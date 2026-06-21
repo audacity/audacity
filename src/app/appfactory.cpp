@@ -42,6 +42,7 @@
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
 #include "spectrogram/spectrogrammodule.h"
+#include "videopreview/videopreviewmodule.h"
 #include "record/recordmodule.h"
 #include "uicomponents/uicomponentsmodule.h"
 #include "toast/toastmodule.h"
@@ -166,6 +167,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::record::RecordModule());
     app->addModule(new au::trackedit::TrackeditModule());
     app->addModule(new au::spectrogram::SpectrogramModule());
+    app->addModule(new au::videopreview::VideoPreviewModule());
     app->addModule(new au::toast::ToastModule());
     app->addModule(new au::project::ProjectModule());
     app->addModule(new au::importexport::ExporterModule());

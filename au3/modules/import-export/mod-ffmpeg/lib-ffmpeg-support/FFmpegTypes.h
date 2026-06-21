@@ -79,6 +79,10 @@
 
 #define AUDACITY_AV_TIME_BASE (1000 * 1000)
 
+#define AUDACITY_AVSEEK_FLAG_BACKWARD 1
+
+#define AUDACITY_SWS_BILINEAR 2
+
 #define AUDACITY_AV_CODEC_FLAG_QSCALE (1 << 1)
 
 #define AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME    (1 << 6)
@@ -124,6 +128,8 @@ typedef struct AVCodec AVCodec;
 typedef struct AVInputFormat AVInputFormat;
 typedef struct AVIOContext AVIOContext;
 typedef struct AVCodecContext AVCodecContext;
+typedef struct SwsContext SwsContext;
+typedef struct SwsFilter SwsFilter;
 
 using AVCodecIDFwd = int;
 using AVMediaTypeFwd = int;

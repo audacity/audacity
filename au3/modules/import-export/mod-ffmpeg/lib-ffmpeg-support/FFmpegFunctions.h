@@ -118,6 +118,16 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions : AVCodecFunctions, AVFormatFunctions,
     std::unique_ptr<AVChannelLayoutWrapper> CreateLegacyChannelLayout(uint64_t layout, int channelsCount) const;
     std::unique_ptr<AVChannelLayoutWrapper> CreateAVChannelLayout(const AVChannelLayout* layout) const;
 
+    bool SupportsVideoDecode() const noexcept;
+    AVPixelFormatFwd GetBGRAPixelFormat() const noexcept;
+
+    SwsContext* (*sws_getCachedContext)(SwsContext* context, int srcW, int srcH, AVPixelFormatFwd srcFormat,
+                                        int dstW, int dstH, AVPixelFormatFwd dstFormat, int flags,
+                                        SwsFilter* srcFilter, SwsFilter* dstFilter, const double* param) = nullptr;
+    int (*sws_scale)(SwsContext* c, const uint8_t* const srcSlice[], const int srcStride[], int srcSliceY, int srcSliceH,
+                     uint8_t* const dst[], const int dstStride[]) = nullptr;
+    void (*sws_freeContext)(SwsContext* swsContext) = nullptr;
+
     const std::vector<const AVOutputFormatWrapper*>& GetOutputFormats() const;
     const std::vector<const AVCodecWrapper*>& GetCodecs() const;
 

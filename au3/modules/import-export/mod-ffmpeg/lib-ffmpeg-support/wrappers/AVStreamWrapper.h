@@ -67,6 +67,7 @@ public:
     virtual void SetMetadata(AVDictionaryWrapper metadata) noexcept = 0;
 
     virtual bool IsAudio() const noexcept = 0;
+    virtual bool IsVideo() const noexcept = 0;
 
     virtual AVCodecIDFwd GetAVCodecID() const noexcept = 0;
 

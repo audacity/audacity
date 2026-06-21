@@ -151,6 +151,7 @@ add_to_link_if_exists(spectrogram)
 add_to_link_if_exists(toast)
 add_to_link_if_exists(usageinfo)
 add_to_link_if_exists(automation)
+add_to_link_if_exists(videopreview)
 
 set (AUDACITY_APPEND_SRC)
 

@@ -97,6 +97,11 @@ QString ProjectPageModel::playbackMeterPanelName() const
     return PLAYBACK_METER_PANEL_NAME;
 }
 
+QString ProjectPageModel::videoPreviewPanelName() const
+{
+    return VIDEO_PREVIEW_PANEL_NAME;
+}
+
 QString ProjectPageModel::statusBarName() const
 {
     return PROJECT_STATUSBAR_NAME;

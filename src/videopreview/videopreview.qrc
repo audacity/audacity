@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/VideoPreview/qmldir</file>
+        <file>qml/Audacity/VideoPreview/VideoPreviewPanel.qml</file>
+    </qresource>
+</RCC>

@@ -318,3 +318,8 @@ CreateAVFrameWrapper(const FFmpegFunctions& ffmpeg)
 {
    return std::make_unique<AVFrameWrapperImpl>(ffmpeg);
 }
+
+AVPixelFormatFwd GetBGRAPixelFormat()
+{
+   return AV_PIX_FMT_BGRA;
+}

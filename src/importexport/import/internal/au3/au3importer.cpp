@@ -1,5 +1,8 @@
 #include "au3importer.h"
 
+#include <algorithm>
+#include <set>
+
 #include "framework/global/io/path.h"
 
 #include "au3-basic-ui/BasicUI.h"
@@ -21,6 +24,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "projectscene/view/tracksitemsview/dropcontroller.h"
 #include "trackedit/internal/au3/au3trackdata.h"
+#include "trackedit/itrackeditproject.h"
 
 #include "tempodetection.h"
 using au::trackedit::ITrackDataPtr;
@@ -28,6 +32,19 @@ using au::trackedit::Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 using namespace au::au3;
+
+namespace {
+std::set<au::trackedit::ClipKey> collectClipKeys(const au::trackedit::ITrackeditProject& project)
+{
+    std::set<au::trackedit::ClipKey> keys;
+    for (const au::trackedit::TrackId trackId : project.trackIdList()) {
+        for (const auto& clip : project.clipList(trackId)) {
+            keys.insert(clip.key);
+        }
+    }
+    return keys;
+}
+}
 
 class ImportProgress final : public ImportProgressListener
 {
@@ -171,6 +188,8 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
         dstTrackIds.push_back(static_cast<trackedit::TrackId>(wt->GetId()));
     }
 
+    linkImportedVideoIfPresent(filePath, importedClipsForTracks(dstTrackIds), -1.0);
+
     m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
 
     return true;
@@ -231,6 +250,12 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         importedData.push_back(std::make_shared<Au3TrackData>(holder));
     }
 
+    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+    std::set<trackedit::ClipKey> clipsBeforePaste;
+    if (trackeditProject) {
+        clipsBeforePaste = collectClipKeys(*trackeditProject);
+    }
+
     bool modifiedState = false;
     selectionController()->setSelectedTracks({ dstTrackId }, true);
     muse::Ret pasteRet = tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
@@ -241,7 +266,27 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
 
     applyImportedProjectTitleIfNeeded(filePath);
 
+    std::vector<trackedit::Clip> importedClips;
+    if (trackeditProject) {
+        for (const trackedit::TrackId trackId : trackeditProject->trackIdList()) {
+            for (const auto& clip : trackeditProject->clipList(trackId)) {
+                if (clipsBeforePaste.find(clip.key) == clipsBeforePaste.end()
+                    && clip.title.toStdString() == baseName
+                    && clip.endTime > startTime.to_double()) {
+                    importedClips.push_back(clip);
+                }
+            }
+        }
+    }
+    std::sort(importedClips.begin(), importedClips.end(), [](const trackedit::Clip& left, const trackedit::Clip& right) {
+        if (left.startTime != right.startTime) {
+            return left.startTime < right.startTime;
+        }
+        return left.key < right.key;
+    });
+
     std::vector<trackedit::TrackId> dstTrackIds(importedWaveTracks.size(), dstTrackId);
+    linkImportedVideoIfPresent(filePath, importedClips, startTime.to_double());
     m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
 
     return true;
@@ -343,12 +388,61 @@ bool au::importexport::Au3Importer::isProjectEmpty() const
     return !trackeditProject->hasAudioContent().val;
 }
 
+std::vector<au::trackedit::Clip> au::importexport::Au3Importer::importedClipsForTracks(
+    const std::vector<trackedit::TrackId>& trackIds) const
+{
+    std::vector<trackedit::Clip> clips;
+
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return clips;
+    }
+
+    std::set<trackedit::TrackId> uniqueTrackIds(trackIds.cbegin(), trackIds.cend());
+    for (const trackedit::TrackId trackId : uniqueTrackIds) {
+        for (const auto& clip : project->clipList(trackId)) {
+            clips.push_back(clip);
+        }
+    }
+
+    std::sort(clips.begin(), clips.end(), [](const trackedit::Clip& left, const trackedit::Clip& right) {
+        if (left.startTime != right.startTime) {
+            return left.startTime < right.startTime;
+        }
+        return left.key < right.key;
+    });
+
+    return clips;
+}
+
+void au::importexport::Au3Importer::linkImportedVideoIfPresent(const muse::io::path_t& filePath,
+                                                               const std::vector<trackedit::Clip>& clips,
+                                                               double sourceOriginProjectTime)
+{
+    if (!videoPreviewService() || clips.empty()) {
+        return;
+    }
+
+    if (sourceOriginProjectTime < 0.0) {
+        const auto minClip = std::min_element(clips.cbegin(), clips.cend(), [](const trackedit::Clip& left, const trackedit::Clip& right) {
+            return left.startTime < right.startTime;
+        });
+
+        if (minClip == clips.cend()) {
+            return;
+        }
+
+        sourceOriginProjectTime = minClip->startTime;
+    }
+
+    videoPreviewService()->linkImportedVideo(filePath, clips, sourceOriginProjectTime);
+}
+
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks,
                                                       std::vector<WaveTrack*>* outWaveTracks)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     auto& tracks = TrackList::Get(*project);
-    auto& projectFileIO = ProjectFileIO::Get(*project);
 
     std::vector<Track*> results;
 

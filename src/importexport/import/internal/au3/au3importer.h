@@ -7,6 +7,7 @@
 #include "context/iglobalcontext.h"
 #include "trackedit/itracksinteraction.h"
 #include "trackedit/iselectioncontroller.h"
+#include "videopreview/ivideopreviewservice.h"
 
 #include "au3-import-export/Import.h"
 
@@ -24,6 +25,7 @@ class Au3Importer : public IImporter, public muse::Contextable
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<ILabelsImporter> labelsImporter{ this };
+    muse::ContextInject<videopreview::IVideoPreviewService> videoPreviewService{ this };
 
 public:
     Au3Importer(const muse::modularity::ContextPtr& ctx);
@@ -40,6 +42,10 @@ private:
     bool isProjectEmpty() const;
     void applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath);
     void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks, std::vector<WaveTrack*>* outWaveTracks = nullptr);
+    std::vector<trackedit::Clip> importedClipsForTracks(const std::vector<trackedit::TrackId>& trackIds) const;
+    void linkImportedVideoIfPresent(const muse::io::path_t& filePath,
+                                    const std::vector<trackedit::Clip>& clips,
+                                    double sourceOriginProjectTime);
 
     const std::unique_ptr<TempoDetection> m_tempoDetection;
 };

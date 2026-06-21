@@ -137,11 +137,30 @@ std::vector<wxString> BuildAVFormatPaths(int version)
     };
 }
 
+std::vector<wxString> BuildSwScalePaths(int avFormatVersion)
+{
+    const int swScaleVersion = avFormatVersion - 53;
+
+    return {
+#if defined(__WXMSW__)
+        wxString::Format("swscale-%d.dll", swScaleVersion),
+#elif defined(__WXMAC__)
+        wxString::Format("libswscale.%d.dylib", swScaleVersion),
+        wxString::Format("ffmpeg.%d.64bit.dylib", avFormatVersion),
+#elif defined(__OpenBSD__)
+        wxString::Format("libswscale.so"),
+#else
+        wxString::Format("libswscale.so.%d", swScaleVersion),
+#endif
+    };
+}
+
 struct FFmpegFunctions::Private final
 {
     std::shared_ptr<wxDynamicLibrary> AVFormatLibrary;
     std::shared_ptr<wxDynamicLibrary> AVCodecLibrary;
     std::shared_ptr<wxDynamicLibrary> AVUtilLibrary;
+    std::shared_ptr<wxDynamicLibrary> SwScaleLibrary;
 
     std::unique_ptr<FFmpegLog> FFmpegLogCallbackSetter;
 
@@ -168,6 +187,41 @@ struct FFmpegFunctions::Private final
         }
 
         return LoadLibrary(wxFileNameFromPath(path), fromUserPathOnly);
+    }
+
+    void LoadSwScale(FFmpegFunctions& functions, bool fromUserPathOnly)
+    {
+        functions.sws_getCachedContext = nullptr;
+        functions.sws_scale = nullptr;
+        functions.sws_freeContext = nullptr;
+        SwScaleLibrary.reset();
+
+        if (functions.AVFormatVersion.Major < 59) {
+            return;
+        }
+
+        for (const wxString& swscalePath : BuildSwScalePaths(functions.AVFormatVersion.Major)) {
+            SwScaleLibrary = LoadLibrary(swscalePath, fromUserPathOnly);
+            if (!SwScaleLibrary) {
+                continue;
+            }
+
+            functions.sws_getCachedContext = reinterpret_cast<decltype(functions.sws_getCachedContext)>(
+                SwScaleLibrary->HasSymbol("sws_getCachedContext") ? SwScaleLibrary->GetSymbol("sws_getCachedContext") : nullptr);
+            functions.sws_scale = reinterpret_cast<decltype(functions.sws_scale)>(
+                SwScaleLibrary->HasSymbol("sws_scale") ? SwScaleLibrary->GetSymbol("sws_scale") : nullptr);
+            functions.sws_freeContext = reinterpret_cast<decltype(functions.sws_freeContext)>(
+                SwScaleLibrary->HasSymbol("sws_freeContext") ? SwScaleLibrary->GetSymbol("sws_freeContext") : nullptr);
+
+            if (functions.sws_getCachedContext && functions.sws_scale && functions.sws_freeContext) {
+                return;
+            }
+
+            functions.sws_getCachedContext = nullptr;
+            functions.sws_scale = nullptr;
+            functions.sws_freeContext = nullptr;
+            SwScaleLibrary.reset();
+        }
     }
 
     bool Load(FFmpegFunctions& functions, const wxString& path, bool fromUserPathOnly)
@@ -232,6 +286,8 @@ struct FFmpegFunctions::Private final
 
         FFmpegLogCallbackSetter
             =UtilFactories.CreateLogCallbackSetter(functions);
+
+        LoadSwScale(functions, fromUserPathOnly);
 
         return true;
     }
@@ -429,6 +485,25 @@ std::unique_ptr<AVChannelLayoutWrapper>
 FFmpegFunctions::CreateAVChannelLayout(const AVChannelLayout* layout) const
 {
     return mPrivate->UtilFactories.CreateAVChannelLayout(*this, layout);
+}
+
+bool FFmpegFunctions::SupportsVideoDecode() const noexcept
+{
+    return AVFormatVersion.Major >= 59
+           && avcodec_send_packet
+           && avcodec_receive_frame
+           && sws_getCachedContext
+           && sws_scale
+           && sws_freeContext
+           && mPrivate
+           && mPrivate->UtilFactories.GetBGRAPixelFormat;
+}
+
+AVPixelFormatFwd FFmpegFunctions::GetBGRAPixelFormat() const noexcept
+{
+    return mPrivate && mPrivate->UtilFactories.GetBGRAPixelFormat
+           ? mPrivate->UtilFactories.GetBGRAPixelFormat()
+           : 0;
 }
 
 std::unique_ptr<AVOutputFormatWrapper>
