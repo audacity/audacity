@@ -45,6 +45,8 @@ Item {
     signal requestSingleSelected
     signal requestSelectionReset
 
+    signal requestSelectLinkedGroup(bool rightSide)
+
     signal titleEditStarted
     signal titleEditAccepted(var newTitle)
     signal titleEditCanceled
@@ -384,7 +386,7 @@ Item {
         }
 
         onRequestSelected: {
-            root.requestSingleSelected()
+            root.requestSelectLinkedGroup(false /*rightSide*/)
         }
 
         onMousePositionChanged: function (x, y) {
@@ -426,7 +428,7 @@ Item {
         }
 
         onRequestSelected: {
-            root.requestSingleSelected()
+            root.requestSelectLinkedGroup(true /*rightSide*/)
         }
 
         onMousePositionChanged: function (x, y) {

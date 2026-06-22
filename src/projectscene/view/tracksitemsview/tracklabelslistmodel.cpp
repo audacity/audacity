@@ -13,6 +13,7 @@ using namespace au::projectscene;
 using namespace au::trackedit;
 
 static constexpr double EDGE_COLLAPSE_SNAP_PX = 4.0;
+static constexpr double SHARED_STALK_TOLERANCE_PX = 2.0;
 
 TrackLabelsListModel::TrackLabelsListModel(QObject* parent)
     : TrackItemsListModel(parent)
@@ -255,6 +256,46 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
             }
         }
     }
+
+    setFocusedItem(key);
+    m_needToSelectTracksData = false;
+}
+
+void TrackLabelsListModel::selectLabelWithSharedStalk(const LabelKey& key, bool rightSide)
+{
+    if (key.key.trackId != m_trackId) {
+        return;
+    }
+
+    const TrackLabelItem* grabbed = labelItemByKey(key.key);
+    if (!grabbed) {
+        return;
+    }
+
+    const double grabbedEdge = rightSide ? grabbed->time().endTime : grabbed->time().startTime;
+    const double tolerance = SHARED_STALK_TOLERANCE_PX / m_context->zoom();
+
+    LabelKeyList keys { key.key };
+    for (const ViewTrackItem* viewItem : m_items) {
+        const TrackLabelItem* other = static_cast<const TrackLabelItem*>(viewItem);
+        if (!other || other->key().key == key.key) {
+            continue;
+        }
+
+        if (std::abs(other->time().startTime - grabbedEdge) < tolerance
+            || std::abs(other->time().endTime - grabbedEdge) < tolerance) {
+            keys.push_back(other->key().key);
+        }
+    }
+
+    if (keys.size() == 1) {
+        selectLabel(key);
+        return;
+    }
+
+    selectionController()->resetDataSelection();
+    selectionController()->resetSelectedClips();
+    selectionController()->setSelectedLabels(keys, true);
 
     setFocusedItem(key);
     m_needToSelectTracksData = false;

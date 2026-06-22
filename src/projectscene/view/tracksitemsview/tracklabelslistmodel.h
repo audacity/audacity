@@ -15,6 +15,7 @@ public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void selectLabel(const LabelKey& key);
+    Q_INVOKABLE void selectLabelWithSharedStalk(const LabelKey& key, bool rightSide);
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 

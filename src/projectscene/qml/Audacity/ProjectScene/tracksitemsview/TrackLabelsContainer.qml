@@ -229,6 +229,10 @@ TrackItemsContainer {
                                         labelsModel.selectLabel(itemData.key)
                                     }
 
+                                    onRequestSelectLinkedGroup: function (rightSide) {
+                                        labelsModel.selectLabelWithSharedStalk(itemData.key, rightSide)
+                                    }
+
                                     onRequestSelectionReset: {
                                         labelsModel.resetSelectedLabels()
                                         root.selectionResetRequested()
