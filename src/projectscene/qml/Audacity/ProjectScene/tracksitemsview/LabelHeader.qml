@@ -169,14 +169,16 @@ Rectangle {
                     id: titleEdit
 
                     property string newTitle: ""
-                    property real contentWidth: textMetrics.advanceWidth
+                    property real contentWidth: titleMetrics.implicitWidth
                     property real contentHeight: scrollableContentHeight
                     property bool _editEscaped: false
 
                     allowNewLineByEnter: false
 
-                    TextMetrics {
-                        id: textMetrics
+                    Text {
+                        id: titleMetrics
+                        visible: false
+                        wrapMode: Text.NoWrap
                         font: titleEdit.inputField.font
                         text: titleEdit.newTitle
                     }
