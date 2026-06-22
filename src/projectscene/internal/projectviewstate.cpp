@@ -521,7 +521,7 @@ bool ProjectViewState::setTrackHeightInternal(const trackedit::TrackId& trackId,
     return changed;
 }
 
-void ProjectViewState::collapseAllTrackHeights()
+void ProjectViewState::decreaseAllTrackHeights()
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -537,7 +537,7 @@ void ProjectViewState::collapseAllTrackHeights()
     recomputeTotalTrackHeight();
 }
 
-void ProjectViewState::expandAllTrackHeights()
+void ProjectViewState::increaseAllTrackHeights()
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -560,13 +560,13 @@ void ProjectViewState::expandAllTrackHeights()
     recomputeTotalTrackHeight();
 }
 
-void ProjectViewState::collapseTrackHeight(const trackedit::TrackId& trackId)
+void ProjectViewState::decreaseTrackHeight(const trackedit::TrackId& trackId)
 {
     disengageAutoFitTrackHeights();
     setTrackHeightInternal(trackId, trackHeight(trackId).val - TRACK_HEIGHT_STEP, true);
 }
 
-void ProjectViewState::expandTrackHeight(const trackedit::TrackId& trackId)
+void ProjectViewState::increaseTrackHeight(const trackedit::TrackId& trackId)
 {
     disengageAutoFitTrackHeights();
 

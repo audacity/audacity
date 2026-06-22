@@ -44,10 +44,10 @@ public:
     int trackVerticalPosition(const trackedit::TrackId& trackId) const override;
     void changeTrackHeight(const trackedit::TrackId& trackId, int delta) override;
     void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
-    void collapseAllTrackHeights() override;
-    void expandAllTrackHeights() override;
-    void collapseTrackHeight(const trackedit::TrackId& trackId) override;
-    void expandTrackHeight(const trackedit::TrackId& trackId) override;
+    void decreaseAllTrackHeights() override;
+    void increaseAllTrackHeights() override;
+    void decreaseTrackHeight(const trackedit::TrackId& trackId) override;
+    void increaseTrackHeight(const trackedit::TrackId& trackId) override;
     void autoFitTrackHeights() override;
     void setTracksViewportHeight(int height) override;
     void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) override;

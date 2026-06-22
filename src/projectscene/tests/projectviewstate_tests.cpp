@@ -249,7 +249,7 @@ TEST_F(ProjectViewStateTests, ManualTrackHeightChangeDisengagesAutoFit)
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 250);
 }
 
-TEST_F(ProjectViewStateTests, ShrinkAndExpandTrackHeights)
+TEST_F(ProjectViewStateTests, DecreaseAndIncreaseTrackHeights)
 {
     const trackedit::TrackIdList tracks = getAllTracks();
     ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
@@ -258,26 +258,26 @@ TEST_F(ProjectViewStateTests, ShrinkAndExpandTrackHeights)
     m_projectViewState->setTrackHeight(tracks[0], 100);
     m_projectViewState->setTrackHeight(tracks[1], 120);
 
-    m_projectViewState->collapseAllTrackHeights();
+    m_projectViewState->decreaseAllTrackHeights();
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 92);
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 112);
 
-    m_projectViewState->collapseTrackHeight(tracks[0]);
+    m_projectViewState->decreaseTrackHeight(tracks[0]);
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 84);
 
-    m_projectViewState->expandAllTrackHeights();
+    m_projectViewState->increaseAllTrackHeights();
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 92);
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 120);
 
-    m_projectViewState->expandTrackHeight(tracks[1]);
+    m_projectViewState->increaseTrackHeight(tracks[1]);
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 128);
 
     m_projectViewState->setTrackHeight(tracks[0], 48);
-    m_projectViewState->collapseTrackHeight(tracks[0]);
+    m_projectViewState->decreaseTrackHeight(tracks[0]);
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 44);
 
     m_projectViewState->setTrackHeight(tracks[1], 176);
-    m_projectViewState->expandTrackHeight(tracks[1]);
+    m_projectViewState->increaseTrackHeight(tracks[1]);
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 180);
 }
 

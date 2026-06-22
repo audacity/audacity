@@ -24,10 +24,10 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("open-label-editor");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
-static const ActionCode COLLAPSE_ALL_TRACKS_CODE("collapse-all-tracks");
-static const ActionCode EXPAND_ALL_TRACKS_CODE("expand-all-tracks");
-static const ActionCode COLLAPSE_THIS_TRACK_CODE("collapse-this-track");
-static const ActionCode EXPAND_THIS_TRACK_CODE("expand-this-track");
+static const ActionCode DECREASE_ALL_TRACK_HEIGHTS_CODE("decrease-all-track-heights");
+static const ActionCode INCREASE_ALL_TRACK_HEIGHTS_CODE("increase-all-track-heights");
+static const ActionCode DECREASE_TRACK_HEIGHT_CODE("decrease-track-height");
+static const ActionCode INCREASE_TRACK_HEIGHT_CODE("increase-track-height");
 static const ActionCode FIT_VERTICALLY_CODE("fit-v");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
@@ -48,10 +48,10 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
-    dispatcher()->reg(this, COLLAPSE_ALL_TRACKS_CODE, this, &ProjectSceneActionsController::collapseAllTrackHeights);
-    dispatcher()->reg(this, EXPAND_ALL_TRACKS_CODE, this, &ProjectSceneActionsController::expandAllTrackHeights);
-    dispatcher()->reg(this, COLLAPSE_THIS_TRACK_CODE, this, &ProjectSceneActionsController::collapseTrackHeight);
-    dispatcher()->reg(this, EXPAND_THIS_TRACK_CODE, this, &ProjectSceneActionsController::expandTrackHeight);
+    dispatcher()->reg(this, DECREASE_ALL_TRACK_HEIGHTS_CODE, this, &ProjectSceneActionsController::decreaseAllTrackHeights);
+    dispatcher()->reg(this, INCREASE_ALL_TRACK_HEIGHTS_CODE, this, &ProjectSceneActionsController::increaseAllTrackHeights);
+    dispatcher()->reg(this, DECREASE_TRACK_HEIGHT_CODE, this, &ProjectSceneActionsController::decreaseTrackHeight);
+    dispatcher()->reg(this, INCREASE_TRACK_HEIGHT_CODE, this, &ProjectSceneActionsController::increaseTrackHeight);
     dispatcher()->reg(this, FIT_VERTICALLY_CODE, this, &ProjectSceneActionsController::autoFitTrackHeights);
 }
 
@@ -187,24 +187,24 @@ void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::Act
     notifyActionCheckedChanged(TOGGLE_TRACK_HALF_WAVE.toString());
 }
 
-void ProjectSceneActionsController::collapseAllTrackHeights()
+void ProjectSceneActionsController::decreaseAllTrackHeights()
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj || !prj->viewState()) {
         return;
     }
 
-    prj->viewState()->collapseAllTrackHeights();
+    prj->viewState()->decreaseAllTrackHeights();
 }
 
-void ProjectSceneActionsController::expandAllTrackHeights()
+void ProjectSceneActionsController::increaseAllTrackHeights()
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj || !prj->viewState()) {
         return;
     }
 
-    prj->viewState()->expandAllTrackHeights();
+    prj->viewState()->increaseAllTrackHeights();
 }
 
 void ProjectSceneActionsController::autoFitTrackHeights()
@@ -217,7 +217,7 @@ void ProjectSceneActionsController::autoFitTrackHeights()
     prj->viewState()->autoFitTrackHeights();
 }
 
-void ProjectSceneActionsController::collapseTrackHeight(const muse::actions::ActionData& args)
+void ProjectSceneActionsController::decreaseTrackHeight(const muse::actions::ActionData& args)
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj || !prj->viewState()) {
@@ -229,10 +229,10 @@ void ProjectSceneActionsController::collapseTrackHeight(const muse::actions::Act
         return;
     }
 
-    prj->viewState()->collapseTrackHeight(trackId);
+    prj->viewState()->decreaseTrackHeight(trackId);
 }
 
-void ProjectSceneActionsController::expandTrackHeight(const muse::actions::ActionData& args)
+void ProjectSceneActionsController::increaseTrackHeight(const muse::actions::ActionData& args)
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj || !prj->viewState()) {
@@ -244,7 +244,7 @@ void ProjectSceneActionsController::expandTrackHeight(const muse::actions::Actio
         return;
     }
 
-    prj->viewState()->expandTrackHeight(trackId);
+    prj->viewState()->increaseTrackHeight(trackId);
 }
 
 trackedit::TrackId ProjectSceneActionsController::trackIdFromArgsOrFocus(const muse::actions::ActionData& args) const

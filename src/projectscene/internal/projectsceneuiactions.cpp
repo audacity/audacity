@@ -77,29 +77,29 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Auto-fit height"),
              TranslatableString("action", "Auto-fit height")
              ),
-    UiAction("collapse-all-tracks",
+    UiAction("decrease-all-track-heights",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Shrink all tracks"),
-             TranslatableString("action", "Shrink all tracks")
+             TranslatableString("action", "Decrease all track heights"),
+             TranslatableString("action", "Decrease all track heights")
              ),
-    UiAction("expand-all-tracks",
+    UiAction("increase-all-track-heights",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Expand all tracks"),
-             TranslatableString("action", "Expand all tracks")
+             TranslatableString("action", "Increase all track heights"),
+             TranslatableString("action", "Increase all track heights")
              ),
-    UiAction("collapse-this-track",
+    UiAction("decrease-track-height",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Shrink this track"),
-             TranslatableString("action", "Shrink this track")
+             TranslatableString("action", "Decrease track height"),
+             TranslatableString("action", "Decrease track height")
              ),
-    UiAction("expand-this-track",
+    UiAction("increase-track-height",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Expand this track"),
-             TranslatableString("action", "Expand this track")
+             TranslatableString("action", "Increase track height"),
+             TranslatableString("action", "Increase track height")
              ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,

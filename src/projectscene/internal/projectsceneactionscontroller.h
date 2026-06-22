@@ -51,11 +51,11 @@ private:
     void togglePlaybackOnRulerClickEnabled();
     void toggleAutomation();
     void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
-    void collapseAllTrackHeights();
-    void expandAllTrackHeights();
+    void decreaseAllTrackHeights();
+    void increaseAllTrackHeights();
     void autoFitTrackHeights();
-    void collapseTrackHeight(const muse::actions::ActionData& args);
-    void expandTrackHeight(const muse::actions::ActionData& args);
+    void decreaseTrackHeight(const muse::actions::ActionData& args);
+    void increaseTrackHeight(const muse::actions::ActionData& args);
 
     void changeFontForLabels();
 

@@ -957,11 +957,11 @@
         <seq>Ctrl+Shift+F</seq>
     </SC>
     <SC>
-        <key>collapse-all-tracks</key>
+        <key>decrease-all-track-heights</key>
         <seq>Ctrl+Shift+Down</seq>
     </SC>
     <SC>
-        <key>expand-all-tracks</key>
+        <key>increase-all-track-heights</key>
         <seq>Ctrl+Shift+Up</seq>
     </SC>
     <SC>
