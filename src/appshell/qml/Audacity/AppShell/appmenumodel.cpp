@@ -611,8 +611,8 @@ MenuItemList AppMenuModel::makeZoomItems()
         makeMenuItem(projectscene::PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND),
         makeMenuItem(projectscene::PROJECTSCENE_FIT_VERTICALLY_COMMAND),
         makeSeparator(),
-        makeMenuItem(projectscene::PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND),
-        makeMenuItem(projectscene::PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND)
+        makeMenuItem(projectscene::PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND)
     };
 
     return items;
