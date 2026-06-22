@@ -33,10 +33,12 @@ inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_SELECTION_COMMA
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND("command://projectscene/zoom-to-fit-project");
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TOGGLE_COMMAND("command://projectscene/zoom-toggle");
 inline static const muse::rcommand::Command PROJECTSCENE_FIT_VERTICALLY_COMMAND("command://projectscene/fit-v");
-inline static const muse::rcommand::Command PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND("command://projectscene/collapse-all-tracks");
-inline static const muse::rcommand::Command PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND("command://projectscene/expand-all-tracks");
-inline static const muse::rcommand::Command PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND("command://projectscene/collapse-this-track");
-inline static const muse::rcommand::Command PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND("command://projectscene/expand-this-track");
+inline static const muse::rcommand::Command PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND(
+    "command://projectscene/decrease-all-track-heights");
+inline static const muse::rcommand::Command PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND(
+    "command://projectscene/increase-all-track-heights");
+inline static const muse::rcommand::Command PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND("command://projectscene/decrease-track-height");
+inline static const muse::rcommand::Command PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND("command://projectscene/increase-track-height");
 inline static const std::string PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM("trackId");
 inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND("command://projectscene/timeline-page-left");
 inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_PAGE_RIGHT_COMMAND("command://projectscene/timeline-page-right");

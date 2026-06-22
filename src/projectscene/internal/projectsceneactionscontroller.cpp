@@ -19,17 +19,17 @@ void ProjectSceneActionsController::init()
     cd->onRequest(this, PROJECTSCENE_FIT_VERTICALLY_COMMAND, [this]() {
         return changeTrackHeight(&IProjectViewState::autoFitTrackHeights);
     });
-    cd->onRequest(this, PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND, [this]() {
-        return changeTrackHeight(&IProjectViewState::collapseAllTrackHeights);
+    cd->onRequest(this, PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND, [this]() {
+        return changeTrackHeight(&IProjectViewState::decreaseAllTrackHeights);
     });
-    cd->onRequest(this, PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND, [this]() {
-        return changeTrackHeight(&IProjectViewState::expandAllTrackHeights);
+    cd->onRequest(this, PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND, [this]() {
+        return changeTrackHeight(&IProjectViewState::increaseAllTrackHeights);
     });
-    cd->onRequest(this, PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, [this](const Params& params) {
-        return changeTrackHeight(params, &IProjectViewState::collapseTrackHeight);
+    cd->onRequest(this, PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND, [this](const Params& params) {
+        return changeTrackHeight(params, &IProjectViewState::decreaseTrackHeight);
     });
-    cd->onRequest(this, PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, [this](const Params& params) {
-        return changeTrackHeight(params, &IProjectViewState::expandTrackHeight);
+    cd->onRequest(this, PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND, [this](const Params& params) {
+        return changeTrackHeight(params, &IProjectViewState::increaseTrackHeight);
     });
     registerViewCommand(PROJECTSCENE_ZOOM_IN_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
                         &ITimelineViewController::zoomIn);

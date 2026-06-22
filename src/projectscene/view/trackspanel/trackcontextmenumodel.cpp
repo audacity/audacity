@@ -60,10 +60,10 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
-        makeMenuItem(make_query(PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, {
+        makeMenuItem(make_query(PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND, {
             { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
         })),
-        makeMenuItem(make_query(PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, {
+        makeMenuItem(make_query(PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND, {
             { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
         })),
         makeSeparator(),
@@ -92,10 +92,10 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
-        makeMenuItem(make_query(PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, {
+        makeMenuItem(make_query(PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND, {
             { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
         })),
-        makeMenuItem(make_query(PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, {
+        makeMenuItem(make_query(PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND, {
             { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
         })),
         makeSeparator(),
@@ -122,10 +122,10 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
-        makeMenuItem(make_query(PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, {
+        makeMenuItem(make_query(PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND, {
             { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
         })),
-        makeMenuItem(make_query(PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, {
+        makeMenuItem(make_query(PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND, {
             { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
         })),
         makeSeparator(),
