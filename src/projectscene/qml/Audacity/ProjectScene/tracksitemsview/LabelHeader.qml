@@ -152,8 +152,13 @@ Rectangle {
 
                 StyledTextLabel {
                     text: root.title
-                    horizontalAlignment: Qt.AlignLeft
+
                     color: root.labelColor
+
+                    horizontalAlignment: Qt.AlignLeft
+                    elide: Text.ElideNone
+                    wrapMode: Text.NoWrap
+                    maximumLineCount: 1
                 }
             }
 
