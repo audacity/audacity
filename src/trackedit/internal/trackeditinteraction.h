@@ -138,6 +138,8 @@ private:
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
     bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
 
+    void resetLabelStretchState() override;
+
     muse::Progress progress() const override;
 
 private:

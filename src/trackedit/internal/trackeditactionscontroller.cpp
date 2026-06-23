@@ -1998,7 +1998,9 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
 
 void TrackeditActionsController::addLabel()
 {
-    trackeditInteraction()->addLabelToSelection();
+    if (trackeditInteraction()->addLabelToSelection()) {
+        dispatcher()->dispatch("rename-item");
+    }
 }
 
 void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)

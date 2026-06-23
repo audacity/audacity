@@ -43,6 +43,7 @@ for drawing different aspects of the label and its text box.
 
 #include "au3-track/TimeWarper.h"
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-stretching-sequence/TempoChange.h"
 
 const FileNames::FileType LabelTrack::SubripFiles{ TranslatableString("label-track", "SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ TranslatableString("label-track", "WebVTT file"), { wxT("vtt") }, true };
@@ -1276,4 +1277,24 @@ int LabelTrack::FindPrevLabel(const SelectedRegion& currentRegion)
 
     miLastLabel = i;
     return i;
+}
+
+using OnLabelTrackProjectTempoChange
+    =OnProjectTempoChange::Override<LabelTrack>;
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnLabelTrackProjectTempoChange)
+{
+    return [](LabelTrack& track, const std::optional<double>& oldTempo,
+              double newTempo) {
+        if (!oldTempo.has_value() || newTempo <= 0.0 || *oldTempo <= 0.0) {
+            return;
+        }
+        const auto ratio = *oldTempo / newTempo;
+        const size_t nn = track.GetNumLabels();
+        for (size_t ii = 0; ii < nn; ++ii) {
+            auto label = *track.GetLabel(ii);
+            label.selectedRegion.setTimes(
+                label.getT0() * ratio, label.getT1() * ratio);
+            track.SetLabel(ii, label);
+        }
+    };
 }

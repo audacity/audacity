@@ -507,13 +507,9 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     const auto& au3labels = labelTrack->GetLabels();
     Au3Label au3Label = au3labels[labelIndex];
 
-    if (!m_stretchTime.has_value() || m_stretchingLabelKey != labelKey) {
-        m_stretchTime = au3Label.getT1();
-        m_stretchingLabelKey = labelKey;
-    }
+    double anchorT1 = m_leftStretchAnchors.try_emplace(labelKey, au3Label.getT1()).first->second;
 
     newStartTime = std::max(0.0, newStartTime.to_double());
-    double anchorT1 = m_stretchTime.value();
 
     au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
     labelTrack->SetLabel(labelIndex, au3Label);
@@ -524,8 +520,7 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     }
 
     if (completed) {
-        m_stretchTime.reset();
-        m_stretchingLabelKey.reset();
+        m_leftStretchAnchors.erase(labelKey);
     }
 
     return true;
@@ -582,13 +577,9 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
     const auto& au3labels = labelTrack->GetLabels();
     Au3Label au3Label = au3labels[labelIndex];
 
-    if (!m_stretchTime.has_value() || m_stretchingLabelKey != labelKey) {
-        m_stretchTime = au3Label.getT0();
-        m_stretchingLabelKey = labelKey;
-    }
+    double anchorT0 = m_rightStretchAnchors.try_emplace(labelKey, au3Label.getT0()).first->second;
 
     newEndTime = std::max(0.0, newEndTime.to_double());
-    double anchorT0 = m_stretchTime.value();
 
     au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
     labelTrack->SetLabel(labelIndex, au3Label);
@@ -599,8 +590,7 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
     }
 
     if (completed) {
-        m_stretchTime.reset();
-        m_stretchingLabelKey.reset();
+        m_rightStretchAnchors.erase(labelKey);
     }
 
     return true;
@@ -627,6 +617,12 @@ bool Au3LabelsInteraction::stretchLabelsRight(const LabelKeyList& labelKeys, sec
         stretchLabelRight(labelKey, newEndTime, completed);
     }
     return true;
+}
+
+void Au3LabelsInteraction::resetLabelStretchState()
+{
+    m_leftStretchAnchors.clear();
+    m_rightStretchAnchors.clear();
 }
 
 muse::Progress Au3LabelsInteraction::progress() const

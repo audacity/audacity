@@ -15,6 +15,7 @@ Canvas {
     signal stretchRequested(bool completed)
     signal stretchStartRequested
     signal stretchEndRequested
+    signal stretchCanceled
     signal stretchMousePositionChanged(real x, real y)
 
     width: 7
@@ -56,7 +57,7 @@ Canvas {
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
-        cursorShape: !root.isLinked ? Qt.SizeHorCursor : Qt.SplitHCursor
+        cursorShape: Qt.SizeHorCursor
 
         visible: root.enableCursorInteraction
 
@@ -83,6 +84,10 @@ Canvas {
             root.stretchRequested(true)
             root.stretchEndRequested()
             e.accepted = true
+        }
+
+        onCanceled: {
+            root.stretchCanceled()
         }
     }
 }

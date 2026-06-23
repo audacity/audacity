@@ -11,15 +11,10 @@ Rectangle {
 
     property alias hovered: dragArea.containsMouse
 
-    property bool isStretchInProgress: false
-
     signal headerHoveredChanged(bool value)
     signal requestSelected
 
-    signal stretchRequested(bool completed)
-    signal stretchStartRequested
-    signal stretchEndRequested
-    signal stretchMousePositionChanged(real x, real y)
+    signal mousePositionChanged(real x, real y)
 
     width: 1
 
@@ -33,54 +28,30 @@ Rectangle {
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
-        cursorShape: Qt.SizeHorCursor
+        cursorShape: Qt.OpenHandCursor
 
         visible: root.enableCursorInteraction
 
         onContainsMouseChanged: {
-            if (!root.visible || !root.isForPoint) {
+            if (!root.visible) {
                 return
             }
             root.headerHoveredChanged(containsMouse)
         }
 
         onPressed: function (e) {
-            if (!root.isForPoint) {
-                root.isStretchInProgress = true
-
-                let mousePos = mapToItem(root.parent, e.x, e.y)
-                root.stretchMousePositionChanged(mousePos.x, mousePos.y)
-                root.stretchStartRequested()
-                root.stretchRequested(false)
-                e.accepted = true
-            } else {
-                root.requestSelected()
-                e.accepted = false
-            }
+            root.requestSelected()
+            e.accepted = false
         }
 
         onPositionChanged: function (e) {
             let mousePos = mapToItem(root.parent, e.x, e.y)
-
-            if (pressed && !root.isForPoint) {
-                root.stretchMousePositionChanged(mousePos.x, mousePos.y)
-                root.stretchRequested(false)
-                e.accepted = true
-            } else {
-                root.stretchMousePositionChanged(mousePos.x, mousePos.y)
-                e.accepted = false
-            }
+            root.mousePositionChanged(mousePos.x, mousePos.y)
+            e.accepted = false
         }
 
         onReleased: function (e) {
-            if (!root.isForPoint) {
-                root.isStretchInProgress = false
-                root.stretchRequested(true)
-                root.stretchEndRequested()
-                e.accepted = true
-            } else {
-                e.accepted = false
-            }
+            e.accepted = false
         }
     }
 }

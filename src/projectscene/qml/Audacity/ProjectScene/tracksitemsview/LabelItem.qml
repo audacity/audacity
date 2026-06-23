@@ -19,6 +19,8 @@ Item {
     required property bool selectionEditInProgress
     required property bool verticalSelectionEditInProgress
 
+    property real leftVisibleMargin: 0
+
     property bool isLeftLinked: false
     property bool isRightLinked: false
     property bool isLinkedActive: false
@@ -43,6 +45,8 @@ Item {
     signal requestSingleSelected
     signal requestSelectionReset
 
+    signal requestSelectLinkedGroup(bool rightSide)
+
     signal titleEditStarted
     signal titleEditAccepted(var newTitle)
     signal titleEditCanceled
@@ -52,6 +56,7 @@ Item {
 
     signal labelStartEditRequested
     signal labelEndEditRequested
+    signal labelCancelDragEditRequested
 
     signal labelLeftStretchRequested(bool unlink, bool completed)
     signal labelRightStretchRequested(bool unlink, bool completed)
@@ -208,6 +213,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onStretchCanceled: {
+            root.labelCancelDragEditRequested()
+        }
     }
 
     // Right Ear
@@ -252,6 +261,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onStretchCanceled: {
+            root.labelCancelDragEditRequested()
+        }
     }
 
     // Main Label Header
@@ -268,6 +281,8 @@ Item {
         backgroundColor: prv.backgroundColor
 
         earWidth: prv.earWidth
+
+        leftVisibleMargin: root.leftVisibleMargin
 
         enableCursorInteraction: root.enableCursorInteraction
 
@@ -332,16 +347,8 @@ Item {
             root.requestSingleSelected()
         }
 
-        onStretchMousePositionChanged: function (x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
-        }
-
-        onStretchRequested: function (completed) {
-            root.labelLeftStretchRequested(false /*without unlink*/, completed)
-        }
-
-        onStretchEndRequested: {
-            root.labelEndEditRequested()
         }
     }
 
@@ -364,7 +371,7 @@ Item {
         backgroundColor: prv.leftEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint || isStretchInProgress
+        visible: !prv.isPoint
 
         onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
@@ -378,21 +385,12 @@ Item {
             }
         }
 
-        onStretchStartRequested: {
-            root.requestSingleSelected()
-            root.labelStartEditRequested()
+        onRequestSelected: {
+            root.requestSelectLinkedGroup(false /*rightSide*/)
         }
 
-        onStretchMousePositionChanged: function (x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
-        }
-
-        onStretchRequested: function (completed) {
-            root.labelLeftStretchRequested(false /*without unlink*/, completed)
-        }
-
-        onStretchEndRequested: {
-            root.labelEndEditRequested()
         }
     }
 
@@ -415,7 +413,7 @@ Item {
         backgroundColor: prv.rightEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint || isStretchInProgress
+        visible: !prv.isPoint
 
         onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
@@ -429,21 +427,12 @@ Item {
             }
         }
 
-        onStretchStartRequested: {
-            root.requestSingleSelected()
-            root.labelStartEditRequested()
+        onRequestSelected: {
+            root.requestSelectLinkedGroup(true /*rightSide*/)
         }
 
-        onStretchMousePositionChanged: function (x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
-        }
-
-        onStretchRequested: function (completed) {
-            root.labelRightStretchRequested(false /*without unlink*/, completed)
-        }
-
-        onStretchEndRequested: {
-            root.labelEndEditRequested()
         }
     }
 
