@@ -59,9 +59,11 @@ Rectangle {
                 navigation.order: root.navigationOrderStart
                 navigation.name: "Toggle all track effects"
                 navigation.accessible.name: root.isMasterTrack
-                                            ? qsTrc("projectscene", "Toggle all master effects")
+                                            ? qsTrc("projectscene", "Toggle all master track effects")
                                             : qsTrc("projectscene", "Toggle all track effects")
-                toolTipTitle: qsTrc("projectscene", "Toggle all track effects")
+                toolTipTitle: root.isMasterTrack
+                              ? qsTrc("projectscene", "Toggle all master track effects")
+                              : qsTrc("projectscene", "Toggle all track effects")
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.margins: 8
