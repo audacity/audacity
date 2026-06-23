@@ -555,6 +555,8 @@ Rectangle {
                         root.interactionState = TracksItemsView.State.DraggingItem
                         lastItemClickKey = root.hoveredItemKey
                     } else {
+                        content.forceActiveFocus()
+
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             if (playbackState.isPlaying) {
                                 playbackState.setLastPlaybackSeekTime(timeline.context.positionToTime(e.x))
