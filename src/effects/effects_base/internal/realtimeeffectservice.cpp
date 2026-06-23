@@ -259,7 +259,10 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         return nullptr;
     }
 
-    effectsProvider()->loadEffect(effectId);
+    if (!effectsProvider()->loadEffect(effectId)) {
+        LOGW() << "cannot load the effect: " << effectId;
+        return nullptr;
+    }
     if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
@@ -308,7 +311,10 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
 
-    effectsProvider()->loadEffect(newEffectId);
+    if (!effectsProvider()->loadEffect(newEffectId)) {
+        LOGW() << "cannot replace with unavailable effect: " << newEffectId;
+        return nullptr;
+    }
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
     if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
         const auto oldEffectName = getEffectName(*oldState);
