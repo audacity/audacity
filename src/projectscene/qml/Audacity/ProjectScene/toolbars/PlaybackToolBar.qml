@@ -309,6 +309,8 @@ Item {
                 height: 28
 
                 title: qsTrc("projectscene", "Snap")
+                toggleAccessibleName: qsTrc("projectscene", "Snapping")
+                dropdownAccessibleName: qsTrc("projectscene", "Snap to")
 
                 current: Boolean(itemData) ? itemData.currentValue : ""
                 model: Boolean(itemData) ? itemData.availableSnapTypes : null
