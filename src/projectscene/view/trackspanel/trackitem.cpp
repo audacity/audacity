@@ -19,6 +19,10 @@ static muse::ui::IconCode::Code iconFromTrackType(au::trackedit::TrackType type)
     switch (type) {
     case au::trackedit::TrackType::Label:
         return muse::ui::IconCode::Code::LOOP_IN;
+    case au::trackedit::TrackType::Mono:
+        return muse::ui::IconCode::Code::CIRCLE;
+    case au::trackedit::TrackType::Stereo:
+        return muse::ui::IconCode::Code::TWO_CIRCLES;
     default:
         return muse::ui::IconCode::Code::MICROPHONE;
     }
