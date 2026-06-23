@@ -9,7 +9,6 @@ set( SOURCES
    AnalysisTracks.h
    LabelTrack.cpp
    LabelTrack.h
-   LabelTrackEditing.cpp
 )
 set( LIBRARIES
    au3-effects-interface
