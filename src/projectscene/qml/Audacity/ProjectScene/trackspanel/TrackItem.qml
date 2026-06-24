@@ -35,6 +35,7 @@ ListItemBlank {
     signal interactionStarted
     signal interactionEnded
     signal selectionRequested(bool exclusive)
+    signal dataSelectionRequested
 
     signal mousePressed(var item, double x, double y)
     signal mouseReleased(var item, double x, double y)
@@ -227,9 +228,14 @@ ListItemBlank {
                 // child elements to handle the input
                 e.accepted = false
                 let toggleModifier = e.modifiers & Qt.ControlModifier
-                if (!root.isSelected || toggleModifier) {
-                    root.selectionRequested(false)
+
+                if (!toggleModifier) {
+                    root.selectionRequested(true)
+                    root.dataSelectionRequested()
+                    return
                 }
+
+                root.selectionRequested(false)
             }
         }
 

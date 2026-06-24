@@ -79,8 +79,7 @@ void ViewTracksListModel::load()
         QModelIndex beginIndex = index(0);
         QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
 
-        emit dataChanged(beginIndex, lastIndex, { IsTrackSelectedRole });
-        emit dataChanged(beginIndex, lastIndex, { IsDataSelectedRole });
+        emit dataChanged(beginIndex, lastIndex, { IsTrackSelectedRole, IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
     trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& /*trackId*/, bool /*highlight*/) {
@@ -124,7 +123,7 @@ void ViewTracksListModel::load()
 
         // TODO: only dataChanged affected tracks, not the whole thing
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
-        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
+        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole, IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
