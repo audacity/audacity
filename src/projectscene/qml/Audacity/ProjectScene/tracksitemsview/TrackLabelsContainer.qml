@@ -27,288 +27,309 @@ TrackItemsContainer {
     contentComponent: Component {
         Item {
             Item {
-                id: labelsContainer
+                id: labelsClipArea
+
                 anchors.fill: parent
+                anchors.leftMargin: -root.canvasIndentWidth
                 anchors.bottomMargin: root.bottomSeparatorHeight
                 z: 1
                 clip: true
 
-                function mapToAllLabels(e, f) {
-                    for (let i = 0; i < repeater.count; i++) {
-                        let labelLoader = repeater.itemAt(i)
-                        if (labelLoader && labelLoader.item) {
-                            let labelPos = labelLoader.mapFromItem(this, e.x, e.y)
-                            f(labelLoader.item, {
-                                button: e.button,
-                                modifiers: e.modifiers,
-                                x: labelPos.x,
-                                y: labelPos.y
+                Item {
+                    id: labelsContainer
+
+                    anchors.fill: parent
+                    anchors.leftMargin: root.canvasIndentWidth
+
+                    function mapToAllLabels(e, f) {
+                        for (let i = 0; i < repeater.count; i++) {
+                            let labelLoader = repeater.itemAt(i)
+                            if (labelLoader && labelLoader.item) {
+                                let labelPos = labelLoader.mapFromItem(this, e.x, e.y)
+                                f(labelLoader.item, {
+                                    button: e.button,
+                                    modifiers: e.modifiers,
+                                    x: labelPos.x,
+                                    y: labelPos.y
+                                })
+                            }
+                        }
+                    }
+
+                    function checkIfAnyLabel(f) {
+                        for (let i = 0; i < repeater.count; i++) {
+                            let labelLoader = repeater.itemAt(i)
+                            if (labelLoader && labelLoader.item) {
+                                if (f(labelLoader.item)) {
+                                    return true
+                                }
+                            }
+                        }
+                        return false
+                    }
+
+                    MouseArea {
+                        id: labelsContainerMouseArea
+                        anchors.fill: parent
+
+                        propagateComposedEvents: true
+
+                        hoverEnabled: true
+                        pressAndHoldInterval: 0
+
+                        cursorShape: Qt.BlankCursor
+                        enabled: !root.selectionInProgress
+
+                        // While a selection edit is in progress the cursor on the track body
+                        // should indicate a horizontal resize. We reuse SelectionLeft.png as a
+                        // generic selection-edit cursor here — the actual left/right edge
+                        // direction is handled by ItemsSelection's own handle MouseAreas.
+                        readonly property string selectionEditCursor: ":/images/customCursorShapes/SelectionLeft.png"
+                        readonly property string idleCursor: ":/images/customCursorShapes/IBeamCursor.png"
+                        readonly property int iBeamSize: 26
+
+                        function updateCustomCursor() {
+                            if (root.selectionEditInProgress) {
+                                CustomCursorProvider.setCursorShape(labelsContainerMouseArea, selectionEditCursor)
+                            } else {
+                                CustomCursorProvider.setCursorShape(labelsContainerMouseArea, idleCursor, iBeamSize)
+                            }
+                        }
+
+                        Component.onCompleted: updateCustomCursor()
+                        Connections {
+                            target: root
+                            function onSelectionEditInProgressChanged() {
+                                labelsContainerMouseArea.updateCustomCursor()
+                            }
+                        }
+
+                        onPressed: function (e) {
+                            e.accepted = false
+                        }
+
+                        onClicked: function (e) {
+                            e.accepted = false
+                        }
+
+                        onReleased: function (e) {
+                            e.accepted = false
+                        }
+
+                        onDoubleClicked: function (e) {
+                            e.accepted = true
+                        }
+
+                        onPositionChanged: function (e) {
+                            labelsContainer.mapToAllLabels(e, function (labelItem, mouseEvent) {
+                                labelItem.labelItemMousePositionChanged(mouseEvent.x, mouseEvent.y)
+                            })
+                        }
+
+                        onContainsMouseChanged: function () {
+                            labelsContainer.mapToAllLabels({
+                                x: mouseX,
+                                y: mouseY
+                            }, function (labelItem, mouseEvent) {
+                                labelItem.setContainsMouse(containsMouse)
                             })
                         }
                     }
-                }
 
-                function checkIfAnyLabel(f) {
-                    for (let i = 0; i < repeater.count; i++) {
-                        let labelLoader = repeater.itemAt(i)
-                        if (labelLoader && labelLoader.item) {
-                            if (f(labelLoader.item)) {
-                                return true
-                            }
-                        }
-                    }
-                    return false
-                }
+                    Repeater {
+                        id: repeater
+                        model: labelsModel
 
-                MouseArea {
-                    id: labelsContainerMouseArea
-                    anchors.fill: parent
+                        delegate: Loader {
+                            id: labelLoader
 
-                    propagateComposedEvents: true
+                            property var itemData: model.item
 
-                    hoverEnabled: true
-                    pressAndHoldInterval: 0
+                            height: parent.height - y
+                            width: itemData.width
+                            x: itemData.x
+                            y: (itemData.visualHeight + 2) * itemData.level
+                            z: itemData.level
 
-                    cursorShape: Qt.BlankCursor
-                    enabled: !root.selectionInProgress
+                            asynchronous: true
 
-                    // While a selection edit is in progress the cursor on the track body
-                    // should indicate a horizontal resize. We reuse SelectionLeft.png as a
-                    // generic selection-edit cursor here — the actual left/right edge
-                    // direction is handled by ItemsSelection's own handle MouseAreas.
-                    readonly property string selectionEditCursor: ":/images/customCursorShapes/SelectionLeft.png"
-                    readonly property string idleCursor: ":/images/customCursorShapes/IBeamCursor.png"
-                    readonly property int iBeamSize: 26
+                            visible: y < root.height
 
-                    function updateCustomCursor() {
-                        if (root.selectionEditInProgress) {
-                            CustomCursorProvider.setCursorShape(labelsContainerMouseArea, selectionEditCursor)
-                        } else {
-                            CustomCursorProvider.setCursorShape(labelsContainerMouseArea, idleCursor, iBeamSize)
-                        }
-                    }
+                            sourceComponent: {
+                                if (!itemData.focused) {
+                                    if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
+                                        return null
+                                    }
 
-                    Component.onCompleted: updateCustomCursor()
-                    Connections {
-                        target: root
-                        function onSelectionEditInProgressChanged() {
-                            labelsContainerMouseArea.updateCustomCursor()
-                        }
-                    }
-
-                    onPressed: function (e) {
-                        e.accepted = false
-                    }
-
-                    onClicked: function (e) {
-                        e.accepted = false
-                    }
-
-                    onReleased: function (e) {
-                        e.accepted = false
-                    }
-
-                    onDoubleClicked: function (e) {
-                        e.accepted = true
-                    }
-
-                    onPositionChanged: function (e) {
-                        labelsContainer.mapToAllLabels(e, function (labelItem, mouseEvent) {
-                            labelItem.labelItemMousePositionChanged(mouseEvent.x, mouseEvent.y)
-                        })
-                    }
-
-                    onContainsMouseChanged: function () {
-                        labelsContainer.mapToAllLabels({
-                            x: mouseX,
-                            y: mouseY
-                        }, function (labelItem, mouseEvent) {
-                            labelItem.setContainsMouse(containsMouse)
-                        })
-                    }
-                }
-
-                Repeater {
-                    id: repeater
-                    model: labelsModel
-
-                    delegate: Loader {
-                        id: labelLoader
-
-                        property var itemData: model.item
-
-                        height: parent.height - y
-                        width: itemData.width
-                        x: itemData.x
-                        y: (itemData.visualHeight + 2) * itemData.level
-                        z: itemData.level
-
-                        asynchronous: true
-
-                        visible: y < root.height
-
-                        sourceComponent: {
-                            if (!itemData.focused) {
-                                if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
-                                    return null
+                                    if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
+                                        return null
+                                    }
                                 }
 
-                                if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
-                                    return null
-                                }
+                                return labelComp
                             }
 
-                            return labelComp
-                        }
+                            Component {
+                                id: labelComp
 
-                        Component {
-                            id: labelComp
+                                LabelItem {
+                                    id: item
 
-                            LabelItem {
-                                id: item
+                                    property var itemData: labelLoader.itemData
 
-                                property var itemData: labelLoader.itemData
+                                    title: Boolean(itemData) ? itemData.title : ""
+                                    labelColor: Boolean(itemData) ? itemData.color : null
+                                    labelKey: Boolean(itemData) ? itemData.key : null
+                                    isSelected: Boolean(itemData) && itemData.selected
+                                    isFocused: Boolean(itemData) && itemData.focused
 
-                                title: Boolean(itemData) ? itemData.title : ""
-                                labelColor: Boolean(itemData) ? itemData.color : null
-                                labelKey: Boolean(itemData) ? itemData.key : null
-                                isSelected: Boolean(itemData) && itemData.selected
-                                isFocused: Boolean(itemData) && itemData.focused
+                                    selectionInProgress: root.selectionInProgress
+                                    selectionEditInProgress: root.selectionEditInProgress
+                                    verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
 
-                                selectionInProgress: root.selectionInProgress
-                                selectionEditInProgress: root.selectionEditInProgress
-                                verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
+                                    isLeftLinked: Boolean(itemData) && itemData.isLeftLinked
+                                    isRightLinked: Boolean(itemData) && itemData.isRightLinked
+                                    isLinkedActive: Boolean(itemData) && itemData.isLinkedActive
+                                    isPoint: Boolean(itemData) && itemData.isPoint
+                                    leftVisibleMargin: Boolean(itemData) ? itemData.leftVisibleMargin : 0
 
-                                isLeftLinked: Boolean(itemData) && itemData.isLeftLinked
-                                isRightLinked: Boolean(itemData) && itemData.isRightLinked
-                                isLinkedActive: Boolean(itemData) && itemData.isLinkedActive
-                                isPoint: Boolean(itemData) && itemData.isPoint
+                                    container: repeater
 
-                                container: repeater
-
-                                navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
-                                navigation.panel: root.navigationPanel
-                                navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
-                                navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
-                                navigation.onActiveChanged: {
-                                    if (navigation.highlight) {
-                                        root.context.animatedInsureVisible(itemData.time.startTime)
-                                        root.insureVerticallyVisible()
-                                    }
-                                }
-
-                                onLabelItemMousePositionChanged: function (xWithinLabel, yWithinLabel) {
-                                    var yWithinTrack = yWithinLabel
-                                    var xWithinTrack = xWithinLabel + itemData.x
-
-                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key);
-
-                                    // While a label is being moved or stretched the guideline follows the
-                                    // dragged label edge (driven by handleLabelGuideline), not the cursor —
-                                    // so only snap the guideline to the cursor when no such edit is in progress.
-                                    const editInProgress = root.moveActive || itemData.isEditing
-                                    if (!editInProgress) {
-                                        let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                        root.updateItemGuideline(time)
-                                    }
-                                }
-
-                                onRequestSelected: {
-                                    labelsModel.selectLabel(itemData.key)
-                                }
-
-                                onRequestSingleSelected: {
-                                    labelsModel.selectLabel(itemData.key)
-                                }
-
-                                onRequestSelectionReset: {
-                                    labelsModel.resetSelectedLabels()
-                                    root.selectionResetRequested()
-                                }
-
-                                onTitleEditStarted: {
-                                    itemData.isEditing = true
-                                }
-
-                                onTitleEditAccepted: function (newTitle) {
-                                    labelsModel.changeLabelTitle(itemData.key, newTitle)
-                                    labelsModel.resetSelectedLabels()
-                                }
-
-                                onTitleEditCanceled: {
-                                    labelsModel.resetSelectedLabels()
-                                }
-
-                                onTitleEditFinished: {
-                                    itemData.isEditing = false
-                                }
-
-                                onLabelStartEditRequested: function () {
-                                    itemData.isEditing = true
-                                    labelsModel.startEditItem(itemData.key)
-                                }
-
-                                onLabelEndEditRequested: function () {
-                                    labelsModel.endEditItem(itemData.key)
-                                    itemData.isEditing = false
-                                }
-
-                                onLabelLeftStretchRequested: function (unlink, completed) {
-                                    var leftLinkedLabelKey = layoutManager.leftLinkedLabel(itemData.key)
-                                    labelsModel.stretchLabelLeft(itemData.key, leftLinkedLabelKey, unlink, completed)
-
-                                    handleLabelGuideline(itemData.key, Direction.Left, completed)
-                                }
-
-                                onLabelRightStretchRequested: function (unlink, completed) {
-                                    var rightLinkedLabelKey = layoutManager.rightLinkedLabel(itemData.key)
-                                    labelsModel.stretchLabelRight(itemData.key, rightLinkedLabelKey, unlink, completed)
-
-                                    handleLabelGuideline(itemData.key, Direction.Right, completed)
-                                }
-
-                                onHeaderHoveredChanged: function () {
-                                    root.itemHeaderHoveredChanged(headerHovered)
-                                }
-
-                                onHoverChanged: function () {
-                                    root.hover = labelsContainer.checkIfAnyLabel(function (labelItem) {
-                                        return labelItem && labelItem.hover
-                                    })
-                                }
-
-                                onVisualWidthChanged: function () {
-                                    itemData.visualWidth = item.visualWidth
-                                }
-
-                                onActivateLeftLinkedLabel: {
-                                    layoutManager.activateLeftLinkedLabel(itemData.key)
-                                }
-
-                                onActivateRightLinkedLabel: {
-                                    layoutManager.activateRightLinkedLabel(itemData.key)
-                                }
-
-                                onDeactivateLinkedLabel: {
-                                    layoutManager.deactivateLinkedLabel(itemData.key)
-                                }
-
-                                Connections {
-                                    target: labelsModel
-                                    function onItemTitleEditRequested(key) {
-                                        if (key === item.itemData.key) {
-                                            item.editTitle()
+                                    navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
+                                    navigation.panel: root.navigationPanel
+                                    navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
+                                    navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
+                                    navigation.onActiveChanged: {
+                                        if (navigation.highlight) {
+                                            root.context.animatedInsureVisible(itemData.time.startTime)
+                                            root.insureVerticallyVisible()
                                         }
                                     }
-                                    function onItemContextMenuOpenRequested(key) {
-                                        if (key === item.itemData.key) {
-                                            item.openContextMenu()
+
+                                    onLabelItemMousePositionChanged: function (xWithinLabel, yWithinLabel) {
+                                        var yWithinTrack = yWithinLabel
+                                        var xWithinTrack = xWithinLabel + itemData.x
+
+                                        trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key);
+
+                                        // During a move/stretch the guideline follows the dragged edge
+                                        // (handleLabelGuideline), not the cursor.
+                                        const editInProgress = root.moveActive || itemData.isEditing
+                                        if (!editInProgress) {
+                                            let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                                            root.updateItemGuideline(time)
                                         }
                                     }
-                                }
 
-                                Component.onCompleted: {
-                                    itemData.visualHeight = item.headerDefaultHeight
+                                    onRequestSelected: {
+                                        labelsModel.selectLabel(itemData.key)
+                                    }
+
+                                    onRequestSingleSelected: {
+                                        labelsModel.selectLabel(itemData.key)
+                                    }
+
+                                    onRequestSelectLinkedGroup: function (rightSide) {
+                                        labelsModel.selectLabelWithSharedStalk(itemData.key, rightSide)
+                                    }
+
+                                    onRequestSelectionReset: {
+                                        labelsModel.resetSelectedLabels()
+                                        root.selectionResetRequested()
+                                    }
+
+                                    onTitleEditStarted: {
+                                        itemData.isEditing = true
+                                    }
+
+                                    onTitleEditAccepted: function (newTitle) {
+                                        labelsModel.changeLabelTitle(itemData.key, newTitle)
+                                        labelsModel.resetSelectedLabels()
+                                    }
+
+                                    onTitleEditCanceled: {
+                                        labelsModel.resetSelectedLabels()
+                                    }
+
+                                    onTitleEditFinished: {
+                                        itemData.isEditing = false
+                                    }
+
+                                    onLabelStartEditRequested: function () {
+                                        itemData.isEditing = true
+                                        labelsModel.startEditItem(itemData.key)
+                                    }
+
+                                    onLabelEndEditRequested: function () {
+                                        labelsModel.endEditItem(itemData.key)
+                                        itemData.isEditing = false
+                                    }
+
+                                    onLabelCancelDragEditRequested: function () {
+                                        if (labelsModel.cancelItemDragEdit(itemData.key)) {
+                                            root.itemDragEditCanceled()
+                                        }
+                                        itemData.isEditing = false
+                                        root.clearItemGuideline()
+                                    }
+
+                                    onLabelLeftStretchRequested: function (unlink, completed) {
+                                        var leftLinkedLabelKey = layoutManager.leftLinkedLabel(itemData.key)
+                                        labelsModel.stretchLabelLeft(itemData.key, leftLinkedLabelKey, unlink, completed)
+
+                                        handleLabelGuideline(itemData.key, Direction.Left, completed)
+                                    }
+
+                                    onLabelRightStretchRequested: function (unlink, completed) {
+                                        var rightLinkedLabelKey = layoutManager.rightLinkedLabel(itemData.key)
+                                        labelsModel.stretchLabelRight(itemData.key, rightLinkedLabelKey, unlink, completed)
+
+                                        handleLabelGuideline(itemData.key, Direction.Right, completed)
+                                    }
+
+                                    onHeaderHoveredChanged: function () {
+                                        root.itemHeaderHoveredChanged(headerHovered)
+                                    }
+
+                                    onHoverChanged: function () {
+                                        root.hover = labelsContainer.checkIfAnyLabel(function (labelItem) {
+                                            return labelItem && labelItem.hover
+                                        })
+                                    }
+
+                                    onVisualWidthChanged: function () {
+                                        itemData.visualWidth = item.visualWidth
+                                    }
+
+                                    onActivateLeftLinkedLabel: {
+                                        layoutManager.activateLeftLinkedLabel(itemData.key)
+                                    }
+
+                                    onActivateRightLinkedLabel: {
+                                        layoutManager.activateRightLinkedLabel(itemData.key)
+                                    }
+
+                                    onDeactivateLinkedLabel: {
+                                        layoutManager.deactivateLinkedLabel(itemData.key)
+                                    }
+
+                                    Connections {
+                                        target: labelsModel
+                                        function onItemTitleEditRequested(key) {
+                                            if (key === item.itemData.key) {
+                                                item.editTitle()
+                                            }
+                                        }
+                                        function onItemContextMenuOpenRequested(key) {
+                                            if (key === item.itemData.key) {
+                                                item.openContextMenu()
+                                            }
+                                        }
+                                    }
+
+                                    Component.onCompleted: {
+                                        itemData.visualHeight = item.headerDefaultHeight
+                                    }
                                 }
                             }
                         }
@@ -390,9 +411,6 @@ TrackItemsContainer {
     }
 
     function handleLabelGuideline(labelKey, direction, completed) {
-        // itemMoveRequested is broadcast to every track's container, but the guideline is
-        // shared across all of them. Only the container that owns the dragged label may touch
-        // it, otherwise non-owners clobber the owning track's guideline.
         if (labelsModel.containsItem(labelKey)) {
             if (completed) {
                 root.clearItemGuideline()

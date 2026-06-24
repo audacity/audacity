@@ -411,6 +411,61 @@ TEST_F(Au3TracksInteractionTests, CutTrackDataMovingClips)
     removeTrack(trackId);
 }
 
+TEST_F(Au3TracksInteractionTests, TrimTracksDataEmptySelectionIsNoOp)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Trim with an empty selection (begin == end) inside the first clip
+    const double point = TRACK_TWO_CLIPS_CLIP1_START + 4 * SAMPLE_INTERVAL;
+    m_tracksInteraction->trimTracksData({ trackTwoClipsId }, point, point);
+
+    //! [THEN] The number of intervals is unchanged
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the trim operation is not 2";
+
+    //! [THEN] Both clips are left untouched
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END);
+    const WaveTrack::IntervalConstHolder secondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(secondClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3TracksInteractionTests, TrimTracksDataInvertedSelectionIsNoOp)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Trim with an inverted selection (begin > end)
+    const double begin = TRACK_TWO_CLIPS_CLIP1_START + 4 * SAMPLE_INTERVAL;
+    const double end = TRACK_TWO_CLIPS_CLIP1_START + 2 * SAMPLE_INTERVAL;
+    m_tracksInteraction->trimTracksData({ trackTwoClipsId }, begin, end);
+
+    //! [THEN] The number of intervals is unchanged
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the trim operation is not 2";
+
+    //! [THEN] Both clips are left untouched
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END);
+    const WaveTrack::IntervalConstHolder secondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(secondClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
 TEST_F(Au3TracksInteractionTests, SplitDeleteOnRangeSelection)
 {
     //! [GIVEN] There is a project with a track and a two clips

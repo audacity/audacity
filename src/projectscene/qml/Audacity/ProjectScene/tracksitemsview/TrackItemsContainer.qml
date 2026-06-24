@@ -30,6 +30,8 @@ Item {
     property bool isLeadInRecordingTrack: false
     property double leadInRecordingStartTime: 0
 
+    property real canvasIndentWidth: 0
+
     required property bool selectionInProgress
     required property bool selectionEditInProgress
     required property bool verticalSelectionEditInProgress

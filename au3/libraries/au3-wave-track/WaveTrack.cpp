@@ -1010,6 +1010,10 @@ auto WaveTrack::SplitCut(double t0, double t1) -> Holder
 /*! @excsafety{Weak} */
 void WaveTrack::Trim(double t0, double t1)
 {
+    if (t0 >= t1) {
+        return;
+    }
+
     bool inside0 = false;
     bool inside1 = false;
 

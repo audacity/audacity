@@ -395,6 +395,7 @@ void TrackeditOperationController::cancelItemDragEdit()
         return;
     }
     clipsInteraction()->cancelClipDragEdit();
+    labelsInteraction()->resetLabelStretchState();
     projectHistory()->rollbackState();
     globalContext()->currentTrackeditProject()->reload();
 }
@@ -1056,6 +1057,11 @@ bool TrackeditOperationController::stretchLabelsRight(const LabelKeyList& labelK
         projectHistory()->pushHistoryState("Stretch", msg);
     }
     return success;
+}
+
+void TrackeditOperationController::resetLabelStretchState()
+{
+    labelsInteraction()->resetLabelStretchState();
 }
 
 muse::Progress TrackeditOperationController::progress() const

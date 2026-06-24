@@ -69,15 +69,15 @@ Rectangle {
         readonly property int headerHeight: 20
         readonly property int listHeaderHeight: 2
 
-        function cancelClipDragEdit() {
+        function cancelItemDragEdit() {
             if (mainMouseArea.pressed) {
                 // This will lead to a cancel signal on `mainMouseArea` that will call back into this function,
                 // but this time in released state.
                 mouseHelper.callUngrabMouseOnItem(mainMouseArea)
                 return
             }
-            if (root.hoveredClipKey) {
-                tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
+            if (root.hoveredItemKey) {
+                tracksItemsView.cancelItemDragEditRequested(root.hoveredItemKey)
             }
         }
 
@@ -116,7 +116,7 @@ Rectangle {
         }
 
         onEscapePressed: {
-            prv.cancelClipDragEdit()
+            prv.cancelItemDragEdit()
         }
     }
 
@@ -555,6 +555,8 @@ Rectangle {
                         root.interactionState = TracksItemsView.State.DraggingItem
                         lastItemClickKey = root.hoveredItemKey
                     } else {
+                        content.forceActiveFocus()
+
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             if (playbackState.isPlaying) {
                                 playbackState.setLastPlaybackSeekTime(timeline.context.positionToTime(e.x))
@@ -646,7 +648,7 @@ Rectangle {
 
             onCanceled: e => {
                 root.interactionState = TracksItemsView.State.Idle
-                prv.cancelClipDragEdit()
+                prv.cancelItemDragEdit()
             }
 
             onClicked: e => {
@@ -988,9 +990,9 @@ Rectangle {
                             }
 
                             onItemDragEditCanceled: {
-                                root.hoveredClipKey = null
-                                root.clipHeaderHovered = false
-                                tracksClipsView.moveActive = false
+                                root.hoveredItemKey = null
+                                root.itemHeaderHovered = false
+                                tracksItemsView.moveActive = false
                                 timeline.context.updateSelectedClipTime()
                             }
 
@@ -1078,6 +1080,7 @@ Rectangle {
                             context: timeline.context
                             container: tracksItemsView
                             canvas: content
+                            canvasIndentWidth: content.anchors.leftMargin
 
                             trackId: itemData.trackId
                             trackTitle: itemData.trackTitle
@@ -1132,6 +1135,12 @@ Rectangle {
 
                             onInteractionEnded: {
                                 tracksViewState.requestVerticalScrollUnlock()
+                            }
+
+                            onItemDragEditCanceled: {
+                                root.hoveredItemKey = null
+                                root.itemHeaderHovered = false
+                                tracksItemsView.moveActive = false
                             }
 
                             onSeekToX: function (x) {

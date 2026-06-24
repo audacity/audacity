@@ -148,6 +148,8 @@ public:
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
     virtual bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) = 0;
 
+    virtual void resetLabelStretchState() = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }

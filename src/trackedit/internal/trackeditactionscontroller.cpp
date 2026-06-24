@@ -1528,6 +1528,10 @@ void TrackeditActionsController::trimAudioOutsideSelection()
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
 
+    if (selectedStartTime >= selectedEndTime) {
+        return;
+    }
+
     std::vector<TrackId> tracksIdsToTrim;
     for (const auto& track : tracks) {
         if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
@@ -1994,7 +1998,9 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
 
 void TrackeditActionsController::addLabel()
 {
-    trackeditInteraction()->addLabelToSelection();
+    if (trackeditInteraction()->addLabelToSelection()) {
+        dispatcher()->dispatch("rename-item");
+    }
 }
 
 void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)

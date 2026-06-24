@@ -133,13 +133,13 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
     QList<LabelInfo> labels = collectLabelsInfo();
 
     for (const LabelInfo& label : labels) {
-        connect(label.item, &TrackLabelItem::startTimeChanged, this, &TrackLabelsLayoutManager::relayout);
-        connect(label.item, &TrackLabelItem::endTimeChanged, this, &TrackLabelsLayoutManager::relayout);
+        connect(label.item, &TrackLabelItem::startTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
+        connect(label.item, &TrackLabelItem::endTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
         connect(label.item, &TrackLabelItem::visualWidthChanged, [this, labelKey = label.key]() {
             QList<LabelInfo> labels = collectLabelsInfo();
             for (const LabelInfo& label : labels) {
                 if (label.key == labelKey && !label.isEditing) {
-                    relayout();
+                    scheduleRelayout();
                     break;
                 }
             }
@@ -203,6 +203,19 @@ QList<TrackLabelsLayoutManager::LabelInfo> TrackLabelsLayoutManager::collectLabe
     }
 
     return labels;
+}
+
+void TrackLabelsLayoutManager::scheduleRelayout()
+{
+    if (m_relayoutScheduled) {
+        return;
+    }
+    m_relayoutScheduled = true;
+
+    QMetaObject::invokeMethod(this, [this]() {
+        m_relayoutScheduled = false;
+        relayout();
+    }, Qt::QueuedConnection);
 }
 
 void TrackLabelsLayoutManager::relayout()

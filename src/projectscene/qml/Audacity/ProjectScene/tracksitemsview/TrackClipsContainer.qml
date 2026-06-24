@@ -758,6 +758,7 @@ TrackItemsContainer {
         }
 
         function onItemReleaseRequested(itemKey) {
+            clipsModel.handleClipRelease(itemKey)
         }
 
         function onCancelItemDragEditRequested(itemKey) {

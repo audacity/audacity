@@ -186,9 +186,14 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
 
 void Au3TrackeditProject::onTrackDataChanged(const TrackId& trackId)
 {
-    auto it = m_clipsChanged.find(trackId);
-    if (it != m_clipsChanged.end()) {
-        it->second.changed();
+    auto clipIt = m_clipsChanged.find(trackId);
+    if (clipIt != m_clipsChanged.end()) {
+        clipIt->second.changed();
+    }
+
+    auto labelIt = m_labelsChanged.find(trackId);
+    if (labelIt != m_labelsChanged.end()) {
+        labelIt->second.changed();
     }
 }
 
