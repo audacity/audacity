@@ -218,7 +218,9 @@ bool AmplifyEffect::Init()
         }
     }
     if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
-        mLastError = TranslatableString("effects-amplify", "The selected audio is silent, so there is nothing to amplify.").translated().toStdString();
+        mLastError
+            = TranslatableString("effects-amplify",
+                                 "The selected audio is silent, so there is nothing to amplify.").translated().toStdString();
         return false;
     }
     return true;
