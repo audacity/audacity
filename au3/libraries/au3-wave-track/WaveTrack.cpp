@@ -3623,6 +3623,17 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
     return result;
 }
 
+bool WaveTrack::NoPlayRegionsOverlap() const
+{
+    const auto clips = SortedIntervalArray();
+    for (size_t i = 1; i < clips.size(); ++i) {
+        if (clips[i - 1]->GetPlayEndTime() > clips[i]->GetPlayStartTime()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void WaveTrack::ZipClips(bool mustAlign)
 {
     const auto pOwner = GetOwner();
