@@ -272,7 +272,7 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
 
     if (!moveClips) {
         if (isMultiSelectionCopy) {
-            ok = clipsInteraction()->makeRoomForClipsOnTracks(dstTracksIds, copiedDataBase, begin);
+            ok = makeRoomForClipsOnTracks(dstTracksIds, copiedDataBase, begin);
         } else {
             ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
         }
@@ -1582,7 +1582,7 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
             secs_t insertDuration = trackToPaste->GetEndTime();
-            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
+            auto ok = makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
             if (!ok) {
                 return make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
@@ -1592,9 +1592,66 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
         // Clear only the ranges actually occupied by the clipboard clips so
         // that existing destination clips in the gaps between them stay intact.
         for (const auto& interval : trackToPaste->Intervals()) {
-            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i),
+            auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
                                                                  snappedBegin + interval->GetPlayStartTime(),
                                                                  snappedBegin + interval->GetPlayEndTime());
+            if (!ok) {
+                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
+        }
+    }
+
+    return muse::make_ok();
+}
+
+muse::Ret Au3TracksInteraction::makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return make_ret(trackedit::Err::TrackNotFound);
+    }
+
+    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+
+    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
+    });
+
+    for (const auto& otherClip : clips) {
+        utils::trimOrDeleteOverlapping(prj, waveTrack, begin, end, otherClip);
+    }
+
+    return make_ret(muse::Ret::Code::Ok);
+}
+
+muse::Ret Au3TracksInteraction::makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds,
+                                                         const std::vector<ITrackDataPtr>& trackData,
+                                                         secs_t begin)
+{
+    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
+        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
+    }
+
+    for (size_t i = 0; i < tracksIds.size(); ++i) {
+        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
+        IF_ASSERT_FAILED(dstWaveTrack) {
+            return make_ret(trackedit::Err::TrackNotFound);
+        }
+
+        secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
+
+        auto au3TrackData = std::dynamic_pointer_cast<Au3TrackData>(trackData.at(i));
+        if (!au3TrackData) {
+            continue;
+        }
+
+        const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(au3TrackData->track().get());
+        for (const auto& interval : wt->Intervals()) {
+            auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
+                                             snappedBegin + interval->GetPlayStartTime(),
+                                             snappedBegin + interval->GetPlayEndTime());
             if (!ok) {
                 return make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }

@@ -8,6 +8,7 @@
 
 #include "au3interactiontypes.h"
 #include "trackedittypes.h"
+#include "trackedit/itrackeditproject.h"
 #include "dom/clip.h"
 #include "au3wrap/au3types.h"
 #include <cstddef>
@@ -51,4 +52,10 @@ au::trackedit::TrackListInfo getTrackListInfo(const au3::Au3TrackList& tracks);
 bool clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack& track2);
 
 muse::Ret withProgress(muse::IInteractive& interactive, const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action);
+
+//! Trim/split/remove @p otherClip so it no longer occupies the [begin, end)
+//! region (e.g. to make room for another clip on the same track), emitting the
+//! corresponding change notifications on @p project.
+void trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack, secs_t begin, secs_t end,
+                             std::shared_ptr<au3::Au3WaveClip> otherClip);
 }

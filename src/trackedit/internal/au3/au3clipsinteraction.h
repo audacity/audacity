@@ -94,9 +94,6 @@ public:
     //! TODO
     bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const override;
     bool userIsOkWithDownmixing() const override;
-    muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<ITrackDataPtr>& trackData,
-                                       muse::secs_t begin) override;
-    muse::Ret makeRoomForDataOnTrack(const TrackId trackId, muse::secs_t begin, muse::secs_t end) override;
     bool singleClipOnTrack(const TrackId trackId) const override;
 
 private:
@@ -107,8 +104,6 @@ private:
     au3::Au3Project& projectRef() const;
 
     NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset);
-
-    void trimOrDeleteOverlapping(::WaveTrack* waveTrack, muse::secs_t begin, muse::secs_t end, std::shared_ptr<::WaveClip> otherClip);
 
     bool noPlayRegionsOverlap(const trackedit::TrackId& trackId) const;
 
