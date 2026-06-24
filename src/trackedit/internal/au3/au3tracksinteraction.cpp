@@ -271,11 +271,9 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
     projectWasModified = true;
 
     if (!moveClips) {
-        if (isMultiSelectionCopy) {
-            ok = makeRoomForClipsOnTracks(dstTracksIds, copiedDataBase, begin);
-        } else {
-            ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
-        }
+        //! NOTE: a multi-selection copy never extends an existing destination clip
+        const bool intoExistingClip = !isMultiSelectionCopy && pasteIntoExistingClip;
+        ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, intoExistingClip);
     }
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
@@ -1624,41 +1622,6 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTrack(const TrackId trackId, se
     }
 
     return make_ret(muse::Ret::Code::Ok);
-}
-
-muse::Ret Au3TracksInteraction::makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds,
-                                                         const std::vector<ITrackDataPtr>& trackData,
-                                                         secs_t begin)
-{
-    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
-        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
-    }
-
-    for (size_t i = 0; i < tracksIds.size(); ++i) {
-        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
-        IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::TrackNotFound);
-        }
-
-        secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
-
-        auto au3TrackData = std::dynamic_pointer_cast<Au3TrackData>(trackData.at(i));
-        if (!au3TrackData) {
-            continue;
-        }
-
-        const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(au3TrackData->track().get());
-        for (const auto& interval : wt->Intervals()) {
-            auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
-                                             snappedBegin + interval->GetPlayStartTime(),
-                                             snappedBegin + interval->GetPlayEndTime());
-            if (!ok) {
-                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
-            }
-        }
-    }
-
-    return muse::make_ok();
 }
 
 bool Au3TracksInteraction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)

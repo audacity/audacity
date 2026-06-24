@@ -101,7 +101,6 @@ private:
     muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin,
                                       bool pasteIntoExistingClip);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
-    muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<ITrackDataPtr>& trackData, secs_t begin);
 
     muse::Ret pasteClips(const std::vector<Au3TrackDataPtr>& copiedData, const TrackIdList& dstTracksIds, secs_t begin, bool moveClips,
                          bool isMultiSelectionCopy, bool pasteIntoExistingClip, bool& projectWasModified);
