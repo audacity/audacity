@@ -1227,7 +1227,8 @@ secs_t Au3ClipsInteraction::clampRightStretchDelta(const ClipKeyList& clipKeys,
     return deltaSec;
 }
 
-bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
+bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool completed,
+                                        const std::function<bool(Au3WaveClip&)>& edit)
 {
     bool ok = false;
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -1242,12 +1243,12 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
             return false;
         }
 
-        ok = clip->TrimLeft(deltaSec);
+        ok = edit(*clip);
 
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
-        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
-        //! but must be "de-overlapped" once the edit is complete.
+        //! NOTE: make room AFTER the edit: overlapping clips are admitted as a transient
+        //! state, but must be "de-overlapped" once the edit is complete.
         if (completed) {
             makeRoomForClip(selectedClip);
         }
@@ -1256,103 +1257,38 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
     }
 
     return ok;
+}
+
+bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
+{
+    return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
+        return clip.TrimLeft(deltaSec);
+    });
 }
 
 bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
-    bool ok = false;
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
-        }
-
-        ok = clip->TrimRight(deltaSec);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
-        //! but must be "de-overlapped" once the edit is complete.
-        if (completed) {
-            makeRoomForClip(selectedClip);
-        }
-
-        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
-    }
-
-    return ok;
+    return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
+        return clip.TrimRight(deltaSec);
+    });
 }
 
 bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
-
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
-        }
-
-        secs_t newStart = clip->GetPlayStartTime() + adjustedDelta;
-        clip->StretchLeftTo(newStart);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
-        //! but must be "de-overlapped" once the edit is complete.
-        if (completed) {
-            makeRoomForClip(selectedClip);
-        }
-
-        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
-    }
-
-    return true;
+    const secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
+    return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
+        clip.StretchLeftTo(clip.GetPlayStartTime() + adjustedDelta);
+        return true;
+    });
 }
 
 bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
-
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
-        }
-
-        secs_t newEnd = clip->GetPlayEndTime() - adjustedDelta;
-        clip->StretchRightTo(newEnd);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
-        //! but must be "de-overlapped" once the edit is complete.
-        if (completed) {
-            makeRoomForClip(selectedClip);
-        }
-
-        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
-    }
-
-    return true;
+    const secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
+    return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
+        clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
+        return true;
+    });
 }
 
 bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed)

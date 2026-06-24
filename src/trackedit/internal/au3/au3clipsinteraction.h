@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <functional>
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 
@@ -121,6 +123,9 @@ private:
     secs_t clampRightStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     bool trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
+
+    //! Returns the @p edit result for the last clip.
+    bool applyClipEdit(const ClipKeyList& clipKeys, bool completed, const std::function<bool(au3::Au3WaveClip&)>& edit);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
