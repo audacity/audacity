@@ -38,15 +38,11 @@ void TimeStretching::WithClipRenderingProgress(
                                                   std::move(title), TranslatableString("wave-track", "Rendering Clip"));
 }
 
-bool TimeStretching::SetClipStretchRatio(
-    const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio)
+bool TimeStretching::SetClipStretchRatio(WaveTrack::Interval& interval, double stretchRatio)
 {
-    const auto nextClip
-        =track.GetNextInterval(interval, PlaybackDirection::forward);
-    const auto maxEndTime = nextClip != nullptr
-                            ? nextClip->Start()
-                            : std::numeric_limits<double>::infinity();
-
+    //! NOTE: the clip is stretched freely here; resolving any overlap this may
+    //! create with a neighbouring clip is the caller's responsibility - matching
+    //! how every other clip edit behaves (see Au3ClipsInteraction::makeRoomForClip).
     const auto start = interval.Start();
     const auto end = interval.End();
 

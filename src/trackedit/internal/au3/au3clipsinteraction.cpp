@@ -1303,7 +1303,7 @@ bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed
         return false;
     }
 
-    TimeStretching::SetClipStretchRatio(*waveTrack, *clip, speed);
+    TimeStretching::SetClipStretchRatio(*clip, speed);
     makeRoomForClip(clipKey);
 
     LOGD() << "changed speed of clip: " << clipKey.itemId << ", track: " << clipKey.trackId;
