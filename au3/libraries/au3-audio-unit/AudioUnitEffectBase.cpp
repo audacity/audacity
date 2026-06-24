@@ -349,9 +349,26 @@ bool AudioUnitEffectBase::LoadSettings(
     return true;
 }
 
+bool AudioUnitEffectBase::VisitSettings(SettingsVisitor&, EffectSettings&)
+{
+    return false;
+}
+
+bool AudioUnitEffectBase::VisitSettings(
+    ConstSettingsVisitor&, const EffectSettings&) const
+{
+    return false;
+}
+
 OptionalMessage AudioUnitEffectBase::LoadUserPreset(
     const RegistryPath& name, EffectSettings& settings) const
 {
+    wxString parms;
+    if (GetConfig(*this, PluginSettings::Private, name, wxT("Parameters"),
+                  parms, wxEmptyString)
+        && !parms.IsEmpty()) {
+        return LoadSettingsFromString(parms, settings);
+    }
     // To do: externalize state so const_cast isn't needed
     return const_cast<AudioUnitEffectBase*>(this)->LoadPreset(name, settings);
 }
@@ -359,7 +376,18 @@ OptionalMessage AudioUnitEffectBase::LoadUserPreset(
 bool AudioUnitEffectBase::SaveUserPreset(
     const RegistryPath& name, const EffectSettings& settings) const
 {
-    return SavePreset(name, GetSettings(settings));
+    bool saved = false;
+
+    wxString parms;
+    if (SaveSettingsAsString(settings, parms) && !parms.IsEmpty()) {
+        saved = SetConfig(*this, PluginSettings::Private, name, wxT("Parameters"), parms);
+    }
+
+    if (SavePreset(name, GetSettings(settings))) {
+        saved = true;
+    }
+
+    return saved;
 }
 
 OptionalMessage
