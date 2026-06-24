@@ -15,6 +15,7 @@
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
 
 #include "trackitem.h"
 
@@ -42,6 +43,7 @@ class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyn
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:
     explicit PanelTracksListModel(QObject* parent = nullptr);
@@ -54,6 +56,7 @@ public:
 
     Q_INVOKABLE QItemSelectionModel* selectionModel() const;
     Q_INVOKABLE void selectRow(int row, bool exclusive = false);
+    Q_INVOKABLE void selectAudioData(int row);
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE void moveSelectedRowsUp();
     Q_INVOKABLE void moveSelectedRowsDown();
