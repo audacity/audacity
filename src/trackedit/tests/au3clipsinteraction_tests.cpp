@@ -6,6 +6,8 @@
 #include "../internal/au3/au3clipsinteraction.h"
 #include "../internal/au3/au3trackdata.h"
 
+#include "au3-wave-track/WaveTrackUtilities.h"
+
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditconfigurationmock.h"
@@ -1096,6 +1098,41 @@ TEST_F(Au3ClipsInteractionTests, TrimClipLeftOntoNeighbourResolvesOverlap)
     EXPECT_LT(secondClip->GetPlayStartTime(), firstClipEnd);
     //! [THEN] ... but the overlap was resolved
     EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+// The load-time sanitizer for projects that are already in the overlapping state
+// (the originally reported bug). WaveTrackUtilities::RemoveOverlaps is run on load,
+// before the trackedit project/UI exist.
+TEST_F(Au3ClipsInteractionTests, RemoveOverlapsClearsAlreadyOverlappingTrack)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+    //! [GIVEN] The first clip is moved via the raw clip API (bypassing the
+    //! interaction's own de-overlapping) so its play region [15,25] overlaps the
+    //! second clip [20,30] - the corrupt state a legacy project can be loaded in
+    const auto firstClip = DomAccessor::findWaveClip(track, firstClipId);
+    firstClip->SetPlayStartTime(15 * SAMPLE_INTERVAL);
+    ASSERT_FALSE(track->NoPlayRegionsOverlap()) << "Precondition: the track should overlap";
+
+    //! [WHEN] The track is de-overlapped
+    WaveTrackUtilities::RemoveOverlaps(*track);
+
+    //! [THEN] No play regions overlap ...
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+    //! [THEN] ... the earlier clip yielded its tail (trimmed back to the later clip's start) ...
+    EXPECT_DOUBLE_EQ(firstClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    //! [THEN] ... and the later clip is untouched
+    const auto secondClip = DomAccessor::findWaveClip(track, secondClipId);
+    EXPECT_DOUBLE_EQ(secondClip->GetPlayStartTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    EXPECT_DOUBLE_EQ(secondClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_END);
 
     removeTrack(trackId);
 }
