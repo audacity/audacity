@@ -1591,8 +1591,8 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
         // that existing destination clips in the gaps between them stay intact.
         for (const auto& interval : trackToPaste->Intervals()) {
             auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
-                                                                 snappedBegin + interval->GetPlayStartTime(),
-                                                                 snappedBegin + interval->GetPlayEndTime());
+                                             snappedBegin + interval->GetPlayStartTime(),
+                                             snappedBegin + interval->GetPlayEndTime());
             if (!ok) {
                 return make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
