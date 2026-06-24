@@ -3,8 +3,15 @@
  */
 
 #include "effectsutils.h"
-#include "effectstypes.h"
 
+#include <wx/string.h>
+
+#include "framework/global/iglobalconfiguration.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/log.h"
+#include "framework/global/stringutils.h"
+
+#include "effectstypes.h"
 #include "effects/vst/internal/vsttypes.h"
 #include "effects/audio_unit/internal/audiounittypes.h"
 #include "effects/lv2/internal/lv2types.h"
@@ -12,11 +19,6 @@
 #include "effects/builtin/internal/builtintypes.h"
 
 #include "au3-components/EffectInterface.h"
-
-#include "framework/global/log.h"
-#include "framework/global/stringutils.h"
-
-#include <wx/string.h>
 #include "au3-strings/wxArrayStringEx.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -125,6 +127,12 @@ static const muse::String legacyEffectCategoryString{ "Legacy" };
 
 EffectId utils::effectId(const EffectDefinitionInterface* effect)
 {
+    static muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    const muse::io::path_t rawPath = au3::wxToStdString(effect->GetPath());
+    const muse::io::path_t portablePath = globalConfiguration()->isBundledWithApp(rawPath)
+                                          ? globalConfiguration()->toBundledPath(rawPath)
+                                          : rawPath;
+
     // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
     // (e.g. an effect vendor that has an underscore in its name.)
     // TODO add defense in muse::strings utils.
@@ -133,7 +141,7 @@ EffectId utils::effectId(const EffectDefinitionInterface* effect)
             effect->GetFamily().Internal(),
             effect->GetVendor().Internal(),
             effect->GetSymbol().Internal(),
-            effect->GetPath()
+            au3::wxFromStdString(portablePath.toStdString())
         }, '_'));
 }
 

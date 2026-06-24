@@ -42,4 +42,29 @@ void KnownAudioPluginsConfigurator::init()
         }
         return out;
     });
+
+    // v3 -> v4: nyquist effects bundled with the app, do not store full path in the configuration file
+    const std::shared_ptr<muse::IGlobalConfiguration> globalConfiguration = m_globalConfiguration();
+    m_migrations()->registerMigration(3, [globalConfiguration](const muse::JsonArray& plugins) {
+        muse::JsonArray out;
+        for (size_t i = 0; i < plugins.size(); ++i) {
+            muse::JsonObject obj = plugins.at(i).toObject();
+
+            const std::string path = obj.value("path").toStdString();
+            if (globalConfiguration->isBundledWithApp(path)) {
+                const std::string portable = globalConfiguration->toBundledPath(path).toStdString();
+                obj.set("path", portable);
+
+                muse::JsonObject meta = obj.value("meta").toObject();
+                std::string id = meta.value("id").toStdString();
+                if (id.size() >= path.size() && id.compare(id.size() - path.size(), path.size(), path) == 0) {
+                    meta.set("id", id.substr(0, id.size() - path.size()) + portable);
+                    obj.set("meta", meta);
+                }
+            }
+
+            out << obj;
+        }
+        return out;
+    });
 }

@@ -115,7 +115,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         while (it != thirdPartyPluginPaths.end()) {
             const auto& reader = pathToMetaReader.at(*it);
             const muse::RetVal<muse::audioplugins::PluginMetaList> ret = reader->readMeta(*it);
-            IF_ASSERT_FAILED(ret.ret) {
+            if (!ret.ret) {
                 it = thirdPartyPluginPaths.erase(it);
                 continue;
             }

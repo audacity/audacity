@@ -2,9 +2,12 @@
 * Audacity: A Digital Audio Editor
 */
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include "global/serialization/json.h"
 #include "global/modularity/ioc.h"
+#include "global/iglobalconfiguration.h"
+#include "global/tests/mocks/globalconfigurationmock.h"
 
 #include "audioplugins/internal/knownaudiopluginsmigrationregister.h"
 
@@ -15,6 +18,9 @@
 using namespace muse;
 using namespace muse::audioplugins;
 using namespace au::effects;
+
+using ::testing::NiceMock;
+using ::testing::Return;
 
 // Covers the Audacity-specific v2 -> v3 known-audio-plugins migration installed
 // by KnownAudioPluginsConfigurator: pre-revamp caches stored builtin effects as
@@ -27,6 +33,7 @@ protected:
     static constexpr const char* MODULE = "effects_base_tests";
 
     std::shared_ptr<KnownAudioPluginsMigrationRegister> m_register;
+    std::shared_ptr<GlobalConfigurationMock> m_globalConfiguration;
 
     void SetUp() override
     {
@@ -37,6 +44,10 @@ protected:
         m_register = std::make_shared<KnownAudioPluginsMigrationRegister>();
         muse::modularity::globalIoc()->registerExport<IKnownAudioPluginsMigrationRegister>(MODULE, m_register);
 
+        muse::modularity::globalIoc()->unregister<IGlobalConfiguration>(MODULE);
+        m_globalConfiguration = std::make_shared<NiceMock<GlobalConfigurationMock> >();
+        muse::modularity::globalIoc()->registerExport<IGlobalConfiguration>(MODULE, m_globalConfiguration);
+
         KnownAudioPluginsConfigurator configurator;
         configurator.init();
     }
@@ -44,6 +55,7 @@ protected:
     void TearDown() override
     {
         muse::modularity::globalIoc()->unregister<IKnownAudioPluginsMigrationRegister>(MODULE);
+        muse::modularity::globalIoc()->unregister<IGlobalConfiguration>(MODULE);
     }
 
     static JsonObject makeEntry(const std::string& type, const std::string& id, const std::string& path)
