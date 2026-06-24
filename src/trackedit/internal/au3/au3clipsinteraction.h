@@ -108,6 +108,8 @@ private:
 
     void trimOrDeleteOverlapping(::WaveTrack* waveTrack, muse::secs_t begin, muse::secs_t end, std::shared_ptr<::WaveClip> otherClip);
 
+    bool noPlayRegionsOverlap(const trackedit::TrackId& trackId) const;
+
     std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
     std::optional<secs_t> leftmostClipStartTime(const ClipKeyList& clipKeys) const;
     bool anyLeftFullyUntrimmed(const ClipKeyList& clipKeys) const;

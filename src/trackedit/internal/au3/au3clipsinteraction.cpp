@@ -120,13 +120,6 @@ bool Au3ClipsInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey,
         return false;
     }
 
-    if (completed) {
-        auto ok = makeRoomForClip(clipKey);
-        if (!ok) {
-            return false;
-        }
-    }
-
     if (!muse::RealIsEqualOrMore(newStartTime, 0.0)) {
         newStartTime = 0.0;
     }
@@ -139,6 +132,10 @@ bool Au3ClipsInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey,
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    if (completed) {
+        makeRoomForClip(clipKey);
+    }
 
     m_clipStartTimeChanged.send(clipKey, newStartTime, completed);
 
@@ -750,7 +747,17 @@ muse::Ret Au3ClipsInteraction::makeRoomForClip(const ClipKey& clipKey)
         trimOrDeleteOverlapping(waveTrack, clip->GetPlayStartTime(), clip->GetPlayEndTime(), otherClip);
     }
 
+    IF_ASSERT_FAILED(noPlayRegionsOverlap(clipKey.trackId)) {
+        return make_ret(trackedit::Err::UnknownError);
+    }
+
     return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+bool Au3ClipsInteraction::noPlayRegionsOverlap(const trackedit::TrackId& trackId) const
+{
+    const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    return !waveTrack || waveTrack->NoPlayRegionsOverlap();
 }
 
 ClipKeyList Au3ClipsInteraction::clipsOnTrack(const TrackId trackId)
@@ -793,6 +800,10 @@ bool Au3ClipsInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKe
         clip->SetClipTempo(projectTempo);
         clip->StretchRightTo(expectedEndTime);
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: matching the project tempo can grow the clip into its neighbour;
+        //! resolve any resulting overlap (this path previously made no room at all).
+        makeRoomForClip(clipKey);
     }
 
     return true;
@@ -1219,6 +1230,7 @@ secs_t Au3ClipsInteraction::clampRightStretchDelta(const ClipKeyList& clipKeys,
 bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     bool ok = false;
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1230,17 +1242,16 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
             return false;
         }
 
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                return false;
-            }
-        }
-
         ok = clip->TrimLeft(deltaSec);
 
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
+        //! but must be "de-overlapped" once the edit is complete.
+        if (completed) {
+            makeRoomForClip(selectedClip);
+        }
+
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
@@ -1261,17 +1272,17 @@ bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t del
             return false;
         }
 
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                make_ret(trackedit::Err::FailedToMakeRoomForClip);
-            }
-        }
-
         ok = clip->TrimRight(deltaSec);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
+        //! but must be "de-overlapped" once the edit is complete.
+        if (completed) {
+            makeRoomForClip(selectedClip);
+        }
+
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
@@ -1293,18 +1304,18 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
             return false;
         }
 
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                return false;
-            }
-        }
-
         secs_t newStart = clip->GetPlayStartTime() + adjustedDelta;
         clip->StretchLeftTo(newStart);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
+        //! but must be "de-overlapped" once the edit is complete.
+        if (completed) {
+            makeRoomForClip(selectedClip);
+        }
+
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
@@ -1326,18 +1337,18 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
             return false;
         }
 
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                make_ret(trackedit::Err::FailedToMakeRoomForClip);
-            }
-        }
-
         secs_t newEnd = clip->GetPlayEndTime() - adjustedDelta;
         clip->StretchRightTo(newEnd);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: make room AFTER the edit: overlapping clips are admitted as transient state,
+        //! but must be "de-overlapped" once the edit is complete.
+        if (completed) {
+            makeRoomForClip(selectedClip);
+        }
+
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
