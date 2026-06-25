@@ -105,7 +105,7 @@ au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::i
             continue;
         }
 
-        auto inFile = plugin->Open(filePath.toStdString(), project);
+        auto inFile = plugin->Open(wxFromPath(filePath), project);
         if ((inFile != NULL) && (inFile->GetStreamCount() > 0)) {
             fileInfo.path = filePath;
             fileInfo.duration = inFile->GetDuration();
@@ -147,7 +147,7 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     {
         ImportProgress importProgress(*project);
         bool success = Importer::Get().Import(
-            *project, wxFromString(filePath.toString()), &importProgress, &WaveTrackFactory::Get(*project),
+            *project, wxFromPath(filePath), &importProgress, &WaveTrackFactory::Get(*project),
             newTracks, newTags.get(), acidTags, errorMessage);
 
         if (!success) {
@@ -199,7 +199,7 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
 
     {
         ImportProgress importProgressListener(*project);
-        const wxString wxPath = filePath.toString().toUtf8().constData();
+        const wxString wxPath = wxFromPath(filePath);
         const bool ok = Importer::Get().Import(
             *project,
             wxPath,
@@ -216,7 +216,7 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         }
     } // ImportProgress (and its dialog) destroyed here, before tempo detection
 
-    std::string baseName = filename(filePath, false).toStdString();
+    wxString baseName = wxFromPath(muse::io::filename(filePath, false));
     std::vector<ITrackDataPtr> importedData;
     std::vector<WaveTrack*> importedWaveTracks;
     for (auto& holder : tmpTracks) {
@@ -328,8 +328,8 @@ void au::importexport::Au3Importer::applyImportedProjectTitleIfNeeded(const muse
         return;
     }
 
-    project->SetProjectName(wxFromString(filename(filePath, false).toString()));
-    project->SetInitialImportPath(wxFromString(dirpath(filePath).toString()));
+    project->SetProjectName(wxFromPath(muse::io::filename(filePath, false)));
+    project->SetInitialImportPath(wxFromPath(muse::io::dirpath(filePath)));
     projectFileIO.SetProjectTitle();
 }
 
@@ -352,7 +352,7 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
 
     std::vector<Track*> results;
 
-    wxFileName fn(wxFromString(fileName.toString()));
+    wxFileName fn(wxFromPath(fileName));
 
     double newRate = 0;
     wxString trackNameBase = fn.GetName();
@@ -393,8 +393,8 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
         newTrack->SetSelected(true);
         if (useSuffix) {
             //: Name default name assigned to a clip on track import
-            newTrack->SetName(::TranslatableString("import-export", "%1 %2", "clip name template")
-                              .arg(trackNameBase).arg(i + 1).translated().toStdString());
+            newTrack->SetName(wxFromString(::TranslatableString("import-export", "%1 %2", "clip name template")
+                                           .arg(trackNameBase).arg(i + 1).translated()));
         } else {
             newTrack->SetName(trackNameBase);
         }

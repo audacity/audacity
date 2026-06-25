@@ -179,7 +179,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
     }
 
-    wxFileName wxfilename = wxFromString(path.toString());
+    wxFileName wxfilename = wxFromPath(path);
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {

@@ -8,6 +8,7 @@
 #include "au3-label-track/LabelTrack.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/domconverter.h"
 
 #include "labelsutils.h"
@@ -22,7 +23,7 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    wxTextFile textFile(wxString(filePath.toStdString()));
+    wxTextFile textFile(wxFromPath(filePath));
 
     if (!textFile.Open()) {
         return muse::make_ret(muse::Ret::Code::InternalError);
