@@ -94,6 +94,10 @@ void ExportPreferencesModel::init()
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
     });
+
+    exportConfiguration()->trimBlankSpaceChanged().onNotify(this, [this] {
+        emit trimBlankSpaceChanged();
+    });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
@@ -197,6 +201,20 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
     }
 
     exportConfiguration()->setProcessType(type);
+}
+
+bool ExportPreferencesModel::trimBlankSpace() const
+{
+    return exportConfiguration()->trimBlankSpace();
+}
+
+void ExportPreferencesModel::setTrimBlankSpace(bool trim)
+{
+    if (trim == exportConfiguration()->trimBlankSpace()) {
+        return;
+    }
+
+    exportConfiguration()->setTrimBlankSpace(trim);
 }
 
 QVariantList ExportPreferencesModel::processList() const

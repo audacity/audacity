@@ -22,6 +22,10 @@ public:
     void setProcessType(ExportProcessType process) override;
     muse::async::Notification processTypeChanged() const override;
 
+    bool trimBlankSpace() const override;
+    void setTrimBlankSpace(bool trim) override;
+    muse::async::Notification trimBlankSpaceChanged() const override;
+
     muse::io::path_t directoryPath() const override;
     void setDirectoryPath(const muse::io::path_t& path) override;
     muse::async::Notification directoryPathChanged() const override;
@@ -146,6 +150,7 @@ public:
 private:
 
     muse::async::Notification m_processChanged;
+    muse::async::Notification m_trimBlankSpaceChanged;
     muse::async::Notification m_filenameChanged;
     muse::async::Notification m_directoryPathChanged;
     muse::async::Notification m_currentFormatChanged;
