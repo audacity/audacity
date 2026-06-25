@@ -7,6 +7,7 @@ set(MODULE_TEST effects_base_tests)
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
     ${CMAKE_CURRENT_LIST_DIR}/config_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/effectsutils_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/pluginmigration_tests.cpp
 )
 
