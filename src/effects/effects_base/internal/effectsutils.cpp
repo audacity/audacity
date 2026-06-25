@@ -22,6 +22,10 @@
 #include "au3-strings/wxArrayStringEx.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include <algorithm>
+#include <cctype>
+#include <iterator>
+
 namespace au::effects {
 muse::String utils::effectFamilyToString(EffectFamily family)
 {
@@ -159,12 +163,73 @@ std::string parseEffectIdPart(const effects::EffectId& effectId, size_t partInde
     }
     return {};
 }
+
+std::string toLower(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char ch) {
+        return static_cast<char>(std::tolower(ch));
+    });
+    return value;
+}
+
+std::string vst3ClassId(const EffectId& effectId)
+{
+    const std::string path = utils::parseEffectPath(effectId);
+    const auto separator = path.rfind(';');
+    if (separator == std::string::npos || separator + 1 == path.size()) {
+        return {};
+    }
+    return toLower(path.substr(separator + 1));
+}
 }
 
 bool utils::isEffectId(const EffectId& effectId)
 {
     const auto strings = wxSplit(au3::wxFromString(effectId), '_');
     return strings.size() == effectIdPartCount && strings[0] == wxString("Effect");
+}
+
+EffectId utils::findRelocatedVst3EffectId(const EffectId& effectId, const EffectMetaList& metaList)
+{
+    if (utils::parseEffectFamily(effectId) != "VST3") {
+        return {};
+    }
+
+    const std::string classId = vst3ClassId(effectId);
+    if (classId.empty()) {
+        return {};
+    }
+
+    const auto exact = std::find_if(metaList.begin(), metaList.end(), [&](const EffectMeta& meta) {
+        return meta.family == EffectFamily::VST3
+               && meta.isLoadable()
+               && meta.id == effectId;
+    });
+    if (exact != metaList.end()) {
+        return {};
+    }
+
+    EffectMetaList candidates;
+    std::copy_if(metaList.begin(), metaList.end(), std::back_inserter(candidates), [&](const EffectMeta& meta) {
+        return meta.family == EffectFamily::VST3
+               && meta.isLoadable()
+               && meta.id != effectId
+               && vst3ClassId(meta.id) == classId;
+    });
+
+    if (candidates.size() == 1) {
+        return candidates.front().id;
+    }
+
+    const std::string vendor = utils::parseEffectVendor(effectId);
+    const std::string name = utils::parseEffectName(effectId);
+
+    candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const EffectMeta& meta) {
+        return utils::parseEffectVendor(meta.id) != vendor
+               || utils::parseEffectName(meta.id) != name;
+    }), candidates.end());
+
+    return candidates.size() == 1 ? candidates.front().id : EffectId {};
 }
 
 std::string utils::parseEffectName(const EffectId& effectId)

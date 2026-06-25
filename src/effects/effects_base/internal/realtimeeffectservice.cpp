@@ -2,6 +2,7 @@
 
 #include "realtimeeffectrestorer.h"
 #include "realtimeeffectserviceutils.h"
+#include "effectsutils.h"
 
 #include "au3-audio-io/AudioIO.h"
 
@@ -14,6 +15,7 @@
 #include "project/iaudacityproject.h"
 
 #include "global/types/translatablestring.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 namespace au::effects {
 /*!
@@ -438,6 +440,18 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     });
 }
 
+wxString RealtimeEffectService::resolveEffectId(const PluginID& id)
+{
+    const auto provider = wEffectsProvider.lock();
+    if (!provider) {
+        return {};
+    }
+
+    const EffectId resolved = utils::findRelocatedVst3EffectId(EffectId::fromStdString(id.ToStdString()),
+                                                               provider->effectMetaList());
+    return resolved.empty() ? wxString {} : au3::wxFromString(resolved);
+}
+
 bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) const
 {
     if (!state) {
@@ -453,3 +467,4 @@ bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) con
 
 // Inject a factory for realtime effects
 static RealtimeEffectState::EffectFactory::Scope scope{ &au::effects::RealtimeEffectService::getInstanceFactory };
+static RealtimeEffectState::EffectIdResolver::Scope idResolverScope{ &au::effects::RealtimeEffectService::resolveEffectId };
