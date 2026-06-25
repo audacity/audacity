@@ -83,8 +83,7 @@ void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, co
 
 BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& message, BasicUI::MessageBoxOptions options)
 {
-    const auto translatedMessage = message.translated().toStdString();
-    LOGI() << translatedMessage;
+    LOGI() << message.translated().toStdString();
 
     auto inter = interactiveForContext(contextFromPlacement(options.parent));
     if (!inter) {
@@ -128,16 +127,22 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& m
     switch (options.iconStyle) {
     case BasicUI::Icon::None:
     case BasicUI::Icon::Information:
-        iret = inter->infoSync("", translatedMessage, buttons);
+        iret = inter->infoSync(contentTitle, body, buttons,
+                               int(muse::IInteractive::Button::NoButton), {}, dialogTitle);
         break;
     case BasicUI::Icon::Question:
-        iret = inter->questionSync("", translatedMessage, buttons);
+        iret = inter->questionSync(contentTitle, body, buttons,
+                                   int(muse::IInteractive::Button::NoButton), {}, dialogTitle);
         break;
     case BasicUI::Icon::Error:
-        iret = inter->errorSync("", translatedMessage, buttons);
+        iret = inter->errorSync(contentTitle, body, buttons,
+                                int(muse::IInteractive::Button::NoButton),
+                                { muse::IInteractive::Option::WithIcon }, dialogTitle);
         break;
     case BasicUI::Icon::Warning:
-        iret = inter->warningSync("", translatedMessage, buttons);
+        iret = inter->warningSync(contentTitle, body, buttons,
+                                  int(muse::IInteractive::Button::NoButton),
+                                  { muse::IInteractive::Option::WithIcon }, dialogTitle);
         break;
     default:
         iret = { static_cast<int>(muse::IInteractive::Button::NoButton) };
