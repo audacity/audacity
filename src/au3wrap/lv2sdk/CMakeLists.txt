@@ -3,62 +3,14 @@
 #
 declare_module(lv2sdk)
 
-include(FetchContent)
-FetchContent_Declare(
-   lv2
-   GIT_REPOSITORY https://gitlab.com/lv2/lv2.git
-   # The latest tag, v1.18.10, doesn't have the Qt6UI type yet,
-   # which we want to give a chance to.
-   GIT_TAG 4b8760cec9636a1d9757afa79ceee2111b86e98b
-)
-FetchContent_MakeAvailable(lv2)
-
-set( LILV_VERSION 0.24.26 )
-FetchContent_Declare(
-   lilv
-   GIT_REPOSITORY https://gitlab.com/lv2/lilv.git
-   GIT_TAG v${LILV_VERSION}
-)
-FetchContent_MakeAvailable(lilv)
-
-FetchContent_Declare(
-   zix
-   GIT_REPOSITORY https://github.com/drobilla/zix.git
-   GIT_TAG v0.6.2
-)
-FetchContent_MakeAvailable(zix)
-
-set( SORD_VERSION 0.16.18 )
-FetchContent_Declare(
-   sord
-   GIT_REPOSITORY https://github.com/drobilla/sord.git
-   GIT_TAG v${SORD_VERSION}
-)
-FetchContent_MakeAvailable(sord)
-
-set( SERD_VERSION 0.32.4 )
-FetchContent_Declare(
-   serd
-   GIT_REPOSITORY https://github.com/drobilla/serd.git
-   GIT_TAG v${SERD_VERSION}
-)
-FetchContent_MakeAvailable(serd)
-
-set( SRATOM_VERSION 0.6.18 )
-FetchContent_Declare(
-   sratom
-   GIT_REPOSITORY https://gitlab.com/lv2/sratom.git
-   GIT_TAG v${SRATOM_VERSION}
-)
-FetchContent_MakeAvailable(sratom)
-
-set( SUIL_VERSION 0.10.22 )
-FetchContent_Declare(
-   suil
-   GIT_REPOSITORY https://gitlab.com/lv2/suil.git
-   GIT_TAG v${SUIL_VERSION}
-)
-FetchContent_MakeAvailable(suil)
+get_property(lv2sdk_SOURCE_DIR GLOBAL PROPERTY lv2sdk_SOURCE_DIR)
+set( lv2_SOURCE_DIR    ${lv2sdk_SOURCE_DIR}/lv2 )
+set( lilv_SOURCE_DIR   ${lv2sdk_SOURCE_DIR}/lilv )
+set( zix_SOURCE_DIR    ${lv2sdk_SOURCE_DIR}/zix )
+set( sord_SOURCE_DIR   ${lv2sdk_SOURCE_DIR}/sord )
+set( serd_SOURCE_DIR   ${lv2sdk_SOURCE_DIR}/serd )
+set( sratom_SOURCE_DIR ${lv2sdk_SOURCE_DIR}/sratom )
+set( suil_SOURCE_DIR   ${lv2sdk_SOURCE_DIR}/suil )
 
 set( SOURCES
 

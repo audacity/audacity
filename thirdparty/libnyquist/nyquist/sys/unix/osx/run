@@ -1,5 +1,0 @@
-#csh
-# INSTRUCTIONS: for developers, in the top nyquist directory:
-#    ln -l sys/unix/osx/run
-#    ln -s macosxproject/build/ny
-java -cp jnyqide/NyquistIDE.jar jnyqide.Main

@@ -1,0 +1,50 @@
+require_dep(expat)
+
+if (AU_USE_LIBCURL)
+    if (NOT OS_IS_WIN)
+        require_dep(openssl SYSTEM)
+    endif()
+    require_dep(libcurl SYSTEM)
+endif()
+
+require_dep(ogg)
+require_dep(vorbis)
+require_dep(flac)
+require_dep(opus)
+require_dep(opusfile)
+require_dep(lame)
+
+# mpg123 asm optimizations on windows require yasm
+if (OS_IS_WIN AND NOT CMAKE_CXX_COMPILER_ARCHITECTURE_ID MATCHES "[Aa][Rr][Mm]64")
+    require_tool(yasm)
+endif()
+
+require_dep(mpg123)
+require_dep(wavpack)
+require_dep(libsndfile)
+require_dep(portaudio)
+require_dep(wxwidgets)
+
+
+if (AU_MODULE_EFFECTS_LV2)
+    require_source_dep(lv2sdk)
+endif()
+if (AU_MODULE_EFFECTS_VST)
+    require_source_dep(vst3sdk)
+endif()
+require_source_dep(loop-tempo-estimator)
+require_source_dep(tft)
+require_source_dep(rapidjson)
+require_source_dep(nyquist)
+require_source_dep(pffft)
+require_source_dep(sqlite)
+require_source_dep(twolame)
+require_source_dep(soxr)
+
+if (AU_USE_SOUNDTOUCH)
+    require_source_dep(soundtouch)
+endif()
+
+if (AU_USE_SBSMS)
+    require_source_dep(sbsms)
+endif()

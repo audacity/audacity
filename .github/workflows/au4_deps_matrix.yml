@@ -1,0 +1,212 @@
+name: '[AU4] Deps matrix'
+
+# Validates dependency consumption in every mode x platform x arch, in parallel:
+#   prebuilt  - lock-verified prebuilt archives (default)
+#   source    - rebuild every dep from source (EXTDEPS_OVERRIDE_ALL=REBUILD)
+#   system    - Linux only: consume the distro's system libraries (EXTDEPS_OVERRIDE_ALL=SYSTEM)
+# macOS covers every lock arch (universal, arm64, x86_64) from the arm64 runner;
+# empty OSX_ARCHITECTURES means the default universal build.
+# Full pipeline: configure, build, self-contained check, dump_syms, package
+# (AppImage / dmg / 7z) - no signing/notarization/sentry/upload.
+
+on:
+  workflow_dispatch:
+  # workflow_dispatch only registers on the default branch; trigger this from a
+  # feature branch by pushing it to the dedicated `deps-matrix-ci` branch.
+  push:
+    branches: [deps-matrix-ci]
+
+env:
+  CI_DIR: buildscripts/ci
+
+jobs:
+  build:
+    name: ${{ matrix.runner }}${{ matrix.arch && format(' {0}', matrix.arch) || '' }} · ${{ matrix.mode }}${{ matrix.cc && format(' ({0})', matrix.cc) || '' }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: linux,   mode: prebuilt, arch: x86_64,  runner: ubuntu-22.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
+          - { os: linux,   mode: source,   arch: x86_64,  runner: ubuntu-22.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
+          - { os: linux,   mode: prebuilt, arch: aarch64, runner: ubuntu-24.04-arm, qt_host: linux_arm64,   qt_arch: linux_gcc_arm64 }
+          - { os: linux,   mode: source,   arch: aarch64, runner: ubuntu-24.04-arm, qt_host: linux_arm64,   qt_arch: linux_gcc_arm64 }
+          - { os: linux,   mode: system,   arch: x86_64,  runner: ubuntu-24.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
+          - { os: linux,   mode: source,   arch: x86_64,  runner: ubuntu-24.04,     qt_host: linux,         qt_arch: linux_gcc_64, cc: gcc-15 }
+          - { os: windows, mode: prebuilt, arch: x86_64,  runner: windows-2022,     qt_host: windows,       qt_arch: win64_msvc2022_64 }
+          - { os: windows, mode: source,   arch: x86_64,  runner: windows-2022,     qt_host: windows,       qt_arch: win64_msvc2022_64 }
+          - { os: windows, mode: prebuilt, arch: aarch64, runner: windows-11-arm,   qt_host: windows_arm64, qt_arch: win64_msvc2022_arm64 }
+          - { os: windows, mode: source,   arch: aarch64, runner: windows-11-arm,   qt_host: windows_arm64, qt_arch: win64_msvc2022_arm64 }
+          - { os: macos,   mode: prebuilt, runner: macos-26, arch: universal, osx_arch: '',     qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: source,   runner: macos-26, arch: universal, osx_arch: '',     qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: prebuilt, runner: macos-26, arch: arm64,     osx_arch: arm64,  qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: source,   runner: macos-26, arch: arm64,     osx_arch: arm64,  qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: prebuilt, runner: macos-26, arch: x86_64,    osx_arch: x86_64, qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: source,   runner: macos-26, arch: x86_64,    osx_arch: x86_64, qt_host: mac, qt_arch: clang_64 }
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      # ci_build.bat runs native vcvars itself; on the arm runner ilammy would
+      # layer an x64 environment underneath it for nothing.
+      - name: Setup MSVC
+        if: matrix.os == 'windows' && matrix.runner != 'windows-11-arm'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # Qt's arm64 install needs an x64 python (no arm64 aqtinstall wheels)
+      - name: Setup x64 Python (WoA)
+        if: matrix.runner == 'windows-11-arm'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          setup-python: ${{ matrix.runner != 'windows-11-arm' }}
+          version: '6.10.1'
+          host: ${{ matrix.qt_host }}
+          target: 'desktop'
+          arch: ${{ matrix.qt_arch }}
+          modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+          cache: true
+
+      - name: Platform setup
+        shell: bash
+        run: |
+          case "${{ matrix.os }}" in
+            linux)   bash ${CI_DIR}/linux/setup.sh ;;
+            macos)   bash ${CI_DIR}/macos/setup.sh ;;
+            windows) cmake -P ${CI_DIR}/windows/setup.cmake ;;
+          esac
+
+      - name: Select dependency mode (${{ matrix.mode }})
+        shell: bash
+        run: |
+          case "${{ matrix.mode }}" in
+            source)
+              echo "EXTDEPS_OVERRIDE_ALL=REBUILD" >> "$GITHUB_ENV"
+              ;;
+            system)
+              # Linux: provide every dep from the distro, then consume it
+              sudo apt-get update
+              sudo apt-get install -y \
+                libogg-dev libvorbis-dev libflac-dev libflac++-dev libopus-dev libopusfile-dev \
+                libmp3lame-dev libmpg123-dev libwavpack-dev libsndfile1-dev \
+                portaudio19-dev libexpat1-dev zlib1g-dev libwxgtk3.2-dev \
+                pkg-config libfreetype-dev libharfbuzz-dev libpugixml-dev libutfcpp-dev
+              echo "EXTDEPS_OVERRIDE_ALL=SYSTEM" >> "$GITHUB_ENV"
+              ;;
+            prebuilt)
+              : # default: lock-verified prebuilts, nothing to set
+              ;;
+          esac
+
+      - name: Install GCC 15 (toolchain PPA)
+        if: matrix.cc == 'gcc-15'
+        shell: bash
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y gcc-15 g++-15
+          echo "CC=gcc-15" >> "$GITHUB_ENV"
+          echo "CXX=g++-15" >> "$GITHUB_ENV"
+          gcc-15 --version | head -1
+
+      - name: Configure workflow
+        shell: bash
+        run: cmake -DEVENT=workflow_dispatch -DBUILD_MODE=devel_build -DARTIFACT_INFO="deps_${{ matrix.os }}${{ matrix.arch && format('_{0}', matrix.arch) || '' }}_${{ matrix.mode }}" -P ${CI_DIR}/common/ci_configure.cmake
+
+      - name: Build
+        shell: bash
+        env:
+          OSX_ARCHITECTURES: ${{ matrix.osx_arch || '' }}
+        run: |
+          case "${{ matrix.os }}" in
+            # crashpad needs no system library; it is never built in system mode
+            # (require_tool would have no system tool to resolve), so turn the client off there.
+            linux)   source $HOME/build_tools/environment.sh; cmake -DCRASH_REPORT_URL="''" -DENABLE_CRASHPAD_CLIENT=${{ matrix.mode == 'system' && 'OFF' || 'ON' }} -P ${CI_DIR}/linux/ci_build.cmake ;;
+            macos)   source $HOME/build_tools/environment.sh; cmake -DCRASH_REPORT_URL="''" -P ${CI_DIR}/macos/ci_build.cmake ;;
+            windows) source /c/build_tools/environment.sh;     cmake -DCRASH_REPORT_URL="''" -P ${CI_DIR}/windows/ci_build.cmake ;;
+          esac
+
+      # The crash-symbol pipeline must work wherever crashpad runs: prebuilt
+      # mode validates the dump_syms lock fetch, source mode the recipe build.
+      # Generate-only, no sentry upload. Skipped on WoA (crashpad is off there)
+      # and in system mode (no distro ships dump_syms).
+      - name: Validate dump_syms (generate symbols, no upload)
+        if: matrix.runner != 'windows-11-arm' && matrix.mode != 'system'
+        shell: bash
+        run: |
+          case "${{ matrix.os }}" in
+            linux)
+              APP_BIN=$(find "$(pwd)/build.release/src/app/" -type f -name "audacity4portable*" -print -quit)
+              cmake -DAPP_BIN="$APP_BIN" -P muse/buildscripts/ci/crashdumps/ci_generate_dumpsyms.cmake
+              ;;
+            macos)
+              case "${{ matrix.arch }}" in
+                universal) ARCHS="x86_64 arm64" ;;
+                *)         ARCHS="${{ matrix.arch }}" ;;
+              esac
+              # the build-tree binary: dump_syms resolves dependent dylibs via
+              # rpaths, which only the build tree satisfies pre-packaging (the
+              # production sentry path runs post-Package, where Frameworks/ is
+              # populated)
+              cmake -DAPP_BIN="$(pwd)/build.release/src/app/audacity.app/Contents/MacOS/audacity" \
+                    -DGENERATE_ARCHS="$ARCHS" \
+                    -DBUILD_DIR="$(pwd)/build.release" \
+                    -P muse/buildscripts/ci/crashdumps/ci_generate_dumpsyms.cmake
+              ;;
+            windows)
+              cmake -DAPP_BIN="$(pwd)/build.release/Audacity4.pdb" -P muse/buildscripts/ci/crashdumps/ci_generate_dumpsyms.cmake
+              ;;
+          esac
+          test -n "$(find build.artifacts/symbols -name '*.sym' -print -quit)" || { echo "no .sym files generated"; exit 1; }
+
+      # Owned (extdeps-built) libraries must resolve inside the bundle, not to
+      # system paths. Skipped in system mode, which consumes distro libs on
+      # purpose. Runs before Package, which mutates build.install.
+      - name: Check bundled deps are self-contained
+        if: matrix.os == 'linux' && matrix.mode != 'system'
+        shell: bash
+        run: |
+          APP=$(find build.install -type f -name 'audacity4*' -path '*bin*' -print -quit)
+          bash ${CI_DIR}/linux/check_self_contained.sh "$APP"
+
+      # The crashpad handler is now produced by ExtDeps (source recipe / lock
+      # prebuilt) with statically linked BoringSSL, replacing the checked-in
+      # binary that dynamically needed the EOL libssl.so.1.1. Confirm the
+      # installed handler is a working executable whose dynamic deps resolve.
+      # Runs before Package (which mutates build.install). Skipped on WoA
+      # (crashpad off), system mode, and macOS x86_64 (cross-arch exec on the
+      # arm64 runner).
+      - name: Verify crashpad_handler runs
+        if: matrix.runner != 'windows-11-arm' && matrix.mode != 'system' && !(matrix.os == 'macos' && matrix.arch == 'x86_64')
+        shell: bash
+        run: |
+          HANDLER=$(find build.install -type f -name 'crashpad_handler*' -print -quit)
+          test -n "$HANDLER" || { echo "crashpad_handler not installed (crashpad enabled but handler missing)"; exit 1; }
+          echo "found: $HANDLER"
+          "$HANDLER" --help > cpad_out.txt 2>&1 || true
+          grep -qi 'usage' cpad_out.txt || { echo "crashpad_handler failed to start:"; cat cpad_out.txt; exit 1; }
+          echo "crashpad_handler starts cleanly"
+
+      # Package the install tree into the production artifact (AppImage / dmg /
+      # 7z) to validate the deps survive packaging. The AppImage path exercises
+      # the extdeps require_tool wiring. No signing/notarization/upload.
+      - name: Package
+        if: matrix.mode != 'system'
+        shell: bash
+        run: |
+          case "${{ matrix.os }}" in
+            linux)   cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/linux/package.cmake ;;
+            macos)   cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/macos/package.cmake ;;
+            windows) cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake ;;
+          esac
+          # package.cmake's execute_process does not propagate failures; assert
+          # the artifact landed.
+          test -n "$(find build.artifacts -maxdepth 1 -type f \( -name '*.AppImage' -o -name '*.dmg' -o -name '*.7z' \) -print -quit)" \
+            || { echo "no package artifact produced"; exit 1; }

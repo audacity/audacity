@@ -58,6 +58,13 @@ env:
 
 jobs:
   au4_build_macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: universal, osx_arch: '' }
+          - { arch: arm64,     osx_arch: arm64 }
+          - { arch: x86_64,    osx_arch: x86_64 }
     runs-on: macos-26
     steps:
     - name: Clone repository
@@ -103,7 +110,7 @@ jobs:
 
         cmake -DEVENT=${{ github.event_name }} \
               -DBUILD_MODE=${BUILD_MODE} \
-              -DARTIFACT_INFO="Mac_${ADD_INFO}" \
+              -DARTIFACT_INFO="Mac_${{ matrix.arch }}${ADD_INFO}" \
               -P ${CI_DIR}/common/ci_configure.cmake
 
         DO_BUILD='true'
@@ -175,6 +182,8 @@ jobs:
 
     - name: Build
       if: env.DO_BUILD == 'true'
+      env:
+        OSX_ARCHITECTURES: ${{ matrix.osx_arch }}
       run: |
         C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source $HOME/build_tools/environment.sh
@@ -188,7 +197,7 @@ jobs:
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v7
       with:
-        name: selftest-build-macos
+        name: selftest-build-macos-${{ matrix.arch }}
         path: ./build.install/
         retention-days: 1
 
@@ -199,7 +208,7 @@ jobs:
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
-        cmake -P ${CI_DIR}/macos/package.cmake
+        cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/macos/package.cmake
 
     - name: Notarize
       if: env.DO_NOTARIZE == 'true'
@@ -222,7 +231,7 @@ jobs:
               -DSENTRY_ORG=sentry \
               -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
               -DSENTRY_PROJECT=${SENTRY_PROJECT} \
-              -P ${CI_DIR}/crashdumps/ci_generate_and_upload.cmake
+              -P muse/buildscripts/ci/crashdumps/ci_generate_and_upload.cmake
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
@@ -246,6 +255,13 @@ jobs:
 
   plugin-registration-self-test:
     needs: au4_build_macos
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: universal }
+          - { arch: arm64 }
+          - { arch: x86_64 }
     runs-on: macos-26
     steps:
     - name: Install Qt
@@ -261,7 +277,7 @@ jobs:
     - name: Download build artifact
       uses: actions/download-artifact@v6
       with:
-        name: selftest-build-macos
+        name: selftest-build-macos-${{ matrix.arch }}
         path: ./build.install
 
     - name: Run plugin registration app self-test
@@ -273,4 +289,5 @@ jobs:
       if: always()
       uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
       with:
-        name: selftest-build-macos
+        failOnError: false
+        name: selftest-build-macos-${{ matrix.arch }}

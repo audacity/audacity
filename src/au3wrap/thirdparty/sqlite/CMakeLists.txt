@@ -2,7 +2,8 @@
 set(TARGET sqlite)
 add_library( ${TARGET} STATIC )
 
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/sqlite)
+get_property(_src GLOBAL PROPERTY sqlite_SOURCE_DIR)
+set(TARGET_ROOT ${_src}/sqlite)
 set( SOURCES
    PRIVATE
 

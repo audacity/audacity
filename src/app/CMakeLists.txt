@@ -54,7 +54,8 @@ elseif(OS_IS_LIN)
         set(APP_OUTPUT_NAME "${EXECUTABLE_NAME}${MUSE_APP_INSTALL_SUFFIX}")
     endif()
 
-    set(CMAKE_INSTALL_RPATH "${QT_INSTALL_LIBS}")
+    # $ORIGIN/../lib holds the bundled extdeps libraries (see require_dep).
+    set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib;${QT_INSTALL_LIBS}")
     if (BUILD_SHARED_LIBS)
         set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${SHARED_LIBS_INSTALL_DESTINATION}")
     endif(BUILD_SHARED_LIBS)
@@ -299,16 +300,6 @@ if (OS_IS_WIN)
     )
 
     install(SCRIPT ${deploy_script})
-
-    if (SNDFILE_DLL)
-        install(FILES ${SNDFILE_DLL} DESTINATION bin)
-    endif()
-
-    # Install ssl
-    install(FILES
-            ${DEPENDENCIES_LIB_DIR}/libcrypto-1_1-x64.dll
-            ${DEPENDENCIES_LIB_DIR}/libssl-1_1-x64.dll
-            DESTINATION bin)
 
     if (WIN_PORTABLE)
         # deploy the files and directory structure needed for the PortableApps.com format
