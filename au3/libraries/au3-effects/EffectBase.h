@@ -21,7 +21,7 @@
 // Internal name should be stable across versions
 #define NYQUIST_PROMPT_ID wxT("Nyquist prompt")
 // User-visible name might change in later versions
-#define NYQUIST_PROMPT_NAME XO("Nyquist prompt")
+#define NYQUIST_PROMPT_NAME XO("Nyquist")
 
 namespace BasicUI {
 class ProgressDialog;

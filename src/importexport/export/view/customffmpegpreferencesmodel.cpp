@@ -150,7 +150,7 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
 {
     QString libraryPath = ffmpegLibraryPath();
     if (!libraryPath.isEmpty()) {
-        auto ret = interactive()->questionSync(muse::trc("preferences", "Success"),
+        auto ret = interactive()->warningSync(muse::trc("preferences", "Installation found"),
                                                muse::trc(
                                                    "preferences",
                                                    "Audacity already has detected a valid FFmpeg version. Do you want to choose another FFmpeg installation instead?"),
@@ -160,8 +160,9 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
                 false),
             muse::IInteractive::ButtonData(
                 muse::IInteractive::Button::Apply, muse::trc("preferences", "Change FFmpeg"), true)
-        }
-                                               );
+        },
+        int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
+        muse::trc("preferences", "FFmpeg has already been found"));
 
         if (ret.standardButton() != muse::IInteractive::Button::Apply) {
             return;

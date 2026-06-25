@@ -820,7 +820,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
 
     // Nyquist Prompt does not require a selection, but effects do.
     if (!bOnePassTool && (mNumSelectedChannels == 0)) {
-        mLastError = XO("Audio selection required.").Translation().ToStdString();
+        mLastError = XO("Audio selection required").Translation().ToStdString();
     }
 
     std::optional<TrackIterRange<WaveTrack> > pRange;
@@ -1429,7 +1429,10 @@ bool NyquistBase::ProcessOne(
             if (!isOk) {
                 mLastError = msg.Translation().ToStdString();
             } else {
-                BasicUI::ShowMessageBox(msg);
+                const bool isErrorMsg = msg.Translation().Contains(wxT("\n"));
+                BasicUI::ShowMessageBox(msg, BasicUI::MessageBoxOptions{}
+                    .Caption(mName)
+                    .IconStyle(isErrorMsg ? BasicUI::Icon::Error : BasicUI::Icon::Information));
             }
         } else if (GetType() == EffectTypeTool) {
             // ;tools may change the project with aud-do commands so
@@ -1448,7 +1451,9 @@ bool NyquistBase::ProcessOne(
         auto str = XO("Nyquist returned the value: %f").Format(nyx_get_double());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
-            BasicUI::ShowMessageBox(str);
+            BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions{}
+                .Caption(mName)
+                .IconStyle(BasicUI::Icon::Information));
         } else {
             mLastError = str.Translation().ToStdString();
         }
@@ -1459,7 +1464,9 @@ bool NyquistBase::ProcessOne(
         auto str = XO("Nyquist returned the value: %d").Format(nyx_get_int());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
-            BasicUI::ShowMessageBox(str);
+            BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions{}
+                .Caption(mName)
+                .IconStyle(BasicUI::Icon::Information));
         } else {
             mLastError = str.Translation().ToStdString();
         }
