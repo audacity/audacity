@@ -112,14 +112,17 @@ void ExportPreferencesModel::init()
         m_filename = globalContext()->currentProject()->displayName();
     }
     emit filenameChanged();
+    emit suggestedFilePathChanged();
 
     exportConfiguration()->directoryPathChanged().onNotify(this, [this] {
         emit directoryPathChanged();
+        emit suggestedFilePathChanged();
     });
 
     exportConfiguration()->currentFormatChanged().onNotify(this, [this] {
         emit currentFormatChanged();
         emit fileExtensionChanged();
+        emit suggestedFilePathChanged();
 
         emit exportSampleRateListChanged();
         emit maxExportChannelsChanged();
@@ -232,6 +235,20 @@ QString ExportPreferencesModel::filename() const
     return m_filename;
 }
 
+QString ExportPreferencesModel::suggestedFilePath() const
+{
+    muse::io::path_t filePath = exportConfiguration()->directoryPath().appendingComponent(m_filename);
+
+    if (suffix(filePath).empty()) {
+        const auto extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
+        if (!extensions.empty()) {
+            filePath = filePath.appendingSuffix(extensions.front());
+        }
+    }
+
+    return filePath.toQString();
+}
+
 void ExportPreferencesModel::setFilename(const QString& filename)
 {
     if (m_filename == filename) {
@@ -240,6 +257,7 @@ void ExportPreferencesModel::setFilename(const QString& filename)
 
     m_filename = filename;
     emit filenameChanged();
+    emit suggestedFilePathChanged();
 }
 
 QStringList ExportPreferencesModel::formatExtensions(const QString& format) const

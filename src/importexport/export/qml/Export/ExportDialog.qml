@@ -191,7 +191,7 @@ StyledDialogView {
                         buttonOrientation: Qt.Horizontal
 
                         path: exportPreferencesModel.directoryPath
-                        dir: exportPreferencesModel.directoryPath
+                        dir: exportPreferencesModel.suggestedFilePath
 
                         navigation: fileSection.navigation
                         navigationRowOrderStart: filenameField.navigation.order + 1
