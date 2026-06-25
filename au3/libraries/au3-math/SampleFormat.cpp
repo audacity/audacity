@@ -59,16 +59,16 @@ TranslatableString GetSampleFormatStr(sampleFormat format)
 {
     switch (format) {
     case int16Sample:
-        /* i18n-hint: Audio data bit depth (precision): 16-bit integers */
-        return XO("16-bit PCM");
+        /*: Audio data bit depth (precision): 16-bit integers */
+        return TranslatableString("math", "16-bit PCM");
     case int24Sample:
-        /* i18n-hint: Audio data bit depth (precision): 24-bit integers */
-        return XO("24-bit PCM");
+        /*: Audio data bit depth (precision): 24-bit integers */
+        return TranslatableString("math", "24-bit PCM");
     case floatSample:
-        /* i18n-hint: Audio data bit depth (precision): 32-bit floating point */
-        return XO("32-bit float");
+        /*: Audio data bit depth (precision): 32-bit floating point */
+        return TranslatableString("math", "32-bit float");
     }
-    return XO("Unknown format"); // compiler food
+    return TranslatableString("math", "Unknown format"); // compiler food
 }
 
 // TODO: Risky?  Assumes 0.0f is represented by 0x00000000;

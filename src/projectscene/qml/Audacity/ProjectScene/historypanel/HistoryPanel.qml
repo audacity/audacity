@@ -79,7 +79,9 @@ Item {
                         }
 
                         if (listItem.isRedoable) {
-                            return Qt.font(Object.assign({}, ui.theme.bodyFont, { italic: true }))
+                            return Qt.font(Object.assign({}, ui.theme.bodyFont, {
+                                italic: true
+                            }))
                         }
 
                         return ui.theme.bodyFont

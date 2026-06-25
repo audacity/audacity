@@ -289,7 +289,7 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
 {
     size_t bufLen = buf.GetDataLen();
     if (!bufLen) {
-        return XO("Failed to decode \"%s\" preset").Format(group);
+        return TranslatableString("audio-unit", "Failed to decode “%1” preset").arg(group);
     }
 
     // Create a CFData object that references the decoded preset
@@ -298,7 +298,7 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
                                                         bufPtr, bufLen, kCFAllocatorNull)
     };
     if (!data) {
-        return XO("Failed to convert \"%s\" preset to internal format")
+        return TranslatableString("audio-unit", "Failed to convert “%1” preset to internal format")
                .Format(group);
     }
 
@@ -310,13 +310,13 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
                                      nullptr)
     };
     if (!content) {
-        return XO("Failed to create property list for \"%s\" preset")
+        return TranslatableString("audio-unit", "Failed to create property list for “%1” preset")
                .Format(group);
     }
 
     // Finally, update the properties and parameters
     if (SetProperty(kAudioUnitProperty_ClassInfo, content.get())) {
-        return XO("Failed to set class info for \"%s\" preset").Format(group);
+        return TranslatableString("audio-unit", "Failed to set class info for “%1” preset").arg(group);
     }
 
     // Repopulate the AudioUnitEffectSettings from the change of state in
@@ -355,7 +355,7 @@ bool AudioUnitWrapper::LoadPreset(const EffectDefinitionInterface& effect,
     auto error
         =InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
     if (!error.empty()) {
-        wxLogError(error.Debug());
+        wxLogError("%s", au3::qtToWx(error.debugStr()));
         return false;
     }
 
@@ -417,12 +417,12 @@ AudioUnitWrapper::MakeBlob(const EffectDefinitionInterface& effect,
     // Define the preset property and set it in the audio unit
     if (SetProperty(
             kAudioUnitProperty_PresentPreset, AudioUnitUtils::UserPreset { cfname })) {
-        message = XO("Failed to set preset name");
+        message = TranslatableString("audio-unit", "Failed to set preset name");
     }
     // Now retrieve the preset content
     else if (CF_ptr<CFPropertyListRef> content;
              GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content)) {
-        message = XO("Failed to retrieve preset content");
+        message = TranslatableString("audio-unit", "Failed to retrieve preset content");
     }
     // And convert it to serialized XML data
     else if (data.reset(CFPropertyListCreateData(kCFAllocatorDefault,
@@ -431,12 +431,12 @@ AudioUnitWrapper::MakeBlob(const EffectDefinitionInterface& effect,
                                                  // TODO might retrieve more error information
                                                  nullptr));
              !data) {
-        message = XO("Failed to convert property list to XML data");
+        message = TranslatableString("audio-unit", "Failed to convert property list to XML data");
     }
     // Nothing to do if we don't have any data
     else if (auto length = CFDataGetLength(data.get()); length == 0) {
         // Caller might not treat this as error, becauase data is non-null
-        message = XO("XML data is empty after conversion");
+        message = TranslatableString("audio-unit", "XML data is empty after conversion");
     }
 
     return { move(data), message };

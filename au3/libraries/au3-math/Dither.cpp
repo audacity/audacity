@@ -366,10 +366,10 @@ inline float ShapedDither(State& state, float sample)
 }
 
 static const std::initializer_list<EnumValueSymbol> choicesDither{
-    { XO("None") },
-    { XO("Rectangle") },
-    { XC("Triangle", "dither") },
-    { XO("Shaped") },
+    { TranslatableString("math", "None") },
+    { TranslatableString("math", "Rectangle") },
+    { TranslatableString("math", "Triangle", "dither") },
+    { TranslatableString("math", "Shaped") },
 };
 static auto intChoicesDither = {
     DitherType::none,

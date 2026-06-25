@@ -178,6 +178,7 @@ EffectStyledDialogView {
         id: generatedViewerComponent
         GeneratedEffectViewer {
             instanceId: root.instanceId
+            dialogView: root
         }
     }
 
@@ -264,7 +265,7 @@ EffectStyledDialogView {
                         width: root.contentWidth - prv.panelMargins * 2
                         spacing: prv.panelMargins
                         navigationPanel.section: root.navigationSection
-                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) + (viewerModel.effectFamily == EffectFamily.Builtin ? (prv.viewer ? prv.viewer.numNavigationPanels : 2) : 0)
+                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) + (prv.viewer && prv.viewer.numNavigationPanels !== undefined ? prv.viewer.numNavigationPanels : (viewerModel.effectFamily == EffectFamily.Builtin ? 2 : 0))
 
                         //! TODO Move function to ButtonBox (Muse framework)
                         function buttonById(id) {

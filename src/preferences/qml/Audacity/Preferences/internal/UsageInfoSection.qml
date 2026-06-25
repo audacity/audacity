@@ -36,9 +36,7 @@ BaseSection {
     StyledTextLabel {
         width: parent.width
 
-        text: qsTrc("appshell/preferences", "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our <a href=\"%1\">privacy policy</a>.")
-              .arg(root.privacyPolicyUrl)
-              .replace("\n", "<br>")
+        text: qsTrc("appshell/preferences", "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our <a href=\"%1\">privacy policy</a>.").arg(root.privacyPolicyUrl).replace("\n", "<br>")
 
         horizontalAlignment: Qt.AlignLeft
         wrapMode: Text.WordWrap

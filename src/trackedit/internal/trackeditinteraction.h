@@ -26,6 +26,7 @@ private:
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool silenceClips(const ClipKeyList& clipKeyList) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     bool changeClipPitch(const ClipKey& clipKey, int pitch) override;
@@ -136,6 +137,8 @@ private:
 
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
     bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
+
+    void resetLabelStretchState() override;
 
     muse::Progress progress() const override;
 

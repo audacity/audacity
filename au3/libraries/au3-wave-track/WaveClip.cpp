@@ -1892,8 +1892,8 @@ void WaveClip::Resample(int rate, const std::function<void(size_t)>& progressRep
     if (error) {
         throw SimpleMessageBoxException{
                   ExceptionType::Internal,
-                  XO("Resampling failed."),
-                  XO("Warning"),
+                  TranslatableString("wave-track", "Resampling failed."),
+                  TranslatableString("wave-track", "Warning"),
                   "Error:_Resampling"
         };
     } else {

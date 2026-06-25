@@ -29,7 +29,7 @@ Column {
 
     spacing: 4
 
-    function requestActiveFocus(){
+    function requestActiveFocus() {
         spinBoxItem.navigation.requestActive()
     }
 
@@ -52,7 +52,7 @@ Column {
         navigation.row: root.navigationRowStart + 1
         navigation.accessible.name: root.title + " " + currentValue
 
-        onValueEditingFinished: function(newValue) {
+        onValueEditingFinished: function (newValue) {
             root.valueChanged(newValue)
         }
     }

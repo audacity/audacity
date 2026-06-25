@@ -54,3 +54,11 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
 
     return muse::make_ret(muse::Ret::Code::Ok);
 }
+
+std::vector<std::string> Au3LabelsImporter::supportedExtensions() const
+{
+    return {
+        fileSuffixFromType(FileType::SUBRIP),
+        fileSuffixFromType(FileType::WEBVTT),
+    };
+}

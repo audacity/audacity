@@ -10,6 +10,7 @@
         <file>qml/Audacity/Effects/MissingPluginsDialog.qml</file>
         <file>qml/Audacity/Effects/PresetNameDialog.qml</file>
         <file>qml/Audacity/Effects/GeneratedEffectViewer.qml</file>
+        <file>qml/Audacity/Effects/GeneratedIncrementalPropertyControl.qml</file>
         <file>qml/Audacity/Effects/ParameterControl.qml</file>
         <file>qml/Audacity/Effects/PluginManagerDialog.qml</file>
         <file>qml/Audacity/Effects/PluginManagerTableView.qml</file>

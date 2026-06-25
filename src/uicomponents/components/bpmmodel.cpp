@@ -13,8 +13,6 @@ using namespace au::uicomponents;
 BPMModel::BPMModel(QObject* parent)
     : NumericViewModel(parent)
 {
-    initFieldInteractionController();
-
     reloadFormatter();
 
     setValue(0.0);

@@ -9,6 +9,7 @@
 
 #include "modularity/ioc.h"
 #include "iplaybackcontroller.h"
+#include "record/irecordcontroller.h"
 
 namespace au::playback {
 class PlaybackStateModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -17,8 +18,10 @@ class PlaybackStateModel : public QObject, public muse::async::Asyncable, public
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isPaused READ isPaused NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isStopped READ isStopped NOTIFY isPlayingChanged FINAL)
+    Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
     Q_PROPERTY(double lastPlaybackSeekTime READ lastPlaybackSeekTime NOTIFY lastPlaybackSeekTimeChanged FINAL)
     muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<au::record::IRecordController> recordController{ this };
 
 public:
     explicit PlaybackStateModel(QObject* parent = nullptr);
@@ -29,10 +32,12 @@ public:
     bool isPlaying() const;
     bool isPaused() const;
     bool isStopped() const;
+    bool isRecording() const;
     double lastPlaybackSeekTime() const;
 
 signals:
     void isPlayingChanged();
+    void isRecordingChanged();
     void lastPlaybackSeekTimeChanged();
 };
 }

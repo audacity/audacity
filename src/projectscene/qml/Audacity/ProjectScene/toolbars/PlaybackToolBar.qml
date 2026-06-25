@@ -29,7 +29,7 @@ Item {
     }
     height: view.height
 
-    signal relayoutRequested()
+    signal relayoutRequested
 
     QtObject {
         id: prv
@@ -60,16 +60,24 @@ Item {
             }
         }
 
-        sourceComponentCallback: function(type) {
-            switch(type) {
-            case PlaybackToolBarModel.PLAYBACK_CONTROL: return controlComp
-            case PlaybackToolBarModel.PLAYBACK_LEVEL: return playbackLevelComp
-            case PlaybackToolBarModel.PLAYBACK_TIME: return playbackTimeComp
-            case PlaybackToolBarModel.PLAYBACK_BPM: return playbackBPMComp
-            case PlaybackToolBarModel.PLAYBACK_TIME_SIGNATURE: return playbackTimeSignatureComp
-            case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
-            case PlaybackToolBarModel.PROJECT_CONTROL: return projectControlComp
-            case PlaybackToolBarModel.SNAP: return snapComp
+        sourceComponentCallback: function (type) {
+            switch (type) {
+            case PlaybackToolBarModel.PLAYBACK_CONTROL:
+                return controlComp
+            case PlaybackToolBarModel.PLAYBACK_LEVEL:
+                return playbackLevelComp
+            case PlaybackToolBarModel.PLAYBACK_TIME:
+                return playbackTimeComp
+            case PlaybackToolBarModel.PLAYBACK_BPM:
+                return playbackBPMComp
+            case PlaybackToolBarModel.PLAYBACK_TIME_SIGNATURE:
+                return playbackTimeSignatureComp
+            case PlaybackToolBarModel.RECORD_LEVEL:
+                return recordLevelComp
+            case PlaybackToolBarModel.PROJECT_CONTROL:
+                return projectControlComp
+            case PlaybackToolBarModel.SNAP:
+                return snapComp
             }
 
             return null
@@ -126,14 +134,14 @@ Item {
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onVolumeLevelChangeRequested: function(level) {
+                onVolumeLevelChangeRequested: function (level) {
                     if (itemData) {
                         itemData.level = level
                     }
                 }
 
-                onWidthChangeRequested: function(x, y) {
-                    let toolbarViewPosition = mapToItem(view, x, y);
+                onWidthChangeRequested: function (x, y) {
+                    let toolbarViewPosition = mapToItem(view, x, y)
 
                     if (toolbarViewPosition.x > view.maximumWidth) {
                         // Do not allow the component to exceed the maximum width of the toolbar view
@@ -166,7 +174,7 @@ Item {
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onValueChangeRequested: function(newValue) {
+                onValueChangeRequested: function (newValue) {
                     if (!Boolean(itemData)) {
                         return
                     }
@@ -194,7 +202,7 @@ Item {
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onValueChangeRequested: function(newValue) {
+                onValueChangeRequested: function (newValue) {
                     if (!Boolean(itemData)) {
                         return
                     }
@@ -215,7 +223,7 @@ Item {
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onUpperChangeRequested: function(newValue) {
+                onUpperChangeRequested: function (newValue) {
                     if (!Boolean(itemData)) {
                         return
                     }
@@ -223,7 +231,7 @@ Item {
                     itemData.upper = newValue
                 }
 
-                onLowerChangeRequested: function(newValue) {
+                onLowerChangeRequested: function (newValue) {
                     if (!Boolean(itemData)) {
                         return
                     }
@@ -263,25 +271,25 @@ Item {
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onVolumeLevelChangeRequested: function(level) {
+                onVolumeLevelChangeRequested: function (level) {
                     if (itemData) {
                         itemData.level = level
                     }
                 }
 
-                onIsInputMonitoringOnChangeRequested: function(enable) {
+                onIsInputMonitoringOnChangeRequested: function (enable) {
                     if (itemData) {
                         itemData.isInputMonitoringOn = enable
                     }
                 }
 
-                onIsMicMeteringOnChangeRequested: function(enable) {
+                onIsMicMeteringOnChangeRequested: function (enable) {
                     if (itemData) {
                         itemData.isMicMeteringOn = enable
                     }
                 }
 
-                onIsPopupOpened: function(opened) {
+                onIsPopupOpened: function (opened) {
                     if (itemData) {
                         itemData.listenMainAudioInput(opened)
                     }
@@ -307,11 +315,11 @@ Item {
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onIsOptionEnableChangeRequested: function(enabled) {
+                onIsOptionEnableChangeRequested: function (enabled) {
                     itemData.isSnapEnabled = enabled
                 }
 
-                onHandleMenuItem: function(itemId) {
+                onHandleMenuItem: function (itemId) {
                     itemData.handleMenuItem(itemId)
                 }
             }

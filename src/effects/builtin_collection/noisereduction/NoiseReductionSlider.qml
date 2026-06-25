@@ -57,7 +57,7 @@ Row {
         maxValue: root.to
         step: 1
         currentValue: root.value
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             if (root.value !== newValue) {
                 newValueRequested(newValue)
             }

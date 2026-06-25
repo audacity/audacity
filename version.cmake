@@ -23,18 +23,6 @@ set(MUSE_APP_NAME_VERSION "${MUSE_APP_NAME} ${MUSE_APP_VERSION_MAJOR}")
 set(MUSE_APP_UNSTABLE ON)
 set(MUSE_APP_IS_PRERELEASE ON)
 
-if(MUSE_APP_BUILD_MODE MATCHES "dev")
-    set(MUSE_APP_RELEASE_CHANNEL "devel")
-endif()
+# MUSE_APP_RELEASE_CHANNEL is assigned per-mode in SetupConfigure.cmake based on AU4_BUILD_MODE.
 
-if(MUSE_APP_BUILD_MODE MATCHES "testing")
-    set(MUSE_APP_RELEASE_CHANNEL "testing")
-endif()
-
-if(MUSE_APP_BUILD_MODE MATCHES "release")
-    set(MUSE_APP_RELEASE_CHANNEL "stable")
-endif()
-
-# Print variables which are needed by CI build scripts.
-message(STATUS "MUSE_APP_RELEASE_CHANNEL ${MUSE_APP_RELEASE_CHANNEL}")
 message(STATUS "MUSE_APP_VERSION ${MUSE_APP_VERSION}")

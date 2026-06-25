@@ -153,7 +153,6 @@ DynamicsEffectBase {
                                 })
                                 return model
                             }
-
                         }
                     }
                 }
@@ -161,8 +160,8 @@ DynamicsEffectBase {
                 CompressionCurve {
                     id: compressionCurve
 
-                    anchors.bottom: leftGrid.bottom
-                    availableHeight: leftGrid.height
+                    width: 352
+                    height: leftGrid.height
 
                     model: compressor
                 }

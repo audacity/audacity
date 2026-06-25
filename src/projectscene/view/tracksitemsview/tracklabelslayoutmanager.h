@@ -58,6 +58,7 @@ private:
     void unsubscribeFromLabelsChanges();
 
     void relayout();
+    void scheduleRelayout();
     void relink();
 
     QList<LabelInfo> collectLabelsInfo() const;
@@ -66,6 +67,7 @@ private:
 
     bool m_isInited = false;
     bool m_isBusy = false;
+    bool m_relayoutScheduled = false;
 
     QMap<LabelKey, LabelKey> m_leftLinkedLabels;
     QMap<LabelKey, LabelKey> m_rightLinkedLabels;

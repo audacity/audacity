@@ -21,6 +21,14 @@ VstViewModel::~VstViewModel()
 {
     m_settingUpdateTimer.stop();
     QObject::disconnect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUiWhileIdle);
+
+    // The wrapper is owned by the effect instance and outlives this view model
+    // (e.g. when the vendor UI is swapped for the fallback UI). Clear the
+    // handler so a later endEdit doesn't invoke a lambda capturing a freed this.
+    if (m_auVst3Instance) {
+        m_auVst3Instance->GetWrapper().ParamChangedHandler = nullptr;
+    }
+
     checkSettingChangesFromUi(true);
 }
 

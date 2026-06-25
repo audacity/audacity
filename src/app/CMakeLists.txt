@@ -17,6 +17,12 @@ if (OS_IS_WIN)
     set(APP_OUTPUT_NAME ${MUSE_APP_NAME}${MUSE_APP_VERSION_MAJOR})
 
     include(GetCompilerInfo)
+    
+    set(WINDOWS_VERSION_RC ${PROJECT_BINARY_DIR}/windows_version.rc)
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/windows_version.rc.in
+        ${WINDOWS_VERSION_RC}
+        @ONLY)
 
     if (CC_IS_MSVC)
         # MSVC recognizes a *.rc file and will invoke the resource compiler to link it
@@ -30,6 +36,16 @@ if (OS_IS_WIN)
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/share/icons
             )
         set_source_files_properties(${PROJECT_BINARY_DIR}/windows_icons_rc.o PROPERTIES generated true)
+
+        set(WINDOWS_VERSION_RC_OBJ ${PROJECT_BINARY_DIR}/windows_version_rc.o)
+        add_custom_command(
+            OUTPUT ${WINDOWS_VERSION_RC_OBJ}
+            COMMAND ${CMAKE_RC_COMPILER} -i windows_version.rc -o ${WINDOWS_VERSION_RC_OBJ}
+            DEPENDS ${WINDOWS_VERSION_RC}
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+            )
+        set_source_files_properties(${WINDOWS_VERSION_RC_OBJ} PROPERTIES generated true)
+        set(WINDOWS_VERSION_RC ${WINDOWS_VERSION_RC_OBJ})
     endif()
 
 elseif(OS_IS_LIN)
@@ -38,7 +54,8 @@ elseif(OS_IS_LIN)
         set(APP_OUTPUT_NAME "${EXECUTABLE_NAME}${MUSE_APP_INSTALL_SUFFIX}")
     endif()
 
-    set(CMAKE_INSTALL_RPATH "${QT_INSTALL_LIBS}")
+    # $ORIGIN/../lib holds the bundled extdeps libraries (see require_dep).
+    set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib;${QT_INSTALL_LIBS}")
     if (BUILD_SHARED_LIBS)
         set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${SHARED_LIBS_INSTALL_DESTINATION}")
     endif(BUILD_SHARED_LIBS)
@@ -133,12 +150,14 @@ add_to_link_if_exists(projectscene)
 add_to_link_if_exists(record)
 add_to_link_if_exists(spectrogram)
 add_to_link_if_exists(toast)
+add_to_link_if_exists(usageinfo)
 add_to_link_if_exists(automation)
 
 set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_ICONS_RC})
+    list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_VERSION_RC})
 endif()
 
 ###########################################
@@ -163,6 +182,8 @@ qt_add_executable(${EXECUTABLE_NAME}
     pluginregistrationapp.h
     commandlineparser.cpp
     commandlineparser.h
+    winleaktracker.cpp
+    winleaktracker.h
 )
 
 ###########################################
@@ -188,6 +209,12 @@ target_include_directories(audacity PRIVATE
 if (APP_OUTPUT_NAME)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${APP_OUTPUT_NAME})
 endif (APP_OUTPUT_NAME)
+
+if (OS_IS_WIN)
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin
+    )
+endif()
 
 if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
     set(COVERAGE_FLAGS -fprofile-arcs -ftest-coverage --coverage)
@@ -274,16 +301,6 @@ if (OS_IS_WIN)
 
     install(SCRIPT ${deploy_script})
 
-    if (SNDFILE_DLL)
-        install(FILES ${SNDFILE_DLL} DESTINATION bin)
-    endif()
-
-    # Install ssl
-    install(FILES
-            ${DEPENDENCIES_LIB_DIR}/libcrypto-1_1-x64.dll
-            ${DEPENDENCIES_LIB_DIR}/libssl-1_1-x64.dll
-            DESTINATION bin)
-
     if (WIN_PORTABLE)
         # deploy the files and directory structure needed for the PortableApps.com format
         install(DIRECTORY ${PROJECT_SOURCE_DIR}/build/PortableApps/App DESTINATION ${CMAKE_INSTALL_PREFIX}/../..)
@@ -291,21 +308,6 @@ if (OS_IS_WIN)
         install(FILES ${PROJECT_SOURCE_DIR}/build/PortableApps/help.html DESTINATION ${CMAKE_INSTALL_PREFIX}/../..)
         configure_file(${PROJECT_SOURCE_DIR}/build/PortableApps/appinfo.ini.in     ${CMAKE_INSTALL_PREFIX}/../../App/AppInfo/appinfo.ini   @ONLY)
     endif (WIN_PORTABLE)
-
-    # TODO
-    # install( DIRECTORY "${_LIB_OUTPUT}/"
-    #          TYPE LIB
-    #          USE_SOURCE_PERMISSIONS
-    #      )
-
-    install( DIRECTORY "${_LIB_OUTPUT}/"
-              TYPE BIN
-              USE_SOURCE_PERMISSIONS
-          )
-
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin"
-    )
 
     if (MSVC)
         set_target_properties(${EXECUTABLE_NAME} PROPERTIES

@@ -54,6 +54,14 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         }
     });
 
+    // While recording, the playcursor position is driven by the recording
+    // unless this is lead-in
+    record()->recordPositionChanged().onReceive(this, [this](const muse::secs_t& pos) {
+        if (recordController()->isRecording() && !recordController()->isLeadInRecording()) {
+            m_playbackPosition.set(std::max(0.0, pos.raw()));
+        }
+    });
+
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
@@ -199,9 +207,15 @@ void Au3Player::play()
             opts.mixerEndTime = mixerEndTime;
             ret = doPlayTracks(TrackList::Get(project), t0, t1, opts);
         }
-    }
 
-    m_playbackStatus.set(PlaybackStatus::Running);
+        //! NOTE: only flip to Running when a stream was actually started.
+        //! Doing it unconditionally (as before) left the UI in a "playing"
+        //! state when t1 == t0 short-circuits doPlayTracks, with no audible
+        //! playback and no playhead movement.
+        if (ret) {
+            m_playbackStatus.set(PlaybackStatus::Running);
+        }
+    }
 }
 
 muse::Ret Au3Player::playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
@@ -288,6 +302,10 @@ void Au3Player::stop()
     audioEngine()->stopStream();
     //Make sure to unpause
     audioEngine()->pauseStream(false);
+
+    // Stop the timer once the stream is down; otherwise it ticks past project
+    // close, causing a use-after-free in updatePlaybackPosition().
+    m_timer.stop();
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
@@ -491,15 +509,10 @@ muse::async::Notification Au3Player::loopRegionChanged() const
     return m_loopRegionChanged;
 }
 
-void Au3Player::updatePlaybackState()
+void Au3Player::updateStreamState()
 {
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
-    const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
-
-    if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
-        m_playbackPosition.set(time);
-    }
 
     if (!isActive) {
         if (playbackStatus() == PlaybackStatus::Running
@@ -512,6 +525,21 @@ void Au3Player::updatePlaybackState()
     }
 }
 
+void Au3Player::updatePlaybackState()
+{
+    // Capture drives the cursor via recordPositionChanged — skip here.
+    const bool captureDrivingCursor = recordController()->isRecording()
+                                      && !recordController()->isLeadInRecording();
+    if (!captureDrivingCursor) {
+        const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
+        if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
+            m_playbackPosition.set(time);
+        }
+    }
+
+    updateStreamState();
+}
+
 muse::secs_t Au3Player::playbackPosition() const
 {
     return m_playbackPosition.val;
@@ -520,6 +548,12 @@ muse::secs_t Au3Player::playbackPosition() const
 void Au3Player::updatePlaybackPosition()
 {
     using namespace std::chrono;
+
+    if (!globalContext()->currentProject()) {
+        // Project closed but timer still firing; projectRef() would deref null.
+        m_timer.stop();
+        return;
+    }
 
     const double sampleRate = audioEngine()->getPlaybackSampleRate();
 
@@ -539,10 +573,14 @@ void Au3Player::updatePlaybackPosition()
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 
-    if (!m_currentTarget.has_value()) {
+    const int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
+    if (!m_currentTarget.has_value() || !AudioIO::Get()->IsStreamActive(token)) {
         // No DAC callbacks available (e.g. recording-only without overdub playback).
-        // Fall back to reading GetStreamTime() directly so the playhead still updates.
-        updatePlaybackState();
+        // GetStreamTime() does not advance here, so we deliberately skip the
+        // position write that updatePlaybackState() would do — the playhead is
+        // driven externally via setPlaybackPosition() in this case. Only the
+        // stream-state / timer cleanup is still needed.
+        updateStreamState();
         return;
     }
 

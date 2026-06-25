@@ -59,6 +59,9 @@
 #include "graphiceq/graphiceq.h"
 #include "graphiceq/graphiceqbandsmodel.h"
 #include "graphiceq/graphiceqviewmodel.h"
+#include "filtercurveeq/filtercurveeq.h"
+#include "filtercurveeq/filtercurvemodel.h"
+#include "filtercurveeq/filtercurveeqviewmodel.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
 #include "removedcoffset/removedcoffseteffect.h"
@@ -86,6 +89,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< NormalizeLoudnessEffect > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
+    static BuiltinEffectsModule::Registration< FilterCurveEq > regFilterCurveEq;
     static BuiltinEffectsModule::Registration< ClickRemovalEffect > regClickRemoval;
     static BuiltinEffectsModule::Registration< NormalizeEffect > regNormalize;
     static BuiltinEffectsModule::Registration< RemoveDCOffsetEffect > regRemoveDCOffset;
@@ -117,6 +121,11 @@ void BuiltinCollectionLoader::init()
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(GraphicEqViewModelFactory);
     qmlRegisterType<GraphicEqBandsModel>("Audacity.Effects", 1, 0, "GraphicEqBandsModel");
     regView(GraphicEq::Symbol, u"qrc:/graphiceq/GraphicEqView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(FilterCurveEqViewModelFactory);
+    qmlRegisterUncreatableType<FilterCurveModel>("Audacity.Effects", 1, 0, "FilterCurveModel",
+                                                 "Created by FilterCurveEqViewModel");
+    regView(FilterCurveEq::Symbol, u"qrc:/filtercurveeq/FilterCurveEqView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ClickRemovalViewModelFactory);
     regView(ClickRemovalEffect::Symbol, u"qrc:/clickremoval/ClickRemovalView.qml");

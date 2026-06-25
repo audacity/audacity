@@ -105,7 +105,7 @@ BaseSection {
             navigationRowOrderStart: 1
             navigationColumnOrderStart: 1
 
-            onPathEdited: function(newPath) {
+            onPathEdited: function (newPath) {
                 root.styleFileImportPathChangeRequested(newPath)
             }
         }

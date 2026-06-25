@@ -110,6 +110,15 @@ void StartupScenario::setRemoveMediaFilesAfterImport(bool remove)
     m_removeMediaFilesAfterImport = remove;
 }
 
+void StartupScenario::setStartupUrl(const QString& url)
+{
+    if (m_startupCompleted && !url.isEmpty()) {
+        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(url));
+        return;
+    }
+    m_startupUrl = url;
+}
+
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
     return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
@@ -196,6 +205,11 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 
         dispatcher()->dispatch("project-import-startup-media",
                                ActionData::make_arg2<QStringList, bool>(files, m_removeMediaFilesAfterImport));
+        return;
+    }
+
+    if (!m_startupUrl.isEmpty()) {
+        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(m_startupUrl));
         return;
     }
 

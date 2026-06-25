@@ -12,6 +12,8 @@
 #include "commandlineparser.h"
 #include "log.h"
 
+#include "framework/multiwindows/singleinstance.h"
+
 #include "muse_framework_config.h"
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
@@ -48,19 +50,11 @@ static void crashCallback(int signum)
 #endif
 
 #ifdef Q_OS_WIN
-#include <crtdbg.h> // _CrtSetDbgFlag
+#include "winleaktracker.h"
 #endif
 
 int main(int argc, char** argv)
 {
-#ifdef Q_OS_WIN
-    // Configure memory leak detection in debug builds.
-    // At the moment we keep it disabled because it causes shutdown to take about 10 seconds.
-    // A ticket was logged to investigate this further: https://github.com/audacity/audacity/issues/7568
-    constexpr auto enableMemoryLeakReport = false;
-    _CrtSetDbgFlag(enableMemoryLeakReport ? _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF : _CRTDBG_ALLOC_MEM_DF);
-#endif
-
 #ifndef MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT
     signal(SIGSEGV, crashCallback);
     signal(SIGILL, crashCallback);
@@ -170,6 +164,22 @@ int main(int argc, char** argv)
     commandLineParser.init();
     commandLineParser.parse(argcFinal, argvFinal);
 
+    if (commandLineParser.options()->app.version) {
+        commandLineParser.printVersion();
+        return 0;
+    }
+
+    if (commandLineParser.options()->app.longVersion) {
+        commandLineParser.printLongVersion();
+        return 0;
+    }
+
+#ifdef Q_OS_WIN
+    if (commandLineParser.options()->app.memoryLeakReport) {
+        au::app::winleaktracker::install();
+    }
+#endif
+
     // ====================================================
     // Create QApplication based on run mode
     // ====================================================
@@ -178,6 +188,19 @@ int main(int argc, char** argv)
     if (commandLineParser.runMode() == muse::IApplication::RunMode::AudioPluginRegistration) {
         qApplication = new QCoreApplication(argcFinal, argvFinal);
     } else {
+        if (!qEnvironmentVariableIsSet("AU_ALLOW_MULTIPLE_PROCESSES")) {
+            QStringList forwardedArgs;
+            forwardedArgs.reserve(argcFinal - 1);
+            for (int i = 1; i < argcFinal; ++i) {
+                forwardedArgs.append(QString::fromUtf8(argvFinal[i]));
+            }
+            if (muse::mi::activateExistingInstance(QString::fromLatin1(appName), forwardedArgs)) {
+                LOGI() << "existing Audacity instance activated";
+                LOGI() << "exiting";
+                return 0;
+            }
+        }
+
         QApplication* guiApp = new QApplication(argcFinal, argvFinal);
         guiApp->setQuitOnLastWindowClosed(false);
         qApplication = guiApp;

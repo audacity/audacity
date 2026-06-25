@@ -6,6 +6,8 @@
 #include "spectrogram/ispectrogramservice.h"
 #include "spectrogram/view/ispectrogramviewservice.h"
 
+#include "shared/axis/axistypes.h"
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/ui/iuiconfiguration.h"
@@ -82,6 +84,7 @@ private:
     void zoomBy(double factor, double centerPosition);
     double frequencyToPosition(double freq) const;
     double positionToFrequency(double pos) const;
+    QVariantList tickListToVariants(const std::vector<au::shared::AxisTick>& ticks) const;
 
     int m_trackId = -1;
     int m_labelHeight = 0;

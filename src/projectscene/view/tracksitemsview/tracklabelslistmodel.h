@@ -15,6 +15,7 @@ public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void selectLabel(const LabelKey& key);
+    Q_INVOKABLE void selectLabelWithSharedStalk(const LabelKey& key, bool rightSide);
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 
@@ -23,6 +24,9 @@ public:
     Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
     Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
     Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed);
+
+    void startEditItem(const TrackItemKey& key) override;
+    void endEditItem(const TrackItemKey& key) override;
 
 private:
     friend class TrackLabelsLayoutManagerTests;
@@ -44,5 +48,10 @@ private:
 
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
     bool m_needToSelectTracksData = false;
+
+    trackedit::TrackItemKey m_pendingShiftDeselect;
+
+    double m_editedLabelStartTime = 0.0;
+    double m_editedLabelEndTime = 0.0;
 };
 }

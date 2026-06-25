@@ -14,6 +14,7 @@ using namespace au::project;
 namespace {
 constexpr const char* OPEN_PROJECT_ACTION = "file-open";
 constexpr const char* OPEN_PROJECT_PAGE_ACTION = "audacity://cloud/open-project-page";
+constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
 
 RecentProjectContextMenuModel::RecentProjectContextMenuModel(bool isCloudProject, QString path, QString displayNameOverride,
@@ -33,6 +34,10 @@ void RecentProjectContextMenuModel::load()
     muse::uicomponents::MenuItemList items = { openItem };
     if (isCloudProject) {
         items.append(makeMenuItem(OPEN_PROJECT_PAGE_ACTION));
+    }
+
+    if (!m_path.isEmpty()) {
+        items.append(makeMenuItem(SHOW_IN_FOLDER_ACTION));
     }
 
     setItems(items);
@@ -57,6 +62,15 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
         query.addParam("path", muse::Val(muse::io::path_t(m_path.toStdString())));
         dispatch(query);
+        return;
+    }
+
+    if (itemId == SHOW_IN_FOLDER_ACTION) {
+        if (m_path.isEmpty()) {
+            return;
+        }
+
+        platformInteractive()->revealInFileBrowser(m_path);
         return;
     }
 

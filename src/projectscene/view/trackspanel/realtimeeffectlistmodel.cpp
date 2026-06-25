@@ -1,10 +1,13 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+
+#include "framework/global/types/translatablestring.h"
+#include "framework/global/defer.h"
+
 #include "realtimeeffectlistmodel.h"
 #include "realtimeeffectlistitemmodel.h"
-#include "global/defer.h"
-#include "global/types/translatablestring.h"
+
 #include "log.h"
 
 using namespace muse;
@@ -25,11 +28,16 @@ void RealtimeEffectListModel::onProjectChanged()
                 emit trackNameChanged();
             }
         });
-        const std::vector<au::trackedit::TrackId> trackIds = project->trackIdList();
-        for (const auto& trackId : trackIds) {
-            if (belongsWithMe(trackId)) {
-                // Project was just opened, we can use brute-force `onChanged`, it won't have an impact on scrollbar position or alike.
-                onChanged(trackId);
+        // Project was just opened, we can use brute-force `onChanged`, it won't have an impact on scrollbar position or alike.
+        if (m_isMasterTrack) {
+            // The master track is not part of `trackIdList()`, so populate it explicitly.
+            onChanged(IRealtimeEffectService::masterTrackId);
+        } else {
+            const std::vector<au::trackedit::TrackId> trackIds = project->trackIdList();
+            for (const auto& trackId : trackIds) {
+                if (belongsWithMe(trackId)) {
+                    onChanged(trackId);
+                }
             }
         }
     } else {
@@ -297,6 +305,29 @@ QString RealtimeEffectListModel::prop_trackName() const
     }
 
     return QString::fromStdString(*trackName);
+}
+
+bool RealtimeEffectListModel::prop_trackSupportsEffects() const
+{
+    const auto tId = trackId();
+    if (!tId.has_value()) {
+        return false;
+    }
+    if (m_isMasterTrack) {
+        return true;
+    }
+
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    const auto track = project->track(*tId);
+    if (!track.has_value()) {
+        return false;
+    }
+
+    return track->type == trackedit::TrackType::Mono || track->type == trackedit::TrackType::Stereo;
 }
 
 QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const

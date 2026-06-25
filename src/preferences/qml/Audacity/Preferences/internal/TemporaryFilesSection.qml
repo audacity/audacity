@@ -62,7 +62,7 @@ BaseSection {
                 navigation: root.navigation
                 navigationColumnOrderStart: 1
 
-                onPathEdited: function(newPath) {
+                onPathEdited: function (newPath) {
                     path = newPath
                     root.temporaryFilesLocationChanged(newPath)
                 }

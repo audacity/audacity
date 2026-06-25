@@ -12,6 +12,7 @@
 #include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "audio/audiotypes.h"
+#include "types/ratio.h"
 
 using namespace muse;
 using namespace muse::async;
@@ -91,13 +92,13 @@ void Au3AudioInput::initMeter()
 
 float Au3AudioInput::recordVolume() const
 {
-    return au3VolumeToLocal(audioEngine()->getInputVolume());
+    return muse::linear_to_db(audioEngine()->getInputVolume());
 }
 
 void Au3AudioInput::setRecordVolume(float volume)
 {
     muse::async::Async::call(this, [this, volume]() {
-        audioEngine()->setInputVolume(localVolumeToAu3(volume));
+        audioEngine()->setInputVolume(muse::db_to_linear(volume));
         m_recordVolumeChanged.send(volume);
     });
 }

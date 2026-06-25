@@ -4,7 +4,7 @@
 #include "spectrogramservice.h"
 
 #include "spectrogramtypes.h"
-#include "./numberscale.h"
+#include "shared/axis/numberscale.h"
 #include "./spectrogramutils.h"
 #include "au3/au3trackspectrogramconfiguration.h"
 #include "au3/au3spectrogramsettings.h"

@@ -37,5 +37,4 @@ DockPage {
     central: Text {
         text: "Publish"
     }
-
 }

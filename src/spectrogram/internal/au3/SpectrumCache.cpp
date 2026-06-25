@@ -382,7 +382,7 @@ void SpecCache::Populate(
     }
 
     const ClipParams clipParams {
-        clip.GetSequence().GetNumSamples().as_long_long(),
+        clip.GetVisibleSampleCount().as_long_long(),
         sampleRate,
         clip.GetStretchRatio()
     };
@@ -506,7 +506,7 @@ void SpecCache::PopulateConstantQ(const Au3SpectrogramSettings& settings, const 
     assert(pixelsPerSecond > 0);
     assert(numPixels > 0);
     ComputeSpectrogramGainFactors(fftLen, sampleRate, frequencyGainSetting, gainFactors);
-    const auto numSamplesInClip = clip.GetSequence().GetNumSamples();
+    const auto numSamplesInClip = clip.GetVisibleSampleCount();
 
     // Loop over the ranges before and after the copied portion and compute anew.
     // One of the ranges may be empty.

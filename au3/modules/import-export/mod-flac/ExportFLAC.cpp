@@ -31,16 +31,16 @@ namespace {
 const std::initializer_list<PlainExportOptionsEditor::OptionDesc> FlacOptions {
     {
         {
-            FlacOptionIDBitDepth, XO("Bit Depth"),
+            FlacOptionIDBitDepth, TranslatableString("import-export", "Bit Depth"),
             std::string("16"),
             ExportOption::TypeEnum,
             { std::string("16"), std::string("24") },
-            { XO("16 bit"), XO("24 bit") }
+            { TranslatableString("import-export", "16 bit"), TranslatableString("import-export", "24 bit") }
         }, wxT("/FileFormats/FLACBitDepth")
     },
     {
         {
-            FlacOptionIDLevel, XO("Level"),
+            FlacOptionIDLevel, TranslatableString("import-export", "Level"),
             std::string("5"),
             ExportOption::TypeEnum,
             {
@@ -55,15 +55,15 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> FlacOptions {
                 std::string("8"),
             },
             {
-                XO("0 (fastest)"),
-                XO("1"),
-                XO("2"),
-                XO("3"),
-                XO("4"),
-                XO("5"),
-                XO("6"),
-                XO("7"),
-                XO("8 (best)"),
+                TranslatableString("import-export", "0 (fastest)"),
+                TranslatableString("import-export", "1"),
+                TranslatableString("import-export", "2"),
+                TranslatableString("import-export", "3"),
+                TranslatableString("import-export", "4"),
+                TranslatableString("import-export", "5"),
+                TranslatableString("import-export", "6"),
+                TranslatableString("import-export", "7"),
+                TranslatableString("import-export", "8 (best)"),
             }
         }, wxT("/FileFormats/FLACLevel")
     }
@@ -74,7 +74,7 @@ ChoiceSetting FLACBitDepth{
     wxT("/FileFormats/FLACBitDepth"),
     {
         ByColumns,
-        { XO("16 bit"), XO("24 bit"), },
+        { TranslatableString("import-export", "16 bit"), TranslatableString("import-export", "24 bit"), },
         { wxT("16"),    wxT("24"), }
     },
     0 // "16",
@@ -85,15 +85,15 @@ ChoiceSetting FLACLevel{
     {
         ByColumns,
         {
-            XO("0 (fastest)"),
-            XO("1"),
-            XO("2"),
-            XO("3"),
-            XO("4"),
-            XO("5"),
-            XO("6"),
-            XO("7"),
-            XO("8 (best)"),
+            TranslatableString("import-export", "0 (fastest)"),
+            TranslatableString("import-export", "1"),
+            TranslatableString("import-export", "2"),
+            TranslatableString("import-export", "3"),
+            TranslatableString("import-export", "4"),
+            TranslatableString("import-export", "5"),
+            TranslatableString("import-export", "6"),
+            TranslatableString("import-export", "7"),
+            TranslatableString("import-export", "8 (best)"),
         },
         {
             wxT("0"),
@@ -156,7 +156,7 @@ int ExportFLAC::GetFormatCount() const
 FormatInfo ExportFLAC::GetFormatInfo(int) const
 {
     return {
-        wxT("FLAC"), XO("FLAC Files"), { wxT("flac") }, FLAC__MAX_CHANNELS, true
+        wxT("FLAC"), TranslatableString("import-export", "FLAC Files"), { wxT("flac") }, FLAC__MAX_CHANNELS, true
     };
 }
 
@@ -299,7 +299,8 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
 #else
     const auto path = fName.GetFullPath();
     if (!context.f.Open(path, wxT("w+b"))) {
-        throw ExportException(XO("FLAC export couldn't open %s")
+        //: %1 is the file path
+        throw ExportException(TranslatableString("import-export", "FLAC export couldn’t open %1")
                               .Format(path)
                               .Translation());
     }
@@ -309,7 +310,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
     // libflac can't (under Windows).
     int status = encoder.init(context.f.fp());
     if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-        throw ExportException(XO("FLAC encoder failed to initialize\nStatus: %d")
+        throw ExportException(TranslatableString("import-export", "FLAC encoder failed to initialize\nStatus: %1")
                               .Format(status)
                               .Translation());
     }
@@ -322,8 +323,8 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
         sampleRate, context.format, mixerSpec);
 
     context.status = selectionOnly
-                     ? XO("Exporting the selected audio as FLAC")
-                     : XO("Exporting the audio as FLAC");
+                     ? TranslatableString("import-export", "Exporting the selected audio as FLAC")
+                     : TranslatableString("import-export", "Exporting the audio as FLAC");
 
     return true;
 }

@@ -58,11 +58,11 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "project-import-startup-media", this, &ProjectActionsController::importStartupMedia);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
+    dispatcher()->reg(this, "file-save-to-cloud", [this]() { saveProject(SaveMode::Save, SaveLocationType::Cloud); });
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
     dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
-    dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
 
     dispatcher()->reg(this, "file-share-audio", this, &ProjectActionsController::shareAudio);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_FILE_URI, this, &ProjectActionsController::openCloudAudioFile);
@@ -71,7 +71,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
     dispatcher()->reg(this, "export-midi", this, &ProjectActionsController::exportMIDI);
 
-    dispatcher()->reg(this, "manage-metadata", this, &ProjectActionsController::openMetadataDialog);
+    dispatcher()->reg(this, "open-metadata-editor", this, &ProjectActionsController::openMetadataDialog);
 
     dispatcher()->reg(this, "file-close", [this]() {
         // reset preferred export sample rate
@@ -125,8 +125,8 @@ const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActions
         "file-close",
         "project-import",
         "file-save",
+        "file-save-to-cloud",
         "file-save-as",
-        "file-save-backup",
         "export-audio",
         "export-labels",
         "export-midi",
@@ -149,6 +149,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "clear-recent",
             "audacity://cloud/open-audio-file",
             "plugin-manager",
+            "project-show-in-folder",
         };
 
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
@@ -199,7 +200,7 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
             filename = resolved.val;
         }
 
-        return openProject(filename, file.displayNameOverride, file.cloudProjectId);
+        return openProject(filename, file.displayNameOverride);
     }
 
     //! TODO: Fix me
@@ -303,13 +304,25 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 
 void ProjectActionsController::openCloudProject(const muse::actions::ActionData& args)
 {
-    if (args.count() != 3) {
+    if (args.count() < 3) {
         return;
     }
 
     const QString cloudProjectId = args.arg<QString>(0);
     const QUrl url = args.arg<QUrl>(1);
     const QString displayName = args.arg<QString>(2);
+    const QString snapshotId = args.count() >= 4 ? args.arg<QString>(3) : QString();
+
+    //! An empty URL means the project is not in the local cloud DB yet (or a
+    //! specific snapshot was requested, which can't be served from local), so
+    //! route into the download flow and let audioComService resolve the path.
+    if (url.isEmpty()) {
+        Ret ret = openCloudProject({}, cloudProjectId, snapshotId);
+        if (!ret) {
+            openPageIfNeed(HOME_PAGE_URI);
+        }
+        return;
+    }
 
     Ret ret = openProject(muse::io::path_t(url), displayName, cloudProjectId);
     if (!ret) {
@@ -552,8 +565,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     }
 
     if (!progress) {
-        LOGE() << "Failed to start cloud upload";
-        return false;
+        return true;
     }
 
     progress->finished().onReceive(this, [this, projectFilePath](const ProgressResult& result) {
@@ -592,8 +604,9 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         { trc("global", "Stop"), au::toast::ToastActionCode::Custom }
     },
         showProgressInfo
-        ).onResolve(this, [progress = progress](const au::toast::ToastActionCode& actionCode) {
+        ).onResolve(this, [this, progress = progress](const au::toast::ToastActionCode& actionCode) {
         if (actionCode == au::toast::ToastActionCode::Custom) {
+            audioComService()->stopProjectSync();
             progress->cancel();
         }
     });
@@ -860,9 +873,6 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         if (!displayNameOverride.isEmpty()) {
             args << "--project-display-name-override" << displayNameOverride;
         }
-        if (!projectId.empty()) {
-            args << "--cloud-project-id" << projectId;
-        }
         multiwindowsProvider()->openNewWindow(args);
         return make_ret(Ret::Code::Ok);
     }
@@ -891,7 +901,8 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     return project;
 }
 
-Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId, bool forceOverwrite)
+Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId,
+                                               const String& snapshotId, bool forceOverwrite)
 {
     if (!audioComService()->enabled()) {
         LOGE() << "Cloud support is not available";
@@ -903,7 +914,8 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     }
 
     const std::string cloudProjectIdStr = projectId.toStdString();
-    auto [openRet, progress] = audioComService()->openCloudProject(localPath, cloudProjectIdStr, forceOverwrite);
+    const std::string snapshotIdStr = snapshotId.toStdString();
+    auto [openRet, progress] = audioComService()->openCloudProject(localPath, cloudProjectIdStr, snapshotIdStr, forceOverwrite);
     if (!openRet) {
         handleCloudOpenError(openRet, localPath, cloudProjectIdStr);
         return openRet;
@@ -939,7 +951,24 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         syncProgress->finished().onReceive(this, [this](const ProgressResult& result) {
             if (!result.ret.success()) {
                 handleCloudSaveError(result.ret);
+                return;
             }
+
+            const bool dismissable = false;
+            toastService()->show(trc("global", "Success"),
+                                 trc("project",
+                                     "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
+                                 muse::ui::IconCode::Code::TICK,
+                                 dismissable,
+            {
+                { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
+                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+            }
+                                 ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
+                if (actionCode == au::toast::ToastActionCode::Custom) {
+                    platformInteractive()->openUrl(url);
+                }
+            });
         });
 
         const bool dismissible = false;
@@ -955,8 +984,9 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             { trc("global", "Stop"), au::toast::ToastActionCode::Custom }
         },
             showProgressInfo
-            ).onResolve(this, [progress = syncProgress](const au::toast::ToastActionCode& actionCode) {
+            ).onResolve(this, [this, progress = syncProgress](const au::toast::ToastActionCode& actionCode) {
             if (actionCode == au::toast::ToastActionCode::Custom) {
+                audioComService()->stopProjectSync();
                 progress->cancel();
             }
         });
@@ -979,7 +1009,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
     IAudacityProjectPtr project = rv.val;
 
     // Check if this is an autosave of a newly created project
-    if (!project->isNewlyCreated()) {
+    if (!project->isNewlyCreated() && !au::project::isAudacityUnsavedFile(project->path())) {
         recentFilesController()->prependRecentFile(makeRecentFile(project));
     }
 
@@ -1358,10 +1388,10 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
-        openCloudProject(localPath, {}, true);
+        openCloudProject(localPath, {}, {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED:
-        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), true);
+        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM:
         if (!cloudProjectId.empty()) {
@@ -1410,7 +1440,7 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();
         closeOpenedProject(false);
-        openCloudProject(localPath, {}, true);
+        openCloudProject(localPath, {}, {}, true);
         break;
     }
     default:

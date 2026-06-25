@@ -156,7 +156,7 @@ TrackItemsContainer {
                     propagateComposedEvents: true
                     hoverEnabled: true
                     pressAndHoldInterval: 0
-                    enabled: !root.selectionInProgress && (root.isNearSample || root.isBrush)
+                    enabled: !root.selectionInProgress
                     cursorShape: Qt.BlankCursor
 
                     // While a selection edit is in progress the cursor on the track body
@@ -175,6 +175,25 @@ TrackItemsContainer {
                         }
                     }
 
+                    // True while the pointer is over any guideline-driving part of a clip in
+                    // this track: its body/header (hover) or either trim/stretch edge. The edges
+                    // are separate MouseAreas that drive the guideline but don't set the clip's
+                    // own `hover`, so they must be checked explicitly.
+                    function pointerOverAnyClip() {
+                        return clipsContainer.checkIfAnyClip(function (clipItem) {
+                            return clipItem && (clipItem.hover || clipItem.leftTrimContainsMouse || clipItem.rightTrimContainsMouse)
+                        })
+                    }
+
+                    function clearGuidelineIfPointerLeft() {
+                        // Clear only once the pointer is over neither the body nor any clip
+                        // otherwise a body->clip (or body->edge) hand-off would blink
+                        // the guideline for one frame.
+                        if (!clipsContainerMouseArea.containsMouse && !clipsContainerMouseArea.pointerOverAnyClip()) {
+                            root.clearItemGuideline()
+                        }
+                    }
+
                     Component.onCompleted: updateCustomCursor()
                     Connections {
                         target: root
@@ -185,8 +204,15 @@ TrackItemsContainer {
 
                     anchors.fill: parent
 
+                    // Only grab mouse buttons in sample/brush editing; otherwise let
+                    // presses fall through to the main area (selection, seek, etc.)
+                    // while still receiving hover moves to drive the snap guideline.
+                    onPressed: function (e) {
+                        e.accepted = root.isNearSample || root.isBrush || root.altPressed
+                    }
+
                     onDoubleClicked: function (e) {
-                        e.accepted = true
+                        e.accepted = root.isNearSample || root.isBrush || root.altPressed
                     }
 
                     onPressAndHold: function (e) {
@@ -226,19 +252,32 @@ TrackItemsContainer {
                     }
 
                     onPositionChanged: function (e) {
-                        clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
-                            clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
-                            clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
-                        })
+                        if (root.isNearSample || root.isBrush) {
+                            clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
+                                clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
+                                clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                            })
+                        }
+
+                        // Show the snap guideline while hovering the empty track body
+                        // (the area between/around clips that no ClipItem covers).
+                        let time = root.context.findGuideline(root.context.positionToTime(e.x, true))
+                        root.updateItemGuideline(time)
                     }
 
                     onContainsMouseChanged: function () {
-                        clipsContainer.mapToAllClips({
-                            x: mouseX,
-                            y: mouseY
-                        }, function (clipItem, mouseEvent) {
-                            clipItem.setContainsMouse(containsMouse)
-                        })
+                        if (root.isNearSample || root.isBrush) {
+                            clipsContainer.mapToAllClips({
+                                x: mouseX,
+                                y: mouseY
+                            }, function (clipItem, mouseEvent) {
+                                clipItem.setContainsMouse(containsMouse)
+                            })
+                        }
+
+                        if (!containsMouse) {
+                            Qt.callLater(clipsContainerMouseArea.clearGuidelineIfPointerLeft)
+                        }
                     }
                 }
 
@@ -308,7 +347,7 @@ TrackItemsContainer {
                                 title: itemData.title
                                 clipColor: itemData.color
                                 clipSelectedColor: itemData.selectedColor
-                                groupId: itemData.groupId
+                                isGrouped: itemData.isGrouped
                                 clipKey: itemData.key
                                 clipTime: itemData.time
                                 pitch: itemData.pitch
@@ -359,7 +398,7 @@ TrackItemsContainer {
                                 navigation.column: itemData ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
-                                    if (navigation.active) {
+                                    if (navigation.highlight) {
                                         root.context.animatedInsureVisible(itemData.time.startTime)
                                         root.insureVerticallyVisible()
                                     }
@@ -436,7 +475,7 @@ TrackItemsContainer {
                                 onClipEndEditRequested: function () {
                                     clipsModel.endEditItem(itemData.key)
 
-                                    root.triggerItemGuideline(false, -1)
+                                    root.clearItemGuideline()
                                 }
 
                                 onClipLeftTrimRequested: function (completed, action) {
@@ -475,10 +514,17 @@ TrackItemsContainer {
                                     var yWithinTrack = yWithinClip
                                     var xWithinTrack = xWithinClip + itemData.x
 
-                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
+                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key);
 
-                                    let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.triggerItemGuideline(time, false)
+                                    // While a clip is being moved or a trim/stretch handle is held the
+                                    // guideline follows the dragged clip edge (driven by handleClipGuideline),
+                                    // not the cursor — so only snap the guideline to the cursor when no such
+                                    // edit is in progress.
+                                    const editInProgress = root.moveActive || root.leftTrimPressedButtons || root.rightTrimPressedButtons
+                                    if (!editInProgress) {
+                                        let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                                        root.updateItemGuideline(time)
+                                    }
                                 }
 
                                 onRequestSelected: {
@@ -712,6 +758,7 @@ TrackItemsContainer {
         }
 
         function onItemReleaseRequested(itemKey) {
+            clipsModel.handleClipRelease(itemKey)
         }
 
         function onCancelItemDragEditRequested(itemKey) {
@@ -730,9 +777,16 @@ TrackItemsContainer {
     }
 
     function handleClipGuideline(clipKey, direction, completed) {
-        let guidelinePos = clipsModel.findGuideline(clipKey, direction)
-        if (guidelinePos) {
-            triggerItemGuideline(guidelinePos, completed)
+        // itemMoveRequested is broadcast to every track's container, but the guideline is
+        // shared across all of them. Only the container that owns the dragged clip may touch
+        // it, otherwise non-owners clobber the owning track's guideline.
+        if (clipsModel.containsItem(clipKey)) {
+            if (completed) {
+                root.clearItemGuideline()
+            } else {
+                let time = clipsModel.findGuideline(clipKey, direction)
+                updateItemGuideline(time)
+            }
         }
     }
 }

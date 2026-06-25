@@ -48,13 +48,13 @@ Item {
 
             if (remainingSeconds >= SECONDS_IN_HOUR) {
                 const hours = Math.round(remainingSeconds / SECONDS_IN_HOUR)
-                text = hours === 1 ? qsTrc("toast", "1 hour remaining") : qsTrc("toast", "%1 hours remaining").arg(hours)
+                text = qsTrc("toast", "%n hour(s) remaining", "amount of time left until the requested operation is finished", hours)
             } else if (remainingSeconds >= SECONDS_IN_MINUTE) {
                 const minutes = Math.round(remainingSeconds / SECONDS_IN_MINUTE)
-                text = minutes === 1 ? qsTrc("toast", "1 minute remaining") : qsTrc("toast", "%1 minutes remaining").arg(minutes)
+                text = qsTrc("toast", "%n minute(s) remaining", "amount of time left until the requested operation is finished", minutes)
             } else {
                 const seconds = Math.round(remainingSeconds)
-                text = seconds === 1 ? qsTrc("toast", "1 second remaining") : qsTrc("toast", "%1 seconds remaining").arg(seconds)
+                text = qsTrc("toast", "%n second(s) remaining", "amount of time left until the requested operation is finished", seconds)
             }
         }
     }

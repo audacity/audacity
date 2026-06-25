@@ -26,12 +26,12 @@
 #define STEPS 1024 // number of +ve or -ve steps in lookup tabe
 
 const EnumValueSymbol DistortionBase::kTableTypeStrings[nTableTypes] = {
-    { XO("Hard Clipping") },    { XO("Soft Clipping") },
-    { XO("Soft Overdrive") },   { XO("Medium Overdrive") },
-    { XO("Hard Overdrive") },   { XO("Cubic Curve (odd harmonics)") },
-    { XO("Even Harmonics") },   { XO("Expand and Compress") },
-    { XO("Leveller") },         { XO("Rectifier Distortion") },
-    { XO("Hard Limiter 1413") }
+    { TranslatableString("builtin-effects", "Hard Clipping") },    { TranslatableString("builtin-effects", "Soft Clipping") },
+    { TranslatableString("builtin-effects", "Soft Overdrive") },   { TranslatableString("builtin-effects", "Medium Overdrive") },
+    { TranslatableString("builtin-effects", "Hard Overdrive") },   { TranslatableString("builtin-effects", "Cubic Curve (odd harmonics)") },
+    { TranslatableString("builtin-effects", "Even Harmonics") },   { TranslatableString("builtin-effects", "Expand and Compress") },
+    { TranslatableString("builtin-effects", "Leveller") },         { TranslatableString("builtin-effects", "Rectifier Distortion") },
+    { TranslatableString("builtin-effects", "Hard Limiter 1413") }
 };
 
 const EffectParameterMethods& DistortionBase::Parameters() const
@@ -57,31 +57,31 @@ static const struct
     // Defaults:                                   0       false   -6.0       -70.0(off)     50.0     50.0     1
     //
     // xgettext:no-c-format
-    { XO("Hard clip -12dB, 80% make-up gain"),     { 0,        0,      -12.0,      -70.0,      0.0,     80.0,    0 } },
+    { TranslatableString("builtin-effects", "Hard clip -12dB, 80% make-up gain"),     { 0,        0,      -12.0,      -70.0,      0.0,     80.0,    0 } },
     // xgettext:no-c-format
-    { XO("Soft clip -12dB, 80% make-up gain"),     { 1,        0,      -12.0,      -70.0,      50.0,    80.0,    0 } },
-    { XO("Fuzz Box"),                              { 1,        0,      -30.0,      -70.0,      80.0,    80.0,    0 } },
-    { XO("Walkie-talkie"),                         { 1,        0,      -50.0,      -70.0,      60.0,    80.0,    0 } },
-    { XO("Blues drive sustain"),                   { 2,        0,       -6.0,      -70.0,      30.0,    80.0,    0 } },
-    { XO("Light Crunch Overdrive"),                { 3,        0,       -6.0,      -70.0,      20.0,    80.0,    0 } },
-    { XO("Heavy Overdrive"),                       { 4,        0,       -6.0,      -70.0,      90.0,    80.0,    0 } },
-    { XO("3rd Harmonic (Perfect Fifth)"),          { 5,        0,       -6.0,      -70.0,     100.0,    60.0,    0 } },
-    { XO("Valve Overdrive"),                       { 6,        1,       -6.0,      -70.0,      30.0,    40.0,    0 } },
-    { XO("2nd Harmonic (Octave)"),                 { 6,        1,       -6.0,      -70.0,      50.0,     0.0,    0 } },
-    { XO("Gated Expansion Distortion"),            { 7,        0,       -6.0,      -70.0,      30.0,    80.0,    0 } },
-    { XO("Leveller, Light, -70dB noise floor"),    { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    1 } },
-    { XO("Leveller, Moderate, -70dB noise floor"), { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    2 } },
-    { XO("Leveller, Heavy, -70dB noise floor"),    { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    3 } },
-    { XO("Leveller, Heavier, -70dB noise floor"),  { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    4 } },
-    { XO("Leveller, Heaviest, -70dB noise floor"), { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    5 } },
-    { XO("Half-wave Rectifier"),                   { 9,        0,       -6.0,      -70.0,      50.0,    50.0,    0 } },
-    { XO("Full-wave Rectifier"),                   { 9,        0,       -6.0,      -70.0,     100.0,    50.0,    0 } },
-    { XO("Full-wave Rectifier (DC blocked)"),      { 9,        1,       -6.0,      -70.0,     100.0,    50.0,    0 } },
-    { XO("Percussion Limiter"),                    { 10,        0,      -12.0,      -70.0,     100.0,    30.0,    0 } },
+    { TranslatableString("builtin-effects", "Soft clip -12dB, 80% make-up gain"),     { 1,        0,      -12.0,      -70.0,      50.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "Fuzz Box"),                              { 1,        0,      -30.0,      -70.0,      80.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "Walkie-talkie"),                         { 1,        0,      -50.0,      -70.0,      60.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "Blues drive sustain"),                   { 2,        0,       -6.0,      -70.0,      30.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "Light Crunch Overdrive"),                { 3,        0,       -6.0,      -70.0,      20.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "Heavy Overdrive"),                       { 4,        0,       -6.0,      -70.0,      90.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "3rd Harmonic (Perfect Fifth)"),          { 5,        0,       -6.0,      -70.0,     100.0,    60.0,    0 } },
+    { TranslatableString("builtin-effects", "Valve Overdrive"),                       { 6,        1,       -6.0,      -70.0,      30.0,    40.0,    0 } },
+    { TranslatableString("builtin-effects", "2nd Harmonic (Octave)"),                 { 6,        1,       -6.0,      -70.0,      50.0,     0.0,    0 } },
+    { TranslatableString("builtin-effects", "Gated Expansion Distortion"),            { 7,        0,       -6.0,      -70.0,      30.0,    80.0,    0 } },
+    { TranslatableString("builtin-effects", "Leveller, Light, -70dB noise floor"),    { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    1 } },
+    { TranslatableString("builtin-effects", "Leveller, Moderate, -70dB noise floor"), { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    2 } },
+    { TranslatableString("builtin-effects", "Leveller, Heavy, -70dB noise floor"),    { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    3 } },
+    { TranslatableString("builtin-effects", "Leveller, Heavier, -70dB noise floor"),  { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    4 } },
+    { TranslatableString("builtin-effects", "Leveller, Heaviest, -70dB noise floor"), { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    5 } },
+    { TranslatableString("builtin-effects", "Half-wave Rectifier"),                   { 9,        0,       -6.0,      -70.0,      50.0,    50.0,    0 } },
+    { TranslatableString("builtin-effects", "Full-wave Rectifier"),                   { 9,        0,       -6.0,      -70.0,     100.0,    50.0,    0 } },
+    { TranslatableString("builtin-effects", "Full-wave Rectifier (DC blocked)"),      { 9,        1,       -6.0,      -70.0,     100.0,    50.0,    0 } },
+    { TranslatableString("builtin-effects", "Percussion Limiter"),                    { 10,        0,      -12.0,      -70.0,     100.0,    30.0,    0 } },
     };
 // clang-format on
 
-const ComponentInterfaceSymbol DistortionBase::Symbol { XO("Distortion") };
+const ComponentInterfaceSymbol DistortionBase::Symbol { TranslatableString("builtin-effects", "Distortion") };
 
 std::shared_ptr<EffectInstance> DistortionBase::MakeInstance() const
 {
@@ -108,7 +108,7 @@ ComponentInterfaceSymbol DistortionBase::GetSymbol() const
 
 TranslatableString DistortionBase::GetDescription() const
 {
-    return XO("Waveshaping distortion effect");
+    return TranslatableString("builtin-effects", "Waveshaping distortion effect");
 }
 
 ManualPageID DistortionBase::ManualPage() const

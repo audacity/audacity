@@ -132,7 +132,7 @@ ExportTask ExportTaskBuilder::Build(AudacityProject& project)
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper& fileName)
 {
     BasicUI::ShowErrorDialog({},
-                             XO("Warning"),
+                             TranslatableString("import-export", "Warning"),
                              FileException::WriteFailureMessage(fileName),
                              "Error:_Disk_full_or_not_writable"
                              );

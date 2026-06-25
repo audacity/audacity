@@ -333,7 +333,7 @@ Item {
                             menuModel: item.contextMenuModel
 
                             onHandleMenuItem: function (itemId) {
-                                item.contextMenuModel.handleMenuItem(itemId)
+                                Qt.callLater(item.contextMenuModel.handleMenuItem, itemId)
                             }
 
                             Component.onCompleted: {

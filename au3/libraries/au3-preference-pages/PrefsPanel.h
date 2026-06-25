@@ -89,7 +89,7 @@ public:
     };
 
     PrefsPanel(wxWindow* parent,
-               wxWindowID winid, const TranslatableString& title)
+               wxWindowID winid, const ::TranslatableString& title)
         :  wxPanelWrapper(parent, winid)
     {
         SetLabel(title);   // Provide visual label

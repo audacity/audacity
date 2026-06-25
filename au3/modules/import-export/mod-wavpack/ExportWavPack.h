@@ -18,20 +18,20 @@ enum : int {
 };
 
 const TranslatableStrings ExportQualityNames{
-    XO("Low Quality (Fast)"),
-    XO("Normal Quality"),
-    XO("High Quality (Slow)"),
-    XO("Very High Quality (Slowest)"),
+    TranslatableString("import-export", "Low Quality (Fast)"),
+    TranslatableString("import-export", "Normal Quality"),
+    TranslatableString("import-export", "High Quality (Slow)"),
+    TranslatableString("import-export", "Very High Quality (Slowest)"),
 };
 
 const TranslatableStrings ExportBitDepthNames {
-    XO("16 bit"),
-    XO("24 bit"),
-    XO("32 bit float"),
+    TranslatableString("import-export", "16 bit"),
+    TranslatableString("import-export", "24 bit"),
+    TranslatableString("import-export", "32 bit float"),
 };
 
-// i18n-hint bps abbreviates "bits per sample"
-inline TranslatableString n_bps(int n) { return XO("%.1f bps").Format(n / 10.0); }
+//: bps abbreviates "bits per sample"
+inline TranslatableString n_bps(int n) { return TranslatableString("import-export", "%1 bps").arg(n / 10.0); }
 
 const TranslatableStrings BitRateNames {
     n_bps(22),
@@ -48,31 +48,31 @@ const TranslatableStrings BitRateNames {
 
 const std::initializer_list<ExportOption> ExportWavPackOptions {
     {
-        OptionIDQuality, XO("Quality"),
+        OptionIDQuality, TranslatableString("import-export", "Quality"),
         1,
         ExportOption::TypeEnum,
         { 0, 1, 2, 3 },
         ExportQualityNames
     },
     {
-        OptionIDBitDepth, XO("Bit Depth"),
+        OptionIDBitDepth, TranslatableString("import-export", "Bit Depth"),
         16,
         ExportOption::TypeEnum,
         { 16, 24, 32 },
         ExportBitDepthNames
     },
     {
-        OptionIDHybridMode, XO("Hybrid Mode"),
+        OptionIDHybridMode, TranslatableString("import-export", "Hybrid Mode"),
         false,
         ExportOption::Hidden
     },
     {
-        OptionIDCreateCorrection, XO("Create Correction(.wvc) File"),
+        OptionIDCreateCorrection, TranslatableString("import-export", "Create Correction(.wvc) File"),
         false,
         ExportOption::ReadOnly | ExportOption::Hidden
     },
     {
-        OptionIDBitRate, XO("Bit Rate"),
+        OptionIDBitRate, TranslatableString("import-export", "Bit Rate"),
         40,
         ExportOption::TypeEnum | ExportOption::Hidden,
         { 22, 25, 30, 35, 40, 45, 50, 60, 70, 80 },

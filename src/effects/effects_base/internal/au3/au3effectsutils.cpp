@@ -17,7 +17,7 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.id = au3::wxToString(desc.GetID());
     meta.family = utils::effectFamilyFromString(au3::wxToString(desc.GetEffectFamily()));
     meta.type = toAu4EffectType(desc.GetEffectType());
-    meta.title = au3::wxToString(desc.GetSymbol().Msgid().MSGID().GET());
+    meta.title = desc.GetSymbol().Msgid().msgid();
     meta.description = au3::wxToString(desc.GetDescription());
     meta.vendor = au3::wxToString(desc.GetVendor());
     meta.version = au3::wxToString(desc.GetUntranslatedVersion());

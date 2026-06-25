@@ -179,7 +179,7 @@ public:
     struct TypeNames {
         wxString info; //!< short, like "wave", in macro output, not internationalized
         wxString property; //!< short, like "wave", as a Lisp symbol property, not internationalized
-        TranslatableString name; //!< long, like "Wave Track"
+        ::TranslatableString name; //!< long, like "Wave Track"
     };
     struct TypeInfo {
         TypeNames names;
@@ -415,7 +415,7 @@ public:
     /*!
      May assume consistency of stereo channel grouping and examine other channels
      */
-    virtual std::optional<TranslatableString> GetErrorOpening() const;
+    virtual std::optional<::TranslatableString> GetErrorOpening() const;
 
     // Send a notification to subscribers when state of the track changes
     // To do: define values for the argument to distinguish different parts

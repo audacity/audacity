@@ -1527,6 +1527,117 @@ TEST_F(Au3LabelsInteractionsTests, StretchLabelLeftInverse)
     ASSERT_DOUBLE_EQ(label3->getT1(), 7.5) << "After swap, T1 should be 7.5";
 }
 
+TEST_F(Au3LabelsInteractionsTests, StretchOppositeEdgeAfterInterruptedStretch)
+{
+    //! [GIVEN] There is a project with a label track containing one label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    //! [GIVEN] Add a label from 2.0 to 5.0
+    SelectedRegion region;
+    region.setTimes(2.0, 5.0);
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString("Test Label"));
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
+
+    //! [EXPECT] Notifications for each stretch call
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(2);
+
+    //! [WHEN] A left stretch is interrupted (never delivers the completed call)
+    bool result1 = m_labelsInteraction->stretchLabelLeft(labelKey, 2.5, false);
+    ASSERT_TRUE(result1) << "Left stretch should succeed";
+
+    //! [WHEN] The right edge of the same label is stretched afterwards
+    bool result2 = m_labelsInteraction->stretchLabelRight(labelKey, 6.0, false);
+    ASSERT_TRUE(result2) << "Right stretch should succeed";
+
+    //! [THEN] The right stretch anchors to the label's current start time,
+    //! it must not reuse the end-time anchor left over from the interrupted left stretch
+    const Au3Label* label = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label->getT0(), 2.5) << "Label start time should stay where the left stretch put it";
+    ASSERT_DOUBLE_EQ(label->getT1(), 6.0) << "Label end time should be 6.0";
+}
+
+TEST_F(Au3LabelsInteractionsTests, ResetLabelStretchStateDropsStretchAnchors)
+{
+    //! [GIVEN] There is a project with a label track containing one label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    //! [GIVEN] Add a label from 2.0 to 5.0
+    SelectedRegion region;
+    region.setTimes(2.0, 5.0);
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString("Test Label"));
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
+
+    //! [EXPECT] Notifications for each stretch call
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(2);
+
+    //! [WHEN] A left stretch crosses the right edge, so the label is swapped to (5.0, 6.0)
+    //! while the gesture holds the original right edge 5.0 as its anchor
+    bool result1 = m_labelsInteraction->stretchLabelLeft(labelKey, 6.0, false);
+    ASSERT_TRUE(result1) << "Left stretch should succeed";
+    ASSERT_DOUBLE_EQ(labelTrack->GetLabel(0)->getT0(), 5.0);
+    ASSERT_DOUBLE_EQ(labelTrack->GetLabel(0)->getT1(), 6.0);
+
+    //! [WHEN] The gesture is canceled
+    m_labelsInteraction->resetLabelStretchState();
+
+    //! [WHEN] A new left stretch starts on the same label
+    bool result2 = m_labelsInteraction->stretchLabelLeft(labelKey, 7.0, false);
+    ASSERT_TRUE(result2) << "Left stretch should succeed";
+
+    //! [THEN] The new gesture anchors to the label's current end time 6.0,
+    //! not to the anchor 5.0 of the canceled gesture
+    const Au3Label* label = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label->getT0(), 6.0) << "Label start time should be the pre-stretch end time 6.0";
+    ASSERT_DOUBLE_EQ(label->getT1(), 7.0) << "Label end time should be 7.0";
+}
+
+TEST_F(Au3LabelsInteractionsTests, TrailingStretchCallAfterCompletionDoesNotLeakIntoNextGesture)
+{
+    //! [GIVEN] There is a project with a label track containing one label from 2.0 to 5.0
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    SelectedRegion region;
+    region.setTimes(2.0, 5.0);
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString("Test Label"));
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
+
+    //! [EXPECT] Notifications for each stretch call
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(4);
+
+    //! [WHEN] A right stretch completes, but a trailing not-completed call arrives after it
+    ASSERT_TRUE(m_labelsInteraction->stretchLabelRight(labelKey, 6.0, false));
+    ASSERT_TRUE(m_labelsInteraction->stretchLabelRight(labelKey, 6.0, true));
+    ASSERT_TRUE(m_labelsInteraction->stretchLabelRight(labelKey, 6.0, false));
+
+    //! [WHEN] The edit session ends, and the label is moved to (1.0, 5.0)
+    m_labelsInteraction->resetLabelStretchState();
+
+    Au3Label movedLabel = labelTrack->GetLabels()[labelTrack->GetLabelIndex(labelId)];
+    movedLabel.selectedRegion.setTimes(1.0, 5.0);
+    labelTrack->SetLabel(labelTrack->GetLabelIndex(labelId), movedLabel);
+
+    //! [WHEN] The right edge is stretched again
+    ASSERT_TRUE(m_labelsInteraction->stretchLabelRight(labelKey, 7.0, false));
+
+    //! [THEN] The start time stays at the label's current position 1.0,
+    //! it must not jump back to the pre-move anchor 2.0 left by the trailing call
+    const Au3Label* label = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label->getT0(), 1.0) << "Label start time should stay at its current position";
+    ASSERT_DOUBLE_EQ(label->getT1(), 7.0) << "Label end time should be 7.0";
+}
+
 TEST_F(Au3LabelsInteractionsTests, StretchLabelLeftWithInvalidKey)
 {
     //! [GIVEN] There is a project with a label track containing one label

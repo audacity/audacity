@@ -394,6 +394,8 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
         return false;
     }
 
+    m_pendingShiftDeselect.clear();
+
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
         return false;
@@ -762,10 +764,10 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
                 return muse::contains(selectedClips, groupClipKey);
             });
 
-            for (const auto& groupClipKey : groupedClips) {
-                if (allGroupClipsSelected) {
-                    selectionController()->removeClipSelection(groupClipKey);
-                } else {
+            if (allGroupClipsSelected) {
+                m_pendingShiftDeselect = groupedClips;
+            } else {
+                for (const auto& groupClipKey : groupedClips) {
                     selectionController()->addSelectedClip(groupClipKey);
                 }
             }
@@ -777,7 +779,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     } else {
         if (modifiers.testFlag(Qt::ShiftModifier)) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
-                selectionController()->removeClipSelection(key.key);
+                m_pendingShiftDeselect = { key.key };
             } else {
                 selectionController()->addSelectedClip(key.key);
             }
@@ -790,6 +792,23 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     }
 
     setFocusedItem(key);
+}
+
+void TrackClipsListModel::handleClipRelease(const ClipKey& key)
+{
+    if (!m_pendingShiftDeselect.empty() && muse::contains(m_pendingShiftDeselect, key.key)) {
+        for (const auto& clipKey : m_pendingShiftDeselect) {
+            selectionController()->removeClipSelection(clipKey);
+        }
+        m_pendingShiftDeselect.clear();
+    }
+}
+
+void TrackClipsListModel::endEditItem(const TrackItemKey& key)
+{
+    TrackItemsListModel::endEditItem(key);
+
+    m_pendingShiftDeselect.clear();
 }
 
 void TrackClipsListModel::resetSelectedClips()

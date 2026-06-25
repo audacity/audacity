@@ -15,16 +15,18 @@ Rectangle {
 
     property int earWidth: 0
 
+    property real leftVisibleMargin: 0
+
     property bool enableCursorInteraction: true
 
     property var navigationPanel: null
 
     signal titleEditAccepted(var newTitle)
 
-    signal editStarted()
-    signal editFinished()
+    signal editStarted
+    signal editFinished
 
-    signal requestSingleSelected()
+    signal requestSingleSelected
 
     signal contextMenuOpenRequested(real x, real y)
     signal mousePositionChanged(real x, real y)
@@ -82,7 +84,7 @@ Rectangle {
             e.accepted = false
         }
 
-        onClicked: function(e) {
+        onClicked: function (e) {
             if (e.button === Qt.RightButton) {
                 root.contextMenuOpenRequested(e.x, e.y)
             }
@@ -92,9 +94,7 @@ Rectangle {
         onPositionChanged: function (e) {
             // Reset double click timer if the mouse has moved,
             // to prevent rapid clip movement activate title editing
-            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
-
+            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
                 lastClickTime = 0
             }
 
@@ -111,15 +111,11 @@ Rectangle {
         }
     }
 
-    Loader {
-        id: titleLoader
-
-        property bool isEditState: false
-        property real contentWidth: item ? (isEditState ? item.contentWidth + 1 : item.implicitWidth + 1) : 0
-        property real contentHeight: item ? (isEditState ? item.contentHeight : item.implicitHeight) : 0
+    Item {
+        id: titleViewport
 
         anchors.top: parent.top
-        anchors.topMargin: isEditState ? 0 : 2
+        anchors.topMargin: titleLoader.isEditState ? 0 : 2
         anchors.left: parent.left
         anchors.leftMargin: root.isPoint ? 4 : root.earWidth
         anchors.right: parent.right
@@ -127,105 +123,126 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 2
 
-        sourceComponent: isEditState ? titleEditComp : titleComp
+        clip: true
 
-        function edit() {
-            root.editStarted()
+        Loader {
+            id: titleLoader
 
-            titleLoader.isEditState = true
-            titleLoader.item.currentText = root.title
-            titleLoader.item.newTitle = root.title
-            titleLoader.item.ensureActiveFocus()
-        }
+            property bool isEditState: false
+            property real contentWidth: item ? (isEditState ? item.contentWidth + 1 : item.implicitWidth + 1) : 0
+            property real contentHeight: item ? (isEditState ? item.contentHeight : item.implicitHeight) : 0
 
-        Component {
-            id: titleComp
+            x: Math.max(0, root.leftVisibleMargin - root.x)
+            width: parent.width
+            height: parent.height
 
-            StyledTextLabel {
-                text: root.title
-                horizontalAlignment: Qt.AlignLeft
-                color: root.labelColor
+            sourceComponent: isEditState ? titleEditComp : titleComp
+
+            function edit() {
+                root.editStarted()
+
+                titleLoader.isEditState = true
+                titleLoader.item.currentText = root.title
+                titleLoader.item.newTitle = root.title
+                titleLoader.item.ensureActiveFocus()
             }
-        }
 
-        Component {
-            id: titleEditComp
+            Component {
+                id: titleComp
 
-            TextInputArea {
-                id: titleEdit
+                StyledTextLabel {
+                    text: root.title
 
-                property string newTitle: ""
-                property real contentWidth: textMetrics.advanceWidth
-                property real contentHeight: scrollableContentHeight
-                property bool _editEscaped: false
+                    color: root.labelColor
 
-                allowNewLineByEnter: false
-
-                TextMetrics {
-                    id: textMetrics
-                    font: titleEdit.inputField.font
-                    text: titleEdit.newTitle
+                    horizontalAlignment: Qt.AlignLeft
+                    elide: Text.ElideNone
+                    wrapMode: Text.NoWrap
+                    maximumLineCount: 1
                 }
+            }
 
-                background.color: root.backgroundColor
-                background.border.width: 0
-                background.radius: 0
+            Component {
+                id: titleEditComp
 
-                inputField.color: root.labelColor
-                textSidePadding: 0
+                TextInputArea {
+                    id: titleEdit
 
-                onTextChanged: function (text) {
-                    titleEdit.newTitle = text
-                }
+                    property string newTitle: ""
+                    property real contentWidth: titleMetrics.implicitWidth
+                    property real contentHeight: scrollableContentHeight
+                    property bool _editEscaped: false
 
-                onAccepted: {
-                    Qt.callLater(root.titleEditAccepted, newTitle)
+                    allowNewLineByEnter: false
 
-                    titleLoader.isEditState = false
-                }
+                    Text {
+                        id: titleMetrics
+                        visible: false
+                        wrapMode: Text.NoWrap
+                        font: titleEdit.inputField.font
+                        text: titleEdit.newTitle
+                    }
 
-                onEscaped: {
-                    titleEdit._editEscaped = true
-                }
+                    background.color: root.backgroundColor
+                    background.border.width: 0
+                    background.radius: 0
 
-                onFocusChanged: {
-                    if (!titleEdit.focus) {
-                        titleEdit.visible = false
-                        Qt.callLater(function() {
-                            var escaped = titleEdit._editEscaped
-                            titleEdit._editEscaped = false
-                            if (!escaped) {
-                                titleEdit.accepted()
-                            } else {
-                                titleLoader.isEditState = false
-                            }
-                            root.editFinished()
-                        })
+                    inputField.color: root.labelColor
+                    textSidePadding: 0
+
+                    onTextChanged: function (text) {
+                        titleEdit.newTitle = text
+                    }
+
+                    onAccepted: {
+                        Qt.callLater(root.titleEditAccepted, newTitle)
+
+                        titleLoader.isEditState = false
+                    }
+
+                    onEscaped: {
+                        titleEdit._editEscaped = true
+                    }
+
+                    onFocusChanged: {
+                        if (!titleEdit.focus) {
+                            titleEdit.visible = false
+                            Qt.callLater(function () {
+                                var escaped = titleEdit._editEscaped
+                                titleEdit._editEscaped = false
+                                if (!escaped) {
+                                    titleEdit.accepted()
+                                } else {
+                                    titleLoader.isEditState = false
+                                }
+                                root.editFinished()
+                            })
+                        }
                     }
                 }
             }
-        }
 
-        NavigationControl {
-            id: titleEditNavCtrl
-            name: "TitleEditNavCtrl"
-            enabled: root.visible
-            panel: root.navigationPanel
-            column: 3
+            NavigationControl {
+                id: titleEditNavCtrl
+                name: "TitleEditNavCtrl"
+                enabled: root.visible
+                panel: root.navigationPanel
+                column: 3
 
-            accessible.enabled: titleEditNavCtrl.enabled
+                accessible.enabled: titleEditNavCtrl.enabled
 
-            onTriggered: {
-                titleLoader.edit()
+                onTriggered: {
+                    titleLoader.edit()
+                }
             }
-        }
 
-        NavigationFocusBorder {
-            navigationCtrl: titleEditNavCtrl
+            NavigationFocusBorder {
+                navigationCtrl: titleEditNavCtrl
 
-            anchors.topMargin: 1
-            anchors.bottomMargin: 0
-            radius: 5
+                anchors.topMargin: 1
+                anchors.bottomMargin: 0
+                radius: 5
+            }
         }
     }
 }

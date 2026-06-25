@@ -12,7 +12,7 @@
             "commands": [
                 {
                     "match": "\\.qml$",
-                    "cmd": "${workspaceFolder}/.tools/qmlformat/bin/qmlformat -i --semicolon-rule=essential ${file}"
+                    "cmd": "qmlformat -i --semicolon-rule=essential -l unix ${file}"
                 }
             ]
         },

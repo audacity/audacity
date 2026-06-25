@@ -25,7 +25,7 @@ $control BAD-DATA (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Er
   (cond
     ((not (setf fstream (open fname)))
         (throw 'err (format nil (_ "Error~%~
-                        '~a' could not be opened.~%~
+                        ‘~a’ could not be opened.~%~
                         Check that file exists.")
                         fname)))
     ; File opened OK, so check for normal ASCII, then close it and return 'true'
@@ -34,7 +34,7 @@ $control BAD-DATA (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Er
           (when (> b 127)
             (throw 'err (format nil (_ "Error:~%~
               The file must contain only plain ASCII text.~%~
-              (Invalid byte '~a' at byte number: ~a)") b (1+ j) ))))
+              (Invalid byte ‘~a’ at byte number: ~a)") b (1+ j) ))))
         (close fstream)
         t)))
 
@@ -75,7 +75,7 @@ $control BAD-DATA (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Er
       ((= BAD-DATA 0) ;invalid. Throw error and quit
           (throw 'err (format nil (_ "Error~%~
               Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value.") val)))
+              ‘~a’ is not a numeric value.") val)))
       (t  0.0)))) ;invalid. Replace with zero.
 
 ;; Instantiate a new sound object

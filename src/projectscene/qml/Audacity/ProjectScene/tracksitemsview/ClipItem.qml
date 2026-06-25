@@ -38,7 +38,7 @@ Rectangle {
     readonly property color classicHeaderColor: ui.theme.extra["classic_clip_header_color"]
     readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
-    property int groupId: -1
+    property bool isGrouped: false
     property bool clipSelected: false
     property bool clipIntersectsSelection: false
     property bool clipFocused: false
@@ -263,7 +263,7 @@ Rectangle {
     }
 
     function openContextMenu() {
-        if (root.multiClipsSelected || root.groupId != -1) {
+        if (root.multiClipsSelected || root.isGrouped) {
             prv.ensureMultiMenuLoaded()
         } else {
             prv.ensureSingleMenuLoaded()
@@ -287,7 +287,7 @@ Rectangle {
     }
 
     function getSpectrogramHit(y /* relative to tracks canvas */) {
-        return spectrogramView.getSpectrogramHit(y)
+        return spectrogramViewLoader.item ? spectrogramViewLoader.item.getSpectrogramHit(y) : null
     }
 
     function setLastSample(x, y) {
@@ -310,7 +310,9 @@ Rectangle {
 
     function updateViews() {
         waveView.update()
-        spectrogramView.update()
+        if (spectrogramViewLoader.item) {
+            spectrogramViewLoader.item.update()
+        }
     }
 
     ClipContextMenuModel {
@@ -387,6 +389,19 @@ Rectangle {
         onClicked: function (e) {
             if (root.multiClipsSelected) {
                 prv.ensureMultiMenuLoaded()
+                if (e.modifiers & Qt.ShiftModifier) {
+                    if (!root.clipSelected) {
+                        root.requestSelectionReset()
+                    }
+                    root.requestSelected()
+                }
+                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
+            } else if (root.isGrouped) {
+                prv.ensureMultiMenuLoaded()
+                if (!root.clipSelected) {
+                    root.requestSelectionReset()
+                }
+                root.requestSelected()
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
                 prv.ensureSingleMenuLoaded()
@@ -794,7 +809,7 @@ Rectangle {
 
                     mouseArea.visible: root.enableCursorInteraction
 
-                    menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
+                    menuModel: (root.multiClipsSelected || root.isGrouped) ? multiClipContextMenuModel : singleClipContextMenuModel
 
                     visible: header.width > (60 + menuBtn.implicitWidth)
 
@@ -807,7 +822,7 @@ Rectangle {
                     }
 
                     onClicked: function (mouse) {
-                        if (root.multiClipsSelected || root.groupId != -1) {
+                        if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
                         } else {
                             prv.ensureSingleMenuLoaded()
@@ -1004,51 +1019,52 @@ Rectangle {
                 }
             }
 
-            ClipSpectrogramView {
-                id: spectrogramView
+            Loader {
+                id: spectrogramViewLoader
 
-                visible: root.isSpectrogramViewVisible
+                active: root.isSpectrogramViewVisible
+                visible: active
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                canvas: root.canvas
-                clipId: root.clipKey.itemId()
-                trackId: root.clipKey.trackId()
-                selectionInProgress: root.selectionInProgress
-                selectionEditInProgress: root.selectionEditInProgress
-                verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
-                spectralSelectionEnabled: root.spectralSelectionEnabled
-                pressedSpectrogram: root.pressedSpectrogram
-                isStereo: root.showChannelSplitter
-                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+                sourceComponent: ClipSpectrogramView {
+                    canvas: root.canvas
+                    clipId: root.clipKey.itemId()
+                    trackId: root.clipKey.trackId()
+                    selectionInProgress: root.selectionInProgress
+                    selectionEditInProgress: root.selectionEditInProgress
+                    verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
+                    spectralSelectionEnabled: root.spectralSelectionEnabled
+                    pressedSpectrogram: root.pressedSpectrogram
+                    isStereo: root.showChannelSplitter
+                    channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
-                timelineIndentWidth: root.canvas.anchors.leftMargin
-                zoom: root.context.zoom
-                frameStartTime: root.context.frameStartTime
-                frameEndTime: root.context.frameEndTime
-                selectionStartTime: root.context.selectionStartTime
-                selectionEndTime: root.context.selectionEndTime
-                selectionStartFrequency: root.selectionStartFrequency
-                selectionEndFrequency: root.selectionEndFrequency
-                clipSelected: root.clipSelected
+                    timelineIndentWidth: root.canvas.anchors.leftMargin
+                    zoom: root.context.zoom
+                    frameStartTime: root.context.frameStartTime
+                    frameEndTime: root.context.frameEndTime
+                    selectionStartTime: root.context.selectionStartTime
+                    selectionEndTime: root.context.selectionEndTime
+                    selectionStartFrequency: root.selectionStartFrequency
+                    selectionEndFrequency: root.selectionEndFrequency
+                    clipSelected: root.clipSelected
 
-                ChannelSplitter {
-                    id: spectrogramChannelSplitter
+                    ChannelSplitter {
+                        anchors.fill: parent
 
-                    anchors.fill: parent
+                        visible: root.showChannelSplitter
 
-                    visible: root.showChannelSplitter
+                        channelHeightRatio: parent.channelHeightRatio
+                        editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
+                        asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
 
-                    channelHeightRatio: parent.channelHeightRatio
-                    editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
-                    asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
+                        color: ui.theme.extra["black_color"]
+                        opacity: 0.10
 
-                    color: ui.theme.extra["black_color"]
-                    opacity: 0.10
-
-                    onPositionChangeRequested: function (position) {
-                        root.splitterPositionChangeRequested(position)
+                        onPositionChangeRequested: function (position) {
+                            root.splitterPositionChangeRequested(position)
+                        }
                     }
                 }
             }

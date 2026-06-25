@@ -85,12 +85,12 @@ PluginPath BuiltinEffectsModule::GetPath() const
 
 ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol() const
 {
-    return XO("Builtin Effects");
+    return TranslatableString("effects", "Builtin Effects");
 }
 
 VendorSymbol BuiltinEffectsModule::GetVendor() const
 {
-    return XO("The Audacity Team");
+    return TranslatableString("effects", "The Audacity Team");
 }
 
 wxString BuiltinEffectsModule::GetVersion() const
@@ -101,7 +101,7 @@ wxString BuiltinEffectsModule::GetVersion() const
 
 TranslatableString BuiltinEffectsModule::GetDescription() const
 {
-    return XO("Provides builtin effects to Audacity");
+    return TranslatableString("effects", "Provides builtin effects to Audacity");
 }
 
 // ============================================================================
@@ -182,7 +182,7 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
         return 1;
     }
 
-    errMsg = XO("Unknown built-in effect name");
+    errMsg = TranslatableString("effects", "Unknown built-in effect name");
     return 0;
 }
 

@@ -20,7 +20,7 @@ class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Async
     muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
-    ProgressDialog(const muse::modularity::ContextPtr& ctx, const TranslatableString& title = {});
+    ProgressDialog(const muse::modularity::ContextPtr& ctx, const ::TranslatableString& title = {});
     ProgressDialog(const muse::modularity::ContextPtr& ctx, const std::string& title);
 
 public:
@@ -28,13 +28,13 @@ public:
 
     void Reinit() override;
 
-    void SetDialogTitle(const TranslatableString& title) override;
+    void SetDialogTitle(const ::TranslatableString& title) override;
 
 public:
     ProgressResult Poll(
-        unsigned long long numerator, unsigned long long denominator, const TranslatableString& message = {}) override;
+        unsigned long long numerator, unsigned long long denominator, const ::TranslatableString& message = {}) override;
 
-    void SetMessage(const TranslatableString& message) override;
+    void SetMessage(const ::TranslatableString& message) override;
 
     bool cancelled() const
     {

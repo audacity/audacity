@@ -18,7 +18,7 @@ DropArea {
     signal setGuidelineRequested(var pos, bool visibility)
 
     signal externalDropAreaEntered(var drop)
-    signal externalDropAreaExited()
+    signal externalDropAreaExited
     signal externalDropAreaDropped(var drop)
 
     onExternalDropAreaEntered: drop => {
@@ -62,11 +62,11 @@ DropArea {
         clearPreviewClipsTimer.start()
     }
 
-    onPositionChanged: {
-        // NOTE! Qt does not reliably send onPositionChanged for external drags
-        // it is expected that Qt may trigger entered/exited signals alternately
-        // instead of positionChanged
-    }
+    onPositionChanged:
+    // NOTE! Qt does not reliably send onPositionChanged for external drags
+    // it is expected that Qt may trigger entered/exited signals alternately
+    // instead of positionChanged
+    {}
 
     onDropped: drop => {
         handleOnDropped(drop, false)
@@ -99,10 +99,10 @@ DropArea {
 
         let tracksIds = dropController.draggedTracksIds(trackId, trackCount)
         tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
-        const durations  = dropController.lastProbedDurations();
-        const titles     = dropController.lastProbedFileNames();
+        const durations = dropController.lastProbedDurations()
+        const titles = dropController.lastProbedFileNames()
 
-        tracksItemsView.previewImportClipRequested(tracksIds, dropX, durations, titles);
+        tracksItemsView.previewImportClipRequested(tracksIds, dropX, durations, titles)
 
         root.setGuidelineRequested(dropX, true)
     }
@@ -117,7 +117,7 @@ DropArea {
 
         let trackId = tracksViewState.trackAtPosition(dropX, dropY)
         let trackCount = dropController.requiredTracksCount()
-        let tracksIds = dropController.draggedTracksIds(trackId, trackCount)
+        let tracksIds = dropController.draggedTracksIds(trackId, trackCount);
         // by this time, url list is already inside dropController
         dropController.handleDroppedFiles(tracksIds, timeline.context.positionToTime(dropX))
 

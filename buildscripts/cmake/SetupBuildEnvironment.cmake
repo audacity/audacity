@@ -35,7 +35,11 @@ elseif(CC_IS_MSVC)
     set(CMAKE_C_FLAGS_DEBUG             "/MDd /Zi /Ob0 /Od /RTC1")
     set(CMAKE_C_FLAGS_RELEASE           "/MD /O2 /Ob2")
     set(CMAKE_C_FLAGS_RELWITHDEBINFO    "/MD /Zi /O2 /Ob1")
-    set(CMAKE_EXE_LINKER_FLAGS          "/DYNAMICBASE:NO")
+    # https://learn.microsoft.com/en-us/cpp/build/reference/dynamicbase?view=msvc-170
+    # can't be disabled on arm, DM: why is this needed anyway?
+    if (NOT CMAKE_CXX_COMPILER_ARCHITECTURE_ID MATCHES "[Aa][Rr][Mm]64")
+        set(CMAKE_EXE_LINKER_FLAGS      "/DYNAMICBASE:NO")
+    endif()
 
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
@@ -46,6 +50,14 @@ elseif(CC_IS_MSVC)
     add_definitions(-DUNICODE)
     add_definitions(-D_USE_MATH_DEFINES)
     add_definitions(-DNOMINMAX)
+
+    # Modern MSVC (incl. ARM64) provides lrint/lrintf in math.h. AU3 sets these
+    # (via check_symbol_exists) so au3's float_cast.h uses the math.h path; the
+    # AU4 build compiles au3 sources without that, so on ARM64 float_cast.h fell
+    # to an `#else` that #defines lrint/lrintf as `(int)`-cast macros, clobbering
+    # <cmath>. Define them here; no-op on x86/x64, which hit earlier branches.
+    add_definitions(-DHAVE_LRINT=1)
+    add_definitions(-DHAVE_LRINTF=1)
 
 elseif(CC_IS_MINGW)
     message(STATUS "Using Compiler MINGW ${CMAKE_CXX_COMPILER_VERSION}")

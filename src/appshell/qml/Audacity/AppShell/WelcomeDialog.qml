@@ -234,7 +234,7 @@ StyledDialogView {
             right: parent.right
         }
 
-        color: ui.theme.backgroundSecondaryColor
+        color: ui.theme.backgroundPrimaryColor
 
         NavigationPanel {
             id: footerPanel

@@ -5,20 +5,18 @@
 
 #include "framework/actions/actiontypes.h"
 
+#include "shared/axis/axisscale.h"
+#include "shared/axis/axistypes.h"
+#include "shared/axis/numberscale.h"
+
 namespace au::spectrogram {
 static const muse::actions::ActionCode TRACK_SPECTROGRAM_SETTINGS_ACTION("track-spectrogram-settings");
 
-// Spectrogram
-enum class SpectrogramScale {
-    Undefined = -1,
-    Linear,
-    Logarithmic,
-    Mel,
-    Bark,
-    ERB,
-    Period,
-    _count
-};
+/** SpectrogramScale and NumberScale are aliases for the generic axis types
+ *  from the shared module. Kept here to avoid churn across spectrogram call
+ *  sites. */
+using SpectrogramScale = au::shared::AxisScale;
+using NumberScale = au::shared::NumberScale;
 
 enum class SpectrogramColorScheme {
     Roseus = 0,
@@ -101,15 +99,8 @@ private:
     double m_centerFrequency = SelectionInfo::UndefinedFrequency;
 };
 
-struct SpectrogramRulerTick {
-    double val = 0.f;
-    double pos = 0.f;
-};
-
-struct SpectrogramRulerTicks {
-    std::vector<SpectrogramRulerTick> major;
-    std::vector<SpectrogramRulerTick> minor;
-};
+using SpectrogramRulerTick = au::shared::AxisTick;
+using SpectrogramRulerTicks = au::shared::AxisTicks;
 
 enum class SpectralEffectId {
     DeleteSelection,

@@ -61,7 +61,8 @@ QString RealtimeEffectListItemModel::effectName() const
     const auto isValid = effectsProvider()->meta(muse::String::fromStdString(effectId)).isValid();
 
     if (!isValid) {
-        return muse::qtrc("effects", "Missing - %1").arg(name);
+        //: %1 is the name of the effect that is missing/unavailable
+        return muse::qtrc("effects", "Missing - “%1”").arg(name);
     }
     return QString::fromStdString(name);
 }

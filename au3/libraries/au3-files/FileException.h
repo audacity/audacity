@@ -28,7 +28,7 @@ public:
     explicit FileException(
         Cause cause_, //!< What kind of file operation failed
         const wxFileName& fileName_, //!< Which file suffered a failure
-        const ::TranslatableString& caption = XO("File Error"), //!< Shown in message box frame, not the main message
+        const ::TranslatableString& caption = ::TranslatableString("files", "File Error"), //!< Shown in message box frame, not the main message
         const wxFileName& renameTarget_ = {} //!< A second file name, only for renaming failure
         )
     // DV: We consider a FileException to be internal for now.

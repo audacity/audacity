@@ -16,6 +16,7 @@ set( SOURCES
 #   PluginIPCUtils.h
    ConfigInterface.cpp
    ConfigInterface.h
+   IEffectIdResolver.h
    IPluginRegistry.h
    ModuleManager.cpp
    ModuleManager.h
@@ -33,6 +34,7 @@ set( SOURCES
 set( LIBRARIES
    au3-xml-interface
    au3-ipc-interface
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

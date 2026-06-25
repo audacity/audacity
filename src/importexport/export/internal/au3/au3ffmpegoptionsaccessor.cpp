@@ -54,7 +54,7 @@ std::vector<std::string> Au3FFmpegOptionsAccessor::predictionOrderMethodList() c
 
 std::string Au3FFmpegOptionsAccessor::ffmpegVersion() const
 {
-    return GetFFmpegVersion().Translation().ToStdString();
+    return GetFFmpegVersion().translated().toStdString();
 }
 
 std::string Au3FFmpegOptionsAccessor::ffmpegLibraryPath() const

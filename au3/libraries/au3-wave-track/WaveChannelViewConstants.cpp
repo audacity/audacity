@@ -108,5 +108,5 @@ auto WaveChannelSubViewType::Default() -> Display
 }
 
 const EnumValueSymbol WaveChannelViewConstants::MultiViewSymbol{
-    wxT("Multiview"), XXO("&Multi-view")
+    wxT("Multiview"), TranslatableString("wave-track", "&Multi-view")
 };

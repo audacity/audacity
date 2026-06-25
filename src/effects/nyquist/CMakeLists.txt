@@ -37,6 +37,6 @@ set(MODULE_DEF ${AU3_DEF})
 
 set(MODULE_LINK au3wrap effects_builtin au3-nyquist-effects)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/libnyquist libnyquist)
+add_subdirectory(libnyquist)
 
 setup_module()

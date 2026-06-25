@@ -19,6 +19,7 @@ public:
 
     MOCK_METHOD(bool, trimTracksData, (const std::vector<trackedit::TrackId>&, secs_t, secs_t), (override));
     MOCK_METHOD(bool, silenceTracksData, (const std::vector<trackedit::TrackId>&, secs_t, secs_t), (override));
+    MOCK_METHOD(bool, silenceClips, (const ClipKeyList&), (override));
     MOCK_METHOD(bool, changeTrackTitle, (const trackedit::TrackId, const muse::String&), (override));
 
     MOCK_METHOD(bool, changeClipTitle, (const ClipKey&, const muse::String&), (override));
@@ -127,6 +128,8 @@ public:
 
     MOCK_METHOD(bool, stretchLabelRight, (const LabelKey&, secs_t, bool), (override));
     MOCK_METHOD(bool, stretchLabelsRight, (const LabelKeyList&, secs_t, bool), (override));
+
+    MOCK_METHOD(void, resetLabelStretchState, (), (override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));
 };

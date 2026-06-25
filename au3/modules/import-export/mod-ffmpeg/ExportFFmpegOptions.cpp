@@ -345,10 +345,11 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
 // PRL:  I can't find where this preference is used!
 ChoiceSetting AACProfiles { wxT("/FileFormats/FFmpegAACProfile"),
                             {
-                                { wxT("1") /*FF_PROFILE_AAC_LOW*/, XO("LC") },
-                                { wxT("0") /*FF_PROFILE_AAC_MAIN*/, XO("Main") },
+                                //: LC is the AAC "Low Complexity" profile
+                                { wxT("1") /*FF_PROFILE_AAC_LOW*/, TranslatableString("import-export", "LC") },
+                                { wxT("0") /*FF_PROFILE_AAC_MAIN*/, TranslatableString("import-export", "Main") },
                                 // {wxT("2") /*FF_PROFILE_AAC_SSR*/, XO("SSR")}, //SSR is not supported
-                                { wxT("3") /*FF_PROFILE_AAC_LTP*/, XO("LTP") },
+                                { wxT("3") /*FF_PROFILE_AAC_LTP*/, TranslatableString("import-export", "LTP") },
                             },
                             0, // "1"
 };
@@ -356,23 +357,23 @@ ChoiceSetting AACProfiles { wxT("/FileFormats/FFmpegAACProfile"),
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
 {
-    { FMT_M4A,   wxT("M4A"),    wxT("m4a"),  wxT("ipod"), 48,  AV_CANMETA,              true,  XO("M4A (AAC) Files (FFmpeg)"),
+    { FMT_M4A,   wxT("M4A"),    wxT("m4a"),  wxT("ipod"), 48,  AV_CANMETA,              true,  TranslatableString("import-export", "M4A (AAC) Files (FFmpeg)"),
       AUDACITY_AV_CODEC_ID_AAC,    true },
-    { FMT_AC3,   wxT("AC3"),    wxT("ac3"),  wxT("ac3"),  7,   AV_VERSION_INT(0, 0, 0),   false, XO("AC3 Files (FFmpeg)"),
+    { FMT_AC3,   wxT("AC3"),    wxT("ac3"),  wxT("ac3"),  7,   AV_VERSION_INT(0, 0, 0),   false, TranslatableString("import-export", "AC3 Files (FFmpeg)"),
       AUDACITY_AV_CODEC_ID_AC3,    true },
-    { FMT_AMRNB, wxT("AMRNB"),  wxT("amr"),  wxT("amr"),  1,   AV_VERSION_INT(0, 0, 0),   false, XO("AMR (narrow band) Files (FFmpeg)"),
+    { FMT_AMRNB, wxT("AMRNB"),  wxT("amr"),  wxT("amr"),  1,   AV_VERSION_INT(0, 0, 0),   false, TranslatableString("import-export", "AMR (narrow band) Files (FFmpeg)"),
       AUDACITY_AV_CODEC_ID_AMR_NB, true },
    #ifdef SHOW_FFMPEG_OPUS_EXPORT
     {
-        FMT_OPUS,  wxT("OPUS"),   wxT("opus"), wxT("opus"), 255, AV_CANMETA,              true,  XO("Opus (OggOpus) Files (FFmpeg)"),
+        FMT_OPUS,  wxT("OPUS"),   wxT("opus"), wxT("opus"), 255, AV_CANMETA,              true,  TranslatableString("import-export", "Opus (OggOpus) Files (FFmpeg)"),
         AUDACITY_AV_CODEC_ID_OPUS,   true
     },
    #endif
     {
-        FMT_WMA2,  wxT("WMA"),    wxT("wma"),  wxT("asf"),  2,   AV_VERSION_INT(52, 53, 0), false, XO("WMA (version 2) Files (FFmpeg)"),
+        FMT_WMA2,  wxT("WMA"),    wxT("wma"),  wxT("asf"),  2,   AV_VERSION_INT(52, 53, 0), false, TranslatableString("import-export", "WMA (version 2) Files (FFmpeg)"),
         AUDACITY_AV_CODEC_ID_WMAV2,  true
     },
-    { FMT_OTHER, wxT("FFMPEG"), wxT(""),     wxT(""),     255, AV_CANMETA,              true,  XO("Custom FFmpeg Export"),
+    { FMT_OTHER, wxT("FFMPEG"), wxT(""),     wxT(""),     255, AV_CANMETA,              true,  TranslatableString("import-export", "Custom FFmpeg Export"),
       AUDACITY_AV_CODEC_ID_NONE,   true }
 };
 
@@ -464,12 +465,13 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
 namespace {
 /// Prediction order method - names.
 const TranslatableStrings PredictionOrderMethodNames {
-    XO("Estimate"),
-    XO("2-level"),
-    XO("4-level"),
-    XO("8-level"),
-    XO("Full search"),
-    XO("Log search"),
+    TranslatableString("import-export", "Estimate"),
+    TranslatableString("import-export", "2-level"),
+    TranslatableString("import-export", "4-level"),
+    TranslatableString("import-export", "8-level"),
+    TranslatableString("import-export", "Full search"),
+    //: "Log" is short for "logarithmic"
+    TranslatableString("import-export", "Log search"),
 };
 }
 
@@ -561,7 +563,7 @@ std::vector<std::string> ExportFFmpegOptions::GetProfiles() const
 {
     std::vector<std::string> list;
     for (const auto& profile : AACProfiles.GetSymbols().GetMsgids()) {
-        list.push_back(profile.Translation().ToStdString());
+        list.push_back(profile.translated().toStdString());
     }
 
     return list;
@@ -571,7 +573,7 @@ std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
 {
     std::vector<std::string> list;
     for (const auto& method : PredictionOrderMethodNames) {
-        list.push_back(method.Translation().ToStdString());
+        list.push_back(method.translated().toStdString());
     }
 
     return list;
@@ -607,7 +609,7 @@ std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
 //             S.SetStretchyCol(3);
 //             S.Id(FEFormatLabelID).AddFixedText(XO("Format:"));
 //             mFormatName = S.Id(FEFormatNameID).AddVariableText({});
-//             /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+//             /*: "codec" is short for a "coder-decoder" algorithm */
 //             S.Id(FECodecLabelID).AddFixedText(XO("Codec:"));
 //             mCodecName = S.Id(FECodecNameID).AddVariableText({});
 //         }
@@ -659,7 +661,7 @@ std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
 //         S.StartMultiColumn(4, wxALIGN_LEFT);
 //         {
 //             S.Id(FETagID)
-//             /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+//             /*: "codec" is short for a "coder-decoder" algorithm */
 //             .ToolTip(XO("Codec tag (FOURCC)\nOptional\nempty - automatic"))
 //             .TieTextBox(XXO("Tag:"), { wxT("/FileFormats/FFmpegTag"), wxEmptyString }, 4);
 
@@ -733,7 +735,7 @@ std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
 //         .ToolTip(XO("Maximal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"))
 //         .TieSpinCtrl(XXO("Max. PtO"), { wxT("/FileFormats/FFmpegMaxPartOrder"), -1 }, 8, -1);
 
-//         /* i18n-hint:  Abbreviates "Linear Predictive Coding",
+//         /*: Abbreviates "Linear Predictive Coding",
 //            but this text needs to be kept very short */
 //         S.AddVariableText(XO("Use LPC"));
 //         // PRL:  This preference is not used anywhere!
@@ -748,16 +750,16 @@ std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
 //                     {
 //                         S.Id(FEMuxRateID)
 //                         .ToolTip(XO("Maximum bit rate of the multiplexed stream\nOptional\n0 - default"))
-//                         /* i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
+//                         /*: 'mux' is short for multiplexor, a device that selects between several inputs
 //                           'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 //                           it has a hard to predict effect on the degree of compression */
 //                         .TieSpinCtrl(XXO("Mux Rate:"), { wxT("/FileFormats/FFmpegMuxRate"), 0 }, 10000000, 0);
 
 //                         S.Id(FEPacketSizeID)
-//                         /* i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
+//                         /*: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 //                           compression.  It measures how big a chunk of audio is compressed in one piece. */
 //                         .ToolTip(XO("Packet size\nOptional\n0 - default"))
-//                         /* i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
+//                         /*: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 //                           compression.  It measures how big a chunk of audio is compressed in one piece. */
 //                         .TieSpinCtrl(XXO("Packet Size:"), { wxT("/FileFormats/FFmpegPacketSize"), 0 }, 10000000, 0);
 //                     }
@@ -969,7 +971,7 @@ void ExportFFmpegOptions::FetchCompatibleFormatList(const std::string& format,
     auto cdc = mFFmpeg->CreateEncoder(wxString(codec).ToUTF8());
     if (cdc == nullptr) {
         //This shouldn't really happen
-        /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+        /*: "codec" is short for a "coder-decoder" algorithm */
         return;
     }
 
@@ -1201,10 +1203,10 @@ void ExportFFmpegOptions::FetchCompatibleFormatList(const std::string& format,
 //     }
 
 //     AudacityMessageBox(
-//         /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+//         /*: "codec" is short for a "coder-decoder" algorithm */
 //         XO("Format %s is not compatible with codec %s.")
 //         .Format(*selfmt, *selcdc),
-//         /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+//         /*: "codec" is short for a "coder-decoder" algorithm */
 //         XO("Incompatible format and codec"));
 
 //     return true;
@@ -1310,7 +1312,7 @@ void ExportFFmpegOptions::FetchCompatibleFormatList(const std::string& format,
 //     auto cdc = mFFmpeg->CreateEncoder(selcdc->ToUTF8());
 //     if (cdc == nullptr) {
 //         //This shouldn't really happen
-//         /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+//         /*: "codec" is short for a "coder-decoder" algorithm */
 //         mCodecName->SetLabel(wxString(_("Failed to find the codec")));
 //         return;
 //     }

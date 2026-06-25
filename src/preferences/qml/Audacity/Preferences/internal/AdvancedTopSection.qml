@@ -34,7 +34,7 @@ BaseSection {
 
     property alias searchText: searchField.searchText
 
-    signal resetToDefaultRequested()
+    signal resetToDefaultRequested
 
     RowLayout {
         //! NOTE: Added to prevent components clipping when navigating

@@ -17,32 +17,8 @@ AmplifyViewModel::AmplifyViewModel(QObject* parent, int instanceId)
 
 void AmplifyViewModel::doReload()
 {
-    auto& ae = effect<AmplifyEffect>();
-
-    m_amp.val = std::numeric_limits<float>::lowest();
-
-    m_canClip = ae.canClip();
     emit canClipChanged();
-
-    update();
-}
-
-void AmplifyViewModel::update()
-{
-    const auto& ae = effect<AmplifyEffect>();
-
-    Param<db_t> amp = ae.amp();
-    db_t newPeak = muse::linear_to_db(ae.ratio() * ae.peak());
-
-    if (!muse::is_equal(m_amp.val, amp.val)) {
-        m_amp = amp;
-        m_newPeak = newPeak;
-        emit ampValueChanged();
-        emit newPeakValueChanged();
-    }
-
-    bool isApplyAllowed = ae.isApplyAllowed();
-    setIsApplyAllowed(isApplyAllowed);
+    emit isApplyAllowedChanged();
 }
 
 QString AmplifyViewModel::effectTitle() const
@@ -57,30 +33,28 @@ QString AmplifyViewModel::ampLabel() const
 
 float AmplifyViewModel::ampValue() const
 {
-    return m_amp.val;
+    return effect<AmplifyEffect>().amp().val.raw();
 }
 
 void AmplifyViewModel::setAmpValue(float newAmpValue)
 {
-    db_t newAmp = newAmpValue;
-    if (muse::is_equal(m_amp.val, newAmp)) {
+    auto& ae = effect<AmplifyEffect>();
+    const shared::Decibel newAmp { newAmpValue };
+    if (ae.amp().val == newAmp) {
         return;
     }
-
-    auto& ae = effect<AmplifyEffect>();
     ae.setAmp(newAmp);
-
-    update();
+    emit isApplyAllowedChanged();
 }
 
 float AmplifyViewModel::ampMin() const
 {
-    return m_amp.min;
+    return effect<AmplifyEffect>().amp().min.raw();
 }
 
 float AmplifyViewModel::ampMax() const
 {
-    return m_amp.max;
+    return effect<AmplifyEffect>().amp().max.raw();
 }
 
 QString AmplifyViewModel::ampMeasureUnitsSymbol() const
@@ -105,35 +79,28 @@ QString AmplifyViewModel::newPeakLabel() const
 
 float AmplifyViewModel::newPeakValue() const
 {
-    return m_newPeak;
+    const auto& ae = effect<AmplifyEffect>();
+    return shared::Decibel::fromLinear(ae.ratio() * ae.inputPeak()).raw();
 }
 
 void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 {
-    db_t newNewPeak = newNewPeakValue;
-    if (muse::is_equal(m_newPeak, newNewPeak)) {
+    if (muse::is_equal(newNewPeakValue, newPeakValue())) {
         return;
     }
 
-    auto& ae = effect<AmplifyEffect>();
-
-    ratio_t ratio = muse::db_to_linear(newNewPeak) / ae.peak();
-    db_t amp = muse::linear_to_db(ratio);
-    ae.setAmp(amp);
-
-    update();
+    effect<AmplifyEffect>().setNewPeak(shared::Decibel(newNewPeakValue));
+    emit isApplyAllowedChanged();
 }
 
 float AmplifyViewModel::newPeakMin() const
 {
-    const auto& ae = effect<AmplifyEffect>();
-    return m_amp.min + muse::linear_to_db(ae.peak());
+    return effect<AmplifyEffect>().newPeak().min.raw();
 }
 
 float AmplifyViewModel::newPeakMax() const
 {
-    const auto& ae = effect<AmplifyEffect>();
-    return m_amp.max + muse::linear_to_db(ae.peak());
+    return effect<AmplifyEffect>().newPeak().max.raw();
 }
 
 QString AmplifyViewModel::newPeakMeasureUnitsSymbol() const
@@ -158,35 +125,22 @@ QString AmplifyViewModel::canClipLabel() const
 
 bool AmplifyViewModel::canClip() const
 {
-    return m_canClip;
+    return effect<AmplifyEffect>().canClip();
 }
 
 void AmplifyViewModel::setCanClip(bool newClipping)
 {
-    if (m_canClip == newClipping) {
+    auto& ae = effect<AmplifyEffect>();
+    if (ae.canClip() == newClipping) {
         return;
     }
-
-    auto& ae = effect<AmplifyEffect>();
-
     ae.setCanClip(newClipping);
-
-    m_canClip = newClipping;
     emit canClipChanged();
-
-    update();
+    emit isApplyAllowedChanged();
 }
 
 bool AmplifyViewModel::isApplyAllowed() const
 {
-    return m_isApplyAllowed;
-}
-
-void AmplifyViewModel::setIsApplyAllowed(bool isApplyAllowed)
-{
-    if (m_isApplyAllowed == isApplyAllowed) {
-        return;
-    }
-    m_isApplyAllowed = isApplyAllowed;
-    emit isApplyAllowedChanged();
+    const auto& ae = effect<AmplifyEffect>();
+    return ae.canClip() || ae.ratio() * ae.inputPeak() <= 1.0f;
 }

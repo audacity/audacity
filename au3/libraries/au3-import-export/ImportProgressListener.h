@@ -10,8 +10,6 @@
 
 #pragma once
 
-class TranslatableString;
-
 class ImportFileHandle;
 
 ///\brief Interface used to report on import state and progress

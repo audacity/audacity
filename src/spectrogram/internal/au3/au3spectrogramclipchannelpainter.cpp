@@ -8,7 +8,7 @@
 #include "internal/spectrogramcolors.h"
 #include "internal/spectrogramutils.h"
 #include "internal/clipparameters.h"
-#include "internal/numberscale.h"
+#include "shared/axis/numberscale.h"
 
 #include "au3-wave-track/WaveClip.h"
 

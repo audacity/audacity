@@ -17,13 +17,13 @@
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-project-rate/ProjectRate.h"
-#include "au3-menus/CommandManager.h"
 #include "au3-effects/EffectManager.h"
 #include "au3-module-manager/ConfigInterface.h"
 #include "au3-numeric-formats/NumericConverterFormats.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-transactions/TransactionScope.h"
 #include "au3-stretching-sequence/TempoChange.h"
+#include "au3-strings/TranslatableString.h"
 
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-components/EffectAutomationParameters.h"
@@ -35,7 +35,6 @@
 #include "trackedit/trackeditutils.h"
 
 #include "../effecterrors.h"
-
 using namespace muse;
 using namespace au::effects;
 
@@ -636,9 +635,10 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
             auto name = effect->GetName();
 
             const std::string title
+            //: %1 is the name of the effect being run
                 = (effect->GetType()
                    == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1…") : muse::qtrc("effects", "Applying %1…")).arg(
-                      QString::fromUtf8(name.Translation().ToUTF8().data())).toStdString();
+                      name.translated()).toStdString();
 
             au3::ProgressDialog progress{ iocContext(), title };
             auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &progress);
@@ -659,7 +659,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);
                 if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
-                    std::string message = box->ErrorMessage().Translation().ToStdString();
+                    std::string message = box->ErrorMessage().translated().toStdString();
                     if (!message.empty()) {
                         success.setText(message);
                     }
@@ -832,7 +832,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         using namespace BasicUI;
         auto progress = MakeProgress(
             effect.GetName(),
-            XO("Preparing preview"),
+            ::TranslatableString("effects-effects_base", "Preparing preview"),
             ProgressShowStop
             ); // Have only "Stop" button.
 

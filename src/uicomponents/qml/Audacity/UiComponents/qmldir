@@ -9,3 +9,4 @@ ArrowMenuButton 1.0 components/ArrowMenuButton.qml
 DropdownWithTitle 1.0 components/DropdownWithTitle.qml
 BaseSection 1.0 components/BaseSection.qml
 StyledGroupBox 1.0 components/StyledGroupBox.qml
+GridPlot 1.0 components/GridPlot.qml

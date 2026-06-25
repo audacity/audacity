@@ -2,6 +2,7 @@
 
 #include "ui/qml/Muse/Ui/navigationsection.h"
 #include "ui/qml/Muse/Ui/navigationpanel.h"
+#include "ui/qml/Muse/Ui/navigationcontrol.h"
 #include "global/async/asyncable.h"
 
 #include "global/modularity/ioc.h"
@@ -45,12 +46,16 @@ private:
     void addPanels(const TrackId& trackId, int pos);
     void resetPanelOrder();
     void addDefaultNavigation();
+    void removeDefaultNavigation();
     void handleArrowKeyFallback(muse::ui::NavigationEvent* event);
 
     void activateNavigation(const TrackId& trackId, bool highlight = false);
     void activateNavigation(const TrackItemKey& itemKey, bool highlight = false);
 
     muse::ui::INavigationSection* m_section = nullptr;
+
+    muse::ui::NavigationPanel* m_defaultPanel = nullptr;
+    muse::ui::NavigationControl* m_defaultControl = nullptr;
 
     QList<muse::ui::NavigationPanel*> m_trackItemPanels;
     QList<muse::ui::NavigationPanel*> m_viewItemPanels;

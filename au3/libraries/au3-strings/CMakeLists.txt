@@ -25,8 +25,8 @@ set( SOURCES
    Internat.h
    Languages.cpp
    Languages.h
-   TranslatableString.cpp
    TranslatableString.h
+   WxMuseStringCompat.h
    wxArrayStringEx.h
    wxArrayStringEx.cpp
 )
@@ -36,3 +36,5 @@ set( LIBRARIES
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
+
+target_link_libraries(au3-strings PUBLIC Qt6::Core)

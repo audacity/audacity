@@ -34,6 +34,7 @@ set( LIBRARIES
    au3-effects-interface
    PRIVATE
    lv2sdk
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

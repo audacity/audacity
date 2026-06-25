@@ -9,19 +9,22 @@
 
 using namespace au::uicomponents;
 
-FrequencyModel::FrequencyModel(QObject* parent)
-    : NumericViewModel(parent)
+namespace {
+QList<NumericViewFormat> makeFrequencyFormats()
 {
     // translate all
-    m_availableViewFormats = {
-        { static_cast<NumericViewFormatType>(FrequencyFormatType::Centihertz), muse::qtrc("uicomponents", "Hz"),
-          "010,01000>0100 Hz" },
-        { static_cast<NumericViewFormatType>(FrequencyFormatType::Hertz), muse::qtrc("uicomponents", "kHz"), "01000>01000 kHz|0.001" },
+    return { NumericViewFormat { static_cast<NumericViewFormatType>(FrequencyFormatType::Centihertz),
+                                 muse::qtrc("uicomponents", "Hz"), "010,01000>0100 Hz" },
+             NumericViewFormat { static_cast<NumericViewFormatType>(FrequencyFormatType::Hertz),
+                                 muse::qtrc("uicomponents", "kHz"), "01000>01000 kHz|0.001" },
     };
+}
+}
 
-    m_currentFormat = static_cast<NumericViewFormatType>(FrequencyFormatType::Centihertz);
-
-    initFieldInteractionController();
+FrequencyModel::FrequencyModel(QObject* parent)
+    : NumericViewModel(parent, makeFrequencyFormats())
+{
+    setCurrentFormat(static_cast<int>(FrequencyFormatType::Centihertz));
 
     reloadFormatter();
 

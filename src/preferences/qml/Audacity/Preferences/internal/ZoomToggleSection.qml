@@ -44,7 +44,7 @@ BaseSection {
         navigation.row: 0
         navigation.column: 0
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             root.zoomPreset1ChangeRequested(newValue)
         }
     }
@@ -67,7 +67,7 @@ BaseSection {
         navigation.row: 1
         navigation.column: 0
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             root.zoomPreset2ChangeRequested(newValue)
         }
     }

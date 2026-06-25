@@ -77,7 +77,7 @@ BaseSection {
             navigation.panel: root.navigation
             navigation.column: 2
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 root.portChanged(newValue)
             }
         }

@@ -1,7 +1,8 @@
 set(TARGET libsbsms)
 add_library( ${TARGET} STATIC )
 
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/libsbsms)
+get_property(_src GLOBAL PROPERTY sbsms_SOURCE_DIR)
+set(TARGET_ROOT ${_src}/sbsms)
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/buffer.cpp
@@ -59,6 +60,12 @@ check_cxx_source_compiles("
     }
 " HAVE_LRINTF)
 set(CMAKE_REQUIRED_LIBRARIES)
+
+# MSVC always has lrint/lrintf in <cmath>, autodetection is not working on WoA
+if(MSVC)
+    set(HAVE_LRINT 1)
+    set(HAVE_LRINTF 1)
+endif()
 
 list( APPEND OPTIONS
    PRIVATE

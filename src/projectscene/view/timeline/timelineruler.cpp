@@ -60,8 +60,10 @@ void TimelineRuler::paint(QPainter* painter)
 
     // begin painting
     QPen pen = painter->pen();
+    const QColor rulerStrokeColor = uiconfiguration()->currentTheme().extra.value("timeline_ruler_stroke_color").toString();
+
     pen.setWidth(2);
-    pen.setColor(uiconfiguration()->currentTheme().values.value(muse::ui::STROKE_COLOR).toString());
+    pen.setColor(rulerStrokeColor);
     painter->setPen(pen);
 
     // vertical line (ruler border)
@@ -162,7 +164,7 @@ void TimelineRuler::drawLabels(QPainter* painter, const Ticks& ticks, double w, 
 void TimelineRuler::drawTicks(QPainter* painter, const Ticks& ticks)
 {
     QPen pen = painter->pen();
-    QColor majorTickColor = QColor(uiconfiguration()->currentTheme().values.value(muse::ui::STROKE_COLOR).toString());
+    QColor majorTickColor = QColor(uiconfiguration()->currentTheme().extra.value("timeline_ruler_stroke_color").toString());
     QColor minorTickColor = QColor(uiconfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
 
     for (auto i = 0; i < ticks.count(); ++i) {

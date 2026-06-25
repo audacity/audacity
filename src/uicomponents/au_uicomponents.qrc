@@ -17,5 +17,6 @@
         <file>qml/Audacity/UiComponents/components/DropdownWithTitle.qml</file>
         <file>qml/Audacity/UiComponents/components/BaseSection.qml</file>
         <file>qml/Audacity/UiComponents/components/StyledGroupBox.qml</file>
+        <file>qml/Audacity/UiComponents/components/GridPlot.qml</file>
     </qresource>
 </RCC>

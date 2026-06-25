@@ -76,7 +76,6 @@ void AppMenuModel::load()
         makeEffectMenu(),
         makeAnalyzeMenu(),
         makeToolsMenu(),
-        makeExtraMenu(),
         makeHelpMenu()
     };
 
@@ -193,7 +192,7 @@ MenuItem* AppMenuModel::makeFileMenu()
     MenuItemList fileItems {
         makeMenuItem("file-new"),
         makeMenuItem("file-open"),
-        makeMenu(TranslatableString("appshell/menu/file", "Open &recent"), recentScoresList, "menu-file-open", openRecentEnabled),
+        makeMenu(TranslatableString("appshell-menu-file", "Open &recent"), recentScoresList, "menu-file-open", openRecentEnabled),
 
         makeSeparator(),
 
@@ -202,13 +201,14 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeSeparator(),
 
         makeMenuItem("file-save"),
+        makeMenuItem("file-save-to-cloud"),
         makeMenuItem("file-save-as"),
-        makeMenuItem("file-save-backup"),
 
         makeSeparator(),
 
         makeMenuItem("export-audio"),
-        makeMenu(TranslatableString("appshell/menu/export-other", "&Export other"), makeExportItems(), "menu-export-other"),
+        makeMenu(TranslatableString("appshell-menu-export-other", "&Export other"), makeExportItems(), "menu-export-other"),
+        makeMenuItem("file-share-audio"),
 
         makeSeparator(),
 
@@ -216,7 +216,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeMenuItem("quit", MenuItemRole::QuitRole)
     };
 
-    return makeMenu(TranslatableString("appshell/menu/file", "&File"), fileItems, "menu-file");
+    return makeMenu(TranslatableString("appshell-menu-file", "&File"), fileItems, "menu-file");
 }
 
 MenuItem* AppMenuModel::makeEditMenu()
@@ -238,27 +238,26 @@ MenuItem* AppMenuModel::makeEditMenu()
         // makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple"),
         makeMenuItem("delete-per-track-ripple"),
         makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/clip", "Clip"), makeClipItems(), "menu-clip"),
-        makeMenu(TranslatableString("appshell/menu/label", "Label"), makeLabelItems(), "menu-label"),
-        makeMenuItem("silence-audio"),
+        makeMenu(TranslatableString("appshell-menu-clip", "Clip"), makeClipItems(), "menu-clip"),
+        makeMenu(TranslatableString("appshell-menu-label", "Label"), makeLabelItems(), "menu-label"),
         makeSeparator(),
-        makeMenuItem("manage-metadata"),
+        makeMenuItem("open-metadata-editor", TranslatableString("action", "Metadata editor")),
         makeSeparator(),
         makeMenuItem("preference-dialog", MenuItemRole::PreferencesRole)
     };
 
-    return makeMenu(TranslatableString("appshell/menu/edit", "&Edit"), editItems, "menu-edit");
+    return makeMenu(TranslatableString("appshell-menu-edit", "&Edit"), editItems, "menu-edit");
 }
 
 MenuItem* AppMenuModel::makeSelectMenu()
 {
     //! NOTE: audio sub-menu to be implemented
-    auto audioClipsMenu = makeMenu(TranslatableString("appshell/menu/select", "Audio clips"),
+    auto audioClipsMenu = makeMenu(TranslatableString("appshell-menu-select", "Audio clips"),
                                    makeAudioClipsSelectionItems(), "menu-selection-audio-clips");
     audioClipsMenu->setState(audioClipsMenu->state().make_disabled());
 
     //! NOTE: spectral tools are not implemented yet
-    auto spectralMenu = makeMenu(TranslatableString("appshell/menu/select", "Spectral"),
+    auto spectralMenu = makeMenu(TranslatableString("appshell-menu-select", "Spectral"),
                                  makeSpectralSelectionItems(), "menu-selection-spectral");
     spectralMenu->setState(spectralMenu->state().make_disabled());
 
@@ -267,15 +266,15 @@ MenuItem* AppMenuModel::makeSelectMenu()
         makeMenuItem("clear-selection"),
         makeMenuItem("select-all-tracks"),
         makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
+        makeMenu(TranslatableString("appshell-menu-select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
         audioClipsMenu,
         spectralMenu,
         makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/select", "Looping"), makeLoopingItems(), "menu-looping"),
+        makeMenu(TranslatableString("appshell-menu-select", "Looping"), makeLoopingItems(), "menu-looping"),
         makeMenuItem("zero-cross"),
     };
 
-    return makeMenu(TranslatableString("appshell/menu/select", "&Select"), selectItems, "menu-select");
+    return makeMenu(TranslatableString("appshell-menu-select", "&Select"), selectItems, "menu-select");
 }
 
 MenuItem* AppMenuModel::makeViewMenu()
@@ -288,8 +287,8 @@ MenuItem* AppMenuModel::makeViewMenu()
     }
 
     MenuItemList viewItems {
-        makeMenu(TranslatableString("appshell/menu/zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
-        makeMenu(TranslatableString("appshell/menu/skip", "Skip to"), makeSkipToItems(), "menu-skip", false),
+        makeMenu(TranslatableString("appshell-menu-zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
+        makeMenu(TranslatableString("appshell-menu-skip", "Skip to"), makeSkipToItems(), "menu-skip", false),
     };
 
     if (effectsItem) {
@@ -298,12 +297,12 @@ MenuItem* AppMenuModel::makeViewMenu()
     }
 
     viewItems << makeSeparator()
-              << makeMenuItem("toggle-label-editor")
-              << makeMenuItem("toggle-metadata-editor")
+              << makeMenuItem("open-label-editor")
+              << makeMenuItem("open-metadata-editor")
               << makeMenuItem("toggle-history")
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
-        << makeMenu(TranslatableString("appshell/menu/view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces")
+        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces")
         << makeSeparator()
 #endif
 #ifndef Q_OS_MAC
@@ -316,7 +315,7 @@ MenuItem* AppMenuModel::makeViewMenu()
         << makeSeparator()
         << makeMenuItem("dock-restore-default-layout");
 
-    return makeMenu(TranslatableString("appshell/menu/view", "&View"), viewItems, "menu-view");
+    return makeMenu(TranslatableString("appshell-menu-view", "&View"), viewItems, "menu-view");
 }
 
 MenuItem* AppMenuModel::makeRecordMenu()
@@ -324,14 +323,13 @@ MenuItem* AppMenuModel::makeRecordMenu()
     MenuItemList recordItems {
         makeMenuItem("record-on-current-track"),
         makeMenuItem("record-on-new-track"),
-        makeMenuItem("set-up-timed-recording"),
+        //! makeMenuItem("set-up-timed-recording"),
         makeMenuItem("action://record/lead-in-recording"),
-        makeSeparator(),
-        makeMenuItem("toggle-sound-activated-recording"),
-        makeMenuItem("set-sound-activation-level"),
+        //! makeMenuItem("toggle-sound-activated-recording"),
+        //! makeMenuItem("set-sound-activation-level"),
     };
 
-    return makeMenu(TranslatableString("appshell/menu/record", "&Record"), recordItems, "menu-record");
+    return makeMenu(TranslatableString("appshell-menu-record", "&Record"), recordItems, "menu-record");
 }
 
 MenuItem* AppMenuModel::makeTracksMenu()
@@ -346,66 +344,66 @@ MenuItem* AppMenuModel::makeTracksMenu()
         makeSeparator(),
         makeMenuItem("mixdown-to"),
         makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/align", "Align content"), makeAlignItems(), "menu-align", false),
-        makeMenu(TranslatableString("appshell/menu/sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
+        makeMenu(TranslatableString("appshell-menu-align", "Align content"), makeAlignItems(), "menu-align", false),
+        makeMenu(TranslatableString("appshell-menu-sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
     };
 
-    return makeMenu(TranslatableString("appshell/menu/tracks", "&Tracks"), tracksItems, "menu-tracks");
+    return makeMenu(TranslatableString("appshell-menu-tracks", "&Tracks"), tracksItems, "menu-tracks");
 }
 
 MenuItem* AppMenuModel::makeGenerateMenu()
 {
-    return makeMenu(TranslatableString("appshell/menu/generate", "&Generate"), makeGeneratorItems(), "menu-generate");
+    return makeMenu(TranslatableString("appshell-menu-generate", "&Generate"), makeGeneratorItems(), "menu-generate");
 }
 
 MenuItem* AppMenuModel::makeEffectMenu()
 {
-    return makeMenu(TranslatableString("appshell/menu/effect", "&Effect"), makeEffectsItems(), "menu-effect");
+    return makeMenu(TranslatableString("appshell-menu-effect", "&Effect"), makeEffectsItems(), "menu-effect");
 }
 
 MenuItem* AppMenuModel::makeAnalyzeMenu()
 {
-    return makeMenu(TranslatableString("appshell/menu/analyze", "&Analyze"), makeAnalyzeItems(), "menu-analyze");
+    return makeMenu(TranslatableString("appshell-menu-analyze", "&Analyze"), makeAnalyzeItems(), "menu-analyze");
 }
 
 MenuItem* AppMenuModel::makeToolsMenu()
 {
-    return makeMenu(TranslatableString("appshell/menu/tools", "&Tools"), makeToolItems(), "menu-tools");
+    return makeMenu(TranslatableString("appshell-menu-tools", "&Tools"), makeToolItems(), "menu-tools");
 }
 
 MenuItem* AppMenuModel::makeExtraMenu()
 {
     MenuItemList extraItems {
         //! TODO AU4
-        makeMenu(TranslatableString("appshell/menu/play", "Play"), makeVolumeAndCompressionItems(), "menu-play", false),
-        makeMenu(TranslatableString("appshell/menu/scrubbing", "Scrubbing"), makeVolumeAndCompressionItems(), "menu-scrubbing", false),
-        makeMenu(TranslatableString("appshell/menu/extratools", "Tools"), makeVolumeAndCompressionItems(), "menu-extra-tools", false),
-        makeMenu(TranslatableString("appshell/menu/mixer", "Mixer"), makeVolumeAndCompressionItems(), "menu-mixer", false),
-        makeMenu(TranslatableString("appshell/menu/extraedit", "Edit"), makeVolumeAndCompressionItems(), "menu-extra-edit", false),
-        makeMenu(TranslatableString("appshell/menu/playatspeed", "Play at speed"),
+        makeMenu(TranslatableString("appshell-menu-play", "Play"), makeVolumeAndCompressionItems(), "menu-play", false),
+        makeMenu(TranslatableString("appshell-menu-scrubbing", "Scrubbing"), makeVolumeAndCompressionItems(), "menu-scrubbing", false),
+        makeMenu(TranslatableString("appshell-menu-extratools", "Tools"), makeVolumeAndCompressionItems(), "menu-extra-tools", false),
+        makeMenu(TranslatableString("appshell-menu-mixer", "Mixer"), makeVolumeAndCompressionItems(), "menu-mixer", false),
+        makeMenu(TranslatableString("appshell-menu-extraedit", "Edit"), makeVolumeAndCompressionItems(), "menu-extra-edit", false),
+        makeMenu(TranslatableString("appshell-menu-playatspeed", "Play at speed"),
                  makeVolumeAndCompressionItems(), "menu-play-at-speed", false),
-        makeMenu(TranslatableString("appshell/menu/device", "Device"), makeVolumeAndCompressionItems(), "menu-device", false),
-        makeMenu(TranslatableString("appshell/menu/extraselect", "Select"), makeVolumeAndCompressionItems(), "menu-extraselect", false),
+        makeMenu(TranslatableString("appshell-menu-device", "Device"), makeVolumeAndCompressionItems(), "menu-device", false),
+        makeMenu(TranslatableString("appshell-menu-extraselect", "Select"), makeVolumeAndCompressionItems(), "menu-extraselect", false),
         makeSeparator(),
         makeMenuItem("prev-window"),
         makeMenuItem("next-window"),
-        makeMenu(TranslatableString("appshell/menu/focus", "Focus"), makeVolumeAndCompressionItems(), "menu-focus", false),
-        makeMenu(TranslatableString("appshell/menu/cursor", "Cursor"), makeVolumeAndCompressionItems(), "menu-cursor", false),
-        makeMenu(TranslatableString("appshell/menu/track", "Track"), makeVolumeAndCompressionItems(), "menu-track", false),
-        makeMenu(TranslatableString("appshell/menu/scriptables1", "Scriptables1"),
+        makeMenu(TranslatableString("appshell-menu-focus", "Focus"), makeVolumeAndCompressionItems(), "menu-focus", false),
+        makeMenu(TranslatableString("appshell-menu-cursor", "Cursor"), makeVolumeAndCompressionItems(), "menu-cursor", false),
+        makeMenu(TranslatableString("appshell-menu-track", "Track"), makeVolumeAndCompressionItems(), "menu-track", false),
+        makeMenu(TranslatableString("appshell-menu-scriptables1", "Scriptables1"),
                  makeVolumeAndCompressionItems(), "menu-scriptables1", false),
-        makeMenu(TranslatableString("appshell/menu/scriptables2", "Scriptables2"),
+        makeMenu(TranslatableString("appshell-menu-scriptables2", "Scriptables2"),
                  makeVolumeAndCompressionItems(), "menu-scriptables2", false),
-        makeMenu(TranslatableString("appshell/menu/images", "Images"), makeVolumeAndCompressionItems(), "menu-images", false),
+        makeMenu(TranslatableString("appshell-menu-images", "Images"), makeVolumeAndCompressionItems(), "menu-images", false),
 
 #ifndef Q_OS_MAC
-        makeMenu(TranslatableString("appshell/menu/settings", "Settings"), makeVolumeAndCompressionItems(), "menu-settings", false),
+        makeMenu(TranslatableString("appshell-menu-settings", "Settings"), makeVolumeAndCompressionItems(), "menu-settings", false),
 #endif
         makeMenuItem("benchmark"),
         makeMenuItem("regular-interval-labels"),
     };
 
-    return makeMenu(TranslatableString("appshell/menu/extra", "&Extra"), extraItems, "menu-extra");
+    return makeMenu(TranslatableString("appshell-menu-extra", "&Extra"), extraItems, "menu-extra");
 }
 
 MenuItem* AppMenuModel::makeHelpMenu()
@@ -414,7 +412,7 @@ MenuItem* AppMenuModel::makeHelpMenu()
         makeMenuItem("tutorials"),
         makeMenuItem("online-handbook"),
         makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
+        makeMenu(TranslatableString("appshell-menu-diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
         makeSeparator(),
         makeMenuItem("link-account"),
         makeMenuItem("about-audacity"),
@@ -428,7 +426,7 @@ MenuItem* AppMenuModel::makeHelpMenu()
         helpItems.push_front(makeMenuItem("check-update"));
     }
 
-    return makeMenu(TranslatableString("appshell/menu/help", "&Help"), helpItems, "menu-help");
+    return makeMenu(TranslatableString("appshell-menu-help", "&Help"), helpItems, "menu-help");
 }
 
 muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
@@ -441,7 +439,7 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
 
     MenuItemList items {
         makeMenuItem("diagnostic-save-diagnostic-files"),
-        makeMenu(TranslatableString("appshell/menu/diagnostics", "&System"), systemItems, "menu-system")
+        makeMenu(TranslatableString("appshell-menu-diagnostics", "&System"), systemItems, "menu-system")
     };
 
     if (globalConfiguration()->devModeEnabled()) {
@@ -463,15 +461,15 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
             makeMenuItem("extensions-show-apidump"),
         };
 
-        items << makeMenu(TranslatableString("appshell/menu/diagnostics", "A&ctions"), actionsItems, "menu-actions")
-              << makeMenu(TranslatableString("appshell/menu/diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility")
-              << makeMenu(TranslatableString("appshell/menu/diagnostics", "E&xtensions"), extensionsItems, "menu-extensions")
-              << makeMenu(TranslatableString("appshell/menu/diagnostics", "Test&flow"), testflowItems, "menu-testflow");
+        items << makeMenu(TranslatableString("appshell-menu-diagnostics", "A&ctions"), actionsItems, "menu-actions")
+              << makeMenu(TranslatableString("appshell-menu-diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility")
+              << makeMenu(TranslatableString("appshell-menu-diagnostics", "E&xtensions"), extensionsItems, "menu-extensions")
+              << makeMenu(TranslatableString("appshell-menu-diagnostics", "Test&flow"), testflowItems, "menu-testflow");
         //! TODO AU4
         // << makeMenuItem("multiwindows-dev-show-info");
     }
 
-    return makeMenu(TranslatableString("appshell/menu/diagnostics", "&Diagnostics"), items, "menu-diagnostic");
+    return makeMenu(TranslatableString("appshell-menu-diagnostics", "&Diagnostics"), items, "menu-diagnostic");
 }
 
 MenuItemList AppMenuModel::makeRecentProjectsItems()
@@ -532,7 +530,7 @@ MenuItemList AppMenuModel::makeExportItems()
 MenuItemList AppMenuModel::makeClipItems()
 {
     MenuItemList items {
-        makeMenuItem("rename-item", TranslatableString("appshell/menu/clip", "Rename clip")),
+        makeMenuItem("rename-item", TranslatableString("appshell-menu-clip", "Rename clip")),
         makeMenuItem("trim-clip"),
         makeSeparator(),
         makeMenuItem("split"),
@@ -553,7 +551,7 @@ MenuItemList AppMenuModel::makeLabelItems()
         makeMenuItem("label-add"),
         makeMenuItem("paste-new-label"),
         makeSeparator(),
-        makeMenuItem("manage-labels"),
+        makeMenuItem("open-label-editor", TranslatableString("action", "Manage labels")),
     };
 
     return items;
@@ -691,7 +689,7 @@ MenuItemList AppMenuModel::makeDiagnosticsItems()
 
     MenuItemList items {
         makeMenuItem("diagnostic-save-diagnostic-files"),
-        makeMenu(TranslatableString("appshell/menu/diagnostic", "&System"), systemItems, "menu-system")
+        makeMenu(TranslatableString("appshell-menu-diagnostic", "&System"), systemItems, "menu-system")
     };
 
     if (globalConfiguration()->devModeEnabled()) {
@@ -701,14 +699,14 @@ MenuItemList AppMenuModel::makeDiagnosticsItems()
             makeMenuItem("diagnostic-show-accessible-tree"),
             makeMenuItem("diagnostic-accessible-tree-dump"),
         };
-        items << makeMenu(TranslatableString("appshell/menu/diagnostic", "&Accessibility"), accessibilityItems, "menu-accessibility");
+        items << makeMenu(TranslatableString("appshell-menu-diagnostic", "&Accessibility"), accessibilityItems, "menu-accessibility");
 #endif
 
 #ifdef MUSE_MODULE_TESTFLOW
         MenuItemList testflowItems {
             makeMenuItem("testflow-show-scripts"),
         };
-        items << makeMenu(TranslatableString("appshell/menu/diagnostic", "Test&flow"), testflowItems, "menu-testflow");
+        items << makeMenu(TranslatableString("appshell-menu-diagnostic", "Test&flow"), testflowItems, "menu-testflow");
 #endif
 
 #ifdef MUSE_MODULE_MULTIWINDOWS
@@ -837,7 +835,7 @@ MenuItemList AppMenuModel::makeToolItems()
         makeMenuItem("plugin-manager"),
         makeSeparator(),
         makeMenuItem("manage-macros"),
-        makeMenu(TranslatableString("appshell/menu/macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
+        makeMenu(TranslatableString("appshell-menu-macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
         makeSeparator(),
     };
 

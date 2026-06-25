@@ -54,84 +54,84 @@ int PitchOctave(const double dMIDInote)
 TranslatableString PitchName(const double dMIDInote, const PitchNameChoice choice)
 {
     static const TranslatableString sharpnames[12] = {
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("C"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("C\u266f"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("D"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("D\u266f"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("E"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("F"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("F\u266f"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("G"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("G\u266f"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("A"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("A\u266f"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("B"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "C"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "C\u266f"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "D"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "D\u266f"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "E"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "F"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "F\u266f"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "G"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "G\u266f"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "A"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "A\u266f"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "B"),
     };
 
     static const TranslatableString flatnames[12] = {
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("C"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("D\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("D"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("E\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("E"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("F"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("G\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("G"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("A\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("A"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("B\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("B"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "C"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "D\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "D"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "E\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "E"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "F"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "G\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "G"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "A\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "A"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "B\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "B"),
     };
 
     static const TranslatableString bothnames[12] = {
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("C"),
-        /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
-        XO("C\u266f/D\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("D"),
-        /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
-        XO("D\u266f/E\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("E"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("F"),
-        /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
-        XO("F\u266f/G\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("G"),
-        /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
-        XO("G\u266f/A\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("A"),
-        /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
-        XO("A\u266f/B\u266d"),
-        /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
-        XO("B"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "C"),
+        /*: Two, alternate names of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "C\u266f/D\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "D"),
+        /*: Two, alternate names of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "D\u266f/E\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "E"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "F"),
+        /*: Two, alternate names of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "F\u266f/G\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "G"),
+        /*: Two, alternate names of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "G\u266f/A\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "A"),
+        /*: Two, alternate names of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "A\u266f/B\u266d"),
+        /*: Name of a musical note in the 12-tone chromatic scale */
+        TranslatableString("math", "B"),
     };
 
     const TranslatableString* table = nullptr;
@@ -152,7 +152,7 @@ TranslatableString PitchName(const double dMIDInote, const PitchNameChoice choic
 TranslatableString PitchName_Absolute(const double dMIDInote, const PitchNameChoice choice)
 {
     // The format string is not localized.  Should it be?
-    return Verbatim(wxT("%s%d"))
+    return au3::untranslatable(wxT("%1%2"))
            .Format(PitchName(dMIDInote, choice), PitchOctave(dMIDInote));
 }
 

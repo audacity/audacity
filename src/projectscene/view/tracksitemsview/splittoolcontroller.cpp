@@ -174,7 +174,7 @@ void SplitToolController::updateGuideline(double pos)
     const bool snapEnabled = true;
     double guideline = context()->findGuideline(context()->positionToTime(pos, snapEnabled));
 
-    if (!muse::RealIsEqualOrMore(guideline, 0)) {
+    if (!context()->isGuidelineValid(guideline)) {
         guideline = context()->positionToTime(pos);
     }
 

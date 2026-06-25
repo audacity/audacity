@@ -35,21 +35,21 @@
 #define square(a) ((a) * (a))
 
 const EnumValueSymbol ScienFilterBase::kTypeStrings[nTypes] = {
-    /*i18n-hint: Butterworth is the name of the person after whom the filter type
+    /*: Butterworth is the name of the person after whom the filter type
        is named.*/
-    { XO("Butterworth") },
-    /*i18n-hint: Chebyshev is the name of the person after whom the filter type
+    { TranslatableString("builtin-effects", "Butterworth") },
+    /*: Chebyshev is the name of the person after whom the filter type
        is named.*/
-    { XO("Chebyshev Type I") },
-    /*i18n-hint: Chebyshev is the name of the person after whom the filter type
+    { TranslatableString("builtin-effects", "Chebyshev Type I") },
+    /*: Chebyshev is the name of the person after whom the filter type
        is named.*/
-    { XO("Chebyshev Type II") }
+    { TranslatableString("builtin-effects", "Chebyshev Type II") }
 };
 
 const EnumValueSymbol ScienFilterBase::kSubTypeStrings[nSubTypes] = {
     // These are acceptable dual purpose internal/visible names
-    { XO("Lowpass") },
-    { XO("Highpass") }
+    { TranslatableString("builtin-effects", "Lowpass") },
+    { TranslatableString("builtin-effects", "Highpass") }
 };
 
 const EffectParameterMethods& ScienFilterBase::Parameters() const
@@ -73,8 +73,7 @@ const EffectParameterMethods& ScienFilterBase::Parameters() const
 // ScienFilterBase
 //----------------------------------------------------------------------------
 
-const ComponentInterfaceSymbol ScienFilterBase::Symbol { XO(
-                                                             "Classic Filters") };
+const ComponentInterfaceSymbol ScienFilterBase::Symbol { TranslatableString("builtin-effects", "Classic Filters") };
 
 ScienFilterBase::ScienFilterBase()
 {
@@ -105,8 +104,8 @@ ComponentInterfaceSymbol ScienFilterBase::GetSymbol() const
 
 TranslatableString ScienFilterBase::GetDescription() const
 {
-    /* i18n-hint: "infinite impulse response" */
-    return XO("Performs IIR filtering that emulates analog filters");
+    /*: "infinite impulse response" */
+    return TranslatableString("builtin-effects", "Performs IIR filtering that emulates analog filters");
 }
 
 ManualPageID ScienFilterBase::ManualPage() const
@@ -172,8 +171,7 @@ bool ScienFilterBase::Init()
             rate = t->GetRate();
         } else {
             if (t->GetRate() != rate) {
-                BasicUI::ShowMessageBox(XO(
-                                            "To apply a filter, all selected tracks must have the same sample rate."));
+                BasicUI::ShowMessageBox(TranslatableString("builtin-effects", "To apply a filter, all selected tracks must have the same sample rate."));
                 return false;
             }
         }

@@ -125,16 +125,6 @@ au::trackedit::TrackList Au3TrackeditProject::trackList() const
         au4tracks.push_back(std::move(au4t));
     }
 
-    if (!globalConfiguration()->devModeEnabled()) {
-        au4tracks.erase(std::remove_if(au4tracks.begin(), au4tracks.end(), [](const Track& t) {
-            if (t.type == au::trackedit::TrackType::Label) {
-                LOGW() << "Label tracks not implemented, so it will be filtered out.";
-                return true;
-            }
-            return false;
-        }), au4tracks.end());
-    }
-
     return au4tracks;
 }
 
@@ -196,9 +186,14 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
 
 void Au3TrackeditProject::onTrackDataChanged(const TrackId& trackId)
 {
-    auto it = m_clipsChanged.find(trackId);
-    if (it != m_clipsChanged.end()) {
-        it->second.changed();
+    auto clipIt = m_clipsChanged.find(trackId);
+    if (clipIt != m_clipsChanged.end()) {
+        clipIt->second.changed();
+    }
+
+    auto labelIt = m_labelsChanged.find(trackId);
+    if (labelIt != m_labelsChanged.end()) {
+        labelIt->second.changed();
     }
 }
 

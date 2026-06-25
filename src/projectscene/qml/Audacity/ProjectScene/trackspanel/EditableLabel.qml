@@ -97,7 +97,7 @@ FocusScope {
                 }
             }
 
-            onTextEdited: function(text) {
+            onTextEdited: function (text) {
                 newText = text
             }
 

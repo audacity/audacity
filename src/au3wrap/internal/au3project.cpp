@@ -149,7 +149,7 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     {
         auto ret = muse::Ret(projectFileIO.GetLastErrorCode());
         ret.setData("title", muse::mtrc("project", "Project loading failed").toStdString());
-        ret.setData("body", projectFileIO.GetLastError().Translation().ToStdString());
+        ret.setData("body", projectFileIO.GetLastError().translated().toStdString());
         ret.setData("path", filePath);
         return ret;
     }
@@ -187,6 +187,12 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
     auto& project = m_data->projectRef();
 
     auto& projectFileIO = ProjectFileIO::Get(project);
+
+    // Refresh the saved master-effect snapshot before serializing so this save persists
+    // the current master effects. (updateSavedState() refreshes it only AFTER the save,
+    // intentionally, to keep "Save As" correct — see commit 86c2f8f7.)
+    SavedMasterEffectList::Get(project).UpdateCopy();
+
     auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), m_lastSavedTracks.get());
     if (result) {
         UndoManager::Get(project).StateSaved();

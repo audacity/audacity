@@ -4,6 +4,7 @@
 
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -43,7 +44,7 @@ const EffectParameterMethods& AmplifyEffect::Parameters() const
 // AmplifyEffect
 //
 
-const ComponentInterfaceSymbol AmplifyEffect::Symbol { XO("Amplify") };
+const ComponentInterfaceSymbol AmplifyEffect::Symbol { TranslatableString("effects-amplify", "Amplify") };
 
 AmplifyEffect::Instance::~Instance()
 {
@@ -53,11 +54,7 @@ AmplifyEffect::Instance::~Instance()
 
 AmplifyEffect::AmplifyEffect()
 {
-    mAmp = Amp.def;
-    // Ratio.def == DB_TO_LINEAR(Amp.def)
     Parameters().Reset(*this);
-    mRatioClip = 0.0;
-    mPeak = 0.0;
 
     SetLinearEffectFlag(true);
 }
@@ -71,19 +68,17 @@ ComponentInterfaceSymbol AmplifyEffect::GetSymbol() const
     return Symbol;
 }
 
-float AmplifyEffect::peak() const
+float AmplifyEffect::inputPeak() const
 {
-    return static_cast<float>(mPeak);
+    return static_cast<float>(mInputPeak);
 }
 
 ratio_t AmplifyEffect::defaultRatio() const
 {
-    return 1.0 / mPeak;
-}
-
-db_t AmplifyEffect::defaultAmp() const
-{
-    return muse::linear_to_db(defaultRatio());
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        return 1.0;
+    }
+    return 1.0 / mInputPeak;
 }
 
 ratio_t AmplifyEffect::ratio() const
@@ -91,14 +86,35 @@ ratio_t AmplifyEffect::ratio() const
     return mRatio;
 }
 
-Param<db_t> AmplifyEffect::amp() const
+Param<au::shared::Decibel> AmplifyEffect::amp() const
 {
-    return make_param<db_t>(muse::linear_to_db(mRatio), muse::linear_to_db(Ratio.min), muse::linear_to_db(Ratio.max));
+    using namespace shared;
+    return { Decibel::fromLinear(mRatio), Decibel::fromLinear(Ratio.min), Decibel::fromLinear(Ratio.max) };
 }
 
-void AmplifyEffect::setAmp(db_t v)
+void AmplifyEffect::setAmp(shared::Decibel v)
 {
-    mRatio = std::clamp<ratio_t>(muse::db_to_linear(v), Ratio.min, Ratio.max);
+    SetRatio(v.toLinear());
+}
+
+Param<au::shared::Decibel> AmplifyEffect::newPeak() const
+{
+    using namespace shared;
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        return { Decibel{}, Decibel{}, Decibel{} };
+    }
+    return { Decibel::fromLinear(mRatio * mInputPeak), Decibel::fromLinear(Ratio.min * mInputPeak), Decibel::fromLinear(
+                 Ratio.max * mInputPeak) };
+}
+
+void AmplifyEffect::setNewPeak(shared::Decibel v)
+{
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        return;
+    }
+
+    const double newRatio = v.toLinear() / mInputPeak;
+    SetRatio(newRatio);
 }
 
 bool AmplifyEffect::canClip() const
@@ -117,7 +133,7 @@ bool AmplifyEffect::isApplyAllowed() const
         return true;
     }
 
-    if (!(mPeak > 0.0)) {
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
         return false;
     }
 
@@ -170,16 +186,10 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
 {
     Init();
 
-    mRatioClip = 0.0;
-    if (mPeak > 0.0) {
-        mRatio = 1.0 / mPeak;
-        mRatioClip = mRatio;
-    } else {
-        mRatio = 1.0;
-    }
+    const auto newRatio =  muse::RealIsEqualOrLess(mInputPeak, 0.0) ? 1.0 : 1.0 / mInputPeak;
     mCanClip = false;
 
-    ClampRatio();
+    SetRatio(newRatio);
     return { nullptr };
 }
 
@@ -189,7 +199,7 @@ bool AmplifyEffect::Init()
 {
     auto range = inputTracks()->Selected<const Au3WaveTrack>();
     if (range.empty() || muse::RealIsEqualOrMore(mT0, mT1)) {
-        mLastError = XO("No audio selected").Translation().ToStdString();
+        mLastError = TranslatableString("effects-amplify", "No audio selected").translated().toStdString();
         return false;
     }
     bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
@@ -198,33 +208,25 @@ bool AmplifyEffect::Init()
     if (hasPitchOrSpeed) {
         range = MakeOutputTracks()->Get().Selected<const Au3WaveTrack>();
     }
-    mPeak = 0.0;
+    mInputPeak = 0.0;
     for (auto t : range) {
         for (const auto& pChannel : t->Channels()) {
             auto pair = WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
             const float min = pair.first, max = pair.second;
             const float newpeak = std::max(fabs(min), fabs(max));
-            mPeak = std::max<double>(mPeak, newpeak);
+            mInputPeak = std::max<double>(mInputPeak, newpeak);
         }
     }
-    return !muse::RealIsEqualOrMore(0.0, mPeak);
+    return !muse::RealIsEqualOrLess(mInputPeak, 0.0);
 }
 
 std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
 {
     return { std::pair { CopyableValueRestorer(mRatio),
-                         CopyableValueRestorer(mPeak) } };
+                         CopyableValueRestorer(mInputPeak) } };
 }
 
-void AmplifyEffect::ClampRatio()
+void AmplifyEffect::SetRatio(double newRatio)
 {
-    // limit range of gain
-    double dBInit = LINEAR_TO_DB(mRatio);
-    double dB = std::clamp<double>(dBInit, Amp.min, Amp.max);
-    if (dB != dBInit) {
-        mRatio = DB_TO_LINEAR(dB);
-    }
-
-    mAmp = LINEAR_TO_DB(mRatio);
-    mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
+    mRatio = std::clamp<double>(newRatio, Ratio.min, Ratio.max);
 }

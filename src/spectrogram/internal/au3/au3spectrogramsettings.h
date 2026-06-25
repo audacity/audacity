@@ -21,8 +21,6 @@ class WaveChannel;
 class WaveTrack;
 
 namespace au::spectrogram {
-class NumberScale;
-
 class Au3SpectrogramSettings : public TrackAttachment
 {
 public:

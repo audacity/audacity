@@ -174,8 +174,9 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     EXPECT_CALL(*m_player, seek(_, _))
     .Times(0);
 
-    //! [THEN] Playback region should be reset to empty (no selection, no loop)
-    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion()))
+    //! [THEN] Playback region falls back to {lastPlaybackSeekTime, totalPlayTime}.
+    //! lastPlaybackSeekTime is 0 (default, no prior seek) and totalPlayTime is 100.
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(0.0), secs_t(100.0) }))
     .Times(1);
 
     //! [THEN] Player should start playing from current position
@@ -694,5 +695,83 @@ TEST_F(PlaybackControllerTests, Rewind_ToEnd_CheckSelectionReset)
 
     //! [WHEN] Rewind to end
     rewindToEnd();
+}
+
+/**
+ * @brief Seek then stopSeekAndUpdatePlaybackRegion should keep the cursor.
+ * @details User clicks the cursor at 42s, then triggers a stop-and-update
+ *          (e.g. via Shift+Space while playing). The playback region forwarded
+ *          to the player should be the cursor, not an empty region.
+ */
+TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPosition)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] No active playback region (seek-validity check uses totalPlayTime)
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion {}));
+
+    const secs_t cursor = 42.0;
+
+    //! [THEN] Player is seeked to the cursor (once by the click, once by
+    //! the subsequent stop-and-update)
+    EXPECT_CALL(*m_player, seek(cursor, false))
+    .Times(2);
+
+    //! [THEN] stopSeekAndUpdatePlaybackRegion stops the player
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+
+    //! [THEN] The playback region forwarded to the player is the cursor
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { cursor, cursor }))
+    .Times(1);
+
+    //! [WHEN] User clicks the cursor at 42s
+    seek(cursor, false);
+
+    //! [WHEN] Then triggers a stop-and-update
+    m_controller->stopSeekAndUpdatePlaybackRegion();
+}
+
+/**
+ * @brief Toggle play with no selection plays from the cursor to project end.
+ * @details Cursor is at 30s (e.g. just after recording finished), nothing
+ *          is selected. Pressing Space should set the playback region to
+ *          {cursor, totalPlayTime} and start playing.
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] Cursor is at 30s
+    const secs_t recordEnd = 30.0;
+    m_controller->setLastPlaybackSeekTime(recordEnd);
+
+    //! [GIVEN] Playhead is at the cursor (not at project end)
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(recordEnd));
+
+    //! [GIVEN] No selection
+    EXPECT_CALL(*m_selectionController, leftMostSelectedItemStartTime())
+    .WillOnce(Return(std::nullopt));
+    EXPECT_CALL(*m_selectionController, rightMostSelectedItemEndTime())
+    .WillOnce(Return(std::nullopt));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillOnce(Return(true));
+
+    //! [THEN] Playback region is {cursor, totalPlayTime}
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { recordEnd, secs_t(100.0) }))
+    .Times(1);
+
+    //! [THEN] Player starts playing
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] User presses Space
+    togglePlay();
 }
 }

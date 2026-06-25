@@ -1,4 +1,4 @@
-name: Audacity 4.0 alpha Bug report
+name: Audacity 4.0 beta Bug report
 description: File a bug report
 labels: ["bug"]
 type: "bug"
@@ -7,7 +7,7 @@ body:
     id: desc
     attributes:
       label: Bug description
-      description: A more detailled description of the bug
+      description: A more detailed description of the bug
       placeholder: Context for the bug that didn't fit in the title
     validations:
       required: false
@@ -36,12 +36,15 @@ body:
       description: What are you actually seeing?
     validations:
       required: false
-  - type: input
+  - type: dropdown
     id: version
     attributes:
       label: Audacity Version
       description: What version of Audacity are you running?
-      placeholder: git commit ID, PR or build number
+      options:
+        - Audacity 4.0 beta 2
+        - Audacity 4.0 beta 1
+        - Other
     validations:
       required: true
   - type: dropdown

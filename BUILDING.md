@@ -9,7 +9,7 @@
 * A package manager (tested: Choco on Windows, Homebrew on macOS)
 * A CMake generator (tested: Ninja)
 * A C++ compiler (tested: MSVC on Windows, g++ on Linux)
-* Qt 6.9.1 'Desktop' (macOS), 'MSVC 2022 64-bit' (Windows) or 'MSVC 2022 ARM64' (Windows on ARM) with 'Additional Libraries':
+* Qt 6.10 'Desktop' (macOS), 'MSVC 2022 64-bit' (Windows) or 'MSVC 2022 ARM64' (Windows on ARM) with 'Additional Libraries':
   * Qt 5 Compatibility Module
   * Qt Network Authorization
   * Qt Shader Tools

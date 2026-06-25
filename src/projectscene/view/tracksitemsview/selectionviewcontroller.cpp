@@ -65,8 +65,12 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
         tracks = selectionController()->selectedTracks();
         TrackIdList newTracks = vs->tracksInRange(y, y);
         if (!newTracks.empty()) {
-            if (!muse::contains(tracks, newTracks.at(0))) {
-                tracks.push_back(newTracks.at(0));
+            const TrackId clickedTrack = newTracks.at(0);
+            auto it = std::find(tracks.begin(), tracks.end(), clickedTrack);
+            if (it == tracks.end()) {
+                tracks.push_back(clickedTrack);
+            } else {
+                tracks.erase(it);
             }
         }
     } else {
@@ -98,7 +102,7 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
     }
     emit pressedSpectrogramChanged();
 
-    viewState()->updateItemsBoundaries(true);
+    viewState()->updateItemsBoundaries(false);
 
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
         doOnPositionChanged(m_lastPoint.x(), m_lastPoint.y());

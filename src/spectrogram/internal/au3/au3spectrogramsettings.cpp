@@ -6,7 +6,7 @@
 #include "iglobalspectrogramconfiguration.h"
 #include "au3spectrogramutils.h"
 #include "spectrogramtypes.h"
-#include "../numberscale.h"
+#include "shared/axis/numberscale.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"

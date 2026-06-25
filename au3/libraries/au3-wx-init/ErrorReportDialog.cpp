@@ -75,7 +75,7 @@ ErrorReportDialog::ErrorReportDialog(
     , mIsModal(modal)
 {
     audacity::sentry::Exception ex = audacity::sentry::Exception::Create(
-        audacity::ToUTF8(dlogTitle.Debug()), message.Debug());
+        dlogTitle.debugStr().toStdString(), message.debugStr().toStdString());
 
     if (!log.empty()) {
         ex.AddData("log", log);

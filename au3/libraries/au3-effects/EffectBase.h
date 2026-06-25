@@ -21,7 +21,7 @@
 // Internal name should be stable across versions
 #define NYQUIST_PROMPT_ID wxT("Nyquist prompt")
 // User-visible name might change in later versions
-#define NYQUIST_PROMPT_NAME XO("Nyquist")
+#define NYQUIST_PROMPT_NAME TranslatableString("effects", "Nyquist prompt")
 
 namespace BasicUI {
 class ProgressDialog;
@@ -141,10 +141,10 @@ private:
     int mNumGroups{};
 };
 
-/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
+/*: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
-#define NYQUISTEFFECTS_FAMILY (EffectFamilySymbol{ XO("Nyquist") })
+#define NYQUISTEFFECTS_FAMILY (EffectFamilySymbol{ ::TranslatableString("effects", "Nyquist") })
 
 #endif

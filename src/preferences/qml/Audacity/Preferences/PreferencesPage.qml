@@ -28,7 +28,7 @@ import Muse.UiComponents
 Rectangle {
     id: root
     height: parent.height
-    color: ui.theme.backgroundSecondaryColor
+    color: ui.theme.backgroundTertiaryColor
 
     default property alias contentData: content.data
 
@@ -43,7 +43,7 @@ Rectangle {
     property NavigationSection navigationSection: null
     property int navigationOrderStart: 0
 
-    signal hideRequested()
+    signal hideRequested
 
     function apply() {
         return true
@@ -55,7 +55,13 @@ Rectangle {
     function ensureContentVisibleRequested(contentRect) {
         const overscroll = 60
 
-        const { contentY, height, topMargin, bottomMargin, contentHeight } = flickable
+        const {
+            contentY,
+            height,
+            topMargin,
+            bottomMargin,
+            contentHeight
+        } = flickable
 
         const visibleTop = contentY
         const visibleBottom = contentY + height - topMargin - bottomMargin

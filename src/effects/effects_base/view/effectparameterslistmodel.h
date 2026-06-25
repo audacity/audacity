@@ -37,6 +37,8 @@ public:
         CurrentValueRole,
         StepSizeRole,
         StepCountRole,
+        NumDecimalsRole,
+        DescriptionRole,
         CurrentValueStringRole,
         FormattedValueRole,
         IsToggleCheckedRole,

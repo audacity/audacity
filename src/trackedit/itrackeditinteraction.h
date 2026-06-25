@@ -32,6 +32,7 @@ public:
 
     virtual bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
+    virtual bool silenceClips(const ClipKeyList& clipKeyList) = 0;
     virtual bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
@@ -146,6 +147,8 @@ public:
 
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
     virtual bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) = 0;
+
+    virtual void resetLabelStretchState() = 0;
 
     virtual muse::Progress progress() const = 0;
 };

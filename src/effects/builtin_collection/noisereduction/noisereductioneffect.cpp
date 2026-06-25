@@ -40,13 +40,17 @@
 *//********************************************************************/
 #include "noisereductioneffect.h"
 
+#include <algorithm>
+#include <cmath>
+
+#include "framework/global/types/translatablestring.h"
+
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-fft/FFT.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track-fft/TrackSpectrumTransformer.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
-#include <algorithm>
-#include <cmath>
 
 // SPECTRAL_SELECTION not to affect this effect for now, as there might be no
 // indication that it does. [Discussed and agreed for v2.1 by Steve, Paul,
@@ -59,31 +63,31 @@ typedef std::vector<float> FloatVector;
 namespace {
 const struct DiscriminationMethodInfo
 {
-    const TranslatableString name;
+    const ::TranslatableString name;
 } discriminationMethodInfo[DM_N_METHODS] = {
     // Experimental only, don't need translations
-    { XO("Median") },
-    { XO("Second greatest") },
+    { TranslatableString("effects-noisereduction", "Median") },
+    { TranslatableString("effects-noisereduction", "Second greatest") },
 };
 
 const struct WindowTypesInfo
 {
-    const TranslatableString name;
+    const ::TranslatableString name;
     unsigned minSteps;
 } windowTypesInfo[WT_N_WINDOW_TYPES] = {
     // Experimental only, don't need translations
-    { Verbatim("none, Hann (2.0.6 behavior)"), 2 },
-    /* i18n-hint: Hann is a proper name */
-    { Verbatim("Hann, none"), 2 },
-    /* i18n-hint: Hann is a proper name */
-    { Verbatim("Hann, Hann (default)"), 4 },
-    /* i18n-hint: Hann and Blackman are proper names */
-    { Verbatim("Blackman, Hann"), 4 },
-    /* i18n-hint: Hamming is a proper name */
-    { Verbatim("Hamming, none"), 2 },
-    /* i18n-hint: Hamming and Hann area proper names */
-    { Verbatim("Hamming, Hann"), 4 },
-    /* i18n-hint: Hamming is a proper name */
+    { ::TranslatableString::untranslatable("none, Hann (2.0.6 behavior)"), 2 },
+    /*: Hann is a proper name */
+    { ::TranslatableString::untranslatable("Hann, none"), 2 },
+    /*: Hann is a proper name */
+    { ::TranslatableString::untranslatable("Hann, Hann (default)"), 4 },
+    /*: Hann and Blackman are proper names */
+    { ::TranslatableString::untranslatable("Blackman, Hann"), 4 },
+    /*: Hamming is a proper name */
+    { ::TranslatableString::untranslatable("Hamming, none"), 2 },
+    /*: Hamming and Hann area proper names */
+    { ::TranslatableString::untranslatable("Hamming, Hann"), 4 },
+    /*: Hamming is a proper name */
     // { XO("Hamming, Reciprocal Hamming"),    2, }, // output window is special
 };
 } // namespace
@@ -194,8 +198,7 @@ public:
     sampleCount mProgressWindowCount = 0;
 };
 
-const ComponentInterfaceSymbol NoiseReductionEffect::Symbol { XO(
-                                                                  "Noise reduction") };
+const ComponentInterfaceSymbol NoiseReductionEffect::Symbol { TranslatableString("effects-noisereduction", "Noise reduction") };
 
 NoiseReductionEffect::~NoiseReductionEffect()
 {
@@ -213,9 +216,9 @@ ComponentInterfaceSymbol NoiseReductionEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString NoiseReductionEffect::GetDescription() const
+::TranslatableString NoiseReductionEffect::GetDescription() const
 {
-    return XO("Removes background noise such as fans, tape noise, or hums");
+    return ::TranslatableString("effects-noisereduction", "Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation
@@ -283,7 +286,7 @@ bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings& s)
 
     auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
     if (!track) {
-        mLastError = XO("No audio selected.").Translation().ToStdString();
+        mLastError = TranslatableString("effects-noisereduction", "No audio selected.").translated().toStdString();
         return false;
     }
 
@@ -297,7 +300,8 @@ bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings& s)
     } else if (mStatistics->mWindowSize != settings.WindowSize()) {
         // possible only with advanced settings
         mLastError
-            = XO("You must specify the same window size for steps 1 and 2.").Translation().ToStdString();
+            = TranslatableString("effects-noisereduction",
+                                 "You must specify the same window size for steps 1 and 2.").translated().toStdString();
         return false;
     }
 
@@ -368,10 +372,14 @@ bool NoiseReductionEffect::Worker::Process(
         mProgressWindowCount = 0;
         if (track->GetRate() != mStatistics.mRate) {
             if (mDoProfile) {
-                error = XO("All noise profile data must have the same sample rate.").Translation().ToStdString();
+                error
+                    = TranslatableString("effects-noisereduction",
+                                         "All noise profile data must have the same sample rate.").translated().toStdString();
             } else {
                 error
-                    = XO("The sample rate of the noise profile must match that of the sound to be processed.").Translation().ToStdString();
+                    = TranslatableString("effects-noisereduction",
+                                         "The sample rate of the noise profile must match that of the sound to be processed.").translated().
+                      toStdString();
             }
             return false;
         }
@@ -436,7 +444,7 @@ bool NoiseReductionEffect::Worker::Process(
 
     if (mDoProfile) {
         if (mStatistics.mTotalWindows == 0) {
-            error = XO("Selected noise profile is too short.").Translation().ToStdString();
+            error = TranslatableString("effects-noisereduction", "Selected noise profile is too short.").translated().toStdString();
             return false;
         }
     }

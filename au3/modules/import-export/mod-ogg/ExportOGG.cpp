@@ -17,10 +17,10 @@
 #include <wx/stream.h>
 
 namespace {
-/* i18n-hint: kbit/s abbreviates "thousands of bits per second" */
+/*: kbit/s abbreviates "thousands of bits per second" */
 TranslatableString n_kbps(int n)
 {
-    return XO("%d kbit/s").Format(n);
+    return TranslatableString("import-export", "%1 kbit/s").arg(n);
 }
 
 enum : int {
@@ -31,7 +31,7 @@ enum : int {
 // but effective bitrate may vary depending on sample rate
 const PlainExportOptionsEditor::OptionDesc OGGOptionBitrate {
     {
-        OptionIDOGGBitRate, XO("Quality"),
+        OptionIDOGGBitRate, TranslatableString("import-export", "Quality"),
         6,
         ExportOption::TypeEnum,
         {
@@ -125,7 +125,7 @@ int ExportOGG::GetFormatCount() const
 FormatInfo ExportOGG::GetFormatInfo(int) const
 {
     return {
-        wxT("OGG"), XO("Ogg Vorbis Files"), { wxT("ogg") }, 255, true
+        wxT("OGG"), TranslatableString("import-export", "Ogg Vorbis Files"), { wxT("ogg") }, 255, true
     };
 }
 
@@ -170,20 +170,20 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
 
     if (vorbis_encode_init_vbr(&context.info, numChannels, (int)(sampleRate + 0.5), quality)) {
         // TODO: more precise message
-        throw ExportException(_("Unable to export - rate or quality problem"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to export - rate or quality problem").c_str()));
     }
 
     context.outFile = std::make_unique<FileIO>(fName, FileIO::Output);
 
     if (!context.outFile->IsOpened()) {
-        throw ExportException(_("Unable to open target file for writing"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to open target file for writing").c_str()));
     }
 
     context.analysis_state_ok = vorbis_analysis_init(&context.dsp, &context.info) == 0
                                 && vorbis_block_init(&context.dsp, &context.block) == 0;
     // Set up analysis state and auxiliary encoding storage
     if (!context.analysis_state_ok) {
-        throw ExportException(_("Unable to export - problem initialising"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to export - problem initialising").c_str()));
     }
 
     // Retrieve tags
@@ -195,7 +195,7 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
     srand(time(NULL));
     context.stream_ok = ogg_stream_init(&context.stream, rand()) == 0;
     if (!context.stream_ok) {
-        throw ExportException(_("Unable to export - problem creating stream"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to export - problem creating stream").c_str()));
     }
 
     // First we need to write the required headers:
@@ -216,7 +216,7 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
         ogg_stream_packetin(&context.stream, &bitstream_header)
         || ogg_stream_packetin(&context.stream, &comment_header)
         || ogg_stream_packetin(&context.stream, &codebook_header)) {
-        throw ExportException(_("Unable to export - problem with packets"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to export - problem with packets").c_str()));
     }
 
     // Flushing these headers now guarantees that audio data will
@@ -224,7 +224,7 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
     while (ogg_stream_flush(&context.stream, &context.page)) {
         if (context.outFile->Write(context.page.header, context.page.header_len).GetLastError()
             || context.outFile->Write(context.page.body, context.page.body_len).GetLastError()) {
-            throw ExportException(_("Unable to export - problem with file"));
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to export - problem with file").c_str()));
         }
     }
 
@@ -233,8 +233,8 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
         sampleRate, floatSample, mixerSpec);
 
     context.status = selectionOnly
-                     ? XO("Exporting the selected audio as Ogg Vorbis")
-                     : XO("Exporting the audio as Ogg Vorbis");
+                     ? TranslatableString("import-export", "Exporting the selected audio as Ogg Vorbis")
+                     : TranslatableString("import-export", "Exporting the audio as Ogg Vorbis");
 
     return true;
 }

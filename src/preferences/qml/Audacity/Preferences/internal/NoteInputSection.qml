@@ -101,7 +101,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 3
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             root.delayBetweenNotesChangeRequested(newValue)
         }
     }

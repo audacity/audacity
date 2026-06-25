@@ -274,7 +274,7 @@ double PlayRegionController::calculateSnappedPosition(double pos) const
     bool snapEnabled = true;
     double guideline = context()->findGuideline(context()->positionToTime(pos, snapEnabled));
 
-    if (muse::RealIsEqualOrMore(guideline, 0)) {
+    if (context()->isGuidelineValid(guideline)) {
         return context()->timeToPosition(guideline);
     }
     return pos;

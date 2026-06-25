@@ -6,7 +6,6 @@ import QtQuick 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents
 
-
 Rectangle {
     id: root
 
@@ -17,7 +16,9 @@ Rectangle {
 
     default property alias content: contentItem.data
 
-    NavigationFocusBorder { navigationCtrl: keynavsec }
+    NavigationFocusBorder {
+        navigationCtrl: keynavsec
+    }
 
     NavigationSection {
         id: keynavsec
@@ -25,7 +26,6 @@ Rectangle {
             console.debug("KeyNavSection.qml active: " + keynavsec.active)
             if (keynavsec.active) {
                 root.forceActiveFocus()
-
             }
         }
     }

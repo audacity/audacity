@@ -93,7 +93,7 @@ StyledDialogView {
                     navigation.order: 1
                     navigation.accessible.name: fileNameLabel.text + ": " + currentText
 
-                    onTextChanged: function(newTextValue) {
+                    onTextChanged: function (newTextValue) {
                         exportModel.fileName = newTextValue
                     }
                 }
@@ -128,7 +128,7 @@ StyledDialogView {
 
                     indeterminateText: ""
 
-                    onActivated: function(index, value) {
+                    onActivated: function (index, value) {
                         exportModel.currentFileType = value
                     }
                 }
@@ -162,7 +162,7 @@ StyledDialogView {
                     navigationRowOrderStart: fileTypeDropdown.navigation.order + 1
                     pathFieldTitle: folderLabel.text
 
-                    onPathEdited: function(newPath) {
+                    onPathEdited: function (newPath) {
                         exportModel.directoryPath = newPath
                     }
                 }
@@ -206,15 +206,15 @@ StyledDialogView {
                     navigationSection: root.navigationSection
                     navigationPanelStartOrder: fileSection.navigation.order + 1
 
-                    onSetSelectedRequested: function(trackId, selected) {
+                    onSetSelectedRequested: function (trackId, selected) {
                         exportModel.changeSelectionForTrack(trackId, selected)
                     }
 
-                    onSelectAllRequested: function() {
+                    onSelectAllRequested: function () {
                         exportModel.selectAllTracks()
                     }
 
-                    onDeselectAllRequested: function() {
+                    onDeselectAllRequested: function () {
                         exportModel.deselectAllTracks()
                     }
                 }
@@ -257,9 +257,12 @@ StyledDialogView {
                 buttonId: ButtonBoxModel.Apply
                 minWidth: 80
                 accentButton: true
-                enabled: (exportModel.selectedTracks && exportModel.selectedTracks.length > 0)
-                         && (exportModel.fileName && exportModel.fileName.trim() !== "")
-                         && (exportModel.directoryPath && exportModel.directoryPath.trim() !== "")
+
+                readonly property bool hasSelectedTracks: exportModel.selectedTracks && exportModel.selectedTracks.length > 0
+                readonly property bool hasFileName: exportModel.fileName && exportModel.fileName.trim() !== ""
+                readonly property bool hasDirectory: exportModel.directoryPath && exportModel.directoryPath.trim() !== ""
+
+                enabled: hasSelectedTracks && hasFileName && hasDirectory
 
                 navigation.panel: buttonBox.navigationPanel
                 navigation.order: 2

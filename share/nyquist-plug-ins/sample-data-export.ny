@@ -506,5 +506,5 @@ Daulton") " (<a href=
           (printhtml)       ; html output
           (printdata)))     ; text output
   (t  (if (= MESSAGES 2)
-          (format t (_ "Error.~%\"~a\" cannot be written.") FILENAME)
-          (format nil (_ "Error.~%\"~a\" cannot be written.") FILENAME))))
+          (format t (_ "Error.~%“~a” cannot be written.") FILENAME)
+          (format nil (_ "Error.~%“~a” cannot be written.") FILENAME))))

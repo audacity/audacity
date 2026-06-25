@@ -1,3 +1,6 @@
 [submodule "muse"]
 	path = muse
 	url = https://github.com/musescore/muse_framework.git
+[submodule "muse_deps"]
+	path = muse_deps
+	url = https://github.com/musescore/muse_deps.git

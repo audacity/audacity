@@ -23,6 +23,8 @@ if (AU_BUILD_APPSHELL_MODULE)
     add_subdirectory(appshell)
 endif()
 
+add_subdirectory(shared)
+
 add_subdirectory(au3wrap)
 
 add_subdirectory(audio)
@@ -32,6 +34,10 @@ endif()
 add_subdirectory(context)
 add_subdirectory(project)
 add_subdirectory(preferences)
+
+if (AU_BUILD_USAGEINFO_MODULE)
+    add_subdirectory(usageinfo)
+endif()
 
 if (AU_BUILD_PROJECTSCENE_MODULE)
    add_subdirectory(projectscene)

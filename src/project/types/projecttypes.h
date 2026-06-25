@@ -146,7 +146,6 @@ struct SaveLocation
 struct ProjectFile {
     QUrl url;
     QString displayNameOverride = {};
-    QString cloudProjectId = {};
 
     ProjectFile() = default;
 
@@ -283,6 +282,7 @@ using GenerateAudioTimePeriodType = GenerateAudioTimePeriod::Type;
 
 static const std::string AUP3 = "aup3";
 static const std::string AUP4 = "aup4";
+static const std::string AUP4UNSAVED = "aup4unsaved";
 
 inline bool isAudacity3File(const muse::io::path_t& filename)
 {
@@ -304,14 +304,24 @@ inline bool isAudacity4FileType(const std::string_view ext)
     return ext == AUP4;
 }
 
+inline bool isAudacityUnsavedFile(const muse::io::path_t& filename)
+{
+    return muse::io::suffix(filename) == AUP4UNSAVED;
+}
+
+inline bool isAudacityUnsavedFileType(const std::string_view ext)
+{
+    return ext == AUP4UNSAVED;
+}
+
 inline bool isAudacityFile(const muse::io::path_t& filename)
 {
-    return isAudacity3File(filename) || isAudacity4File(filename);
+    return isAudacity3File(filename) || isAudacity4File(filename) || isAudacityUnsavedFile(filename);
 }
 
 inline bool isAudacityFileType(const std::string_view ext)
 {
-    return isAudacity3FileType(ext) || isAudacity4FileType(ext);
+    return isAudacity3FileType(ext) || isAudacity4FileType(ext) || isAudacityUnsavedFileType(ext);
 }
 }
 

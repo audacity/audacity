@@ -3,7 +3,14 @@
  */
 #include "guiapp.h"
 
-#include "modularity/ioc.h"
+#include <QCoreApplication>
+
+#include "framework/global/async/async.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/imainwindow.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/actions/actiontypes.h"
+
 #include "appshell/istartupscenario.h"
 #include "appshell/internal/splashscreen/splashscreen.h"
 #include "project/types/projecttypes.h"
@@ -79,9 +86,6 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
         if (options->startup.projectDisplayNameOverride.has_value()) {
             file.displayNameOverride = options->startup.projectDisplayNameOverride.value();
         }
-        if (options->startup.cloudProjectId.has_value()) {
-            file.cloudProjectId = options->startup.cloudProjectId.value();
-        }
         projectFile = file;
     }
 
@@ -89,6 +93,9 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
     startupScenario->setStartupProjectFile(projectFile);
     startupScenario->setStartupMediaFiles(options->startup.mediaFiles);
     startupScenario->setRemoveMediaFilesAfterImport(options->startup.removeMediaFilesAfterImport);
+    if (options->startup.startupUrl.has_value()) {
+        startupScenario->setStartupUrl(options->startup.startupUrl.value());
+    }
 
     startupScenario->runOnSplashScreen();
 
@@ -113,5 +120,74 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
 
     if (options->app.revertToFactorySettings) {
         appshellConfiguration()->revertToFactorySettings();
+    }
+}
+
+void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)
+{
+    muse::ui::GuiApplication::doSetup(options);
+
+    if (qEnvironmentVariableIsSet("AU_ALLOW_MULTIPLE_PROCESSES")) {
+        return;
+    }
+
+    const QString appId = QCoreApplication::applicationName();
+    if (!m_singleInstance.start(appId)) {
+        return;
+    }
+
+    m_singleInstance.messageReceived().onReceive(this, [this](const QStringList& args) {
+        muse::async::Async::call(this, [this, args]() {
+            onSecondInstanceArgs(args);
+        });
+    });
+}
+
+void GuiApp::onSecondInstanceArgs(const QStringList& args)
+{
+    LOGI() << "second instance handed off args: " << args;
+
+    // Raise the first window when the instance is activated
+    // TODO: define rules which window should be activated, ie first, last, last used
+    const auto& contexts = muse::ui::GuiApplication::contexts();
+    IF_ASSERT_FAILED(!contexts.empty()) {
+        return;
+    }
+    const auto& ctx = contexts.front();
+
+    auto window = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("app");
+    if (window) {
+        window->requestShowOnFront();
+    }
+
+    auto parsed = std::dynamic_pointer_cast<AudacityCmdOptions>(makeContextOptions(muse::StringList(args)));
+    if (!parsed) {
+        return;
+    }
+
+    auto dispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("app");
+    if (!dispatcher) {
+        return;
+    }
+
+    if (parsed->startup.startupUrl.has_value()) {
+        dispatcher->dispatch("open-url",
+                             muse::actions::ActionData::make_arg1<QString>(parsed->startup.startupUrl.value()));
+    }
+
+    if (parsed->startup.projectUrl.has_value()) {
+        dispatcher->dispatch("file-open",
+                             muse::actions::ActionData::make_arg1<QUrl>(parsed->startup.projectUrl.value()));
+    }
+
+    if (!parsed->startup.mediaFiles.empty()) {
+        QStringList files;
+        files.reserve(static_cast<int>(parsed->startup.mediaFiles.size()));
+        for (const auto& file : parsed->startup.mediaFiles) {
+            files << file.toQString();
+        }
+        dispatcher->dispatch("project-import-startup-media",
+                             muse::actions::ActionData::make_arg2<QStringList, bool>(
+                                 files, parsed->startup.removeMediaFilesAfterImport));
     }
 }

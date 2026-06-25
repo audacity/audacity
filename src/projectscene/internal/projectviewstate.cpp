@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 
 #include "framework/global/types/retval.h"
+#include "framework/global/async/async.h"
 
 #include "au3wrap/iau3project.h"
 #include "au3wrap/internal/projectsnap.h"
@@ -214,13 +215,9 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         }
 
         prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
-            auto it = m_tracks.find(track.id);
-            if (it == m_tracks.end()) {
-                return;
-            }
-            m_totalTracksHeight.set(m_totalTracksHeight.val - it->second.height.val);
+            recomputeTotalTrackHeight();
             m_verticalRulerWidth.set(calculateVerticalRulerWidth());
-            m_tracks.erase(it);
+            m_tracks.erase(track.id);
         });
 
         updateItemsBoundaries(false);
@@ -229,10 +226,12 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         });
 
         prj->trackAdded().onReceive(this, [this](const trackedit::Track&) {
+            recomputeTotalTrackHeight();
             updateItemsBoundaries(false);
         });
 
         prj->trackInserted().onReceive(this, [this](const trackedit::Track&, int) {
+            recomputeTotalTrackHeight();
             updateItemsBoundaries(false);
         });
 
@@ -357,10 +356,24 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
         }
     }
 
-    m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
     m_verticalRulerWidth.set(calculateVerticalRulerWidth());
 
     return m_tracks.insert({ trackId, d }).first->second;
+}
+
+void ProjectViewState::recomputeTotalTrackHeight()
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        m_totalTracksHeight.set(0);
+        return;
+    }
+
+    int total = 0;
+    for (const trackedit::TrackId& id : prj->trackIdList()) {
+        total += trackHeight(id).val;
+    }
+    m_totalTracksHeight.set(total);
 }
 
 bool ProjectViewState::doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
@@ -400,6 +413,11 @@ muse::ValCh<int> ProjectViewState::trackHeight(const trackedit::TrackId& trackId
         return it->second.height;
     }
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
+    }
+
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
     return d.height;
 }
@@ -411,6 +429,11 @@ muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const trackedit::TrackId& t
         return it->second.collapsed;
     }
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
+    }
+
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
     return d.collapsed;
 }
@@ -420,6 +443,11 @@ muse::ValCh<double> ProjectViewState::channelHeightRatio(const trackedit::TrackI
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         return it->second.channelHeightRatio;
+    }
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
     }
 
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
@@ -442,7 +470,7 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
     d->height.set(newHeight);
     d->collapsed.set(newHeight < TRACK_COLLAPSE_HEIGHT);
 
-    m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
+    recomputeTotalTrackHeight();
 
     const project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
@@ -464,12 +492,11 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
         d = &makeTrackData(trackId);
     }
 
-    int oldHeight = d->height.val;
     int newHeight = std::max(height, TRACK_MIN_HEIGHT);
     d->height.set(newHeight);
     d->collapsed.set(height < TRACK_COLLAPSE_HEIGHT);
 
-    m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
+    recomputeTotalTrackHeight();
 
     const project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
@@ -644,6 +671,11 @@ muse::ValCh<std::pair<float, float> > ProjectViewState::verticalDisplayBounds(co
         return it->second.verticalDisplayBounds;
     }
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
+    }
+
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
     return d.verticalDisplayBounds;
 }
@@ -792,6 +824,11 @@ muse::ValCh<bool> ProjectViewState::isHalfWave(const trackedit::TrackId& trackId
         return it->second.isHalfWave;
     }
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
+    }
+
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
     return d.isHalfWave;
 }
@@ -822,6 +859,11 @@ muse::ValCh<au::trackedit::TrackViewType> ProjectViewState::trackViewType(const 
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         return it->second.viewType;
+    }
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
     }
 
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
@@ -897,6 +939,11 @@ muse::ValCh<int> ProjectViewState::trackRulerType(const trackedit::TrackId& trac
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         return it->second.rulerType;
+    }
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || !prj->track(trackId)) {
+        return {};
     }
 
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
@@ -989,6 +1036,11 @@ std::set<muse::secs_t> ProjectViewState::itemsBoundaries() const
     return m_itemsBoundaries;
 }
 
+void ProjectViewState::setEditedItem(const trackedit::TrackItemKey& key)
+{
+    m_editedItemKey = key;
+}
+
 void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const trackedit::TrackItemKey& itemKeyToOmit)
 {
     auto prj = globalContext()->currentTrackeditProject();
@@ -1000,10 +1052,16 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
     const auto& selectedClips = selectionController()->selectedClips();
     const auto& selectedLabels = selectionController()->selectedLabels();
 
-    if (selectedClips.empty() && selectedLabels.empty()) {
-        setItemsBoundaries({});
-        return;
-    }
+    // An item being dragged must never snap to its own edges. The drag may rebuild the
+    // boundary set mid-flight (e.g. label moves emit trackChanged every frame, which calls
+    // updateItemsBoundaries(false)), so relying on the one-shot itemKeyToOmit argument is not
+    // enough; m_editedItemKey persists the exclusion for the whole edit.
+    const auto isEditedItem = [this, &itemKeyToOmit](const trackedit::TrackItemKey& key) {
+        if (itemKeyToOmit.isValid() && key == itemKeyToOmit) {
+            return true;
+        }
+        return m_editedItemKey.isValid() && key == m_editedItemKey;
+    };
 
     for (const auto& trackId : prj->trackIdList()) {
         // Add clips boundaries
@@ -1012,7 +1070,7 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
                 continue;
             }
 
-            if (itemKeyToOmit.isValid() && clip.key == itemKeyToOmit) {
+            if (isEditedItem(clip.key)) {
                 continue;
             }
 
@@ -1022,6 +1080,14 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
         // Add labels boundaries
         for (const auto& label : prj->labelList(trackId)) {
+            if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
+                continue;
+            }
+
+            if (isEditedItem(label.key)) {
+                continue;
+            }
+
             boundaries.insert(label.startTime);
             boundaries.insert(label.endTime);
         }

@@ -28,7 +28,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/frequencyselectioncontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/frequencyselectioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/numberscale.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/roseuscolormaps.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramactionscontroller.h
@@ -109,5 +108,6 @@ set(MODULE_SRC
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 set(MODULE_USE_UNITY OFF)
 set(MODULE_LINK au3wrap Qt6::Concurrent tft)
+set(MODULE_LINK_PUBLIC shared)
 
 setup_module()

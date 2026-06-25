@@ -68,7 +68,7 @@ BaseSection {
                 navigation.row: 1
                 navigation.column: 0
 
-                onValueEdited: function(newIndex, newValue) {
+                onValueEdited: function (newIndex, newValue) {
                     root.currentAudioApiIndexChangeRequested(newIndex)
                 }
             }
@@ -87,7 +87,7 @@ BaseSection {
                 navigation.row: 2
                 navigation.column: 0
 
-                onValueEdited: function(newIndex, newValue) {
+                onValueEdited: function (newIndex, newValue) {
                     apiModel.inputDeviceSelected(newValue)
                 }
             }
@@ -111,7 +111,7 @@ BaseSection {
                 navigation.row: 1
                 navigation.column: 1
 
-                onValueEdited: function(newIndex, newValue) {
+                onValueEdited: function (newIndex, newValue) {
                     apiModel.outputDeviceSelected(newValue)
                 }
             }
@@ -130,7 +130,7 @@ BaseSection {
                 navigation.row: 2
                 navigation.column: 1
 
-                onValueEdited: function(newIndex, newValue) {
+                onValueEdited: function (newIndex, newValue) {
                     apiModel.inputChannelsSelected(newIndex)
                 }
             }

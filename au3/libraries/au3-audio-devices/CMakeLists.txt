@@ -24,8 +24,9 @@ set( SOURCES
 set( LIBRARIES
    PRIVATE
    portaudio::portaudio
-   $<$<BOOL:${USE_PORTMIXER}>:portmixer>
+   $<$<BOOL:${AU_USE_PORTMIXER}>:portmixer>
    au3-preferences-interface
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

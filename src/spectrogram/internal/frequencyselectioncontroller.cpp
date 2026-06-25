@@ -4,7 +4,7 @@
 #include "frequencyselectioncontroller.h"
 
 #include "ifrequencyselectionrestorer.h"
-#include "internal/numberscale.h"
+#include "shared/axis/numberscale.h"
 
 #include "framework/global/log.h"
 #include "framework/global/defer.h"

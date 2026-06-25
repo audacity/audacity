@@ -10,6 +10,7 @@
 #include "framework/diagnostics/idiagnosticspathsregister.h"
 
 #include "internal/effectconfigsettings.h"
+#include "internal/effectidresolver.h"
 #include "internal/effectsprovider.h"
 #include "internal/effectsmenuprovider.h"
 #include "internal/effectsconfiguration.h"
@@ -100,7 +101,7 @@ void EffectsModule::onPreInit(const muse::IApplication::RunMode&)
         return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
     };
 
-    PluginManager::Get().Initialize(std::move(configFactory));
+    PluginManager::Get().Initialize(std::move(configFactory), std::make_unique<EffectIdResolver>());
 }
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)

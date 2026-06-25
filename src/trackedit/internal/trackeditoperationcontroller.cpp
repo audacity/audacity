@@ -53,6 +53,23 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
     return false;
 }
 
+bool TrackeditOperationController::silenceClips(const ClipKeyList& clipKeyList)
+{
+    bool anySilenced = false;
+    for (const auto& clipKey : clipKeyList) {
+        const secs_t begin = clipsInteraction()->clipStartTime(clipKey);
+        const secs_t end = clipsInteraction()->clipEndTime(clipKey);
+        if (tracksInteraction()->silenceTracksData({ clipKey.trackId }, begin, end)) {
+            anySilenced = true;
+        }
+    }
+
+    if (anySilenced) {
+        projectHistory()->pushHistoryState("Silenced selected clips", "Silence");
+    }
+    return anySilenced;
+}
+
 bool TrackeditOperationController::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
     if (tracksInteraction()->changeTrackTitle(trackId, title)) {
@@ -378,6 +395,7 @@ void TrackeditOperationController::cancelItemDragEdit()
         return;
     }
     clipsInteraction()->cancelClipDragEdit();
+    labelsInteraction()->resetLabelStretchState();
     projectHistory()->rollbackState();
     globalContext()->currentTrackeditProject()->reload();
 }
@@ -1039,6 +1057,11 @@ bool TrackeditOperationController::stretchLabelsRight(const LabelKeyList& labelK
         projectHistory()->pushHistoryState("Stretch", msg);
     }
     return success;
+}
+
+void TrackeditOperationController::resetLabelStretchState()
+{
+    labelsInteraction()->resetLabelStretchState();
 }
 
 muse::Progress TrackeditOperationController::progress() const

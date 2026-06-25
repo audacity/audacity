@@ -9,10 +9,12 @@ set( SOURCES
    TrackSpectrumTransformer.h
 )
 set( LIBRARIES
-   PUBLIC
-      au3-wave-track-interface
-      au3-fft-interface
-      wxBase
+PUBLIC
+    au3-wave-track-interface
+    au3-fft-interface
+    au3-strings-interface
+PRIVATE
+    wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

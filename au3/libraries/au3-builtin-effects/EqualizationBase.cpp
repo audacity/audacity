@@ -31,7 +31,7 @@ const EffectParameterMethods& EqualizationBase::Parameters() const
 // EqualizationBase
 //----------------------------------------------------------------------------
 
-const ComponentInterfaceSymbol EqualizationBase::Symbol { XO("Equalization") };
+const ComponentInterfaceSymbol EqualizationBase::Symbol { TranslatableString("builtin-effects", "Equalization") };
 
 EqualizationBase::EqualizationBase(int Options)
     : mParameters{GetDefinition()}
@@ -77,7 +77,7 @@ EqualizationBase::~EqualizationBase()
 
 TranslatableString EqualizationBase::GetDescription() const
 {
-    return XO("Adjusts the volume levels of particular frequencies");
+    return TranslatableString("builtin-effects", "Adjusts the volume levels of particular frequencies");
 }
 
 ManualPageID EqualizationBase::ManualPage() const
@@ -177,29 +177,29 @@ static const struct
     const wxChar* values;
 } FactoryPresets
 [] = {
-    { kCURVE, XO("100Hz Rumble"),
+    { kCURVE, TranslatableString("builtin-effects", "100Hz Rumble"),
       wxT(
           "f0=\"20.0\" v0=\"-80.0\" f1=\"49.237316986327\" v1=\"-33.107692718506\" f2=\"54.196034330446\" v2=\"-29.553844451904\" f3=\"88.033573501041\" v3=\"-6.923076629639\" f4=\"95.871851182279\" v4=\"-4.523078918457\" f5=\"108.957037410504\" v5=\"-1.938461303711\" f6=\"123.828171198057\" v6=\"-0.73846244812\" f7=\"149.228077614658\" v7=\"-0.092308044434\"") },
-    { kCURVE, XO("AM Radio"),
+    { kCURVE, TranslatableString("builtin-effects", "AM Radio"),
       wxT(
           "f0=\"20.0\" v0=\"-63.67\" f1=\"31.0\" v1=\"-33.219\" f2=\"50.0\" v2=\"-3.01\" f3=\"63.0\" v3=\"-0.106\" f4=\"100.0\" v4=\"0.0\" f5=\"2500.0\" v5=\"0.0\" f6=\"4000.0\" v6=\"-0.614\" f7=\"5000.0\" v7=\"-8.059\" f8=\"8000.0\" v8=\"-39.981\" f9=\"20000.0\" v9=\"-103.651\" f10=\"48000.0\" v10=\"-164.485\"") },
-    { kBOTH, XO("Bass Boost"),
+    { kBOTH, TranslatableString("builtin-effects", "Bass Boost"),
       wxT("f0=\"100.0\" v0=\"9.0\" f1=\"500.0\" v1=\"0.0\"") },
-    { kBOTH, XO("Bass Cut"),
+    { kBOTH, TranslatableString("builtin-effects", "Bass Cut"),
       wxT("f0=\"150.0\" v0=\"-50.0\" f1=\"300.0\" v1=\"0.0\"") },
-    { kCURVE, XO("Low rolloff for speech"),
+    { kCURVE, TranslatableString("builtin-effects", "Low rolloff for speech"),
       wxT(
           "f0=\"50.0\" v0=\"-120.0\" f1=\"60.0\" v1=\"-50.0\" f2=\"65.0\" v2=\"-24.0\" f3=\"70.0\" v3=\"-12.0\" f4=\"80.0\" v4=\"-4.0\" f5=\"90.0\" v5=\"-1.0\" f6=\"100.0\" v6=\"0.0\"") },
-    { kBOTH, XO("RIAA"), wxT(
+    { kBOTH, TranslatableString("builtin-effects", "RIAA"), wxT(
           "f0=\"20.0\" v0=\"19.274\" f1=\"25.0\" v1=\"18.954\" f2=\"31.0\" v2=\"18.516\" f3=\"40.0\" v3=\"17.792\" f4=\"50.0\" v4=\"16.946\" f5=\"63.0\" v5=\"15.852\" f6=\"80.0\" v6=\"14.506\" f7=\"100.0\" v7=\"13.088\" f8=\"125.0\" v8=\"11.563\" f9=\"160.0\" v9=\"9.809\" f10=\"200.0\" v10=\"8.219\" f11=\"250.0\" v11=\"6.677\" f12=\"315.0\" v12=\"5.179\" f13=\"400.0\" v13=\"3.784\" f14=\"500.0\" v14=\"2.648\" f15=\"630.0\" v15=\"1.642\" f16=\"800.0\" v16=\"0.751\" f17=\"1000.0\" v17=\"0.0\" f18=\"1250.0\" v18=\"-0.744\" f19=\"1600.0\" v19=\"-1.643\" f20=\"2000.0\" v20=\"-2.589\" f21=\"2500.0\" v21=\"-3.7\" f22=\"3150.0\" v22=\"-5.038\" f23=\"4000.0\" v23=\"-6.605\" f24=\"5000.0\" v24=\"-8.21\" f25=\"6300.0\" v25=\"-9.98\" f26=\"8000.0\" v26=\"-11.894\" f27=\"10000.0\" v27=\"-13.734\" f28=\"12500.0\" v28=\"-15.609\" f29=\"16000.0\" v29=\"-17.708\" f30=\"20000.0\" v30=\"-19.62\" f31=\"25000.0\" v31=\"-21.542\" f32=\"48000.0\" v32=\"-27.187\"") },
-    { kCURVE, XO("Telephone"),
+    { kCURVE, TranslatableString("builtin-effects", "Telephone"),
       wxT(
           "f0=\"20.0\" v0=\"-94.087\" f1=\"200.0\" v1=\"-14.254\" f2=\"250.0\" v2=\"-7.243\" f3=\"315.0\" v3=\"-2.245\" f4=\"400.0\" v4=\"-0.414\" f5=\"500.0\" v5=\"0.0\" f6=\"2500.0\" v6=\"0.0\" f7=\"3150.0\" v7=\"-0.874\" f8=\"4000.0\" v8=\"-3.992\" f9=\"5000.0\" v9=\"-9.993\" f10=\"48000.0\" v10=\"-88.117\"") },
-    { kBOTH, XO("Treble Boost"),
+    { kBOTH, TranslatableString("builtin-effects", "Treble Boost"),
       wxT("f0=\"4000.0\" v0=\"0.0\" f1=\"5000.0\" v1=\"9.0\"") },
-    { kBOTH, XO("Treble Cut"),
+    { kBOTH, TranslatableString("builtin-effects", "Treble Cut"),
       wxT("f0=\"6000.0\" v0=\"0.0\" f1=\"10000.0\" v1=\"-110.0\"") },
-    { kCURVE, XO("Walkie-talkie"),
+    { kCURVE, TranslatableString("builtin-effects", "Walkie-talkie"),
       wxT(
           "f0=\"100.0\" v0=\"-120.0\" f1=\"101.0\" v1=\"0.0\" f2=\"2000.0\" v2=\"0.0\" f3=\"2001.0\" v3=\"-120.0\"") },
 };
@@ -272,12 +272,12 @@ bool EqualizationBase::Init()
             for (auto track : trackRange) {
                 if (track->GetRate() != rate) {
                     mLastError
-                        = XO("To apply Equalization, all selected tracks must have the same sample rate.").Translation().ToStdString();
+                        = TranslatableString("builtin-effects", "To apply Equalization, all selected tracks must have the same sample rate.").Translation();
                     return false;
                 }
             }
         } else {
-            mLastError = XO("To apply Equalization, select one or more audio tracks.").Translation().ToStdString();
+            mLastError = TranslatableString("builtin-effects", "To apply Equalization, select one or more audio tracks.").Translation();
             return false;
         }
     } else {
@@ -288,7 +288,7 @@ bool EqualizationBase::Init()
     hiFreq = rate / 2.0;
     // Unlikely, but better than crashing.
     if (hiFreq <= loFreqI) {
-        mLastError = XO("Track sample rate is too low for this effect.").Translation().ToStdString();
+        mLastError = TranslatableString("builtin-effects", "Track sample rate is too low for this effect.").Translation();
         return false;
     }
 

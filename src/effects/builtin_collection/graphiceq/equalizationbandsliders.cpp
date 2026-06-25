@@ -17,6 +17,9 @@
 **********************************************************************/
 #include "equalizationbandsliders.h"
 #include "au3-math/SampleFormat.h"
+#include "../equalization_common/equalizationenvelopeutils.h"
+
+using namespace au::effects;
 
 #include "log.h"
 
@@ -90,73 +93,13 @@ void EqualizationBandSliders::Flatten()
 
 void EqualizationBandSliders::EnvLogToLin()
 {
-    auto& parameters = m_curvesList.mParameters;
-    auto& linEnvelope = parameters.mLinEnvelope;
-    auto& logEnvelope = parameters.mLogEnvelope;
-    const auto& hiFreq = parameters.mHiFreq;
-
-    size_t numPoints = logEnvelope.GetNumberOfPoints();
-    if (numPoints == 0) {
-        return;
-    }
-
-    Doubles when{ numPoints };
-    Doubles value{ numPoints };
-
-    linEnvelope.Flatten(0.);
-    linEnvelope.SetTrackLen(1.0);
-    logEnvelope.GetPoints(when.get(), value.get(), numPoints);
-    linEnvelope.Reassign(0., value[0]);
-    double loLog = log10(20.);
-    double hiLog = log10(hiFreq);
-    double denom = hiLog - loLog;
-
-    for (size_t i = 0; i < numPoints; i++) {
-        linEnvelope.Insert(pow(10., ((when[i] * denom) + loLog)) / hiFreq, value[i]);
-    }
-    linEnvelope.Reassign(1., value[numPoints - 1]);
+    eq_common::envLogToLin(m_curvesList.mParameters);
 }
 
 void EqualizationBandSliders::EnvLinToLog()
 {
-    auto& parameters = m_curvesList.mParameters;
-    auto& linEnvelope = parameters.mLinEnvelope;
-    auto& logEnvelope = parameters.mLogEnvelope;
-    const auto& hiFreq = parameters.mHiFreq;
-
-    size_t numPoints = linEnvelope.GetNumberOfPoints();
-    if (numPoints == 0) {
-        return;
-    }
-
-    Doubles when{ numPoints };
-    Doubles value{ numPoints };
-
-    logEnvelope.Flatten(0.);
-    logEnvelope.SetTrackLen(1.0);
-    linEnvelope.GetPoints(when.get(), value.get(), numPoints);
-    logEnvelope.Reassign(0., value[0]);
-    double loLog = log10(20.);
-    double hiLog = log10(hiFreq);
-    double denom = hiLog - loLog;
-    bool changed = false;
-
-    for (size_t i = 0; i < numPoints; i++) {
-        if (when[i] * hiFreq >= 20) {
-            // Caution: on Linux, when when == 20, the log calculation rounds
-            // to just under zero, which causes an assert error.
-            double flog = (log10(when[i] * hiFreq) - loLog) / denom;
-            logEnvelope.Insert(std::max(0.0, flog), value[i]);
-        } else { //get the first point as close as we can to the last point requested
-            changed = true;
-            double v = value[i];
-            logEnvelope.Insert(0., v);
-        }
-    }
-    logEnvelope.Reassign(1., value[numPoints - 1]);
-
-    if (changed) {
-        m_curvesList.EnvelopeUpdated(logEnvelope, false);
+    if (eq_common::envLinToLog(m_curvesList.mParameters)) {
+        m_curvesList.EnvelopeUpdated(m_curvesList.mParameters.mLogEnvelope, false);
     }
 }
 

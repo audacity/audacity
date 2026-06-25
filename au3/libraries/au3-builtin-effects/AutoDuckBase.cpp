@@ -25,7 +25,7 @@
 #include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
-const ComponentInterfaceSymbol AutoDuckBase::Symbol { XO("Auto Duck") };
+const ComponentInterfaceSymbol AutoDuckBase::Symbol { TranslatableString("builtin-effects", "Auto Duck") };
 
 const EffectParameterMethods& AutoDuckBase::Parameters() const
 {
@@ -79,8 +79,7 @@ ComponentInterfaceSymbol AutoDuckBase::GetSymbol() const
 
 TranslatableString AutoDuckBase::GetDescription() const
 {
-    return XO(
-        "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
+    return TranslatableString("builtin-effects", "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level");
 }
 
 ManualPageID AutoDuckBase::ManualPage() const
@@ -123,11 +122,10 @@ bool AutoDuckBase::Init()
                 [&](const Track&) {
                 using namespace BasicUI;
                 ShowMessageBox(
-                    /* i18n-hint: Auto duck is the name of an effect that 'ducks'
+                    /*: Auto duck is the name of an effect that 'ducks'
                      (reduces the volume) of the audio automatically when there is
                      sound on another track.  Not as in 'Donald-Duck'!*/
-                    XO("You selected a track which does not contain audio. "
-                       "AutoDuck can only process audio tracks."),
+                    TranslatableString("builtin-effects", "You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
                     MessageBoxOptions {}.IconStyle(Icon::Error));
                 return false;
             });
@@ -140,11 +138,10 @@ bool AutoDuckBase::Init()
     if (!controlTrackCandidate) {
         using namespace BasicUI;
         ShowMessageBox(
-            /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+            /*: Auto duck is the name of an effect that 'ducks' (reduces
              the volume) of the audio automatically when there is sound on another
              track.  Not as in 'Donald-Duck'!*/
-            XO("Auto Duck needs a control track which must be placed below the "
-               "selected track(s)."),
+            TranslatableString("builtin-effects", "Auto Duck needs a control track which must be placed below the selected track(s)."),
             MessageBoxOptions {}.IconStyle(Icon::Error));
         return false;
     }
@@ -184,7 +181,7 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
                         { { t0, t1 } }, reportProgress);
                 },
                     TimeStretching::defaultStretchRenderingTitle,
-                    XO("Rendering Control-Track Time-Stretched Audio"));
+                    TranslatableString("builtin-effects", "Rendering Control-Track Time-Stretched Audio"));
                 pControlTrack = pFirstTrack.get();
             }
         }

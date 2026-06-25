@@ -24,7 +24,7 @@ class EXCEPTIONS_API InconsistencyException final : public MessageBoxException
 {
 public:
     InconsistencyException ()
-        : MessageBoxException{ExceptionType::Internal, XO("Internal Error")}
+        : MessageBoxException{ExceptionType::Internal, ::TranslatableString("exceptions", "Internal Error")}
     {}
 
     //! Don't call this directly but use @ref CONSTRUCT_INCONSISTENCY_EXCEPTION or @ref THROW_INCONSISTENCY_EXCEPTION
@@ -33,7 +33,7 @@ public:
         const char* f, //!< function name supplied by preprocessor
         unsigned l //!< line number supplied by preprocessor
         )
-        : MessageBoxException{ExceptionType::Internal, XO("Internal Error")}
+        : MessageBoxException{ExceptionType::Internal, ::TranslatableString("exceptions", "Internal Error")}
         , func{fn}, file{f}, line{l}
     {}
 
@@ -50,7 +50,7 @@ public:
 
 private:
     // Format a default, internationalized error message for this exception.
-    TranslatableString ErrorMessage() const override;
+    ::TranslatableString ErrorMessage() const override;
 
     const char* func {};
     const char* file {};

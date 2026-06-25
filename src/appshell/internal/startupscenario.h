@@ -71,6 +71,7 @@ public:
     void setStartupMediaFiles(const muse::io::paths_t& files) override;
     bool removeMediaFilesAfterImport() const override;
     void setRemoveMediaFilesAfterImport(bool remove) override;
+    void setStartupUrl(const QString& url) override;
 
     muse::async::Promise<muse::Ret> runOnSplashScreen() override;
     void runAfterSplashScreen() override;
@@ -95,6 +96,7 @@ private:
     au::project::ProjectFile m_startupProjectFile;
     muse::io::paths_t m_startupMediaFiles;
     bool m_removeMediaFilesAfterImport = false;
+    QString m_startupUrl;
     bool m_startupCompleted = false;
     QTimer m_updateCheckTimer;
 };

@@ -71,7 +71,7 @@ BuiltinEffectBase {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 FlatButton {
-                    id: flattenButton
+                    id: resetButton
 
                     width: 64
                     height: 28
@@ -79,7 +79,7 @@ BuiltinEffectBase {
                     navigation.panel: root.flattenInvertNavigationPanel
                     navigation.order: 0
 
-                    text: qsTrc("effects/graphiceq", "Flatten")
+                    text: qsTrc("effects/graphiceq", "Reset")
 
                     onClicked: graphicEq.bandsModel.flatten()
                 }
@@ -91,7 +91,7 @@ BuiltinEffectBase {
                     height: 28
 
                     navigation.panel: root.flattenInvertNavigationPanel
-                    navigation.order: flattenButton.navigation.order + 1
+                    navigation.order: resetButton.navigation.order + 1
 
                     text: qsTrc("effects/graphiceq", "Invert")
 

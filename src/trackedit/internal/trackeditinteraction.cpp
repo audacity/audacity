@@ -36,6 +36,11 @@ bool TrackeditInteraction::silenceTracksData(const std::vector<trackedit::TrackI
     return withPlaybackStop(&ITrackeditInteraction::silenceTracksData, tracksIds, begin, end);
 }
 
+bool TrackeditInteraction::silenceClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::silenceClips, clipKeyList);
+}
+
 bool TrackeditInteraction::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
     return m_interaction->changeTrackTitle(trackId, title);
@@ -506,6 +511,11 @@ bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
 bool TrackeditInteraction::stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed)
 {
     return m_interaction->stretchLabelsRight(labelKeyList, deltaSec, completed);
+}
+
+void TrackeditInteraction::resetLabelStretchState()
+{
+    m_interaction->resetLabelStretchState();
 }
 
 muse::Progress TrackeditInteraction::progress() const

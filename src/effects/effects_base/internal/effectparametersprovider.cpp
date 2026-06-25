@@ -195,12 +195,12 @@ void EffectParametersProvider::beginParameterGesture(EffectInstanceId instanceId
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
     const EffectFamily family = getEffectFamily(effectId);
 
-    const IParameterExtractorService* extractor = parameterExtractorRegistry()
-                                                  ? parameterExtractorRegistry()->extractorForFamily(family)
-                                                  : nullptr;
+    IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                            ? parameterExtractorRegistry()->extractorForFamily(family)
+                                            : nullptr;
     if (extractor) {
         EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
-        const_cast<IParameterExtractorService*>(extractor)->beginParameterGesture(instance, parameterId, settingsAccess);
+        extractor->beginParameterGesture(instance, parameterId, settingsAccess);
     }
 }
 
@@ -214,11 +214,11 @@ void EffectParametersProvider::endParameterGesture(EffectInstanceId instanceId, 
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
     const EffectFamily family = getEffectFamily(effectId);
 
-    const IParameterExtractorService* extractor = parameterExtractorRegistry()
-                                                  ? parameterExtractorRegistry()->extractorForFamily(family)
-                                                  : nullptr;
+    IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                            ? parameterExtractorRegistry()->extractorForFamily(family)
+                                            : nullptr;
     if (extractor) {
-        const_cast<IParameterExtractorService*>(extractor)->endParameterGesture(instance, parameterId);
+        extractor->endParameterGesture(instance, parameterId);
     }
 }
 

@@ -27,7 +27,6 @@
 #include "view/toolbars/workspacestoolbarmodel.h"
 
 #include "view/trackspanel/addeffectmenumodel.h"
-#include "view/trackspanel/addnewtrackpopupmodel.h"
 #include "view/trackspanel/paneltrackslistmodel.h"
 #include "view/trackspanel/realtimeeffectlistitemmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
@@ -168,7 +167,6 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<RealtimeEffectRowActionsController>("Audacity.ProjectScene", 1, 0, "RealtimeEffectRowActionsController");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
-    qmlRegisterType<AddNewTrackPopupModel>("Audacity.ProjectScene", 1, 0, "AddNewTrackPopupModel");
     qmlRegisterType<VolumePressureMeterItem>("Audacity.ProjectScene", 1, 0, "VolumePressureMeterItem");
 
     // clips view

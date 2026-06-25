@@ -85,7 +85,7 @@ BaseSection {
             navigation.row: 0
             navigation.column: 1
 
-            onNewColorSelected: function(newColor) {
+            onNewColorSelected: function (newColor) {
                 root.colorChangeRequested(newColor)
             }
         }
@@ -116,7 +116,7 @@ BaseSection {
             navigationRowOrderStart: 1
             navigationColumnOrderStart: 1
 
-            onPathEdited: function(newPath) {
+            onPathEdited: function (newPath) {
                 root.wallpaperPathChangeRequested(newPath)
             }
         }

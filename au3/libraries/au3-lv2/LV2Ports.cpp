@@ -184,7 +184,7 @@ LV2Ports::LV2Ports(const LilvPlugin& plug)
         const auto name = LilvStringMove(lilv_port_get_name(&plug, port));
 
         // Get the group to which this port belongs or default to the main group
-        TranslatableString groupName{};
+        ::TranslatableString groupName{};
         if (LilvNodePtr group{ lilv_port_get(&plug, port, node_Group) }) {
             // lilv.h does not say whether return of lilv_world_get() needs to
             // be freed, but that is easily seen to be so from source

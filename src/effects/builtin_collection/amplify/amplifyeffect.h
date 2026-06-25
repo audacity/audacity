@@ -1,5 +1,7 @@
 #pragma once
 
+#include "shared/types/decibel.h"
+
 #include "au3-components/SettingsVisitor.h"
 #include "au3-effects/StatefulPerTrackEffect.h"
 
@@ -23,14 +25,16 @@ public:
     // fot view
     // ====================
     // properties
-    float peak() const;
-    ratio_t defaultRatio() const;
-    db_t defaultAmp() const;
+    float inputPeak() const;
 
     // params
     ratio_t ratio() const;
-    Param<db_t> amp() const;      // dB
-    void setAmp(db_t v);
+
+    Param<shared::Decibel> amp() const;
+    void setAmp(shared::Decibel v);
+
+    Param<shared::Decibel> newPeak() const;
+    void setNewPeak(shared::Decibel v);
 
     bool canClip() const;
     void setCanClip(bool v);
@@ -66,28 +70,21 @@ protected:
     };
 
 protected:
-    void ClampRatio();
+    void SetRatio(double);
 
     // AmplifyEffect implementation
 protected:
-    double mPeak = 1.0;
-
+    double mInputPeak = 0.0;
     double mRatio = 1.0;
-    double mRatioClip =1.0; // maximum value of mRatio which does not cause clipping
-    double mAmp = 0.0;
-    double mNewPeak = 1.0;
     bool mCanClip = true;
 
 private:
     const EffectParameterMethods& Parameters() const override;
+    ratio_t defaultRatio() const;
 
 protected:
     static constexpr EffectParameter Ratio {
         &AmplifyEffect::mRatio, L"Ratio", 0.9f, 0.003162f, 316.227766f, 1.0f
-    };
-    // Amp is not saved in settings!
-    static constexpr EffectParameter Amp {
-        &AmplifyEffect::mAmp, L"", -0.91515f, -50.0f, 50.0f, 10.0f
     };
     static constexpr EffectParameter Clipping {
         &AmplifyEffect::mCanClip, L"AllowClipping", false, false, true, 1

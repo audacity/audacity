@@ -11,9 +11,39 @@
 
 using namespace au::uicomponents;
 
-NumericViewModel::NumericViewModel(QObject* parent)
-    : QAbstractListModel(parent)
+namespace {
+muse::uicomponents::MenuItemList makeMenuItemList(const QList<NumericViewFormat>& formats, QObject* parent)
 {
+    muse::uicomponents::MenuItemList list;
+    for (const NumericViewFormat& format : formats) {
+        auto* item = new muse::uicomponents::MenuItem(parent);
+        item->setId(QString::number(static_cast<int>(format.type)));
+
+        muse::ui::UiAction action;
+        action.title = muse::TranslatableString::untranslatable(format.title);
+        action.checkable = muse::ui::Checkable::Yes;
+        item->setAction(action);
+
+        list << item;
+    }
+    return list;
+}
+}
+
+NumericViewModel::NumericViewModel(QObject* parent, QList<NumericViewFormat> availableViewFormats)
+    : QAbstractListModel(parent),
+    m_fieldsInteractionController(std::make_shared<FieldsInteractionController>(this)),
+    m_availableViewFormats(std::move(availableViewFormats)),
+    m_availableFormatsCache(makeMenuItemList(m_availableViewFormats, this))
+{
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::currentEditedFieldIndexChanged,
+            this, &NumericViewModel::currentEditedFieldIndexChanged);
+
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
+            this, &NumericViewModel::setValue);
+
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::editingFinished,
+            this, &NumericViewModel::editingFinished);
 }
 
 int NumericViewModel::rowCount(const QModelIndex& parent) const
@@ -106,6 +136,7 @@ void NumericViewModel::setCurrentFormat(int format)
 
     reloadFormatter();
     updateValueString();
+    updateAvailableFormatsCheckedState();
 
     emit currentFormatChanged();
     emit availableFormatsChanged();
@@ -136,30 +167,18 @@ void NumericViewModel::setCurrentFormatStr(const QString& title)
 
 muse::uicomponents::MenuItemList NumericViewModel::availableFormats()
 {
-    muse::uicomponents::MenuItemList result;
+    updateAvailableFormatsCheckedState();
+    return m_availableFormatsCache;
+}
 
-    for (const NumericViewFormat& viewFormat : m_availableViewFormats) {
-        muse::uicomponents::MenuItem* item = new muse::uicomponents::MenuItem(this);
-
-        int id = static_cast<int>(viewFormat.type);
-
-        item->setId(QString::number(id));
-
-        muse::ui::UiAction action;
-        action.title = muse::TranslatableString::untranslatable(viewFormat.title);
-        action.checkable = muse::ui::Checkable::Yes;
-        item->setAction(action);
-
+void NumericViewModel::updateAvailableFormatsCheckedState()
+{
+    for (int i = 0; i < m_availableFormatsCache.size(); ++i) {
         muse::ui::UiActionState state;
         state.enabled = true;
-        state.checked = m_currentFormat == viewFormat.type;
-
-        item->setState(state);
-
-        result << item;
+        state.checked = m_currentFormat == m_availableViewFormats[i].type;
+        m_availableFormatsCache[i]->setState(state);
     }
-
-    return result;
 }
 
 QVariantList NumericViewModel::availableFormats_property()
@@ -233,20 +252,6 @@ void NumericViewModel::setLowerTimeSignature(int timeSignature)
 
     initFormatter();
     updateValueString();
-}
-
-void NumericViewModel::initFieldInteractionController()
-{
-    m_fieldsInteractionController = std::make_shared<FieldsInteractionController>(this);
-
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::currentEditedFieldIndexChanged,
-            this, &NumericViewModel::currentEditedFieldIndexChanged);
-
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
-            this, &NumericViewModel::setValue);
-
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::editingFinished,
-            this, &NumericViewModel::editingFinished);
 }
 
 void NumericViewModel::initFormatter()

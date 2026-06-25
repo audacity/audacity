@@ -85,7 +85,12 @@ qreal HorizontalVolumePressureMeterItem::sampleValueToWidth(qreal sampleValue) c
 
 void HorizontalVolumePressureMeterItem::drawBackground(QPainter& p) const
 {
-    p.fillRect(QRectF(0, 0, indicatorWidth(), height()), meterBackgroundColor());
+    const QRectF rect(0, 0, indicatorWidth(), height());
+    p.fillRect(rect, meterBackgroundColor());
+    if (meterStrokeColor().isValid() && meterStrokeColor().alpha() > 0) {
+        p.setPen(QPen(meterStrokeColor(), 1));
+        p.drawRect(rect);
+    }
 }
 
 void HorizontalVolumePressureMeterItem::drawClippedIndicator(QPainter& p) const
@@ -142,6 +147,11 @@ void HorizontalVolumePressureMeterItem::drawBarStyleRMS(QPainter& p)
 
 void HorizontalVolumePressureMeterItem::drawBarStyleGradient(QPainter& p)
 {
+    if (isClipping()) {
+        p.fillRect(QRectF(0, 0, indicatorWidth(), height()), clippedColor());
+        return;
+    }
+
     const qreal w = sampleValueToWidth(currentVolumePressure());
     if (w > 0) {
         QLinearGradient grad(0, 0, indicatorWidth(), 0);

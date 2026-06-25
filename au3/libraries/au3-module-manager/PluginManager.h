@@ -24,6 +24,7 @@
 #include "au3-utility/Observer.h"
 
 class wxArrayString;
+class IEffectIdResolver;
 
 typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
@@ -53,7 +54,7 @@ public:
     // PluginManagerInterface implementation
 
     bool IsPluginRegistered(
-        const PluginPath& path, const ::TranslatableString* pSymbol) override;
+        const PluginPath& path, const TranslatableString* pSymbol) override;
 
     bool IsPluginLoaded(const wxString& ID) const;
 
@@ -85,7 +86,7 @@ public:
     using ConfigFactory = std::function<std::unique_ptr<audacity::BasicSettings>(const FilePath& localFilename)>;
 
     /*! @pre `factory != nullptr` */
-    void Initialize(ConfigFactory);
+    void Initialize(ConfigFactory, std::unique_ptr<IEffectIdResolver> resolver);
     void Terminate();
 
     bool DropFile(const wxString& fileName);
@@ -94,7 +95,7 @@ public:
 
     static PluginID GetID(const PluginProvider* provider);
     static PluginID GetID(const ComponentInterface* command);
-    static PluginID OldGetID(const EffectDefinitionInterface* effect);
+    static PluginID GetID(const EffectDefinitionInterface* command);
     //! Parse English effect name from the result of
     //! GetID(const EffectDefinitionInterface*)
     static Identifier GetEffectNameFromID(const PluginID& ID);
@@ -149,7 +150,7 @@ public:
     void EnablePlugin(const PluginID& ID, bool enable);
 
     const ComponentInterfaceSymbol& GetSymbol(const PluginID& ID) const;
-    ::TranslatableString GetName(const PluginID& ID) const;
+    TranslatableString GetName(const PluginID& ID) const;
     CommandID GetCommandIdentifier(const PluginID& ID) const;
     const PluginID& GetByCommandIdentifier(const CommandID& strTarget);
     ComponentInterface* Load(const PluginID& ID);

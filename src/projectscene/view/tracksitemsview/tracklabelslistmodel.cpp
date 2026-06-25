@@ -12,6 +12,9 @@
 using namespace au::projectscene;
 using namespace au::trackedit;
 
+static constexpr double EDGE_COLLAPSE_SNAP_PX = 4.0;
+static constexpr double SHARED_STALK_TOLERANCE_PX = 2.0;
+
 TrackLabelsListModel::TrackLabelsListModel(QObject* parent)
     : TrackItemsListModel(parent)
 {
@@ -28,7 +31,9 @@ void TrackLabelsListModel::onInit()
     });
 
     dispatcher()->reg(this, "rename-item", [this]() {
-        requestItemTitleChange();
+        QTimer::singleShot(100, this, [this]() {
+            requestItemTitleChange();
+        });
     });
 }
 
@@ -83,10 +88,6 @@ void TrackLabelsListModel::onReload()
             m_allLabelList.insert(m_allLabelList.begin() + i, label);
 
             update();
-
-            QTimer::singleShot(100, [this](){
-                dispatcher()->dispatch("rename-item");
-            });
 
             break;
         }
@@ -239,7 +240,7 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            selectionController()->removeLabelSelection(key.key);
+            m_pendingShiftDeselect = key.key;
         } else {
             selectionController()->addSelectedLabel(key.key);
         }
@@ -260,6 +261,46 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     m_needToSelectTracksData = false;
 }
 
+void TrackLabelsListModel::selectLabelWithSharedStalk(const LabelKey& key, bool rightSide)
+{
+    if (key.key.trackId != m_trackId) {
+        return;
+    }
+
+    const TrackLabelItem* grabbed = labelItemByKey(key.key);
+    if (!grabbed) {
+        return;
+    }
+
+    const double grabbedEdge = rightSide ? grabbed->time().endTime : grabbed->time().startTime;
+    const double tolerance = SHARED_STALK_TOLERANCE_PX / m_context->zoom();
+
+    LabelKeyList keys { key.key };
+    for (const ViewTrackItem* viewItem : m_items) {
+        const TrackLabelItem* other = static_cast<const TrackLabelItem*>(viewItem);
+        if (!other || other->key().key == key.key) {
+            continue;
+        }
+
+        if (std::abs(other->time().startTime - grabbedEdge) < tolerance
+            || std::abs(other->time().endTime - grabbedEdge) < tolerance) {
+            keys.push_back(other->key().key);
+        }
+    }
+
+    if (keys.size() == 1) {
+        selectLabel(key);
+        return;
+    }
+
+    selectionController()->resetDataSelection();
+    selectionController()->resetSelectedClips();
+    selectionController()->setSelectedLabels(keys, true);
+
+    setFocusedItem(key);
+    m_needToSelectTracksData = false;
+}
+
 void TrackLabelsListModel::resetSelectedLabels()
 {
     clearSelectedItems();
@@ -274,6 +315,12 @@ bool TrackLabelsListModel::changeLabelTitle(const LabelKey& key, const QString& 
 void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
 {
     if (key.key.trackId != m_trackId) {
+        return;
+    }
+
+    if (m_pendingShiftDeselect.isValid() && m_pendingShiftDeselect == key.key) {
+        selectionController()->removeLabelSelection(key.key);
+        m_pendingShiftDeselect = {};
         return;
     }
 
@@ -304,6 +351,8 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         return false;
     }
 
+    m_pendingShiftDeselect = {};
+
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
         return false;
@@ -316,8 +365,9 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
 
     bool ok = false;
 
-    // Labels can only be moved to label tracks
-    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
+    // Labels can only be moved to label tracks.
+    TrackItemsListModel::MoveOffset moveOffset
+        = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
         if (!selectionController()->timeSelectionIsEmpty()) {
             ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
@@ -359,6 +409,10 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey&
         newStartTime = m_context->applySnapToItem(newStartTime);
     }
 
+    if (std::abs(newStartTime - m_editedLabelEndTime) * m_context->zoom() < EDGE_COLLAPSE_SNAP_PX) {
+        newStartTime = m_editedLabelEndTime;
+    }
+
     bool ok = trackeditInteraction()->stretchLabelLeft(key.key, newStartTime, completed);
 
     if (ok && !unlink && leftLinkedLabel.isValid()) {
@@ -395,6 +449,10 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
         newEndTime = m_context->applySnapToItem(newEndTime);
     }
 
+    if (std::abs(newEndTime - m_editedLabelStartTime) * m_context->zoom() < EDGE_COLLAPSE_SNAP_PX) {
+        newEndTime = m_editedLabelStartTime;
+    }
+
     bool ok = trackeditInteraction()->stretchLabelRight(key.key, newEndTime, completed);
 
     if (ok && !unlink && rightLinkedLabel.isValid()) {
@@ -410,6 +468,27 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
     });
 
     return ok;
+}
+
+void TrackLabelsListModel::startEditItem(const TrackItemKey& key)
+{
+    trackeditInteraction()->resetLabelStretchState();
+
+    if (const ViewTrackItem* item = itemByKey(key.key)) {
+        m_editedLabelStartTime = item->time().startTime;
+        m_editedLabelEndTime = item->time().endTime;
+    }
+
+    TrackItemsListModel::startEditItem(key);
+}
+
+void TrackLabelsListModel::endEditItem(const TrackItemKey& key)
+{
+    TrackItemsListModel::endEditItem(key);
+
+    trackeditInteraction()->resetLabelStretchState();
+
+    m_pendingShiftDeselect = {};
 }
 
 TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& k) const

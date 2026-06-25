@@ -51,7 +51,7 @@ private:
     // NormalizeEffect implementation
 
     bool ProcessOne(
-        WaveChannel& track, const TranslatableString& msg, double& progress, float offset);
+        WaveChannel& track, const ::TranslatableString& msg, double& progress, float offset);
     using ProgressReport = std::function<bool (double fraction)>;
     static bool AnalyseTrack(
         const WaveChannel& track, const ProgressReport& report, bool gain, bool dc, double curT0, double curT1, float& offset,

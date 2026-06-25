@@ -53,7 +53,7 @@ BaseSection {
         navigation.row: 1
         navigation.column: 0
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             root.selectionProximityChangeRequested(newValue)
         }
     }

@@ -4,7 +4,7 @@ Item {
     id: root
 
     property double channelHeightRatio: 0.5
-    property alias color : splitter.color
+    property alias color: splitter.color
     property alias thickness: splitter.height
     property alias editable: dragArea.visible
     property bool asymmetricStereoHeightsPossible: false

@@ -48,7 +48,7 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
                                   mT0 + duration - (mT1 - mT0) - 1.0 / track.GetRate())) {
                 using namespace BasicUI;
                 ShowMessageBox(
-                    XO("There is not enough room available to generate the audio"),
+                    TranslatableString("builtin-effects", "There is not enough room available to generate the audio"),
                     MessageBoxOptions {}.IconStyle(Icon::Error));
                 bGoodResult = false;
                 return;

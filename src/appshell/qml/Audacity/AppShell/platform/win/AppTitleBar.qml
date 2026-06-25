@@ -40,9 +40,9 @@ Rectangle {
 
     property alias appWindow: menu.appWindow
 
-    signal showWindowMinimizedRequested()
-    signal toggleWindowMaximizedRequested()
-    signal closeWindowRequested()
+    signal showWindowMinimizedRequested
+    signal toggleWindowMaximizedRequested
+    signal closeWindowRequested
 
     height: content.childrenRect.height
 

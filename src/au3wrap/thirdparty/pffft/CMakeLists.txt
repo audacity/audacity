@@ -1,6 +1,7 @@
 
 set(TARGET pffft)
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/pffft)
+get_property(_src GLOBAL PROPERTY pffft_SOURCE_DIR)
+set(TARGET_ROOT ${_src}/pffft)
 
 add_library( ${TARGET} STATIC )
 

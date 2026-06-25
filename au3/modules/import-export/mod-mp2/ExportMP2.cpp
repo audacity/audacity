@@ -158,7 +158,7 @@ int ExportMP2::GetFormatCount() const
 FormatInfo ExportMP2::GetFormatInfo(int) const
 {
     return {
-        wxT("MP2"), XO("MP2 Files"), { wxT("mp2") }, 2, true
+        wxT("MP2"), TranslatableString("import-export", "MP2 Files"), { wxT("mp2") }, 2, true
     };
 }
 
@@ -217,7 +217,7 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
     twolame_set_num_channels(encodeOptions, stereo ? 2 : 1);
 
     if (twolame_init_params(encodeOptions) != 0) {
-        throw ExportException(_("Cannot export MP2 with this sample rate and bit rate"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Cannot export MP2 with this sample rate and bit rate").c_str()));
     }
 
     // Put ID3 tags at beginning of file
@@ -227,7 +227,7 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
 
     context.outFile = std::make_unique<FileIO>(fName, FileIO::Output);
     if (!context.outFile->IsOpened()) {
-        throw ExportException(_("Unable to open target file for writing"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to open target file for writing").c_str()));
     }
 
     bool endOfFile;
@@ -242,9 +242,9 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
     }
 
     context.status = selectionOnly
-                     ? XO("Exporting selected audio at %ld kbps")
+                     ? TranslatableString("import-export", "Exporting selected audio at %1 kbps")
                      .Format(bitrate)
-                     : XO("Exporting the audio at %ld kbps")
+                     : TranslatableString("import-export", "Exporting the audio at %1 kbps")
                      .Format(bitrate);
 
     context.mixer = ExportPluginHelpers::CreateMixer(

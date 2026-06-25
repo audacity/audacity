@@ -54,7 +54,7 @@ void id3_latin1_decode(id3_latin1_t const*, id3_ucs4_t*);
 }
 #endif
 
-#define DESC XO("WAV, AIFF, and other uncompressed types")
+#define DESC TranslatableString("import-export", "WAV, AIFF, and other uncompressed types")
 
 PCMImportPlugin::PCMImportPlugin()
     :  ImportPlugin(sf_get_all_extensions())
@@ -180,62 +180,61 @@ TranslatableString PCMImportFileHandle::GetFileDescription()
 
     using Unevaluated = decltype(
         /* major_formats */
-        XO("AIFF (Apple/SGI)"),
-        XO("AU (Sun/NeXT)"),
-        XO("AVR (Audio Visual Research)"),
-        XO("CAF (Apple Core Audio File)")
-        /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-        , XO("FLAC (FLAC Lossless Audio Codec)"),
-        XO("HTK (HMM Tool Kit)"),
-        XO("IFF (Amiga IFF/SVX8/SV16)"),
-        XO("MAT4 (GNU Octave 2.0 / Matlab 4.2)"),
-        XO("MAT5 (GNU Octave 2.1 / Matlab 5.0)"),
-        XO("MPC (Akai MPC 2k)"),
-        XO("OGG (OGG Container format)"),
-        XO("PAF (Ensoniq PARIS)"),
-        XO("PVF (Portable Voice Format)"),
-        XO("RAW (header-less)"),
-        XO("RF64 (RIFF 64)"),
-        XO("SD2 (Sound Designer II)"),
-        XO("SDS (Midi Sample Dump Standard)"),
-        XO("SF (Berkeley/IRCAM/CARL)"),
-        XO("VOC (Creative Labs)"),
-        XO("W64 (SoundFoundry WAVE 64)"),
-        XO("WAV (Microsoft)"),
-        XO("WAV (NIST Sphere)"),
-        XO("WAVEX (Microsoft)"),
-        XO("WVE (Psion Series 3)"),
-        XO("XI (FastTracker 2)")
+        TranslatableString("import-export", "AIFF (Apple/SGI)"),
+        TranslatableString("import-export", "AU (Sun/NeXT)"),
+        TranslatableString("import-export", "AVR (Audio Visual Research)"),
+        TranslatableString("import-export", "CAF (Apple Core Audio File)")
+        /*: "codec" is short for a "coder-decoder" algorithm */
+        , TranslatableString("import-export", "FLAC (FLAC Lossless Audio Codec)"),
+        TranslatableString("import-export", "HTK (HMM Tool Kit)"),
+        TranslatableString("import-export", "IFF (Amiga IFF/SVX8/SV16)"),
+        TranslatableString("import-export", "MAT4 (GNU Octave 2.0 / Matlab 4.2)"),
+        TranslatableString("import-export", "MAT5 (GNU Octave 2.1 / Matlab 5.0)"),
+        TranslatableString("import-export", "MPC (Akai MPC 2k)"),
+        TranslatableString("import-export", "OGG (OGG Container format)"),
+        TranslatableString("import-export", "PAF (Ensoniq PARIS)"),
+        TranslatableString("import-export", "PVF (Portable Voice Format)"),
+        TranslatableString("import-export", "RAW (header-less)"),
+        TranslatableString("import-export", "RF64 (RIFF 64)"),
+        TranslatableString("import-export", "SD2 (Sound Designer II)"),
+        TranslatableString("import-export", "SDS (Midi Sample Dump Standard)"),
+        TranslatableString("import-export", "SF (Berkeley/IRCAM/CARL)"),
+        TranslatableString("import-export", "VOC (Creative Labs)"),
+        TranslatableString("import-export", "W64 (SoundFoundry WAVE 64)"),
+        TranslatableString("import-export", "WAV (Microsoft)"),
+        TranslatableString("import-export", "WAV (NIST Sphere)"),
+        TranslatableString("import-export", "WAVEX (Microsoft)"),
+        TranslatableString("import-export", "WVE (Psion Series 3)"),
+        TranslatableString("import-export", "XI (FastTracker 2)")
         );
 
     using Unevaluated2 = decltype(
         /* subtype_formats */
-        XO("Signed 8 bit PCM"),
-        XO("Signed 16 bit PCM"),
-        XO("Signed 24 bit PCM"),
-        XO("Signed 32 bit PCM"),
-        XO("Unsigned 8 bit PCM"),
-        XO("32 bit float"),
-        XO("64 bit float"),
-        XO("U-Law"),
-        XO("A-Law"),
-        XO("IMA ADPCM"),
-        XO("Microsoft ADPCM"),
-        XO("GSM 6.10"),
-        XO("32kbs G721 ADPCM"),
-        XO("24kbs G723 ADPCM"),
-        XO("12 bit DWVW"),
-        XO("16 bit DWVW"),
-        XO("24 bit DWVW"),
-        XO("VOX ADPCM"),
-        XO("16 bit DPCM"),
-        XO("8 bit DPCM"),
-        XO("Vorbis")
+        TranslatableString("import-export", "Signed 8 bit PCM"),
+        TranslatableString("import-export", "Signed 16 bit PCM"),
+        TranslatableString("import-export", "Signed 24 bit PCM"),
+        TranslatableString("import-export", "Signed 32 bit PCM"),
+        TranslatableString("import-export", "Unsigned 8 bit PCM"),
+        TranslatableString("import-export", "32 bit float"),
+        TranslatableString("import-export", "64 bit float"),
+        TranslatableString("import-export", "U-Law"),
+        TranslatableString("import-export", "A-Law"),
+        TranslatableString("import-export", "IMA ADPCM"),
+        TranslatableString("import-export", "Microsoft ADPCM"),
+        TranslatableString("import-export", "GSM 6.10"),
+        TranslatableString("import-export", "32kbs G721 ADPCM"),
+        TranslatableString("import-export", "24kbs G723 ADPCM"),
+        TranslatableString("import-export", "12 bit DWVW"),
+        TranslatableString("import-export", "16 bit DWVW"),
+        TranslatableString("import-export", "24 bit DWVW"),
+        TranslatableString("import-export", "VOX ADPCM"),
+        TranslatableString("import-export", "16 bit DPCM"),
+        TranslatableString("import-export", "8 bit DPCM"),
+        TranslatableString("import-export", "Vorbis")
         );
 
     auto untranslated = SFCall<wxString>(sf_header_name, mInfo.format);
-    return TranslatableString{
-        untranslated, {} };
+    return TranslatableString::untranslatable(untranslated);
 }
 
 double PCMImportFileHandle::GetDuration() const

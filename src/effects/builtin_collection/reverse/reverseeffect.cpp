@@ -1,10 +1,13 @@
 #include "reverseeffect.h"
-#include "au3-effects/EffectOutputTracks.h"
-#include "au3-label-track/LabelTrack.h"
-#include "au3-wave-track/WaveTrack.h"
-#include "au3-wave-track/WaveTrackUtilities.h"
+
 #include <algorithm>
 #include <cmath>
+
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 namespace au::effects {
 ReverseEffect::ReverseEffect()
@@ -15,16 +18,16 @@ ReverseEffect::~ReverseEffect()
 {
 }
 
-const ComponentInterfaceSymbol ReverseEffect::Symbol { XO("Reverse") };
+const ComponentInterfaceSymbol ReverseEffect::Symbol { TranslatableString("effects-reverse", "Reverse") };
 
 ComponentInterfaceSymbol ReverseEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString ReverseEffect::GetDescription() const
+::TranslatableString ReverseEffect::GetDescription() const
 {
-    return XO("Reverses the selected audio");
+    return ::TranslatableString("effects-reverse", "Reverses the selected audio");
 }
 
 // EffectDefinitionInterface implementation

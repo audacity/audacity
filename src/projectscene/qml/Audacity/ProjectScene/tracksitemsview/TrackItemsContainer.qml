@@ -30,6 +30,8 @@ Item {
     property bool isLeadInRecordingTrack: false
     property double leadInRecordingStartTime: 0
 
+    property real canvasIndentWidth: 0
+
     required property bool selectionInProgress
     required property bool selectionEditInProgress
     required property bool verticalSelectionEditInProgress
@@ -56,7 +58,7 @@ Item {
     signal insureVerticallyVisible
 
     signal handleTimeGuideline(real x, bool completed)
-    signal triggerItemGuideline(real x, bool completed)
+    signal updateItemGuideline(real time)
     signal itemDragEditCanceled
 
     signal initRequired
@@ -73,6 +75,14 @@ Item {
         trackViewState.init()
 
         root.initRequired()
+    }
+
+    function clearItemGuideline() {
+        if (!root.context) {
+            return
+        }
+
+        root.updateItemGuideline(root.context.invalidGuidelineTime)
     }
 
     Loader {

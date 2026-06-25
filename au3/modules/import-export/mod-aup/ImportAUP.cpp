@@ -70,7 +70,7 @@ public:
 
     wxString GetPluginStringID() override;
 
-    TranslatableString GetPluginFormatDescription() override;
+    ::TranslatableString GetPluginFormatDescription() override;
 
     ImportHandle Open(const FilePath& fileName, AudacityProject* project) override;
 };
@@ -81,9 +81,9 @@ public:
     AUPImportFileHandle(const FilePath& name, AudacityProject* project);
     ~AUPImportFileHandle();
 
-    TranslatableString GetErrorMessage() const override;
+    ::TranslatableString GetErrorMessage() const override;
 
-    TranslatableString GetFileDescription() override;
+    ::TranslatableString GetFileDescription() override;
 
     ByteCount GetFileUncompressedBytes() override;
 
@@ -139,8 +139,8 @@ private:
     bool AddSamples(const FilePath& blockFilename, const FilePath& audioFilename, sampleCount len, sampleFormat format,
                     sampleCount origin = 0, int channel = 0);
 
-    bool SetError(const TranslatableString& msg);
-    bool SetWarning(const TranslatableString& msg);
+    bool SetError(const ::TranslatableString& msg);
+    bool SetWarning(const ::TranslatableString& msg);
 
 private:
     AudacityProject& mProject;
@@ -198,7 +198,7 @@ private:
     WaveClip* mClip;
     std::vector<WaveClip*> mClips;
 
-    TranslatableString mErrorMsg;
+    ::TranslatableString mErrorMsg;
     bool mHasParseError { false };
 };
 
@@ -239,7 +239,7 @@ wxString AUPImportPlugin::GetPluginStringID()
     return wxT("legacyaup");
 }
 
-TranslatableString AUPImportPlugin::GetPluginFormatDescription()
+::TranslatableString AUPImportPlugin::GetPluginFormatDescription()
 {
     return DESC;
 }
@@ -273,12 +273,12 @@ AUPImportFileHandle::~AUPImportFileHandle()
 {
 }
 
-TranslatableString AUPImportFileHandle::GetFileDescription()
+::TranslatableString AUPImportFileHandle::GetFileDescription()
 {
     return DESC;
 }
 
-TranslatableString AUPImportFileHandle::GetErrorMessage() const
+::TranslatableString AUPImportFileHandle::GetErrorMessage() const
 {
     return mErrorMsg;
 }
@@ -1448,7 +1448,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath& blockFilename,
     return true;
 }
 
-bool AUPImportFileHandle::SetError(const TranslatableString& msg)
+bool AUPImportFileHandle::SetError(const ::TranslatableString& msg)
 {
     wxLogError(msg.Debug());
 
@@ -1460,7 +1460,7 @@ bool AUPImportFileHandle::SetError(const TranslatableString& msg)
     return false;
 }
 
-bool AUPImportFileHandle::SetWarning(const TranslatableString& msg)
+bool AUPImportFileHandle::SetWarning(const ::TranslatableString& msg)
 {
     wxLogWarning(msg.Debug());
 

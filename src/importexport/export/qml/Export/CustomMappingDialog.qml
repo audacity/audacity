@@ -27,7 +27,7 @@ StyledDialogView {
         section: root.navigationSection
         direction: NavigationPanel.Both
         order: 1
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }

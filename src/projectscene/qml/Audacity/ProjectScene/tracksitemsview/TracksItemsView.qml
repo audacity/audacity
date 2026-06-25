@@ -67,17 +67,26 @@ Rectangle {
 
         property bool playRegionActivated: false
         readonly property int headerHeight: 20
+        readonly property int listHeaderHeight: 2
 
-        function cancelClipDragEdit() {
+        function cancelItemDragEdit() {
             if (mainMouseArea.pressed) {
                 // This will lead to a cancel signal on `mainMouseArea` that will call back into this function,
                 // but this time in released state.
                 mouseHelper.callUngrabMouseOnItem(mainMouseArea)
                 return
             }
-            if (root.hoveredClipKey) {
-                tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
+            if (root.hoveredItemKey) {
+                tracksItemsView.cancelItemDragEditRequested(root.hoveredItemKey)
             }
+        }
+
+        function setGuidelinePosition(time) {
+            root.guidelinePos = timeline.context.timeToPosition(time)
+        }
+
+        function updateGuidelineVisibility() {
+            root.guidelineVisible = root.guidelinePos >= 0
         }
     }
 
@@ -97,12 +106,17 @@ Rectangle {
         id: tracksModel
 
         onTotalTracksHeightChanged: {
-            timeline.context.onResizeFrameContentHeight(
-                tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding)
+            let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
+            timeline.context.onResizeFrameContentHeight(totalContentHeight)
+
+            let maxContentY = Math.max(totalContentHeight - tracksItemsView.height, 0)
+            if (tracksItemsView.contentY > maxContentY) {
+                tracksItemsView.contentY = maxContentY
+            }
         }
 
         onEscapePressed: {
-            prv.cancelClipDragEdit()
+            prv.cancelItemDragEdit()
         }
     }
 
@@ -147,7 +161,7 @@ Rectangle {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
-            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset
+            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
         }
     }
 
@@ -209,7 +223,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset)
+        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight)
     }
 
     Rectangle {
@@ -541,6 +555,8 @@ Rectangle {
                         root.interactionState = TracksItemsView.State.DraggingItem
                         lastItemClickKey = root.hoveredItemKey
                     } else {
+                        content.forceActiveFocus()
+
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             if (playbackState.isPlaying) {
                                 playbackState.setLastPlaybackSeekTime(timeline.context.positionToTime(e.x))
@@ -554,7 +570,7 @@ Rectangle {
                             selectionViewController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
-                        handleGuideline(e.x, false)
+                        snapGuidelineToPosition(e.x)
 
                         splitToolController.mouseDown(e.x)
                         lastItemClickKey = null
@@ -590,7 +606,7 @@ Rectangle {
                     selectionViewController.onPositionChanged(e.x, e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
-                    handleGuideline(e.x, false)
+                    snapGuidelineToPosition(e.x)
                 }
             }
 
@@ -621,7 +637,7 @@ Rectangle {
                         selectionViewController.onReleased(e.x, e.y)
                         itemsSelection.visible = false
                     }
-                    handleGuideline(e.x, true)
+                    hideGuideline()
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                         playCursorController.seekToX(timeline.context.selectionStartPosition)
                     }
@@ -632,7 +648,7 @@ Rectangle {
 
             onCanceled: e => {
                 root.interactionState = TracksItemsView.State.Idle
-                prv.cancelClipDragEdit()
+                prv.cancelItemDragEdit()
             }
 
             onClicked: e => {
@@ -662,6 +678,34 @@ Rectangle {
                     playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
                 }
                 itemsSelection.visible = false
+            }
+        }
+
+        // Drives the snap guideline while hovering empty project space below the last track.
+        HoverHandler {
+            id: emptyAreaGuidelineHandler
+
+            enabled: root.interactionState !== TracksItemsView.State.DraggingItem
+
+            onPointChanged: {
+                if (!hovered) {
+                    return
+                }
+
+                let pos = point.position
+                if (tracksViewState.trackAtPosition(pos.x, pos.y) !== -1) {
+                    // Over a track: let the track container own the guideline.
+                    return
+                }
+
+                timeline.updateCursorPosition(pos.x, pos.y)
+                root.snapGuidelineToPosition(pos.x)
+            }
+
+            onHoveredChanged: {
+                if (!hovered) {
+                    root.hideGuideline()
+                }
             }
         }
 
@@ -738,7 +782,7 @@ Rectangle {
 
                 function insureVerticallyVisible(item) {
                     var itemViewY = item.mapToItem(tracksItemsView.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY, tracksItemsView.height, itemViewY, item.height)
+                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY + prv.listHeaderHeight, tracksItemsView.height, itemViewY + prv.listHeaderHeight, item.height)
                 }
 
                 signal itemMoveRequested(var itemKey, bool completed)
@@ -753,7 +797,7 @@ Rectangle {
                 signal clearPreviewImportClip(var excludeTrackIds)
 
                 header: Rectangle {
-                    height: 2
+                    height: prv.listHeaderHeight
                     width: parent.width
                     color: "transparent"
                 }
@@ -770,7 +814,7 @@ Rectangle {
                     if (verticalScrollLocked) {
                         contentY = lockedVerticalScrollPosition
                     } else {
-                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY)
+                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY + prv.listHeaderHeight)
                         timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
                     }
                 }
@@ -946,9 +990,9 @@ Rectangle {
                             }
 
                             onItemDragEditCanceled: {
-                                root.hoveredClipKey = null
-                                root.clipHeaderHovered = false
-                                tracksClipsView.moveActive = false
+                                root.hoveredItemKey = null
+                                root.itemHeaderHovered = false
+                                tracksItemsView.moveActive = false
                                 timeline.context.updateSelectedClipTime()
                             }
 
@@ -994,13 +1038,12 @@ Rectangle {
                                 })
                             }
 
-                            onTriggerItemGuideline: function (time, completed) {
-                                root.guidelinePos = timeline.context.timeToPosition(time)
-                                root.guidelineVisible = root.guidelinePos >= 0 && !completed
+                            onUpdateItemGuideline: function (time) {
+                                root.updateGuidelineAtTime(time)
                             }
 
                             onHandleTimeGuideline: function (x) {
-                                root.handleGuideline(x)
+                                root.snapGuidelineToPosition(x)
                             }
 
                             Connections {
@@ -1037,6 +1080,7 @@ Rectangle {
                             context: timeline.context
                             container: tracksItemsView
                             canvas: content
+                            canvasIndentWidth: content.anchors.leftMargin
 
                             trackId: itemData.trackId
                             trackTitle: itemData.trackTitle
@@ -1093,6 +1137,12 @@ Rectangle {
                                 tracksViewState.requestVerticalScrollUnlock()
                             }
 
+                            onItemDragEditCanceled: {
+                                root.hoveredItemKey = null
+                                root.itemHeaderHovered = false
+                                tracksItemsView.moveActive = false
+                            }
+
                             onSeekToX: function (x) {
                                 playCursorController.seekToX(x)
                             }
@@ -1122,13 +1172,12 @@ Rectangle {
                                 tracksItemsView.moveActive = !completed
                             }
 
-                            onTriggerItemGuideline: function (time, completed) {
-                                root.guidelinePos = timeline.context.timeToPosition(time)
-                                root.guidelineVisible = root.guidelinePos >= 0 && !completed
+                            onUpdateItemGuideline: function (time) {
+                                root.updateGuidelineAtTime(time)
                             }
 
                             onHandleTimeGuideline: function (x) {
-                                root.handleGuideline(x)
+                                root.snapGuidelineToPosition(x)
                             }
 
                             onInsureVerticallyVisible: function () {
@@ -1170,6 +1219,10 @@ Rectangle {
             anchors.bottom: parent.bottom
 
             x: timeline.context.lastPlaybackSeekPosition
+            // The seek line marks "where playback will resume" — meaningless
+            // while recording (the playhead is being driven by record position),
+            // so hide it to avoid showing a stale marker at the pre-record cursor.
+            visible: !playbackState.isRecording
         }
 
         PlayCursorLine {
@@ -1259,17 +1312,17 @@ Rectangle {
         }
     }
 
-    function handleGuideline(x, completed) {
-        let time = timeline.context.positionToTime(x)
-        time = timeline.context.applyDetectedSnap(time)
-        let guidelineTimePos = timeline.context.findGuideline(time)
+    function snapGuidelineToPosition(x) {
+        let time = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
+        root.updateGuidelineAtTime(timeline.context.findGuideline(time))
+    }
 
-        if (guidelineTimePos !== -1) {
-            root.guidelinePos = timeline.context.timeToPosition(guidelineTimePos)
+    function updateGuidelineAtTime(time) {
+        prv.setGuidelinePosition(time)
+        prv.updateGuidelineVisibility()
+    }
 
-            root.guidelineVisible = root.guidelinePos >= 0 ? !completed : false
-        } else {
-            root.guidelineVisible = false
-        }
+    function hideGuideline() {
+        root.guidelineVisible = false
     }
 }

@@ -287,7 +287,7 @@ void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
 void Au3AudioDevicesProvider::setDefaultSampleFormat(const std::string& format)
 {
     for (const auto& symbol : QualitySettings::SampleFormatSetting.GetSymbols()) {
-        if (format == symbol.Msgid().Translation()) {
+        if (format == symbol.Msgid().translated().toStdString()) {
             settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_FORMAT, muse::Val(symbol.Internal().ToStdString()));
         }
     }
@@ -303,7 +303,7 @@ std::string Au3AudioDevicesProvider::defaultSampleFormat() const
     auto currentFormat = muse::settings()->value(DEFAULT_PROJECT_SAMPLE_FORMAT).toString();
     for (const auto& symbol : QualitySettings::SampleFormatSetting.GetSymbols()) {
         if (currentFormat == symbol.Internal()) {
-            return symbol.Msgid().Translation().ToStdString();
+            return symbol.Msgid().translated().toStdString();
         }
     }
 
@@ -314,7 +314,7 @@ std::vector<std::string> Au3AudioDevicesProvider::sampleFormats() const
 {
     std::vector<std::string> formats;
     for (const auto& format : QualitySettings::SampleFormatSetting.GetSymbols().GetMsgids()) {
-        formats.push_back(format.Translation().ToStdString());
+        formats.push_back(format.translated().toStdString());
     }
 
     return formats;

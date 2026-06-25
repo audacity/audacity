@@ -34,6 +34,12 @@ void TrackViewStateModel::init()
             if (m_trackHeight.val == h) {
                 return;
             }
+
+            auto prj = globalContext()->currentTrackeditProject();
+            if (prj && !prj->track(m_trackId)) {
+                return;
+            }
+
             m_trackHeight.val = h;
             emit trackHeightChanged();
         }, muse::async::Asyncable::Mode::SetReplace);

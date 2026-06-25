@@ -42,7 +42,7 @@ void ProjectHistory::InitialState()
 
     undoManager.ClearStates();
 
-    undoManager.PushState(XO("Created new project"), {});
+    undoManager.PushState(TranslatableString("project-history", "Created new project"), {});
 
     undoManager.StateSaved();
 }

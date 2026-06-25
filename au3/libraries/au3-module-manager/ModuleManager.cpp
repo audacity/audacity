@@ -66,7 +66,7 @@ static BasicUI::MessageBoxResult DoMessageBox(const TranslatableString& msg)
 {
     using namespace BasicUI;
     return ShowMessageBox(msg,
-                          MessageBoxOptions {}.Caption(XO("Module Unsuitable")));
+                          MessageBoxOptions {}.Caption(TranslatableString("module-manager", "Module Unsuitable")));
 }
 
 // Module's Major.Minor version should match the current Audacity build
@@ -89,7 +89,8 @@ void Module::ShowLoadFailureError(const wxString& Error)
 {
     auto ShortName = wxFileName(mName).GetName();
     DoMessageBox(
-        XO("Unable to load the \"%s\" module.\n\nError: %s")
+        //: %1 is the module name, %2 is the system error message
+        TranslatableString("module-manager", "Unable to load the “%1” module.\n\nError: %2")
         .Format(ShortName, Error));
     wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
 }
@@ -121,7 +122,7 @@ bool Module::Load(wxString& deferredErrorMessage)
     tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
     if (versionFn == NULL) {
         DoMessageBox(
-            XO("The module \"%s\" does not provide a version string.\n\nIt will not be loaded.")
+            TranslatableString("module-manager", "The module “%1” does not provide a version string.\n\nIt will not be loaded.")
             .Format(ShortName));
         wxLogMessage(wxT("The module \"%s\" does not provide a version string. It will not be loaded."), mName);
         mLib->Unload();
@@ -131,7 +132,8 @@ bool Module::Load(wxString& deferredErrorMessage)
     wxString moduleVersion = versionFn();
     if (!IsVersionCompatible(moduleVersion)) {
         DoMessageBox(
-            XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
+            //: %1 is the module name, %2 is the Audacity version string the module targets
+            TranslatableString("module-manager", "The module “%1” is matched with Audacity version “%2”.\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion));
         wxLogMessage(wxT("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion);
         mLib->Unload();
@@ -154,7 +156,7 @@ bool Module::Load(wxString& deferredErrorMessage)
     mDispatch = NULL;
 
     DoMessageBox(
-        XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.")
+        TranslatableString("module-manager", "The module “%1” failed to initialize.\n\nIt will not be loaded.")
         .Format(ShortName));
     wxLogMessage(wxT("The module \"%s\" failed to initialize.\nIt will not be loaded."), mName);
     mLib->Unload();
@@ -314,16 +316,16 @@ void ModuleManager::TryLoadModules(
             // JKC: I don't like prompting for the plug-ins individually
             // I think it would be better to show the module prefs page,
             // and let the user decide for each one.
-            auto msg = XO("Module \"%s\" found.").Format(ShortName);
-            msg += XO("\n\nOnly use modules from trusted sources");
+            auto msg = TranslatableString("module-manager", "Module “%1” found.").arg(ShortName);
+            msg += TranslatableString("module-manager", "\n\nOnly use modules from trusted sources");
             const TranslatableStrings buttons{
-                XO("Yes"), XO("No"),
+                TranslatableString("module-manager", "Yes"), TranslatableString("module-manager", "No"),
             }; // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
             int action = BasicUI::ShowMultiDialog(msg,
-                                                  XO("Audacity Module Loader"),
+                                                  TranslatableString("module-manager", "Audacity Module Loader"),
                                                   buttons,
                                                   "",
-                                                  XO("Try and load this module?"),
+                                                  TranslatableString("module-manager", "Try and load this module?"),
                                                   false);
             // If we're not prompting always, accept the answer permanently
             if (iModuleStatus == kModuleNew) {
@@ -348,7 +350,7 @@ void ModuleManager::TryLoadModules(
             if (!module->HasDispatch()) {
                 auto ShortName = wxFileName(file).GetName();
                 DoMessageBox(
-                    XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.")
+                    TranslatableString("module-manager", "The module “%1” does not provide any of the required functions.\n\nIt will not be loaded.")
                     .Format(ShortName));
                 wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), file);
                 module->Unload();

@@ -56,7 +56,7 @@ static const wxChar* KEY_Parameters = wxT("Parameters");
 NyquistBase::NyquistBase(const wxString& fName)
     : mIsPrompt{fName == NYQUIST_PROMPT_ID}
 {
-    mAction = XO("Applying Nyquist Effect...");
+    mAction = TranslatableString("effects-nyquist", "Applying Nyquist Effect…");
     mExternal = false;
     mCompiler = false;
     mTrace = false;
@@ -64,9 +64,9 @@ NyquistBase::NyquistBase(const wxString& fName)
     mDebug = false;
     mIsSal = false;
     mOK = false;
-    mAuthor = XO("n/a");
-    mReleaseVersion = XO("n/a");
-    mCopyright = XO("n/a");
+    mAuthor = TranslatableString("effects-nyquist", "n/a");
+    mReleaseVersion = TranslatableString("effects-nyquist", "n/a");
+    mCopyright = TranslatableString("effects-nyquist", "n/a");
 
     // set clip/split handling when applying over clip boundary.
     mRestoreSplits = true; // Default: Restore split lines.
@@ -94,21 +94,21 @@ NyquistBase::NyquistBase(const wxString& fName)
 
     if (fName == NYQUIST_WORKER_ID) {
         // Effect spawned from Nyquist Prompt
-        /* i18n-hint: It is acceptable to translate this the same as for "Nyquist
+        /*: It is acceptable to translate this the same as for "Nyquist
          * Prompt" */
-        mName = XO("Nyquist Worker");
+        mName = TranslatableString("effects-nyquist", "Nyquist Worker");
         return;
     }
 
     mFileName = fName;
     // Use the file name verbatim as effect name.
     // This is only a default name, overridden if we find a $name line:
-    mName = Verbatim(mFileName.GetName());
+    mName = TranslatableString::untranslatable(mFileName.GetName());
     mFileModified = mFileName.GetModificationTime();
     ParseFile();
 
     if (!mOK && mInitError.empty()) {
-        mInitError = XO("Ill-formed Nyquist plug-in header");
+        mInitError = TranslatableString("effects-nyquist", "Ill-formed Nyquist plug-in header");
     }
 }
 
@@ -135,7 +135,7 @@ ComponentInterfaceSymbol NyquistBase::GetSymbol() const
 VendorSymbol NyquistBase::GetVendor() const
 {
     if (mIsPrompt) {
-        return XO("Audacity");
+        return TranslatableString("effects-nyquist", "Audacity");
     }
 
     return mAuthor;
@@ -486,9 +486,7 @@ bool NyquistBase::Init()
         if (const auto project = FindProject()) {
             if (!mSpectralSelectionEnabled || ((mF0 < 0.0) && (mF1 < 0.0))) {
                 mLastError
-                    = XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                         "in the track Spectrogram settings and select the\n"
-                         "frequency range for the effect to act on.").Translation().ToStdString();
+                    = TranslatableString("effects-nyquist", "To use ‘Spectral effects’, enable ‘Spectral Selection’\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.").Translation();
                 return false;
             }
         }
@@ -654,7 +652,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
     mDebugOutput = {};
     if (!mHelpFile.empty() && !mHelpFileExists) {
         mDebugOutput
-            =XO("error: File \"%s\" specified in header but not found in plug-in path.\n")
+            =TranslatableString("effects-nyquist", "error: File “%1” specified in header but not found in plug-in path.\n")
               .Format(mHelpFile);
     }
 
@@ -820,7 +818,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
 
     // Nyquist Prompt does not require a selection, but effects do.
     if (!bOnePassTool && (mNumSelectedChannels == 0)) {
-        mLastError = XO("Audio selection required").Translation().ToStdString();
+        mLastError = TranslatableString("effects-nyquist", "Audio selection required.").Translation();
     }
 
     std::optional<TrackIterRange<WaveTrack> > pRange;
@@ -839,7 +837,11 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
          (void)(!pRange || (++pRange->first, true))) {
         // Prepare to accumulate more debug output in OutputCallback
         mDebugOutputStr = mDebugOutput.Translation();
-        mDebugOutput = Verbatim("%s").Format(std::cref(mDebugOutputStr));
+        // NOTE: muse's TranslatableString::arg snapshots the value; the
+        // original code used std::cref to defer until rendering. We accept
+        // that the rendered debug output may not include bytes appended
+        // after this point (see OutputCallback at mDebugOutputStr += ...).
+        mDebugOutput = TranslatableString::untranslatable("%1").arg(mDebugOutputStr);
 
         // New context for each channel group of input
         NyxContext nyxContext {
@@ -1009,6 +1011,16 @@ finish:
 }
 
 namespace {
+//! Dynamic Nyquist labels are translated at lookup time via the
+//! "effects-nyquist" context, whose catalogue is populated by the lupdate
+//! stub tools/translations/nyquist_strings.cpp.generated (emitted from the
+//! .ny script bodies).
+TranslatableString NyqTranslatable(const wxString& s)
+{
+    const auto utf8 = s.utf8_str();
+    return TranslatableString("effects-nyquist", utf8.data());
+}
+
 wxString GetClipBoundaries(const Track* t)
 {
     wxString clips;
@@ -1092,7 +1104,7 @@ bool NyquistBase::ProcessOne(
                 // Get the English name of the view type, without menu codes,
                 // as a string that Lisp can examine
                 return wxString::Format(
-                    wxT("\"%s\""), display.name.Stripped().Debug());
+                    wxT("\"%s\""), au3::qtToWx(display.name.Stripped().debugStr()));
             };
             if (displays.empty()) {
             } else if (displays.size() == 1) {
@@ -1352,7 +1364,7 @@ bool NyquistBase::ProcessOne(
     // If we're not showing debug window, log errors and warnings:
     const auto output = mDebugOutput.Translation();
     if (!output.empty() && !mDebug && !mTrace) {
-        /* i18n-hint: An effect "returned" a message.*/
+        /*: An effect "returned" a message.*/
         wxLogMessage(wxT("\'%s\' returned:\n%s"), mName.Translation(), output);
     }
 
@@ -1364,17 +1376,17 @@ bool NyquistBase::ProcessOne(
         (rval != nyx_audio)
         && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
         if (mCurNumChannels == 1) {
-            TrackProgress(mCount, 1.0, XO("Processing complete."));
+            TrackProgress(mCount, 1.0, TranslatableString("effects-nyquist", "Processing complete."));
         } else {
-            TrackGroupProgress(mCount, 1.0, XO("Processing complete."));
+            TrackGroupProgress(mCount, 1.0, TranslatableString("effects-nyquist", "Processing complete."));
         }
     }
 
     if ((rval == nyx_audio) && (GetType() == EffectTypeTool)) {
         // Catch this first so that we can also handle other errors.
         mDebugOutput
-            =/* i18n-hint: Don't translate ';type tool'.  */
-              XO("';type tool' effects cannot return audio from Nyquist.\n")
+            =/*: Don't translate ';type tool'.  */
+              TranslatableString("effects-nyquist", "‘;type tool’ effects cannot return audio from Nyquist.\n")
               + mDebugOutput;
         rval = nyx_error;
     }
@@ -1382,8 +1394,8 @@ bool NyquistBase::ProcessOne(
     if ((rval == nyx_labels) && (GetType() == EffectTypeTool)) {
         // Catch this first so that we can also handle other errors.
         mDebugOutput
-            =/* i18n-hint: Don't translate ';type tool'.  */
-              XO("';type tool' effects cannot return labels from Nyquist.\n")
+            =/*: Don't translate ';type tool'.  */
+              TranslatableString("effects-nyquist", "‘;type tool’ effects cannot return labels from Nyquist.\n")
               + mDebugOutput;
         rval = nyx_error;
     }
@@ -1392,9 +1404,9 @@ bool NyquistBase::ProcessOne(
         // Return value is not valid type.
         // Show error in debug window if trace enabled, otherwise log.
         if (mTrace) {
-            /* i18n-hint: "%s" is replaced by name of plug-in.*/
-            mDebugOutput = XO("nyx_error returned from %s.\n")
-                           .Format(mName.empty() ? XO("plug-in") : mName)
+            /*: "%s" is replaced by name of plug-in.*/
+            mDebugOutput = TranslatableString("effects-nyquist", "nyx_error returned from %1.\n")
+                           .Format(mName.empty() ? TranslatableString("effects-nyquist", "plug-in") : mName)
                            + mDebugOutput;
             mDebug = true;
         } else {
@@ -1409,7 +1421,7 @@ bool NyquistBase::ProcessOne(
         if (GetType() == EffectTypeTool) {
             mProjectChanged = true;
         } else {
-            BasicUI::ShowMessageBox(XO("Nyquist returned a list."));
+            BasicUI::ShowMessageBox(TranslatableString("effects-nyquist", "Nyquist returned a list."));
         }
         return true;
     }
@@ -1424,10 +1436,10 @@ bool NyquistBase::ProcessOne(
         // Assume the string has already been translated within the Lisp runtime
         // if necessary, by one of the gettext functions defined below, before it
         // is communicated back to C++
-        auto msg = Verbatim(NyquistToWxString(nyx_get_string()));
+        auto msg = TranslatableString::untranslatable(NyquistToWxString(nyx_get_string()));
         if (!msg.empty()) { // Empty string may be used as a No-Op return value.
             if (!isOk) {
-                mLastError = msg.Translation().ToStdString();
+                mLastError = msg.Translation();
             } else {
                 const bool isErrorMsg = msg.Translation().Contains(wxT("\n"));
                 BasicUI::ShowMessageBox(msg, BasicUI::MessageBoxOptions{}
@@ -1448,27 +1460,27 @@ bool NyquistBase::ProcessOne(
     }
 
     if (rval == nyx_double) {
-        auto str = XO("Nyquist returned the value: %f").Format(nyx_get_double());
+        auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_double());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
             BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions{}
                 .Caption(mName)
                 .IconStyle(BasicUI::Icon::Information));
         } else {
-            mLastError = str.Translation().ToStdString();
+            mLastError = str.Translation();
         }
         return isOk;
     }
 
     if (rval == nyx_int) {
-        auto str = XO("Nyquist returned the value: %d").Format(nyx_get_int());
+        auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_int());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
             BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions{}
                 .Caption(mName)
                 .IconStyle(BasicUI::Icon::Information));
         } else {
-            mLastError = str.Translation().ToStdString();
+            mLastError = str.Translation();
         }
         return isOk;
     }
@@ -1511,17 +1523,17 @@ bool NyquistBase::ProcessOne(
     int outChannels = nyx_get_audio_num_channels();
     if (outChannels > (int)mCurNumChannels) {
         mLastError = (
-            XO("Nyquist returned too many audio channels.\n")).Translation().ToStdString();
+            TranslatableString("effects-nyquist", "Nyquist returned too many audio channels.\n")).Translation();
         return false;
     }
 
     if (outChannels == -1) {
-        mLastError = XO("Nyquist returned one audio channel as an array.\n").Translation().ToStdString();
+        mLastError = TranslatableString("effects-nyquist", "Nyquist returned one audio channel as an array.\n").Translation();
         return false;
     }
 
     if (outChannels == 0) {
-        mLastError = XO("Nyquist returned an empty array.\n").Translation().ToStdString();
+        mLastError = TranslatableString("effects-nyquist", "Nyquist returned an empty array.\n").Translation();
         return false;
     }
 
@@ -1542,7 +1554,7 @@ bool NyquistBase::ProcessOne(
 
     mOutputDuration = out->GetEndTime();
     if (mOutputDuration <= 0) {
-        mLastError = XO("Nyquist returned nil audio.\n").Translation().ToStdString();
+        mLastError = TranslatableString("effects-nyquist", "Nyquist returned nil audio.\n").Translation();
         return false;
     }
 
@@ -1587,8 +1599,7 @@ wxString NyquistBase::NyquistToWxString(const char* nyqString)
     wxString str(nyqString, wxConvUTF8);
     if (nyqString != NULL && nyqString[0] && str.empty()) {
         // invalid UTF-8 string, convert as Latin-1
-        str = _(
-            "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]");
+        str = wxString::FromUTF8(au3::trc("effects-nyquist", "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]").c_str());
         // TODO: internationalization of strings from Nyquist effects, at least
         // from those shipped with Audacity
         str += LAT1CTOWX(nyqString);
@@ -1618,9 +1629,9 @@ std::vector<EnumValueSymbol> NyquistBase::ParseChoice(const wxString& text)
         for (auto& choice : choices) {
             auto label = UnQuote(choice, true, &extra);
             if (extra.empty()) {
-                results.push_back(TranslatableString { label, {} });
+                results.push_back(NyqTranslatable(label));
             } else {
-                results.push_back({ extra, TranslatableString { label, {} } });
+                results.push_back({ extra, NyqTranslatable(label) });
             }
         }
     } else {
@@ -1702,7 +1713,7 @@ FileNames::FileTypes NyquistBase::ParseFileTypes(const wxString& text)
                     extensions.push_back(ext);
                 }
             }
-            results.push_back({ Verbatim(pieces[ii]), extensions });
+            results.push_back({ TranslatableString::untranslatable(pieces[ii]), extensions });
         }
     }
     return results;
@@ -1747,9 +1758,12 @@ TranslatableString NyquistBase::UnQuoteMsgid(
     int len = s.length();
     if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
         auto unquoted = s.Mid(1, len - 2);
-        // Sorry, no context strings, yet
-        // (See also comments in NyquistEffectsModule::AutoRegisterPlugins)
-        return TranslatableString { unquoted, {} };
+        // Return a locale-independent string: the caller uses .Translation()
+        // to build plugin identifiers at scan time, so a translated result
+        // would make the effectId differ from the URL-captured one and break
+        // plugin lookup. Display labels are translated separately at dialog
+        // time (convertControl in nyquistparameterextractorservice.cpp).
+        return TranslatableString::untranslatable(unquoted);
     } else if (
         allowParens && len >= 2 && s[0] == wxT('(') && s[len - 1] == wxT(')')) {
         Tokenizer tzer;
@@ -1773,7 +1787,7 @@ TranslatableString NyquistBase::UnQuoteMsgid(
         }
     } else {
         // If string was not quoted, assume no translation exists
-        return Verbatim(s);
+        return TranslatableString::untranslatable(s);
     }
 }
 
@@ -2025,7 +2039,7 @@ bool NyquistBase::Parse(
             // This is an unsupported plug-in version
             mOK = false;
             mInitError
-                =XO("This version of Audacity does not support Nyquist plug-in version %ld")
+                =TranslatableString("effects-nyquist", "This version of Audacity does not support Nyquist plug-in version %1")
                   .Format(v);
             return true;
         }
@@ -2045,17 +2059,17 @@ bool NyquistBase::Parse(
         if (name.EndsWith(wxT("..."))) {
             name = name.RemoveLast(3);
         }
-        mName = TranslatableString { name, {} };
+        mName = TranslatableString::untranslatable(name);
         return true;
     }
 
     if (len >= 2 && tokens[0] == wxT("action")) {
-        mAction = TranslatableString { UnQuote(tokens[1]), {} };
+        mAction = TranslatableString::untranslatable(UnQuote(tokens[1]));
         return true;
     }
 
     if (len >= 2 && tokens[0] == wxT("info")) {
-        mInfo = TranslatableString { UnQuote(tokens[1]), {} };
+        mInfo = TranslatableString::untranslatable(UnQuote(tokens[1]));
         return true;
     }
 
@@ -2104,18 +2118,18 @@ bool NyquistBase::Parse(
     }
 
     if (len >= 2 && tokens[0] == wxT("author")) {
-        mAuthor = TranslatableString { UnQuote(tokens[1]), {} };
+        mAuthor = TranslatableString::untranslatable(UnQuote(tokens[1]));
         return true;
     }
 
     if (len >= 2 && tokens[0] == wxT("release")) {
         // Value must be quoted if the release version string contains spaces.
-        mReleaseVersion = TranslatableString { UnQuote(tokens[1]), {} };
+        mReleaseVersion = TranslatableString::untranslatable(UnQuote(tokens[1]));
         return true;
     }
 
     if (len >= 2 && tokens[0] == wxT("copyright")) {
-        mCopyright = TranslatableString { UnQuote(tokens[1]), {} };
+        mCopyright = TranslatableString::untranslatable(UnQuote(tokens[1]));
         return true;
     }
 
@@ -2205,12 +2219,6 @@ bool NyquistBase::Parse(
                             "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
                         tokens[3], mFileName.GetFullPath());
 
-                    // Too disturbing to show alert before Audacity frame is up.
-                    //    EffectUIServices::DoMessageBox(*this,
-                    //       str,
-                    //       wxOK | wxICON_EXCLAMATION,
-                    //       XO("Nyquist Warning") );
-
                     // Note that the AudacityApp's mLogger has not yet been created,
                     // so this brings up an alert box, but after the Audacity frame
                     // is up.
@@ -2286,7 +2294,7 @@ bool NyquistBase::Parse(
 bool NyquistBase::ParseProgram(wxInputStream& stream)
 {
     if (!stream.IsOk()) {
-        mInitError = XO("Could not open file");
+        mInitError = TranslatableString("effects-nyquist", "Could not open file");
         return false;
     }
 
@@ -2357,10 +2365,9 @@ bool NyquistBase::ParseProgram(wxInputStream& stream)
         using namespace BasicUI;
         /* i1n-hint: SAL and LISP are names for variant syntaxes for the
          Nyquist programming language.  Leave them, and 'return', untranslated. */
-        mLastError = XO(
-            "Your code looks like SAL syntax, but there is no \'return\' statement.\n\
+        mLastError = TranslatableString("effects-nyquist", "Your code looks like SAL syntax, but there is no ‘return’ statement.\n\
             For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
-            or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation().ToStdString();
+            or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
         return false;
         // Else just throw it at Nyquist to see what happens
     }
@@ -2596,7 +2603,7 @@ void NyquistBase::resolveFilePath(
     // If the directory is invalid, better to leave it as is (invalid) so that
     // the user sees the error rather than an unexpected file path.
     if (fname.wxFileName::IsOk() && fname.GetFullName().empty()) {
-        path = fname.GetPathWithSep() + _("untitled");
+        path = fname.GetPathWithSep() + wxString::FromUTF8(au3::trc("effects-nyquist", "untitled").c_str());
         if (!extension.empty()) {
             path = path + '.' + extension;
         }
@@ -2622,9 +2629,15 @@ wxString NyquistBase::ToTimeFormat(double t)
     return wxString::Format("%d:%d:%.3f", hh, mm, t - (hh * 3600 + mm * 60));
 }
 
+// Route .ny runtime translation through au3::trc.
+// Behavioural caveat: Qt's translate selects the plural form from the
+// catalogue using the singular as the key; the gettext-style English
+// plural fallback (string2) is ignored when no catalogue entry is present.
+// Callers that relied on string2 as the English n>1 form will see string1
+// instead.
 static LVAL gettext()
 {
-    auto string = UTF8CTOWX(getstring(xlgastring()));
+    auto string = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
 #if !HAS_I18N_CONTEXTS
     // allow ignored context argument
     if (moreargs()) {
@@ -2632,17 +2645,16 @@ static LVAL gettext()
     }
 #endif
     xllastarg();
-    return cvstring(GetCustomTranslation(string).mb_str(wxConvUTF8));
+    return cvstring(au3::trc("effects-nyquist", string.c_str()).c_str());
 }
 
 static LVAL gettextc()
 {
 #if HAS_I18N_CONTEXTS
-    auto string = UTF8CTOWX(getstring(xlgastring()));
-    auto context = UTF8CTOWX(getstring(xlgastring()));
+    auto string = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
+    auto context = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
     xllastarg();
-    return cvstring(
-        wxGetTranslation(string, "", 0, "", context).mb_str(wxConvUTF8));
+    return cvstring(au3::trc("effects-nyquist", string.c_str(), context.c_str()).c_str());
 #else
     return gettext();
 #endif
@@ -2650,8 +2662,9 @@ static LVAL gettextc()
 
 static LVAL ngettext()
 {
-    auto string1 = UTF8CTOWX(getstring(xlgastring()));
-    auto string2 = UTF8CTOWX(getstring(xlgastring()));
+    auto string1 = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
+    auto string2 = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
+    (void)string2;
     auto number = getfixnum(xlgafixnum());
 #if !HAS_I18N_CONTEXTS
     // allow ignored context argument
@@ -2660,20 +2673,19 @@ static LVAL ngettext()
     }
 #endif
     xllastarg();
-    return cvstring(
-        wxGetTranslation(string1, string2, number).mb_str(wxConvUTF8));
+    return cvstring(au3::trc("effects-nyquist", string1.c_str(), nullptr, static_cast<int>(number)).c_str());
 }
 
 static LVAL ngettextc()
 {
 #if HAS_I18N_CONTEXTS
-    auto string1 = UTF8CTOWX(getstring(xlgastring()));
-    auto string2 = UTF8CTOWX(getstring(xlgastring()));
+    auto string1 = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
+    auto string2 = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
+    (void)string2;
     auto number = getfixnum(xlgafixnum());
-    auto context = UTF8CTOWX(getstring(xlgastring()));
+    auto context = std::string(reinterpret_cast<const char*>(getstring(xlgastring())));
     xllastarg();
-    return cvstring(wxGetTranslation(string1, string2, number, "", context)
-                    .mb_str(wxConvUTF8));
+    return cvstring(au3::trc("effects-nyquist", string1.c_str(), context.c_str(), static_cast<int>(number)).c_str());
 #else
     return ngettext();
 #endif

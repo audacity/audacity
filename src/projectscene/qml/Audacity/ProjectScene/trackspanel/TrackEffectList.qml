@@ -16,6 +16,7 @@ Rectangle {
     readonly property int topMargin: 8
     property alias isMasterTrack: trackEffectListModel.isMasterTrack
     property alias trackName: trackEffectListModel.trackName
+    property alias trackSupportsEffects: trackEffectListModel.trackSupportsEffects
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
     property bool empty: trackEffectList.count == 0
     property alias count: trackEffectList.count
@@ -82,7 +83,7 @@ Rectangle {
             navigationPanel: root.navigationPanel
             navigationOrder: root.navigationOrderStart + model.index
 
-            onGripReorderCommitted: function(targetIndex, focusGripHandle) {
+            onGripReorderCommitted: function (targetIndex, focusGripHandle) {
                 root.pendingGripFocusIndex = targetIndex
                 root.pendingGripFocusHandle = focusGripHandle
             }
@@ -122,7 +123,7 @@ Rectangle {
             root.pendingGripFocusIndex = -1
             root.pendingGripFocusHandle = false
 
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 root.focusGripAtIndex(targetIndex, focusGripHandle)
             })
         }
@@ -139,7 +140,7 @@ Rectangle {
             const targetIndex = root.pendingDialogRestoreIndex
             root.pendingDialogRestoreIndex = -1
 
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 const delegate = trackEffectList.itemAtIndex(targetIndex)
                 if (delegate) {
                     delegate.navigation.requestActive()

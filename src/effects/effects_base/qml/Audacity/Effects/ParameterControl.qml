@@ -22,6 +22,12 @@ Item {
     property int upperTimeSignature: 0
     property int lowerTimeSignature: 0
 
+    // Navigation: provided by the parent so Up/Down/Tab can be handled by the
+    // inner controls (e.g. IncrementalPropertyControl's own NavigationEvent
+    // handler) instead of bubbling up to the dialog ButtonBox.
+    property NavigationPanel navigationPanel: null
+    property int navigationOrderStart: 0
+
     signal valueChanged(string parameterId, double value)
     signal stringValueChanged(string parameterId, string stringValue)
     signal gestureStarted(string parameterId)
@@ -36,10 +42,17 @@ Item {
         readonly property int spaceM: 8
         readonly property int spaceL: 12
 
-        readonly property int labelWidth: 192
-        readonly property int controlWidth: 160
-        readonly property int numericControlWidth: 160
+        readonly property int labelWidth: 140
+        readonly property int controlWidth: 140
+        readonly property int numericControlWidth: 90
+        readonly property int compactInputWidth: 80
         readonly property int valueDisplayWidth: 160
+        readonly property int descriptionMaxWidth: 200
+        readonly property int sliderMaxWidth: 280
+        readonly property int sliderShortMaxWidth: 200
+        readonly property int dropdownMaxWidth: 260
+        readonly property int textControlWidth: 240
+        readonly property int filePickerWidth: 320
     }
 
     RowLayout {
@@ -52,16 +65,17 @@ Item {
         StyledTextLabel {
             id: paramLabel
             Layout.preferredWidth: prv.labelWidth
+            Layout.maximumWidth: prv.labelWidth
             Layout.alignment: Qt.AlignVCenter
             text: parameterData ? parameterData.name : ""
             horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap
         }
 
         // Control loader - loads different controls based on parameter type
         Loader {
             id: controlLoader
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
 
             sourceComponent: {
@@ -91,6 +105,25 @@ Item {
                 }
             }
         }
+
+        // Optional human-readable hint, shared across all control types.
+        // Capped width with word-wrap so long Nyquist labels stay readable.
+        StyledTextLabel {
+            id: descriptionLabel
+            Layout.alignment: Qt.AlignVCenter
+            Layout.maximumWidth: prv.descriptionMaxWidth
+            text: parameterData ? parameterData.description : ""
+            visible: text.length > 0
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+
+        // Trailing fillWidth filler so the loader + description sit at their
+        // content widths (left side of the row) rather than spreading out.
+        Item {
+            Layout.fillWidth: true
+        }
     }
 
     // Toggle control (checkbox)
@@ -98,6 +131,11 @@ Item {
         id: toggleControl
 
         CheckBox {
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrderStart
+            navigation.accessible.name: parameterData ? parameterData.name : ""
+            navigation.accessible.description: parameterData ? parameterData.description : ""
+
             checked: parameterData ? parameterData.isToggleChecked : false
             enabled: parameterData ? !parameterData.isReadOnly : false
 
@@ -118,14 +156,18 @@ Item {
     Component {
         id: dropdownControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: dropdown.width
-            implicitHeight: dropdown.height
+        RowLayout {
+            spacing: prv.spaceL
 
             StyledDropdown {
                 id: dropdown
-                width: prv.controlWidth
+                Layout.maximumWidth: prv.dropdownMaxWidth
+                Layout.alignment: Qt.AlignVCenter
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name + (dropdown.displayText ? ": " + dropdown.displayText : "") : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 currentIndex: parameterData ? parameterData.currentEnumIndex : 0
 
@@ -164,13 +206,21 @@ Item {
     Component {
         id: sliderControl
 
-        Row {
+        RowLayout {
             spacing: prv.spaceL
 
             StyledSlider {
                 id: slider
-                anchors.verticalCenter: parent.verticalCenter
-                width: prv.controlWidth
+                // Tighten the slider when there's a description label so the
+                // hint text has room and doesn't get pushed off the row.
+                Layout.preferredWidth: descriptionLabel.visible ? prv.sliderShortMaxWidth : prv.sliderMaxWidth
+                Layout.minimumWidth: prv.controlWidth
+                Layout.alignment: Qt.AlignVCenter
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 from: parameterData ? parameterData.minValue : 0
                 to: parameterData ? parameterData.maxValue : 1
@@ -193,11 +243,21 @@ Item {
                 }
             }
 
-            // Display formatted value from plugin (like AU3 does)
-            StyledTextLabel {
-                anchors.verticalCenter: parent.verticalCenter
-                text: parameterData ? parameterData.formattedValue : ""
-                horizontalAlignment: Text.AlignLeft
+            GeneratedIncrementalPropertyControl {
+                Layout.preferredWidth: prv.compactInputWidth
+                Layout.alignment: Qt.AlignVCenter
+                parameterData: root.parameterData
+
+                navigation.panel: root.navigationPanel
+                navigation.order: slider.navigation.order + 1
+                navigation.accessible.name: parameterData ? parameterData.name : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
+
+                onGestureStarted: root.gestureStarted(root.parameterId)
+                onGestureEnded: root.gestureEnded(root.parameterId)
+                onValueCommitted: function (v) {
+                    root.valueChanged(root.parameterId, v)
+                }
             }
         }
     }
@@ -206,54 +266,23 @@ Item {
     Component {
         id: numericControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: numericInput.width
-            implicitHeight: numericInput.height
+        RowLayout {
+            spacing: prv.spaceL
 
-            IncrementalPropertyControl {
-                id: numericInput
-                width: prv.numericControlWidth
+            GeneratedIncrementalPropertyControl {
+                Layout.preferredWidth: prv.numericControlWidth
+                Layout.alignment: Qt.AlignVCenter
+                parameterData: root.parameterData
 
-                // Always use normalized values (0.0 to 1.0) like AU3 does
-                currentValue: parameterData ? parameterData.currentValue : 0
-                minValue: parameterData ? parameterData.minValue : 0
-                maxValue: parameterData ? parameterData.maxValue : 1
-                step: parameterData && parameterData.stepSize > 0 ? parameterData.stepSize : 0.01
-                decimals: parameterData && parameterData.isInteger ? 0 : 2
-                measureUnitsSymbol: ""  // Don't show units here, show in formatted label
-                enabled: parameterData ? !parameterData.isReadOnly : false
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
-                // Track editing state for gesture
-                property bool isEditing: false
-
-                // Handle focus changes for gesture tracking
-                onActiveFocusChanged: {
-                    if (activeFocus && !isEditing) {
-                        // User focused the control - begin gesture
-                        isEditing = true
-                        root.gestureStarted(root.parameterId)
-                    } else if (!activeFocus && isEditing) {
-                        // User left the control - end gesture
-                        isEditing = false
-                        root.gestureEnded(root.parameterId)
-                    }
-                }
-
-                onValueEdited: function (newValue) {
-                    // If not already editing (e.g., increment/decrement button without focus), start gesture
-                    if (!isEditing) {
-                        isEditing = true
-                        root.gestureStarted(root.parameterId)
-                    }
-
-                    root.valueChanged(root.parameterId, newValue);
-
-                    // For button clicks without focus, end gesture immediately
-                    if (!activeFocus && isEditing) {
-                        isEditing = false
-                        root.gestureEnded(root.parameterId)
-                    }
+                onGestureStarted: root.gestureStarted(root.parameterId)
+                onGestureEnded: root.gestureEnded(root.parameterId)
+                onValueCommitted: function (v) {
+                    root.valueChanged(root.parameterId, v)
                 }
             }
         }
@@ -263,13 +292,27 @@ Item {
     Component {
         id: timeControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: timecode.width
-            implicitHeight: timecode.height
+        // Wrapper RowLayout + fillWidth filler so Timecode (NumericView, itself
+        // a RowLayout) keeps its content-sized implicit width when the Loader
+        // grows wider than its content. Without this, Timecode's internal
+        // items (display + arrow-menu button) spread apart with a gap.
+        RowLayout {
+            spacing: 0
 
             Timecode {
                 id: timecode
+                Layout.alignment: Qt.AlignVCenter
+
+                // Timecode (NumericView) does expose `navigation` -- as a
+                // `property NavigationControl` instance, not a `property
+                // alias`. Group-binding sub-properties on it still works.
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+                navigation.accessible.description: parameterData ? parameterData.description : ""
+
+                // NumericView composes accessible.name as `accessibleName +
+                // valueString`; the parameter label is the prefix here.
+                accessibleName: parameterData ? parameterData.name + ": " : ""
 
                 value: parameterData ? parameterData.currentValue : 0
                 mode: TimecodeModeSelector.Duration
@@ -291,6 +334,10 @@ Item {
                     }
                 }
             }
+
+            Item {
+                Layout.fillWidth: true
+            }
         }
     }
 
@@ -298,44 +345,60 @@ Item {
     Component {
         id: fileControl
 
-        FilePicker {
-            id: filePicker
-            width: parent.width
+        RowLayout {
+            spacing: prv.spaceL
 
-            path: parameterData ? parameterData.currentValueString : ""
+            FilePicker {
+                id: filePicker
+                Layout.preferredWidth: prv.filePickerWidth
+                Layout.alignment: Qt.AlignVCenter
 
-            pickerType: {
-                if (!parameterData) {
+                // FilePicker uses a different navigation API than the other
+                // Muse controls: it takes the panel directly via `navigation`
+                // (not `navigation.panel`) and accepts row/column orders.
+                navigation: root.navigationPanel
+                navigationRowOrderStart: root.navigationOrderStart
+
+                // FilePicker prepends pathFieldTitle to its inner pathField's
+                // accessible name, which is the only hook it exposes for the
+                // parameter label.
+                pathFieldTitle: parameterData ? parameterData.name : ""
+
+                path: parameterData ? parameterData.currentValueString : ""
+
+                pickerType: {
+                    if (!parameterData) {
+                        return FilePicker.PickerType.File
+                    }
+
+                    // If "save" flag is set, use Any type (save dialog)
+                    if (parameterData.isFileSave) {
+                        return FilePicker.PickerType.Any
+                    }
+
+                    // Otherwise use File type (open dialog)
+                    // Note: Multiple file selection is not yet fully supported in the Framework
+                    // but the flag is available for future implementation
                     return FilePicker.PickerType.File
                 }
 
-                // If "save" flag is set, use Any type (save dialog)
-                if (parameterData.isFileSave) {
-                    return FilePicker.PickerType.Any
+                enabled: parameterData ? !parameterData.isReadOnly : false
+
+                // Set file filters from parameterData
+                filter: {
+                    if (!parameterData || !parameterData.fileFilters || parameterData.fileFilters.length === 0) {
+                        return ""
+                    }
+                    // Join all filters with ";;" separator for Qt file dialog
+                    return parameterData.fileFilters.join(";;")
                 }
 
-                // Otherwise use File type (open dialog)
-                // Note: Multiple file selection is not yet fully supported in the Framework
-                // but the flag is available for future implementation
-                return FilePicker.PickerType.File
-            }
-
-            enabled: parameterData ? !parameterData.isReadOnly : false
-
-            // Set file filters from parameterData
-            filter: {
-                if (!parameterData || !parameterData.fileFilters || parameterData.fileFilters.length === 0) {
-                    return ""
+                onPathEdited: function (newPath) {
+                    // File selection is a single atomic operation - begin and end gesture immediately
+                    root.gestureStarted(root.parameterId)
+                    root.stringValueChanged(root.parameterId, newPath)
+                    root.gestureEnded(root.parameterId)
                 }
-                // Join all filters with ";;" separator for Qt file dialog
-                return parameterData.fileFilters.join(";;")
-            }
-
-            onPathEdited: function (newPath) {
-                // File selection is a single atomic operation - begin and end gesture immediately
-                root.gestureStarted(root.parameterId)
-                root.stringValueChanged(root.parameterId, newPath)
-                root.gestureEnded(root.parameterId)
             }
         }
     }
@@ -344,22 +407,32 @@ Item {
     Component {
         id: textControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: textField.width
-            implicitHeight: textField.height
+        RowLayout {
+            spacing: prv.spaceL
 
             TextInputField {
                 id: textField
-                width: prv.controlWidth
+                Layout.preferredWidth: prv.textControlWidth
+                Layout.alignment: Qt.AlignVCenter
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name + ": " + (textField.currentText || "") : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 currentText: parameterData ? parameterData.currentValueString : ""
                 enabled: parameterData ? !parameterData.isReadOnly : false
 
+                onActiveFocusChanged: {
+                    if (activeFocus) {
+                        root.gestureStarted(root.parameterId)
+                    } else {
+                        root.gestureEnded(root.parameterId)
+                    }
+                }
+
                 onTextEdited: function (newTextValue) {
-                    root.gestureStarted(root.parameterId)
                     root.stringValueChanged(root.parameterId, newTextValue)
-                    root.gestureEnded(root.parameterId)
                 }
             }
         }
@@ -373,8 +446,6 @@ Item {
             text: parameterData ? parameterData.formattedValue : ""
             opacity: 0.7
             wrapMode: Text.WordWrap
-            Layout.alignment: Qt.AlignVCenter
-            Layout.fillWidth: true
             horizontalAlignment: Text.AlignLeft
         }
     }

@@ -3,6 +3,7 @@
 */
 
 #include "au3record.h"
+#include "au3-strings/TranslatableString.h"
 
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
@@ -294,6 +295,14 @@ void Au3Record::init()
         }
         m_recordPosition.set(m_recordPosition.val);
         m_recordingFinished.notify();
+
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(m_recordPosition.val));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
+
+        m_recordData.clear();
+        rebuildRecordingClipKeys();
     });
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
@@ -328,17 +337,10 @@ void Au3Record::init()
             trackeditInteraction()->makeRoomForClip(clipKey);
         }
 
-        commitRecording();
-
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(m_recordPosition.val));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
-
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
-        m_recordData.clear();
-        rebuildRecordingClipKeys();
+
+        commitRecording();
     });
 }
 
@@ -681,9 +683,10 @@ Ret Au3Record::doRecord(Au3Project& project,
         =[&](Au3WaveTrack& track, double t0, bool placeholder) {
         wxString name;
         for (auto i = 1;; ++i) {
-            //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
-            name = (::TranslatableString{ wxT("%s #%d"), {} }.Context("clip name template"))
-                   .Format(track.GetName(), i).Translation();
+            //: a numerical suffix added to distinguish otherwise like-named clips when new record started
+            //: %1 is the track name, %2 is the numerical suffix distinguishing like-named clips
+            name = ::au3::qtToWx(::TranslatableString("audacity", "%1 #%2", "clip name template")
+                                 .arg(track.GetName()).arg(i).translated());
             if (!track.HasClipNamed(name)) {
                 break;
             }

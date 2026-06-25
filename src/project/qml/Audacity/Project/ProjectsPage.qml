@@ -382,7 +382,7 @@ FocusScope {
         height: 48
         width: parent.width
 
-        color: ui.theme.backgroundSecondaryColor
+        color: ui.theme.backgroundTertiaryColor
 
         SeparatorLine {
             anchors.top: parent.top
@@ -447,7 +447,7 @@ FocusScope {
                 text: qsTrc("project", "Open other…")
 
                 onClicked: {
-                    projectsPageModel.openOther()
+                    Qt.callLater(projectsPageModel.openOther)
                 }
             }
         }

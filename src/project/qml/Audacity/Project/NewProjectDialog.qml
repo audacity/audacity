@@ -92,9 +92,7 @@ StyledDialogView {
 
         StyledTextLabel {
             id: descriptionLabel
-            text: pagesStack.currentIndex === 0
-                  ? chooseInstrumentsAndTemplatePage.description
-                  : ""
+            text: pagesStack.currentIndex === 0 ? chooseInstrumentsAndTemplatePage.description : ""
 
             Layout.fillWidth: true
             Layout.maximumHeight: buttonBox.height

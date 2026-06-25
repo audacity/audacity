@@ -5,8 +5,9 @@
 
 #include "framework/global/types/number.h"
 #include "framework/global/log.h"
-#include "internal/spectrogramutils.h"
 #include "spectrogramtypes.h"
+#include "shared/axis/axislabel.h"
+#include "shared/axis/axisticks.h"
 
 namespace au::spectrogram {
 SpectrogramChannelRulerModel::SpectrogramChannelRulerModel(QObject* parent)
@@ -48,7 +49,7 @@ void SpectrogramChannelRulerModel::updateTicks()
     IF_ASSERT_FAILED(config) {
         return;
     }
-    m_ticks = spectrogramRulerTicks(*config, m_labelHeight, m_channelHeight);
+    m_ticks = au::shared::axisTicks(config->minFreq(), config->maxFreq(), config->scale());
 }
 
 int SpectrogramChannelRulerModel::trackId() const
@@ -272,58 +273,27 @@ void SpectrogramChannelRulerModel::scrollBy(double delta)
     spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
 }
 
-namespace {
-QString valueToLabel(double value, int decimalDigits)
-{
-    if (value >= 1000 && decimalDigits < 3) {
-        auto label = QString::number(value / 1000, 'f', decimalDigits);
-        // remove trailing zeros and dot if any, not using regular expressions
-        while (((label.contains('.') && (label.endsWith('0'))) || label.endsWith('.'))) {
-            label.chop(1);
-        }
-        return label + "k";
-    } else {
-        return QString::number(value, 'f', decimalDigits);
-    }
-}
-
-QVariantList toVariantList(const std::vector<SpectrogramRulerTick>& ticks)
-{
-    QVariantList list;
-    list.reserve(ticks.size());
-
-    std::vector<QString> labels;
-    labels.reserve(ticks.size());
-    auto numDecimalDigits = 0;
-    constexpr auto maxDecimalDigits = 3;
-    // Derive the labels. If some are the same, increase the number of decimal digits until they are all different (or we reach the max).
-    while (numDecimalDigits <= maxDecimalDigits) {
-        labels.clear();
-        for (const auto& tick : ticks) {
-            labels.push_back(valueToLabel(tick.val, numDecimalDigits));
-        }
-        const auto someLabelsAreTheSame = std::adjacent_find(labels.begin(), labels.end()) != labels.end();
-        if (!someLabelsAreTheSame) {
-            break;
-        }
-        ++numDecimalDigits;
-    }
-
-    for (auto i = 0; i < static_cast<int>(ticks.size()); ++i) {
-        list.append(QVariant::fromValue(QVariantMap { { "y", ticks[i].pos }, { "label", labels[i] } }));
-    }
-
-    return list;
-}
-}
-
 QVariantList SpectrogramChannelRulerModel::majorTicks() const
 {
-    return toVariantList(m_ticks.major);
+    return tickListToVariants(m_ticks.major);
 }
 
 QVariantList SpectrogramChannelRulerModel::minorTicks() const
 {
-    return toVariantList(m_ticks.minor);
+    return tickListToVariants(m_ticks.minor);
+}
+
+QVariantList SpectrogramChannelRulerModel::tickListToVariants(const std::vector<au::shared::AxisTick>& ticks) const
+{
+    const std::vector<std::string> labels = au::shared::labelsForTicks(ticks, m_labelHeight, m_channelHeight);
+    QVariantList list;
+    list.reserve(ticks.size());
+    for (auto i = 0; i < static_cast<int>(ticks.size()); ++i) {
+        list.append(QVariant::fromValue(QVariantMap {
+                { "y", (1.0 - ticks[i].position) * m_channelHeight },
+                { "label", QString::fromStdString(labels[i]) },
+            }));
+    }
+    return list;
 }
 }

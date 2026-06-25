@@ -17,7 +17,7 @@ Item {
     property alias tracksModel: tracksModel
     property NavigationPanel effectColumnNavigationPanel: null
 
-    signal openEffectsRequested()
+    signal openEffectsRequested
     signal panelActive(var trackId)
 
     property NavigationSection trackEffectsNavigationSection: null
@@ -36,8 +36,7 @@ Item {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
-            let headerHeight = view.header.height ? view.header.height : 0
-            view.contentY = tracksViewState.tracksVerticalOffset
+            view.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
         }
     }
 
@@ -51,6 +50,12 @@ Item {
         id: prv
 
         property string currentItemNavigationName: ""
+        readonly property int listHeaderHeight: 2
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: ui.theme.backgroundSecondaryColor
     }
 
     RowLayout {
@@ -73,7 +78,7 @@ Item {
                 id: effectSectionModel
 
                 onFocusEffectsPanelRequested: {
-                    Qt.callLater(function() {
+                    Qt.callLater(function () {
                         if (root.effectColumnNavigationPanel && effectColumn.visible) {
                             root.effectColumnNavigationPanel.requestActive()
                         }
@@ -81,7 +86,7 @@ Item {
                 }
             }
 
-            SeparatorLine { }
+            SeparatorLine {}
 
             TrackEffectsSection {
                 id: trackEffectsSection
@@ -113,12 +118,12 @@ Item {
                     property real startY: 0
                     property real startHeight: 0
 
-                    onPressed: (mouse) => {
+                    onPressed: mouse => {
                         startY = mouse.y
                         startHeight = trackEffectsSection.height
                     }
 
-                    onPositionChanged: (mouse) => {
+                    onPositionChanged: mouse => {
                         const deltaY = mouse.y - startY
                         const newMasterHeight = masterEffectsSection.height - deltaY
                         masterEffectsSection.Layout.preferredHeight = Math.min(newMasterHeight, effectColumn.height - trackEffectsSection.minimumHeight)
@@ -141,7 +146,7 @@ Item {
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         ColumnLayout {
             id: contentColumn
@@ -174,9 +179,8 @@ Item {
                 onContentYChanged: {
                     if (verticalScrollLocked) {
                         view.contentY = lockedVerticalScrollPosition
-                    }
-                    else {
-                        tracksViewState.changeTracksVerticalOffset(view.contentY)
+                    } else {
+                        tracksViewState.changeTracksVerticalOffset(view.contentY + prv.listHeaderHeight)
                     }
                 }
 
@@ -185,7 +189,7 @@ Item {
                 model: tracksModel
 
                 header: Rectangle {
-                    height: 2
+                    height: prv.listHeaderHeight
                     width: parent.width
                     color: "transparent"
                 }
@@ -196,7 +200,7 @@ Item {
 
                 function insureVerticallyVisible(item) {
                     var itemViewY = item.mapToItem(view.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(view.contentY, view.height, itemViewY, item.height)
+                    tracksViewState.insureVerticallyVisible(view.contentY + prv.listHeaderHeight, view.height, itemViewY + prv.listHeaderHeight, item.height)
                 }
 
                 delegate: Loader {
@@ -249,6 +253,10 @@ Item {
                                 tracksModel.selectRow(index, exclusive)
                             }
 
+                            onDataSelectionRequested: {
+                                tracksModel.selectAudioData(index)
+                            }
+
                             onOpenEffectsRequested: {
                                 effectSectionModel.showEffectsSection = true
                                 root.openEffectsRequested()
@@ -258,7 +266,7 @@ Item {
                                 tracksModel.removeSelection()
                             }
 
-                            onMouseReleased: function(releasedItem, x, y) {
+                            onMouseReleased: function (releasedItem, x, y) {
                                 root.panelActive(item.trackId)
                             }
 
@@ -306,6 +314,10 @@ Item {
                                 tracksModel.selectRow(index, exclusive)
                             }
 
+                            onDataSelectionRequested: {
+                                tracksModel.selectAudioData(index)
+                            }
+
                             onRemoveSelectionRequested: {
                                 tracksModel.removeSelection()
                             }
@@ -314,7 +326,7 @@ Item {
                                 tracksModel.addLabelToSelection()
                             }
 
-                            onMouseReleased: function(releasedItem, x, y) {
+                            onMouseReleased: function (releasedItem, x, y) {
                                 root.panelActive(item.trackId)
                             }
 
@@ -335,10 +347,10 @@ Item {
                     WheelHandler {
                         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
 
-                        onWheel: function(wheelEvent) {
+                        onWheel: function (wheelEvent) {
                             let headerHeight = view.headerItem ? view.headerItem.height : 0
                             let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
-                            let offset  = view.contentY - delta
+                            let offset = view.contentY - delta
 
                             let maxContentY = view.contentHeight - view.height
                             maxContentY = Math.max(maxContentY, view.contentY)
@@ -420,16 +432,14 @@ Item {
                             if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY - view.contentY).y) {
                                 indexAtCursor++
                             }
-                        }
-                        else {
+                        } else {
                             indexAtCursor = mouseY < 0 ? 0 : view.count
                         }
 
-                        if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor ) {
+                        if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor) {
                             dropIndex = indexAtCursor
                             setDraggedStateForTracks(true)
-                        }
-                        else {
+                        } else {
                             dropIndex = -1
                             setDraggedStateForTracks(false)
                         }
@@ -437,11 +447,11 @@ Item {
 
                     function setDraggedStateForTracks(state) {
                         tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
-                                                                                 let loader = view.itemAtIndex(selectedIndex.row)
-                                                                                 if (Boolean(loader) && Boolean(loader.item)) {
-                                                                                     loader.item.dragged = state
-                                                                                 }
-                                                                             })
+                            let loader = view.itemAtIndex(selectedIndex.row)
+                            if (Boolean(loader) && Boolean(loader.item)) {
+                                loader.item.dragged = state
+                            }
+                        })
                     }
                 }
             }

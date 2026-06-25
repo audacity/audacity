@@ -52,17 +52,13 @@ ApplicationWindow {
         }
     }
 
-
     RowLayout {
         anchors.fill: parent
-
 
         NotationView {
             id: notationView
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
-
     }
-
 }

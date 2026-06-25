@@ -15,11 +15,7 @@ StyledPopupView {
 
     property alias popupAnchorItem: root.anchorItem
 
-    signal createTrack(type : int)
-
-    AddNewTrackPopupModel {
-        id: addModel
-    }
+    signal createTrack(type: int)
 
     NavigationPanel {
         id: navPanel
@@ -30,7 +26,7 @@ StyledPopupView {
     }
 
     onOpened: {
-        Qt.callLater(function() {
+        Qt.callLater(function () {
             root.repositionWindowIfNeed()
         })
         navPanel.requestActive()
@@ -43,9 +39,24 @@ StyledPopupView {
 
         Repeater {
             model: [
-                { type: TrackType.MONO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Mono"), enabled: true },
-                { type: TrackType.STEREO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Stereo"), enabled: true },
-                { type: TrackType.LABEL, icon: IconCode.LOOP_IN, text: qsTrc("projectscene", "Label"), enabled: addModel.isAddLabelAvailable() }
+                {
+                    type: TrackType.MONO,
+                    icon: IconCode.MICROPHONE,
+                    text: qsTrc("projectscene", "Mono"),
+                    enabled: true
+                },
+                {
+                    type: TrackType.STEREO,
+                    icon: IconCode.MICROPHONE,
+                    text: qsTrc("projectscene", "Stereo"),
+                    enabled: true
+                },
+                {
+                    type: TrackType.LABEL,
+                    icon: IconCode.LOOP_IN,
+                    text: qsTrc("projectscene", "Label"),
+                    enabled: true
+                }
             ]
 
             FlatButton {

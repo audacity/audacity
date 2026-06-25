@@ -8,13 +8,19 @@
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [
+                // "--memory-leak-report", // Enable memory-leak reporting
                 // Comment this out to run audacity in plugin registration mode
                 // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
             ],
             "environment": [
                 {
+                    "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
+                    "value": "${env:QTDIR}/plugins/platforms"
+                },
+                {
+                    // The install step copies everything needed to `app/bin`
                     "name": "PATH",
-                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
+                    "value": "${env:PATH};${workspaceFolder}/build/audacity-debug/src/app/bin"
                 }
             ],
             "sourceFileMap": {

@@ -175,7 +175,7 @@ public:
         BasicUI::CallAfter(
             [this, message = error.GetMessage(), helpPage = error.GetHelpPageId()]
         {
-            ShowExportErrorDialog(message, XO("Export failed"), helpPage, true);
+            ShowExportErrorDialog(message, TranslatableString("cloud-audiocom", "Export failed"), helpPage, true);
         });
     }
 
@@ -186,14 +186,14 @@ public:
         BasicUI::CallAfter(
             [this, message = error.What()]
         {
-            ShowExportErrorDialog(Verbatim(message), XO("Export failed"), true);
+            ShowExportErrorDialog(TranslatableString::untranslatable(message), TranslatableString("cloud-audiocom", "Export failed"), true);
         });
     }
 
     void HandleUnkonwnException()
     {
         mParent.ReportProgress(MixdownState::Failed, 1.0, {});
-        BasicUI::CallAfter([] { BasicUI::ShowMessageBox(XO("Export error")); });
+        BasicUI::CallAfter([] { BasicUI::ShowMessageBox(TranslatableString("cloud-audiocom", "Export error")); });
     }
 
 private:
