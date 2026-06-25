@@ -757,7 +757,7 @@ IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityPr
         IInteractive::Button::Cancel,
         IInteractive::Button::Save
     }, IInteractive::Button::Save, { IInteractive::Option::WithIcon },
-    muse::trc("project", "Unsaved changes"));
+                                                             muse::trc("project", "Unsaved changes"));
 
     return result.standardButton();
 }

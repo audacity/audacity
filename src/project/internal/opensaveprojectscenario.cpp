@@ -97,7 +97,8 @@ const char* DEFAULT_CLOUD_ERROR_TITLE = "Cloud error";
 const char* DEFAULT_CLOUD_ERROR_TEXT = "An error occurred while syncing with the cloud. Please try again later.";
 
 const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TITLE = "Couldn't download audio";
-const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT = "Something went wrong while downloading your audio from audio.com. Please try again, or visit audio.com for help.";
+const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT
+    = "Something went wrong while downloading your audio from audio.com. Please try again, or visit audio.com for help.";
 
 const char* PROJECT_INCOMPLETE_TITLE = "Cloud project incomplete";
 const char* PROJECT_INCOMPLETE_TEXT
@@ -488,8 +489,8 @@ muse::RetVal<muse::io::path_t> OpenSaveProjectScenario::resolveLegacyProjectForm
         muse::IInteractive::ButtonData(
             muse::IInteractive::Button::Apply, muse::trc("project/open", "Save as new project"), true)
     },
-    int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
-    muse::trc("project/open", "Legacy project"));
+                                          int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
+                                          muse::trc("project/open", "Legacy project"));
 
     if (ret.standardButton() != muse::IInteractive::Button::Apply) {
         return muse::make_ret(Ret::Code::Cancel);
@@ -519,8 +520,8 @@ muse::RetVal<muse::io::path_t> OpenSaveProjectScenario::resolveLegacyProjectForm
         muse::IInteractive::ButtonData(
             muse::IInteractive::Button::Ok, muse::trc("project/open", "Continue"), false)
     },
-    int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
-    muse::trc("project/open", "Project saved"));
+                            int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
+                            muse::trc("project/open", "Project saved"));
     return RetVal<muse::io::path_t>::make_ok(newFilename);
 }
 
