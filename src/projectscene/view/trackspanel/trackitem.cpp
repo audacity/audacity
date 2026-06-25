@@ -52,7 +52,11 @@ void TrackItem::init(const trackedit::Track& track)
         emit titleChanged(m_title);
     }
 
-    m_icon = iconFromTrackType(track.type);
+    const auto icon = iconFromTrackType(track.type);
+    if (m_icon != icon) {
+        m_icon = icon;
+        emit iconChanged();
+    }
 
     m_isFocused = trackNavigationController()->focusedTrack() == m_trackId;
     emit isFocusedChanged();

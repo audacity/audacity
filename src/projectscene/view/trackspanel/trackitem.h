@@ -27,7 +27,7 @@ class TrackItem : public QObject, public muse::Contextable, public muse::async::
 
     Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(int icon READ icon CONSTANT)
+    Q_PROPERTY(int icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(au::trackedit::TrackType trackType READ trackType NOTIFY trackTypeChanged)
 
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
@@ -66,6 +66,7 @@ signals:
     void titleChanged(QString title);
 
     void trackTypeChanged();
+    void iconChanged();
 
     void isSelectedChanged();
     void isFocusedChanged();
