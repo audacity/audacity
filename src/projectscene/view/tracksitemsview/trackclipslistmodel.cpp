@@ -754,10 +754,28 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     constexpr auto complete = true;
+
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        const trackedit::TrackItemKey anchor = trackNavigationController()->focusedItem();
+        if (anchor.isValid() && anchor.trackId == key.key.trackId) {
+            const ClipKeyList rangeKeys = itemKeysInRange(anchor, key.key);
+            if (!rangeKeys.empty()) {
+                selectionController()->resetSelectedLabels();
+                selectionController()->setSelectedClips(rangeKeys, complete);
+                return;
+            }
+        }
+
+        selectionController()->resetSelectedLabels();
+        selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
+        setFocusedItem(key);
+        return;
+    }
+
     const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
-        if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (modifiers.testFlag(Qt::ControlModifier)) {
             const auto groupedClips = trackeditInteraction()->clipsInGroup(clipGroupId);
             const auto selectedClips = selectionController()->selectedClips();
             const bool allGroupClipsSelected = std::all_of(groupedClips.cbegin(), groupedClips.cend(), [&](const auto& groupClipKey) {
@@ -777,7 +795,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             trackNavigationController()->setFocusedTrack(key.key.trackId);
         }
     } else {
-        if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (modifiers.testFlag(Qt::ControlModifier)) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
                 m_pendingShiftDeselect = { key.key };
             } else {

@@ -102,6 +102,8 @@ protected:
     ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
     int indexByKey(const trackedit::TrackItemKey& key) const;
 
+    trackedit::TrackItemKeyList itemKeysInRange(const trackedit::TrackItemKey& anchor, const trackedit::TrackItemKey& target) const;
+
     void requestItemTitleChange();
     virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;
 

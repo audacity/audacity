@@ -239,6 +239,27 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
+        const trackedit::TrackItemKey anchor = trackNavigationController()->focusedItem();
+        if (anchor.isValid() && anchor.trackId == key.key.trackId) {
+            const LabelKeyList rangeKeys = itemKeysInRange(anchor, key.key);
+            if (!rangeKeys.empty()) {
+                selectionController()->resetDataSelection();
+                selectionController()->resetSelectedClips();
+                selectionController()->setSelectedLabels(rangeKeys, true);
+                m_needToSelectTracksData = false;
+                return;
+            }
+        }
+
+        selectionController()->resetDataSelection();
+        selectionController()->resetSelectedClips();
+        selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
+        setFocusedItem(key);
+        m_needToSelectTracksData = false;
+        return;
+    }
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
             m_pendingShiftDeselect = key.key;
         } else {
