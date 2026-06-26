@@ -35,6 +35,7 @@ public:
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
+    void showTourPage();
     void openSignInDialog(const muse::actions::ActionQuery& query);
     void openCreateAccountDialog(const muse::actions::ActionQuery& query);
     void openCloudProjectPage(const muse::actions::ActionQuery& query);
