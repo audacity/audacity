@@ -250,9 +250,9 @@ void PlaybackController::togglePlayAction()
     const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
         if (isShiftPressed) {
-            stopSeekAndUpdatePlaybackRegion();
-        } else {
             doPause();
+        } else {
+            stopSeekAndUpdatePlaybackRegion();
         }
     } else if (isPaused()) {
         if (isSelectionPlaybackRegionChanged()) {
@@ -266,12 +266,14 @@ void PlaybackController::togglePlayAction()
         } else {
             doResume();
         }
-    } else {
+    } else if (isStopped()) {
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             doSeek(0.0, false);
         }
 
         doPlay(isShiftPressed /* ignoreSelection */);
+    } else {
+        // that shouldn't happen
     }
 }
 
