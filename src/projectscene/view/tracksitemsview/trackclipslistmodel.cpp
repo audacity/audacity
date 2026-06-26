@@ -751,11 +751,11 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
 
 void TrackClipsListModel::selectClip(const ClipKey& key)
 {
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
-
     constexpr auto complete = true;
 
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
+    const SelectionMode mode = selectionMode();
+
+    if (mode == SelectionMode::Range) {
         const trackedit::TrackItemKey anchor = trackNavigationController()->focusedItem();
         if (anchor.isValid() && anchor.trackId == key.key.trackId) {
             const ClipKeyList rangeKeys = itemKeysInRange(anchor, key.key);
@@ -775,7 +775,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
-        if (modifiers.testFlag(Qt::ControlModifier)) {
+        if (mode == SelectionMode::Toggle) {
             const auto groupedClips = trackeditInteraction()->clipsInGroup(clipGroupId);
             const auto selectedClips = selectionController()->selectedClips();
             const bool allGroupClipsSelected = std::all_of(groupedClips.cbegin(), groupedClips.cend(), [&](const auto& groupClipKey) {
@@ -795,7 +795,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             trackNavigationController()->setFocusedTrack(key.key.trackId);
         }
     } else {
-        if (modifiers.testFlag(Qt::ControlModifier)) {
+        if (mode == SelectionMode::Toggle) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
                 m_pendingShiftDeselect = { key.key };
             } else {

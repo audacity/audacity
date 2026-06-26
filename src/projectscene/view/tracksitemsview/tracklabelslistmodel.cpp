@@ -236,9 +236,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         return;
     }
 
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+    const SelectionMode mode = selectionMode();
 
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
+    if (mode == SelectionMode::Range) {
         const trackedit::TrackItemKey anchor = trackNavigationController()->focusedItem();
         if (anchor.isValid() && anchor.trackId == key.key.trackId) {
             const LabelKeyList rangeKeys = itemKeysInRange(anchor, key.key);
@@ -259,7 +259,7 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         return;
     }
 
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (mode == SelectionMode::Toggle) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
             m_pendingShiftDeselect = key.key;
         } else {

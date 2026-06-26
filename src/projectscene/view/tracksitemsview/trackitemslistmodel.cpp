@@ -541,6 +541,21 @@ Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
     return modifiers;
 }
 
+au::trackedit::SelectionMode TrackItemsListModel::selectionMode() const
+{
+    const Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        return SelectionMode::Range;
+    }
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        return SelectionMode::Toggle;
+    }
+
+    return SelectionMode::Replace;
+}
+
 int TrackItemsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;

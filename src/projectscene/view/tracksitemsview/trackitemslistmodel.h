@@ -130,6 +130,8 @@ protected:
     int calculateTrackPositionOffset(const TrackItemKey& key, const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const;
     bool isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes, const trackedit::TrackId& movedTrackId) const;
 
+    trackedit::SelectionMode selectionMode() const;
+
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     friend class TrackClipsSelectionTests;
