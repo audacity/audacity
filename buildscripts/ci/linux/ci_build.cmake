@@ -41,7 +41,7 @@ elseif(BUILD_MODE STREQUAL "stable_build")
 endif()
 
 
-# Build 
+# Build
 set(CONFIG
     -DBUILD_TYPE=appimage
     -DBUILD_MODE=${APP_BUILD_MODE}
@@ -49,6 +49,7 @@ set(CONFIG
     -DBUILD_REVISION=${BUILD_REVISION}
     -DINSTALL_SUFFIX=${APP_SUFFIX}
     -DCRASH_REPORT_URL=${CRASH_REPORT_URL}
+    -DENABLE_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}
 )
 
 execute_process(
@@ -56,7 +57,7 @@ execute_process(
     RESULT_VARIABLE BUILD_RESULT
 )
 
-if (BUILD_RESULT GREATER 0) 
+if (BUILD_RESULT GREATER 0)
     message(FATAL_ERROR "Failed build")
 endif()
 

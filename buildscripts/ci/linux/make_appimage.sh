@@ -25,32 +25,12 @@ mkdir -p $BUILD_TOOLS
 # INSTALL APPIMAGETOOL AND LINUXDEPLOY
 ##########################################################################
 
-function download_github_release()
-{
-  local -r repo_slug="$1" release_tag="$2" file="$3"
-  if [[ "${release_tag}" == "latest" ]]; then
-    local -r url="https://github.com/${repo_slug}/releases/latest/download/${file}"
-  else
-    local -r url="https://github.com/${repo_slug}/releases/download/${release_tag}/${file}"
-  fi
-  # use curl instead of wget which fails on armhf
-  curl "${url}" -O -L
-  chmod +x "${file}"
-}
-
 function extract_appimage()
 {
   # Extract AppImage so we can run it without having to install FUSE
   local -r appimage="$1" binary_name="$2"
   local -r appdir="${appimage%.AppImage}.AppDir"
-  # run appimage in docker container with QEMU emulation directly since binfmt fails
-  if [[ "$PACKARCH" == aarch64 ]]; then
-    /usr/bin/qemu-aarch64-static "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
-  elif [[ "$PACKARCH" == armhf ]]; then
-    /usr/bin/qemu-arm-static "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
-  else
-    "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
-  fi
+  "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
   mv squashfs-root "${appdir}" # rename folder to avoid collisions
   # wrapper script for convenience
   printf '#!/bin/sh\nexec "%s/AppRun" "$@"\n' "$(readlink -f "${appdir}")" > "${binary_name}"
@@ -58,74 +38,46 @@ function extract_appimage()
   rm -f "${appimage}"
 }
 
-function download_appimage_release()
+function install_appimage_tool()
 {
-  local -r github_repo_slug="$1" binary_name="$2" tag="$3"
+  local -r binary_name="$1"
   local -r appimage="${binary_name}-${PACKARCH}.AppImage"
-  download_github_release "${github_repo_slug}" "${tag}" "${appimage}"
+  local tool_path
+  tool_path="$(command -v "${binary_name}")" || { echo "error: ${binary_name} not provided via extdeps (require_tool)"; exit 1; }
+  cp "${tool_path}" "${appimage}"
+  chmod +x "${appimage}"
   extract_appimage "${appimage}" "${binary_name}"
-  # mv "${appimage}" "${binary_name}" # use this instead of the previous line for the static runtime AppImage
 }
 
 if [[ ! -d $BUILD_TOOLS/appimagetool ]]; then
   mkdir $BUILD_TOOLS/appimagetool
   cd $BUILD_TOOLS/appimagetool
-  download_appimage_release AppImage/appimagetool appimagetool continuous # use AppImage/appimagetool for the static runtime AppImage
+  install_appimage_tool appimagetool
   cd $ORIGIN_DIR
 fi
 export PATH="$BUILD_TOOLS/appimagetool:$PATH"
 appimagetool --version
 
-function download_linuxdeploy_component()
-{
-  download_appimage_release "linuxdeploy/$1" "$1" continuous
-}
-
 if [[ ! -f $BUILD_TOOLS/linuxdeploy/linuxdeploy ]]; then
   mkdir -p $BUILD_TOOLS/linuxdeploy
   cd $BUILD_TOOLS/linuxdeploy
-  download_linuxdeploy_component linuxdeploy
+  install_appimage_tool linuxdeploy
   cd $ORIGIN_DIR
 fi
 if [[ ! -f $BUILD_TOOLS/linuxdeploy/linuxdeploy-plugin-qt ]]; then
   mkdir -p $BUILD_TOOLS/linuxdeploy
   cd $BUILD_TOOLS/linuxdeploy
-  download_linuxdeploy_component linuxdeploy-plugin-qt
+  install_appimage_tool linuxdeploy-plugin-qt
   cd $ORIGIN_DIR
 fi
 export PATH="$BUILD_TOOLS/linuxdeploy:$PATH"
 linuxdeploy --list-plugins
 
 if [[ ! -d $BUILD_TOOLS/appimageupdatetool ]]; then
-  if [[ "$PACKARCH" == aarch64 ]] || [[ "$PACKARCH" == armhf ]]; then
-    ##########################################################################
-    # Compile and install appimageupdatetool
-    ##########################################################################
-
-    git clone https://github.com/AppImageCommunity/AppImageUpdate.git
-    cd AppImageUpdate
-    git checkout --recurse-submodules 2.0.0-alpha-1-20220512
-    git submodule update --init --recursive
-    mkdir -p build
-    cd build
-
-    cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_SYSTEM_NAME=Linux ..
-    make -j"$(nproc)"
-    # create the extracted appimage directory
-    mkdir -p $BUILD_TOOLS/appimageupdatetool
-    make install DESTDIR=$BUILD_TOOLS/appimageupdatetool/appimageupdatetool-${PACKARCH}.AppDir
-    mkdir -p $BUILD_TOOLS/appimageupdatetool/appimageupdatetool-${PACKARCH}.AppDir/resources
-    cp -v ../resources/*.xpm $BUILD_TOOLS/appimageupdatetool/appimageupdatetool-${PACKARCH}.AppDir/resources/
-    $BUILD_TOOLS/linuxdeploy/linuxdeploy -v0 --appdir $BUILD_TOOLS/appimageupdatetool/appimageupdatetool-${PACKARCH}.AppDir  --output appimage -d ../resources/appimageupdatetool.desktop -i ../resources/appimage.png
-    cd $BUILD_TOOLS/appimageupdatetool
-    ln -s "appimageupdatetool-${PACKARCH}.AppDir/AppRun" appimageupdatetool # symlink for convenience
-    cd $ORIGIN_DIR
-  else
-    mkdir $BUILD_TOOLS/appimageupdatetool
-    cd $BUILD_TOOLS/appimageupdatetool
-    download_appimage_release AppImage/AppImageUpdate appimageupdatetool continuous
-    cd $ORIGIN_DIR
-  fi
+  mkdir $BUILD_TOOLS/appimageupdatetool
+  cd $BUILD_TOOLS/appimageupdatetool
+  install_appimage_tool appimageupdatetool
+  cd $ORIGIN_DIR
 fi
 if [[ "${UPDATE_INFORMATION}" ]]; then
   export PATH="$BUILD_TOOLS/appimageupdatetool:$PATH"
@@ -244,8 +196,6 @@ additional_qt_components=(
 # linuxdeploy may have missed some libraries that we need
 # Report new additions at https://github.com/linuxdeploy/linuxdeploy/issues
 additional_libraries=(
-  libssl.so.1.1       # OpenSSL (for Save Online)
-  libcrypto.so.1.1    # OpenSSL (for Save Online)
 )
 
 # FALLBACK LIBRARIES

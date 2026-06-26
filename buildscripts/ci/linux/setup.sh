@@ -148,49 +148,10 @@ else
   echo "Unknown compiler: $COMPILER"
 fi
 
-# CMAKE
-# Get newer CMake (only used cached version if it is the same)
-cmake_dir="$BUILD_TOOLS/cmake/3.24.0"
-if [[ ! -d "$cmake_dir" ]]; then
-  mkdir -p "$cmake_dir"
-  cmake_url="https://cmake.org/files/v3.24/cmake-3.24.0-linux-x86_64.tar.gz"
-  wget -q --show-progress --no-check-certificate -O - "${cmake_url}" | tar --strip-components=1 -xz -C "${cmake_dir}"
-fi
-echo export PATH="$cmake_dir/bin:\${PATH}" >> ${ENV_FILE}
-$cmake_dir/bin/cmake --version
-
-# Ninja
-echo "Get Ninja"
-ninja_dir=$BUILD_TOOLS/Ninja
-if [[ ! -d "$ninja_dir" ]]; then
-  mkdir -p $ninja_dir
-  wget -q --show-progress -O $ninja_dir/ninja "https://s3.amazonaws.com/utils.musescore.org/build_tools/linux/Ninja/ninja"
-  chmod +x $ninja_dir/ninja
-fi
-echo export PATH="${ninja_dir}:\${PATH}" >> ${ENV_FILE}
+cmake --version
+sudo apt-get install -y ninja-build
 echo "ninja version"
-$ninja_dir/ninja --version
-
-# Dump syms
-echo "Get Breakpad"
-breakpad_dir=$BUILD_TOOLS/breakpad
-if [[ ! -d "$breakpad_dir" ]]; then
-  wget -q --show-progress -O $BUILD_TOOLS/dump_syms.7z "https://s3.amazonaws.com/utils.musescore.org/breakpad/linux/x86-64/dump_syms.7z"
-  7z x -y $BUILD_TOOLS/dump_syms.7z -o"$breakpad_dir"
-fi
-echo export DUMPSYMS_BIN="$breakpad_dir/dump_syms" >> $ENV_FILE
-
-##########################################################################
-# OTHER
-##########################################################################
-# TODO: https://github.com/musescore/MuseScore/issues/11689
-#echo "Get VST"
-#vst_dir=$BUILD_TOOLS/vst
-#if [[ ! -d "$vst_dir" ]]; then
-#  wget -q --show-progress -O $BUILD_TOOLS/vst_sdk.7z "https://s3.amazonaws.com/utils.musescore.org/VST3_SDK_379.7z"
-#  7z x -y $BUILD_TOOLS/vst_sdk.7z -o"$vst_dir"
-#fi
-#echo export VST3_SDK_PATH="$vst_dir/VST3_SDK" >> $ENV_FILE
+ninja --version
 
 ##########################################################################
 # POST INSTALL

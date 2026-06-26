@@ -49,8 +49,6 @@ add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 include(GetPlatformInfo)
 
-include(SetupDependencies)
-
 ###########################################
 # Setup option and build settings
 ###########################################
@@ -125,7 +123,6 @@ option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
 
 option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
 
-set(AU_MODULE_VST_VST3_SDK_PATH "" CACHE PATH "[optional] Path to VST3_SDK. SDK version >= ${VST3_SDK_VERSION} required")
 
 option(AU_MODULE_EFFECTS_NYQUIST "Build audacity nyquist module" ON)
 
@@ -197,6 +194,9 @@ endif(MUSE_COMPILE_USE_CCACHE)
 ###########################################
 set(QT_MIN_VERSION "6.2.4")
 include(SetupQt6)
+
+# This should be called after all options() are resolved
+include(SetupDependencies)
 
 ###########################################
 # Add source tree

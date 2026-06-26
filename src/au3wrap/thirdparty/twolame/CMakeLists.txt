@@ -1,7 +1,8 @@
 set(TARGET twolame)
 add_library(${TARGET} STATIC)
 
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/twolame)
+get_property(_src GLOBAL PROPERTY twolame_SOURCE_DIR)
+set(TARGET_ROOT ${_src}/twolame)
 
 list(APPEND SOURCES
    PRIVATE
@@ -61,11 +62,12 @@ check_include_file(string.h   HAVE_STRING_H)
 check_type_size("short" SIZEOF_SHORT)
 check_type_size("float" SIZEOF_FLOAT)
 
-if(NOT SIZEOF_SHORT EQUAL 2)
-   message(FATAL_ERROR "twolame: sizeof(short)=${SIZEOF_SHORT}, expected 2 (16-bit short).")
+# Autodetection is not working on WoA, set these defautls
+if(NOT SIZEOF_SHORT)
+   set(SIZEOF_SHORT 2)
 endif()
-if(NOT SIZEOF_FLOAT EQUAL 4)
-   message(FATAL_ERROR "twolame: sizeof(float)=${SIZEOF_FLOAT}, expected 4 (32-bit float).")
+if(NOT SIZEOF_FLOAT)
+   set(SIZEOF_FLOAT 4)
 endif()
 
 test_big_endian(WORDS_BIGENDIAN)

@@ -1,7 +1,8 @@
 set(TARGET soundtouch)
 add_library( ${TARGET} STATIC )
 
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/soundtouch)
+get_property(_src GLOBAL PROPERTY soundtouch_SOURCE_DIR)
+set(TARGET_ROOT ${_src}/soundtouch)
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/source/SoundTouch/AAFilter.cpp

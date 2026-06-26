@@ -1,9 +1,0 @@
-test_portburn: portburn_macosx.cpp portburn_staging.cpp test_portburn.cpp Makefile.macosx
-	g++ \
-		-framework Carbon -framework Cocoa -framework System \
-		-framework DiscRecording \
-		-Wall -g -O \
-		-o test_portburn \
-		portburn_macosx.cpp \
-		portburn_staging.cpp \
-		test_portburn.cpp
