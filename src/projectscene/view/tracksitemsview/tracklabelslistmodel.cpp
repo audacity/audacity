@@ -261,7 +261,7 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     if (mode == SelectionMode::Toggle) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            m_pendingShiftDeselect = key.key;
+            m_pendingToggleDeselect = key.key;
         } else {
             selectionController()->addSelectedLabel(key.key);
         }
@@ -339,9 +339,9 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         return;
     }
 
-    if (m_pendingShiftDeselect.isValid() && m_pendingShiftDeselect == key.key) {
+    if (m_pendingToggleDeselect.isValid() && m_pendingToggleDeselect == key.key) {
         selectionController()->removeLabelSelection(key.key);
-        m_pendingShiftDeselect = {};
+        m_pendingToggleDeselect = {};
         return;
     }
 
@@ -372,7 +372,7 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         return false;
     }
 
-    m_pendingShiftDeselect = {};
+    m_pendingToggleDeselect = {};
 
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -509,7 +509,7 @@ void TrackLabelsListModel::endEditItem(const TrackItemKey& key)
 
     trackeditInteraction()->resetLabelStretchState();
 
-    m_pendingShiftDeselect = {};
+    m_pendingToggleDeselect = {};
 }
 
 TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& k) const

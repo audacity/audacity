@@ -394,7 +394,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
         return false;
     }
 
-    m_pendingShiftDeselect.clear();
+    m_pendingToggleDeselect.clear();
 
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -783,7 +783,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             });
 
             if (allGroupClipsSelected) {
-                m_pendingShiftDeselect = groupedClips;
+                m_pendingToggleDeselect = groupedClips;
             } else {
                 for (const auto& groupClipKey : groupedClips) {
                     selectionController()->addSelectedClip(groupClipKey);
@@ -797,7 +797,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     } else {
         if (mode == SelectionMode::Toggle) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
-                m_pendingShiftDeselect = { key.key };
+                m_pendingToggleDeselect = { key.key };
             } else {
                 selectionController()->addSelectedClip(key.key);
             }
@@ -814,11 +814,11 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
 
 void TrackClipsListModel::handleClipRelease(const ClipKey& key)
 {
-    if (!m_pendingShiftDeselect.empty() && muse::contains(m_pendingShiftDeselect, key.key)) {
-        for (const auto& clipKey : m_pendingShiftDeselect) {
+    if (!m_pendingToggleDeselect.empty() && muse::contains(m_pendingToggleDeselect, key.key)) {
+        for (const auto& clipKey : m_pendingToggleDeselect) {
             selectionController()->removeClipSelection(clipKey);
         }
-        m_pendingShiftDeselect.clear();
+        m_pendingToggleDeselect.clear();
     }
 }
 
@@ -826,7 +826,7 @@ void TrackClipsListModel::endEditItem(const TrackItemKey& key)
 {
     TrackItemsListModel::endEditItem(key);
 
-    m_pendingShiftDeselect.clear();
+    m_pendingToggleDeselect.clear();
 }
 
 void TrackClipsListModel::resetSelectedClips()
