@@ -107,40 +107,25 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         }
     }
 
-    // Audacity plugins (built-in effects and nyquist plugins) are safe. Register them in-process,
-    // because out-of-process registration is slow and users may opt out. Remove them from the list of plugins.
-    muse::io::paths_t audacityPluginPaths;
-    auto it = thirdPartyPluginPaths.begin();
-    while (it != thirdPartyPluginPaths.end()) {
-        const auto& reader = pathToMetaReader.at(*it);
-        const auto metaType = reader->metaType();
+    const auto mid = std::stable_partition(
+        thirdPartyPluginPaths.begin(), thirdPartyPluginPaths.end(),
+        [&](const auto& path) {
+        const auto family = utils::effectFamilyFromCacheType(pathToMetaReader.at(path)->metaType());
+        return !(family == EffectFamily::Nyquist || family == EffectFamily::Builtin);
+    });
 
-        const EffectFamily family = utils::effectFamilyFromCacheType(metaType);
-        const bool isAudacityPlugin = family == EffectFamily::Nyquist || family == EffectFamily::Builtin;
-        if (isAudacityPlugin) {
-            audacityPluginPaths.push_back(*it);
-            it = thirdPartyPluginPaths.erase(it);
-        } else {
-            ++it;
-        }
-    }
+    muse::io::paths_t audacityPluginPaths(mid, thirdPartyPluginPaths.end());
+    thirdPartyPluginPaths.erase(mid, thirdPartyPluginPaths.end());
 
-    // Mark missing plugins without deleting cache entries — the framework wants
-    // to preserve the meta so the user can still see "the plugin I had is gone".
-    // Rediscovered (formerly Missing, found again) paths come back in
-    // scanResult.newPluginPaths and are re-validated below, not trusted.
-    // Mirrors RegisterAudioPluginsScenario::updatePluginsRegistry().
     knownPluginsRegister()->setPluginsState(scanResult.missingPluginPaths,
                                             muse::audioplugins::AudioPluginState::Missing);
 
+    // built-in and nyquist plugins are trusted, register in-process
     for (const io::path_t& path : audacityPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
     }
 
     if (!thirdPartyPluginPaths.empty()) {
-        // Skip ("validate later") still records the plugins as Discovered so
-        // scanPlugins() can re-offer them on the next launch. Validate runs
-        // the full out-of-process scan.
         const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
         const muse::Ret ret = registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
         if (!ret) {
