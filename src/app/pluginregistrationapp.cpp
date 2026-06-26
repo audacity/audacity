@@ -65,14 +65,8 @@ int PluginRegistrationApp::processAudioPluginRegistration(const muse::modularity
         return 1;
     }
 
-    Ret ret = make_ret(Ret::Code::Ok);
-
     const auto& task = options->audioPluginRegistration;
-    if (task.failedPlugin) {
-        ret = scenario->registerFailedPlugin(task.pluginPath, task.failCode);
-    } else {
-        ret = scenario->registerPlugin(task.pluginPath);
-    }
+    Ret ret = scenario->validatePlugin(task.pluginPath, task.outputPath);
 
     if (!ret) {
         LOGE() << ret.toString();
