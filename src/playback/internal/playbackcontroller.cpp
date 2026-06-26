@@ -11,7 +11,8 @@ using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/togglePlayPause");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/togglePlayStop");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
@@ -31,7 +32,8 @@ static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_QUERY, this, &PlaybackController::togglePlayStopAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
@@ -240,7 +242,35 @@ void PlaybackController::onPlaybackPositionChanged()
     }
 }
 
-void PlaybackController::togglePlayAction()
+void PlaybackController::togglePlayPauseAction()
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return;
+    }
+
+    if (isPlaying()) {
+        doPause();
+    } else if (isPaused()) {
+        if (isSelectionPlaybackRegionChanged()) {
+            //! NOTE: just stop, without seek
+            player()->stop();
+            doPlay(false);
+        } else {
+            doResume();
+        }
+    } else if (isStopped()) {
+        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+            doSeek(0.0, false);
+        }
+
+        doPlay(false /* ignoreSelection */);
+    } else {
+        // that shouldn't happen
+    }
+}
+
+void PlaybackController::togglePlayStopAction()
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
@@ -774,9 +804,10 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAYBACK_PLAY_QUERY.toString()) {
-        return !recordController()->isRecording();
-    }
+    // commenting this one as we should be able to togglePlayPause (pause/resume) while recording
+    // if (code == PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()) {
+    //     return !recordController()->isRecording();
+    // }
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
         return !isPlaying() && !recordController()->isRecording();

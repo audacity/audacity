@@ -14,7 +14,8 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/togglePlayPause");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/togglePlayStop");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
@@ -29,11 +30,18 @@ static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 
 const UiActionList PlaybackUiActions::m_mainActions = {
-    UiAction(PLAYBACK_PLAY_QUERY.toString(),
+    UiAction(PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Play"),
-             TranslatableString("action", "Play"),
+             TranslatableString("action", "Play/Pause"),
+             TranslatableString("action", "Play/Pause"),
+             IconCode::Code::PLAY_FILL
+             ),
+    UiAction(PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Play/Stop"),
+             TranslatableString("action", "Play/Stop"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PAUSE_QUERY.toString(),
@@ -245,8 +253,9 @@ void PlaybackUiActions::init()
     });
 
     m_controller->isPlayingChanged().onNotify(this, [this]() {
-        ActionCodeList codes= {
-            PLAYBACK_PLAY_QUERY.toString(),
+        const ActionCodeList codes= {
+            PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(),
+            PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),
             PLAYBACK_REWIND_START_QUERY.toString(),
             PLAYBACK_REWIND_END_QUERY.toString()

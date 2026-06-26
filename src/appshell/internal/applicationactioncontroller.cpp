@@ -525,7 +525,7 @@ void ApplicationActionController::doGlobalCancel()
 void ApplicationActionController::doGlobalTrigger()
 {
     if (isProjectOpened()) {
-        dispatcher()->dispatch("action://playback/play");
+        dispatcher()->dispatch("action://playback/togglePlayStop");
     } else {
         commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
     }

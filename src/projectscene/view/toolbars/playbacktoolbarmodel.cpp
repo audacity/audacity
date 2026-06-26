@@ -26,8 +26,7 @@ static const QString TOOLBAR_NAME("playbackToolBar");
 static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
 static const QString STOP_ITEM_ID("stop-id");
 
-static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
-static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/togglePlayPause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
 static const ActionQuery RECORD_START_QUERY("action://record/start");
@@ -59,7 +58,7 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
         { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
         { RECORD_LEVEL_QUERY.toString(), PlaybackToolBarModel::RECORD_LEVEL },
-        { PLAYBACK_PLAY_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_STOP_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { RECORD_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
@@ -133,7 +132,8 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
         return;
     }
 
-    if (containsAction(codes, PLAYBACK_PLAY_QUERY.toString()) || containsAction(codes, PLAYBACK_PAUSE_QUERY.toString())
+    if (containsAction(codes, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString())
+        // || containsAction(codes, PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString()) // do we need play/stop here?
         || containsAction(codes, RECORD_PAUSE_QUERY.toString())) {
         updatePlayState();
     }
@@ -176,16 +176,19 @@ void PlaybackToolBarModel::updatePlayState()
     bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
 
-    ActionCode code = (isPlaying || isLeadIn) ? PLAYBACK_PAUSE_QUERY.toString() : PLAYBACK_PLAY_QUERY.toString();
+    ActionCode code = PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString();
     if (isRecording && !isLeadIn) {
         code = RECORD_PAUSE_QUERY.toString();
     }
 
     UiAction action = uiActionsRegister()->action(code);
-    item->setAction(action);
 
     // During lead-in, show as playing (green background) since audio is playing back
     bool showAsPlaying = isPlaying || isLeadIn;
+    if (showAsPlaying) {
+        action.iconCode = IconCode::Code::PAUSE_FILL;
+    }
+    item->setAction(action);
     item->setSelected(showAsPlaying);
 
     QColor iconColor = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
@@ -370,7 +373,7 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action == PLAYBACK_PLAY_QUERY.toString()) {
+        if (citem.action == PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()) {
             item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
         }
 
