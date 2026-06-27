@@ -1,6 +1,6 @@
 $nyquist plug-in
 $version 5
-$type tool nogroup
+$type tool analyze nogroup
 $name (_ "Sample data export")
 $debugbutton false
 $author (_ "Steve Daulton")
