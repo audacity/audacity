@@ -186,6 +186,13 @@ Rectangle {
 
         clipHovered: root.itemHovered && !root.itemHeaderHovered
         hoveredTrack: root.hoveredTrackId
+
+        onActiveChanged: {
+            if (active) {
+                selectionViewController.cancelSpectrogramEdit()
+                itemsSelection.visible = false
+            }
+        }
     }
 
     SelectionViewController {

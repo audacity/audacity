@@ -295,6 +295,21 @@ void SelectionViewController::updateSelectionVerticalResize(double y, bool compl
     frequencySelectionController()->setHandleFrequency(frequency, completed, m_frequencyEdgeHandle);
 }
 
+void SelectionViewController::cancelSpectrogramEdit()
+{
+    frequencySelectionController()->resetFrequencySelection();
+
+    if (!m_verticalSelectionEditInProgress) {
+        return;
+    }
+
+    m_verticalSelectionEditInProgress = false;
+    m_frequencyEdgeHandle = 0;
+    m_spectrogramHit.reset();
+    emit verticalSelectionEditInProgressChanged();
+    emit pressedSpectrogramChanged();
+}
+
 void SelectionViewController::selectTrackAudioData(double y)
 {
     if (!isProjectOpened()) {

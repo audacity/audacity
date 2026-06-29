@@ -80,6 +80,12 @@ Item {
         }
     }
 
+    onEnabledChanged: {
+        if (!enabled && selectionModel.verticalDragActive) {
+            selectionModel.endCenterFrequencyDrag()
+        }
+    }
+
     ChannelSpectralSelectionModel {
         id: selectionModel
 
