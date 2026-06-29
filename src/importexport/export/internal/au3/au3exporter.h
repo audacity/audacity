@@ -12,7 +12,7 @@
 #include "../../iexporter.h"
 #include "internal/exportconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
-#include "playback/iplaybackcontroller.h"
+#include "playback/iplayback.h"
 
 namespace au::importexport {
 using OptionsEditorUPtr = std::unique_ptr<ExportOptionsEditor>;
@@ -24,7 +24,7 @@ class Au3Exporter : public IExporter, public muse::Contextable
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<au::playback::IPlayback> playback{ this };
 
 public:
     Au3Exporter(const muse::modularity::ContextPtr& ctx)

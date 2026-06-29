@@ -3,6 +3,8 @@
 */
 #include "trackviewstatemodel.h"
 
+#include "playback/iplayer.h"
+
 using namespace au::projectscene;
 using namespace au::project;
 
@@ -87,7 +89,7 @@ void TrackViewStateModel::init()
         emit displayBoundsChanged();
     }
 
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -169,7 +171,7 @@ bool TrackViewStateModel::isLinear() const
 
 bool TrackViewStateModel::isPlaying() const
 {
-    return playbackController()->isPlaying();
+    return playback()->player()->isPlaying();
 }
 
 bool TrackViewStateModel::isRecording() const

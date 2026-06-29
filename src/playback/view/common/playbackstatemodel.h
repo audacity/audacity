@@ -8,7 +8,8 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "iplaybackcontroller.h"
+#include "iplayback.h"
+#include "iplayer.h"
 #include "record/irecordcontroller.h"
 
 namespace au::playback {
@@ -20,7 +21,7 @@ class PlaybackStateModel : public QObject, public muse::async::Asyncable, public
     Q_PROPERTY(bool isStopped READ isStopped NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
     Q_PROPERTY(double lastPlaybackSeekTime READ lastPlaybackSeekTime NOTIFY lastPlaybackSeekTimeChanged FINAL)
-    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<au::playback::IPlayback> playback{ this };
     muse::ContextInject<au::record::IRecordController> recordController{ this };
 
 public:

@@ -108,7 +108,6 @@ void PlaybackContext::registerExports()
     m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
     m_playback = std::make_shared<Au3Playback>(iocContext());
 
-    ioc()->registerExport<IPlaybackController>(mname, m_controller);
     ioc()->registerExport<playback::IPlayback>(mname, m_playback);
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));
 }
