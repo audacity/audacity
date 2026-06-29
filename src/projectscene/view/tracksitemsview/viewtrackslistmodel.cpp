@@ -240,6 +240,7 @@ void ViewTracksListModel::load()
     viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+    emit totalTracksHeightChanged();
 
     viewState->verticalRulerWidth().ch.onReceive(this, [this](int) {
         emit verticalRulerWidthChanged();

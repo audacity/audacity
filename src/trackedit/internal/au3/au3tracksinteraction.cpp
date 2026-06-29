@@ -271,11 +271,9 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
     projectWasModified = true;
 
     if (!moveClips) {
-        if (isMultiSelectionCopy) {
-            ok = clipsInteraction()->makeRoomForClipsOnTracks(dstTracksIds, copiedDataBase, begin);
-        } else {
-            ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
-        }
+        //! NOTE: a multi-selection copy never extends an existing destination clip
+        const bool intoExistingClip = !isMultiSelectionCopy && pasteIntoExistingClip;
+        ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, intoExistingClip);
     }
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
@@ -1582,7 +1580,7 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
             secs_t insertDuration = trackToPaste->GetEndTime();
-            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
+            auto ok = makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
             if (!ok) {
                 return make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
@@ -1592,9 +1590,9 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
         // Clear only the ranges actually occupied by the clipboard clips so
         // that existing destination clips in the gaps between them stay intact.
         for (const auto& interval : trackToPaste->Intervals()) {
-            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i),
-                                                                 snappedBegin + interval->GetPlayStartTime(),
-                                                                 snappedBegin + interval->GetPlayEndTime());
+            auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
+                                             snappedBegin + interval->GetPlayStartTime(),
+                                             snappedBegin + interval->GetPlayEndTime());
             if (!ok) {
                 return make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
@@ -1602,6 +1600,28 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
     }
 
     return muse::make_ok();
+}
+
+muse::Ret Au3TracksInteraction::makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return make_ret(trackedit::Err::TrackNotFound);
+    }
+
+    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+
+    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
+    });
+
+    for (const auto& otherClip : clips) {
+        utils::trimOrDeleteOverlapping(prj, waveTrack, begin, end, otherClip);
+    }
+
+    return make_ret(muse::Ret::Code::Ok);
 }
 
 bool Au3TracksInteraction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)

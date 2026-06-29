@@ -172,6 +172,13 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
         pTrack->LinkConsistencyFix();
     }
 
+    //! NOTE: sanitize legacy/corrupted projects that were saved with overlapping
+    //! clip play regions (an unsupported state). Done here, before the trackedit
+    //! project and UI are built, so no change notifications are needed.
+    for (auto pWaveTrack : tracks.Any<WaveTrack>()) {
+        WaveTrackUtilities::RemoveOverlaps(*pWaveTrack);
+    }
+
     updateSavedState();
 
     return ret;

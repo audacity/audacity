@@ -178,6 +178,17 @@ WAVE_TRACK_API void InspectBlocks(const TrackList& tracks, BlockInspector inspec
 
 WAVE_TRACK_API void
 ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
+
+//! Resolve overlapping clip play regions so that no two clips overlap.
+/*!
+ Clips are visited in play-start order; whenever a clip's play region overlaps
+ its predecessor, the earlier clip yields its overlapping tail - its right edge
+ is trimmed back to the later clip's start, or it is removed if fully shadowed.
+ Sequence/hidden (trimmed-away) extents are not considered. Tolerant of
+ sub-sample rounding.
+ @post `track.NoPlayRegionsOverlap()`
+ */
+WAVE_TRACK_API void RemoveOverlaps(WaveTrack& track);
 } // namespace WaveTrackUtilities
 
 #endif

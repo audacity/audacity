@@ -120,13 +120,6 @@ bool Au3ClipsInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey,
         return false;
     }
 
-    if (completed) {
-        auto ok = makeRoomForClip(clipKey);
-        if (!ok) {
-            return false;
-        }
-    }
-
     if (!muse::RealIsEqualOrMore(newStartTime, 0.0)) {
         newStartTime = 0.0;
     }
@@ -139,6 +132,10 @@ bool Au3ClipsInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey,
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    if (completed) {
+        makeRoomForClip(clipKey);
+    }
 
     m_clipStartTimeChanged.send(clipKey, newStartTime, completed);
 
@@ -747,10 +744,20 @@ muse::Ret Au3ClipsInteraction::makeRoomForClip(const ClipKey& clipKey)
             continue;
         }
 
-        trimOrDeleteOverlapping(waveTrack, clip->GetPlayStartTime(), clip->GetPlayEndTime(), otherClip);
+        utils::trimOrDeleteOverlapping(prj, waveTrack, clip->GetPlayStartTime(), clip->GetPlayEndTime(), otherClip);
+    }
+
+    IF_ASSERT_FAILED(noPlayRegionsOverlap(clipKey.trackId)) {
+        return make_ret(trackedit::Err::UnknownError);
     }
 
     return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+bool Au3ClipsInteraction::noPlayRegionsOverlap(const trackedit::TrackId& trackId) const
+{
+    const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    return !waveTrack || waveTrack->NoPlayRegionsOverlap();
 }
 
 ClipKeyList Au3ClipsInteraction::clipsOnTrack(const TrackId trackId)
@@ -793,6 +800,10 @@ bool Au3ClipsInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKe
         clip->SetClipTempo(projectTempo);
         clip->StretchRightTo(expectedEndTime);
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: matching the project tempo can grow the clip into its neighbour;
+        //! resolve any resulting overlap (this path previously made no room at all).
+        makeRoomForClip(clipKey);
     }
 
     return true;
@@ -1216,9 +1227,11 @@ secs_t Au3ClipsInteraction::clampRightStretchDelta(const ClipKeyList& clipKeys,
     return deltaSec;
 }
 
-bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
+bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool completed,
+                                        const std::function<bool(Au3WaveClip&)>& edit)
 {
     bool ok = false;
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1230,118 +1243,52 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
             return false;
         }
 
+        ok = edit(*clip);
+
+        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        //! NOTE: make room AFTER the edit: overlapping clips are admitted as a transient
+        //! state, but must be "de-overlapped" once the edit is complete.
         if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                return false;
-            }
+            makeRoomForClip(selectedClip);
         }
 
-        ok = clip->TrimLeft(deltaSec);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
     return ok;
+}
+
+bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
+{
+    return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
+        return clip.TrimLeft(deltaSec);
+    });
 }
 
 bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
-    bool ok = false;
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
-        }
-
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                make_ret(trackedit::Err::FailedToMakeRoomForClip);
-            }
-        }
-
-        ok = clip->TrimRight(deltaSec);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
-    }
-
-    return ok;
+    return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
+        return clip.TrimRight(deltaSec);
+    });
 }
 
 bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
-
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
-        }
-
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                return false;
-            }
-        }
-
-        secs_t newStart = clip->GetPlayStartTime() + adjustedDelta;
-        clip->StretchLeftTo(newStart);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
-    }
-
-    return true;
+    const secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
+    return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
+        clip.StretchLeftTo(clip.GetPlayStartTime() + adjustedDelta);
+        return true;
+    });
 }
 
 bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
-
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
-        }
-
-        if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
-                make_ret(trackedit::Err::FailedToMakeRoomForClip);
-            }
-        }
-
-        secs_t newEnd = clip->GetPlayEndTime() - adjustedDelta;
-        clip->StretchRightTo(newEnd);
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
-    }
-
-    return true;
+    const secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
+    return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
+        clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
+        return true;
+    });
 }
 
 bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed)
@@ -1356,7 +1303,7 @@ bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed
         return false;
     }
 
-    TimeStretching::SetClipStretchRatio(*waveTrack, *clip, speed);
+    TimeStretching::SetClipStretchRatio(*clip, speed);
     makeRoomForClip(clipKey);
 
     LOGD() << "changed speed of clip: " << clipKey.itemId << ", track: " << clipKey.trackId;
@@ -1435,122 +1382,4 @@ bool Au3ClipsInteraction::singleClipOnTrack(const TrackId trackId) const
     }
 
     return waveTrack->Intervals().size() == 1;
-}
-
-void Au3ClipsInteraction::trimOrDeleteOverlapping(::WaveTrack* waveTrack,
-                                                  muse::secs_t begin,
-                                                  muse::secs_t end,
-                                                  std::shared_ptr<::WaveClip> otherClip)
-{
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-
-    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
-        auto clipInfo = DomConverter::clip(waveTrack, otherClip.get());
-        waveTrack->RemoveInterval(otherClip);
-        prj->notifyAboutClipRemoved(clipInfo);
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-        return;
-    }
-
-    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
-        muse::secs_t otherClipStartTime = otherClip->GetPlayStartTime();
-        muse::secs_t otherClipEndTime = otherClip->GetPlayEndTime();
-
-        auto leftClip = waveTrack->CopyClip(*otherClip, true);
-        waveTrack->InsertInterval(std::move(leftClip), false);
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-
-        muse::secs_t rightClipOverlap = (end - otherClip->GetPlayStartTime());
-        otherClip->TrimLeft(rightClipOverlap);
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
-
-        leftClip->SetPlayStartTime(otherClipStartTime);
-        muse::secs_t leftClipOverlap = (otherClipEndTime - begin);
-        leftClip->TrimRight(leftClipOverlap);
-        prj->notifyAboutClipAdded(DomConverter::clip(waveTrack, leftClip.get()));
-
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-        return;
-    }
-
-    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())
-        && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
-        muse::secs_t overlap = (end - otherClip->GetPlayStartTime());
-        otherClip->TrimLeft(overlap);
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
-        return;
-    }
-
-    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
-        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
-        muse::secs_t overlap = (otherClip->GetPlayEndTime() - begin);
-        otherClip->TrimRight(overlap);
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
-        return;
-    }
-}
-
-muse::Ret Au3ClipsInteraction::makeRoomForDataOnTrack(const TrackId trackId,
-                                                      muse::secs_t begin,
-                                                      muse::secs_t end)
-{
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return make_ret(trackedit::Err::TrackNotFound);
-    }
-
-    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
-
-    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
-        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
-    });
-
-    for (const auto& otherClip : clips) {
-        trimOrDeleteOverlapping(waveTrack, begin, end, otherClip);
-    }
-
-    return make_ret(muse::Ret::Code::Ok);
-}
-
-muse::Ret Au3ClipsInteraction::makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds,
-                                                        const std::vector<ITrackDataPtr>& trackData,
-                                                        muse::secs_t begin)
-{
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-
-    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
-        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
-    }
-
-    for (size_t i = 0; i < tracksIds.size(); ++i) {
-        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
-        IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::TrackNotFound);
-        }
-
-        muse::secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
-
-        auto au3TrackData = std::dynamic_pointer_cast<Au3TrackData>(trackData.at(i));
-        if (!au3TrackData) {
-            continue;
-        }
-
-        const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(au3TrackData->track().get());
-        for (const auto& interval : wt->Intervals()) {
-            auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
-                                             snappedBegin + interval->GetPlayStartTime(),
-                                             snappedBegin + interval->GetPlayEndTime());
-            if (!ok) {
-                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
-            }
-        }
-    }
-
-    return muse::make_ok();
 }

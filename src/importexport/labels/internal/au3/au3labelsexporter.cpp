@@ -39,7 +39,7 @@ muse::Ret Au3LabelsExporter::exportData(const muse::io::path_t& filePath, const 
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    wxTextFile textFile(wxFromString(filePath.toString()));
+    wxTextFile textFile(wxFromPath(filePath));
 
     bool open = false;
     if (textFile.Exists()) {
