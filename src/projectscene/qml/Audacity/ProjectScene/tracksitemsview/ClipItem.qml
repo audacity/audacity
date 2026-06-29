@@ -65,6 +65,7 @@ Rectangle {
     required property real selectionEndFrequency
     required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
+    required property bool splitToolActive
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -1049,6 +1050,8 @@ Rectangle {
                     selectionStartFrequency: root.selectionStartFrequency
                     selectionEndFrequency: root.selectionEndFrequency
                     clipSelected: root.clipSelected
+
+                    enabled: !root.splitToolActive
 
                     ChannelSplitter {
                         anchors.fill: parent

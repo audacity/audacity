@@ -916,6 +916,7 @@ Rectangle {
                             pressedSpectrogram: selectionViewController.pressedSpectrogram
                             spectralSelectionEnabled: selectionViewController.spectralSelectionEnabled
                             selectionController: selectionViewController
+                            splitToolActive: splitToolController.active
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 

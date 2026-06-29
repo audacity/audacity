@@ -98,12 +98,14 @@ Item {
     }
 
     MouseArea {
+        property var draggedEdges: []
+
         anchors.fill: parent
 
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton
 
-        property var draggedEdges: []
+        enabled: root.visible && root.enabled
 
         onPressed: function (mouse) {
             switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
