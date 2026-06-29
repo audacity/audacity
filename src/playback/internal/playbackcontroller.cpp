@@ -225,9 +225,7 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
         return;
     }
 
-    int index = q.param("input-channels_index").toInt();
-
-    audioDevicesProvider()->setInputChannels(index);
+    m_player->setInputChannels(q.param("input-channels_index").toInt());
 }
 
 void PlaybackController::rescanAudioDevices()

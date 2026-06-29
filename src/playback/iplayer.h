@@ -94,6 +94,7 @@ public:
     virtual void setAudioApi(const std::string& api) = 0;
     virtual void setAudioOutputDevice(const std::string& device) = 0;
     virtual void setAudioInputDevice(const std::string& device) = 0;
+    virtual void setInputChannels(int channels) = 0;
     virtual void rescanAudioDevices() = 0;
 };
 

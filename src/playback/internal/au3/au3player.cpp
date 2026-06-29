@@ -991,6 +991,13 @@ void Au3Player::setAudioInputDevice(const std::string& device)
     });
 }
 
+void Au3Player::setInputChannels(int channels)
+{
+    withStreamRestart([this, channels]() {
+        audioDevicesProvider()->setInputChannels(channels);
+    });
+}
+
 void Au3Player::rescanAudioDevices()
 {
     withStreamRestart([this]() {

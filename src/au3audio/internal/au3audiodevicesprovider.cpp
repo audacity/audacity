@@ -233,6 +233,10 @@ int Au3AudioDevicesProvider::inputChannelsAvailable() const
 void Au3AudioDevicesProvider::setInputChannels(const int count)
 {
     muse::settings()->setLocalValue(INPUT_CHANNELS, muse::Val(count));
+
+    // The capture channel count can't be changed on an open stream, so tear it
+    // down just like an input-device change does (via setupInputDevice()).
+    handleDeviceChange();
 }
 
 double Au3AudioDevicesProvider::bufferLength() const
