@@ -126,41 +126,6 @@ int TrackItemsListModel::indexByKey(const trackedit::TrackItemKey& key) const
     return -1;
 }
 
-au::trackedit::TrackItemKeyList TrackItemsListModel::itemKeysInRange(const trackedit::TrackItemKey& anchor,
-                                                                     const trackedit::TrackItemKey& target) const
-{
-    std::vector<std::pair<double, trackedit::TrackItemKey> > ordered;
-    ordered.reserve(m_items.size());
-    for (const ViewTrackItem* item : m_items) {
-        ordered.emplace_back(item->time().startTime, item->key().key);
-    }
-
-    std::stable_sort(ordered.begin(), ordered.end(), [](const auto& a, const auto& b) {
-        return a.first < b.first;
-    });
-
-    int anchorIndex = -1;
-    int targetIndex = -1;
-    for (int i = 0; i < static_cast<int>(ordered.size()); ++i) {
-        if (ordered.at(i).second == anchor) {
-            anchorIndex = i;
-        }
-        if (ordered.at(i).second == target) {
-            targetIndex = i;
-        }
-    }
-
-    if (anchorIndex < 0 || targetIndex < 0) {
-        return {};
-    }
-
-    trackedit::TrackItemKeyList result;
-    for (int i = std::min(anchorIndex, targetIndex); i <= std::max(anchorIndex, targetIndex); ++i) {
-        result.push_back(ordered.at(i).second);
-    }
-    return result;
-}
-
 void TrackItemsListModel::onSelectedItem(const trackedit::TrackItemKey& k)
 {
     // ignore if item already selected

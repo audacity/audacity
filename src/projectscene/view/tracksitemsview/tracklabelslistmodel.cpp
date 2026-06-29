@@ -239,16 +239,13 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const trackedit::TrackItemKey anchor = trackNavigationController()->focusedItem();
-        if (anchor.isValid() && anchor.trackId == key.key.trackId) {
-            const LabelKeyList rangeKeys = itemKeysInRange(anchor, key.key);
-            if (!rangeKeys.empty()) {
-                selectionController()->resetDataSelection();
-                selectionController()->resetSelectedClips();
-                selectionController()->setSelectedLabels(rangeKeys, true);
-                m_needToSelectTracksData = false;
-                return;
-            }
+        const LabelKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
+        if (!rangeKeys.empty()) {
+            selectionController()->resetDataSelection();
+            selectionController()->resetSelectedClips();
+            selectionController()->setSelectedLabels(rangeKeys, true);
+            m_needToSelectTracksData = false;
+            return;
         }
 
         selectionController()->resetDataSelection();

@@ -756,14 +756,11 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const trackedit::TrackItemKey anchor = trackNavigationController()->focusedItem();
-        if (anchor.isValid() && anchor.trackId == key.key.trackId) {
-            const ClipKeyList rangeKeys = itemKeysInRange(anchor, key.key);
-            if (!rangeKeys.empty()) {
-                selectionController()->resetSelectedLabels();
-                selectionController()->setSelectedClips(rangeKeys, complete);
-                return;
-            }
+        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
+        if (!rangeKeys.empty()) {
+            selectionController()->resetSelectedLabels();
+            selectionController()->setSelectedClips(rangeKeys, complete);
+            return;
         }
 
         selectionController()->resetSelectedLabels();
