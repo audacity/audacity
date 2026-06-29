@@ -1239,8 +1239,10 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
+        if (!clip) {
+            //! NOTE: a sibling clip in this batch may have been removed by makeRoomForClip
+            //! (case: one stretched clip grows to fully contain another). Skip gracefully.
+            continue;
         }
 
         ok = edit(*clip);
