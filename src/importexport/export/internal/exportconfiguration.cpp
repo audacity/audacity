@@ -13,6 +13,7 @@ using namespace au::importexport;
 static const std::string module_name("export");
 
 static const muse::Settings::Key EXPORT_PROCESS(module_name, "importexport/process");
+static const muse::Settings::Key EXPORT_TRIM_BLANK_SPACE(module_name, "importexport/trimBlankSpace");
 static const muse::Settings::Key EXPORT_DIRECTORY_PATH(module_name, "importexport/directoryPath");
 static const muse::Settings::Key EXPORT_FORMAT(module_name, "importexport/format");
 static const muse::Settings::Key EXPORT_CHANNELS_TYPE(module_name, "importexport/channelsType");
@@ -52,6 +53,11 @@ void ExportConfiguration::init()
     muse::settings()->setDefaultValue(EXPORT_PROCESS, muse::Val(ExportProcessType::FULL_PROJECT_AUDIO));
     muse::settings()->valueChanged(EXPORT_PROCESS).onReceive(nullptr, [this] (const muse::Val&) {
         m_processChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(EXPORT_TRIM_BLANK_SPACE, muse::Val(false));
+    muse::settings()->valueChanged(EXPORT_TRIM_BLANK_SPACE).onReceive(nullptr, [this] (const muse::Val&) {
+        m_trimBlankSpaceChanged.notify();
     });
 
     muse::settings()->setDefaultValue(EXPORT_DIRECTORY_PATH, muse::Val(globalConfiguration()->userDataPath()));
@@ -211,6 +217,21 @@ void ExportConfiguration::setProcessType(ExportProcessType process)
 muse::async::Notification ExportConfiguration::processTypeChanged() const
 {
     return m_processChanged;
+}
+
+bool ExportConfiguration::trimBlankSpace() const
+{
+    return muse::settings()->value(EXPORT_TRIM_BLANK_SPACE).toBool();
+}
+
+void ExportConfiguration::setTrimBlankSpace(bool trim)
+{
+    muse::settings()->setSharedValue(EXPORT_TRIM_BLANK_SPACE, muse::Val(trim));
+}
+
+muse::async::Notification ExportConfiguration::trimBlankSpaceChanged() const
+{
+    return m_trimBlankSpaceChanged;
 }
 
 muse::io::path_t ExportConfiguration::directoryPath() const

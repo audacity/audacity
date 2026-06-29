@@ -191,7 +191,7 @@ StyledDialogView {
                         buttonOrientation: Qt.Horizontal
 
                         path: exportPreferencesModel.directoryPath
-                        dir: exportPreferencesModel.directoryPath
+                        dir: exportPreferencesModel.suggestedFilePath
 
                         navigation: fileSection.navigation
                         navigationRowOrderStart: filenameField.navigation.order + 1
@@ -572,14 +572,14 @@ StyledDialogView {
                         width: parent.width
 
                         text: qsTrc("export", "Trim blank space before first clip")
-                        enabled: false
+                        checked: exportPreferencesModel.trimBlankSpace
 
                         navigation.name: "TrimBlankSpaceBox"
                         navigation.panel: renderingSection.navigation
                         navigation.order: 1
                         navigation.accessible.name: text
 
-                        onClicked: {}
+                        onClicked: exportPreferencesModel.trimBlankSpace = !exportPreferencesModel.trimBlankSpace
                     }
                 }
             }

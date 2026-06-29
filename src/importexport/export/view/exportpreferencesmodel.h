@@ -39,7 +39,10 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
 
+    Q_PROPERTY(bool trimBlankSpace READ trimBlankSpace WRITE setTrimBlankSpace NOTIFY trimBlankSpaceChanged)
+
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
+    Q_PROPERTY(QString suggestedFilePath READ suggestedFilePath NOTIFY suggestedFilePathChanged)
 
     Q_PROPERTY(QString directoryPath READ directoryPath NOTIFY directoryPathChanged)
 
@@ -70,8 +73,12 @@ public:
     Q_INVOKABLE void setCurrentProcess(const QString& process);
     QVariantList processList() const;
 
+    bool trimBlankSpace() const;
+    void setTrimBlankSpace(bool trim);
+
     QString filename() const;
     Q_INVOKABLE void setFilename(const QString& filename);
+    QString suggestedFilePath() const;
 
     QString directoryPath() const;
     Q_INVOKABLE void setDirectoryPath(const QString& path);
@@ -113,7 +120,9 @@ public:
 signals:
     void currentProcessChanged();
     void processListChanged();
+    void trimBlankSpaceChanged();
     void filenameChanged();
+    void suggestedFilePathChanged();
     void fileExtensionChanged();
     void directoryPathChanged();
     void currentFormatChanged();

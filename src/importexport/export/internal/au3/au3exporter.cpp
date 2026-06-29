@@ -231,6 +231,13 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
     }
 
+    if (exportConfiguration()->trimBlankSpace()) {
+        const double firstClipStart = exportedTracks.min(&Track::GetStartTime);
+        if (firstClipStart > m_t0 && firstClipStart < m_t1) {
+            m_t0 = firstClipStart;
+        }
+    }
+
     int inputChannelsCount = 0;
     for (const auto& exportedTrack : exportedTracks) {
         inputChannelsCount += exportedTrack->NChannels();

@@ -25,6 +25,10 @@ public:
     virtual void setProcessType(ExportProcessType process) = 0;
     virtual muse::async::Notification processTypeChanged() const = 0;
 
+    virtual bool trimBlankSpace() const = 0;
+    virtual void setTrimBlankSpace(bool trim) = 0;
+    virtual muse::async::Notification trimBlankSpaceChanged() const = 0;
+
     virtual muse::io::path_t directoryPath() const = 0;
     virtual void setDirectoryPath(const muse::io::path_t& path) = 0;
     virtual muse::async::Notification directoryPathChanged() const = 0;
