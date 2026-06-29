@@ -666,7 +666,9 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
         vs->updateItemsBoundaries(true, key.key);
     }
 
-    setFocusedItem(key);
+    if (selectionMode() != SelectionMode::Range) {
+        setFocusedItem(key);
+    }
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
