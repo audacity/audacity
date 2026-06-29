@@ -59,9 +59,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                        "This integration allows you to save and access your Audacity projects on any device"),
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-                query.addParam("showTourPage", muse::Val(true));
-
+                muse::actions::ActionQuery query("audacity://cloud/show-tour-page");
                 dispatcher()->dispatch(query);
             }
         },

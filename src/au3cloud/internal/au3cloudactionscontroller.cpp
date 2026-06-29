@@ -14,6 +14,7 @@ namespace {
 const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
 const char* TOUR_PAGE_URL { "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg" };
 
+const muse::actions::ActionQuery SHOW_TOUR_PAGE_ACTION("audacity://cloud/show-tour-page");
 const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/open-signin-dialog");
 const muse::actions::ActionQuery OPEN_CREATE_ACCOUNT_DIALOG_ACTION("audacity://cloud/open-create-account-dialog");
 const muse::actions::ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
@@ -33,6 +34,7 @@ void Au3CloudActionsController::init()
 {
     m_urlHandler = std::make_unique<CloudUrlHandler>(iocContext());
 
+    dispatcher()->reg(this, SHOW_TOUR_PAGE_ACTION, this, &Au3CloudActionsController::showTourPage);
     dispatcher()->reg(this, OPEN_SIGNIN_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
     dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openCreateAccountDialog);
     dispatcher()->reg(this, OPEN_CLOUD_PROJECT_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProjectPage);
@@ -61,13 +63,25 @@ void Au3CloudActionsController::openCreateAccountDialog(const muse::actions::Act
     openSignInDialog(newQuery);
 }
 
+void Au3CloudActionsController::showTourPage()
+{
+    if (!authorization()->isAuthorized()) {
+        const muse::UriQuery uri(SIGNIN_URI);
+        const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
+        if (!rv.ret) {
+            return;
+        }
+    }
+
+    platformInteractive()->openUrl(TOUR_PAGE_URL);
+}
+
 void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuery& query)
 {
     if (authorization()->isAuthorized()) {
         return;
     }
 
-    const bool showTourPage = query.param("showTourPage").toBool();
     const bool sync = query.param("sync").toBool();
     const bool isCreateAccountMode = query.param(createAccountModeParam, muse::Val(false)).toBool();
 
@@ -75,16 +89,12 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
     uri.addParam(createAccountModeParam, muse::Val(isCreateAccountMode));
 
     if (sync) {
-        muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
+        const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
         if (!rv.ret) {
             return;
         }
     } else {
         interactive()->open(uri);
-    }
-
-    if (showTourPage) {
-        platformInteractive()->openUrl(TOUR_PAGE_URL);
     }
 }
 
