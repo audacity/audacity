@@ -13,8 +13,8 @@ BuiltinEffectBase {
     property string title: qsTrc("effects/reverb", "Reverb")
     property bool isApplyAllowed: true
 
-    implicitHeight: row.height
-    width: 560
+    implicitWidth: row.implicitWidth
+    implicitHeight: row.implicitHeight
 
     builtinEffectModel: ReverbViewModelFactory.createModel(root, root.instanceId)
     numNavigationPanels: 2
@@ -54,8 +54,7 @@ BuiltinEffectBase {
 
         RoundedRectangle {
 
-            Layout.fillWidth: true
-            Layout.preferredWidth: 5
+            Layout.preferredWidth: leftColumn.implicitWidth + 2 * prv.rowSpacing
             Layout.preferredHeight: rightColumn.height
 
             color: ui.theme.backgroundSecondaryColor
@@ -68,10 +67,10 @@ BuiltinEffectBase {
             GridLayout {
                 id: leftColumn
 
-                x: prv.rowSpacing
-                y: prv.columnSpacing
-
-                Layout.fillWidth: true
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: prv.rowSpacing
+                anchors.topMargin: prv.columnSpacing
 
                 rows: 2
                 columns: 2
@@ -139,10 +138,8 @@ BuiltinEffectBase {
 
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.preferredWidth: 7
 
             columns: 2
-            rows: 5
             rowSpacing: prv.narrowRowSpacing
             columnSpacing: prv.columnSpacing
 
