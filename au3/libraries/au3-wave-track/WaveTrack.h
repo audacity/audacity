@@ -651,6 +651,15 @@ public:
     //! Return all WaveClips sorted by clip play start time.
     IntervalConstHolders SortedIntervalArray() const;
 
+    //! Whether no two clips' play regions overlap.
+    /*!
+     Compares `GetPlayStartTime()`/`GetPlayEndTime()` only, tolerant of sub-sample
+     rounding (same tolerance as the clip-edit overlap resolvers). Sequence/hidden
+     (trimmed-away) extents may overlap and are deliberately not considered. Intended
+     as a post-condition check after an editing interaction completes.
+     */
+    bool NoPlayRegionsOverlap() const;
+
     //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
     /*!
     @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`

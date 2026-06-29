@@ -34,8 +34,7 @@ extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
 WAVE_TRACK_API void WithClipRenderingProgress(
     std::function<void(const ProgressReporter&)> action, TranslatableString title = defaultStretchRenderingTitle);
 
-WAVE_TRACK_API bool SetClipStretchRatio(
-    const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio);
+WAVE_TRACK_API bool SetClipStretchRatio(WaveTrack::Interval& interval, double stretchRatio);
 }
 
 #endif

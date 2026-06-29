@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <functional>
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 
@@ -92,9 +94,6 @@ public:
     //! TODO
     bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const override;
     bool userIsOkWithDownmixing() const override;
-    muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<ITrackDataPtr>& trackData,
-                                       muse::secs_t begin) override;
-    muse::Ret makeRoomForDataOnTrack(const TrackId trackId, muse::secs_t begin, muse::secs_t end) override;
     bool singleClipOnTrack(const TrackId trackId) const override;
 
 private:
@@ -106,7 +105,7 @@ private:
 
     NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset);
 
-    void trimOrDeleteOverlapping(::WaveTrack* waveTrack, muse::secs_t begin, muse::secs_t end, std::shared_ptr<::WaveClip> otherClip);
+    bool noPlayRegionsOverlap(const trackedit::TrackId& trackId) const;
 
     std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
     std::optional<secs_t> leftmostClipStartTime(const ClipKeyList& clipKeys) const;
@@ -119,6 +118,9 @@ private:
     secs_t clampRightStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     bool trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
+
+    //! Returns the @p edit result for the last clip.
+    bool applyClipEdit(const ClipKeyList& clipKeys, bool completed, const std::function<bool(au3::Au3WaveClip&)>& edit);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 

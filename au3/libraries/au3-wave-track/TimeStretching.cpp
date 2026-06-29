@@ -15,40 +15,11 @@
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-exceptions/UserException.h"
 #include "WaveClip.h"
-#include "framework/global/realfn.h"
+#include "WaveTrackUtilities.h"
 #include <algorithm>
 
 const TranslatableString TimeStretching::defaultStretchRenderingTitle
     =TranslatableString("wave-track", "Pre-processing");
-
-namespace {
-void trimRightOverlapping(WaveTrack& track)
-{
-    std::list<std::shared_ptr<WaveClip> > clips = { track.Intervals().begin(), track.Intervals().end() };
-    if (clips.size() <= 1) {
-        return;
-    }
-
-    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
-        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
-    });
-
-    auto prev_it = clips.begin();
-    for (auto it = std::next(clips.begin()); it != clips.end(); ++it) {
-        auto& previousClip = *prev_it;
-        auto& currentClip = *it;
-
-        if (!muse::RealIsEqualOrLess(currentClip->GetPlayStartTime(), previousClip->GetPlayStartTime())
-            && muse::RealIsEqualOrLess(currentClip->GetPlayStartTime(), previousClip->GetPlayEndTime())
-            && muse::RealIsEqualOrMore(currentClip->GetPlayEndTime(), previousClip->GetPlayEndTime())) {
-            double overlap = (previousClip->GetPlayEndTime() - currentClip->GetPlayStartTime());
-            previousClip->TrimRight(overlap);
-        }
-
-        prev_it = it;
-    }
-}
-}
 
 bool TimeStretching::HasPitchOrSpeed(
     const WaveTrack& track, double t0, double t1)
@@ -67,15 +38,11 @@ void TimeStretching::WithClipRenderingProgress(
                                                   std::move(title), TranslatableString("wave-track", "Rendering Clip"));
 }
 
-bool TimeStretching::SetClipStretchRatio(
-    const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio)
+bool TimeStretching::SetClipStretchRatio(WaveTrack::Interval& interval, double stretchRatio)
 {
-    const auto nextClip
-        =track.GetNextInterval(interval, PlaybackDirection::forward);
-    const auto maxEndTime = nextClip != nullptr
-                            ? nextClip->Start()
-                            : std::numeric_limits<double>::infinity();
-
+    //! NOTE: the clip is stretched freely here; resolving any overlap this may
+    //! create with a neighbouring clip is the caller's responsibility - matching
+    //! how every other clip edit behaves (see Au3ClipsInteraction::makeRoomForClip).
     const auto start = interval.Start();
     const auto end = interval.End();
 
@@ -96,7 +63,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnWaveTrackProjectTempoChange) {
         }
 
         if (oldTempo != newTempo) {
-            trimRightOverlapping(track);
+            WaveTrackUtilities::RemoveOverlaps(track);
         }
     };
 }

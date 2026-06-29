@@ -12,6 +12,7 @@
 #include "SampleBlock.h"
 #include "Sequence.h"
 #include "WaveClip.h"
+#include "WaveTrack.h"
 #include <algorithm>
 
 WaveTrackUtilities::AllClipsIterator::AllClipsIterator(WaveTrack& track)
@@ -428,5 +429,25 @@ void WaveTrackUtilities::ExpandClipTillNextOne(
         const auto nextClip
             =track.GetNextInterval(interval, PlaybackDirection::forward)) {
         interval.StretchRightTo(nextClip->GetPlayStartTime());
+    }
+}
+
+void WaveTrackUtilities::RemoveOverlaps(WaveTrack& track)
+{
+    // Visit clips in play-start order; the earlier clip of any overlapping pair
+    // yields its tail (right edge trimmed back to the later clip's start, or the
+    // clip removed if the later one starts at/before it).
+    const auto clips = track.SortedIntervalArray();
+    for (size_t i = 1; i < clips.size(); ++i) {
+        const auto& prev = clips[i - 1];
+        const auto& cur = clips[i];
+        if (prev->GetPlayEndTime() <= cur->GetPlayStartTime()) {
+            continue; // no overlap
+        }
+        if (cur->GetPlayStartTime() <= prev->GetPlayStartTime()) {
+            track.RemoveInterval(prev); // earlier clip fully shadowed from the left
+        } else {
+            prev->TrimRight(prev->GetPlayEndTime() - cur->GetPlayStartTime());
+        }
     }
 }
