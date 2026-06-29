@@ -217,7 +217,13 @@ bool AmplifyEffect::Init()
             mInputPeak = std::max<double>(mInputPeak, newpeak);
         }
     }
-    return !muse::RealIsEqualOrLess(mInputPeak, 0.0);
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        mLastError
+            = TranslatableString("effects-amplify",
+                                 "The selected audio is silent, so there is nothing to amplify.").translated().toStdString();
+        return false;
+    }
+    return true;
 }
 
 std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
