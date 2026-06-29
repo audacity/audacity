@@ -181,35 +181,42 @@ void PlaybackController::setSelectionFollowsLoopRegion()
 
 void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("api_index")) {
-        return;
-    }
-
-    int index = q.param("api_index").toInt();
-
-    audioDevicesProvider()->setApi(audioDevicesProvider()->apis().at(index));
+    changeAudioDeviceFromQuery(q, "api_index", audioDevicesProvider()->apis(), [this](const std::string& api) {
+        m_player->setAudioApi(api);
+    });
 }
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("device_index")) {
-        return;
-    }
-
-    int index = q.param("device_index").toInt();
-
-    audioDevicesProvider()->setOutputDevice(audioDevicesProvider()->outputDevices().at(index));
+    changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->outputDevices(), [this](const std::string& device) {
+        m_player->setAudioOutputDevice(device);
+    });
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("device_index")) {
+    changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->inputDevices(), [this](const std::string& device) {
+        m_player->setAudioInputDevice(device);
+    });
+}
+
+void PlaybackController::changeAudioDeviceFromQuery(const muse::actions::ActionQuery& q, const std::string& indexParam,
+                                                    const std::vector<std::string>& options,
+                                                    const std::function<void(const std::string&)>& applyValue)
+{
+    IF_ASSERT_FAILED(q.contains(indexParam)) {
         return;
     }
 
-    int index = q.param("device_index").toInt();
+    // Resolve and bounds-check the selection against the current list, then
+    // forward the resolved value (not the index) so a list that changes
+    // meanwhile can't make us pick the wrong entry or read out of range.
+    const int index = q.param(indexParam).toInt();
+    IF_ASSERT_FAILED(index >= 0 && index < static_cast<int>(options.size())) {
+        return;
+    }
 
-    audioDevicesProvider()->setInputDevice(audioDevicesProvider()->inputDevices().at(index));
+    applyValue(options.at(index));
 }
 
 void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)

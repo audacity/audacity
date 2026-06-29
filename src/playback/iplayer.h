@@ -87,6 +87,13 @@ public:
     virtual void setSelectionToLoop() = 0;
     virtual void setLoopRegionInOut() = 0;
     virtual void setSelectionFollowsLoopRegion() = 0;
+
+    // Audio device/configuration changes. Each can't be applied on an open
+    // stream, so playback is stopped first and, if the user was actively
+    // playing, resumed from the same position afterwards.
+    virtual void setAudioApi(const std::string& api) = 0;
+    virtual void setAudioOutputDevice(const std::string& device) = 0;
+    virtual void setAudioInputDevice(const std::string& device) = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

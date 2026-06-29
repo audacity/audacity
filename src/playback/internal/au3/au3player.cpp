@@ -970,6 +970,61 @@ void Au3Player::setSelectionFollowsLoopRegion()
     playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
 }
 
+void Au3Player::setAudioApi(const std::string& api)
+{
+    withStreamRestart([this, api]() {
+        audioDevicesProvider()->setApi(api);
+    });
+}
+
+void Au3Player::setAudioOutputDevice(const std::string& device)
+{
+    withStreamRestart([this, device]() {
+        audioDevicesProvider()->setOutputDevice(device);
+    });
+}
+
+void Au3Player::setAudioInputDevice(const std::string& device)
+{
+    withStreamRestart([this, device]() {
+        audioDevicesProvider()->setInputDevice(device);
+    });
+}
+
+void Au3Player::withStreamRestart(const std::function<void()>& change)
+{
+    const bool isRecording = recordController()->isRecording();
+    const bool wasPlaying = !isRecording && isPlaying();
+    const bool wasPaused = !isRecording && isPaused();
+    const muse::secs_t resumePos = playbackPosition();
+
+    if (isRecording || wasPlaying || wasPaused) {
+        stop();
+    }
+
+    change();
+
+    // Only resume when the user was actively playing. A paused or recording
+    // transport is torn down for the switch and then left stopped (the teardown
+    // flushes its queues, so the paused state can't be preserved).
+    if (wasPlaying) {
+        playFrom(resumePos);
+    }
+}
+
+void Au3Player::playFrom(muse::secs_t pos)
+{
+    // Resume plain playback from `pos` after the audio stream was torn down for a
+    // device change. Keep m_lastPlaybackRegion aligned with the player's
+    // resulting zero-length region so a following pause→play resumes from the
+    // pause position instead of being mistaken for a selection change. The user's
+    // seek bookmark (m_lastPlaybackSeekTime) is intentionally left as-is: the
+    // stream restart is our workaround, not a user gesture.
+    m_lastPlaybackRegion = { pos, pos };
+    seek(pos, false);
+    play();
+}
+
 PlaybackRegion Au3Player::selectionPlaybackRegion() const
 {
     // item selection has priority over time selection

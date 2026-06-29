@@ -194,10 +194,15 @@ async::Notification Au3AudioDevicesProvider::inputDeviceChanged() const
 
 void Au3AudioDevicesProvider::handleDeviceChange()
 {
-    if (audioEngine()) {
-        audioEngine()->stopMonitoring();
-        audioEngine()->handleDeviceChange();
+    if (!audioEngine()) {
+        return;
     }
+
+    audioEngine()->stopMonitoring();
+    if (audioEngine()->isBusy()) {
+        audioEngine()->stopStream();
+    }
+    audioEngine()->handleDeviceChange();
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::apis() const

@@ -13,6 +13,7 @@
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
 #include "audio/iaudioengine.h"
+#include "audio/iaudiodevicesprovider.h"
 #include "record/irecord.h"
 #include "record/irecordcontroller.h"
 #include "playback/iplaybackconfiguration.h"
@@ -22,7 +23,9 @@
 #include <QTimer>
 
 #include <chrono>
+#include <functional>
 #include <optional>
+#include <string>
 
 struct TransportSequences;
 namespace au::playback {
@@ -36,6 +39,7 @@ class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Co
     muse::ContextInject<au::record::IRecord> record{ this };
     muse::ContextInject<au::record::IRecordController> recordController{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<au::audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
 
@@ -103,6 +107,11 @@ public:
     void setLoopRegionInOut() override;
     void setSelectionFollowsLoopRegion() override;
 
+    // Audio device/configuration changes (applied via withStreamRestart).
+    void setAudioApi(const std::string& api) override;
+    void setAudioOutputDevice(const std::string& device) override;
+    void setAudioInputDevice(const std::string& device) override;
+
 private:
     friend class PlaybackControllerTests;
 
@@ -129,6 +138,12 @@ private:
     void doSeek(const muse::secs_t secs, bool applyIfPlaying);
     void doChangePlaybackRegion(const PlaybackRegion& region);
     void doPauseStream();
+    void playFrom(muse::secs_t pos);
+
+    //! Applies `change` while the audio stream is inactive (it can't be done on
+    //! an open stream): stop the transport, apply, and resume from the same
+    //! position if the user was actively playing.
+    void withStreamRestart(const std::function<void()>& change);
 
     bool isEqualToPlaybackPosition(muse::secs_t position) const;
     bool isPlaybackPositionOnTheEndOfProject() const;
