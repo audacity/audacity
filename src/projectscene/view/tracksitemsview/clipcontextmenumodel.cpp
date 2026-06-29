@@ -229,9 +229,9 @@ void ClipContextMenuModel::updateColorCheckedState()
         ActionQuery query(action);
 
         bool checked = false;
-        if (clip.colorIndex == trackedit::CLIP_COLOR_INDEX_NONE && action == m_colorChangeActionCodeList.at(0)) {
+        if (clip.isAutoColor && action == m_colorChangeActionCodeList.at(0)) {
             checked = true;
-        } else if (query.contains("colorindex") && query.param("colorindex").toInt() == clip.colorIndex) {
+        } else if (!clip.isAutoColor && query.contains("colorindex") && query.param("colorindex").toInt() == clip.colorIndex) {
             checked = true;
         }
 
