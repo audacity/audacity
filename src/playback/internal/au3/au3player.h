@@ -111,6 +111,7 @@ public:
     void setAudioApi(const std::string& api) override;
     void setAudioOutputDevice(const std::string& device) override;
     void setAudioInputDevice(const std::string& device) override;
+    void rescanAudioDevices() override;
 
 private:
     friend class PlaybackControllerTests;

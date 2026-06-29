@@ -991,6 +991,13 @@ void Au3Player::setAudioInputDevice(const std::string& device)
     });
 }
 
+void Au3Player::rescanAudioDevices()
+{
+    withStreamRestart([this]() {
+        audioDevicesProvider()->rescan();
+    });
+}
+
 void Au3Player::withStreamRestart(const std::function<void()>& change)
 {
     const bool isRecording = recordController()->isRecording();

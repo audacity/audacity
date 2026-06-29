@@ -232,7 +232,7 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
 
 void PlaybackController::rescanAudioDevices()
 {
-    audioDevicesProvider()->rescan();
+    m_player->rescanAudioDevices();
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)
