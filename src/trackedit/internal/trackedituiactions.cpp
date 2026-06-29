@@ -126,7 +126,8 @@ UiActionList STATIC_ACTIONS = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Split"),
-             TranslatableString("action", "Split")
+             TranslatableString("action", "Split"),
+             IconCode::Code::SPLIT_TOOL
              ),
     UiAction("join",
              au::context::UiCtxAny,
@@ -247,7 +248,7 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Multi-view"),
              TranslatableString("action", "Multi-view"),
-             IconCode::Code::SPECTROGRAM_BOX_SELECTION, // TODO need proper icon
+             IconCode::Code::WAVEFORM_MULTIVIEW,
              Checkable::Yes
              ),
     UiAction("action://trackedit/paste-default",

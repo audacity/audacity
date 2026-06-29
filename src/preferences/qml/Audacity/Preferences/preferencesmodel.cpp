@@ -164,7 +164,7 @@ void PreferencesModel::load(const QString& currentPageId)
                  "Preferences/AudioPreferencesPage.qml"),
 
         makeItem("editing", QT_TRANSLATE_NOOP("preferences",
-                                              "Audio editing"), IconCode::Code::WAVEFORM, "Preferences/EditPreferencesPage.qml"),
+                                              "Audio editing"), IconCode::Code::IBEAM, "Preferences/EditPreferencesPage.qml"),
 
         makeItem("playback-recording", QT_TRANSLATE_NOOP("preferences",
                                                          "Playback/Recording"), IconCode::Code::MICROPHONE,
@@ -174,7 +174,7 @@ void PreferencesModel::load(const QString& currentPageId)
                                                        "Spectral display"), IconCode::Code::SPECTROGRAM,
                  "Preferences/SpectrogramPreferencesPage.qml"),
 
-        makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::METRONOME,
+        makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::MUSIC_NOTES,
                  "Preferences/MusicPreferencesPage.qml"),
 
         makeItem("cloud", QT_TRANSLATE_NOOP("preferences", "Cloud"), IconCode::Code::CLOUD, ""),
