@@ -7,6 +7,7 @@
 #include "trackedit/dom/track.h"
 #include "framework/global/translation.h"
 #include "global/realfn.h"
+#include "ui/view/iconcodes.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
@@ -211,6 +212,16 @@ void ClipContextMenuModel::updateColorCheckedState()
     auto clip = project->trackeditProject()->clip(m_clipKey.key);
     if (!clip.isValid()) {
         return;
+    }
+
+    auto trackOpt = project->trackeditProject()->track(m_clipKey.trackId());
+    if (trackOpt) {
+        muse::Color trackColor = projectSceneConfiguration()->clipColor(trackOpt->colorIndex);
+        MenuItem& autoColorItem = findItem(muse::actions::ActionCode("action://trackedit/clip/change-color-auto"));
+        muse::ui::UiAction action = autoColorItem.action();
+        action.iconCode = muse::ui::IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        action.iconColor = QString::fromStdString(trackColor.toString());
+        autoColorItem.setAction(action);
     }
 
     for (const auto& action : m_colorChangeActionCodeList) {
