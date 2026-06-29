@@ -56,6 +56,7 @@ public:
     float EvaluateTransferFunction(float inputDb) const;
 
 private:
+    void ApplySettings(const DynamicRangeProcessorSettings& settings, bool reinitLookahead);
     void UpdateEnvelope(const float* const* inBlock, int blockLen);
     void CopyWithDelay(const float* const* inBlock, int blockLen);
     void ApplyEnvelope(
