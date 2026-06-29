@@ -16,7 +16,7 @@ import "internal"
 StyledDialogView {
     id: root
 
-    title: qsTrc("export", "Export audio")
+    title: exportPreferencesModel.videoExport ? qsTrc("export", "Export audio and video") : qsTrc("export", "Export audio")
 
     contentWidth: 612
     contentHeight: 600
@@ -28,6 +28,12 @@ StyledDialogView {
     property int dropdownWidth: 358
     property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 140
+    property int optionsTabIndex: 0
+    property var exportFileFilter: []
+
+    function updateFileFilter() {
+        exportFileFilter = exportPreferencesModel.fileFilter()
+    }
 
     onNavigationActivateRequested: {
         typeDropdown.navigation.requestActive()
@@ -38,6 +44,17 @@ StyledDialogView {
 
         onExportCompleted: {
             root.accept()
+        }
+
+        onCurrentProcessChanged: {
+            if (!videoExport) {
+                root.optionsTabIndex = 0
+            }
+            root.updateFileFilter()
+        }
+
+        onFileExtensionChanged: {
+            root.updateFileFilter()
         }
     }
 
@@ -53,6 +70,7 @@ StyledDialogView {
         exportPreferencesModel.init()
         ffmpegPrefModel.init()
         dynamicOptionsModel.init()
+        root.updateFileFilter()
     }
 
     ColumnLayout {
@@ -185,7 +203,7 @@ StyledDialogView {
                         pickerType: FilePicker.PickerType.Any
                         pathFieldWidth: root.dropdownWidth
                         spacing: 8
-                        filter: exportPreferencesModel.fileFilter()
+                        filter: root.exportFileFilter
 
                         buttonType: FlatButton.Horizontal
                         buttonOrientation: Qt.Horizontal
@@ -209,7 +227,7 @@ StyledDialogView {
                         StyledTextLabel {
                             id: formatLabel
 
-                            text: qsTrc("export", "Format")
+                            text: exportPreferencesModel.videoExport ? qsTrc("export", "Audio format") : qsTrc("export", "Format")
 
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -243,8 +261,32 @@ StyledDialogView {
 
             SeparatorLine {}
 
+            StyledTabBar {
+                id: optionsTabBar
+
+                Layout.fillWidth: true
+
+                visible: exportPreferencesModel.videoExport
+                currentIndex: root.optionsTabIndex
+                spacing: 28
+
+                onCurrentIndexChanged: {
+                    root.optionsTabIndex = currentIndex
+                }
+
+                StyledTabButton {
+                    text: qsTrc("export", "Audio")
+                }
+
+                StyledTabButton {
+                    text: qsTrc("export", "Video")
+                }
+            }
+
             BaseSection {
                 id: audioSection
+
+                visible: !exportPreferencesModel.videoExport || root.optionsTabIndex === 0
 
                 title: qsTrc("export", "Audio options")
 
@@ -560,11 +602,105 @@ StyledDialogView {
             SeparatorLine {}
 
             BaseSection {
+                id: videoSection
+
+                visible: exportPreferencesModel.videoExport && root.optionsTabIndex === 1
+
+                title: qsTrc("export", "Video options")
+
+                rowSpacing: 8
+
+                navigation.section: root.navigationSection
+                navigation.order: audioSection.navigation.order + 1
+
+                RowLayout {
+
+                    Item {
+                        width: root.labelColumnWidth
+
+                        StyledTextLabel {
+                            id: videoFormatLabel
+
+                            text: qsTrc("export", "Format")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    StyledDropdown {
+                        id: videoFormatDropdown
+
+                        Layout.preferredWidth: root.smallDropdownWidth
+
+                        textRole: "name"
+                        valueRole: "code"
+
+                        popupItemsCount: 4
+                        currentIndex: indexOfValue(exportPreferencesModel.currentVideoFormat)
+                        model: exportPreferencesModel.videoFormatsList
+
+                        navigation.name: "VideoFormatDropdown"
+                        navigation.panel: videoSection.navigation
+                        navigation.order: 1
+                        navigation.accessible.name: videoFormatLabel.text + ": " + currentText
+
+                        indeterminateText: ""
+
+                        onActivated: function (index, value) {
+                            exportPreferencesModel.setCurrentVideoFormat(value)
+                        }
+                    }
+                }
+
+                RowLayout {
+                    visible: exportPreferencesModel.videoQualityVisible
+
+                    Item {
+                        width: root.labelColumnWidth
+
+                        StyledTextLabel {
+                            id: videoQualityLabel
+
+                            text: qsTrc("export", "Quality")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    StyledDropdown {
+                        id: videoQualityDropdown
+
+                        Layout.preferredWidth: root.smallDropdownWidth
+
+                        textRole: "name"
+                        valueRole: "code"
+
+                        popupItemsCount: 3
+                        currentIndex: indexOfValue(exportPreferencesModel.currentVideoQuality)
+                        model: exportPreferencesModel.videoQualityList
+
+                        navigation.name: "VideoQualityDropdown"
+                        navigation.panel: videoSection.navigation
+                        navigation.order: videoFormatDropdown.navigation.order + 1
+                        navigation.accessible.name: videoQualityLabel.text + ": " + currentText
+
+                        indeterminateText: ""
+
+                        onActivated: function (index, value) {
+                            exportPreferencesModel.setCurrentVideoQuality(value)
+                        }
+                    }
+                }
+            }
+
+            SeparatorLine {}
+
+            BaseSection {
                 id: renderingSection
                 title: qsTrc("export", "Rendering")
 
                 navigation.section: root.navigationSection
-                navigation.order: audioSection.navigation.order + 1
+                navigation.order: videoSection.navigation.order + 1
 
                 ColumnLayout {
                     CheckBox {
@@ -598,7 +734,7 @@ StyledDialogView {
             spacing: 8
 
             navigationPanel.section: root.navigationSection
-            navigationPanel.order: audioSection.navigation.order + 2
+            navigationPanel.order: renderingSection.navigation.order + 1
 
             FlatButton {
                 text: qsTrc("appshell/preferences", "Edit metadata")

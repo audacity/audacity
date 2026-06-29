@@ -19,6 +19,8 @@ static muse::ui::IconCode::Code iconFromTrackType(au::trackedit::TrackType type)
     switch (type) {
     case au::trackedit::TrackType::Label:
         return muse::ui::IconCode::Code::LOOP_IN;
+    case au::trackedit::TrackType::Video:
+        return muse::ui::IconCode::Code::VIDEO;
     default:
         return muse::ui::IconCode::Code::MICROPHONE;
     }

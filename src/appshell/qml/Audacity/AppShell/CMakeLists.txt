@@ -154,3 +154,5 @@ target_include_directories(appshell_qml PRIVATE
     FirstLaunchSetup
     PublishPage
 )
+
+target_link_libraries(appshell_qml PRIVATE muse::workspace)

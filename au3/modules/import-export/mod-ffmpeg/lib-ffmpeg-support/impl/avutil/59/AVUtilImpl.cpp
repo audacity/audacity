@@ -36,7 +36,9 @@ void Register()
             &CreateLogCallbackSetter,
             &CreateDefaultChannelLayout,
             &CreateLegacyChannelLayout,
-            &CreateAVChannelLayout
+            &CreateAVChannelLayout,
+            &GetBGRAPixelFormat,
+            &GetYUV420PPixelFormat
         });
 }
 
@@ -46,7 +48,9 @@ const bool registered = ([]() {
             &CreateLogCallbackSetter,
             &CreateDefaultChannelLayout,
             &CreateLegacyChannelLayout,
-            &CreateAVChannelLayout
+            &CreateAVChannelLayout,
+            &GetBGRAPixelFormat,
+            &GetYUV420PPixelFormat
         });
 
     return true;

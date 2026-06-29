@@ -300,6 +300,9 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         if (track.type == au::trackedit::TrackType::Label) {
             return false;
         }
+        if (track.type == au::trackedit::TrackType::Video) {
+            return true;
+        }
 
         if (trackPlaybackControl()->muted(track.id)) {
             assert(!trackPlaybackControl()->solo(track.id));
@@ -330,11 +333,19 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     }
 
     case IsWaveformViewVisibleRole: {
+        if (track.type == au::trackedit::TrackType::Video) {
+            return false;
+        }
+
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
         return vt == trackedit::TrackViewType::Waveform || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
     }
 
     case IsSpectrogramViewVisibleRole: {
+        if (track.type == au::trackedit::TrackType::Video) {
+            return false;
+        }
+
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
         return vt == trackedit::TrackViewType::Spectrogram || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
     }

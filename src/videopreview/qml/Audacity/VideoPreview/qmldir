@@ -1,0 +1,2 @@
+module Audacity.VideoPreview
+VideoPreviewPanel 1.0 VideoPreviewPanel.qml

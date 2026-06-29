@@ -513,7 +513,7 @@ int TrackItemsListModel::cacheBufferPx()
 
 void TrackItemsListModel::init()
 {
-    IF_ASSERT_FAILED(m_trackId >= 0) {
+    IF_ASSERT_FAILED(m_trackId != trackedit::INVALID_TRACK) {
         return;
     }
 
@@ -560,7 +560,7 @@ void TrackItemsListModel::init()
 
 void TrackItemsListModel::reload()
 {
-    if (m_trackId < 0) {
+    if (m_trackId == trackedit::INVALID_TRACK) {
         return;
     }
 

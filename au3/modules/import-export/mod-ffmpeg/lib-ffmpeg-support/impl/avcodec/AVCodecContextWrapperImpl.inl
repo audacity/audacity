@@ -301,6 +301,71 @@ public:
          mAVCodecContext->frame_size = value;
    }
 
+   int GetWidth() const noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         return mAVCodecContext->width;
+
+      return {};
+   }
+
+   void SetWidth(int value) noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         mAVCodecContext->width = value;
+   }
+
+   int GetHeight() const noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         return mAVCodecContext->height;
+
+      return {};
+   }
+
+   void SetHeight(int value) noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         mAVCodecContext->height = value;
+   }
+
+   AVPixelFormatFwd GetPixelFormat() const noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         return mAVCodecContext->pix_fmt;
+
+      return {};
+   }
+
+   void SetPixelFormat(AVPixelFormatFwd value) noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         mAVCodecContext->pix_fmt = static_cast<AVPixelFormat>(value);
+   }
+
+   AudacityAVRational GetFrameRate() const noexcept override
+   {
+#if LIBAVCODEC_VERSION_MAJOR >= 57
+      if (mAVCodecContext != nullptr)
+         return { mAVCodecContext->framerate.num, mAVCodecContext->framerate.den };
+#endif
+
+      return {};
+   }
+
+   void SetFrameRate(AudacityAVRational value) noexcept override
+   {
+#if LIBAVCODEC_VERSION_MAJOR >= 57
+      if (mAVCodecContext != nullptr)
+      {
+         mAVCodecContext->framerate.num = value.num;
+         mAVCodecContext->framerate.den = value.den;
+      }
+#else
+      (void)value;
+#endif
+   }
+
    int GetGlobalQuality() const noexcept override
    {
       if (mAVCodecContext != nullptr)

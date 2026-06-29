@@ -40,6 +40,11 @@ public:
 
     virtual int GetDuration() const noexcept = 0;
 
+    virtual void SetPresentationTimestamp(int64_t timestamp) noexcept = 0;
+    virtual void SetDecompressionTimestamp(int64_t timestamp) noexcept = 0;
+    virtual void SetDuration(int duration) noexcept = 0;
+    virtual void SetPos(int64_t pos) noexcept = 0;
+
     virtual void RescalePresentationTimestamp(AudacityAVRational bq, AudacityAVRational cq) noexcept = 0;
     virtual void RescaleDecompressionTimestamp(AudacityAVRational bq, AudacityAVRational cq) noexcept = 0;
     virtual void RescaleDuration(AudacityAVRational bq, AudacityAVRational cq) noexcept = 0;

@@ -67,12 +67,14 @@ public:
     virtual void SetMetadata(AVDictionaryWrapper metadata) noexcept = 0;
 
     virtual bool IsAudio() const noexcept = 0;
+    virtual bool IsVideo() const noexcept = 0;
 
     virtual AVCodecIDFwd GetAVCodecID() const noexcept = 0;
 
     virtual std::unique_ptr<AVCodecContextWrapper> GetAVCodecContext() const noexcept = 0;
 
     virtual int SetParametersFromContext(AVCodecContextWrapper& context) noexcept = 0;
+    virtual int CopyParametersFrom(const AVStreamWrapper& source) noexcept = 0;
 
 protected:
     const FFmpegFunctions& mFFmpeg;

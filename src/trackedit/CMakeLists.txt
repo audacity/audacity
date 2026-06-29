@@ -15,6 +15,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iauxiliarytrackprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iclipsinteraction.h

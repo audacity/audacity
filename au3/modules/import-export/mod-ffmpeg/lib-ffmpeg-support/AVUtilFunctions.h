@@ -34,6 +34,7 @@ struct FFMPEG_SUPPORT_API AVUtilFunctions
     int64_t (*av_rescale_q)(int64_t a, AudacityAVRational bq, AudacityAVRational cq) = nullptr;
     AVFrame*(*av_frame_alloc)(void) = nullptr;
     void (*av_frame_free)(AVFrame** frame) = nullptr;
+    int (*av_frame_get_buffer)(AVFrame* frame, int align) = nullptr;
     int (*av_samples_get_buffer_size)(int* linesize, int nb_channels, int nb_samples, AVSampleFormatFwd sample_fmt, int align) = nullptr;
     int64_t (*av_get_default_channel_layout)(int nb_channels) = nullptr;
     int (*av_strerror)(int errnum, char* errbuf, size_t errbuf_size) = nullptr;

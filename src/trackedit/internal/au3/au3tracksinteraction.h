@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditconfiguration.h"
 #include "trackedit/iclipsinteraction.h"
+#include "trackedit/iauxiliarytrackprovider.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
@@ -33,6 +34,7 @@ class Au3TracksInteraction : public ITracksInteraction, public muse::Contextable
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
     muse::ContextInject<au::trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<au::trackedit::IAuxiliaryTrackProvider> auxiliaryTrackProvider{ this };
 
 public:
     Au3TracksInteraction(const muse::modularity::ContextPtr& ctx);

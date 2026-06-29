@@ -30,6 +30,7 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.TrackEdit
+import Audacity.VideoPreview
 
 DockPage {
     id: root
@@ -128,6 +129,8 @@ DockPage {
 
     readonly property int verticalPanelDefaultWidth: 281
 
+    readonly property int videoPreviewToolBarDefaultHeight: 260
+
     readonly property int horizontalPanelMinHeight: 100
     readonly property int horizontalPanelMaxHeight: 520
 
@@ -218,6 +221,31 @@ DockPage {
     ]
 
     toolBars: [
+        DockToolBar {
+            id: videoPreviewToolBar
+
+            objectName: pageModel.videoPreviewPanelName()
+            title: qsTrc("appshell", "Video preview")
+
+            dropDestinations: [root.toolBarTopDropDestination, root.toolBarBottomDropDestination]
+
+            minimumWidth: 300
+            thickness: root.videoPreviewToolBarDefaultHeight
+            resizable: true
+            separatorsVisible: false
+
+            visible: pageModel.videoEditingWorkspace
+
+            VideoPreviewPanel {
+                width: videoPreviewToolBar.width
+                height: videoPreviewToolBar.height
+                implicitWidth: videoPreviewToolBar.width
+                implicitHeight: videoPreviewToolBar.thickness
+
+                navigationSection: root.playbackToolBarKeyNavSec
+                navigationOrderStart: 0
+            }
+        },
         DockToolBar {
             id: playbackToolBar
 

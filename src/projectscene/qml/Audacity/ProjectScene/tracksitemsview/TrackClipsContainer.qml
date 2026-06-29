@@ -363,6 +363,7 @@ TrackItemsContainer {
                                 isMultiSelectionActive: root.isMultiSelectionActive
                                 isDataSelected: root.isDataSelected
                                 clipFocused: itemData.focused
+                                isVideoClip: root.trackType === TrackType.VIDEO
                                 moveActive: root.moveActive
                                 isAudible: root.isTrackAudible
                                 dbRange: root.dbRange

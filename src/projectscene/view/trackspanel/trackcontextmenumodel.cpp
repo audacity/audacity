@@ -114,6 +114,14 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
     };
 }
 
+MenuItemList TrackContextMenuModel::makeVideoTrackItems()
+{
+    return {
+        makeItemWithArg("track-rename"),
+        makeItemWithArg("track-delete")
+    };
+}
+
 void TrackContextMenuModel::load()
 {
     AbstractMenuModel::load();
@@ -153,6 +161,9 @@ void TrackContextMenuModel::load()
     case trackedit::TrackType::Label:
         setItems(makeLabelTrackItems());
         break;
+    case trackedit::TrackType::Video:
+        setItems(makeVideoTrackItems());
+        return;
     default:
         return;
     }

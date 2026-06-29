@@ -63,6 +63,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/volumepressuremeteritem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/videotrackitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/videotrackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmenumodel.cpp

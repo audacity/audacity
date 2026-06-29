@@ -12,6 +12,7 @@ Item {
     property NavigationPanel navigationPanel: null
 
     property var trackId: null
+    property int trackType: TrackType.UNDEFINED
     property string trackTitle: ""
     property var context: null
     property var canvas: null

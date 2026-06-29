@@ -10,6 +10,7 @@ import Audacity.Playback
 import Audacity.Spectrogram
 import Audacity.UiComponents
 import Audacity.Automation
+import Audacity.VideoPreview
 
 Rectangle {
     id: root
@@ -73,6 +74,7 @@ Rectangle {
     property real rightVisibleMargin: 0
 
     property bool collapsed: false
+    property bool isVideoClip: false
 
     property bool multiSampleEdit: false
 
@@ -213,6 +215,7 @@ Rectangle {
 
         property bool singleMenuLoaded: false
         property bool multiMenuLoaded: false
+        property bool clipGainModelInitialized: false
 
         function ensureSingleMenuLoaded() {
             if (!singleMenuLoaded) {
@@ -225,6 +228,13 @@ Rectangle {
             if (!multiMenuLoaded) {
                 multiClipContextMenuModel.load()
                 multiMenuLoaded = true
+            }
+        }
+
+        function ensureClipGainModelInitialized() {
+            if (!clipGainModelInitialized && root.isAutomationEnabled) {
+                clipGainModel.init()
+                clipGainModelInitialized = true
             }
         }
     }
@@ -346,7 +356,11 @@ Rectangle {
 
     Component.onCompleted: {
         playbackState.init()
-        clipGainModel.init()
+        prv.ensureClipGainModelInitialized()
+    }
+
+    onIsAutomationEnabledChanged: {
+        prv.ensureClipGainModelInitialized()
     }
 
     Component.onDestruction: {
@@ -839,6 +853,26 @@ Rectangle {
             }
         }
 
+        VideoClipThumbnailsItem {
+            id: videoThumbnails
+
+            anchors.top: (!root.collapsed && header.visible) ? header.bottom : parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            visible: root.isVideoClip
+            clip: true
+            z: 1
+
+            trackId: root.clipKey ? root.clipKey.trackId() : -1
+            itemId: root.clipKey ? root.clipKey.itemId() : -1
+            projectStart: root.clipTime ? root.clipTime.startTime : 0
+            projectEnd: root.clipTime ? root.clipTime.endTime : 0
+
+            Component.onCompleted: init()
+        }
+
         ColumnLayout {
             id: viewsColumn
 
@@ -851,7 +885,7 @@ Rectangle {
 
             WaveView {
                 id: waveView
-                visible: root.isWaveformViewVisible
+                visible: !root.isVideoClip && root.isWaveformViewVisible
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -1022,7 +1056,7 @@ Rectangle {
             Loader {
                 id: spectrogramViewLoader
 
-                active: root.isSpectrogramViewVisible
+                active: !root.isVideoClip && root.isSpectrogramViewVisible
                 visible: active
 
                 Layout.fillWidth: true

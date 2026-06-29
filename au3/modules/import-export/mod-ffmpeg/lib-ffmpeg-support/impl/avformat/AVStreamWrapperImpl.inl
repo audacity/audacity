@@ -184,6 +184,18 @@ public:
       return {};
    }
 
+   bool IsVideo() const noexcept override
+   {
+      if (mAVStream != nullptr)
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
+         return mAVStream->codec->codec_type == AVMEDIA_TYPE_VIDEO;
+#else
+         return mAVStream->codecpar->codec_type == AVMEDIA_TYPE_VIDEO;
+#endif
+
+      return {};
+   }
+
    AVCodecIDFwd GetAVCodecID() const noexcept override
    {
       if (mAVStream != nullptr)
@@ -222,8 +234,11 @@ public:
          auto ret = mFFmpeg.avcodec_parameters_to_context(
             codecContext, mAVStream->codecpar);
 
-         if (ret < 0)
+         if (ret < 0) {
+            if (mFFmpeg.avcodec_free_context != nullptr)
+               mFFmpeg.avcodec_free_context(&codecContext);
             return {};
+         }
       }
       
       return context;
@@ -237,6 +252,22 @@ public:
 #else
       return mFFmpeg.avcodec_parameters_from_context(
          mAVStream->codecpar, context.GetWrappedValue());
+#endif
+   }
+
+   int CopyParametersFrom(const AVStreamWrapper& source) noexcept override
+   {
+      if (mAVStream == nullptr || source.GetWrappedValue() == nullptr)
+         return -1;
+
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
+      return -1;
+#else
+      if (mFFmpeg.avcodec_parameters_copy == nullptr)
+         return -1;
+
+      return mFFmpeg.avcodec_parameters_copy(
+         mAVStream->codecpar, source.GetWrappedValue()->codecpar);
 #endif
    }
 

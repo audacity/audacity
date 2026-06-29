@@ -2280,14 +2280,21 @@ au::trackedit::TrackId TrackeditActionsController::resolvePreviousTrackIdForMove
 
     for (const Track& track : trackList) {
         bool isLabelTrack = track.type == TrackType::Label;
+        bool isWaveTrack = track.type == TrackType::Mono || track.type == TrackType::Stereo;
 
         if (track.id == trackId) {
-            return track.type == TrackType::Label ? lastLabelTrackId : lastWaveTrackId;
+            if (isLabelTrack) {
+                return lastLabelTrackId;
+            }
+            if (isWaveTrack) {
+                return lastWaveTrackId;
+            }
+            return INVALID_TRACK;
         }
 
         if (isLabelTrack) {
             lastLabelTrackId = track.id;
-        } else {
+        } else if (isWaveTrack) {
             lastWaveTrackId = track.id;
         }
     }
@@ -2312,12 +2319,13 @@ au::trackedit::TrackId TrackeditActionsController::resolveNextTrackIdForMove(con
         }
 
         bool isLabelTrack = track.type == TrackType::Label;
+        bool isWaveTrack = track.type == TrackType::Mono || track.type == TrackType::Stereo;
 
         while (++i < trackList.size()) {
             const Track& nextTrack = trackList[i];
             if (isLabelTrack && nextTrack.type == TrackType::Label) {
                 return nextTrack.id;
-            } else if (!isLabelTrack && nextTrack.type != TrackType::Label) {
+            } else if (isWaveTrack && (nextTrack.type == TrackType::Mono || nextTrack.type == TrackType::Stereo)) {
                 return nextTrack.id;
             }
         }

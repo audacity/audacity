@@ -69,7 +69,8 @@ SplitToolController::~SplitToolController() = default;
 
 void au::projectscene::SplitToolController::doSplit()
 {
-    if (!m_clipHovered) {
+    const bool hasHoveredTrack = m_hoveredTrack != trackedit::INVALID_TRACK;
+    if (!m_clipHovered && !hasHoveredTrack) {
         return;
     }
 
@@ -78,8 +79,8 @@ void au::projectscene::SplitToolController::doSplit()
     if (mods & Qt::ShiftModifier) {
         auto allTracks = globalContext()->currentProject()->trackeditProject()->trackIdList();
         splitTracksAt(allTracks, context()->positionToTime(m_guidelinePos));
-    } else if (m_hoveredTrack >= 0) {
-        splitTracksAt({ m_hoveredTrack }, context()->positionToTime(m_guidelinePos));
+    } else if (hasHoveredTrack) {
+        splitTracksAt({ static_cast<trackedit::TrackId>(m_hoveredTrack) }, context()->positionToTime(m_guidelinePos));
     }
 }
 

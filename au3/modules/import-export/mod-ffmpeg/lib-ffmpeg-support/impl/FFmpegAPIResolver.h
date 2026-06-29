@@ -68,6 +68,8 @@ struct AVUtilFactories final
     std::unique_ptr<AVChannelLayoutWrapper> (* CreateLegacyChannelLayout)(const FFmpegFunctions&, uint64_t layout,
                                                                           int channelsCount) = nullptr;
     std::unique_ptr<AVChannelLayoutWrapper> (* CreateAVChannelLayout)(const FFmpegFunctions&, const AVChannelLayout* layout) = nullptr;
+    AVPixelFormatFwd (* GetBGRAPixelFormat)() = nullptr;
+    AVPixelFormatFwd (* GetYUV420PPixelFormat)() = nullptr;
 };
 
 class FFmpegAPIResolver final

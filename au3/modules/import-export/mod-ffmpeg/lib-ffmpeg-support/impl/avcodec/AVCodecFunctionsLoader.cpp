@@ -42,6 +42,7 @@ bool LoadAVCodecFunctions(
     GET_SYMBOL(avcodec_register_all);
     GET_SYMBOL(av_codec_next);
     GET_SYMBOL(av_codec_iterate);
+    GET_SYMBOL(avcodec_parameters_copy);
    // Missing in FFmpeg 60
    GET_SYMBOL(avcodec_close);
     // New decoding API

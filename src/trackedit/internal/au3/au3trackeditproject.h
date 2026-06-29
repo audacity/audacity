@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include "trackedit/iauxiliarytrackprovider.h"
 #include "trackedit/itrackeditproject.h"
 
 #include "au3-project-history/UndoManager.h"
@@ -18,6 +19,7 @@ class Au3TrackeditProject : public ITrackeditProject, public muse::Contextable
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<trackedit::IAuxiliaryTrackProvider> auxiliaryTrackProvider { this };
 
 public:
     explicit Au3TrackeditProject(const muse::modularity::ContextPtr& ctx, const std::shared_ptr<au::au3::IAu3Project>& au3project);
@@ -78,6 +80,8 @@ private:
 
     au::trackedit::Clips getClips(const TrackId& trackId) const;
     au::trackedit::Labels getLabels(const TrackId& trackId) const;
+    int auxiliaryTrackCount() const;
+    int displayTrackPosition(const Track& track, int pos) const;
     void updateHasAudioContent();
 
     struct Au3Impl;

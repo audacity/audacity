@@ -272,6 +272,13 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Show history"),
              Checkable::Yes
              ),
+    UiAction("toggle-video-preview",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Show video preview"),
+             TranslatableString("action", "Show video preview"),
+             Checkable::Yes
+             ),
 
     // record menu
     UiAction("set-up-timed-recording",

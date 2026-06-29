@@ -87,6 +87,18 @@ public:
     virtual int GetFrameSize() const noexcept = 0;
     virtual void SetFrameSize(int value) noexcept = 0;
 
+    virtual int GetWidth() const noexcept = 0;
+    virtual void SetWidth(int value) noexcept = 0;
+
+    virtual int GetHeight() const noexcept = 0;
+    virtual void SetHeight(int value) noexcept = 0;
+
+    virtual AVPixelFormatFwd GetPixelFormat() const noexcept = 0;
+    virtual void SetPixelFormat(AVPixelFormatFwd value) noexcept = 0;
+
+    virtual AudacityAVRational GetFrameRate() const noexcept = 0;
+    virtual void SetFrameRate(AudacityAVRational value) noexcept = 0;
+
     virtual int GetGlobalQuality() const noexcept = 0;
     virtual void SetGlobalQuality(int value) noexcept = 0;
 
