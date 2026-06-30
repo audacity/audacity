@@ -29,6 +29,8 @@ public:
     virtual void setFocusedItem(const TrackItemKey& key, bool highlight = false) = 0;
     virtual muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const = 0;
 
+    virtual TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const = 0;
+
     virtual muse::async::Channel<TrackItemKey> openContextMenuRequested() const = 0;
 };
 }

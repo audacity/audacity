@@ -390,7 +390,7 @@ Rectangle {
         onClicked: function (e) {
             if (root.multiClipsSelected) {
                 prv.ensureMultiMenuLoaded()
-                if (e.modifiers & Qt.ShiftModifier) {
+                if (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
                     if (!root.clipSelected) {
                         root.requestSelectionReset()
                     }
@@ -630,7 +630,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if ((!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier)) && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
+                        if ((!root.multiClipsSelected || (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier))) && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
                             root.requestSelected()
                         }
 
@@ -829,7 +829,7 @@ Rectangle {
                             prv.ensureSingleMenuLoaded()
                         }
 
-                        if (!root.multiClipsSelected || (mouse.modifiers & Qt.ShiftModifier)) {
+                        if (!root.multiClipsSelected || (mouse.modifiers & (Qt.ShiftModifier | Qt.ControlModifier))) {
                             if (!root.clipSelected) {
                                 root.requestSelectionReset()
                             }
