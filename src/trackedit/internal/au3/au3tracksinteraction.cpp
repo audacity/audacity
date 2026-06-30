@@ -129,9 +129,9 @@ bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, ClipC
 
         if (Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track)) {
             for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
-                //Set it back to auto (inherit from track)
-                clips->SetColorIndex(CLIP_COLOR_INDEX_NONE);
-                prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+                if (clips->GetColorIndex() == CLIP_COLOR_INDEX_NONE) {
+                    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+                }
             }
         } else if (Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track)) {
             const auto& au3labels = labelTrack->GetLabels();
