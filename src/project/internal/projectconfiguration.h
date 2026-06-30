@@ -1,8 +1,6 @@
 #ifndef AU_PROJECT_PROJECTCONFIGURATION_H
 #define AU_PROJECT_PROJECTCONFIGURATION_H
 
-#include "types/val.h"
-
 #include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"
 #include "io/ifilesystem.h"
@@ -32,7 +30,6 @@ public:
 
     muse::io::path_t cloudProjectsPath() const override;
     void setCloudProjectsPath(const muse::io::path_t& path) override;
-    bool isCloudProject(const muse::io::path_t& projectPath) const override;
 
     muse::io::path_t lastOpenedProjectsPath() const override;
     void setLastOpenedProjectsPath(const muse::io::path_t& path) override;
