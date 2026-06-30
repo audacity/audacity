@@ -186,6 +186,13 @@ Rectangle {
 
         clipHovered: root.itemHovered && !root.itemHeaderHovered
         hoveredTrack: root.hoveredTrackId
+
+        onActiveChanged: {
+            if (active) {
+                selectionViewController.cancelSpectrogramEdit()
+                itemsSelection.visible = false
+            }
+        }
     }
 
     SelectionViewController {
@@ -916,6 +923,7 @@ Rectangle {
                             pressedSpectrogram: selectionViewController.pressedSpectrogram
                             spectralSelectionEnabled: selectionViewController.spectralSelectionEnabled
                             selectionController: selectionViewController
+                            splitToolActive: splitToolController.active
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 

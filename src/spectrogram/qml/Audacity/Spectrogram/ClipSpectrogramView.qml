@@ -100,6 +100,8 @@ Item {
 
                     cursorShape: Qt.CrossCursor
                     acceptedButtons: Qt.NoButton // Don't consume mouse events
+
+                    enabled: root.visible && root.enabled
                 }
             }
         }

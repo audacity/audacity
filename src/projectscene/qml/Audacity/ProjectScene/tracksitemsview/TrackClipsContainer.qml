@@ -28,6 +28,7 @@ TrackItemsContainer {
     required property var pressedSpectrogram
     required property double sampleRate
     required property var selectionController
+    required property bool splitToolActive
 
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
@@ -386,6 +387,7 @@ TrackItemsContainer {
                                 selectionEndFrequency: root.selectionEndFrequency
                                 pressedSpectrogram: root.pressedSpectrogram
                                 spectralSelectionEnabled: root.spectralSelectionEnabled
+                                splitToolActive: root.splitToolActive
 
                                 leftVisibleMargin: itemData.leftVisibleMargin
                                 rightVisibleMargin: itemData.rightVisibleMargin
@@ -668,6 +670,7 @@ TrackItemsContainer {
                 id: spectralSelectionContainer
 
                 visible: root.isSpectrogramViewVisible
+                enabled: !root.splitToolActive
 
                 y: root.headerHeight + (root.isWaveformViewVisible ? prv.viewHeight : 0)
                 height: prv.viewHeight

@@ -65,6 +65,7 @@ public:
     Q_INVOKABLE void onSelectionHorizontalResize(double x, double x2, bool completed);
     Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop);
     Q_INVOKABLE void updateSelectionVerticalResize(double y, bool completed);
+    Q_INVOKABLE void cancelSpectrogramEdit();
 
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);
