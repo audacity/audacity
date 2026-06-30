@@ -2,12 +2,10 @@
 
 #include <QFileDialog>
 
-#include "au3cloud/internal/au3audiocomservice.h"
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
 #include "framework/global/io/path.h"
-#include "framework/global/io/fileinfo.h"
 #include "framework/global/progress.h"
 #include "framework/global/log.h"
 #include "framework/global/types/ret.h"
@@ -19,6 +17,7 @@
 #include "audacityproject.h"
 #include "projecterrors.h"
 #include "project/types/projecttypes.h"
+#include "thirdparty/kors_logger/src/log_base.h"
 
 using namespace muse;
 using namespace au::project;
@@ -304,27 +303,48 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 
 void ProjectActionsController::openCloudProject(const muse::actions::ActionData& args)
 {
-    if (args.count() < 3) {
+    if (args.count() > 2 || args.count() < 1) {
         return;
     }
 
     const QString cloudProjectId = args.arg<QString>(0);
-    const QUrl url = args.arg<QUrl>(1);
-    const QString displayName = args.arg<QString>(2);
-    const QString snapshotId = args.count() >= 4 ? args.arg<QString>(3) : QString();
+    const QString snapshotId = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
-    //! An empty URL means the project is not in the local cloud DB yet (or a
-    //! specific snapshot was requested, which can't be served from local), so
-    //! route into the download flow and let audioComService resolve the path.
-    if (url.isEmpty()) {
-        Ret ret = openCloudProject({}, cloudProjectId, snapshotId);
-        if (!ret) {
-            openPageIfNeed(HOME_PAGE_URI);
+    if (m_isProjectProcessing) {
+        return;
+    }
+    m_isProjectProcessing = true;
+
+    DEFER {
+        m_isProjectProcessing = false;
+    };
+
+    std::optional<io::path_t> localPath = audioComService()->projectLocalPath(cloudProjectId.toStdString());
+    if (localPath) {
+        if (isProjectOpened(localPath.value())) {
+            openPageIfNeed(PROJECT_PAGE_URI);
+            return;
         }
+
+        if (multiwindowsProvider()->isProjectAlreadyOpened(localPath.value())) {
+            multiwindowsProvider()->activateWindowWithProject(localPath.value());
+            return;
+        }
+    }
+
+    if (globalContext()->currentProject()) {
+        QString cloudArg = cloudProjectId;
+        if (!snapshotId.isEmpty()) {
+            cloudArg += "@" + snapshotId;
+        }
+
+        QStringList newWindowArgs;
+        newWindowArgs << "--cloud-project-id" << cloudArg;
+        multiwindowsProvider()->openNewWindow(newWindowArgs);
         return;
     }
 
-    Ret ret = openProject(muse::io::path_t(url), displayName, cloudProjectId);
+    Ret ret = openCloudProject(localPath.value_or(io::path_t {}), cloudProjectId, snapshotId);
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
@@ -846,26 +866,21 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         m_isProjectProcessing = false;
     };
 
-    //! Step 1. Take absolute path
     io::path_t actualPath = fileSystem()->absoluteFilePath(path);
     if (actualPath.empty()) {
         // We assume that a valid path has been specified to this method
         return make_ret(Ret::Code::UnknownError);
     }
 
-    //! Step 2. If the project is already open in the current window, then just switch to showing the project
     if (isProjectOpened(actualPath)) {
         return openPageIfNeed(PROJECT_PAGE_URI);
     }
 
-    //! Step 3. Check, if the project already opened in another window, then activate the window with the project
     if (multiwindowsProvider()->isProjectAlreadyOpened(actualPath)) {
         multiwindowsProvider()->activateWindowWithProject(actualPath);
         return make_ret(Ret::Code::Ok);
     }
 
-    //! Step 4. Check, if a any project is already open in the current window,
-    //! then create a new instance
     if (globalContext()->currentProject()) {
         QStringList args;
         args << actualPath.toQString();
@@ -877,12 +892,6 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         return make_ret(Ret::Code::Ok);
     }
 
-    //! Step 5. If it's a cloud project, download the latest version
-    if (audioComService()->isCloudProject(actualPath)) {
-        return openCloudProject(actualPath, projectId);
-    }
-
-    //! Step 6. Open project in the current window
     return doOpenProject(actualPath);
 }
 

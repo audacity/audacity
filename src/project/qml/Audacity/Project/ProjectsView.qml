@@ -40,6 +40,6 @@ Loader {
 
     signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
-    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId)
     signal openCloudAudioFileRequested(var cloudItemId)
 }

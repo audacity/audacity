@@ -84,6 +84,16 @@ bool Au3AudioComServiceStub::isCloudProject(const muse::io::path_t&) const
     return false;
 }
 
+std::optional<muse::io::path_t> Au3AudioComServiceStub::projectLocalPath(const std::string&) const
+{
+    return std::nullopt;
+}
+
+std::optional<std::string> Au3AudioComServiceStub::cloudProjectId(const muse::io::path_t&) const
+{
+    return std::nullopt;
+}
+
 void Au3AudioComServiceStub::deinit()
 {
 }

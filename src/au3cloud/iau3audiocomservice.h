@@ -66,6 +66,9 @@ public:
 
     virtual bool isCloudProject(const muse::io::path_t& projectPath) const = 0;
 
+    virtual std::optional<muse::io::path_t> projectLocalPath(const std::string& projectId) const = 0;
+    virtual std::optional<std::string> cloudProjectId(const muse::io::path_t& projectPath) const = 0;
+
     virtual void deinit() = 0;
 };
 }
