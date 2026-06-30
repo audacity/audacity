@@ -4,6 +4,7 @@
 #include "guiapp.h"
 
 #include <QCoreApplication>
+#include <optional>
 
 #include "framework/global/async/async.h"
 #include "framework/global/modularity/ioc.h"
@@ -89,8 +90,19 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
         projectFile = file;
     }
 
+    std::optional<project::CloudProject> cloudProject;
+    if (options->startup.cloudProject.has_value()) {
+        const QString& value = options->startup.cloudProject.value();
+        const int atIndex = value.indexOf('@');
+
+        cloudProject = atIndex < 0
+                       ? project::CloudProject(value)
+                       : project::CloudProject(value.left(atIndex), value.mid(atIndex + 1));
+    }
+
     startupScenario->setStartupType(options->startup.type);
     startupScenario->setStartupProjectFile(projectFile);
+    startupScenario->setStartupCloudProject(cloudProject);
     startupScenario->setStartupMediaFiles(options->startup.mediaFiles);
     startupScenario->setRemoveMediaFilesAfterImport(options->startup.removeMediaFilesAfterImport);
     if (options->startup.startupUrl.has_value()) {

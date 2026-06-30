@@ -59,6 +59,10 @@ static StartupModeType modeTypeFromString(const std::string& str)
         return StartupModeType::StartWithProject;
     }
 
+    if ("start-with-cloud" == str) {
+        return StartupModeType::StartWithCloudProject;
+    }
+
     return StartupModeType::StartEmpty;
 }
 
@@ -88,6 +92,11 @@ const ProjectFile& StartupScenario::startupProjectFile() const
 void StartupScenario::setStartupProjectFile(const std::optional<ProjectFile>& file)
 {
     m_startupProjectFile = file ? file.value() : ProjectFile();
+}
+
+void StartupScenario::setStartupCloudProject(const std::optional<CloudProject>& cloudProject)
+{
+    m_startupCloudProject = cloudProject ? cloudProject.value() : CloudProject();
 }
 
 const muse::io::paths_t& StartupScenario::startupMediaFiles() const
@@ -176,6 +185,10 @@ bool StartupScenario::startupCompleted() const
 
 StartupModeType StartupScenario::resolveStartupModeType() const
 {
+    if (m_startupCloudProject.isValid()) {
+        return StartupModeType::StartWithCloudProject;
+    }
+
     if (m_startupProjectFile.isValid()) {
         return StartupModeType::StartWithProject;
     }
@@ -231,6 +244,9 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
                            : ProjectFile(configuration()->startupProjectPath());
         openProject(file);
     } break;
+    case StartupModeType::StartWithCloudProject:
+        openCloudProject(m_startupCloudProject);
+        break;
     case StartupModeType::FirstLaunch: {
         dispatcher()->dispatch("file-new");
     } break;
@@ -278,6 +294,7 @@ muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
     case StartupModeType::Recovery:
         return HOME_URI;
     case StartupModeType::StartWithProject:
+    case StartupModeType::StartWithCloudProject:
     case StartupModeType::ContinueLastSession:
     case StartupModeType::FirstLaunch:
         return PROJECT_URI;
@@ -289,6 +306,16 @@ muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
 void StartupScenario::openProject(const ProjectFile& file)
 {
     dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(file.url, file.displayNameOverride));
+}
+
+void StartupScenario::openCloudProject(const CloudProject& cloudProject)
+{
+    ActionData data;
+    data.setArg<QString>(0, cloudProject.id);
+    data.setArg<QUrl>(1, QUrl());
+    data.setArg<QString>(2, QString());
+    data.setArg<QString>(3, cloudProject.snapshotId.value_or(QString()));
+    dispatcher()->dispatch("cloud-file-open", data);
 }
 
 void StartupScenario::restoreLastSession()

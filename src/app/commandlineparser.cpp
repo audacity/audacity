@@ -142,12 +142,7 @@ void CommandLineParser::parse(int argc, char** argv)
     }
 
     if (m_parser.isSet("cloud-project-id")) {
-        const QString value = m_parser.value("cloud-project-id");
-        const int atIndex = value.indexOf('@');
-
-        AudacityCmdOptions::CloudProject cloudProject;
-        cloudProject.id = atIndex < 0 ? value : value.left(atIndex);
-        cloudProject.snapshotId = atIndex < 0 ? std::nullopt : std::optional<QString>(value.mid(atIndex + 1));
+        m_options->startup.cloudProject = m_parser.value("cloud-project-id");
     }
 
     if (m_parser.isSet("u")) {
