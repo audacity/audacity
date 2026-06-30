@@ -171,6 +171,7 @@ ListItemBlank {
 
                 Loader {
                     id: headerTrailingControls
+                    visible: root.collapsed && item !== null
                 }
 
                 MenuButton {
