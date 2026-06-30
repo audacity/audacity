@@ -316,9 +316,7 @@ void StartupScenario::openCloudProject(const CloudProject& cloudProject)
 {
     ActionData data;
     data.setArg<QString>(0, cloudProject.id);
-    data.setArg<QUrl>(1, QUrl());
-    data.setArg<QString>(2, QString());
-    data.setArg<QString>(3, cloudProject.snapshotId.value_or(QString()));
+    data.setArg<QString>(1, cloudProject.snapshotId.value_or(QString()));
     dispatcher()->dispatch("cloud-file-open", data);
 }
 

@@ -294,8 +294,8 @@ FocusScope {
                 Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
             }
 
-            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
-                Qt.callLater(projectsPageModel.openCloudProject, projectId, projectPath, displayName)
+            onOpenCloudProjectRequested: function (projectId) {
+                Qt.callLater(projectsPageModel.openCloudProject, projectId)
             }
         }
     }
@@ -322,8 +322,8 @@ FocusScope {
                 })
                 item.navigationSection = navSec
                 item.navigationOrder = 5
-                item.openCloudProjectRequested.connect(function (projectId, projectPath, displayName) {
-                    Qt.callLater(projectsPageModel.openCloudProject, projectId, projectPath, displayName)
+                item.openCloudProjectRequested.connect(function (projectId) {
+                    Qt.callLater(projectsPageModel.openCloudProject, projectId)
                 })
             }
 

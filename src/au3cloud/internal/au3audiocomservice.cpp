@@ -743,6 +743,26 @@ bool Au3AudioComService::isCloudProject(const muse::io::path_t& projectPath) con
     return dbProjectData.has_value() && !dbProjectData->ProjectId.empty();
 }
 
+std::optional<muse::io::path_t> Au3AudioComService::projectLocalPath(const std::string& projectId) const
+{
+    const auto dbProjectData = sync::CloudProjectsDatabase::Get().GetProjectData(projectId);
+    if (!dbProjectData.has_value() || dbProjectData->LocalPath.empty()) {
+        return std::nullopt;
+    }
+
+    return muse::io::path_t(dbProjectData->LocalPath);
+}
+
+std::optional<std::string> Au3AudioComService::cloudProjectId(const muse::io::path_t& projectPath) const
+{
+    const auto dbProjectData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(projectPath.toStdString());
+    if (!dbProjectData.has_value() || dbProjectData->ProjectId.empty()) {
+        return std::nullopt;
+    }
+
+    return dbProjectData->ProjectId;
+}
+
 void Au3AudioComService::removeProjectFromDatabase(const muse::io::path_t& localPath)
 {
     auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
