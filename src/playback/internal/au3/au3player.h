@@ -8,12 +8,14 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/types/retval.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
 #include "audio/iaudioengine.h"
 #include "record/irecord.h"
 #include "record/irecordcontroller.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "au3wrap/au3types.h"
 
@@ -27,11 +29,13 @@ namespace au::playback {
 class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<au::record::IRecord> record{ this };
     muse::ContextInject<au::record::IRecordController> recordController{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
 
 public:
 
@@ -80,6 +84,12 @@ public:
     bool isStopped() const override;
     muse::async::Notification isPlayingChanged() const override;
     muse::secs_t totalPlayTime() const override;
+
+    void toggleLoopPlayback() override;
+    void setLoopRegionToSelection() override;
+    void setSelectionToLoop() override;
+    void setLoopRegionInOut() override;
+    void setSelectionFollowsLoopRegion() override;
 
 private:
     au3::Au3Project& projectRef() const;

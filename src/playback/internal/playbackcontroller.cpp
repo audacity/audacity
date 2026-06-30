@@ -70,9 +70,6 @@ void PlaybackController::init()
 
     player()->loopRegionChanged().onNotify(this, [this](){
         m_actionCheckedChanged.send("toggle-loop-region");
-        if (playbackConfiguration()->selectionFollowsLoopRegion()) {
-            setSelectionToLoop();
-        }
     });
 
     playbackConfiguration()->selectionFollowsLoopRegionChanged().onNotify(this, [this]() {
@@ -154,9 +151,7 @@ bool PlaybackController::isLoaded() const
 
 bool PlaybackController::isLoopRegionActive() const
 {
-    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
-
-    return prj ? player()->isLoopRegionActive() : false;
+    return player()->isLoopRegionActive();
 }
 
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
@@ -525,7 +520,7 @@ void PlaybackController::toggleAutomaticallyPan()
 
 void PlaybackController::toggleLoopPlayback()
 {
-    player()->setLoopRegionActive(!isLoopRegionActive());
+    player()->toggleLoopPlayback();
     notifyActionCheckedChanged("toggle-loop-region");
 }
 
@@ -592,61 +587,22 @@ muse::async::Notification PlaybackController::loopRegionChanged() const
 
 void PlaybackController::setLoopRegionToSelection()
 {
-    double start = 0;
-    double end = 0;
-
-    if (!selectionController()->timeSelectionIsEmpty()) {
-        start = selectionController()->dataSelectedStartTime();
-        end = selectionController()->dataSelectedEndTime();
-    } else {
-        auto itemStart = selectionController()->leftMostSelectedItemStartTime();
-        auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
-        if (itemStart.has_value() && itemEnd.has_value()) {
-            start = itemStart.value();
-            end = itemEnd.value();
-        } else {
-            player()->clearLoopRegion();
-            return;
-        }
-    }
-
-    player()->setLoopRegion({ start, end });
+    player()->setLoopRegionToSelection();
 }
 
 void PlaybackController::setSelectionToLoop()
 {
-    PlaybackRegion loopRegion = player()->loopRegion();
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    trackedit::TrackIdList tracks = prj->trackIdList();
-
-    selectionController()->setSelectedTracks(tracks, false);
-    selectionController()->setDataSelectedStartTime(loopRegion.start, false);
-    selectionController()->setDataSelectedEndTime(loopRegion.end, true);
+    player()->setSelectionToLoop();
 }
 
 void PlaybackController::setLoopRegionInOut()
 {
-    PlaybackRegion region = player()->loopRegion();
-
-    muse::UriQuery loopRegionInOutUri("audacity://playback/loop_region_in_out");
-    loopRegionInOutUri.addParam("title", muse::Val(muse::trc("trackedit", "Set looping region in/out")));
-    loopRegionInOutUri.addParam("start", muse::Val(static_cast<double>(region.start)));
-    loopRegionInOutUri.addParam("end", muse::Val(static_cast<double>(region.end)));
-
-    RetVal<Val> rv = interactive()->openSync(loopRegionInOutUri);
-    if (!rv.ret.success()) {
-        return;
-    }
-
-    QVariantMap vals = rv.val.toQVariant().toMap();
-
-    player()->setLoopRegion({ vals["start"].toDouble(), vals["end"].toDouble() });
+    player()->setLoopRegionInOut();
 }
 
 void PlaybackController::setSelectionFollowsLoopRegion()
 {
-    playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
+    player()->setSelectionFollowsLoopRegion();
 }
 
 void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)

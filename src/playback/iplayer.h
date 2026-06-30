@@ -69,6 +69,13 @@ public:
     virtual bool isStopped() const = 0;
     virtual muse::async::Notification isPlayingChanged() const = 0;
     virtual muse::secs_t totalPlayTime() const = 0;
+
+    // loop region
+    virtual void toggleLoopPlayback() = 0;
+    virtual void setLoopRegionToSelection() = 0;
+    virtual void setSelectionToLoop() = 0;
+    virtual void setLoopRegionInOut() = 0;
+    virtual void setSelectionFollowsLoopRegion() = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

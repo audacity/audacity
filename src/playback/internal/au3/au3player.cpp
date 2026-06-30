@@ -4,6 +4,7 @@
 #include "au3player.h"
 
 #include "framework/global/types/number.h"
+#include "framework/global/translation.h"
 #include "framework/global/defer.h"
 #include "framework/global/log.h"
 
@@ -18,6 +19,8 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
+
+#include <QVariant>
 
 #include <algorithm>
 
@@ -86,6 +89,12 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
+    }, Mode::SetReplace);
+
+    m_loopRegionChanged.onNotify(this, [this]() {
+        if (playbackConfiguration()->selectionFollowsLoopRegion()) {
+            setSelectionToLoop();
+        }
     });
 
     m_timer.setInterval(16);
@@ -136,6 +145,70 @@ muse::secs_t Au3Player::totalPlayTime() const
     }
 
     return project->trackeditProject()->totalTime();
+}
+
+void Au3Player::toggleLoopPlayback()
+{
+    setLoopRegionActive(!isLoopRegionActive());
+}
+
+void Au3Player::setLoopRegionToSelection()
+{
+    double start = 0;
+    double end = 0;
+
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        start = selectionController()->dataSelectedStartTime();
+        end = selectionController()->dataSelectedEndTime();
+    } else {
+        auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+        auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+        if (itemStart.has_value() && itemEnd.has_value()) {
+            start = itemStart.value();
+            end = itemEnd.value();
+        } else {
+            clearLoopRegion();
+            return;
+        }
+    }
+
+    setLoopRegion({ start, end });
+}
+
+void Au3Player::setSelectionToLoop()
+{
+    const PlaybackRegion region = loopRegion();
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    selectionController()->setSelectedTracks(tracks, false);
+    selectionController()->setDataSelectedStartTime(region.start, false);
+    selectionController()->setDataSelectedEndTime(region.end, true);
+}
+
+void Au3Player::setLoopRegionInOut()
+{
+    const PlaybackRegion region = loopRegion();
+
+    muse::UriQuery loopRegionInOutUri("audacity://playback/loop_region_in_out");
+    loopRegionInOutUri.addParam("title", muse::Val(muse::trc("trackedit", "Set looping region in/out")));
+    loopRegionInOutUri.addParam("start", muse::Val(static_cast<double>(region.start)));
+    loopRegionInOutUri.addParam("end", muse::Val(static_cast<double>(region.end)));
+
+    const muse::RetVal<muse::Val> rv = interactive()->openSync(loopRegionInOutUri);
+    if (!rv.ret.success()) {
+        return;
+    }
+
+    const QVariantMap vals = rv.val.toQVariant().toMap();
+
+    setLoopRegion({ vals["start"].toDouble(), vals["end"].toDouble() });
+}
+
+void Au3Player::setSelectionFollowsLoopRegion()
+{
+    playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
 }
 
 void Au3Player::play()
@@ -515,6 +588,10 @@ bool Au3Player::isLoopRegionClear() const
 
 bool Au3Player::isLoopRegionActive() const
 {
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
