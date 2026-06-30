@@ -71,6 +71,7 @@ public:
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings)
     const override;
+    OptionalMessage LoadFactoryDefaults(EffectSettings& settings) const override;
 
     bool InitializePlugin();
 

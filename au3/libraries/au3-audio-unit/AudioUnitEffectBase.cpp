@@ -399,6 +399,27 @@ AudioUnitEffectBase::LoadFactoryPreset(int id, EffectSettings& settings) const
     return {};
 }
 
+OptionalMessage
+AudioUnitEffectBase::LoadFactoryDefaults(EffectSettings& settings) const
+{
+    if (auto msg = LoadUserPreset(FactoryDefaultsGroup(), settings)) {
+        return msg;
+    }
+
+    auto& mySettings = GetSettings(settings);
+    mySettings.mPresetNumber = {};
+    ForEachParameter([&mySettings](const ParameterInfo& pi, AudioUnitParameterID ID) {
+        auto& slot = mySettings.values[ID];
+        slot.reset();
+        if (pi.mName) {
+            slot.emplace(mySettings.Intern(*pi.mName), pi.mInfo.defaultValue);
+        }
+        return true;
+    });
+
+    return { nullptr };
+}
+
 RegistryPaths AudioUnitEffectBase::GetFactoryPresets() const
 {
     RegistryPaths presets;
