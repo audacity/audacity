@@ -65,6 +65,8 @@ public:
     virtual std::string getCloudAudioPage(const std::string& slug) const = 0;
     virtual std::string getCloudProfilePage() const = 0;
 
+    virtual bool isCloudProject(const muse::io::path_t& projectPath) const = 0;
+
     virtual void deinit() = 0;
 };
 }

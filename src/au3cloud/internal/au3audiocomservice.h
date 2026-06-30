@@ -78,6 +78,8 @@ public:
     std::string getCloudAudioPage(const std::string& slug) const override;
     std::string getCloudProfilePage() const override;
 
+    bool isCloudProject(const muse::io::path_t& projectPath) const override;
+
     void deinit() override;
 
 private:
