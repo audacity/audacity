@@ -77,14 +77,26 @@ public:
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
-    bool isPlayAllowed() const override;
-    muse::async::Notification isPlayAllowedChanged() const override;
+    // --- session status (merged from the former Transport layer) ---
     bool isPlaying() const override;
     bool isPaused() const override;
     bool isStopped() const override;
     muse::async::Notification isPlayingChanged() const override;
+    bool isPlayAllowed() const override;
+    muse::async::Notification isPlayAllowedChanged() const override;
+
+    muse::secs_t lastPlaybackSeekTime() const override;
+    void setLastPlaybackSeekTime(muse::secs_t secs) override;
+    muse::async::Notification lastPlaybackSeekTimeChanged() const override;
     muse::secs_t totalPlayTime() const override;
 
+    // High-level transport intents, driven by PlaybackController.
+    void togglePlay(bool ignoreSelection) override;
+    void rewindToStart() override;
+    void rewindToEnd() override;
+    void seekTo(muse::secs_t secs, bool triggerPlay) override;
+    void changePlaybackRegion(muse::secs_t start, muse::secs_t end) override;
+    void stopSeekAndUpdatePlaybackRegion() override;
     void toggleLoopPlayback() override;
     void setLoopRegionToSelection() override;
     void setSelectionToLoop() override;
@@ -92,6 +104,8 @@ public:
     void setSelectionFollowsLoopRegion() override;
 
 private:
+    friend class PlaybackControllerTests;
+
     au3::Au3Project& projectRef() const;
 
     bool canStopAudioStream() const;
@@ -103,9 +117,33 @@ private:
     void updateStreamState();
     void updatePlaybackState();
 
+    // --- transport session logic (merged from the former Transport layer) ---
+    PlaybackRegion selectionPlaybackRegion() const;
+    bool isSelectionPlaybackRegionChanged() const;
+    void updatePlaybackRegion();
+
+    void onProjectChanged();
+    void onPlaybackPositionChanged();
+
+    void doPlay(bool ignoreSelection);
+    void doSeek(const muse::secs_t secs, bool applyIfPlaying);
+    void doChangePlaybackRegion(const PlaybackRegion& region);
+    void doPauseStream();
+
+    bool isEqualToPlaybackPosition(muse::secs_t position) const;
+    bool isPlaybackPositionOnTheEndOfProject() const;
+    bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
+    bool isPlaybackStartPositionValid() const;
+    bool isSeekPositionValid(const muse::secs_t& seekTime) const;
+
     muse::async::Notification m_loopRegionChanged;
+
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
+    muse::async::Notification m_lastPlaybackSeekTimeChanged;
+    muse::secs_t m_lastPlaybackSeekTime = 0.0;
+    PlaybackRegion m_lastPlaybackRegion;
+    bool m_pauseShouldStopPlayback = false;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;
