@@ -128,6 +128,16 @@ muse::async::Notification Au3Player::isPlayingChanged() const
     return m_isPlayingChanged;
 }
 
+muse::secs_t Au3Player::totalPlayTime() const
+{
+    au::project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return 0;
+    }
+
+    return project->trackeditProject()->totalTime();
+}
+
 void Au3Player::play()
 {
     if (m_playbackStatus.val == PlaybackStatus::Paused) {

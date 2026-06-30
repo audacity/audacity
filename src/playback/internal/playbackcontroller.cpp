@@ -778,12 +778,7 @@ Channel<ActionCode> PlaybackController::actionCheckedChanged() const
 
 muse::secs_t PlaybackController::totalPlayTime() const
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    if (!project) {
-        return 0;
-    }
-
-    return project->trackeditProject()->totalTime();
+    return player()->totalPlayTime();
 }
 
 Notification PlaybackController::totalPlayTimeChanged() const

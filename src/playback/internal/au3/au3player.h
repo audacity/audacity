@@ -79,6 +79,7 @@ public:
     bool isPaused() const override;
     bool isStopped() const override;
     muse::async::Notification isPlayingChanged() const override;
+    muse::secs_t totalPlayTime() const override;
 
 private:
     au3::Au3Project& projectRef() const;
