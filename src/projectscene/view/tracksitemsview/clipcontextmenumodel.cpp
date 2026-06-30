@@ -111,6 +111,12 @@ void ClipContextMenuModel::load()
                 load();
             }
         }, muse::async::Asyncable::Mode::SetReplace);
+
+        prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+            if (track.id == m_clipKey.trackId()) {
+                updateColorCheckedState();
+            }
+        }, muse::async::Asyncable::Mode::SetReplace);
     }
 
     setItems(items);
