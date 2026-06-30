@@ -75,6 +75,10 @@ public:
 
     bool isPlayAllowed() const override;
     muse::async::Notification isPlayAllowedChanged() const override;
+    bool isPlaying() const override;
+    bool isPaused() const override;
+    bool isStopped() const override;
+    muse::async::Notification isPlayingChanged() const override;
 
 private:
     au3::Au3Project& projectRef() const;
@@ -90,6 +94,7 @@ private:
 
     muse::async::Notification m_loopRegionChanged;
     muse::async::Notification m_isPlayAllowedChanged;
+    muse::async::Notification m_isPlayingChanged;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;

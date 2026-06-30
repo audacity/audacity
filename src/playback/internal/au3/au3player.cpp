@@ -28,6 +28,8 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
 {
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
+        m_isPlayingChanged.notify();
+
         if (st == PlaybackStatus::Running) {
             m_currentTarget.reset();
             m_consumedSamplesSoFar = 0;
@@ -104,6 +106,26 @@ bool Au3Player::isPlayAllowed() const
 muse::async::Notification Au3Player::isPlayAllowedChanged() const
 {
     return m_isPlayAllowedChanged;
+}
+
+bool Au3Player::isPlaying() const
+{
+    return playbackStatus() == PlaybackStatus::Running;
+}
+
+bool Au3Player::isPaused() const
+{
+    return playbackStatus() == PlaybackStatus::Paused;
+}
+
+bool Au3Player::isStopped() const
+{
+    return playbackStatus() == PlaybackStatus::Stopped;
+}
+
+muse::async::Notification Au3Player::isPlayingChanged() const
+{
+    return m_isPlayingChanged;
 }
 
 void Au3Player::play()

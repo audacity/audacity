@@ -63,10 +63,6 @@ void PlaybackController::init()
     m_player = playback()->player();
     globalContext()->setPlayer(player());
 
-    player()->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
-        m_isPlayingChanged.notify();
-    });
-
     // No need to assert that we're on the main thread here: this is the init method of a controller...
     player()->playbackPositionChanged().onReceive(this, [this](const muse::secs_t&) {
         onPlaybackPositionChanged();
@@ -138,17 +134,17 @@ Notification PlaybackController::isPlayAllowedChanged() const
 
 bool PlaybackController::isPlaying() const
 {
-    return player()->playbackStatus() == PlaybackStatus::Running;
+    return player()->isPlaying();
 }
 
 bool PlaybackController::isPaused() const
 {
-    return player()->playbackStatus() == PlaybackStatus::Paused;
+    return player()->isPaused();
 }
 
 bool PlaybackController::isStopped() const
 {
-    return player()->playbackStatus() == PlaybackStatus::Stopped;
+    return player()->isStopped();
 }
 
 bool PlaybackController::isLoaded() const
@@ -192,7 +188,7 @@ void PlaybackController::updatePlaybackRegion()
 
 Notification PlaybackController::isPlayingChanged() const
 {
-    return m_isPlayingChanged;
+    return player()->isPlayingChanged();
 }
 
 muse::secs_t PlaybackController::lastPlaybackSeekTime() const

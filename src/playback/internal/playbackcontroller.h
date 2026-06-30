@@ -164,7 +164,6 @@ private:
 
     playback::IPlayerPtr m_player;
 
-    muse::async::Notification m_isPlayingChanged;
     muse::async::Notification m_totalPlayTimeChanged;
     muse::async::Notification m_lastPlaybackSeekTimeChanged;
     muse::async::Notification m_currentTempoChanged;

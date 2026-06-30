@@ -64,6 +64,10 @@ public:
     // session status
     virtual bool isPlayAllowed() const = 0;
     virtual muse::async::Notification isPlayAllowedChanged() const = 0;
+    virtual bool isPlaying() const = 0;
+    virtual bool isPaused() const = 0;
+    virtual bool isStopped() const = 0;
+    virtual muse::async::Notification isPlayingChanged() const = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;
