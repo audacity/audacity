@@ -220,9 +220,9 @@ void ClipContextMenuModel::updateColorCheckedState()
         return;
     }
 
-    auto trackOpt = project->trackeditProject()->track(m_clipKey.trackId());
+    const auto trackOpt = project->trackeditProject()->track(m_clipKey.trackId());
     if (trackOpt) {
-        muse::Color trackColor = projectSceneConfiguration()->clipColor(trackOpt->colorIndex);
+        const muse::Color trackColor = projectSceneConfiguration()->clipColor(trackOpt->colorIndex);
         MenuItem& autoColorItem = findItem(muse::actions::ActionCode("action://trackedit/clip/change-color-auto"));
         muse::ui::UiAction action = autoColorItem.action();
         action.iconCode = muse::ui::IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
