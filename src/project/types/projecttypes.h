@@ -22,6 +22,7 @@
 #ifndef AU_PROJECT_PROJECTTYPES_H
 #define AU_PROJECT_PROJECTTYPES_H
 
+#include <optional>
 #include <variant>
 
 #include <QString>
@@ -141,6 +142,32 @@ struct SaveLocation
 
     SaveLocation(const CloudProjectInfo& cloudInfo)
         : type(SaveLocationType::Cloud), data(cloudInfo) {}
+};
+
+struct CloudProject {
+    QString id;
+    std::optional<QString> snapshotId;
+
+    CloudProject() = default;
+
+    CloudProject(const QString& id, const std::optional<QString>& snapshotId = {})
+        : id(id), snapshotId(snapshotId) {}
+
+    bool isValid() const
+    {
+        return !id.isEmpty();
+    }
+
+    bool operator ==(const CloudProject& other) const
+    {
+        return id == other.id
+               && snapshotId == other.snapshotId;
+    }
+
+    bool operator !=(const CloudProject& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 struct ProjectFile {

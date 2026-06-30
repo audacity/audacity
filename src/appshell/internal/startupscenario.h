@@ -67,6 +67,7 @@ public:
 
     const au::project::ProjectFile& startupProjectFile() const override;
     void setStartupProjectFile(const std::optional<au::project::ProjectFile>& file) override;
+    void setStartupCloudProject(const std::optional<au::project::CloudProject>& cloudProject) override;
     const muse::io::paths_t& startupMediaFiles() const override;
     void setStartupMediaFiles(const muse::io::paths_t& files) override;
     bool removeMediaFilesAfterImport() const override;
@@ -85,6 +86,7 @@ private:
     muse::Uri startupPageUri(StartupModeType modeType) const;
 
     void openProject(const au::project::ProjectFile& file);
+    void openCloudProject(const au::project::CloudProject& cloudProject);
 
     void restoreLastSession();
     bool alreadyCheckedForUpdateToday() const;
@@ -94,6 +96,7 @@ private:
 
     std::string m_startupTypeStr;
     au::project::ProjectFile m_startupProjectFile;
+    au::project::CloudProject m_startupCloudProject;
     muse::io::paths_t m_startupMediaFiles;
     bool m_removeMediaFilesAfterImport = false;
     QString m_startupUrl;
