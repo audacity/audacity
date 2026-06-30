@@ -105,6 +105,11 @@ void PlayPositionActionController::applySingleStep(Direction direction)
         q.addParam("triggerPlay", muse::Val(false));
         dispatcher()->dispatch(q);
 
+        if (!playbackState()->isPlaying()) {
+            selectionController()->setDataSelectedStartTime(secs, true);
+            selectionController()->setDataSelectedEndTime(secs, true);
+        }
+
         m_context->animatedInsureVisible(secs);
     }
 }
