@@ -306,6 +306,11 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
 void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
 {
     LOGD() << "newPosition: " << newPosition;
+
+    // Any explicit reposition (a click, a stop returning to the anchor, a rewind,
+    // a project change) supersedes a pending paused-stream resume.
+    m_pausedResumePos.reset();
+
     auto pos = std::max(0.0, newPosition.raw());
 
     Au3Project& project = projectRef();
@@ -797,6 +802,15 @@ void Au3Player::togglePlay(bool ignoreSelection)
 
 void Au3Player::doPlay(bool ignoreSelection)
 {
+    if (m_pausedResumePos.has_value()) {
+        // Resuming a stream that a device change tore down while paused: play
+        // from the pause position, leaving the stop anchor where it was.
+        const muse::secs_t pos = *m_pausedResumePos;
+        m_pausedResumePos.reset();
+        playFrom(pos);
+        return;
+    }
+
     if (!ignoreSelection) {
         PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
@@ -1023,6 +1037,12 @@ void Au3Player::withStreamRestart(const std::function<void()>& change)
     // flushes its queues, so the paused state can't be preserved).
     if (wasPlaying) {
         playFrom(resumePos);
+    } else if (wasPaused) {
+        // The paused stream can't survive the switch, so we end up stopped.
+        // Remember the pause position so the next play resumes from there; the
+        // stop anchor (m_lastPlaybackSeekTime) is deliberately left untouched, so
+        // a stop still returns to where playback originally started.
+        m_pausedResumePos = resumePos;
     }
 }
 

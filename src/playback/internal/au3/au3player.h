@@ -162,6 +162,8 @@ private:
     PlaybackRegion m_lastPlaybackRegion;
     bool m_pauseShouldStopPlayback = false;
 
+    std::optional<muse::secs_t> m_pausedResumePos;
+
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;
 
