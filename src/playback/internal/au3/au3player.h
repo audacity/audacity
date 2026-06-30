@@ -73,6 +73,9 @@ public:
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
+    bool isPlayAllowed() const override;
+    muse::async::Notification isPlayAllowedChanged() const override;
+
 private:
     au3::Au3Project& projectRef() const;
 
@@ -86,6 +89,7 @@ private:
     void updatePlaybackState();
 
     muse::async::Notification m_loopRegionChanged;
+    muse::async::Notification m_isPlayAllowedChanged;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;

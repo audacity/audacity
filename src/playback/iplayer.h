@@ -60,6 +60,10 @@ public:
 
     // tracks
     virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;
+
+    // session status
+    virtual bool isPlayAllowed() const = 0;
+    virtual muse::async::Notification isPlayAllowedChanged() const = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

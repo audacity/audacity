@@ -83,10 +83,6 @@ void PlaybackController::init()
         m_actionCheckedChanged.send("toggle-selection-follows-loop-region");
     });
 
-    recordController()->isRecordingChanged().onNotify(this, [this]() {
-        m_isPlayAllowedChanged.notify();
-    });
-
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeyList) {
         if (clipKeyList.empty()) {
             return;
@@ -132,12 +128,12 @@ IPlayerPtr PlaybackController::player() const
 
 bool PlaybackController::isPlayAllowed() const
 {
-    return !recordController()->isRecording();
+    return player()->isPlayAllowed();
 }
 
 Notification PlaybackController::isPlayAllowedChanged() const
 {
-    return m_isPlayAllowedChanged;
+    return player()->isPlayAllowedChanged();
 }
 
 bool PlaybackController::isPlaying() const

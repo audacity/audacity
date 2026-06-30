@@ -82,6 +82,10 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         });
     });
 
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_isPlayAllowedChanged.notify();
+    });
+
     m_timer.setInterval(16);
     m_timer.setTimerType(Qt::PreciseTimer);
     m_timer.callOnTimeout([this]() { updatePlaybackPosition(); });
@@ -90,6 +94,16 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
 bool Au3Player::isBusy() const
 {
     return audioEngine()->isBusy();
+}
+
+bool Au3Player::isPlayAllowed() const
+{
+    return !recordController()->isRecording();
+}
+
+muse::async::Notification Au3Player::isPlayAllowedChanged() const
+{
+    return m_isPlayAllowedChanged;
 }
 
 void Au3Player::play()
