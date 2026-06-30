@@ -52,6 +52,9 @@ Item {
         visible: selectionStartFrequency < selectionEndFrequency
         hoverEnabled: true
         acceptedButtons: Qt.RightButton
+
+        enabled: root.visible && root.enabled
+
         onClicked: function (mouse) {
             contextMenuLoader.show(Qt.point(mouse.x, mouse.y), contextMenuModel.items)
         }
@@ -78,6 +81,8 @@ Item {
         selectionEndTime: root.selectionEndTime
         selectionController: root.selectionController
 
+        enabled: root.visible && root.enabled
+
         onSelectionHorizontalResize: function (x1, x2, completed) {
             root.selectionHorizontalResize(x1, x2, completed)
         }
@@ -90,8 +95,6 @@ Item {
 
     ChannelSpectralSelectionContainer {
         id: rightContainer
-
-        visible: root.isStereo
 
         anchors.top: leftOrMonoContainer.bottom
         anchors.left: parent.left
@@ -110,6 +113,9 @@ Item {
         selectionStartTime: root.selectionStartTime
         selectionEndTime: root.selectionEndTime
         selectionController: root.selectionController
+
+        visible: root.isStereo
+        enabled: root.visible && root.enabled
 
         onSelectionHorizontalResize: function (x1, x2, completed) {
             root.selectionHorizontalResize(x1, x2, completed)

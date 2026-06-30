@@ -168,9 +168,14 @@
     </SC>
 
     <SC>
-        <key>track-view-toggle-selection</key>
+        <key>track-view-replace-selection</key>
         <seq>Return</seq>
         <seq>Enter</seq>
+    </SC>
+    <SC>
+        <key>track-view-toggle-selection</key>
+        <seq>Ctrl+Enter</seq>
+        <seq>Ctrl+Return</seq>
     </SC>
     <SC>
         <key>track-view-range-selection</key>
