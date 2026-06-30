@@ -2,11 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 #include "playbackcontroller.h"
-#include "playbackuiactions.h"
-#include "../playbacktypes.h"
+
+#include "playback/iplayback.h"
+#include "framework/global/log.h"
 
 using namespace muse;
-using namespace au::audio;
 using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
@@ -69,6 +69,8 @@ void PlaybackController::deinit()
 {
 }
 
+// --- IPlaybackController: thin pass-through to the player ---
+
 bool PlaybackController::isPlayAllowed() const
 {
     return m_player->isPlayAllowed();
@@ -84,6 +86,66 @@ bool PlaybackController::isPlaying() const
     return m_player->isPlaying();
 }
 
+Notification PlaybackController::isPlayingChanged() const
+{
+    return m_player->isPlayingChanged();
+}
+
+PlaybackStatus PlaybackController::playbackStatus() const
+{
+    return m_player->playbackStatus();
+}
+
+PlaybackRegion PlaybackController::loopRegion() const
+{
+    return m_player->loopRegion();
+}
+
+void PlaybackController::loopEditingBegin()
+{
+    m_player->loopEditingBegin();
+}
+
+void PlaybackController::loopEditingEnd()
+{
+    m_player->loopEditingEnd();
+}
+
+void PlaybackController::setLoopRegion(const PlaybackRegion& region)
+{
+    m_player->setLoopRegion(region);
+}
+
+void PlaybackController::setLoopRegionStart(const muse::secs_t time)
+{
+    m_player->setLoopRegionStart(time);
+}
+
+void PlaybackController::setLoopRegionEnd(const muse::secs_t time)
+{
+    m_player->setLoopRegionEnd(time);
+}
+
+bool PlaybackController::isLoopRegionClear() const
+{
+    return m_player->isLoopRegionClear();
+}
+
+Notification PlaybackController::loopRegionChanged() const
+{
+    return m_player->loopRegionChanged();
+}
+
+bool PlaybackController::isLoopRegionActive() const
+{
+    return m_player->isLoopRegionActive();
+}
+
+void PlaybackController::setLoopRegionActive(const bool active)
+{
+    m_player->setLoopRegionActive(active);
+}
+
 bool PlaybackController::isPaused() const
 {
     return m_player->isPaused();
@@ -94,29 +156,9 @@ bool PlaybackController::isStopped() const
     return m_player->isStopped();
 }
 
-bool PlaybackController::isLoopRegionActive() const
+void PlaybackController::stop()
 {
-    return m_player->isLoopRegionActive();
-}
-
-Notification PlaybackController::isPlayingChanged() const
-{
-    return m_player->isPlayingChanged();
-}
-
-muse::secs_t PlaybackController::lastPlaybackSeekTime() const
-{
-    return m_player->lastPlaybackSeekTime();
-}
-
-muse::async::Notification PlaybackController::lastPlaybackSeekTimeChanged() const
-{
-    return m_player->lastPlaybackSeekTimeChanged();
-}
-
-PlaybackStatus PlaybackController::playbackStatus() const
-{
-    return m_player->playbackStatus();
+    m_player->stop();
 }
 
 void PlaybackController::stopSeekAndUpdatePlaybackRegion()
@@ -129,14 +171,44 @@ Channel<uint32_t> PlaybackController::midiTickPlayed() const
     return m_tickPlayed;
 }
 
-muse::async::Channel<TrackId> PlaybackController::trackAdded() const
+Channel<TrackId> PlaybackController::trackAdded() const
 {
     return m_trackAdded;
 }
 
-muse::async::Channel<TrackId> PlaybackController::trackRemoved() const
+Channel<TrackId> PlaybackController::trackRemoved() const
 {
     return m_trackRemoved;
+}
+
+muse::secs_t PlaybackController::totalPlayTime() const
+{
+    return m_player->totalPlayTime();
+}
+
+Notification PlaybackController::totalPlayTimeChanged() const
+{
+    return m_totalPlayTimeChanged;
+}
+
+muse::secs_t PlaybackController::lastPlaybackSeekTime() const
+{
+    return m_player->lastPlaybackSeekTime();
+}
+
+void PlaybackController::setLastPlaybackSeekTime(muse::secs_t secs)
+{
+    m_player->setLastPlaybackSeekTime(secs);
+}
+
+Notification PlaybackController::lastPlaybackSeekTimeChanged() const
+{
+    return m_player->lastPlaybackSeekTimeChanged();
+}
+
+muse::Progress PlaybackController::loadingProgress() const
+{
+    return m_loadingProgress;
 }
 
 void PlaybackController::togglePlayAction()
@@ -148,6 +220,16 @@ void PlaybackController::togglePlayAction()
 void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
 {
     // Not implemented yet.
+}
+
+void PlaybackController::pauseAction()
+{
+    m_player->pause();
+}
+
+void PlaybackController::stopAction()
+{
+    m_player->stopSeekAndUpdatePlaybackRegion();
 }
 
 void PlaybackController::rewindToStartAction()
@@ -190,21 +272,6 @@ void PlaybackController::onChangePlaybackRegionAction(const muse::actions::Actio
     m_player->changePlaybackRegion(start, end);
 }
 
-void PlaybackController::pauseAction()
-{
-    m_player->pause();
-}
-
-void PlaybackController::stopAction()
-{
-    m_player->stopSeekAndUpdatePlaybackRegion();
-}
-
-void PlaybackController::stop()
-{
-    m_player->stop();
-}
-
 void PlaybackController::togglePlayRepeats()
 {
     NOT_IMPLEMENTED;
@@ -229,59 +296,9 @@ void PlaybackController::toggleLoopPlayback()
     notifyActionCheckedChanged("toggle-loop-region");
 }
 
-PlaybackRegion PlaybackController::loopRegion() const
-{
-    return m_player->loopRegion();
-}
-
-void PlaybackController::setLoopRegion(const PlaybackRegion& region)
-{
-    m_player->setLoopRegion(region);
-}
-
-void PlaybackController::setLoopRegionStart(const muse::secs_t time)
-{
-    m_player->setLoopRegionStart(time);
-}
-
-void PlaybackController::setLoopRegionEnd(const muse::secs_t time)
-{
-    m_player->setLoopRegionEnd(time);
-}
-
-void PlaybackController::setLoopRegionActive(const bool active)
-{
-    m_player->setLoopRegionActive(active);
-}
-
 void PlaybackController::clearLoopRegion()
 {
     m_player->clearLoopRegion();
-}
-
-void PlaybackController::setLastPlaybackSeekTime(muse::secs_t secs)
-{
-    m_player->setLastPlaybackSeekTime(secs);
-}
-
-void PlaybackController::loopEditingBegin()
-{
-    m_player->loopEditingBegin();
-}
-
-void PlaybackController::loopEditingEnd()
-{
-    m_player->loopEditingEnd();
-}
-
-bool PlaybackController::isLoopRegionClear() const
-{
-    return m_player->isLoopRegionClear();
-}
-
-muse::async::Notification PlaybackController::loopRegionChanged() const
-{
-    return m_player->loopRegionChanged();
 }
 
 void PlaybackController::setLoopRegionToSelection()
@@ -371,21 +388,6 @@ bool PlaybackController::actionChecked(const ActionCode& actionCode) const
 Channel<ActionCode> PlaybackController::actionCheckedChanged() const
 {
     return m_actionCheckedChanged;
-}
-
-muse::secs_t PlaybackController::totalPlayTime() const
-{
-    return m_player->totalPlayTime();
-}
-
-Notification PlaybackController::totalPlayTimeChanged() const
-{
-    return m_totalPlayTimeChanged;
-}
-
-muse::Progress PlaybackController::loadingProgress() const
-{
-    return m_loadingProgress;
 }
 
 bool PlaybackController::canReceiveAction(const ActionCode& code) const

@@ -4,15 +4,16 @@
 #pragma once
 
 #include "framework/global/async/asyncable.h"
+#include "framework/global/async/channel.h"
 #include "framework/global/iapplication.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
+#include "playback/iplayback.h"
 #include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
 
@@ -25,10 +26,10 @@ public:
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
-    muse::ContextInject<IPlayback> playback { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::ContextInject<record::IRecordController> recordController{ this };
+    muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<playback::IPlayback> playback { this };
 
 public:
     PlaybackController(const muse::modularity::ContextPtr& ctx)
@@ -48,18 +49,19 @@ public:
     muse::async::Notification isPlayingChanged() const override;
     PlaybackStatus playbackStatus() const override;
 
-    bool isLoopRegionActive() const override;
-    void toggleLoopPlayback() override;
     PlaybackRegion loopRegion() const override;
+    void loopEditingBegin() override;
+    void loopEditingEnd() override;
     void setLoopRegion(const PlaybackRegion& region) override;
     void setLoopRegionStart(const muse::secs_t time) override;
     void setLoopRegionEnd(const muse::secs_t time) override;
-    void setLoopRegionActive(const bool active) override;
     void clearLoopRegion() override;
-    void loopEditingBegin() override;
-    void loopEditingEnd() override;
     bool isLoopRegionClear() const override;
     muse::async::Notification loopRegionChanged() const override;
+
+    bool isLoopRegionActive() const override;
+    void setLoopRegionActive(const bool active) override;
+    void toggleLoopPlayback() override;
 
     bool isPaused() const override;
     bool isStopped() const override;
@@ -77,6 +79,7 @@ public:
 
     muse::secs_t totalPlayTime() const override;
     muse::async::Notification totalPlayTimeChanged() const override;
+
     muse::secs_t lastPlaybackSeekTime() const override;
     void setLastPlaybackSeekTime(muse::secs_t secs) override;
     muse::async::Notification lastPlaybackSeekTimeChanged() const override;
@@ -89,13 +92,13 @@ private:
     friend class PlaybackControllerTests;
 
     void togglePlayAction();
-    void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
+    void pauseAction();
+    void stopAction();
     void rewindToStartAction();
     void rewindToEndAction();
     void onSeekAction(const muse::actions::ActionQuery& q);
     void onChangePlaybackRegionAction(const muse::actions::ActionQuery& q);
-    void pauseAction();
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
