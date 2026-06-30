@@ -69,6 +69,8 @@ void CommandLineParser::init()
     m_parser.addOption(internalCommandLineOption("import-media-file", "Import media file on startup", "path"));
     m_parser.addOption(internalCommandLineOption("remove-media-after-import", "Remove imported media files after import"));
     m_parser.addOption(internalCommandLineOption("project-display-name-override", "Display name override", "name"));
+    m_parser.addOption(internalCommandLineOption("cloud-project-id",
+                                                 "Cloud project to open, as 'projectId@snapshotId' (snapshotId optional)", "id"));
 
     m_parser.addOption(QCommandLineOption({ "u", "url" }, "Open the given URL on startup", "url"));
 
@@ -137,6 +139,15 @@ void CommandLineParser::parse(int argc, char** argv)
 
     if (m_parser.isSet("project-display-name-override")) {
         m_options->startup.projectDisplayNameOverride = m_parser.value("project-display-name-override");
+    }
+
+    if (m_parser.isSet("cloud-project-id")) {
+        const QString value = m_parser.value("cloud-project-id");
+        const int atIndex = value.indexOf('@');
+
+        AudacityCmdOptions::CloudProject cloudProject;
+        cloudProject.id = atIndex < 0 ? value : value.left(atIndex);
+        cloudProject.snapshotId = atIndex < 0 ? std::nullopt : std::optional<QString>(value.mid(atIndex + 1));
     }
 
     if (m_parser.isSet("u")) {
