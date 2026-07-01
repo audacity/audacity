@@ -440,8 +440,7 @@ public:
 
     // May assume precondition: t0 <= t1
     void SplitDelete(double t0, double t1) /* not override */;
-    void Join(
-        double t0, double t1, const ProgressReporter& reportProgress) /* not override */;
+    void Join(double t0, double t1, const ProgressReporter& reportProgress, bool evenIfPitchOrSpeedMismatch) /* not override */;
     // May assume precondition: t0 <= t1
     void Disjoin(double t0, double t1) /* not override */;
 

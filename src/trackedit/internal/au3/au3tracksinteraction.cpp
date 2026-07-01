@@ -333,7 +333,8 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
             rightClip->SetPlayStartTime(begin + trackToPaste->GetClip(0)->GetPlayDuration());
             dstWaveTrack->Paste(begin, *trackToPaste, false);
             ProgressReporter dummyProgressReporter;
-            dstWaveTrack->Join(leftClip->GetPlayStartTime(), rightClip->GetPlayEndTime(), dummyProgressReporter);
+            dstWaveTrack->Join(leftClip->GetPlayStartTime(), rightClip->GetPlayEndTime(), dummyProgressReporter,
+                               true /* evenIfPitchOrSpeedMismatch */);
         } else {
             dstWaveTrack->Paste(begin, *trackToPaste, moveClips);
         }
@@ -1637,7 +1638,7 @@ bool Au3TracksInteraction::mergeSelectedOnTrack(const TrackId trackId, secs_t be
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     utils::executeAndNotifyAboutChangedClips(prj, trackId, [&] {
-        waveTrack->Join(begin, end, dummyProgressReporter);
+        waveTrack->Join(begin, end, dummyProgressReporter, true /* evenIfPitchOrSpeedMismatch */);
     });
 
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
