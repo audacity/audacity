@@ -17,6 +17,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/importerconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/importerconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/legacyaupimporter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/legacyaupimporter.h
 
     # tempo detection
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/tempodetection.cpp
@@ -36,8 +38,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap loop-tempo-estimator)
+set(MODULE_LINK au3wrap loop-tempo-estimator SndFile::sndfile)
 
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_IMPORT_TESTS)
+    add_subdirectory(tests)
+endif()
