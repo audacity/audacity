@@ -91,6 +91,12 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Export audio…"),
              TranslatableString("action", "Export audio…")
              ),
+    UiAction("export-overwrite-original",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Overwrite original"),
+             TranslatableString("action", "Overwrite original file")
+             ),
     UiAction("export-labels",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

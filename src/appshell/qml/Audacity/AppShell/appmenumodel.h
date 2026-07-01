@@ -49,6 +49,7 @@ Q_MOC_INCLUDE(< QWindow >)
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
 #include "project/irecentfilescontroller.h"
+#include "context/iglobalcontext.h"
 // #include "extensions/iextensionsprovider.h"
 #include "update/iupdateconfiguration.h"
 
@@ -72,7 +73,7 @@ public:
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
     muse::ContextInject<effects::IEffectsMenuProvider> effectsMenuProvider = { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory = { this };
-
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     //! TODO AU4
     // muse::ContextInject<workspace::IWorkspaceManager> workspacesManager = { this };
     // muse::ContextInject<extensions::IExtensionsProvider> extensionsProvider = { this };
@@ -137,6 +138,7 @@ private:
     void setItemIsChecked(const QString& itemId, bool checked);
 
     void updateUndoRedoItems();
+    void updateOverwriteOriginalTitle();
 
     std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
 
