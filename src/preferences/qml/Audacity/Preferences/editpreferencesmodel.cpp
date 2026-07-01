@@ -260,4 +260,18 @@ QVariantList EditPreferencesModel::zoomPresetList() const
     list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Max Zoom") }, { "value", 14 } };
     return list;
 }
+
+int EditPreferencesModel::mouseZoomPrecision() const
+{
+    return projectsceneConfiguration()->mouseZoomPrecision();
+}
+
+void EditPreferencesModel::setMouseZoomPrecision(int precision)
+{
+    if (mouseZoomPrecision() == precision) {
+        return;
+    }
+    projectsceneConfiguration()->setMouseZoomPrecision(precision);
+    emit mouseZoomPrecisionChanged();
+}
 }
