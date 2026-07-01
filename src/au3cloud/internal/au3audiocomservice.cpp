@@ -728,8 +728,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
 
 bool Au3AudioComService::isCloudProject(const muse::io::path_t& projectPath) const
 {
-    const auto dbProjectData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(projectPath.toStdString());
-    return dbProjectData.has_value() && !dbProjectData->ProjectId.empty();
+    return CloudSyncService::IsCloudProject(projectPath.toStdString());
 }
 
 std::optional<muse::io::path_t> Au3AudioComService::projectLocalPath(const std::string& projectId) const
