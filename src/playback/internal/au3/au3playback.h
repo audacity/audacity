@@ -5,6 +5,8 @@
 
 #include "modularity/ioc.h"
 
+#include "context/iglobalcontext.h"
+
 #include "../../iplayback.h"
 
 namespace au::playback {
@@ -12,6 +14,8 @@ class Au3Player;
 class Au3AudioOutput;
 class Au3Playback : public IPlayback, public muse::Contextable
 {
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+
 public:
     Au3Playback(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}

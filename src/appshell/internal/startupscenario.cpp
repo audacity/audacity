@@ -30,6 +30,7 @@
 #include "framework/global/types/uri.h"
 
 #include "appshell/appshelltypes.h"
+#include "playback/iplayer.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
@@ -337,7 +338,7 @@ bool StartupScenario::isAudioActive() const
         return true;
     }
 
-    if (playbackController() && playbackController()->isPlaying()) {
+    if (playback() && playback()->player() && playback()->player()->isPlaying()) {
         return true;
     }
 

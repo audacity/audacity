@@ -24,7 +24,6 @@ import QtQuick 2.15
 import Muse.UiComponents
 
 import Audacity.UiComponents 1.0
-import Audacity.Playback 1.0
 
 BaseSection {
     id: root
@@ -38,14 +37,6 @@ BaseSection {
 
     signal currentAudioApiIndexChangeRequested(int newIndex)
 
-    PlaybackStateModel {
-        id: playbackState
-    }
-
-    Component.onCompleted: {
-        playbackState.init()
-    }
-
     Row {
         width: parent.width
         spacing: root.spacing
@@ -57,8 +48,6 @@ BaseSection {
             ComboBoxWithTitle {
                 title: qsTrc("preferences", "Host")
                 columnWidth: root.columnWidth
-
-                enabled: !playbackState.isPlaying
 
                 currentIndex: apiModel.currentAudioApiIndex
                 model: root.audioApiList
@@ -76,8 +65,6 @@ BaseSection {
             ComboBoxWithTitle {
                 title: qsTrc("preferences", "Recording device")
                 columnWidth: root.columnWidth
-
-                enabled: !playbackState.isPlaying
 
                 currentIndex: indexOfValue(apiModel.currentInputDeviceId)
                 model: apiModel.inputDeviceList
@@ -101,8 +88,6 @@ BaseSection {
                 title: qsTrc("preferences", "Playback device")
                 columnWidth: root.columnWidth
 
-                enabled: !playbackState.isPlaying
-
                 currentIndex: indexOfValue(apiModel.currentOutputDeviceId)
                 model: apiModel.outputDeviceList
 
@@ -119,8 +104,6 @@ BaseSection {
             ComboBoxWithTitle {
                 title: qsTrc("preferences", "Recording channels")
                 columnWidth: root.columnWidth
-
-                enabled: !playbackState.isPlaying
 
                 currentIndex: indexOfValue(apiModel.currentInputChannelsSelected)
                 model: apiModel.inputChannelsList

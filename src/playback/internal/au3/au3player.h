@@ -73,6 +73,12 @@ public:
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
+    // --- raw playback status (read by the Transport coordinator and consumers) ---
+    bool isPlaying() const override;
+    bool isPaused() const override;
+    bool isStopped() const override;
+    muse::async::Notification isPlayingChanged() const override;
+
 private:
     au3::Au3Project& projectRef() const;
 
@@ -86,6 +92,7 @@ private:
     void updatePlaybackState();
 
     muse::async::Notification m_loopRegionChanged;
+    muse::async::Notification m_isPlayingChanged;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;

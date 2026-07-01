@@ -8,13 +8,13 @@
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
 #include "au3wrap/internal/progressdialog.h"
-#include "playback/iplaybackcontroller.h"
+#include "playback/iplayback.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Contextable
 {
     muse::ContextInject<au::record::IRecordController> recordController { this };
-    muse::ContextInject<au::playback::IPlaybackController> playbackController { this };
+    muse::ContextInject<au::playback::IPlayback> playback { this };
 
 public:
     TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction);
@@ -152,7 +152,7 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        playbackController()->stop();
+        playback()->player()->stop();
 
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
@@ -168,7 +168,7 @@ private:
             retVal.ret = make_ret(trackedit::Err::DisallowedDuringRecording);
             return retVal;
         }
-        playbackController()->stop();
+        playback()->player()->stop();
 
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }

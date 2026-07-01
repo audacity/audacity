@@ -10,6 +10,7 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometerfactory.h"
+#include "playback/iplayer.h"
 
 #include "audio/audiotypes.h"
 #include "types/ratio.h"
@@ -51,7 +52,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
 
-        playbackController()->isPlayingChanged().onNotify(this, [this]() {
+        playback()->player()->isPlayingChanged().onNotify(this, [this]() {
             // when the playback stops we need to restart the monitoring if mic metering is on or input monitoring is on
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
@@ -150,7 +151,7 @@ bool Au3AudioInput::canStartAudioEngineMonitoring() const
 {
     // Monitoring can't be started if we are recording or playing/pause
     // it can only be started when we are stopped
-    return !controller()->isRecording() && !playbackController()->isPlaying() && !playbackController()->isPaused();
+    return !controller()->isRecording() && !playback()->player()->isPlaying() && !playback()->player()->isPaused();
 }
 
 bool Au3AudioInput::audioEngineShouldBeMonitoring() const

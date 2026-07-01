@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "framework/global/types/ret.h"
 #include "framework/global/types/retval.h"
@@ -60,6 +61,12 @@ public:
 
     // tracks
     virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;
+
+    // raw playback status (the transport session state lives on ITransport)
+    virtual bool isPlaying() const = 0;
+    virtual bool isPaused() const = 0;
+    virtual bool isStopped() const = 0;
+    virtual muse::async::Notification isPlayingChanged() const = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

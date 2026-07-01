@@ -10,12 +10,16 @@
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iuicontextresolver.h"
 #include "internal/playbackcontroller.h"
+#include "playback/iplayback.h"
+#include "playback/itransport.h"
 
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
     muse::ContextInject<context::IUiContextResolver> uiContextResolver{ this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::ITransport> transport{ this };
 
 public:
     PlaybackUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<PlaybackController> controller);

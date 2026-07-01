@@ -13,11 +13,11 @@ PlaybackStateModel::PlaybackStateModel(QObject* parent)
 
 void PlaybackStateModel::init()
 {
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
-    playbackController()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
+    transport()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
         emit lastPlaybackSeekTimeChanged();
     });
 
@@ -28,22 +28,22 @@ void PlaybackStateModel::init()
 
 void PlaybackStateModel::setLastPlaybackSeekTime(double time)
 {
-    playbackController()->setLastPlaybackSeekTime(std::max(0.0, time));
+    transport()->setLastPlaybackSeekTime(std::max(0.0, time));
 }
 
 bool PlaybackStateModel::isPlaying() const
 {
-    return playbackController()->isPlaying();
+    return playback()->player()->isPlaying();
 }
 
 bool PlaybackStateModel::isPaused() const
 {
-    return playbackController()->isPaused();
+    return playback()->player()->isPaused();
 }
 
 bool PlaybackStateModel::isStopped() const
 {
-    return playbackController()->isStopped();
+    return playback()->player()->isStopped();
 }
 
 bool PlaybackStateModel::isRecording() const
@@ -53,5 +53,5 @@ bool PlaybackStateModel::isRecording() const
 
 double PlaybackStateModel::lastPlaybackSeekTime() const
 {
-    return playbackController()->lastPlaybackSeekTime();
+    return transport()->lastPlaybackSeekTime();
 }

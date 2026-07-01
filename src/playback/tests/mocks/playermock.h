@@ -47,5 +47,13 @@ public:
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, playbackPositionChanged, (), (const, override));
 
     MOCK_METHOD(muse::Ret, playTracks, (TrackList&, double, double, const PlayTracksOptions&), (override));
+
+    MOCK_METHOD(muse::async::Notification, isPlayingChanged, (), (const, override));
+
+    //! The raw status predicates derive from playbackStatus() so tests can drive
+    //! the whole transport state machine by stubbing a single getter.
+    bool isPlaying() const override { return playbackStatus() == PlaybackStatus::Running; }
+    bool isPaused() const override { return playbackStatus() == PlaybackStatus::Paused; }
+    bool isStopped() const override { return playbackStatus() == PlaybackStatus::Stopped; }
 };
 }

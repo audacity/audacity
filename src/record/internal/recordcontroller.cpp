@@ -3,6 +3,7 @@
 */
 #include "recordcontroller.h"
 
+#include "playback/iplayer.h"
 #include "framework/global/translation.h"
 
 using namespace muse;
@@ -32,7 +33,7 @@ void RecordController::init()
     dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
     dispatcher()->reg(this, RECORD_LEAD_IN_RECORDING_QUERY, this, &RecordController::leadInRecording);
 
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
     });
 
@@ -59,7 +60,7 @@ void RecordController::deinit()
 
 bool RecordController::isRecordAllowed() const
 {
-    return !playbackController()->isPlaying();
+    return !playback()->player()->isPlaying();
 }
 
 Notification RecordController::isRecordAllowedChanged() const
@@ -271,11 +272,11 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
     if (code == RECORD_START_QUERY.toString()
         || code == RECORD_ON_CURRENT_TRACK_CODE
         || code == RECORD_ON_NEW_TRACK_CODE) {
-        return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
+        return !playback()->player()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
     }
 
     if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {
-        return !playbackController()->isPlaying() && !isRecording();
+        return !playback()->player()->isPlaying() && !isRecording();
     }
 
     if (code == RECORD_STOP_QUERY.toString()) {

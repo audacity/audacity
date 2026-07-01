@@ -20,6 +20,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "importexport/export/exportutils.h"
+#include "playback/iplayer.h"
 
 #include "translation.h"
 
@@ -213,7 +214,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
               : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
         m_selectedOnly = true;
     } else if (processType == ExportProcessType::AUDIO_IN_LOOP_REGION) {
-        auto region = playbackController()->loopRegion();
+        auto region = playback()->player()->loopRegion();
         m_t0 = region.start;
         m_t1 = region.end;
     } else {

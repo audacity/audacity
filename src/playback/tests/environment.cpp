@@ -15,9 +15,9 @@ static muse::testing::SuiteEnvironment playback_se
     = muse::testing::SuiteEnvironment()
       .setDependencyModules({ new au::au3::Au3WrapModule() })
       .setPreInit([](){
-    std::shared_ptr<au::playback::PlaybackConfigurationMock> playbackConfigurator(new au::playback::PlaybackConfigurationMock(),
+    std::shared_ptr<au::playback::PlaybackConfigurationMock> playbackConfigurator(new NiceMock<au::playback::PlaybackConfigurationMock>(),
                                                                                   [](au::playback::PlaybackConfigurationMock*){});
-    std::shared_ptr<au::project::ProjectConfigurationMock> projectConfigurator(new au::project::ProjectConfigurationMock(),
+    std::shared_ptr<au::project::ProjectConfigurationMock> projectConfigurator(new NiceMock<au::project::ProjectConfigurationMock>(),
                                                                                [](au::project::ProjectConfigurationMock*){});
 
     ON_CALL(*projectConfigurator, temporaryDir())

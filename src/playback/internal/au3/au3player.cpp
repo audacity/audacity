@@ -28,6 +28,8 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
 {
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
+        m_isPlayingChanged.notify();
+
         if (st == PlaybackStatus::Running) {
             m_currentTarget.reset();
             m_consumedSamplesSoFar = 0;
@@ -46,8 +48,8 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
 
     // Start position tracking timer when recording begins (the timer normally
     // starts on PlaybackStatus change, but recording doesn't change that status).
-    globalContext()->isRecordingChanged().onNotify(this, [this]() {
-        if (globalContext()->isRecording() && !m_timer.isActive()) {
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        if (recordController()->isRecording() && !m_timer.isActive()) {
             m_currentTarget.reset();
             m_consumedSamplesSoFar = 0;
             m_timer.start();
@@ -469,6 +471,10 @@ bool Au3Player::isLoopRegionClear() const
 
 bool Au3Player::isLoopRegionActive() const
 {
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
@@ -627,4 +633,24 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
         }
     }
     return result;
+}
+
+bool Au3Player::isPlaying() const
+{
+    return playbackStatus() == PlaybackStatus::Running;
+}
+
+bool Au3Player::isPaused() const
+{
+    return playbackStatus() == PlaybackStatus::Paused;
+}
+
+bool Au3Player::isStopped() const
+{
+    return playbackStatus() == PlaybackStatus::Stopped;
+}
+
+muse::async::Notification Au3Player::isPlayingChanged() const
+{
+    return m_isPlayingChanged;
 }
