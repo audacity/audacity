@@ -879,6 +879,9 @@
     <SC>
         <key>action://playback/togglePlayStop</key>
         <seq>Space</seq>
+    </SC>
+    <SC>
+        <key>action://playback/togglePlayUpdate</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>

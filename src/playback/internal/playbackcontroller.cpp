@@ -13,6 +13,7 @@ using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/togglePlayPause");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/togglePlayStop");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_UPDATE_QUERY("action://playback/togglePlayUpdate");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
@@ -34,6 +35,7 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_QUERY, this, &PlaybackController::togglePlayStopAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_UPDATE_QUERY, this, &PlaybackController::togglePlayUpdateAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
@@ -277,22 +279,13 @@ void PlaybackController::togglePlayStopAction()
         return;
     }
 
-    const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
-        if (isShiftPressed) {
-            doPause();
-        } else {
-            stopSeekAndUpdatePlaybackRegion();
-        }
+        stopSeekAndUpdatePlaybackRegion();
     } else if (isPaused()) {
         if (isSelectionPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
             doPlay(false);
-        } else if (isShiftPressed) {
-            //! NOTE: set the current position as start position
-            doSeek(playbackPosition(), false);
-            doPlay(true /* ignoreSelection */);
         } else {
             doResume();
         }
@@ -301,7 +294,37 @@ void PlaybackController::togglePlayStopAction()
             doSeek(0.0, false);
         }
 
-        doPlay(isShiftPressed /* ignoreSelection */);
+        doPlay(false /* ignoreSelection */);
+    } else {
+        // that shouldn't happen
+    }
+}
+
+void PlaybackController::togglePlayUpdateAction()
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return;
+    }
+
+    if (isPlaying()) {
+        doPause();
+    } else if (isPaused()) {
+        if (isSelectionPlaybackRegionChanged()) {
+            //! NOTE: just stop, without seek
+            player()->stop();
+            doPlay(false);
+        } else {
+            //! NOTE: set the current position as start position
+            doSeek(playbackPosition(), false);
+            doPlay(true /* ignoreSelection */);
+        }
+    } else if (isStopped()) {
+        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+            doSeek(0.0, false);
+        }
+
+        doPlay(true /* ignoreSelection */);
     } else {
         // that shouldn't happen
     }
