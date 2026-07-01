@@ -1,5 +1,72 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr">
 <context>
+    <name>KDDockWidgets::Debug::DebugWindow</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
+        <source>DockWidget unique name</source>
+        <translation>DockWidget&apos;ın benzersiz ismi</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::DockWidgetBase</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
+        <source>Dock</source>
+        <translation>Yapışık</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
+        <source>Detach</source>
+        <translation>Ayır</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBar</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Dock window</source>
+        <translation>Pencereyi yapıştır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Undock window</source>
+        <translation>Pencereyi ayır</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBarWidget</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
+        <source>Minimize</source>
+        <translation>Küçült</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
+        <source>Close</source>
+        <translation>Kapat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
+        <source>Auto-hide</source>
+        <translation>Otomatik-gizle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
+        <source>Disable auto-hide</source>
+        <translation>Otomatik-gizlemeyi kapat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Restore</source>
+        <translation>Eski haline getir</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Maximize</source>
+        <translation>Büyüt</translation>
+    </message>
+</context>
+<context>
     <name>Playback</name>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
@@ -23,6 +90,14 @@
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Disabled</source>
         <translation>Kapalı</translation>
+    </message>
+</context>
+<context>
+    <name>accessibility</name>
+    <message>
+        <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
+        <source>%1 panel</source>
+        <translation>Panel %1</translation>
     </message>
 </context>
 <context>
@@ -527,7 +602,7 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
         <source>Open recent</source>
-        <translation type="unfinished">Son kullanılanları aç</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
@@ -1829,6 +1904,186 @@
         <source>Change track sample rate</source>
         <translation>İzin örnekleme hızını değiştir</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
+        <source>Save diagnostic files</source>
+        <translation>Tanılama dosyalarını kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
+        <source>Show p&amp;aths…</source>
+        <translation>Show p&amp;aths…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
+        <source>Show paths</source>
+        <translation>Yolları göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
+        <source>Show pr&amp;ofiler…</source>
+        <translation>Profil &amp;oluşturucuyu göster…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>Profil oluşturucuyu göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
+        <source>Show g&amp;raphics info…</source>
+        <translation>Grafik b&amp;ilgilerini göster…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
+        <source>Show graphics info</source>
+        <translation>Grafik bilgilerini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
+        <source>Show &amp;navigation tree…</source>
+        <translation>Dolaş&amp;ma ağacını göster…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
+        <source>Show navigation tree</source>
+        <translation>Dolaşma ağacını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
+        <source>Show &amp;accessibility tree…</source>
+        <translation>Erişilebilirlik &amp;ağacını göster…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
+        <source>Show accessibility tree</source>
+        <translation>Erişilebilirlik ağacını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
+        <source>&amp;Dump accessibility tree to console</source>
+        <translation>&amp;Erişilebilirlik ağacını konsola aktar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>Erişilebilirlik ağacını konsola aktar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
+        <source>Show engraving &amp;elements</source>
+        <translation>Gravür ögelerini g&amp;öster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
+        <source>Show engraving elements</source>
+        <translation>Gravür ögelerini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
+        <source>Show engraving &amp;undo stack</source>
+        <translation>Gravür &amp;geri alma yığınını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
+        <source>Show engraving undo stack</source>
+        <translation>Gravür &amp;geri alma yığınını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
+        <source>Show engraving &amp;style options list</source>
+        <translation>Gravür ve stil seçenekleri listesini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
+        <source>Show engraving style options list</source>
+        <translation>Gravür stil seçenekleri listesini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
+        <source>Show &amp;actions list</source>
+        <translation>&amp;Eylem listesini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
+        <source>Show actions list</source>
+        <translation>Eylem listesini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
+        <source>&amp;Manage plugins…</source>
+        <translation>Eklentileri &amp;yönet…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
+        <source>Manage plugins…</source>
+        <translation>Eklentileri yönet…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
+        <source>Show API dump</source>
+        <translation>API dökümünü göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
+        <source>&amp;Multiinstances</source>
+        <translation>Çoklu örnekle&amp;r</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
+        <source>Check MuseSampler</source>
+        <translation>MuseSampler&apos;ı denetle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
+        <source>Reload MuseSampler</source>
+        <translation>MuseSampler&apos;ı yeniden yükle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
+        <source>Show &amp;scripts…</source>
+        <translation>Komut dosyalarını göster…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
+        <source>Show scripts</source>
+        <translation>Komut dosyalarını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
+        <source>Check for &amp;update</source>
+        <translation>&amp;Güncelleştirmeleri kontrol et</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
+        <source>Use old view</source>
+        <translation>Eski görünümü kullan</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
+        <source>Use new view</source>
+        <translation>Yeni görünümü kullan</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
+        <source>Select workspace</source>
+        <translation>Çalışma alanını seçin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
+        <source>Edit workspaces…</source>
+        <translation>Çalışma alanını düzenle...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
+        <source>Edit workspaces</source>
+        <translation>Çalışma alanını düzenle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
+        <source>Create new workspace</source>
+        <translation>Yeni çalışma alanı oluştur</translation>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -1928,12 +2183,12 @@
         <translation>Alıcı destekliyorsa MIDI 2.0 çıktısı oluşturur</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="382"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Fabrika ayarlarına dönmek istediğinize emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="383"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -1941,27 +2196,27 @@ This action will not delete any of your projects.</source>
 Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="395"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
         <source>Revert</source>
         <translation>Geri al</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
         <source>Revert to factory settings</source>
         <translation>Fabrika ayarlarına dön</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Audacity şimdi yeniden başlatılsın mı?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="410"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Değişikliklerin etkili olması için Audacity yeniden başlatılmalı</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="416"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
         <source>Restart</source>
         <translation>Yeniden başlat</translation>
     </message>
@@ -2063,6 +2318,11 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
+        <source>Accounts</source>
+        <translation>Hesaplar</translation>
     </message>
 </context>
 <context>
@@ -2530,6 +2790,27 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
 </context>
 <context>
+    <name>appshell/dock</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
+        <source>Close</source>
+        <translation>Kapat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Dock</source>
+        <translation>Yapışık</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Undock</source>
+        <translation>Ayrılmış</translation>
+    </message>
+</context>
+<context>
     <name>appshell/gettingstarted</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
@@ -2579,7 +2860,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")</extracomment>
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
         <translation>Güncellemeler kullanımı. %1</translation>
     </message>
     <message>
@@ -2590,15 +2871,15 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="183"/>
         <source>%1. %2</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the selection status (e.g. "Currently selected" or "Click to select this style")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this style&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the availability status (e.g. "Currently selected" or "Available option")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available option&quot;)
 ----------
-%1 is the workspace description, %2 is the selection status (e.g. "Currently selected" or "Click to select this workspace")
+%1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
-%1 is the workspace description, %2 is the availability status (e.g. "Currently selected" or "Available workspace")</extracomment>
+%1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
         <translation>%1. %2</translation>
     </message>
     <message>
@@ -2643,8 +2924,8 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
-        <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href="%1"&gt;Parolamı unuttum&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;Parolamı unuttum&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -2722,7 +3003,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="32"/>
         <source>Behind this dialog is the ‘Learn’ section, where you’ll find tutorials to get you started
 (Video tutorials require an internet connection)</source>
-        <translation>Bu iletişim kutusunun arkasında, başlamanıza yarayacak öğreticiler bulacağınız 'Öğren' bölümü bulunur.
+        <translation>Bu iletişim kutusunun arkasında, başlamanıza yarayacak öğreticiler bulacağınız &apos;Öğren&apos; bölümü bulunur.
 (Görüntülü öğreticiler için internet bağlantısı gerekir)</translation>
     </message>
     <message>
@@ -2738,13 +3019,13 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>%1 teması</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>%1 temasını seç</translation>
     </message>
     <message>
@@ -2884,7 +3165,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
-        <extracomment>here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"</extracomment>
+        <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
         <translation>Açıldığında, daha iyi görünürlük için yüksek karşıtlık kipi kullanılır. %1</translation>
     </message>
     <message>
@@ -3401,7 +3682,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
         <translation>Güncelleme denetimi için ağ erişimi gereklidir. Gizliliğinizi korumak için Audacity hiçbir kişisel bilgiyi saklamaz. Asyrıntılı bilgi almak için gizlilik ilkemize bakabilirsiniz.</translation>
     </message>
     <message>
@@ -3673,8 +3954,8 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
-        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>İnsanların Audacity uygulamasını ne sıklıkla kullandığını anlamamıza yardımcı olması amacıyla her kurulum için rastgele bir kimlik (UUID) oluşturuyoruz. Bu kimlikte sizi kişisel olarak tanımlayabilecek herhangi bir bilgi bulunmaz. Ayrıntılı bilgi almak için &lt;a href="%1"&gt;gizlilik ilkesi&lt;/a&gt; bölümüne bakabilirsiniz.</translation>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation>İnsanların Audacity uygulamasını ne sıklıkla kullandığını anlamamıza yardımcı olması amacıyla her kurulum için rastgele bir kimlik (UUID) oluşturuyoruz. Bu kimlikte sizi kişisel olarak tanımlayabilecek herhangi bir bilgi bulunmaz. Ayrıntılı bilgi almak için &lt;a href=&quot;%1&quot;&gt;gizlilik ilkesi&lt;/a&gt; bölümüne bakabilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
@@ -3915,8 +4196,46 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
         <source>Scanning audio plugins</source>
         <translation>Ses eklentileri aranıyor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
+        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
+        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
+        <source>System default</source>
+        <translation>Sistem varsayılanı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
+        <source>Do you want to add SoundFont %1?</source>
+        <translation>%1 SoundFont&apos;unu eklemek istiyor musunuz?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
+        <source>File already exists. Do you want to overwrite it?</source>
+        <translation>Dosya zaten var. Üstüne yazılmasını ister misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
+        <source>File path: %1</source>
+        <translation>Dosya yolu: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
+        <source>SoundFont installed</source>
+        <translation>SoundFont yüklendi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
+        <source>You can assign soundfonts to instruments using the mixer panel.</source>
+        <translation>Karıştırıcı panelini kullanarak çalgılara soundfont&apos;lar atayabilirsiniz.</translation>
     </message>
 </context>
 <context>
@@ -4233,7 +4552,7 @@ Hata kodu: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
+        <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
         <translation>yok</translation>
     </message>
     <message>
@@ -4889,7 +5208,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>"infinite impulse response"</extracomment>
+        <extracomment>&quot;infinite impulse response&quot;</extracomment>
         <translation>Analog süzgeçleri taklit eden IIR süzme yapar</translation>
     </message>
     <message>
@@ -5074,11 +5393,14 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>Oturum açılmamış</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>Profilim</translation>
     </message>
@@ -5086,12 +5408,14 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>Sign in</source>
         <translation>Oturum aç</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>Oturumu kapat</translation>
     </message>
@@ -5099,6 +5423,8 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <source>Create account</source>
         <translation>Hesap aç</translation>
     </message>
@@ -5116,6 +5442,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="36"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="69"/>
         <source>You are not signed in</source>
         <translation>Oturum açmamışsınız</translation>
     </message>
@@ -5222,6 +5549,21 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <source>Sign in buttons</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
+        <source>My accounts</source>
+        <translation>Hesabım</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
+        <source>Log in</source>
+        <translation>Giriş yap</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
+        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
+        <translation>Oturum açma başarılı! MuseScore Studio&apos;ya geri dönebilirsiniz.</translation>
+    </message>
 </context>
 <context>
     <name>cloud-audiocom</name>
@@ -5284,6 +5626,24 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
         <translation>audio.com üzerine kaydet</translation>
+    </message>
+</context>
+<context>
+    <name>diagnostics</name>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <source>Save diagnostic files?</source>
+        <translation>Tanılama dosyaları kaydedilsin mi?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Bu, geliştiricilerin yaşadığınız sorunları teşhis etmesine yardımcı olmak için MuseScore Studio kurulumunuzla ilgili bilgileri içeren bir .zip dosyası oluşturacaktır. Bu dosyanın içeriğini herhangi birine göndermeden önce inceleyebilirsiniz.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <source>Save diagnostic files</source>
+        <translation>Tanılama dosyalarını kaydet</translation>
     </message>
 </context>
 <context>
@@ -5822,7 +6182,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished">Uygulama ekleri yönetimi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
@@ -5838,7 +6198,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished">Eksik uygulama ekleri</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
@@ -5869,7 +6229,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished">Yol</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5899,18 +6259,18 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">Başlangıç tempo değişimi (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">Sonuç tempo değişimi (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">Başlangıç perde kayması</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5922,7 +6282,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">Bitiş perde kayması</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
@@ -6007,7 +6367,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
+        <extracomment>&quot;Nyquist&quot; is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>Nyquist</translation>
     </message>
     <message>
@@ -6072,7 +6432,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished">Tıkırtı kaldırma ses izlerindeki tıklamaları kaldırmak için tasarlanmıştır</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -6250,7 +6610,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished">Herhangi bir ses seçilmemiş</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6391,7 +6751,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
+        <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>Nyquist çalışanı</translation>
     </message>
     <message>
@@ -6447,7 +6807,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
+        <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
         <translation>%1nyx_error sonucunu verdi.
 </translation>
     </message>
@@ -6528,7 +6888,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished">Raf süzgeci</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -6662,7 +7022,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished">Stüdyo azalarak çık</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -6672,7 +7032,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished">Ayarlanabilir kısma</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -6826,7 +7186,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished">Vuruş bulucu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -6836,7 +7196,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished">Parça düzeltme</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -6856,7 +7216,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished">Çapraz parça geçişi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -6876,7 +7236,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished">Çapraz iz geçişi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -7161,7 +7521,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished">Yüksek geçiren süzgeç</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -7215,7 +7575,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished">Sesleri etiketle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -7320,7 +7680,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished">Sınırlayıcı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -7379,12 +7739,12 @@ Sağ kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished">Alçak geçiren süzgeç</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished">Gürültü engelleme kapısı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -7476,7 +7836,7 @@ Sağ kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished">Çentik süzgeç</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -7645,7 +8005,7 @@ Sağ kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Rhythm track</source>
-        <translation type="unfinished">Ritim izi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -7786,7 +8146,7 @@ Sağ kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Risset drum</source>
-        <translation type="unfinished">Risset davulu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
@@ -7821,7 +8181,7 @@ Sağ kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished">Sola</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7831,7 +8191,7 @@ Sağ kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished">Sağa</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -8117,9 +8477,9 @@ DC kayma: ~a~a</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
-        <translation>&lt;a href="~a"&gt;Audacity&lt;/a&gt; için
+        <translation>&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; için
 &lt;span&gt;Sample Data Export&lt;/span&gt;
  Steve Daulton tarafından geliştirilmiştir</translation>
     </message>
@@ -8176,7 +8536,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Sample data Import</source>
-        <translation type="unfinished">Örnek veri içe aktarma</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
@@ -8589,7 +8949,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">Kayan esnetme</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -8858,7 +9218,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished">Doğrusal frekans ölçeği</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
@@ -9011,7 +9371,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
         <source>Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.</source>
-        <translation>Süzülmesini istediğiniz tüm sesi seçin, ne kadar gürültünün süzülmesini istediğinizi seçin ve ardından gürültüyü azaltmak için "Uygula" üzerine tıklayın.</translation>
+        <translation>Süzülmesini istediğiniz tüm sesi seçin, ne kadar gürültünün süzülmesini istediğinizi seçin ve ardından gürültüyü azaltmak için &quot;Uygula&quot; üzerine tıklayın.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
@@ -9186,27 +9546,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">Kayan esnetme</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">Başlangıç tempo değişimi (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">Sonuç tempo değişimi (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">Başlangıç perde kayması</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">Bitiş perde kayması</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -9325,7 +9685,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>Abbreviation of "seconds"</extracomment>
+        <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
         <translation>s</translation>
     </message>
     <message>
@@ -9336,7 +9696,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -9353,7 +9713,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>Abbreviation of "hertz"</extracomment>
+        <extracomment>Abbreviation of &quot;hertz&quot;</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
@@ -9364,7 +9724,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>Abbreviation of "kilohertz"</extracomment>
+        <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
         <translation>kHz</translation>
     </message>
     <message>
@@ -9375,7 +9735,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>Abbreviation of "decibels"</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9386,7 +9746,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
-        <extracomment>Symbol of "percent"</extracomment>
+        <extracomment>Symbol of &quot;percent&quot;</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9403,7 +9763,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
-        <extracomment>Abbreviation of "beats per minute"</extracomment>
+        <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
         <translation>bpm</translation>
     </message>
     <message>
@@ -9414,7 +9774,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
-        <extracomment>Symbol of "degrees"</extracomment>
+        <extracomment>Symbol of &quot;degrees&quot;</extracomment>
         <translation>°</translation>
     </message>
     <message>
@@ -9831,6 +10191,160 @@ Ana etkiler dışa aktarmadan sonra yeniden açılır.</translation>
         <source>Reload plugins</source>
         <translation>Eklentileri yeniden yükle</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
+        <source>Enabled</source>
+        <translation>Etkinleştirilmiş</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
+        <source>Disabled</source>
+        <translation>Pasifleştirilmiş</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <source>Version:</source>
+        <translation>Sürüm:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <source>Shortcut:</source>
+        <extracomment>Keyboard shortcut</extracomment>
+        <translation>Kısayol:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <source>Edit shortcut</source>
+        <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
+        <translation>Kısayolu düzenle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Enable</source>
+        <translation>Etkinleştir</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Disable</source>
+        <translation>Etkisizleştir</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
+        <source>Plugin not found</source>
+        <translation>Eklenti bulunamadı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
+        <source>Could not load plugin</source>
+        <translation>Eklenti yüklenemedi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
+        <source>Plugin is not in the correct format</source>
+        <translation>Eklenti doğru biçimde değil</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
+        <source>Manually</source>
+        <translation>Elle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
+        <source>Failed to install extension</source>
+        <translation>Uzantı yüklenemedi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
+        <source>The extension does not contain a valid manifest file.</source>
+        <translation>Uzantı geçerli bir bildirim dosyası içermiyor.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
+        <source>The extension is already installed.</source>
+        <translation>Uzantı zaten yüklü.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
+        <source>This extension cannot be updated.</source>
+        <translation>Bu uzantı güncellenemiyor.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
+        <source>The currently installed version cannot be uninstalled.</source>
+        <translation>Şu anda yüklü olan sürüm kaldırılamaz.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
+        <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
+        <translation>&quot;%1&quot; eklentisinin başka bir sürümü zaten yüklü (%2 sürümü). Bunu %3 sürümüyle değiştirmek ister misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
+        <source>Update extension</source>
+        <translation>Eklentileri güncelle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <source>Error code: %1</source>
+        <translation>Hata kodu: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
+        <translation>&quot;%1&quot; eklentisi şu anda devre dışı. Şimdi etkinleştirmek istiyor musunuz?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
+        <translation>Alternatif olarak, istediğiniz zaman Başlangıç &gt; Eklentiler&apos;den etkinleştirebilirsiniz.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <source>Composing/arranging tools</source>
+        <translation>Besteleme/düzenleme araçları</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <source>Color notes</source>
+        <translation>Renkli notalar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Playback</source>
+        <translation>Çalma</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <source>Lyrics</source>
+        <translation>Sözler</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
+        <source>Run plugin %1</source>
+        <extracomment>%1 is replaced with the name of the plugin</extracomment>
+        <translation>%1 eklentisini çalıştır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
+        <source>Run plugin %1: %2</source>
+        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
+        <translation>%1 eklentisini çalıştır: %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <source>Not specified</source>
+        <extracomment>No version is specified for this plugin.</extracomment>
+        <translation>Belirtilmemiş</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <source>Not defined</source>
+        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
+        <translation>Tanımlanmamış</translation>
+    </message>
 </context>
 <context>
     <name>fft</name>
@@ -9976,13 +10490,13 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
+        <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>%1 dosyaları</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
-        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
+        <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
@@ -10032,6 +10546,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
         <translation>Tamam</translation>
     </message>
@@ -10064,9 +10579,12 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <translation>İptal</translation>
     </message>
@@ -10076,6 +10594,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
         <translation>Uygula</translation>
     </message>
@@ -10089,6 +10608,8 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
         <translation>Kapat</translation>
     </message>
@@ -10099,6 +10620,10 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
         <source>Clear</source>
         <translation>Temizle</translation>
     </message>
@@ -10115,7 +10640,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -10128,7 +10653,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
-        <extracomment>Abbreviation of "points", used to specify a font size</extracomment>
+        <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
         <translation>pt</translation>
     </message>
     <message>
@@ -10141,6 +10666,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
         <translation>Herhangi bir sonuç bulunamadı</translation>
     </message>
@@ -10154,6 +10680,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="365"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="296"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="63"/>
         <source>Unknown</source>
         <translation>Bilinmiyor</translation>
     </message>
@@ -10167,6 +10694,7 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Lütfen internet bağlantınızı denetleyin ya da bir süre sonra yeniden deneyin</translation>
     </message>
@@ -10226,11 +10754,13 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>Save</source>
         <translation>Kaydet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
         <translation>Aç</translation>
     </message>
@@ -10245,6 +10775,1506 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
         <source>Stop</source>
         <translation>Durdur</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
+        <source>Copy</source>
+        <translation>Kopyala</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
+        <source>Error details have been copied to the clipboard.</source>
+        <translation>Hata ayrıntıları panoya kopyalandı.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Hide details</source>
+        <translation>Detayları gizle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Show details</source>
+        <translation>Detayları göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <source>Question</source>
+        <translation>Soru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <source>Information</source>
+        <translation>Bilgi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <source>Warning</source>
+        <translation>Uyarı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <source>Error</source>
+        <translation>Hata</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <source>Don’t show this message again</source>
+        <translation>Bu mesajı tekrar gösterme</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
+        <source>Waiting…</source>
+        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
+        <source>Add</source>
+        <translation>Ekle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
+        <source>Clear all</source>
+        <translation>Tümünü temizle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
+        <source>action</source>
+        <translation>eylem</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
+        <source>status</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
+        <source>Delete</source>
+        <translation>Sil</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>On</source>
+        <translation>Açık</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>Off</source>
+        <translation>Kapalı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
+        <source>Hours</source>
+        <translation>Saat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
+        <source>Minutes</source>
+        <translation>Dakika</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
+        <source>Seconds</source>
+        <translation>Saniye</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
+        <source>Milliseconds</source>
+        <translation>Milisaniye</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation>yüzde</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
+        <source>Collapse</source>
+        <extracomment>Collapse a tree item</extracomment>
+        <translation>Daralt</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
+        <source>Expand</source>
+        <extracomment>Expand a tree item</extracomment>
+        <translation>Genişlet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <source>Create</source>
+        <translation>Oluştur</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <source>Select</source>
+        <translation>Seçiniz</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
+        <source>Today</source>
+        <translation>Bugün</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="49"/>
+        <source>Yesterday</source>
+        <translation>Dün</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>%n gün önce</numerusform><numerusform>%n gün önce</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
+        <source>Last week</source>
+        <translation>Geçen hafta</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
+        <source>%n week(s) ago</source>
+        <translation><numerusform>%n hafta önce</numerusform><numerusform>%n hafta önce</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
+        <source>Last month</source>
+        <translation>Geçen ay</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
+        <source>%n month(s) ago</source>
+        <translation><numerusform>%n ay önce </numerusform><numerusform>%n ay önce </numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
+        <source>%n year(s) ago</source>
+        <translation><numerusform>%n yıl önce</numerusform><numerusform>%n yıl önce</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
+        <source>%1 GB</source>
+        <comment>gigabyte</comment>
+        <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
+        <source>%1 MB</source>
+        <comment>megabyte</comment>
+        <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
+        <source>%1 KB</source>
+        <comment>kilobyte</comment>
+        <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 KB</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
+        <source>%Ln byte(s)</source>
+        <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
+        <translation><numerusform>%Ln bayt</numerusform><numerusform>%Ln bayt</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <source>Save all</source>
+        <translation>Hepsini kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <source>Don’t save</source>
+        <translation>Kaydetme</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <source>Yes</source>
+        <translation>Evet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <source>Yes to all</source>
+        <translation>Hepsine evet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <source>No</source>
+        <translation>Hayır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <source>No to all</source>
+        <translation>Hepsine hayır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <source>Abort</source>
+        <translation>İptal</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <source>Retry</source>
+        <translation>Yeniden dene</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <source>Ignore</source>
+        <translation>Görmezden gel</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <source>Discard</source>
+        <translation>Çıkar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <source>Help</source>
+        <translation>Yardım</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <source>Reset</source>
+        <translation>Sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <source>Continue</source>
+        <translation>Devam et</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <source>Checking for updates…</source>
+        <translation>Güncelleştirmeler kontrol ediliyor...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <source>Downloading %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <source>Unpacking %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
+        <source>Inactive</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>global/noteName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="267"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="282"/>
+        <source>C</source>
+        <translation>Do</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="268"/>
+        <source>C♯</source>
+        <translation>Do♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="269"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="284"/>
+        <source>D</source>
+        <translation>Re</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="270"/>
+        <source>D♯</source>
+        <translation>Re♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="271"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="286"/>
+        <source>E</source>
+        <translation>Mi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="272"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="287"/>
+        <source>F</source>
+        <translation>Fa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="273"/>
+        <source>F♯</source>
+        <translation>Fa♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="274"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="289"/>
+        <source>G</source>
+        <translation>Sol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="275"/>
+        <source>G♯</source>
+        <translation>Sol#</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="276"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="291"/>
+        <source>A</source>
+        <translation>La</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="277"/>
+        <source>A♯</source>
+        <translation>La#</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="278"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="293"/>
+        <source>B</source>
+        <translation>Si</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="283"/>
+        <source>D♭</source>
+        <translation>Re♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="285"/>
+        <source>E♭</source>
+        <translation>Mi♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="288"/>
+        <source>G♭</source>
+        <translation>Sol♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="290"/>
+        <source>A♭</source>
+        <translation>La♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="292"/>
+        <source>B♭</source>
+        <translation>Si♭</translation>
+    </message>
+</context>
+<context>
+    <name>global/pitchName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="31"/>
+        <source>C-1</source>
+        <translation>C-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="32"/>
+        <source>C♯-1</source>
+        <translation>C♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="33"/>
+        <source>D♭-1</source>
+        <translation>D♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="34"/>
+        <source>D-1</source>
+        <translation>D-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="35"/>
+        <source>D♯-1</source>
+        <translation>D♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="36"/>
+        <source>E♭-1</source>
+        <translation>E♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="37"/>
+        <source>E-1</source>
+        <translation>E-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="38"/>
+        <source>E♯-1</source>
+        <translation>E♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="39"/>
+        <source>F♭-1</source>
+        <translation>F♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="40"/>
+        <source>F-1</source>
+        <translation>F-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="41"/>
+        <source>F♯-1</source>
+        <translation>F♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="42"/>
+        <source>G♭-1</source>
+        <translation>G♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="43"/>
+        <source>G-1</source>
+        <translation>G-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="44"/>
+        <source>G♯-1</source>
+        <translation>G♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="45"/>
+        <source>A♭-1</source>
+        <translation>A♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="46"/>
+        <source>A-1</source>
+        <translation>A-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="47"/>
+        <source>A♯-1</source>
+        <translation>A♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="48"/>
+        <source>B♭-1</source>
+        <translation>B♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="49"/>
+        <source>B-1</source>
+        <translation>B-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="50"/>
+        <source>B♯-1</source>
+        <translation>B♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="52"/>
+        <source>C♭0</source>
+        <translation>C♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="53"/>
+        <source>C0</source>
+        <translation>C0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="54"/>
+        <source>C♯0</source>
+        <translation>C♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="55"/>
+        <source>D♭0</source>
+        <translation>D♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="56"/>
+        <source>D0</source>
+        <translation>D0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="57"/>
+        <source>D♯0</source>
+        <translation>D♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="58"/>
+        <source>E♭0</source>
+        <translation>E♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="59"/>
+        <source>E0</source>
+        <translation>E0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="60"/>
+        <source>E♯0</source>
+        <translation>E♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="61"/>
+        <source>F♭0</source>
+        <translation>F♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="62"/>
+        <source>F0</source>
+        <translation>F0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="63"/>
+        <source>F♯0</source>
+        <translation>F♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="64"/>
+        <source>G♭0</source>
+        <translation>G♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="65"/>
+        <source>G0</source>
+        <translation>G0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="66"/>
+        <source>G♯0</source>
+        <translation>G♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="67"/>
+        <source>A♭0</source>
+        <translation>A♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="68"/>
+        <source>A0</source>
+        <translation>A0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="69"/>
+        <source>A♯0</source>
+        <translation>A♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="70"/>
+        <source>B♭0</source>
+        <translation>B♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="71"/>
+        <source>B0</source>
+        <translation>B0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="72"/>
+        <source>B♯0</source>
+        <translation>B♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="74"/>
+        <source>C♭1</source>
+        <translation>C♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="75"/>
+        <source>C1</source>
+        <translation>C1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="76"/>
+        <source>C♯1</source>
+        <translation>C♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="77"/>
+        <source>D♭1</source>
+        <translation>D♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="78"/>
+        <source>D1</source>
+        <translation>D1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="79"/>
+        <source>D♯1</source>
+        <translation>D♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="80"/>
+        <source>E♭1</source>
+        <translation>E♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="81"/>
+        <source>E1</source>
+        <translation>E1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="82"/>
+        <source>E♯1</source>
+        <translation>E♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="83"/>
+        <source>F♭1</source>
+        <translation>F♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="84"/>
+        <source>F1</source>
+        <translation>F1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="85"/>
+        <source>F♯1</source>
+        <translation>F♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="86"/>
+        <source>G♭1</source>
+        <translation>G♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="87"/>
+        <source>G1</source>
+        <translation>G1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="88"/>
+        <source>G♯1</source>
+        <translation>G♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="89"/>
+        <source>A♭1</source>
+        <translation>A♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="90"/>
+        <source>A1</source>
+        <translation>A1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="91"/>
+        <source>A♯1</source>
+        <translation>A♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="92"/>
+        <source>B♭1</source>
+        <translation>B♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="93"/>
+        <source>B1</source>
+        <translation>B1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="94"/>
+        <source>B♯1</source>
+        <translation>B♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="96"/>
+        <source>C♭2</source>
+        <translation>C♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="97"/>
+        <source>C2</source>
+        <translation>C2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="98"/>
+        <source>C♯2</source>
+        <translation>C♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="99"/>
+        <source>D♭2</source>
+        <translation>D♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="100"/>
+        <source>D2</source>
+        <translation>D2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="101"/>
+        <source>D♯2</source>
+        <translation>D♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="102"/>
+        <source>E♭2</source>
+        <translation>E♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="103"/>
+        <source>E2</source>
+        <translation>E2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="104"/>
+        <source>E♯2</source>
+        <translation>E♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="105"/>
+        <source>F♭2</source>
+        <translation>F♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="106"/>
+        <source>F2</source>
+        <translation>F2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="107"/>
+        <source>F♯2</source>
+        <translation>F♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="108"/>
+        <source>G♭2</source>
+        <translation>G♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="109"/>
+        <source>G2</source>
+        <translation>G2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="110"/>
+        <source>G♯2</source>
+        <translation>G♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="111"/>
+        <source>A♭2</source>
+        <translation>A♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="112"/>
+        <source>A2</source>
+        <translation>A2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="113"/>
+        <source>A♯2</source>
+        <translation>A♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="114"/>
+        <source>B♭2</source>
+        <translation>B♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="115"/>
+        <source>B2</source>
+        <translation>B2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="116"/>
+        <source>B♯2</source>
+        <translation>B♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="118"/>
+        <source>C♭3</source>
+        <translation>C♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="119"/>
+        <source>C3</source>
+        <translation>C3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="120"/>
+        <source>C♯3</source>
+        <translation>C♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="121"/>
+        <source>D♭3</source>
+        <translation>D♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="122"/>
+        <source>D3</source>
+        <translation>D3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="123"/>
+        <source>D♯3</source>
+        <translation>D♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="124"/>
+        <source>E♭3</source>
+        <translation>E♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="125"/>
+        <source>E3</source>
+        <translation>E3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="126"/>
+        <source>E♯3</source>
+        <translation>E♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="127"/>
+        <source>F♭3</source>
+        <translation>F♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="128"/>
+        <source>F3</source>
+        <translation>F3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="129"/>
+        <source>F♯3</source>
+        <translation>F♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="130"/>
+        <source>G♭3</source>
+        <translation>G♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="131"/>
+        <source>G3</source>
+        <translation>G3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="132"/>
+        <source>G♯3</source>
+        <translation>G♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="133"/>
+        <source>A♭3</source>
+        <translation>A♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="134"/>
+        <source>A3</source>
+        <translation>A3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="135"/>
+        <source>A♯3</source>
+        <translation>A♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="136"/>
+        <source>B♭3</source>
+        <translation>B♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="137"/>
+        <source>B3</source>
+        <translation>B3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="138"/>
+        <source>B♯3</source>
+        <translation>B♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="140"/>
+        <source>C♭4</source>
+        <translation>C♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="141"/>
+        <source>C4</source>
+        <translation>C4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="142"/>
+        <source>C♯4</source>
+        <translation>C♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="143"/>
+        <source>D♭4</source>
+        <translation>D♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="144"/>
+        <source>D4</source>
+        <translation>D4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="145"/>
+        <source>D♯4</source>
+        <translation>D♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="146"/>
+        <source>E♭4</source>
+        <translation>E♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="147"/>
+        <source>E4</source>
+        <translation>E4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="148"/>
+        <source>E♯4</source>
+        <translation>E♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="149"/>
+        <source>F♭4</source>
+        <translation>F♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="150"/>
+        <source>F4</source>
+        <translation>F4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="151"/>
+        <source>F♯4</source>
+        <translation>F♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="152"/>
+        <source>G♭4</source>
+        <translation>G♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="153"/>
+        <source>G4</source>
+        <translation>G4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="154"/>
+        <source>G♯4</source>
+        <translation>G♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="155"/>
+        <source>A♭4</source>
+        <translation>A♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="156"/>
+        <source>A4</source>
+        <translation>A4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="157"/>
+        <source>A♯4</source>
+        <translation>A♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="158"/>
+        <source>B♭4</source>
+        <translation>B♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="159"/>
+        <source>B4</source>
+        <translation>B4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="160"/>
+        <source>B♯4</source>
+        <translation>B♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="162"/>
+        <source>C♭5</source>
+        <translation>C♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="163"/>
+        <source>C5</source>
+        <translation>C5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="164"/>
+        <source>C♯5</source>
+        <translation>C♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="165"/>
+        <source>D♭5</source>
+        <translation>D♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="166"/>
+        <source>D5</source>
+        <translation>D5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="167"/>
+        <source>D♯5</source>
+        <translation>D♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="168"/>
+        <source>E♭5</source>
+        <translation>E♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="169"/>
+        <source>E5</source>
+        <translation>E5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="170"/>
+        <source>E♯5</source>
+        <translation>E♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="171"/>
+        <source>F♭5</source>
+        <translation>F♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="172"/>
+        <source>F5</source>
+        <translation>F5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="173"/>
+        <source>F♯5</source>
+        <translation>F♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="174"/>
+        <source>G♭5</source>
+        <translation>G♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="175"/>
+        <source>G5</source>
+        <translation>G5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="176"/>
+        <source>G♯5</source>
+        <translation>G♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="177"/>
+        <source>A♭5</source>
+        <translation>A♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="178"/>
+        <source>A5</source>
+        <translation>A5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="179"/>
+        <source>A♯5</source>
+        <translation>A♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="180"/>
+        <source>B♭5</source>
+        <translation>B♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="181"/>
+        <source>B5</source>
+        <translation>B5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="182"/>
+        <source>B♯5</source>
+        <translation>B♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="184"/>
+        <source>C♭6</source>
+        <translation>C♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="185"/>
+        <source>C6</source>
+        <translation>C6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="186"/>
+        <source>C♯6</source>
+        <translation>C♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="187"/>
+        <source>D♭6</source>
+        <translation>D♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="188"/>
+        <source>D6</source>
+        <translation>D6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="189"/>
+        <source>D♯6</source>
+        <translation>D♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="190"/>
+        <source>E♭6</source>
+        <translation>E♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="191"/>
+        <source>E6</source>
+        <translation>E6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="192"/>
+        <source>E♯6</source>
+        <translation>E♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="193"/>
+        <source>F♭6</source>
+        <translation>F♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="194"/>
+        <source>F6</source>
+        <translation>F6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="195"/>
+        <source>F♯6</source>
+        <translation>F♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="196"/>
+        <source>G♭6</source>
+        <translation>G♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="197"/>
+        <source>G6</source>
+        <translation>G6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="198"/>
+        <source>G♯6</source>
+        <translation>G♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="199"/>
+        <source>A♭6</source>
+        <translation>A♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="200"/>
+        <source>A6</source>
+        <translation>A6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="201"/>
+        <source>A♯6</source>
+        <translation>A♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="202"/>
+        <source>B♭6</source>
+        <translation>B♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="203"/>
+        <source>B6</source>
+        <translation>B6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="204"/>
+        <source>B♯6</source>
+        <translation>B♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="206"/>
+        <source>C♭7</source>
+        <translation>C♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="207"/>
+        <source>C7</source>
+        <translation>Do7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="208"/>
+        <source>C♯7</source>
+        <translation>C♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="209"/>
+        <source>D♭7</source>
+        <translation>D♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="210"/>
+        <source>D7</source>
+        <translation>Re7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="211"/>
+        <source>D♯7</source>
+        <translation>D♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="212"/>
+        <source>E♭7</source>
+        <translation>E♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="213"/>
+        <source>E7</source>
+        <translation>Mi7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="214"/>
+        <source>E♯7</source>
+        <translation>E♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="215"/>
+        <source>F♭7</source>
+        <translation>F♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="216"/>
+        <source>F7</source>
+        <translation>Fa7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="217"/>
+        <source>F♯7</source>
+        <translation>F♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="218"/>
+        <source>G♭7</source>
+        <translation>G♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="219"/>
+        <source>G7</source>
+        <translation>Sol7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="220"/>
+        <source>G♯7</source>
+        <translation>G♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="221"/>
+        <source>A♭7</source>
+        <translation>A♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="222"/>
+        <source>A7</source>
+        <translation>La7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="223"/>
+        <source>A♯7</source>
+        <translation>A♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="224"/>
+        <source>B♭7</source>
+        <translation>B♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="225"/>
+        <source>B7</source>
+        <translation>Si7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="226"/>
+        <source>B♯7</source>
+        <translation>B♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="228"/>
+        <source>C♭8</source>
+        <translation>C♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="229"/>
+        <source>C8</source>
+        <translation>C8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="230"/>
+        <source>C♯8</source>
+        <translation>C♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="231"/>
+        <source>D♭8</source>
+        <translation>D♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="232"/>
+        <source>D8</source>
+        <translation>D8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="233"/>
+        <source>D♯8</source>
+        <translation>D♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="234"/>
+        <source>E♭8</source>
+        <translation>E♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="235"/>
+        <source>E8</source>
+        <translation>E8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="236"/>
+        <source>E♯8</source>
+        <translation>E♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="237"/>
+        <source>F♭8</source>
+        <translation>F♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="238"/>
+        <source>F8</source>
+        <translation>F8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="239"/>
+        <source>F♯8</source>
+        <translation>F♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="240"/>
+        <source>G♭8</source>
+        <translation>G♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="241"/>
+        <source>G8</source>
+        <translation>G8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="242"/>
+        <source>G♯8</source>
+        <translation>G♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="243"/>
+        <source>A♭8</source>
+        <translation>A♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="244"/>
+        <source>A8</source>
+        <translation>A8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="245"/>
+        <source>A♯8</source>
+        <translation>A♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="246"/>
+        <source>B♭8</source>
+        <translation>B♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="247"/>
+        <source>B8</source>
+        <translation>B8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="248"/>
+        <source>B♯8</source>
+        <translation>B♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="250"/>
+        <source>C♭9</source>
+        <translation>C♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="251"/>
+        <source>C9</source>
+        <translation>C9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="252"/>
+        <source>C♯9</source>
+        <translation>C♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="253"/>
+        <source>D♭9</source>
+        <translation>D♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="254"/>
+        <source>D9</source>
+        <translation>D9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="255"/>
+        <source>D♯9</source>
+        <translation>D♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="256"/>
+        <source>E♭9</source>
+        <translation>E♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="257"/>
+        <source>E9</source>
+        <translation>E9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="258"/>
+        <source>E♯9</source>
+        <translation>E♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="259"/>
+        <source>F♭9</source>
+        <translation>F♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="260"/>
+        <source>F9</source>
+        <translation>F9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="261"/>
+        <source>F♯9</source>
+        <translation>F♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="262"/>
+        <source>G♭9</source>
+        <translation>G♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="263"/>
+        <source>G9</source>
+        <translation>G9</translation>
     </message>
 </context>
 <context>
@@ -10360,7 +12390,7 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
-        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
+        <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
         <translation>Bu Audacity sürümü %1 desteği ile derlenmemiş.</translation>
     </message>
     <message>
@@ -10501,7 +12531,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
-        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
+        <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -10572,7 +12602,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
-        <extracomment>"Log" is short for "logarithmic"</extracomment>
+        <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
         <translation>Günlük arama</translation>
     </message>
     <message>
@@ -10590,7 +12620,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>Belirteç[%1] Kodlayıcı-çözücü[%2], Dil[%3], Bithızı[%4], Kanallar[%5], Süre[%6]</translation>
     </message>
     <message>
@@ -10599,7 +12629,7 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>kbps abbreviates "thousands of bits per second"
+        <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
@@ -10670,7 +12700,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
-        <extracomment>VBR is "variable bit rate"</extracomment>
+        <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
         <translation>VBR kipi</translation>
     </message>
     <message>
@@ -10699,7 +12729,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
-        <extracomment>VOIP is "voice over IP"</extracomment>
+        <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -10788,7 +12818,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>FFmpeg 0x%1 ses kodlayıcı-çözücüsünü bulamadı.
 Bu kodlayıcı çözücü desteği derlenmemiş olabilir.</translation>
     </message>
@@ -10807,7 +12837,7 @@ Bu kodlayıcı çözücü desteği derlenmemiş olabilir.</translation>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11325,9 +13355,9 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates "thousands of bits per second"
+        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
-kbit/s abbreviates "kilobits per second"</extracomment>
+kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11676,7 +13706,7 @@ Audacity bu işlemi yapamaz, dışa aktarma işlemi iptal edildi.</translation>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
-        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like "system * error"</extracomment>
+        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11732,7 +13762,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>bps abbreviates "bits per sample"</extracomment>
+        <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
         <translation>%1 b/sn</translation>
     </message>
     <message>
@@ -11754,10 +13784,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
 </context>
 <context>
@@ -11887,6 +13914,120 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
         <source>One or more saved labels could not be read.</source>
         <translation>Kaydedilmiş bir ya da bir kaç etiket okunamadı.</translation>
+    </message>
+</context>
+<context>
+    <name>languages</name>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
+        <source>Up to date</source>
+        <translation>Güncel</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
+        <source>Error while parsing response from server</source>
+        <translation>Sunucudan yanıt ayrıştırılırken hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
+        <source>Error while downloading language</source>
+        <translation>Dil indirilirken hata</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
+        <source>Error while writing language files</source>
+        <translation>Dil dosyaları yazılırken hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
+        <source>Language not found</source>
+        <translation>Dil bulunamadı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
+        <source>Error while removing language directory</source>
+        <translation>Dil dizini kaldırılırken hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
+        <source>Another operation on this language has already been started</source>
+        <translation>Bu dilde başka bir işlem zaten başlatıldı</translation>
+    </message>
+</context>
+<context>
+    <name>learn</name>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
+        <source>Open %1</source>
+        <translation>%1 aç</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <source>Sorry, we are unable to load these videos right now</source>
+        <translation>Üzgünüz, şu anda bu videoları yükleyemiyoruz</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="103"/>
+        <source>Learn</source>
+        <translation>Öğrenin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <source>Learn tab bar</source>
+        <translation>Öğren sekmesi çubuğu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <source>Get started</source>
+        <translation>Başlarken</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <source>Classes</source>
+        <translation>Sınıflar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
+        <source>The received playlist is empty.</source>
+        <translation>Alınan çalma listesi boş.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <source>Marc Sabatella</source>
+        <translation>Marc Sabatella</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <source>Instructor</source>
+        <translation>Eğitmen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <source>Creator, Mastering MuseScore</source>
+        <translation>Yaratıcılık, MuseScore&apos;da Ustalaşmak</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
+
+Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
+
+In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
+
+(Note: Mastering MuseScore is available in English only)</source>
+        <translation>Dünyanın en popüler müzik notasyonu yazılımını öğrenmek için en kapsamlı kaynak olan Mastering MuseScore&apos;a hoş geldiniz! Benim adım Marc Sabatella ve MuseScore&apos;un geliştirilmesine, desteklenmesine ve tanıtımına on yılı aşkın bir süre önce ilk çıkışından bu yana yardımcı oluyorum.
+
+İster müzik notası yazılımına yeni başlıyor olun, ister gelişmiş gravür ve çalma tekniklerini keşfetmeye hevesli bir uzman kullanıcı olun, amiral gemisi çevrimiçi kursum Mastering MuseScore, MuseScore&apos;dan en iyi şekilde yararlanmak için bilmeniz gereken her şeyi kapsar. 
+
+Ayrıca, Mastering MuseScore, en iyi müziğinizi yaratmanıza yardımcı olacak tartışma alanları, canlı yayınlar ve diğer ilgili kurslar ve hizmetler ile destekleyici bir müzisyenler topluluğuna sahiptir. MuseScore&apos;u en tanınmış uzmanlarından birinden öğrenmek için bu fırsattan yararlanın!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <source>Mastering MuseScore</source>
+        <translation>MuseScore&apos;da Ustalaşma&apos;yı</translation>
     </message>
 </context>
 <context>
@@ -12216,6 +14357,53 @@ Libsndfile says “%2”</source>
     </message>
 </context>
 <context>
+    <name>midi</name>
+    <message>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
+        <source>No device</source>
+        <translation>Cihaz yok</translation>
+    </message>
+</context>
+<context>
+    <name>midiremote</name>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
+        <source>MIDI remote control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
+        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
+        <source>MIDI mapping:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
+        <source>MIDI mapping bottom panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
+        <source>Assign MIDI mapping…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
+        <source>MIDI mapping top panel</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -12321,11 +14509,8 @@ It will not be loaded.</source>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of "Enable this plug-in?": "Enable these plug-ins?"</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -12377,6 +14562,52 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>musesampler</name>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
+        <source>MuseSampler library is detected, version %1</source>
+        <translation>MuseSampler kitaplığı algılandı, %1 sürümü</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
+        <source>Installed MuseSampler library is not supported, version %1</source>
+        <translation>Yüklü MuseSampler kitaplığı desteklenmiyor, sürüm %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
+        <source>MuseSampler library is not found</source>
+        <translation>MuseSampler kitaplığı bulunamadı</translation>
+    </message>
+</context>
+<context>
+    <name>network</name>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
+        <source>The request was aborted</source>
+        <translation>İstek iptal edildi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
+        <source>The connection to the remote server timed out</source>
+        <translation>Uzak sunucuya bağlantı zaman aşımına uğradı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
+        <source>An unknown network-related error occurred</source>
+        <translation>Ağla ilgili bilinmeyen bir hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
+        <source>The I/O device was not opened for reading</source>
+        <translation>G/Ç aygıtı okumak için açılamadı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
+        <source>The I/O device was not opened for writing</source>
+        <translation>G/Ç aygıtı yazmak için açılamadı</translation>
+    </message>
+</context>
+<context>
     <name>network-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="102"/>
@@ -12386,29 +14617,37 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>notation</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
+        <source>Extensions toolbar</source>
+        <translation>Uzantılar araç çubuğu</translation>
+    </message>
+</context>
+<context>
     <name>numeric-formats</name>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>bar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>vuruş</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
         <translation>bar:vuruş</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
         <translation>bar:vuruş:tik</translation>
     </message>
     <message>
@@ -13722,7 +15961,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
-        <extracomment>accessibility name for the panel at the bottom of the "Projects" page</extracomment>
+        <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>Proje işlemleri</translation>
     </message>
     <message>
@@ -14676,6 +16915,7 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>Bilgisayara kaydet</translation>
@@ -14694,13 +16934,13 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
-        <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>kopya</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
-        <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>seçim</translation>
     </message>
     <message>
@@ -14710,6 +16950,7 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Yayınla</translation>
     </message>
@@ -14740,6 +16981,58 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>audio.com ile bağlantı kurulamadı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
+        <source>Public</source>
+        <translation>Halka açık</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="167"/>
+        <source>Unlisted</source>
+        <translation>Listelenmemiş</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="173"/>
+        <source>Private</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
+        <source>Publish to MuseScore.com</source>
+        <translation>MuseScore.com&apos;da yayınla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
+        <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation>Mevcut &lt;a href=&quot;%1&quot;&gt;çevrimiçi partisyonu&lt;/a&gt; değiştirin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
+        <source>Publish as new online score</source>
+        <translation>Yeni çevrimiçi partisyon olarak yayınla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
+        <source>Share on Audio.com</source>
+        <translation>Audio.com&apos;da paylaşın...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
+        <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation>Mevcut &lt;a href=&quot;%1&quot;&gt;sesi&lt;/a&gt; değiştirin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
+        <source>Upload as new audio file</source>
+        <translation>Yeni ses dosyası olarak yükle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
+        <source>Share</source>
+        <translation>Paylaş</translation>
     </message>
 </context>
 <context>
@@ -15008,8 +17301,8 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
-        <source>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Watch video&lt;/a&gt;</source>
-        <translation>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Görüntüyü izle&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Görüntüyü izle&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
@@ -15400,17 +17693,138 @@ iki kanal ister)</translation>
     </message>
 </context>
 <context>
+    <name>shortcuts</name>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
+        <source>Old shortcut:</source>
+        <translation>Eski kısayol:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
+        <source>New shortcut:</source>
+        <translation>Yeni kısayol:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
+        <source>Type to set shortcut</source>
+        <translation>Kısayolu ayarlamak için yazın</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
+        <source>Shortcuts bottom panel</source>
+        <translation>Kısayollar alt paneli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
+        <source>Import</source>
+        <translation>İçe aktar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
+        <source>Export</source>
+        <translation>Dışa aktar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
+        <source>Reset to default</source>
+        <translation>Varsayılana ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
+        <source>action</source>
+        <translation>eylem</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="34"/>
+        <source>shortcut</source>
+        <translation>kısayol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
+        <source>Shortcuts top panel</source>
+        <translation>Kısayollar üst paneli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
+        <source>Define…</source>
+        <translation>Tanımla…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="98"/>
+        <source>Search shortcut</source>
+        <translation>Kısayol ara</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
+        <source>Enter shortcut sequence</source>
+        <translation>Kısayol sırasını girin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <source>Define keyboard shortcut</source>
+        <translation>Klavye kısayolunu tanımlayın</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
+        <source>Note %1</source>
+        <extracomment>A MIDI remote event, namely a note event</extracomment>
+        <translation>Nota %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
+        <source>CC %1</source>
+        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
+        <translation>CC %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
+        <source>None</source>
+        <extracomment>No MIDI remote event</extracomment>
+        <translation>Hiçbiri</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
+        <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>Bu kısayol zaten şuraya atanmış: &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
+        <translation>Bunun yerine &lt;b&gt;%1&lt;/b&gt;&apos;e atamak istediğinizden emin misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <source>Reassign shortcut</source>
+        <translation>Kısayolu yeniden ata</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <source>MuseScore Studio shortcuts file</source>
+        <translation>MuseScore Studio kısayol dosyası</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <source>Import shortcuts</source>
+        <translation>Kısayolları içe aktar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <source>Export shortcuts</source>
+        <translation>Kısayolları dışa aktar</translation>
+    </message>
+</context>
+<context>
     <name>snapping</name>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>Vuruşlar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>Çubuk</translation>
     </message>
     <message>
@@ -15451,7 +17865,7 @@ iki kanal ister)</translation>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>The music theory "triplet"</extracomment>
+        <extracomment>The music theory &quot;triplet&quot;</extracomment>
         <translation>Üçlükler</translation>
     </message>
     <message>
@@ -15969,7 +18383,7 @@ iki kanal ister)</translation>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
         <translation>Kes/Kopyala/Yapıştır</translation>
     </message>
     <message>
@@ -16017,6 +18431,59 @@ iki kanal ister)</translation>
     </message>
 </context>
 <context>
+    <name>system</name>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="54"/>
+        <source>The file does not exist</source>
+        <translation>Dosya yok</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="55"/>
+        <source>The file already exists</source>
+        <translation>Dosya zaten mevcut</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="56"/>
+        <source>The file could not be removed</source>
+        <translation>Dosya kaldırılamadı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="57"/>
+        <source>The directory is not empty</source>
+        <translation>Dizin boş değil</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
+        <source>The directory could not be cleared</source>
+        <translation>Dizin temizlenemedi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
+        <source>An error occurred when reading from the file</source>
+        <translation>Dosyadan okunurken bir hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="60"/>
+        <source>An error occurred when writing to the file</source>
+        <translation>Dosyaya yazarken bir hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="61"/>
+        <source>An error occurred when making a path</source>
+        <translation>Yol oluşturulurken bir hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="62"/>
+        <source>An error occurred when copying the file</source>
+        <translation>Dosya kopyalanırken bir hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="63"/>
+        <source>An error occurred when moving the file</source>
+        <translation>Dosya taşınırken bir hata oluştu</translation>
+    </message>
+</context>
+<context>
     <name>time-frequency-selection</name>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
@@ -16039,28 +18506,37 @@ iki kanal ister)</translation>
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>tours</name>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
+        <source>Watch video</source>
+        <translation>Video izle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Got it</source>
+        <translation>Anladım</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Next</source>
+        <translation>Sonraki</translation>
     </message>
 </context>
 <context>
@@ -16346,6 +18822,203 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
     </message>
 </context>
 <context>
+    <name>ui</name>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
+        <source>Browse</source>
+        <translation>Araştırma</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
+        <source>Current path:</source>
+        <translation>Geçerli yol:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
+        <source>Choose file</source>
+        <translation>Dosya seçin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
+        <source>Choose directory</source>
+        <translation>Dizin seçin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
+        <source>Directories actions</source>
+        <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
+        <translation>Dizin eylemleri</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
+        <source>Directories</source>
+        <translation>Dizinler</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
+        <source>Add directory</source>
+        <translation>Dizin ekle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
+        <source>Path</source>
+        <translation>Yol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
+        <source>Directories list</source>
+        <translation>Dizin listesi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>checked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <translation>işaretlenmiş</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>unchecked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <translation>işaretlenmemiş</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="82"/>
+        <source>selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is the chosen option in a list of options</extracomment>
+        <translation>seçildi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="84"/>
+        <source>not selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is not the chosen option in a list of options</extracomment>
+        <translation>seçilmedi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="93"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
+        <source>Menu</source>
+        <extracomment>a type of ui item</extracomment>
+        <translation>Menü</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted ascending</source>
+        <translation>artan sıralama</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted descending</source>
+        <translation>azalan sıralama</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
+        <source>not sorted</source>
+        <translation>sıralanmamış</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
+        <source>Search</source>
+        <translation>Arama</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation>Kırmızı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation>Yeşil</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation>Mavi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
+        <source>Key</source>
+        <comment>key/value</comment>
+        <extracomment>As in a &quot;key/value&quot; pair: for example, the &quot;key&quot; could be the name of a setting and the &quot;value&quot; the value of that setting.</extracomment>
+        <translation>Anahtar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
+        <source>Value</source>
+        <translation>Değer</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation>Değer listesi başlık paneli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <source>Value list panel</source>
+        <extracomment>Accessibility description of the body of a value list (table)</extracomment>
+        <translation>Değer listesi paneli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Visible</source>
+        <translation>Görünür</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Hidden</source>
+        <translation>Gizli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
+        <source>Light</source>
+        <extracomment>The name of the light ui theme</extracomment>
+        <translation>Açık</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
+        <source>Dark</source>
+        <extracomment>The name of the dark ui theme</extracomment>
+        <translation>Koyu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
+        <source>White</source>
+        <extracomment>The name of the high contrast light ui theme</extracomment>
+        <translation>Beyaz</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
+        <source>Black</source>
+        <extracomment>The name of the high contrast dark ui theme</extracomment>
+        <translation>Siyah</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="149"/>
+        <source>direction is horizontal</source>
+        <translation>yatay yön</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="150"/>
+        <source>direction is vertical</source>
+        <translation>dikey yön</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
+        <source>direction is both</source>
+        <translation>iki yönede</translation>
+    </message>
+</context>
+<context>
     <name>uicomponents</name>
     <message>
         <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="17"/>
@@ -16461,6 +19134,210 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
         <translation>bar:vuruş:tik</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
+        <source>No button</source>
+        <translation>Düğme yok</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
+        <source>OK</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
+        <source>Save</source>
+        <translation>Kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
+        <source>Save all</source>
+        <translation>Hepsini kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
+        <source>Don’t save</source>
+        <translation>Kaydetme</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
+        <source>Open</source>
+        <translation>Aç</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
+        <source>Yes</source>
+        <translation>Evet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
+        <source>Yes to all</source>
+        <translation>Hepsine evet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
+        <source>No</source>
+        <translation>Hayır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
+        <source>No to all</source>
+        <translation>Hepsine hayır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
+        <source>Abort</source>
+        <translation>İptal</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
+        <source>Retry</source>
+        <translation>Yeniden dene</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
+        <source>Ignore</source>
+        <translation>Görmezden gel</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
+        <source>Close</source>
+        <translation>Kapat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
+        <source>Cancel</source>
+        <translation>İptal</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
+        <source>Discard</source>
+        <translation>Çıkar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
+        <source>Help</source>
+        <translation>Yardım</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
+        <source>Apply</source>
+        <translation>Uygula</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
+        <source>Reset</source>
+        <translation>Sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
+        <source>Restore defaults</source>
+        <translation>Varsayılanları geri yükle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
+        <source>Continue</source>
+        <translation>Devam et</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
+        <source>Next</source>
+        <translation>Sonraki</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
+        <source>Back</source>
+        <translation>Geri</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
+        <source>Select</source>
+        <translation>Seçiniz</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
+        <source>Clear</source>
+        <translation>Temizle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
+        <source>Done</source>
+        <translation>Bitti</translation>
+    </message>
+</context>
+<context>
+    <name>update</name>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <source>A new version of %1 is available!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <source>Release notes</source>
+        <translation>Sürüm notları</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <source>Skip this version</source>
+        <translation>Bu sürümü atla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <source>Remind me later</source>
+        <translation>Daha sonra hatırlat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <source>Install update</source>
+        <translation>Güncellemeyi yükle</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
+        <source>Read the %1 release notes</source>
+        <translation>%1 sürüm notlarını okuyun</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <source>You’re up to date!</source>
+        <translation>Güncelsiniz!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <source>Cannot connect to server</source>
+        <translation>Sunucuya bağlanılamıyor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <source>Sorry - please try again later</source>
+        <translation>Üzgünüm, lütfen daha sonra tekrar deneyin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <source>Close</source>
+        <translation>Kapat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating MuseScore Studio</source>
+        <translation>MuseScore Studio güncelleniyor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading MuseScore Studio %1</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
+        <translation>MuseScore Studio %1 indiriliyor</translation>
     </message>
 </context>
 <context>
@@ -16656,6 +19533,80 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
 </context>
 <context>
+    <name>workspace</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
+        <source>Workspaces</source>
+        <translation>Çalışma alanı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
+        <source>Save layout as new workspace</source>
+        <translation>Yerleşimi yeni çalışma alanı olarak kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
+        <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
+        <translation>Çalışma alanları, %1 arayüzünün farklı yapılandırmalarını seçmenizi sağlar. Kendi benzersiz yapılandırmalarınızı yeni çalışma alanları olarak kaydedebilirsiniz.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
+        <source>Reset</source>
+        <translation>Sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <source>Workspace name:</source>
+        <translation>Çalışma alanı adı:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
+        <source>New</source>
+        <translation>Yeni</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
+        <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
+        <translation>”%1“ adında bir çalışma alanı zaten var. Lütfen farklı bir ad seçin.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
+        <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
+        <translation>“%1” çalışma alanı adı olarak kullanılamaz. Lütfen farklı bir ad seçin.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
+        <translation>Bu işlem çalışma alanınızı fabrika varsayılan düzenine sıfırlayacak ve geri alınamaz. Devam etmek istiyor musunuz?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <source>Resetting workspaces</source>
+        <translation>Çalışma alanı sıfırlanıyor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <source>Reset workspace</source>
+        <translation>Çalışma alanını sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <source>Name cannot be empty</source>
+        <translation>İsim boş bırakılamaz</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <source>Name already exists</source>
+        <translation>Bu isim zaten var</translation>
+    </message>
+</context>
+<context>
     <name>xml</name>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
@@ -16680,14321 +19631,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
         <translation>XML işlenemedi</translation>
-    </message>
-</context>
-<context>
-    <name>_au3_legacy_vanished</name>
-    <message>
-        <source>Stream is active ... unable to gather information.
-</source>
-        <translation type="vanished">Akış etkin... bilgiler alınamadı.
-</translation>
-    </message>
-    <message>
-        <source>No recording device found for '%s'.
-</source>
-        <translation type="vanished">'%1' için bir oynatma aygıtı bulunamadı.
-</translation>
-    </message>
-    <message>
-        <source>No playback device found for '%s'.
-</source>
-        <translation type="vanished">'%1' için bir oynatma aygıtı bulunamadı.
-</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Daha fazla iyileştirme yapmak olanaksız. Hala çok yüksek.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment decreased the volume to %f.</source>
-        <translation type="vanished">Kayıt düzeyi otomatik olarak ayarlanarak ses düzeyi %1 olarak azaltıldı.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Daha fazla iyileştirme yapmak olanaksız. Hala çok düşük.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment increased the volume to %.2f.</source>
-        <translation type="vanished">Kayıt düzeyi otomatik olarak ayarlanarak ses düzeyi %1. olarak arttırıldı.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Kabul edilebilir bir ses düzeyi bulunamadan toplam inceleme sayısı aşıldı. Hala çok yüksek.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Kabul edilebilir bir ses düzeyi bulunamadan toplam inceleme sayısı aşıldı. Hala çok düşük.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. %1. kabul edilebilir bir ses düzeyi olarak görünüyor.</translation>
-    </message>
-    <message>
-        <source>Failed to encode preset from "%s"</source>
-        <translation type="vanished">Hazır ayar "%1" konumundan kodlanamadı</translation>
-    </message>
-    <message>
-        <source>Couldn't open "%s"</source>
-        <translation type="vanished">"%1" açılamadı</translation>
-    </message>
-    <message>
-        <source>Failed to write XML preset to "%s"</source>
-        <translation type="vanished">XML hazır ayarı "%1" üzerine yazılamadı</translation>
-    </message>
-    <message>
-        <source>Unable to read the preset from "%s"</source>
-        <translation type="vanished">Hazır ayar "%1" konumundan okunamadı</translation>
-    </message>
-    <message>
-        <source>Failed to decode "%s" preset</source>
-        <translation type="vanished">"%1" hazır ayarının kodu çözülemedi</translation>
-    </message>
-    <message>
-        <source>Failed to convert "%s" preset to internal format</source>
-        <translation type="vanished">"%1" hazır ayarı iç biçime dönüştürülemedi</translation>
-    </message>
-    <message>
-        <source>Failed to create property list for "%s" preset</source>
-        <translation type="vanished">"%1" hazır ayarının özellik listesi oluşturulamadı</translation>
-    </message>
-    <message>
-        <source>Failed to set class info for "%s" preset</source>
-        <translation type="vanished">"%1" hazır ayarı için sınıf bilgileri ayarlanamadı</translation>
-    </message>
-    <message>
-        <source>Applying %s...</source>
-        <translation type="vanished">%1 uygulanıyor...</translation>
-    </message>
-    <message>
-        <source>"%s" 
-is a not an audio file. 
-Audacity cannot open this type of file.</source>
-        <translation type="vanished">"%1" 
-bir ses dosyası değil. 
-Audacity bu dosya türünü açamıyor.</translation>
-    </message>
-    <message>
-        <source>Importing %s...</source>
-        <translation type="vanished">%1 içe aktarılıyor</translation>
-    </message>
-    <message>
-        <source>"%s" is an audio CD track. 
-Audacity cannot open audio CDs directly. 
-Extract (rip) the CD tracks to an audio format that 
-Audacity can import, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir CD ses izi. 
-Audacity ses CDlerini doğrudan açamaz. 
-CD izlerini Audacity tarafından içe aktarılabilecek 
-WAV ya da AIFF gibi biçimlere dönüştürün.</translation>
-    </message>
-    <message>
-        <source>"%s" is a playlist file. 
-Audacity cannot open this file because it only contains links to other files. 
-You may be able to open it in a text editor and download the actual audio files.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir oynatma listesi dosyası. 
-Bu dosya yalnızca başka dosyalara bağlantılar içerdiğinden Audacity bu dosyayı açamaz. 
-Dosyayı bir metin düzenleyici ile açarak geçerli ses dosyalarını indirebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Windows Media Audio file. 
-Audacity cannot open this type of file due to patent restrictions. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir Windows Media ses dosyası. 
-Audacity patent kısıtlamaları nedeniyle bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is an Advanced Audio Coding file.
-Without the optional FFmpeg library, Audacity cannot open this type of file.
-Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir gelişmiş ses kodlama dosyası. 
-İsteğe bağlı FFmpeg kitaplığı olmadan Audacity bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is an encrypted audio file. 
-These typically are from an online music store. 
-Audacity cannot open this type of file due to the encryption. 
-Try recording the file into Audacity, or burn it to audio CD then 
-extract the CD track to a supported audio format such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir şifrelenmiş ses dosyası. 
-Bu dosyalar genellikle çevrim içi müzik mağazalarından alınmıştır. 
-Audacity şifreleme nedeniyle bu türdeki dosyaları açamaz. 
-Dosyayı Audacity ile kaydetmeyi deneyin ya da ses CDsine yazarak 
-açın ve WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürün.</translation>
-    </message>
-    <message>
-        <source>"%s" is a RealPlayer media file. 
-Audacity cannot open this proprietary format. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir RealPlayer ortam dosyası. 
-Audacity bu özel türdeki dosya biçimini açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is a notes-based file, not an audio file. 
-Audacity cannot open this type of file. 
-Try converting it to an audio file such as WAV or AIFF and 
-then import it, or record it into Audacity.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir nota tabanlı dosya, bir ses dosyası değil. 
-Audacity bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine 
-dönüştürüp içe aktarmayı ya da Audacity ile kaydetmeyi deneyin.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Musepack audio file. 
-Audacity cannot open this type of file. 
-If you think it might be an mp3 file, rename it to end with ".mp3" 
-and try importing it again. Otherwise you need to convert it to a supported audio 
-format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir Musepack ses dosyası. 
-Audacity bu türdeki dosyaları açamaz. 
-Bunun bir mp3 dosyası olduğunu düşünüyorsanız uzantısını "mp3" 
-olarak değiştirin ve yeniden içe aktarmayı deneyin. Aksi halde 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Wavpack audio file. 
-Audacity cannot open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir Wavpack ses dosyası. 
-Audacity bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Dolby Digital audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir Dolby sayısal ses dosyası. 
-Audacity şu anda bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is an Ogg Speex audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir Ogg Spex ses dosyası. 
-Audacity şu anda bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>"%s" is a video file. 
-Audacity cannot currently open this type of file. 
-You need to extract the audio to a supported format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" bir görüntü dosyası. 
-Audacity şu anda bu türdeki dosyaları açamaz. 
-Bu dosyayı WAV ya da AIFF gibi desteklenen bir ses biçimine dönüştürmelisiniz.</translation>
-    </message>
-    <message>
-        <source>File "%s" not found.</source>
-        <translation type="vanished">"%1" dosyası bulunamadı.</translation>
-    </message>
-    <message>
-        <source>Audacity did not recognize the type of the file '%s'.
-
-%sFor uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">Audacity '%1' dosyasının türünü tanıyamadı.
-
-%2Sıkıştırılmamış dosyalar için, Dosya &gt; İçe Aktar &gt; Ham Veri seçeneğini deneyin.</translation>
-    </message>
-    <message>
-        <source>Audacity recognized the type of the file '%s'.
-Importers supposedly supporting such files are:
-%s,
-but none of them understood this file format.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">Audacity '%1' dosyasının türünü tanıdı.
-İçe aktarıcılar bu türdeki dosyaları destekliyor olabilir:
-%2,
-fakat hiç biri bu dosya biçimini anlayamadı.</translation>
-    </message>
-    <message>
-        <source>LADSPA</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA</translation>
-    </message>
-    <message>
-        <source>LADSPA Effects</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA etkileri</translation>
-    </message>
-    <message>
-        <source>Provides LADSPA Effects</source>
-        <translation type="vanished">LADSPA etkileri sağlar</translation>
-    </message>
-    <message>
-        <source>Audacity no longer uses vst-bridge</source>
-        <translation type="vanished">Audacity artık vst-bridge kullanmıyor</translation>
-    </message>
-    <message>
-        <source>Could not load the library</source>
-        <translation type="vanished">Kitaplık yüklenemedi</translation>
-    </message>
-    <message>
-        <source>LV2</source>
-        <extracomment>i18n-hint: abbreviates
-"Linux Audio Developer's Simple Plugin API (LADSPA) version 2"</extracomment>
-        <translation type="vanished">LV2</translation>
-    </message>
-    <message>
-        <source>Effect Settings</source>
-        <translation type="vanished">Etki ayarları</translation>
-    </message>
-    <message>
-        <source>LV2 Effects</source>
-        <translation type="vanished">LV2 etkileri</translation>
-    </message>
-    <message>
-        <source>Provides LV2 Effects support to Audacity</source>
-        <translation type="vanished">Audacity için LV2 etkileri desteği sağlar</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>dither</comment>
-        <translation type="vanished">Üçgen</translation>
-    </message>
-    <message>
-        <source>Command</source>
-        <translation type="vanished">Komut</translation>
-    </message>
-    <message>
-        <source>Repeat %s</source>
-        <extracomment>i18n-hint: %s will be the name of the effect which will be
-* repeated if this menu item is chosen</extracomment>
-        <translation type="vanished">%1 yinele</translation>
-    </message>
-    <message>
-        <source>
-* %s, because you have assigned the shortcut %s to %s</source>
-        <translation type="vanished">
-* %1, %2 kısayolunu %3 için atamış olduğunuzdan</translation>
-    </message>
-    <message>
-        <source>There was a problem with your last action. If you think
-this is a bug, please tell us exactly where it occurred.</source>
-        <translation type="vanished">Son işleminizde bir sorun çıktı. Bunun bir hatadan kaynaklandığını
-düşünüyorsanız, lütfen bize tam olarak nerede, ne olduğunu iletin.</translation>
-    </message>
-    <message>
-        <source>Disallowed</source>
-        <translation type="vanished">Reddedildi</translation>
-    </message>
-    <message>
-        <source>&amp;Undo %s</source>
-        <translation type="vanished">%1 &amp;Geri al</translation>
-    </message>
-    <message>
-        <source>&amp;Redo %s</source>
-        <translation type="vanished">%1 &amp;Yinele</translation>
-    </message>
-    <message>
-        <source>Unable to load the "%s" module.
-
-Error: %s</source>
-        <translation type="vanished">"%1" modülü yüklenemedi.
-
-Hata: %2</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide a version string.
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" modülü sürüm bilgisini bildirmiyor.
-
-Bu nedenle yüklenmeyecek.</translation>
-    </message>
-    <message>
-        <source>The module "%s" is matched with Audacity version "%s".
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" modülü, Audacity %2 sürümüne uygun.
-
-Bu nedenle yüklenmeyecek.</translation>
-    </message>
-    <message>
-        <source>The module "%s" failed to initialize.
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" modülü hazırlanamadı.
-
-Bu nedenle yüklenmeyecek.</translation>
-    </message>
-    <message>
-        <source>Module "%s" found.</source>
-        <translation type="vanished">"%1" modülü bulunamadı.</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide any of the required functions.
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" modülü istenilen işlevlerin hiç birini sağlamıyor.
-
-Bu nedenle yüklenmeyecek.</translation>
-    </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <oldsource>Enable these plug-ins?
-</oldsource>
-        <comment>plug-ins</comment>
-        <extracomment>i18n-hint A plug-in is an optional added program for a sound
-effect, or generator, or analyzer</extracomment>
-        <translation type="vanished">
-            <numerusform>Şu uygulama eki etkinleştirilsin mi?
-</numerusform>
-            <numerusform>Şu uygulama ekleri etkinleştirilsin mi?
-</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Nyquist Prompt</source>
-        <translation type="vanished">Nyquist komutu</translation>
-    </message>
-    <message>
-        <source>There was an error initializing the midi i/o layer.
-</source>
-        <translation type="vanished">Midi giriş/çıkış katmanı hazırlanırken bir sorun çıktı.
-</translation>
-    </message>
-    <message>
-        <source>You will not be able to play midi.
-
-</source>
-        <translation type="vanished">MIDI dosyasını oynatamayacaksınız.
-
-</translation>
-    </message>
-    <message>
-        <source>Error Initializing Midi</source>
-        <translation type="vanished">MIDI hazırlanırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Note Track</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this is a Note track.</extracomment>
-        <translation type="vanished">Nota izi</translation>
-    </message>
-    <message>
-        <source>&amp;Seconds</source>
-        <translation type="vanished">&amp;Saniye</translation>
-    </message>
-    <message>
-        <source>&amp;Beats</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation type="vanished">&amp;Vuruş</translation>
-    </message>
-    <message>
-        <source>Supports output: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">Şu çıkış destekleniyor: %1
-</translation>
-    </message>
-    <message>
-        <source>Supports input: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">Şu giriş destekleniyor: %1
-</translation>
-    </message>
-    <message>
-        <source>Opened: %d
-</source>
-        <translation type="vanished">Açılan: %1
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI recording device: %d - %s
-</source>
-        <translation type="vanished">Seçilmiş MIDI kayıt aygıtı: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI recording device found for '%s'.
-</source>
-        <translation type="vanished">'%1' için herhangi bir MIDI kayıt aygıtı bulunamadı.
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI playback device: %d - %s
-</source>
-        <translation type="vanished">Seçilmiş MIDI oynatma aygıtı: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI playback device found for '%s'.
-</source>
-        <translation type="vanished">'%1' için herhangi bir MIDI oynatma aygıtı bulunamadı.
-</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <extracomment>i18n-hint: refers to optional plug-in software libraries</extracomment>
-        <translation type="vanished">Kitaplıklar</translation>
-    </message>
-    <message>
-        <source>Preferences for Library</source>
-        <translation type="vanished">Kitaplık ayarları</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="vanished">Kitaplık</translation>
-    </message>
-    <message>
-        <source>Failed to open the project's database</source>
-        <translation type="vanished">Projenin veri tabanı açılamadı</translation>
-    </message>
-    <message>
-        <source>Unable to add 'inset' function (can't verify blockids)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate inset or blockids.</extracomment>
-        <translation type="vanished">'inset' işlevi eklenemedi (blockids doğrulanamadı)</translation>
-    </message>
-    <message>
-        <source>[Project %02i] Audacity "%s"</source>
-        <extracomment>i18n-hint: The %02i is the project number, the %s is the project name.</extracomment>
-        <translation type="vanished">[Proje %1] Audacity "%2"</translation>
-    </message>
-    <message>
-        <source>Can't open project file</source>
-        <translation type="vanished">Proje dosyası açılamadı</translation>
-    </message>
-    <message>
-        <source>The project's database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="vanished">Projenin veri tabanı yeniden açılamadı. Büyük olasılıkla depolama aygıtı üzerindeki boş alan çok az.</translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="vanished">Kapa&amp;t</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished">Yardım</translation>
-    </message>
-    <message>
-        <source>&amp;Preview</source>
-        <translation type="vanished">Ön &amp;izleme</translation>
-    </message>
-    <message>
-        <source>Dry Previe&amp;w</source>
-        <translation type="vanished">&amp;Kuru ön izleme</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="vanished">&amp;Ayarlar</translation>
-    </message>
-    <message>
-        <source>Debu&amp;g</source>
-        <translation type="vanished">Sorun a&amp;yıklama</translation>
-    </message>
-    <message>
-        <source>High Contrast</source>
-        <extracomment>i18n-hint: greater difference between foreground and
-background colors</extracomment>
-        <translation type="vanished">Yüksek karşıtlık</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/%s.</source>
-        <extracomment>i18n-hint: A theme is a consistent visual style across an application's
-graphical user interface, including choices of colors, and similarity of images
-such as those on button controls.  Audacity can load and save alternative
-themes.</extracomment>
-        <translation type="vanished">Temalar şuraya yazıldı:
-  %1/*/%2.</translation>
-    </message>
-    <message>
-        <source>Audacity could not write file:
-  %s.</source>
-        <translation type="vanished">Audacity dosyaya yazamadı:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not open file:
-  %s
-for writing.</source>
-        <translation type="vanished">Audacity:
-  %1
-dosyasını yazmak için açamadı.</translation>
-    </message>
-    <message>
-        <source>Audacity could not write images to file:
-  %s.</source>
-        <translation type="vanished">Audacity görüntüleri dosyaya yazamadı:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find file:
-  %s.
-Theme not loaded.</source>
-        <translation type="vanished">Audacity şu dosyayı bulamadı:
-  %1.
-Tema yüklenemedi.</translation>
-    </message>
-    <message>
-        <source>Audacity could not load file:
-  %s.
-Bad png format perhaps?</source>
-        <extracomment>i18n-hint: Do not translate png.  It is the name of a file format.</extracomment>
-        <translation type="vanished">Audacity şu dosyayı yükleyemedi:
-  %1.
-Bozuk png biçimi olabilir mi?</translation>
-    </message>
-    <message>
-        <source>Audacity could not read its default theme.
-Please report the problem.</source>
-        <translation type="vanished">Audacity varsayılan temayı okuyamadı.
-Lütfen bu sorunu bildirin.</translation>
-    </message>
-    <message>
-        <source>Couldn't read from file: %s</source>
-        <translation type="vanished">Dosya okunamadı: %1</translation>
-    </message>
-    <message>
-        <source>None of the expected theme component files
- were found in:
-  %s.</source>
-        <translation type="vanished">Beklenen tema bileşen dosyalarından hiç biri
- şurada bulunamadı:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/Components/.</source>
-        <translation type="vanished">Temalar şuraya yazıldı:
-  %1/*/Components/.</translation>
-    </message>
-    <message>
-        <source>Could not create directory:
-  %s</source>
-        <translation type="vanished">Klasör oluşturulamadı:
-  %1</translation>
-    </message>
-    <message>
-        <source>Some required files in:
-  %s
-were already present. Overwrite?</source>
-        <translation type="vanished">Gereken dosyaların bazıları:
-  %1
-içinde zaten var. Üzerine yazılsın mı?</translation>
-    </message>
-    <message>
-        <source>Audacity could not save file:
-  %s</source>
-        <translation type="vanished">Audacity dosyayı kaydedemedi:
-  %1</translation>
-    </message>
-    <message>
-        <source>Couldn't write to file: %s</source>
-        <translation type="vanished">Dosya yazılamadı: %1</translation>
-    </message>
-    <message>
-        <source>Themes as Cee code written to:
-  %s/*%s.</source>
-        <extracomment>i18n-hint "Cee" means the C computer programming language</extracomment>
-        <translation type="vanished">Temalar Cee kodu olarak şuraya yazıldı:
-  %1/*%2.</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <extracomment>i18n-hint: user defined</extracomment>
-        <translation type="vanished">Özel</translation>
-    </message>
-    <message>
-        <source>Database error.  Sorry, but we don't have more details.</source>
-        <translation type="vanished">Veri tabanı sorunu. Ne yazık ki daha fazla ayrıntı veremiyoruz.</translation>
-    </message>
-    <message>
-        <source>Audio In: %d, Audio Out: %d</source>
-        <translation type="vanished">Ses girişi: %1, Ses çıkışı: %2</translation>
-    </message>
-    <message>
-        <source>VST</source>
-        <extracomment>i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-developed by Steinberg GmbH</extracomment>
-        <translation type="vanished">VST</translation>
-    </message>
-    <message>
-        <source>VST Effects</source>
-        <translation type="vanished">VST etkileri</translation>
-    </message>
-    <message>
-        <source>Adds the ability to use VST effects in Audacity.</source>
-        <translation type="vanished">Audacity içinde VST etkilerinin kullanılabilmesini sağlar.</translation>
-    </message>
-    <message>
-        <source>Unable to allocate memory when loading presets file.</source>
-        <translation type="vanished">Hazır ayarlar dosyası yüklenirken yeterli bellek ayrılamadı.</translation>
-    </message>
-    <message>
-        <source>Error Loading VST Presets</source>
-        <translation type="vanished">Hazır VST ayarları yüklenirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Unable to read presets file.</source>
-        <translation type="vanished">Hazır ayarlar dosyası okunamadı.</translation>
-    </message>
-    <message>
-        <source>Could not open file: "%s"</source>
-        <translation type="vanished">Dosya açılamadı: "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving VST Presets</source>
-        <translation type="vanished">Hazır VST ayarları kaydedilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Error writing to file: "%s"</source>
-        <translation type="vanished">Dosya yazılırken sorun çıktı:"%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving Effect Presets</source>
-        <translation type="vanished">Etki hazır ayarları kaydedilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>This parameter file was saved from %s. Continue?</source>
-        <translation type="vanished">Bu parametre dosyası %1 ile kaydedilmiş. İlerlensin mi?</translation>
-    </message>
-    <message>
-        <source>%s.%i</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Template for clip name generation on copy-paste
-i18n-hint Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>There is not enough room available to paste the selection</source>
-        <translation type="vanished">Seçimi yapıştırmak için yeterli alan yok</translation>
-    </message>
-    <message>
-        <source>Show &amp;Log...</source>
-        <translation type="vanished">Gün&amp;lüğü görüntüle...</translation>
-    </message>
-    <message>
-        <source>More information about this error may be available %s.</source>
-        <translation type="vanished">Bu sorun hakkında ayrıntılı bilgi almak için %1 bakabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>here</source>
-        <translation type="vanished">buraya</translation>
-    </message>
-    <message>
-        <source>Would you like to send a report to help us fix this issue?</source>
-        <translation type="vanished">Bu sorunu düzeltmemize yardımcı olmak için bir bir bildirim göndermek ister misiniz?</translation>
-    </message>
-    <message>
-        <source>All reports are anonymous. See %s for more info.</source>
-        <translation type="vanished">Tüm bildirimler anonim olarak gönderilir. Ayrıntılı bilgi almak için %1 bakabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>our Privacy Policy</source>
-        <extracomment>i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".</extracomment>
-        <translation type="vanished">Gizlilik ilkemiz</translation>
-    </message>
-    <message>
-        <source>Problem details</source>
-        <translation type="vanished">Sorun ayrıntıları</translation>
-    </message>
-    <message>
-        <source>&amp;Don't send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">&amp;Gönderme</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">&amp;Gönder</translation>
-    </message>
-    <message>
-        <source>Backwards</source>
-        <translation type="vanished">Geriye</translation>
-    </message>
-    <message>
-        <source>&lt;</source>
-        <extracomment>i18n-hint arrowhead meaning backward movement</extracomment>
-        <translation type="vanished">&lt;</translation>
-    </message>
-    <message>
-        <source>Forwards</source>
-        <translation type="vanished">İleriye</translation>
-    </message>
-    <message>
-        <source>&gt;</source>
-        <extracomment>i18n-hint arrowhead meaning forward movement</extracomment>
-        <translation type="vanished">&gt;</translation>
-    </message>
-    <message>
-        <source>Help on the Internet</source>
-        <translation type="vanished">Internetten yardım</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">Yerel</translation>
-    </message>
-    <message>
-        <source>From Internet</source>
-        <translation type="vanished">İnternet üzerinden</translation>
-    </message>
-    <message>
-        <source>Welcome!</source>
-        <translation type="vanished">Hoş geldiniz!</translation>
-    </message>
-    <message>
-        <source>Playing Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Ses oynatılıyor</translation>
-    </message>
-    <message>
-        <source>Recording Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Ses kaydediliyor</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Device</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Kaydediliyor - Kayıt aygıtı seçiliyor</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Source</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Kaydediliyor - Kayıt kaynağı seçiliyor</translation>
-    </message>
-    <message>
-        <source>Recording - Setting the Recording Level</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Kaydediliyor - Kayıt düzeyi ayarlanıyor</translation>
-    </message>
-    <message>
-        <source>Editing and greyed out Menus</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Düzenleme ve etkin olmayan menüler</translation>
-    </message>
-    <message>
-        <source>Exporting an Audio File</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Bir ses dosyasını dışa aktarmak</translation>
-    </message>
-    <message>
-        <source>Saving an Audacity Project</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Bir Audacity projesini kaydetmek</translation>
-    </message>
-    <message>
-        <source>Support for Other Formats</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Diğer biçimler için destek</translation>
-    </message>
-    <message>
-        <source>Burn to CD</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">CD yaz</translation>
-    </message>
-    <message>
-        <source>No Local Help</source>
-        <translation type="vanished">Yerel yardım yok</translation>
-    </message>
-    <message>
-        <source>Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer.</source>
-        <translation type="vanished">İsteğe bağlı olarak bilgisayarınıza indirip kurabileceğiniz [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg kitaplığı]] ile, Audacity, korunmamış pek çok biçimdeki dosyayı alabilir (M4A, WMA, taşınabilir oynatıcılarda sıkıştırılmış WAV ve görüntü dosyalarındaki sesler gibi).</translation>
-    </message>
-    <message>
-        <source>You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]].</source>
-        <translation type="vanished">Ayrıca [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI dosyaları]] ve [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ses CD]] izlerini almak için yardım bölümlerini okuyabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].&lt;br&gt;&lt;br&gt;To always view the Manual online, change "Location of Manual" in Interface Preferences to "From Internet".</source>
-        <translation type="vanished">Kullanım rehberi kurulmamış görünüyor. Lütfen [[*URL*|çevrim içi rehbere bakın]] ya da [[https://manual.audacityteam.org/man/unzipping_the_manual.html| rehberi indirin]]. &lt;br&gt;&lt;br&gt;Rehberi her zaman çevrim içi görüntülemek için Arayüz ayarlarında "Rehber konumu" seçeneğini "İnternet üzerinden" olarak ayarlayın.</translation>
-    </message>
-    <message>
-        <source>Audacity Log</source>
-        <translation type="vanished">Audacity günlüğü</translation>
-    </message>
-    <message>
-        <source>&amp;Save...</source>
-        <translation type="vanished">&amp;Kaydet...</translation>
-    </message>
-    <message>
-        <source>Cl&amp;ear</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">T&amp;emizle</translation>
-    </message>
-    <message>
-        <source>log.txt</source>
-        <translation type="vanished">log.txt</translation>
-    </message>
-    <message>
-        <source>Save log to:</source>
-        <translation type="vanished">Günlüğün kaydedileceği dosya:</translation>
-    </message>
-    <message>
-        <source>Couldn't save log to file: %s</source>
-        <translation type="vanished">Günlük dosyası kaydedilemedi: %1</translation>
-    </message>
-    <message>
-        <source>Show Log for Details</source>
-        <translation type="vanished">Ayrıntılar için günlüğü görüntüle</translation>
-    </message>
-    <message>
-        <source>Elapsed Time:</source>
-        <translation type="vanished">Geçen süre:</translation>
-    </message>
-    <message>
-        <source>Remaining Time:</source>
-        <translation type="vanished">Kalan süre:</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to cancel?</source>
-        <translation type="vanished">İptal etmek istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Confirm Cancel</source>
-        <translation type="vanished">İptal etmeyi onaylayın</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to stop?</source>
-        <translation type="vanished">Durdurmak istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Confirm Stop</source>
-        <translation type="vanished">Durdurmayı onaylayın</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close?</source>
-        <translation type="vanished">Kapatmak istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Confirm Close</source>
-        <translation type="vanished">Kapatmayı onayla</translation>
-    </message>
-    <message>
-        <source>The specified filename could not be converted due to Unicode character use.</source>
-        <translation type="vanished">Unicode karakter kullandığından, belirttiğiniz dosya adı kullanılamadı.</translation>
-    </message>
-    <message>
-        <source>Specify New Filename:</source>
-        <translation type="vanished">Yeni bir dosya adı belirtin:</translation>
-    </message>
-    <message>
-        <source>Don't ask me again</source>
-        <translation type="vanished">Bir daha sorma</translation>
-    </message>
-    <message>
-        <source>File '%s' already exists, do you really want to overwrite it?</source>
-        <translation type="vanished">'%1' dosyası zaten var, üzerine yazılmasını ister misiniz?</translation>
-    </message>
-    <message>
-        <source>Please choose an existing file.</source>
-        <translation type="vanished">Lütfen var olan bir dosya seçin.</translation>
-    </message>
-    <message>
-        <source>File type:</source>
-        <translation type="vanished">Dosya türü:</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="vanished">Bir klasör seçin</translation>
-    </message>
-    <message>
-        <source>Panel</source>
-        <translation type="vanished">Pano</translation>
-    </message>
-    <message>
-        <source>Dialog</source>
-        <translation type="vanished">Pencere</translation>
-    </message>
-    <message>
-        <source>Directory Dialog</source>
-        <translation type="vanished">Klasör penceresi</translation>
-    </message>
-    <message>
-        <source>File Dialog</source>
-        <translation type="vanished">Dosya penceresi</translation>
-    </message>
-    <message>
-        <source>Could not load file: "%s"</source>
-        <translation type="vanished">Dosya yüklenemedi: "%1"</translation>
-    </message>
-    <message>
-        <source>1st Experimental Command...</source>
-        <translation type="vanished">1. deneysel komut...</translation>
-    </message>
-    <message>
-        <source>2nd Experimental Command</source>
-        <translation type="vanished">2. deneysel komut</translation>
-    </message>
-    <message>
-        <source>AUP project files (*.aup)</source>
-        <translation type="vanished">AUP proje dosyaları (*.aup)</translation>
-    </message>
-    <message>
-        <source>Couldn't import the project:
-
-%s</source>
-        <translation type="vanished">Proje içe aktarılamadı:
-
-%1</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to import an AUP project.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">%1
-Bu özellik Audacity 3.3.3 sonrasındaki sürümlerde desteklenmiyor.
-Bu çift kanallı parçalar tek kanallı parçalara bölünmüştür.
-Lütfen kaydetmeden önce her şeyin amaçlandığı gibi olduğundan emin olun.</translation>
-    </message>
-    <message>
-        <source>This project was saved by Audacity version 1.0 or earlier. The format has
-changed and this version of Audacity is unable to import the project.
-
-Use a version of Audacity prior to v3.0.0 to upgrade the project and then
-you may import it with this version of Audacity.</source>
-        <translation type="vanished">Bu proje Audacity 1.0 ya da öncesindeki bir sürüm ile kaydedilmiş. 
-Dosya biçimi değiştiğinden bu Audacity sürümü projeyi içe aktaramıyor.
-
-Projeyi 3.0.0 öncesindeki bir Audacity sürümü ile açarak güncelledikten sonra
-oluşturulan projeyi bu Audacity sürümü içine aktarabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Internal error in importer...tag not recognized</source>
-        <translation type="vanished">İçe aktarıcıda sorun çıktı...kod imi anlaşılamadı</translation>
-    </message>
-    <message>
-        <source>Invalid project 'vpos' attribute.</source>
-        <translation type="vanished">Projenin 'vpos' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'h' attribute.</source>
-        <translation type="vanished">Projenin 'h' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'zoom' attribute.</source>
-        <translation type="vanished">Projenin 'zoom' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel0' attribute.</source>
-        <translation type="vanished">Projenin 'sel0' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel1' attribute.</source>
-        <translation type="vanished">Projenin 'sel1' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selLow' attribute.</source>
-        <translation type="vanished">Projenin 'selLow' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selHigh' attribute.</source>
-        <translation type="vanished">Projenin 'selHigh' özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Couldn't find the project data folder: "%s"</source>
-        <translation type="vanished">"%1" proje veri klasörü bulunamadı</translation>
-    </message>
-    <message>
-        <source>MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track.</source>
-        <translation type="vanished">Proje dosyasında MIDI izleri bulundu ancak bu Audacity sürümünde MIDI desteği olmadığından iz atlanıyor.</translation>
-    </message>
-    <message>
-        <source>The active project already has a time track and one was encountered in the project being imported, bypassing imported time track.</source>
-        <translation type="vanished">Etkin projenin zaten bir zaman izi var olduğundan içe aktarılmakta olan projede karşılaşılan zaman izi atlandı.</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'maxsamples' attribute.</source>
-        <translation type="vanished">'maxsamples' sıralama özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'sampleformat' attribute.</source>
-        <translation type="vanished">'sampleformat' sıralama özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'numsamples' attribute.</source>
-        <translation type="vanished">'numsamples' sıralama özniteliği geçersiz.</translation>
-    </message>
-    <message>
-        <source>Unable to parse the waveblock 'start' attribute</source>
-        <translation type="vanished">Waveblock 'start' özniteliği işlenemedi</translation>
-    </message>
-    <message>
-        <source>Missing project file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">%1 proje dosyası eksik
-
-Yerine sessizlik ekleniyor.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid simpleblockfile 'len' attribute.</source>
-        <translation type="vanished">Simpleblockfile 'len' özniteliği eksik ya da geçersiz.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid silentblockfile 'len' attribute.</source>
-        <translation type="vanished">Silentblockfile 'len' özniteliği eksik ya da geçersiz.</translation>
-    </message>
-    <message>
-        <source>Missing alias file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">%1 kısaltma dosyası eksik
-
-Yerine sessizlik ekleniyor.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliasstart' attribute.</source>
-        <translation type="vanished">Pcmaliasblockfile 'aliasstart' özniteliği eksik ya da geçersiz.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliaslen' attribute.</source>
-        <translation type="vanished">Pcmaliasblockfile 'aliaslen' özniteliği eksik ya da geçersiz.</translation>
-    </message>
-    <message>
-        <source>Error while processing %s
-
-Inserting silence.</source>
-        <translation type="vanished">%1 işlenirken sorun çıktı
-
-Sessizlik ekleniyor.</translation>
-    </message>
-    <message>
-        <source>Failed to open %s</source>
-        <translation type="vanished">%1 açılamadı</translation>
-    </message>
-    <message>
-        <source>Failed to seek to position %lld in %s</source>
-        <translation type="vanished">%1 konumuna %2 içinde gidilemedi</translation>
-    </message>
-    <message>
-        <source>Unable to read %lld samples from %s</source>
-        <translation type="vanished">%1 örnek %2 üzerinden okunamadı</translation>
-    </message>
-    <message>
-        <source>Command:</source>
-        <translation type="vanished">Komut:</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="vanished">Göz at...</translation>
-    </message>
-    <message>
-        <source>Show output</source>
-        <extracomment>i18n-hint: show output on a graph</extracomment>
-        <translation type="vanished">Çıkışı görüntüle</translation>
-    </message>
-    <message>
-        <source>Data will be piped to standard in. "%f" uses the file name in the export window.</source>
-        <extracomment>i18n-hint: Some programmer-oriented terminology here:
-"Data" refers to the sound to be exported, "piped" means sent,
-and "standard in" means the default input stream that the external program,
-named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
-in the program as a format string.  Keep %f unchanged.</extracomment>
-        <translation type="vanished">Veri standart girişe yönlendirilecek. "%1" dışa aktarma penceresindeki dosya adını kullanır.</translation>
-    </message>
-    <message>
-        <source>Program name appears to be missing.</source>
-        <translation type="vanished">Program adı eksik görünüyor.</translation>
-    </message>
-    <message>
-        <source>"%s" couldn't be found.</source>
-        <translation type="vanished">"%1" bulunamadı.</translation>
-    </message>
-    <message>
-        <source>Unable to locate "%s" in your path.</source>
-        <translation type="vanished">Yolunuzda "%1" bulunamadı.</translation>
-    </message>
-    <message>
-        <source>Executables</source>
-        <extracomment>i18n-hint files that can be run as programs</extracomment>
-        <translation type="vanished">Yürütülebilir dosyalar</translation>
-    </message>
-    <message>
-        <source>Find path to command</source>
-        <translation type="vanished">Yolu bul komutu</translation>
-    </message>
-    <message>
-        <source>(external program)</source>
-        <translation type="vanished">(dış program)</translation>
-    </message>
-    <message>
-        <source>Exporting the selected audio using command-line encoder</source>
-        <translation type="vanished">Seçilmiş ses komut satırı kodlayıcısı kullanılarak dışa aktarılıyor</translation>
-    </message>
-    <message>
-        <source>Exporting the audio using command-line encoder</source>
-        <translation type="vanished">Ses komut satırı kodlayıcısı kullanılarak dışa aktarılıyor</translation>
-    </message>
-    <message>
-        <source>Command Output</source>
-        <translation type="vanished">Komut çıktısı</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="vanished">&amp;Tamam</translation>
-    </message>
-    <message>
-        <source>%.2f kbps</source>
-        <translation type="vanished">%1 kbps</translation>
-    </message>
-    <message>
-        <source>Current Format:</source>
-        <translation type="vanished">Geçerli biçim:</translation>
-    </message>
-    <message>
-        <source>Current Codec:</source>
-        <translation type="vanished">Geçerli kodlayıcı-çözücü:</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't determine format description for file "%s".</source>
-        <translation type="vanished">FFmpeg : SORUN - "%1" dosyasının biçim açıklaması belirlenemedi.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate output format context.</source>
-        <translation type="vanished">FFmpeg : SORUN - Çıkış biçimi bağlamı konumlandırılamadı.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't add audio stream to output file "%s".</source>
-        <translation type="vanished">FFmpeg : SORUN - Ses akışı "%1" çıkış dosyasına eklenemedi.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't open output file "%s" to write. Error code is %d.</source>
-        <translation type="vanished">FFmpeg : SORUN - "%1" çıkış dosyası yazılmak üzere açılamadı. Sorun kodu: %2.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't write headers to output file "%s". Error code is %d.</source>
-        <translation type="vanished">FFmpeg : SORUN - Üst bilgiler "%1" çıkış dosyasına yazılamadı. Sorun kodu: %2.</translation>
-    </message>
-    <message>
-        <source>Can't open audio codec "%s" (0x%x)
-
-%s</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">"%1" (0x%2) ses kodlayıcı-çözücüsü açılamadı
-
-%3</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.</source>
-        <translation type="vanished">FFmpeg : SORUN - Ses FIFO üzerinden veri okumak için ara bellek ayrılamadı.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Couldn't write audio frame to output file.</source>
-        <translation type="vanished">FFmpeg : SORUN - Ses karesi çıkış dosyasına yazılamadı.</translation>
-    </message>
-    <message>
-        <source>Properly configured FFmpeg is required to proceed.
-You can configure it at Preferences &gt; Libraries.</source>
-        <translation type="vanished">İşlemi yapabilmek FFmpeg ayarlarının düzgün yapılmış olması gerekiyor.
-Bu işlemi Ayarlar &gt; Kitaplıklar bölümünden yapabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Configure custom FFmpeg options</source>
-        <translation type="vanished">Özel FFmpeg ayarlarını yap</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation type="vanished">Hazır ayar:</translation>
-    </message>
-    <message>
-        <source>Load Preset</source>
-        <translation type="vanished">Hazır ayar yükle</translation>
-    </message>
-    <message>
-        <source>Save Preset</source>
-        <translation type="vanished">Hazır ayarı kaydet</translation>
-    </message>
-    <message>
-        <source>Delete Preset</source>
-        <translation type="vanished">Hazır ayarı sil</translation>
-    </message>
-    <message>
-        <source>Import Presets</source>
-        <translation type="vanished">Hazır ayarları içe aktar</translation>
-    </message>
-    <message>
-        <source>Export Presets</source>
-        <translation type="vanished">Hazır ayarları dışa aktar</translation>
-    </message>
-    <message>
-        <source>Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs.</source>
-        <translation type="vanished">Tüm biçim ve kodlayıcı-çözücüler uyumlu olmadığı gibi, tüm ayar kombinasyonları da tüm kodlayıcı-çözücüler ile uyumlu olmayabilir.</translation>
-    </message>
-    <message>
-        <source>Show All Formats</source>
-        <translation type="vanished">Tüm biçimleri görüntüle</translation>
-    </message>
-    <message>
-        <source>Show All Codecs</source>
-        <translation type="vanished">Tüm kodlayıcı-çözücüleri görüntüle</translation>
-    </message>
-    <message>
-        <source>General Options</source>
-        <translation type="vanished">Genel ayarlar</translation>
-    </message>
-    <message>
-        <source>ISO 639 3-letter language code
-Optional
-empty - automatic</source>
-        <translation type="vanished">ISO 639 3-mektup dili kodu
-İsteğe göre
-boş - otomatik</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation type="vanished">Dil:</translation>
-    </message>
-    <message>
-        <source>Bit Reservoir</source>
-        <translation type="vanished">Bit deposu</translation>
-    </message>
-    <message>
-        <source>Codec tag (FOURCC)
-Optional
-empty - automatic</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Kodlayıcı-çözücü sekmesi (FOURCC)
-İsteğe göre
-boş - otomatik</translation>
-    </message>
-    <message>
-        <source>Tag:</source>
-        <translation type="vanished">İşaret:</translation>
-    </message>
-    <message>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</source>
-        <translation type="vanished">Bit hızı (bit/saniye) - sonuç dosyasının boyutu ve kalitesini etkiler
-Bazı kodlayıcı-çözücüler yalnızca belirli değerleri kabul eder (128k, 192k, 256k gibi)
-0 - otomatik
-Önerilen - 192000</translation>
-    </message>
-    <message>
-        <source>Bit Rate:</source>
-        <translation type="vanished">Bit hızı:</translation>
-    </message>
-    <message>
-        <source>Overall quality, used differently by different codecs
-Required for vorbis
-0 - automatic
--1 - off (use bitrate instead)</source>
-        <translation type="vanished">Genel kalite, farklı kodlayıcı-çözücüler farklı şekilde kullanır
-Vorbis için gereklidir
-0 - otomatik
--1 - kapalı (yerine bit hızı kullanılır)</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="vanished">Kalite:</translation>
-    </message>
-    <message>
-        <source>Sample rate (Hz)
-0 - don't change sample rate</source>
-        <translation type="vanished">Örnekleme hızı (Hz)
-0 - örnekleme hızını değiştirme</translation>
-    </message>
-    <message>
-        <source>Sample Rate:</source>
-        <translation type="vanished">Örnekleme hızı:</translation>
-    </message>
-    <message>
-        <source>Audio cutoff bandwidth (Hz)
-Optional
-0 - automatic</source>
-        <translation type="vanished">Ses kesim bant genişliği (Hz)
-İsteğe göre
-0 - otomatik</translation>
-    </message>
-    <message>
-        <source>Cutoff:</source>
-        <translation type="vanished">Kesim:</translation>
-    </message>
-    <message>
-        <source>AAC Profile
-Low Complexity - default
-Most players won't play anything other than LC</source>
-        <translation type="vanished">AAC Profili
-Düşük karmaşıklık -varsayılan
-Çoğu oynatıcılar LC dışında başka bir şey oynatmazlar</translation>
-    </message>
-    <message>
-        <source>Profile:</source>
-        <translation type="vanished">Profil:</translation>
-    </message>
-    <message>
-        <source>Compression level
-Required for FLAC
--1 - automatic
-min - 0 (fast encoding, large output file)
-max - 10 (slow encoding, small output file)</source>
-        <translation type="vanished">Sıkıştırma düzeyi
-FLAC için gereklidir
--1 - otomatik
-En düşük - 0 (hızlı kodlama, büyük çıkış dosyası)
-En yüksek - 10 (yavaş kodlama, küçük çıkış dosyası)</translation>
-    </message>
-    <message>
-        <source>Compression:</source>
-        <translation type="vanished">Sıkıştırma:</translation>
-    </message>
-    <message>
-        <source>Frame size
-Optional
-0 - default
-min - 16
-max - 65535</source>
-        <translation type="vanished">Kare boyutu
-İsteğe göre
-0 - varsayılan
-En küçük - 16
-En büyük - 65535</translation>
-    </message>
-    <message>
-        <source>Frame:</source>
-        <translation type="vanished">Kare:</translation>
-    </message>
-    <message>
-        <source>LPC coefficients precision
-Optional
-0 - default
-min - 1
-max - 15</source>
-        <translation type="vanished">LPC katsayıları duyarlılığı
-İsteğe göre
-0 - varsayılan
-En az - 1
-En çok - 15</translation>
-    </message>
-    <message>
-        <source>Prediction Order Method
-Estimate - fastest, lower compression
-Log search - slowest, best compression
-Full search - default</source>
-        <translation type="vanished">Öngörü sıralama yöntemi
-Kestirim - en hızlı, daha düşük sıkıştırma
-Günlük arama - en yavaş, en iyi sıkıştırma
-Tam arama - varsayılan</translation>
-    </message>
-    <message>
-        <source>PdO Method:</source>
-        <translation type="vanished">ÖS yöntemi:</translation>
-    </message>
-    <message>
-        <source>Minimal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">En düşük öngürü sıralama
-İsteğe göre
-- 1 - varsayılan
-En küçük - 0
-En büyük -32 (LPC ile) ya da 4 (LPC olmadan)</translation>
-    </message>
-    <message>
-        <source>Maximal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">En yüksek öngörü sıralama
-İsteğe göre
-- 1 - varsayılan
-En küçük - 0
-En büyük -32 (LPC ile) ya da 4 (LPC olmadan)</translation>
-    </message>
-    <message>
-        <source>Minimal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">En düşük bölümleme sırası
-İsteğe göre
--1 - varsayılan
-En düşük - 0
-En yüksek - 8</translation>
-    </message>
-    <message>
-        <source>Maximal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">En yüksek bölümleme sırası
-İsteğe göre
--1 - varsayılan
-En düşük - 0
-En yüksek - 8</translation>
-    </message>
-    <message>
-        <source>Maximum bit rate of the multiplexed stream
-Optional
-0 - default</source>
-        <translation type="vanished">Çoklanmış akışın en yüksek bit hızı
-İsteğe göre
-0 - varsayılan</translation>
-    </message>
-    <message>
-        <source>Mux Rate:</source>
-        <extracomment>i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
-it has a hard to predict effect on the degree of compression</extracomment>
-        <translation type="vanished">Çoklayıcı hızı:</translation>
-    </message>
-    <message>
-        <source>Packet size
-Optional
-0 - default</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">Paket boyutu
-İsteğe göre
-0 - varsayılan</translation>
-    </message>
-    <message>
-        <source>Packet Size:</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">Paket boyutu:</translation>
-    </message>
-    <message>
-        <source>You can't delete a preset without name</source>
-        <translation type="vanished">Adsız bir hazır ayar silinemez</translation>
-    </message>
-    <message>
-        <source>Delete preset '%s'?</source>
-        <translation type="vanished">'%1' hazır ayarı silinsin mi?</translation>
-    </message>
-    <message>
-        <source>Confirm Deletion</source>
-        <translation type="vanished">Silmeyi onayla</translation>
-    </message>
-    <message>
-        <source>You can't save a preset without a name</source>
-        <translation type="vanished">Adsız bir hazır ayar kaydedilemez</translation>
-    </message>
-    <message>
-        <source>Select xml file with presets to import</source>
-        <translation type="vanished">İçe aktarılacak hazır ayarların bulunduğu xml dosyasını seçin</translation>
-    </message>
-    <message>
-        <source>No presets to export</source>
-        <translation type="vanished">Dışa aktarılacak bir hazır ayar yok</translation>
-    </message>
-    <message>
-        <source>Select xml file to export presets into</source>
-        <translation type="vanished">Hazır ayarların dışa aktarılacağı XML dosyasını seçin</translation>
-    </message>
-    <message>
-        <source>Format %s is not compatible with codec %s.</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">%1 biçimi %2 kodlayıcı-çözücü ile uyumlu değil.</translation>
-    </message>
-    <message>
-        <source>Incompatible format and codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Biçim ve kodlayıcı-çözücü uyumsuz</translation>
-    </message>
-    <message>
-        <source>Failed to guess format</source>
-        <translation type="vanished">Biçim tahmin edilemedi</translation>
-    </message>
-    <message>
-        <source>Failed to find the codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Kodlayıcı-çözücü bulunamadı</translation>
-    </message>
-    <message>
-        <source>FFmpeg was configured in Preferences and successfully loaded before, 
-but this time Audacity failed to load it at startup. 
-
-You may want to go back to Preferences &gt; Libraries and re-configure it.</source>
-        <translation type="vanished">FFmpeg, Ayarlardan yapılandırılmış ve daha önce sorunsuz yüklenmiş.
-Ancak bu kez Audacity başlatılırken yüklenemedi.
-
-Ayarlar &gt; Kitaplıklar bölümüne giderek yeniden yapılandırmak isteyebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>FFmpeg startup failed</source>
-        <translation type="vanished">FFmpeg başlatılamadı</translation>
-    </message>
-    <message>
-        <source>Locate FFmpeg</source>
-        <translation type="vanished">FFmpeg konumu</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file '%s' to import and export audio via FFmpeg.</source>
-        <translation type="vanished">Audacity, sesleri FFmpeg aracılığıyla içe ve dışa aktarmak için '%1' dosyasına gerek duyuyor.</translation>
-    </message>
-    <message>
-        <source>Location of '%s':</source>
-        <translation type="vanished">'%1' konumu:</translation>
-    </message>
-    <message>
-        <source>To find '%s', click here --&gt;</source>
-        <translation type="vanished">'%1' bulmak için, buraya tıklayın --&gt;</translation>
-    </message>
-    <message>
-        <source>To get a free copy of FFmpeg, click here --&gt;</source>
-        <translation type="vanished">Ücretsiz FFmpeg kopyasını indirmek için şuraya tıklayın --&gt;</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">İndir</translation>
-    </message>
-    <message>
-        <source>Only avformat.dll</source>
-        <translation type="vanished">Yalnızca avformat.dll</translation>
-    </message>
-    <message>
-        <source>Only libavformat.dylib</source>
-        <translation type="vanished">Yalnızca libavformat.dylib</translation>
-    </message>
-    <message>
-        <source>Only libavformat.so</source>
-        <translation type="vanished">Yalnızca libavformat.so</translation>
-    </message>
-    <message>
-        <source>Where is '%s'?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-example, "Where is lame_enc.dll?" - you could translate
-"Where would I find the file '%s'?" instead if you want.</extracomment>
-        <translation type="vanished">'%1' nerede?</translation>
-    </message>
-    <message>
-        <source>FFmpeg not found</source>
-        <translation type="vanished">FFmpeg bulunamadı</translation>
-    </message>
-    <message>
-        <source>Audacity attempted to use FFmpeg to import an audio file,
-but the libraries were not found.
-
-To use FFmpeg import, go to Edit &gt; Preferences &gt; Libraries
-to download or locate the FFmpeg libraries.</source>
-        <translation type="vanished">Audacity bir ses dosyasını içe aktarmak için FFmpeg kullanmak istedi,
-ancak kitaplıklar bulunamadı.
-
-FFmpeg içe aktarmasını kullanabilmek için Düzenle &gt; Ayarlar &gt; Kitaplıklar
-bölümüne giderek FFmpeg kitaplıklarını indirin ve konumunu ayarlayın.</translation>
-    </message>
-    <message>
-        <source>Do not show this warning again</source>
-        <translation type="vanished">Bu uyarı bir daha görüntülenmesin</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export Library</source>
-        <translation type="vanished">FFmpeg içe/dışa aktarma kitaplığı</translation>
-    </message>
-    <message>
-        <source>No compatible FFmpeg library was found</source>
-        <translation type="vanished">Uyumlu FFmpeg kitaplığı bulunamadı</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library Version:</source>
-        <translation type="vanished">FFmpeg kitaplığının sürümü:</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library:</source>
-        <translation type="vanished">FFmpeg kitaplığı:</translation>
-    </message>
-    <message>
-        <source>Loca&amp;te...</source>
-        <translation type="vanished">Konumunu &amp;seç...</translation>
-    </message>
-    <message>
-        <source>Dow&amp;nload</source>
-        <translation type="vanished">İ&amp;ndir</translation>
-    </message>
-    <message>
-        <source>Audacity has automatically detected valid FFmpeg libraries.
-Do you still want to locate them manually?</source>
-        <translation type="vanished">Audacity uygun FFmpeg kitaplıkları buldu.
-Hala konumu el ile seçmek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Error Saving FFmpeg Presets</source>
-        <translation type="vanished">FFmpeg hazır ayarları kaydedilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Overwrite preset '%s'?</source>
-        <translation type="vanished">'%1' hazır ayarı üzerine yazılsın mı?</translation>
-    </message>
-    <message>
-        <source>Confirm Overwrite</source>
-        <translation type="vanished">Üzerine yazmayı onaylayın</translation>
-    </message>
-    <message>
-        <source>Please select format before saving a profile</source>
-        <translation type="vanished">Bir profili kaydetmeden önce biçimini seçin</translation>
-    </message>
-    <message>
-        <source>Please select codec before saving a profile</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Bir profili kaydetmeden önce lütfen bir kodlayıcı-çözücü belirleyin</translation>
-    </message>
-    <message>
-        <source>Preset '%s' does not exist.</source>
-        <translation type="vanished">'%1' hazır ayarı bulunamadı.</translation>
-    </message>
-    <message>
-        <source>Replace preset '%s'?</source>
-        <translation type="vanished">'%1' hazır ayarının üzerine yazılsın mı?</translation>
-    </message>
-    <message>
-        <source>FLAC export couldn't open %s</source>
-        <translation type="vanished">FLAC dışa aktarma %1 dosyasını açamadı</translation>
-    </message>
-    <message>
-        <source>List of Files in basic text format</source>
-        <translation type="vanished">Temel metin biçimindeki dosyaların listesi</translation>
-    </message>
-    <message>
-        <source>Invalid window offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF dosyasındaki pencere ötelemesi geçersiz.</translation>
-    </message>
-    <message>
-        <source>Invalid duration in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF dosyasındaki süre geçersiz.</translation>
-    </message>
-    <message>
-        <source>MIDI tracks cannot be offset individually, only audio files can be.</source>
-        <translation type="vanished">MIDI izleri tek tek kaydırılamaz, yalnızca ses dosyaları kaydırılabilir.</translation>
-    </message>
-    <message>
-        <source>Invalid track offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF dosyasındaki iz kayması geçersiz.</translation>
-    </message>
-    <message>
-        <source>Insane, 320 kbps</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">Çılgınca, 320 kbps</translation>
-    </message>
-    <message>
-        <source>Insane</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">Çılgınca</translation>
-    </message>
-    <message>
-        <source>Locate LAME</source>
-        <extracomment>i18n-hint: LAME is the name of an MP3 converter and should not be translated</extracomment>
-        <translation type="vanished">LAME konumu</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file %s to create MP3s.</source>
-        <translation type="vanished">Audacity MP3 oluşturmak için %1 dosyasına gerek duyuyor.</translation>
-    </message>
-    <message>
-        <source>Location of %s:</source>
-        <translation type="vanished">%1 konumu:</translation>
-    </message>
-    <message>
-        <source>To find %s, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">%1 dosyasını bulmak için, buraya tıklayın --&gt;</translation>
-    </message>
-    <message>
-        <source>To get a free copy of LAME, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">Ücretsiz LAME kopyasını indirmek için, şuraya tıklayın --&gt;</translation>
-    </message>
-    <message>
-        <source>Where is %s?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-* example, "Where is lame_enc.dll?" - you could translate
-* "Where would I find the file %s" instead if you want.</extracomment>
-        <translation type="vanished">%1 nerede?</translation>
-    </message>
-    <message>
-        <source>You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.
-Please download the latest version of 'LAME for Audacity'.</source>
-        <translation type="vanished">Lame_enc.dll v%1.%2 sürümüne bağlanıyorsunuz. Bu sürüm Audacity %3.%4.%5 sürümü ile uyumlu değil.
-Lütfen en son 'Audacity için LAME' sürümünü indirin.</translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) is not supported by the MP3
-file format. </source>
-        <translation type="vanished">Proje örnekleme hızı (%1) MP3 dosya biçimi tarafından
-desteklenmiyor. </translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) and bit rate (%d kbps) combination is not
-supported by the MP3 file format. </source>
-        <translation type="vanished">Proje örnekleme hızı(%1) ve bit hızı (%2 kbps) kombinasyonu MP3
-dosya biçimi tarafından desteklenmiyor. </translation>
-    </message>
-    <message>
-        <source>LAME MP3 Export Library</source>
-        <translation type="vanished">LAME MP3 dışa aktarma kitaplığı</translation>
-    </message>
-    <message>
-        <source>MP3 Library Version:</source>
-        <translation type="vanished">MP3 kitaplığının sürümü:</translation>
-    </message>
-    <message>
-        <source>Error while writing %s file (disk full?).
-Libsndfile says "%s"</source>
-        <extracomment>i18n-hint: %s will be the error message from libsndfile, which
-* is usually something unhelpful (and untranslated) like "system
-* error"</extracomment>
-        <translation type="vanished">%1 dosyası yazılırken sorun çıktı (disk mi doldu?).
-Libsndfile iletisi "%2"</translation>
-    </message>
-    <message>
-        <source>AU (Sun/NeXT)</source>
-        <translation type="vanished">AU (Sun/NeXT)</translation>
-    </message>
-    <message>
-        <source>AVR (Audio Visual Research)</source>
-        <translation type="vanished">AVR (Audio Visual Research)</translation>
-    </message>
-    <message>
-        <source>CAF (Apple Core Audio File)</source>
-        <translation type="vanished">CAF (Apple Core Audio File)</translation>
-    </message>
-    <message>
-        <source>FLAC (FLAC Lossless Audio Codec)</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">FLAC (FLAC kayıpsız ses kodlayıcı-çözücü)</translation>
-    </message>
-    <message>
-        <source>HTK (HMM Tool Kit)</source>
-        <translation type="vanished">HTK (HMM Tool Kit)</translation>
-    </message>
-    <message>
-        <source>IFF (Amiga IFF/SVX8/SV16)</source>
-        <translation type="vanished">IFF (Amiga IFF/SVX8/SV16)</translation>
-    </message>
-    <message>
-        <source>MAT4 (GNU Octave 2.0 / Matlab 4.2)</source>
-        <translation type="vanished">MAT4 (GNU Octave 2.0 / Matlab 4.2)</translation>
-    </message>
-    <message>
-        <source>MAT5 (GNU Octave 2.1 / Matlab 5.0)</source>
-        <translation type="vanished">MAT5 (GNU Octave 2.1 / Matlab 5.0)</translation>
-    </message>
-    <message>
-        <source>MPC (Akai MPC 2k)</source>
-        <translation type="vanished">MPC (Akai MPC 2k)</translation>
-    </message>
-    <message>
-        <source>OGG (OGG Container format)</source>
-        <translation type="vanished">OGG (OGG kapsayıcı biçimi)</translation>
-    </message>
-    <message>
-        <source>PAF (Ensoniq PARIS)</source>
-        <translation type="vanished">PAF (Ensoniq PARIS)</translation>
-    </message>
-    <message>
-        <source>PVF (Portable Voice Format)</source>
-        <translation type="vanished">PVF (Portable Voice Format)</translation>
-    </message>
-    <message>
-        <source>RAW (header-less)</source>
-        <translation type="vanished">RAW (üst bilgisiz)</translation>
-    </message>
-    <message>
-        <source>RF64 (RIFF 64)</source>
-        <translation type="vanished">RF64 (RIFF 64)</translation>
-    </message>
-    <message>
-        <source>SD2 (Sound Designer II)</source>
-        <translation type="vanished">SD2 (Sound Designer II)</translation>
-    </message>
-    <message>
-        <source>SDS (Midi Sample Dump Standard)</source>
-        <translation type="vanished">SDS (Midi Sample Dump Standard)</translation>
-    </message>
-    <message>
-        <source>SF (Berkeley/IRCAM/CARL)</source>
-        <translation type="vanished">SF (Berkeley/IRCAM/CARL)</translation>
-    </message>
-    <message>
-        <source>VOC (Creative Labs)</source>
-        <translation type="vanished">VOC (Creative Labs)</translation>
-    </message>
-    <message>
-        <source>W64 (SoundFoundry WAVE 64)</source>
-        <translation type="vanished">W64 (SoundFoundry WAVE 64)</translation>
-    </message>
-    <message>
-        <source>WAV (NIST Sphere)</source>
-        <translation type="vanished">WAV (NIST Sphere)</translation>
-    </message>
-    <message>
-        <source>WAVEX (Microsoft)</source>
-        <translation type="vanished">WAVEX (Microsoft)</translation>
-    </message>
-    <message>
-        <source>WVE (Psion Series 3)</source>
-        <translation type="vanished">WVE (Psion Series 3)</translation>
-    </message>
-    <message>
-        <source>XI (FastTracker 2)</source>
-        <translation type="vanished">XI (FastTracker 2)</translation>
-    </message>
-    <message>
-        <source>Signed 8 bit PCM</source>
-        <translation type="vanished">İmzalanmış 8 bit PCM</translation>
-    </message>
-    <message>
-        <source>Signed 16 bit PCM</source>
-        <translation type="vanished">İmzalanmış 16 bit PCM</translation>
-    </message>
-    <message>
-        <source>Signed 24 bit PCM</source>
-        <translation type="vanished">İmzalanmış 24 bit PCM</translation>
-    </message>
-    <message>
-        <source>Signed 32 bit PCM</source>
-        <translation type="vanished">İmzalanmış 32 bit PCM</translation>
-    </message>
-    <message>
-        <source>Unsigned 8 bit PCM</source>
-        <translation type="vanished">İmzalanmamış 8 bit PCM</translation>
-    </message>
-    <message>
-        <source>64 bit float</source>
-        <translation type="vanished">64 bit kayan</translation>
-    </message>
-    <message>
-        <source>U-Law</source>
-        <translation type="vanished">U-Law</translation>
-    </message>
-    <message>
-        <source>A-Law</source>
-        <translation type="vanished">A-Law</translation>
-    </message>
-    <message>
-        <source>IMA ADPCM</source>
-        <translation type="vanished">IMA ADPCM</translation>
-    </message>
-    <message>
-        <source>Microsoft ADPCM</source>
-        <translation type="vanished">Microsoft ADPCM</translation>
-    </message>
-    <message>
-        <source>GSM 6.10</source>
-        <translation type="vanished">GSM 6.10</translation>
-    </message>
-    <message>
-        <source>32kbs G721 ADPCM</source>
-        <translation type="vanished">32kbs G721 ADPCM</translation>
-    </message>
-    <message>
-        <source>24kbs G723 ADPCM</source>
-        <translation type="vanished">24kbs G723 ADPCM</translation>
-    </message>
-    <message>
-        <source>12 bit DWVW</source>
-        <translation type="vanished">12 bit DWVW</translation>
-    </message>
-    <message>
-        <source>16 bit DWVW</source>
-        <translation type="vanished">16 bit DWVW</translation>
-    </message>
-    <message>
-        <source>24 bit DWVW</source>
-        <translation type="vanished">24 bit DWVW</translation>
-    </message>
-    <message>
-        <source>VOX ADPCM</source>
-        <translation type="vanished">VOX ADPCM</translation>
-    </message>
-    <message>
-        <source>16 bit DPCM</source>
-        <translation type="vanished">16 bit DPCM</translation>
-    </message>
-    <message>
-        <source>8 bit DPCM</source>
-        <translation type="vanished">8 bit DPCM</translation>
-    </message>
-    <message>
-        <source>Vorbis</source>
-        <translation type="vanished">Vorbis</translation>
-    </message>
-    <message>
-        <source>&amp;Nyquist Workbench...</source>
-        <translation type="vanished">&amp;Nyquist tezgahı...</translation>
-    </message>
-    <message>
-        <source>&amp;Undo	Ctrl+Z</source>
-        <translation type="vanished">&amp;Geri al	Ctrl+Z</translation>
-    </message>
-    <message>
-        <source>&amp;Redo	Ctrl+Y</source>
-        <translation type="vanished">&amp;Yinele	Ctrl+Y</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t	Ctrl+X</source>
-        <translation type="vanished">K&amp;es	Ctrl+X</translation>
-    </message>
-    <message>
-        <source>&amp;Copy	Ctrl+C</source>
-        <translation type="vanished">&amp;Kopyala	Ctrl+C</translation>
-    </message>
-    <message>
-        <source>&amp;Paste	Ctrl+V</source>
-        <translation type="vanished">Ya&amp;pıştır	Ctrl+V</translation>
-    </message>
-    <message>
-        <source>Cle&amp;ar	Ctrl+L</source>
-        <translation type="vanished">&amp;Temizle	Ctrl+L</translation>
-    </message>
-    <message>
-        <source>Select A&amp;ll	Ctrl+A</source>
-        <translation type="vanished">Tü&amp;münü seç	Ctrl+A</translation>
-    </message>
-    <message>
-        <source>&amp;Find...	Ctrl+F</source>
-        <translation type="vanished">&amp;Bul...	Ctrl+F</translation>
-    </message>
-    <message>
-        <source>&amp;Matching Paren	F8</source>
-        <translation type="vanished">&amp;Eşleşen üst	F8</translation>
-    </message>
-    <message>
-        <source>&amp;Top S-expr	F9</source>
-        <translation type="vanished">Üs&amp;t S-expr	F9</translation>
-    </message>
-    <message>
-        <source>&amp;Higher S-expr	F10</source>
-        <translation type="vanished">Daha &amp;yüksek S-expr	F10</translation>
-    </message>
-    <message>
-        <source>&amp;Previous S-expr	F11</source>
-        <translation type="vanished">Ö&amp;nceki S-expr	F11</translation>
-    </message>
-    <message>
-        <source>&amp;Next S-expr	F12</source>
-        <translation type="vanished">&amp;Sonraki S-expr	F12</translation>
-    </message>
-    <message>
-        <source>&amp;Go to</source>
-        <translation type="vanished">&amp;Git</translation>
-    </message>
-    <message>
-        <source>Select &amp;Font...</source>
-        <translation type="vanished">&amp;Yazı türünü seçin...</translation>
-    </message>
-    <message>
-        <source>Split &amp;Vertically</source>
-        <translation type="vanished">&amp;Dikey böl</translation>
-    </message>
-    <message>
-        <source>Split &amp;Horizontally</source>
-        <translation type="vanished">&amp;Yatay böl</translation>
-    </message>
-    <message>
-        <source>Show S&amp;cript</source>
-        <translation type="vanished">&amp;Betiği görüntüle</translation>
-    </message>
-    <message>
-        <source>Show &amp;Output</source>
-        <translation type="vanished">Çıkışı &amp;görüntüle</translation>
-    </message>
-    <message>
-        <source>&amp;Large Icons</source>
-        <translation type="vanished">&amp;Büyük simgeler</translation>
-    </message>
-    <message>
-        <source>&amp;Small Icons</source>
-        <translation type="vanished">&amp;Küçük simgeler</translation>
-    </message>
-    <message>
-        <source>Toolbar</source>
-        <translation type="vanished">Araç çubuğu</translation>
-    </message>
-    <message>
-        <source>&amp;Go	F5</source>
-        <translation type="vanished">&amp;Git	F5</translation>
-    </message>
-    <message>
-        <source>&amp;Stop	F6</source>
-        <translation type="vanished">&amp;Durdur	F6</translation>
-    </message>
-    <message>
-        <source>&amp;About</source>
-        <translation type="vanished">&amp;Hakkında</translation>
-    </message>
-    <message>
-        <source>Script</source>
-        <translation type="vanished">Betik</translation>
-    </message>
-    <message>
-        <source>Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*</source>
-        <translation type="vanished">Nyquist betikleri (*.ny)|*.ny|Lisp betikleri (*.lsp)|*.lsp|Tüm dosyalar|*</translation>
-    </message>
-    <message>
-        <source>Script was not saved.</source>
-        <translation type="vanished">Betik kaydedilemedi.</translation>
-    </message>
-    <message>
-        <source>Find dialog</source>
-        <translation type="vanished">Arama penceresi</translation>
-    </message>
-    <message>
-        <source>Harvey Lubin (logo)</source>
-        <translation type="vanished">Harvey Lubin (logo)</translation>
-    </message>
-    <message>
-        <source>Tango Icon Gallery (toolbar icons)</source>
-        <translation type="vanished">Tango Icon Gallery (araç çubuğu simgeleri)</translation>
-    </message>
-    <message>
-        <source>Leland Lucius</source>
-        <translation type="vanished">Leland Lucius</translation>
-    </message>
-    <message>
-        <source>(C) 2009 by Leland Lucius</source>
-        <translation type="vanished">(C) 2009 by Leland Lucius</translation>
-    </message>
-    <message>
-        <source>External Audacity module which provides a simple IDE for writing effects.</source>
-        <translation type="vanished">Yazma etkileri için basit bir IDE oluşturan dış Audacity modülü.</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench</source>
-        <translation type="vanished">Nyquist etkisi tezgahı</translation>
-    </message>
-    <message>
-        <source>No matches found</source>
-        <translation type="vanished">Bir eşleşme bulunamadı</translation>
-    </message>
-    <message>
-        <source>Code has been modified. Are you sure?</source>
-        <translation type="vanished">Kod değiştirildi. Emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench - </source>
-        <translation type="vanished">Nyquist etkisi tezgahı - </translation>
-    </message>
-    <message>
-        <source>New script</source>
-        <translation type="vanished">Yeni betik</translation>
-    </message>
-    <message>
-        <source>Open script</source>
-        <translation type="vanished">Betik aç</translation>
-    </message>
-    <message>
-        <source>Save script</source>
-        <translation type="vanished">Betiği kaydet</translation>
-    </message>
-    <message>
-        <source>Save As</source>
-        <translation type="vanished">Farklı kaydet</translation>
-    </message>
-    <message>
-        <source>Save script as...</source>
-        <translation type="vanished">Betiği farklı kaydet...</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">Panoya kopyala</translation>
-    </message>
-    <message>
-        <source>Cut to clipboard</source>
-        <translation type="vanished">Panoya kes</translation>
-    </message>
-    <message>
-        <source>Paste from clipboard</source>
-        <translation type="vanished">Panodan kopyala</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation type="vanished">Tümünü seç</translation>
-    </message>
-    <message>
-        <source>Select all text</source>
-        <translation type="vanished">Tüm metni seç</translation>
-    </message>
-    <message>
-        <source>Undo last change</source>
-        <translation type="vanished">Son değişikliği geri al</translation>
-    </message>
-    <message>
-        <source>Redo previous change</source>
-        <translation type="vanished">Önceki değişikliği yinele</translation>
-    </message>
-    <message>
-        <source>Find</source>
-        <translation type="vanished">Bul</translation>
-    </message>
-    <message>
-        <source>Find text</source>
-        <translation type="vanished">Metin bul</translation>
-    </message>
-    <message>
-        <source>Match</source>
-        <translation type="vanished">Eşleştir</translation>
-    </message>
-    <message>
-        <source>Go to matching paren</source>
-        <translation type="vanished">Eşleşen üste git</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">Üst</translation>
-    </message>
-    <message>
-        <source>Go to top S-expr</source>
-        <translation type="vanished">Üst S-expr git</translation>
-    </message>
-    <message>
-        <source>Go to higher S-expr</source>
-        <translation type="vanished">Daha yüksek S-expr git</translation>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation type="vanished">Önceki</translation>
-    </message>
-    <message>
-        <source>Go to previous S-expr</source>
-        <translation type="vanished">Önceki S-expr git</translation>
-    </message>
-    <message>
-        <source>Go to next S-expr</source>
-        <translation type="vanished">Sonraki S-expr git</translation>
-    </message>
-    <message>
-        <source>Start</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Başlangıç</translation>
-    </message>
-    <message>
-        <source>Start script</source>
-        <translation type="vanished">Betiği başlat</translation>
-    </message>
-    <message>
-        <source>Stop script</source>
-        <translation type="vanished">Betiği durdur</translation>
-    </message>
-    <message>
-        <source>Waiting for audio.com</source>
-        <translation type="vanished">Audio.com bekleniyor</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. You can cancel this operation.</source>
-        <translation type="vanished">İlerleyebilmeniz için audio.com üzerinde bir işlem yapmanız gerekiyor. Bu işlemi iptal edebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Generating audio preview...</source>
-        <translation type="vanished">Ses ön izlemesi oluşturuluyor...</translation>
-    </message>
-    <message>
-        <source>Open trace audio.com</source>
-        <translation type="vanished">Audio.com üzerinden aç</translation>
-    </message>
-    <message>
-        <source>Synchronizing project</source>
-        <translation type="vanished">Proje eşitleniyor</translation>
-    </message>
-    <message>
-        <source>Previews can be updated only for Cloud projects</source>
-        <translation type="vanished">Yalnızca bulut projelerinin ön izlemeleri güncellenebilir</translation>
-    </message>
-    <message>
-        <source>Save &amp;To Cloud...</source>
-        <translation type="vanished">Bulu&amp;ta kaydet...</translation>
-    </message>
-    <message>
-        <source>&amp;Update Cloud Audio Preview</source>
-        <translation type="vanished">B&amp;ulut ses ön izlemesini güncelle</translation>
-    </message>
-    <message>
-        <source>Open Fro&amp;m Cloud...</source>
-        <translation type="vanished">Bulutta&amp;n aç...</translation>
-    </message>
-    <message>
-        <source>S&amp;hare Audio...</source>
-        <translation type="vanished">Ses&amp;i paylaş...</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Hesap</translation>
-    </message>
-    <message>
-        <source>Export behavior</source>
-        <translation type="vanished">Dışa aktarma davranışı</translation>
-    </message>
-    <message>
-        <source>S&amp;how 'How would you like to export?' dialog</source>
-        <translation type="vanished">'Nasıl dışa aktarmak istersiniz?' &amp;penceresi görüntülensin</translation>
-    </message>
-    <message>
-        <source>Save behavior</source>
-        <translation type="vanished">Kaydetme davranışı</translation>
-    </message>
-    <message>
-        <source>Always &amp;ask</source>
-        <translation type="vanished">&amp;Her zaman sorulsun</translation>
-    </message>
-    <message>
-        <source>Always &amp;save to cloud</source>
-        <translation type="vanished">Her &amp;zaman buluta kaydedilsin</translation>
-    </message>
-    <message>
-        <source>Always save to the co&amp;mputer</source>
-        <translation type="vanished">Her zaman bilgisayara &amp;kaydedilsin</translation>
-    </message>
-    <message>
-        <source>Temporary Cloud files directory</source>
-        <translation type="vanished">Geçici bulut dosyaları klasörü</translation>
-    </message>
-    <message>
-        <source>&amp;Location:</source>
-        <translation type="vanished">&amp;Konum:</translation>
-    </message>
-    <message>
-        <source>&amp;Browse...</source>
-        <translation type="vanished">&amp;Göz at...</translation>
-    </message>
-    <message>
-        <source>days</source>
-        <translation type="vanished">gün</translation>
-    </message>
-    <message>
-        <source>&amp;Remove temporary files after:</source>
-        <translation type="vanished">&amp;Geçici dosyalar şu süre sonunda silinsin:</translation>
-    </message>
-    <message>
-        <source>Preferences for Cloud</source>
-        <translation type="vanished">Bulut ayarları</translation>
-    </message>
-    <message>
-        <source>Choose a location to place the temporary directory</source>
-        <translation type="vanished">Geçici klasörün bulunacağı konumu seçin</translation>
-    </message>
-    <message>
-        <source>Temporary files directory cannot be on a FAT drive.</source>
-        <translation type="vanished">Geçici dosyalar klasörü, FAT olarak biçimlendirilmiş bir bölüm üzerinde bulunamaz.</translation>
-    </message>
-    <message>
-        <source>Cannot set the preference.</source>
-        <translation type="vanished">Hazır ayar yapılamadı.</translation>
-    </message>
-    <message>
-        <source>Failed.</source>
-        <translation type="vanished">Başarısız oldu.</translation>
-    </message>
-    <message>
-        <source>Syncing to audio.com... (%d%%)</source>
-        <translation type="vanished">audio.com ile eşitleniyor... (%%%1)</translation>
-    </message>
-    <message>
-        <source>Waiting for space to free up</source>
-        <translation type="vanished">Boş alan açılması bekleniyor</translation>
-    </message>
-    <message>
-        <source>Once you have made storage space available on audio.com, click Retry.</source>
-        <translation type="vanished">Audio.com üzerinde depolama alanı açtıktan sonra Yeniden dene üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>Share Audio</source>
-        <extracomment>i18n-hint: Share audio button text, keep as short as possible</extracomment>
-        <translation type="vanished">Sesi paylaş</translation>
-    </message>
-    <message>
-        <source>&amp;Share Audio Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that opens Share Audio dialog</extracomment>
-        <translation type="vanished">&amp;Sesi paylaş araç çubuğu</translation>
-    </message>
-    <message>
-        <source>Account not linked</source>
-        <translation type="vanished">Hesap bağlanmamış</translation>
-    </message>
-    <message>
-        <source>&amp;Link Account</source>
-        <translation type="vanished">&amp;Hesap bağla</translation>
-    </message>
-    <message>
-        <source>&amp;Unlink Account</source>
-        <translation type="vanished">Hesap bağlantısını &amp;kes</translation>
-    </message>
-    <message>
-        <source>Open from audio.com</source>
-        <translation type="vanished">Audio.com üzerinden aç</translation>
-    </message>
-    <message>
-        <source>Don't show this again</source>
-        <translation type="vanished">Bu bir daha görüntülenmesin</translation>
-    </message>
-    <message>
-        <source>Save to the Cloud (free)</source>
-        <translation type="vanished">Buluta kaydet</translation>
-    </message>
-    <message>
-        <source>&amp;Save to Cloud</source>
-        <translation type="vanished">&amp;Buluta kaydet</translation>
-    </message>
-    <message>
-        <source>Files are saved on your device.
-Note: To export MP3 and WAV files, use File &gt; Export Audio instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save to &amp;computer</source>
-        <translation type="vanished">&amp;Bilgisayara kaydet</translation>
-    </message>
-    <message>
-        <source>&amp;Remember my choice and don't show again</source>
-        <translation type="vanished">&amp;Seçimimi hatırla ve bir daha sorma</translation>
-    </message>
-    <message>
-        <source>How would you like to export?</source>
-        <extracomment>i18n-hint: A title that is shown on export that allows the user to select
-Cloud or local export.</extracomment>
-        <translation type="vanished">Nasıl dışa aktarmak istersiniz?</translation>
-    </message>
-    <message>
-        <source>Share to audio.com</source>
-        <translation type="vanished">Audio.com ile paylaş</translation>
-    </message>
-    <message>
-        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation type="vanished">Sıkıştırılmamış bir ses dosyası yükler ve paylaşılabilir bir bağlantı oluşturur. Bu bağlantı, başkalarının dosyayı .wav ya da .mp3 biçiminde indirebilmesini sağlar.</translation>
-    </message>
-    <message>
-        <source>&amp;Share to audio.com</source>
-        <translation type="vanished">Audio.com ile &amp;paylaş</translation>
-    </message>
-    <message>
-        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation type="vanished">MP3s, WAV, FLAC ve diğer biçimleri bilgisayarınıza dışa aktarır.</translation>
-    </message>
-    <message>
-        <source>Export to &amp;computer</source>
-        <translation type="vanished">&amp;Bilgisayara dışa aktar</translation>
-    </message>
-    <message>
-        <source>&amp;Don't show again</source>
-        <translation type="vanished">Bir &amp;daha görüntülenmesin</translation>
-    </message>
-    <message>
-        <source>Project Name</source>
-        <translation type="vanished">Proje adı</translation>
-    </message>
-    <message>
-        <source>Cloud saving requires a free audio.com account linked to Audacity. Press "Link account" above to proceed.</source>
-        <translation type="vanished">Buluta kaydedebilmek için, Audacity ile bağlı ücretsiz bir audio.com hesabı gereklidir. İlerlemek için yukarıdaki "Hesap bağla" üzerine basın.</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="vanished">Özel</translation>
-    </message>
-    <message>
-        <source>Unlisted</source>
-        <translation type="vanished">Listelenmemiş</translation>
-    </message>
-    <message>
-        <source>Public</source>
-        <translation type="vanished">Herkese açık</translation>
-    </message>
-    <message>
-        <source>Save to computer...</source>
-        <translation type="vanished">Bilgisayara kaydet...</translation>
-    </message>
-    <message>
-        <source>We encountered an issue syncing your file</source>
-        <translation type="vanished">Dosyanız eşitlenirken bir sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.</source>
-        <translation type="vanished">Endişelenmeyin, değişiklikleriniz geçici bir konuma kaydedilecek ve İnternet bağlantınız yeniden kurulduğunda bulut kopyanızla eşitlenecek.</translation>
-    </message>
-    <message>
-        <source>Log in to audio.com to proceed.</source>
-        <translation type="vanished">İlerlemek için audio.com oturumu açın.</translation>
-    </message>
-    <message>
-        <source>We were unable to link your account. Please try again.</source>
-        <translation type="vanished">Hesabınızla bağlantı kuramadık. Lütfen yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>&amp;Try again</source>
-        <translation type="vanished">&amp;Yeniden dene</translation>
-    </message>
-    <message>
-        <source>Account linked successfully!</source>
-        <translation type="vanished">Hesap bağlantısı kuruldu!</translation>
-    </message>
-    <message>
-        <source>Enter token to link your account</source>
-        <translation type="vanished">Hesabınızı bağlamak için kodu yazın</translation>
-    </message>
-    <message>
-        <source>Token</source>
-        <translation type="vanished">Kod</translation>
-    </message>
-    <message>
-        <source>C&amp;ontinue</source>
-        <translation type="vanished">İ&amp;lerle</translation>
-    </message>
-    <message>
-        <source>L&amp;ink audio.com account...</source>
-        <translation type="vanished">audio.com hesabı &amp;bağla...</translation>
-    </message>
-    <message>
-        <source>This project is no longer saved to the Cloud</source>
-        <translation type="vanished">Bu proje artık bulut üzerine kaydedilmiyor</translation>
-    </message>
-    <message>
-        <source>This project was removed from audio.com and therefore cannot be saved at this time. </source>
-        <translation type="vanished">Bu proje audio.com üzerinden kaldırıldığı için şu anda kaydedilemiyor.</translation>
-    </message>
-    <message>
-        <source>You can either save it to the Cloud as a new project, or save it to your computer.</source>
-        <translation type="vanished">Yeni bir proje olarak bulut üzerine kaydedebileceğiniz gibi bilgisayarınıza da kaydedebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Save to Cloud</source>
-        <translation type="vanished">Buluta kaydet</translation>
-    </message>
-    <message>
-        <source>Your project storage limit has been reached.</source>
-        <translation type="vanished">Proje depolama alanı sınırınıza ulaşıldı.</translation>
-    </message>
-    <message>
-        <source>You may need to remove older projects to make space available. For more options, visit audio.com</source>
-        <translation type="vanished">Yer açmak için eski projeleri kaldırmanız gerekebilir. Daha fazla seçenek için audio.com sitesine bakın</translation>
-    </message>
-    <message>
-        <source>You can also save this project locally to avoid losing changes.</source>
-        <translation type="vanished">Değişiklikleri kaybetmemek için bu projeyi yerel olarak da kaydedebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Project version conflict detected</source>
-        <translation type="vanished">Proje sürümü çakışması bulundu</translation>
-    </message>
-    <message>
-        <source>There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead.</source>
-        <translation type="vanished">Audio.com üzerinde bu Audacity projesinin daha yeni bir sürümü var. Bu projeyi kaydettiğinizde bu sürüm en yeni sürüm olarak değiştirilecek.</translation>
-    </message>
-    <message>
-        <source>Save this project</source>
-        <translation type="vanished">Bu projeyi kaydet</translation>
-    </message>
-    <message>
-        <source>Discard and open latest version</source>
-        <translation type="vanished">Yok say ve son sürümü aç</translation>
-    </message>
-    <message>
-        <source>Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead.</source>
-        <translation type="vanished">Projede kaydedilmemiş değişiklikler var. Audio.com üzerinde bu Audacity projesinin daha yeni bir sürümü var. Değişikliklerin iptal edilmesi bu sürüm yerine son sürümün açılmasına neden olur.</translation>
-    </message>
-    <message>
-        <source>Open local project</source>
-        <translation type="vanished">Yerel projeyi aç</translation>
-    </message>
-    <message>
-        <source>Cloud project conflict</source>
-        <translation type="vanished">Bulut projesi çakışması</translation>
-    </message>
-    <message>
-        <source>You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open.</source>
-        <translation type="vanished">Zaten açık olan bir proje varken bu projenin yeni bir etkin sürümünü açmaya çalışıyorsunuz. Lütfen hangi sürümün açık kalmasını istediğinizi seçin.</translation>
-    </message>
-    <message>
-        <source>Keep currently open version</source>
-        <translation type="vanished">Şu andaki sürüm açık kalsın</translation>
-    </message>
-    <message>
-        <source>Open new version</source>
-        <translation type="vanished">Yeni sürümü aç</translation>
-    </message>
-    <message>
-        <source>Open from Cloud</source>
-        <translation type="vanished">Buluttan aç</translation>
-    </message>
-    <message>
-        <source>less than 1 minute</source>
-        <translation type="vanished">1 dakikadan az</translation>
-    </message>
-    <message numerus="yes">
-        <source>one minutes ago</source>
-        <oldsource>%d minutes ago</oldsource>
-        <translation type="vanished">
-            <numerusform>1 dakika önce</numerusform>
-            <numerusform>%1 dakika önce</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>one hour ago</source>
-        <oldsource>%d hours ago</oldsource>
-        <translation type="vanished">
-            <numerusform>1 saat önce</numerusform>
-            <numerusform>%1 saat önce</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Failed to authorize account</source>
-        <translation type="vanished">Hesap kimliği doğrulanamadı</translation>
-    </message>
-    <message>
-        <source>Loading projects list...</source>
-        <translation type="vanished">Proje listesi yükleniyor...</translation>
-    </message>
-    <message>
-        <source>Failed to get projects list</source>
-        <translation type="vanished">Proje listesi alınamadı</translation>
-    </message>
-    <message>
-        <source>Cloud saved projects</source>
-        <translation type="vanished">Buluta kaydedilmiş projeler</translation>
-    </message>
-    <message>
-        <source>Search:</source>
-        <translation type="vanished">Ara:</translation>
-    </message>
-    <message>
-        <source>Prev</source>
-        <translation type="vanished">Önceki</translation>
-    </message>
-    <message>
-        <source>View in audio.com</source>
-        <translation type="vanished">Audio.com üzerinde görüntüle</translation>
-    </message>
-    <message>
-        <source>Page %d of %d</source>
-        <translation type="vanished">Sayfa %1 / %2</translation>
-    </message>
-    <message>
-        <source>Anyone will be able to listen to this audio.</source>
-        <translation type="vanished">Bu ses kaydını herkes dinleyebilir.</translation>
-    </message>
-    <message>
-        <source>Only you and people you share a link with will be able to listen to this audio.</source>
-        <translation type="vanished">Bu ses kaydını yalnızca siz ve bağlantıyı paylaştığınız kişiler dinleyebilir.</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to cancel?</source>
-        <translation type="vanished">İptal etmek istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Cancel upload to Audio.com</source>
-        <translation type="vanished">Audio.com üzerine yüklemeyi iptal et</translation>
-    </message>
-    <message>
-        <source>Uploading audio...</source>
-        <translation type="vanished">Ses yükleniyor...</translation>
-    </message>
-    <message>
-        <source>We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.</source>
-        <translation type="vanished">Bu dosya yüklenemedi. Lütfen audio.com hesabınızı bağladığınızdan emin olun ve yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>Upload error</source>
-        <translation type="vanished">Yüklenirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>We are unable to prepare this file for uploading.</source>
-        <translation type="vanished">Bu dosyayı yüklemeye hazırlanamadık.</translation>
-    </message>
-    <message>
-        <source>Finalizing upload...</source>
-        <translation type="vanished">Yükleme tamamlanıyor...</translation>
-    </message>
-    <message>
-        <source>Track Title</source>
-        <translation type="vanished">İz adı</translation>
-    </message>
-    <message>
-        <source>Sharing audio requires a free %s account linked to Audacity. %%Press "Link account" above to proceed.</source>
-        <extracomment>i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.</extracomment>
-        <translation type="vanished">Ses paylaşmak için Audacity ile bağlı ücretsiz bir %1 hesabı gerekir. %%İlerlemek için yukarıdaki "Hesap bağla" üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>audio.com</source>
-        <translation type="vanished">audio.com</translation>
-    </message>
-    <message>
-        <source>Press "Continue" to upload to audio.com</source>
-        <translation type="vanished">audio.com üzerine yüklemek için "İlerle" üzerine basın</translation>
-    </message>
-    <message>
-        <source>Preparing audio...</source>
-        <translation type="vanished">Ses hazırlanıyor...</translation>
-    </message>
-    <message>
-        <source>You are not authorized to access this project.</source>
-        <translation type="vanished">Bu projeye erişme izniniz yok.</translation>
-    </message>
-    <message>
-        <source>You tried to access a project that has expired.</source>
-        <translation type="vanished">Geçerlilik süresi geçmiş bir projeye erişmeye çalıştınız.</translation>
-    </message>
-    <message>
-        <source>Audacity had trouble connecting to the server.</source>
-        <translation type="vanished">Audacity sunucu ile bağlantı kurarken sorun çıktı.</translation>
-    </message>
-    <message>
-        <source>The project is too large to upload. Please save it to your computer instead.</source>
-        <translation type="vanished">Proje yüklenmek için çok büyük. Bunun yerine lütfen bilgisayarınıza kaydedin. </translation>
-    </message>
-    <message>
-        <source>You don't have access to this project.</source>
-        <translation type="vanished">Bu projeye erişme izniniz yok.</translation>
-    </message>
-    <message>
-        <source>The project could not be found.</source>
-        <translation type="vanished">Proje bulunamadı.</translation>
-    </message>
-    <message>
-        <source>The server responded with something Audacity could not understand.</source>
-        <translation type="vanished">Sunucu Audacity tarafından anlaşılamayan bir yanıt verdi.</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an internal error.</source>
-        <translation type="vanished">Audacity içinde bir sorun çıktı. </translation>
-    </message>
-    <message>
-        <source>Audio.com encountered an internal error.</source>
-        <translation type="vanished">Audacity.com içinde bir sorun çıktı. </translation>
-    </message>
-    <message>
-        <source>Audacity encountered an unknown error.</source>
-        <translation type="vanished">Audacity içinde bilinmeyen bir sorun çıktı. </translation>
-    </message>
-    <message>
-        <source>Sync failed</source>
-        <translation type="vanished">Eşitlenemedi</translation>
-    </message>
-    <message>
-        <source>Error details:
-%s</source>
-        <translation type="vanished">Hata bilgileri:
-%1</translation>
-    </message>
-    <message>
-        <source>Syncing your project</source>
-        <translation type="vanished">Projeniz eşitleniyor</translation>
-    </message>
-    <message>
-        <source>The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time</source>
-        <translation type="vanished">Siz çalışırken proje arka planda eşitlenecek. Eşitleme durumunu istediğiniz zaman Audacity içinde sağ alt köşede görebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com</source>
-        <translation type="vanished">Kaydedilmiş tüm değişiklikler artık bulutta güncellenecek. Bu dosyayı audio.com üzerine yüklediğiniz projeler sayfasından yönetebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Cloud project incomplete</source>
-        <translation type="vanished">Bulut projesi eksik</translation>
-    </message>
-    <message>
-        <source>The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.</source>
-        <translation type="vanished">Bu projenin son sürümü audio.com üzerine tam olarak yüklenmemiş. Bunun yerine son tam sürümü yükleyebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>No version of this project has been fully uploaded to audio.com. It cannot be loaded.</source>
-        <translation type="vanished">Bu projenin hiçbir sürümü audio.com üzerine tam olarak yüklenmemiş. Yüklenemiyor.</translation>
-    </message>
-    <message>
-        <source>You have canceled this upload to audio.com</source>
-        <translation type="vanished">audio.com üzerine yapılan bu yüklemeyi iptal ettiniz</translation>
-    </message>
-    <message>
-        <source>Retry</source>
-        <translation type="vanished">Yeniden dene</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. Once you are done with it, click Retry</source>
-        <translation type="vanished">İlerleyebilmeniz için audio.com üzerinde bir işlem yapmanız gerekiyor. Bu işlemi yaptıktan sonra Yeniden dene üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>Exported Allegro (.gro) files save time as:</source>
-        <translation type="vanished">Dışa aktarılan Allegro (.gro) dosyalarının zamanı şu şekilde:</translation>
-    </message>
-    <message>
-        <source>Please select only one Note Track at a time.</source>
-        <translation type="vanished">Lütfen aynı anda yalnızca bir nota izi seçin.</translation>
-    </message>
-    <message>
-        <source>Please select a Note Track.</source>
-        <translation type="vanished">Lütfen bir nota izi seçin.</translation>
-    </message>
-    <message>
-        <source>Export MIDI As:</source>
-        <translation type="vanished">MIDI şu şekilde dışa aktar:</translation>
-    </message>
-    <message>
-        <source>MIDI file</source>
-        <translation type="vanished">MIDI dosyası</translation>
-    </message>
-    <message>
-        <source>Allegro file</source>
-        <translation type="vanished">Allegro dosyası</translation>
-    </message>
-    <message>
-        <source>You have selected a filename with an unrecognized file extension.
-Do you want to continue?</source>
-        <translation type="vanished">Tanımlanmamış bir dosya uzantısına sahip bir dosya adı seçtiniz.
-İlerlemek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Export MI&amp;DI...</source>
-        <translation type="vanished">&amp;MIDI dışa aktar...</translation>
-    </message>
-    <message>
-        <source>Imported MIDI from '%s'</source>
-        <translation type="vanished">MIDI '%1' kaynağından içe aktarıldı</translation>
-    </message>
-    <message>
-        <source>Import MIDI</source>
-        <translation type="vanished">MIDI içe aktar</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Filename too short.</source>
-        <translation type="vanished">%1 dosyası açılamadı: Dosya adı çok kısa.</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Incorrect filetype.</source>
-        <translation type="vanished">%1 dosyası açılamadı: Dosya türü geçersiz.</translation>
-    </message>
-    <message>
-        <source>Could not open file %s.</source>
-        <translation type="vanished">%1 dosyası açılamadı.</translation>
-    </message>
-    <message>
-        <source>Select a MIDI file</source>
-        <translation type="vanished">Bir MIDI dosyası seçin</translation>
-    </message>
-    <message>
-        <source>MIDI and Allegro files</source>
-        <translation type="vanished">MIDI ve Allegro dosyaları</translation>
-    </message>
-    <message>
-        <source>MIDI files</source>
-        <translation type="vanished">MIDI dosyaları</translation>
-    </message>
-    <message>
-        <source>Allegro files</source>
-        <translation type="vanished">Allegro dosyaları</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI...</source>
-        <translation type="vanished">&amp;MIDI...</translation>
-    </message>
-    <message>
-        <source>No revision identifier was provided</source>
-        <translation type="vanished">Herhangi bir değişiklik belirteci belirtilmemiş</translation>
-    </message>
-    <message>
-        <source>%s, system administration</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, sistem yöneticisi</translation>
-    </message>
-    <message>
-        <source>%s, co-founder and developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, kurucu ortak ve yazılım geliştirici</translation>
-    </message>
-    <message>
-        <source>%s, designer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, tasarımcı</translation>
-    </message>
-    <message>
-        <source>%s, developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, yazılım geliştirici</translation>
-    </message>
-    <message>
-        <source>%s, developer and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, geliştirme ve destek</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, belge hazırlama ve destek</translation>
-    </message>
-    <message>
-        <source>%s, QA tester, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, kalite güvencesi, belgelendirme ve destek</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support, French</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, belge hazırlama ve destek, Fransızca</translation>
-    </message>
-    <message>
-        <source>%s, quality assurance</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, kalite güvencesi</translation>
-    </message>
-    <message>
-        <source>%s, accessibility advisor</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, erişilebilirlik danışmanı</translation>
-    </message>
-    <message>
-        <source>%s, graphic artist</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, görsel sanatçı</translation>
-    </message>
-    <message>
-        <source>%s, composer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, besteci</translation>
-    </message>
-    <message>
-        <source>%s, tester</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, deneme kullanıcısı</translation>
-    </message>
-    <message>
-        <source>%s, Nyquist plug-ins</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, Nyquist uygulama ekleri</translation>
-    </message>
-    <message>
-        <source>%s, web developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1 site geliştiricisi</translation>
-    </message>
-    <message>
-        <source>%s, graphics</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, görseller</translation>
-    </message>
-    <message>
-        <source>%s, effects presets</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Hazır ayarı seçin</translation>
-    </message>
-    <message>
-        <source>%s (incorporating %s, %s, %s, %s and %s)</source>
-        <translation type="vanished">%1 (%2, %3, %4, %5 ve %6 ile birlikte)</translation>
-    </message>
-    <message>
-        <source>About %s</source>
-        <extracomment>i18n-hint: information about the program</extracomment>
-        <translation type="vanished">%1 hakkında</translation>
-    </message>
-    <message>
-        <source>&lt;h3&gt;</source>
-        <translation type="vanished">&lt;h3&gt;</translation>
-    </message>
-    <message>
-        <source>%s the free, open source, cross-platform software for recording and editing sounds.</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 özgür, açık kaynaklı ve farklı platformlarda çalışabilen bir ses düzenleme ve kaydetme uygulamasıdır.</translation>
-    </message>
-    <message>
-        <source>%s Team Members</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 takımı üyeleri</translation>
-    </message>
-    <message>
-        <source>Emeritus:</source>
-        <translation type="vanished">Emekliler:</translation>
-    </message>
-    <message>
-        <source>Distinguished %s Team members, not currently active</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">Şu anda etkin olmayan Değerli %1 Takımı üyeleri</translation>
-    </message>
-    <message>
-        <source>Contributors</source>
-        <translation type="vanished">Katkıda bulunanlar</translation>
-    </message>
-    <message>
-        <source>Website and Graphics</source>
-        <translation type="vanished">Site ve görseller</translation>
-    </message>
-    <message>
-        <source>Translators</source>
-        <translation type="vanished">Çevirmenler</translation>
-    </message>
-    <message>
-        <source>%s includes code from the following projects:</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 uygulamasında şu projelerden alınan kodlar bulunur:</translation>
-    </message>
-    <message>
-        <source>Special thanks:</source>
-        <translation type="vanished">Özel teşekkürler:</translation>
-    </message>
-    <message>
-        <source>%s website: </source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 sitesi: </translation>
-    </message>
-    <message>
-        <source>%s software is copyright %s 1999-2024 %s Team.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for first and third %s,
-and a "copyright" symbol for the second</extracomment>
-        <translation type="vanished">%1 uygulamasının telif hakkı %2 1999-2024 %3 ekibine aittir.</translation>
-    </message>
-    <message>
-        <source>The name %s is a registered trademark.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 adı kayıtlı bir markadır.</translation>
-    </message>
-    <message>
-        <source>Build Information</source>
-        <translation type="vanished">Yapım bilgileri</translation>
-    </message>
-    <message>
-        <source>The Build</source>
-        <extracomment>i18n-hint: Information about when audacity was compiled follows</extracomment>
-        <translation type="vanished">Yapım</translation>
-    </message>
-    <message>
-        <source>Program build date:</source>
-        <translation type="vanished">Uygulama oluşturulma tarihi:</translation>
-    </message>
-    <message>
-        <source>Commit Id:</source>
-        <translation type="vanished">Gönderim kodu:</translation>
-    </message>
-    <message>
-        <source>Debug build (debug level %d)</source>
-        <translation type="vanished">Hata ayıklama yapımı (hata ayıklama düzeyi %1)</translation>
-    </message>
-    <message>
-        <source>Release build (debug level %d)</source>
-        <translation type="vanished">Yayım yapımı (hata ayıklama düzeyi %1)</translation>
-    </message>
-    <message>
-        <source>%s, 64 bits</source>
-        <translation type="vanished">%1, 64 bit</translation>
-    </message>
-    <message>
-        <source>%s, 32 bits</source>
-        <translation type="vanished">%1, 32 bit</translation>
-    </message>
-    <message>
-        <source>Build type:</source>
-        <translation type="vanished">Sürüm türü:</translation>
-    </message>
-    <message>
-        <source>Compiler:</source>
-        <translation type="vanished">Derleyici:</translation>
-    </message>
-    <message>
-        <source>Installation Prefix:</source>
-        <extracomment>i18n-hint: The directory audacity is installed into (on *nix systems)</extracomment>
-        <translation type="vanished">Kurulum ön eki:</translation>
-    </message>
-    <message>
-        <source>Cache folder:</source>
-        <translation type="vanished">Ön bellek klasörü:</translation>
-    </message>
-    <message>
-        <source>Settings folder:</source>
-        <translation type="vanished">Ayarlar klasörü:</translation>
-    </message>
-    <message>
-        <source>Data folder:</source>
-        <translation type="vanished">Veri klasörü:</translation>
-    </message>
-    <message>
-        <source>State folder:</source>
-        <translation type="vanished">Durum klasörü:</translation>
-    </message>
-    <message>
-        <source>Core Libraries</source>
-        <extracomment>i18n-hint: Libraries that are essential to audacity</extracomment>
-        <translation type="vanished">Temel Kitaplıklar</translation>
-    </message>
-    <message>
-        <source>Cross-platform GUI library</source>
-        <translation type="vanished">Platformlar arası GUI kitaplığı</translation>
-    </message>
-    <message>
-        <source>Audio playback and recording</source>
-        <translation type="vanished">Ses oynatma ve kaydetme</translation>
-    </message>
-    <message>
-        <source>Sample rate conversion</source>
-        <translation type="vanished">Örnekleme hızı dönüşümü</translation>
-    </message>
-    <message>
-        <source>File Format Support</source>
-        <translation type="vanished">Dosya biçimi desteği</translation>
-    </message>
-    <message>
-        <source>MP3 Import</source>
-        <translation type="vanished">MP3 içe aktarma</translation>
-    </message>
-    <message>
-        <source>MP3 Export</source>
-        <extracomment>i18n-hint: LAME is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">MP3 dışa aktarma</translation>
-    </message>
-    <message>
-        <source>Opus Import and Export</source>
-        <extracomment>i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">Opus içe ve dışa aktarma</translation>
-    </message>
-    <message>
-        <source>Ogg Vorbis Import and Export</source>
-        <extracomment>i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-* Both are proper nouns and shouldn't be translated</extracomment>
-        <translation type="vanished">Ogg Vorbis içe ve dışa aktarma</translation>
-    </message>
-    <message>
-        <source>ID3 tag support</source>
-        <translation type="vanished">ID3 etiket desteği</translation>
-    </message>
-    <message>
-        <source>FLAC import and export</source>
-        <extracomment>i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-* a proper noun and so shouldn't be translated</extracomment>
-        <translation type="vanished">FLAC içe ve dışa aktarma</translation>
-    </message>
-    <message>
-        <source>MP2 export</source>
-        <translation type="vanished">MP2 dışa aktarma</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export</source>
-        <translation type="vanished">FFmpeg içe ve dışa aktarma</translation>
-    </message>
-    <message>
-        <source>Features</source>
-        <translation type="vanished">Özellikler</translation>
-    </message>
-    <message>
-        <source>Plug-in support</source>
-        <translation type="vanished">Uygulama eki desteği</translation>
-    </message>
-    <message>
-        <source>Sound card mixer support</source>
-        <translation type="vanished">Ses kartı karıştırıcı desteği</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo Change support</source>
-        <translation type="vanished">Perde ve tempo değiştirme desteği</translation>
-    </message>
-    <message>
-        <source>Extreme Pitch and Tempo Change support</source>
-        <translation type="vanished">Aşırı perde ve tempo değiştirme desteği</translation>
-    </message>
-    <message>
-        <source>Legal</source>
-        <comment>about dialog</comment>
-        <translation type="vanished">Yasal</translation>
-    </message>
-    <message>
-        <source>GPL License</source>
-        <translation type="vanished">GPL lisansı</translation>
-    </message>
-    <message>
-        <source>PRIVACY POLICY</source>
-        <comment>about dialog</comment>
-        <extracomment>i18n-hint: For "About Audacity...": Title for Privacy Policy section</extracomment>
-        <translation type="vanished">GİZLİLİK İLKESİ</translation>
-    </message>
-    <message>
-        <source>App update checking and error reporting require network access. These features are optional.</source>
-        <translation type="vanished">Uygulama güncelleme denetimi ve hata bildirimi özellikleri için ağ erişimi gereklidir. Bu özelliklerin kullanılması isteğe bağlıdır.</translation>
-    </message>
-    <message>
-        <source>See %s for more info.</source>
-        <extracomment>i18n-hint: %s will be replaced with "our Privacy Policy"</extracomment>
-        <translation type="vanished">Ayrıntılı bilgi almak için %1 bölümüne bakabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Click and drag to define a looping region.</source>
-        <translation type="vanished">Yineleme bölgesini belirlemek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Timeline actions disabled during recording</source>
-        <translation type="vanished">Kayıt sırasında zaman akışı işlemleri kullanılamaz</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust, double-click to reset</source>
-        <translation type="vanished">Ayarlamak için tıklayıp sürükleyin, sıfırlamak için çift tıklayın</translation>
-    </message>
-    <message>
-        <source>Record/Playhead</source>
-        <extracomment>i18n-hint: This text is a tooltip on the icon (of a pin) representing
-the temporal position in the audio.</extracomment>
-        <translation type="vanished">Kayıt/Oynatma kafası</translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation type="vanished">Zaman akışı</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Taramayı başlatmak için tıklayın ya da sürükleyin</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Sarmayı başlatmak için tıklayın ya da sürükleyin</translation>
-    </message>
-    <message>
-        <source>Click &amp; move to Scrub. Click &amp; drag to Seek.</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Sarmak için tıklayıp taşıyın. Taramak için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Move to Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Taramaya taşı</translation>
-    </message>
-    <message>
-        <source>Move to Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Sarmaya taşı</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release to stop seeking.</source>
-        <translation type="vanished">Taramak için sürükleyin. Taramayı durdurmak için bırakın.</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release and move to Scrub.</source>
-        <translation type="vanished">Taramak için sürükleyin. Sarmak için bırakıp taşıyın.</translation>
-    </message>
-    <message>
-        <source>Move to Scrub. Drag to Seek.</source>
-        <translation type="vanished">Sarmak için taşıyın. Taramak için sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Quick-Play disabled</source>
-        <translation type="vanished">Hızlı oynatma kapalı</translation>
-    </message>
-    <message>
-        <source>Quick-Play enabled</source>
-        <translation type="vanished">Hızlı oynatma açık</translation>
-    </message>
-    <message>
-        <source>Timeline Options</source>
-        <translation type="vanished">Zaman akışı ayarları</translation>
-    </message>
-    <message>
-        <source>Minutes and Seconds</source>
-        <translation type="vanished">Dakika ve saniye</translation>
-    </message>
-    <message>
-        <source>Beats and Measures</source>
-        <translation type="vanished">Vuruşlar ve ölçüler</translation>
-    </message>
-    <message>
-        <source>Setting a loop region also makes an audio selection</source>
-        <translation type="vanished">Bir döngü bölgesi ayarlamak bir ses seçimi de yapar</translation>
-    </message>
-    <message>
-        <source>Clear Loop</source>
-        <extracomment>i18n-hint Clear is a verb</extracomment>
-        <translation type="vanished">Yinelemeyi temizle</translation>
-    </message>
-    <message>
-        <source>Set Loop To Selection</source>
-        <translation type="vanished">Seçimi yineleme olarak ayarla</translation>
-    </message>
-    <message>
-        <source>Scroll view to playhead</source>
-        <translation type="vanished">Görünümü oynatma kafasına kaydır</translation>
-    </message>
-    <message>
-        <source>Continuous scrolling</source>
-        <translation type="vanished">Sürekli kaydırma</translation>
-    </message>
-    <message>
-        <source>Failed to remove %s</source>
-        <translation type="vanished">%1 silinemedi</translation>
-    </message>
-    <message>
-        <source>Failed!</source>
-        <translation type="vanished">Başarısız!</translation>
-    </message>
-    <message>
-        <source>%s could not be found.
-
-It has been removed from the list of recent files.</source>
-        <translation type="vanished">%1 bulunamadı.
-
-Geçmiş dosyalar listesinden kaldırıldı.</translation>
-    </message>
-    <message>
-        <source>SQLite library failed to initialize.  Audacity cannot continue.</source>
-        <translation type="vanished">SQLite kitaplığı hazırlanamadı. Audacity ilerleyemiyor.</translation>
-    </message>
-    <message>
-        <source>Block size must be within 256 to 100000000
-</source>
-        <translation type="vanished">Blok boyutu 256 ile 100000000 arasında olmalıdır
-</translation>
-    </message>
-    <message>
-        <source>Audacity is starting up...</source>
-        <translation type="vanished">Audacity başlatılıyor...</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <extracomment>i18n-hint: "New" is an action (verb) to create a NEW project</extracomment>
-        <translation type="vanished">&amp;Yeni</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Aç...</translation>
-    </message>
-    <message>
-        <source>Open &amp;Recent...</source>
-        <translation type="vanished">&amp;Son kullanılanlar...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity...</source>
-        <translation type="vanished">&amp;Audacity hakkında...</translation>
-    </message>
-    <message>
-        <source>&amp;Preferences...</source>
-        <translation type="vanished">&amp;Ayarlar...</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a safe place to store temporary files.
-Audacity needs a place where automatic cleanup programs won't delete the temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity geçici dosyaları kaydedecek bir yer bulamadı.
-Audacity otomatik temizleme uygulamalarının geçici dosyaları silemeyeceği bir yere gerek duyar.
-Lütfen ayarlar bölümünden uygun bir klasör seçin.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a place to store temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity geçici dosyaları kaydedecek bir yer bulamadı.
-Lütfen ayarlar bölümünden uygun bir klasör seçin.</translation>
-    </message>
-    <message>
-        <source>Audacity is now going to exit. Please launch Audacity again to use the new temporary directory.</source>
-        <translation type="vanished">Audacity şimdi kapanacak. Yeni geçici klasörü kullanmak için yeniden başlatmalısınız.</translation>
-    </message>
-    <message>
-        <source>Running two copies of Audacity simultaneously may cause
-data loss or cause your system to crash.
-
-</source>
-        <translation type="vanished">Aynı anda iki farklı Audacity programını çalıştırmak veri 
-kaybına ya da sistem çökmesine neden olabilir.
-
-</translation>
-    </message>
-    <message>
-        <source>Audacity was not able to lock the temporary files directory.
-This folder may be in use by another copy of Audacity.
-</source>
-        <translation type="vanished">Audacity geçici dosyalar klasörünü kilitleyemedi.
-Bu klasör çalışan başka bir Audacity kopyası tarafından kullanılıyor olabilir.
-</translation>
-    </message>
-    <message>
-        <source>Do you still want to start Audacity?</source>
-        <translation type="vanished">Audacity gene de başlatılsın mı?</translation>
-    </message>
-    <message>
-        <source>Error Locking Temporary Folder</source>
-        <translation type="vanished">Geçici klasör kilitlenirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>The system has detected that another copy of Audacity is running.
-</source>
-        <translation type="vanished">Sistem başka bir Audacity kopyasının çalıştığını algıladı.
-</translation>
-    </message>
-    <message>
-        <source>Use the New or Open commands in the currently running Audacity
-process to open multiple projects simultaneously.
-</source>
-        <translation type="vanished">Aynı anda birden fazla projeyi açmak için çalışmakta olan
-Audacity içinden Yeni ya da Aç komutlarını kullanın.
-</translation>
-    </message>
-    <message>
-        <source>Audacity is already running</source>
-        <translation type="vanished">Audacity zaten çalışıyor</translation>
-    </message>
-    <message>
-        <source>Unable to create shared memory segment.
-
-error code=%d : "%s".</source>
-        <translation type="vanished">Paylaşılmış bellek bölümü oluşturulamadı.
-
-Hata kodu=%1 : "%2".</translation>
-    </message>
-    <message>
-        <source>Audacity Startup Failure</source>
-        <translation type="vanished">Audacity açılışı tamamlanamadı</translation>
-    </message>
-    <message>
-        <source>Unable to acquire semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Semaforlar alınamadı.
-
-Kaynak yetersizliği olabilir ve
-yeniden başlatma gerekebilir.</translation>
-    </message>
-    <message>
-        <source>Unable to create semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Semaforlar oluşturulamadı.
-
-Kaynak yetersizliği olabilir ve
-yeniden başlatma gerekebilir.</translation>
-    </message>
-    <message>
-        <source>Unable to acquire lock semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Semafor kilidi alınamadı.
-
-Kaynak yetersizliği olabilir ve
-yeniden başlatma gerekebilir.</translation>
-    </message>
-    <message>
-        <source>Unable to acquire server semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Sunucu semaforu alınamadı.
-
-Kaynak yetersizliği olabilir ve
-yeniden başlatma gerekebilir.</translation>
-    </message>
-    <message>
-        <source>The Audacity IPC server failed to initialize.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Audacity IPC sunucusu başlatılamadı.
-
-Kaynak yetersizliği olabilir ve
-yeniden başlatma gerekebilir.</translation>
-    </message>
-    <message>
-        <source>An unrecoverable error has occurred during startup</source>
-        <translation type="vanished">Açılışta düzeltilemeyen bir sorun çıktı</translation>
-    </message>
-    <message>
-        <source>set max disk block size in bytes</source>
-        <extracomment>i18n-hint: This controls the number of bytes that Audacity will
-*           use when writing files to the disk</extracomment>
-        <translation type="vanished">bayt olarak en büyük disk bloğu boyutunu ayarlayın</translation>
-    </message>
-    <message>
-        <source>replay a journal file</source>
-        <extracomment>i18n-hint: brief help message for Audacity's command-line options
-A journal contains a sequence of user interface interactions to be repeated
-"log," "trail," "trace" have somewhat similar meanings</extracomment>
-        <translation type="vanished">bir günlük dosyasını yeniden oynat</translation>
-    </message>
-    <message>
-        <source>this help message</source>
-        <extracomment>i18n-hint: This displays a list of available options</extracomment>
-        <translation type="vanished">bu yardım iletisi</translation>
-    </message>
-    <message>
-        <source>run self diagnostics</source>
-        <extracomment>i18n-hint: This runs a set of automatic tests on Audacity itself</extracomment>
-        <translation type="vanished">kendi kendini sına</translation>
-    </message>
-    <message>
-        <source>display Audacity version</source>
-        <extracomment>i18n-hint: This displays the Audacity version</extracomment>
-        <translation type="vanished">Audacity sürümünü görüntüle</translation>
-    </message>
-    <message>
-        <source>audio or project file name</source>
-        <extracomment>i18n-hint: This is a list of one or more files that Audacity
-*           should open upon startup</extracomment>
-        <translation type="vanished">ses ya da proje dosyasının adı</translation>
-    </message>
-    <message>
-        <source>Handle 'audacity://' url</source>
-        <extracomment>i18n-hint: This option is used to handle custom URLs in Audacity</extracomment>
-        <translation type="vanished">'audacity://' adresleri işlensin</translation>
-    </message>
-    <message>
-        <source>Audacity project (.aup3) files are not currently 
-associated with Audacity. 
-
-Associate them, so they open on double-click?</source>
-        <translation type="vanished">Audacity proje dosyaları (.aup3) Audacity ile 
-ilişkilendirilmemiş. 
-
-Çift tıklandığında açılacak şekilde ilişkilendirilsin mi?</translation>
-    </message>
-    <message>
-        <source>Audacity Project Files</source>
-        <translation type="vanished">Audacity proje dosyaları</translation>
-    </message>
-    <message>
-        <source>Audacity Configuration Error</source>
-        <translation type="vanished">Audacity yapılandırma sorunu</translation>
-    </message>
-    <message>
-        <source>The following configuration file could not be accessed:
-
-	%s
-
-This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. 
-
-You can attempt to correct the issue and then click "Retry" to continue.
-
-If you choose to "Quit Audacity", your project may be left in an unsaved state which will be recovered the next time you open it.</source>
-        <translation type="vanished">Şu yapılandırma dosyasına erişilemedi:
-
-	%1
-
-Bunun birçok nedeni olabilir, ancak büyük olasılıkla disk doludur ya da dosyaya yazma izniniz yoktur.
-
-Bu sorunu çözmeyi denedikten sonra ilerlemek için "Yeniden dene" üzerine tıklayın.
-
-"Audacity uygulamasından çık" üzerine tıklarsanız, projeniz kaydedilmemiş bir durumda kalır ve bir sonraki açışınızda kurtarılır.</translation>
-    </message>
-    <message>
-        <source>&amp;Quit Audacity</source>
-        <translation type="vanished">A&amp;udacity'den çık</translation>
-    </message>
-    <message>
-        <source>&amp;Retry</source>
-        <translation type="vanished">&amp;Yeniden dene</translation>
-    </message>
-    <message>
-        <source>Configure Project from Music File</source>
-        <translation type="vanished">Music dosyasından proje yapılandırma</translation>
-    </message>
-    <message>
-        <source>Automatic Music Configuration</source>
-        <translation type="vanished">Otomatik Music yapılandırması</translation>
-    </message>
-    <message>
-        <source>Audacity detected this file to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity bu dosyanın %1 bpm olduğunu algıladı.
-Müzik görünümünü etkinleştirmek ve proje temposunu %2 olarak ayarlamak ister misiniz?</translation>
-    </message>
-    <message>
-        <source>Audacity detected one or more files to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity bir ya da birkaç dosyanın %1 bpm olduğunu algıladı.
-Müzik görünümünü etkinleştirmek ve proje temposunu %2 olarak ayarlamak ister misiniz?</translation>
-    </message>
-    <message>
-        <source>Music Import</source>
-        <translation type="vanished">Music içe aktarma</translation>
-    </message>
-    <message>
-        <source>Smart clip.
-The entire source clip will be pasted into your project, allowing you to access
-trimmed audio data anytime.</source>
-        <translation type="vanished">Akıllı kırpma
-Kaynak parçanın tamamı projenize yapıştırılır ve istediğiniz zaman 
-kırpılmış ses verilerine erişmenizi sağlar.</translation>
-    </message>
-    <message>
-        <source>Selected audio only.
-Only the selected portion of the source clip will be pasted.</source>
-        <translation type="vanished">Yalnızca seçilmiş ses.
-Kaynak parçanın yalnızca seçilmiş bölümü yapıştırılır.</translation>
-    </message>
-    <message>
-        <source>Paste audio</source>
-        <translation type="vanished">Sesi yapıştır</translation>
-    </message>
-    <message>
-        <source>How would you like to paste your audio?</source>
-        <translation type="vanished">Sesi nasıl yapıştırmak istersiniz?</translation>
-    </message>
-    <message>
-        <source>The full smart clip is %s. Larger sizes will take longer to paste.</source>
-        <extracomment>i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.</extracomment>
-        <translation type="vanished">Akıllı parça %1 boyutunda. Boyut büyüdükçe yapıştırma süresi uzar.</translation>
-    </message>
-    <message>
-        <source>Remember my choice and don't ask again</source>
-        <translation type="vanished">Seçimimi hatırla ve bir daha sorma</translation>
-    </message>
-    <message>
-        <source>Automatic Crash Recovery</source>
-        <translation type="vanished">Otomatik çökme kurtarması</translation>
-    </message>
-    <message>
-        <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
-
-After recovery, save the projects to ensure changes are written to disk.</source>
-        <translation type="vanished">Audacity son kullanıldığında şu projeler doğru şekilde kaydedilmemiş ve otomatik olarak kurtarılabilir.
-
-Kurtardıktan sonra değişikliklerin diske kaydedildiğinden emin olmak için projeleri kaydedin.</translation>
-    </message>
-    <message>
-        <source>Recoverable &amp;projects</source>
-        <translation type="vanished">Kurtarılabilir &amp;projeler</translation>
-    </message>
-    <message>
-        <source>&amp;Discard Selected</source>
-        <translation type="vanished">&amp;Seçilmişleri yok say</translation>
-    </message>
-    <message>
-        <source>&amp;Recover Selected</source>
-        <translation type="vanished">Seçilmişleri ku&amp;rtar</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <translation type="vanished">A&amp;tla</translation>
-    </message>
-    <message>
-        <source>No projects selected</source>
-        <translation type="vanished">Herhangi bir proje seçilmemiş</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to discard the selected projects?
-
-Choosing "Yes" permanently deletes the selected projects immediately.</source>
-        <translation type="vanished">Seçilmiş projeleri yok saymak istediğinize emin misiniz?
-
-"Evet" seçildiğinde seçilmiş projeler hemen silinecek.</translation>
-    </message>
-    <message>
-        <source>Select Command</source>
-        <translation type="vanished">Komut seçin</translation>
-    </message>
-    <message>
-        <source>&amp;Command</source>
-        <translation type="vanished">&amp;Komut</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Parameters</source>
-        <translation type="vanished">&amp;Parametreleri düzenle</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preset</source>
-        <translation type="vanished">Hazır ayar k&amp;ullanılsın</translation>
-    </message>
-    <message>
-        <source>&amp;Parameters</source>
-        <translation type="vanished">&amp;Parametreler</translation>
-    </message>
-    <message>
-        <source>&amp;Details</source>
-        <translation type="vanished">&amp;Ayrıntılar</translation>
-    </message>
-    <message>
-        <source>Choose command</source>
-        <translation type="vanished">Komut seçin</translation>
-    </message>
-    <message>
-        <source>MP3 Conversion</source>
-        <translation type="vanished">MP3 dönüşümü</translation>
-    </message>
-    <message>
-        <source>Fade Ends</source>
-        <translation type="vanished">Sonları kıs</translation>
-    </message>
-    <message>
-        <source>Import Macro</source>
-        <translation type="vanished">Makroyu içe aktar</translation>
-    </message>
-    <message>
-        <source>Macro %s already exists. Would you like to replace it?</source>
-        <translation type="vanished">%1 makrosu zaten var. Değiştirmek ister misiniz?</translation>
-    </message>
-    <message>
-        <source>Export Macro</source>
-        <translation type="vanished">Makroyu dışa aktar</translation>
-    </message>
-    <message>
-        <source>Effect</source>
-        <translation type="vanished">Etki</translation>
-    </message>
-    <message>
-        <source>Menu Command (With Parameters)</source>
-        <translation type="vanished">Menü komutu (Parametreler ile)</translation>
-    </message>
-    <message>
-        <source>Menu Command (No Parameters)</source>
-        <translation type="vanished">Menü komutu (parametre olmadan)</translation>
-    </message>
-    <message>
-        <source>"%s" requires one or more tracks to be selected.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".</extracomment>
-        <translation type="vanished">"%1" için bir ya da bir kaç iz seçilmiş olmalıdır.</translation>
-    </message>
-    <message>
-        <source>Your batch command of %s was not recognized.</source>
-        <translation type="vanished">%1 toplu komutunuz anlaşılamadı.</translation>
-    </message>
-    <message>
-        <source>Applied Macro</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">Uygulanmış makro</translation>
-    </message>
-    <message>
-        <source>Apply Macro</source>
-        <translation type="vanished">Makro uygula</translation>
-    </message>
-    <message>
-        <source>Applied Macro '%s'</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">Uygulanmış makro '%1'</translation>
-    </message>
-    <message>
-        <source>Apply '%s'</source>
-        <translation type="vanished">'%1' uygula</translation>
-    </message>
-    <message>
-        <source>Apply %s with parameter(s)
-
-%s</source>
-        <translation type="vanished">%1 şu parametrelerle uygulanıyor
-
-%2</translation>
-    </message>
-    <message>
-        <source>Test Mode</source>
-        <translation type="vanished">Sınama kipi</translation>
-    </message>
-    <message>
-        <source>Apply %s</source>
-        <translation type="vanished">%1 uygula</translation>
-    </message>
-    <message>
-        <source>Macros Palette</source>
-        <translation type="vanished">Makro paleti</translation>
-    </message>
-    <message>
-        <source>Manage Macros</source>
-        <translation type="vanished">Makro yönetimi</translation>
-    </message>
-    <message>
-        <source>Select Macro</source>
-        <extracomment>i18n-hint: A macro is a sequence of commands that can be applied
-* to one or more audio files.</extracomment>
-        <translation type="vanished">Makro seçin</translation>
-    </message>
-    <message>
-        <source>Macro</source>
-        <extracomment>i18n-hint: This is the heading for a column in the edit macros dialog</extracomment>
-        <translation type="vanished">Makro</translation>
-    </message>
-    <message>
-        <source>Apply Macro to:</source>
-        <translation type="vanished">Makroyu şuna uygula:</translation>
-    </message>
-    <message>
-        <source>Apply macro to project</source>
-        <translation type="vanished">Makroyu projeye uygula</translation>
-    </message>
-    <message>
-        <source>&amp;Project</source>
-        <translation type="vanished">&amp;Proje</translation>
-    </message>
-    <message>
-        <source>Apply macro to files...</source>
-        <translation type="vanished">Makroyu dosyalara uygula...</translation>
-    </message>
-    <message>
-        <source>&amp;Files...</source>
-        <translation type="vanished">&amp;Dosyalar...</translation>
-    </message>
-    <message>
-        <source>&amp;Expand</source>
-        <extracomment>i18n-hint: The Expand button makes the dialog bigger, with more in it</extracomment>
-        <translation type="vanished">&amp;Genişlet</translation>
-    </message>
-    <message>
-        <source>No macro selected</source>
-        <translation type="vanished">Herhangi bir makro seçilmemiş</translation>
-    </message>
-    <message>
-        <source>Applying '%s' to current project</source>
-        <translation type="vanished">'%1 geçerli projeye uygulanıyor</translation>
-    </message>
-    <message>
-        <source>Please save and close the current project first.</source>
-        <translation type="vanished">Lütfen önce geçerli projeyi kaydedip kapatın.</translation>
-    </message>
-    <message>
-        <source>Select file(s) for batch processing...</source>
-        <translation type="vanished">Yığın işlemi için dosyaları seçin...</translation>
-    </message>
-    <message>
-        <source>Applying...</source>
-        <translation type="vanished">Uygulanıyor...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve</source>
-        <translation type="vanished">Kal&amp;dır</translation>
-    </message>
-    <message>
-        <source>&amp;Rename...</source>
-        <translation type="vanished">Yeniden adlandı&amp;r...</translation>
-    </message>
-    <message>
-        <source>Re&amp;store</source>
-        <translation type="vanished">K&amp;urtar</translation>
-    </message>
-    <message>
-        <source>I&amp;mport...</source>
-        <translation type="vanished">İç&amp;e aktar...</translation>
-    </message>
-    <message>
-        <source>E&amp;xport...</source>
-        <translation type="vanished">&amp;Dışa aktar...</translation>
-    </message>
-    <message>
-        <source>Edit Steps</source>
-        <translation type="vanished">Adımları düzenle</translation>
-    </message>
-    <message>
-        <source>Num</source>
-        <extracomment>i18n-hint: This is the number of the command in the list</extracomment>
-        <translation type="vanished">No</translation>
-    </message>
-    <message>
-        <source>Command  </source>
-        <translation type="vanished">Komut </translation>
-    </message>
-    <message>
-        <source>Parameters</source>
-        <translation type="vanished">Parametreler</translation>
-    </message>
-    <message>
-        <source>&amp;Insert</source>
-        <translation type="vanished">&amp;Ekle</translation>
-    </message>
-    <message>
-        <source>&amp;Edit...</source>
-        <translation type="vanished">Düz&amp;enle...</translation>
-    </message>
-    <message>
-        <source>Move &amp;Up</source>
-        <translation type="vanished">Y&amp;ukarı taşı</translation>
-    </message>
-    <message>
-        <source>Move &amp;Down</source>
-        <translation type="vanished">&amp;Aşağı taşı</translation>
-    </message>
-    <message>
-        <source>Shrin&amp;k</source>
-        <extracomment>i18n-hint: The Shrink button makes the dialog smaller, with less in it</extracomment>
-        <translation type="vanished">Sı&amp;kıştır</translation>
-    </message>
-    <message>
-        <source>- END -</source>
-        <extracomment>i18n-hint: This is the last item in a list.</extracomment>
-        <translation type="vanished">- SON -</translation>
-    </message>
-    <message>
-        <source>%s changed</source>
-        <translation type="vanished">%1 değişti</translation>
-    </message>
-    <message>
-        <source>Do you want to save the changes?</source>
-        <translation type="vanished">Değişiklikleri kaydetmek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Enter name of new macro</source>
-        <translation type="vanished">Yeni makronun adını yazın</translation>
-    </message>
-    <message>
-        <source>Name of new macro</source>
-        <translation type="vanished">Yeni makronun adı</translation>
-    </message>
-    <message>
-        <source>Name must not be blank</source>
-        <translation type="vanished">Ad boş bırakılamaz</translation>
-    </message>
-    <message>
-        <source>Names may not contain '%c' and '%c'</source>
-        <extracomment>i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.</extracomment>
-        <translation type="vanished">Adlar '%1' ve '%2' içeremez</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s?</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of a file.</extracomment>
-        <translation type="vanished">%1 silinecek. Emin misiniz?</translation>
-    </message>
-    <message>
-        <source>&amp;Repeat %s</source>
-        <translation type="vanished">%1 &amp;yinele</translation>
-    </message>
-    <message>
-        <source>Repeat Last Tool</source>
-        <translation type="vanished">Son aracı yinele</translation>
-    </message>
-    <message>
-        <source>&amp;Macro Manager</source>
-        <translation type="vanished">&amp;Makro yönetimi</translation>
-    </message>
-    <message>
-        <source>&amp;Apply Macro</source>
-        <translation type="vanished">M&amp;akroyu uygula</translation>
-    </message>
-    <message>
-        <source>Palette...</source>
-        <translation type="vanished">Palet...</translation>
-    </message>
-    <message>
-        <source>Script&amp;ables I</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">Be&amp;tiklenebilirler I</translation>
-    </message>
-    <message>
-        <source>Scripta&amp;bles II</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">&amp;Betiklenebilirler II</translation>
-    </message>
-    <message>
-        <source>Disk Block Size (KB):</source>
-        <translation type="vanished">Disk blok boyutu (KB):</translation>
-    </message>
-    <message>
-        <source>Number of Edits:</source>
-        <translation type="vanished">Düzenleme sayısı:</translation>
-    </message>
-    <message>
-        <source>Test Data Size (MB):</source>
-        <translation type="vanished">Deneme verisi boyutu (MB):</translation>
-    </message>
-    <message>
-        <source>Random Seed:</source>
-        <extracomment>i18n-hint: A "seed" is a number that initializes a
-pseudorandom number generating algorithm</extracomment>
-        <translation type="vanished">Rastgelelik tohumu::</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each block file</source>
-        <translation type="vanished">Blok dosyalarının ayrıntıları görüntülensin</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each editing operation</source>
-        <translation type="vanished">Düzenleme işlemlerinin ayrıntıları görüntülensin</translation>
-    </message>
-    <message>
-        <source>Run</source>
-        <translation type="vanished">Çalıştır</translation>
-    </message>
-    <message>
-        <source>benchmark.txt</source>
-        <extracomment>i18n-hint: Benchmark means a software speed test;
-leave untranslated file extension .txt</extracomment>
-        <translation type="vanished">benchmark.txt</translation>
-    </message>
-    <message>
-        <source>Export Benchmark Data as:</source>
-        <translation type="vanished">Hız sınaması verilerini şu şekilde dışa aktar:</translation>
-    </message>
-    <message>
-        <source>Block size should be in the range 1 - 1024 KB.</source>
-        <translation type="vanished">Blok boyutu 1 - 1024 KB arasında olmalıdır.</translation>
-    </message>
-    <message>
-        <source>Number of edits should be in the range 1 - 10000.</source>
-        <translation type="vanished">Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır.</translation>
-    </message>
-    <message>
-        <source>Test data size should be in the range 1 - 2000 MB.</source>
-        <translation type="vanished">Deneme verisi boyutu 1 - 2000 MB arasında olmalıdır.</translation>
-    </message>
-    <message>
-        <source>Using %lld chunks of %lld samples each, for a total of %.1f MB.
-</source>
-        <translation type="vanished">%1 parçada %2 örnek kullanılıyor toplam %3 MB.
-</translation>
-    </message>
-    <message>
-        <source>Preparing...
-</source>
-        <translation type="vanished">Hazırlanıyor...
-</translation>
-    </message>
-    <message>
-        <source>Expected len %lld, track len %lld.
-</source>
-        <translation type="vanished">Beklenen uzunluk %1, iz uzunluğu %2.
-</translation>
-    </message>
-    <message>
-        <source>Performing %d edits...
-</source>
-        <translation type="vanished">%1 düzenleme yapılıyor...
-</translation>
-    </message>
-    <message>
-        <source>Cut: %lld - %lld 
-</source>
-        <translation type="vanished">Kes: %1- %2
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-</source>
-        <translation type="vanished">%1 denemesi
-</translation>
-    </message>
-    <message>
-        <source>Cut (%lld, %lld) failed.
-</source>
-        <translation type="vanished">Kesme (%1, %2) işlemi yapılamadı.
-</translation>
-    </message>
-    <message>
-        <source>Paste: %lld
-</source>
-        <translation type="vanished">Yapıştır: %1
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-Failed on Paste.
-</source>
-        <translation type="vanished">%1 denemesi
-Yapıştırılamadı.
-</translation>
-    </message>
-    <message>
-        <source>Time to perform %d edits: %ld ms
-</source>
-        <translation type="vanished">%1 düzenlemeyi işleme süresi: %2 ms
-</translation>
-    </message>
-    <message>
-        <source>Checking file pointer leaks:
-</source>
-        <translation type="vanished">Dosya gösterici kaçakları denetleniyor:
-</translation>
-    </message>
-    <message>
-        <source>Track # blocks: %ld
-</source>
-        <translation type="vanished">İz blok sayısı: %1
-</translation>
-    </message>
-    <message>
-        <source>Disk # blocks: 
-</source>
-        <translation type="vanished">Disk blok sayısı: 
-</translation>
-    </message>
-    <message>
-        <source>Doing correctness check...
-</source>
-        <translation type="vanished">Düzetme denetimi yapılıyor...
-</translation>
-    </message>
-    <message>
-        <source>Bad: chunk %lld sample %lld
-</source>
-        <translation type="vanished">Kötü: Parça %1 Örnek %2
-</translation>
-    </message>
-    <message>
-        <source>Passed correctness check!
-</source>
-        <translation type="vanished">Düzetme denetimi tamamlandı!
-</translation>
-    </message>
-    <message>
-        <source>Errors in %d/%lld chunks
-</source>
-        <translation type="vanished">%1/%2 parçada sorun var
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data: %ld ms
-</source>
-        <translation type="vanished">Tüm verilerin denetlenme süresi: %1 ms
-</translation>
-    </message>
-    <message>
-        <source>Reading data again...
-</source>
-        <translation type="vanished">Veriler yeniden okunuyor...
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data (2): %ld ms
-</source>
-        <translation type="vanished">Tüm verilerin denetlenme süresi (2): %1 ms
-</translation>
-    </message>
-    <message>
-        <source>At 44100 Hz, %d bytes per sample, the estimated number of
- simultaneous tracks that could be played at once: %.1f
-</source>
-        <translation type="vanished">44100 Hz frekansında, her örnek için %1 bayt için aynı anda
- eşzamanlı olarak çalınabilecek iz sayısı: %2
-</translation>
-    </message>
-    <message>
-        <source>TEST FAILED!!!
-</source>
-        <translation type="vanished">DENEME BAŞARISIZ!!!
-</translation>
-    </message>
-    <message>
-        <source>Benchmark completed successfully.
-</source>
-        <translation type="vanished">Hız sınırı değerlendirmesi tamamlandı.
-</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Cmd + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">%1 için kullanılacak sesi seçin (örneğin Tümünü Seçmek için Cmd + A) ve yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">%1 için kullanılacak sesi seçin (örneğin Tümünü Seçmek için Ctrl + A) ve yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>No Audio Selected</source>
-        <translation type="vanished">Herhangi bir ses seçilmemiş</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use.
-
-1. Select audio that represents noise and use %s to get your 'noise profile'.
-
-2. When you have got your noise profile, select the audio you want to change
-and use %s to change that audio.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.</extracomment>
-        <translation type="vanished">%1 için kullanılacak sesi seçin.
-
-1. Gürültüyü temsil eden sesi seçin ve 'gürültü profilinizi' oluşturmak için %2 kullanın.
-
-2. Gürültü profilinizi oluşturduktan sonra, değiştirmek istediğiniz sesi seçin
-ve bu sesi değiştirmek için %3 kullanın.</translation>
-    </message>
-    <message>
-        <source>You can only do this when playing and recording are
-stopped. (Pausing is not sufficient.)</source>
-        <translation type="vanished">Bu işlem yalnızca oynatma ya da kayıt durdurulmuş ise
-yapılabilir. (Beklemede bırakmak yeterli değildir.)</translation>
-    </message>
-    <message>
-        <source>You must first select some stereo audio to perform this
-action. (You cannot use this with mono.)</source>
-        <translation type="vanished">Bu işlemi yapabilmek için önce çift kanallı sesler
-seçmelisiniz. (Tek kanallı seste kullanılamaz.)</translation>
-    </message>
-    <message>
-        <source>You must first select some audio to perform this action.
-(Selecting other kinds of track won't work.)</source>
-        <translation type="vanished">Bu işlemi yapabilmek için önce bazı sesler
-seçmelisiniz. (Başka iz türleri ile kullanılamaz).</translation>
-    </message>
-    <message>
-        <source>Audacity Support Data</source>
-        <translation type="vanished">Audacity destek verileri</translation>
-    </message>
-    <message>
-        <source>Report generated to:</source>
-        <translation type="vanished">Rapor şuraya oluşturuldu:</translation>
-    </message>
-    <message>
-        <source>Removing Dependencies</source>
-        <translation type="vanished">Bağımlılıklar kaldırılıyor</translation>
-    </message>
-    <message>
-        <source>Copying audio data into project...</source>
-        <translation type="vanished">Ses verisi projeye kopyalanıyor...</translation>
-    </message>
-    <message>
-        <source>Project Depends on Other Audio Files</source>
-        <translation type="vanished">Proje başka ses dosyalarına bağlı</translation>
-    </message>
-    <message>
-        <source>Copying these files into your project will remove this dependency.
-This is safer, but needs more disk space.</source>
-        <translation type="vanished">Aşağıdaki dosyaları projenize kopyalamak bu bağımlılığı kaldıracak.
-Bu işlem daha fazla disk alanına gerek duyar, ancak daha güvenlidir.</translation>
-    </message>
-    <message>
-        <source>
-
-Files shown as MISSING have been moved or deleted and cannot be copied.
-Restore them to their original location to be able to copy into project.</source>
-        <translation type="vanished">
-
-KAYIP olarak görüntülenen dosyalar taşınmış ya da silinmiş olduğundan kopyalanamıyor.
-Bunları projenin içine kopyalayabilmek için özgün konumlarına geri yükleyin.</translation>
-    </message>
-    <message>
-        <source>Project Dependencies</source>
-        <translation type="vanished">Proje bağımlılıkları</translation>
-    </message>
-    <message>
-        <source>Audio File</source>
-        <translation type="vanished">Ses dosyası</translation>
-    </message>
-    <message>
-        <source>Disk Space</source>
-        <translation type="vanished">Disk alanı</translation>
-    </message>
-    <message>
-        <source>Copy Selected Files</source>
-        <translation type="vanished">Seçilmiş dosyaları kopyala</translation>
-    </message>
-    <message>
-        <source>Cancel Save</source>
-        <translation type="vanished">Kaydetmeyi iptal et</translation>
-    </message>
-    <message>
-        <source>Save Without Copying</source>
-        <translation type="vanished">Kopyalamadan kaydet</translation>
-    </message>
-    <message>
-        <source>Do Not Copy</source>
-        <translation type="vanished">Kopyalama</translation>
-    </message>
-    <message>
-        <source>Copy All Files (Safer)</source>
-        <translation type="vanished">Tüm dosyaları kopyala (daha güvenli)</translation>
-    </message>
-    <message>
-        <source>Whenever a project depends on other files:</source>
-        <translation type="vanished">Bir proje başka dosyalara bağlı olduğunda:</translation>
-    </message>
-    <message>
-        <source>Ask me</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Bana sor</translation>
-    </message>
-    <message>
-        <source>Always copy all files (safest)</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Her zaman tüm dosyaları kopyala (en güvenlisi)</translation>
-    </message>
-    <message>
-        <source>Never copy any files</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Asla hiçbir dosyayı kopyalama</translation>
-    </message>
-    <message>
-        <source>MISSING %s</source>
-        <translation type="vanished">EKSİK %1</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Names to Clipboard</source>
-        <translation type="vanished">Adları panoya &amp;kopyala</translation>
-    </message>
-    <message>
-        <source>"%s", "%s", "%s"
-</source>
-        <translation type="vanished">"%1", "%2", "%3"
-</translation>
-    </message>
-    <message>
-        <source>Missing</source>
-        <translation type="vanished">Eksik</translation>
-    </message>
-    <message>
-        <source>If you proceed, your project will not be saved to disk. Is this what you want?</source>
-        <translation type="vanished">İşlemi sürdürürseniz, projeniz diske kaydedilmeyecek. Ne yapmak istersiniz?</translation>
-    </message>
-    <message>
-        <source>Your project is self-contained; it does not depend on any external audio files. 
-
-Some older Audacity projects may not be self-contained, and care 
-is needed to keep their external dependencies in the right place.
-New projects will be self-contained and are less risky.</source>
-        <translation type="vanished">Projenizin tüm kaynakları içinde, herhangi bir dış dosyaya bağımlılığı yok. 
-
-Bazı eski Audacity projelerinin tüm kaynakları içinde olmayabilir ve dış 
-dosya bağımlılıklarının doğru yerde bulunduğundan emin olunması gerekebilir. 
-Yeni projelerin tüm kaynakları içinde olduğundan zarar görme riski daha düşüktür.</translation>
-    </message>
-    <message>
-        <source>Dependency Check</source>
-        <translation type="vanished">Bağımlılık denetimi</translation>
-    </message>
-    <message>
-        <source>Dropouts</source>
-        <extracomment>i18n-hint:  A name given to a track, appearing as its menu button.
-The translation should be short or else it will not display well.
-At most, about 11 Latin characters.
-Dropout is a loss of a short sequence of audio sample data from the
-recording</extracomment>
-        <translation type="vanished">Kesintiler</translation>
-    </message>
-    <message>
-        <source>Recorded audio was lost at the labeled locations. Possible causes:
-
-Other applications are competing with Audacity for processor time
-
-You are saving directly to a slow external storage device
-</source>
-        <translation type="vanished">Kaydedilen ses etiketlenmiş konumlarda kaybolmuş. Olası nedenler:
-
-Diğer uygulamalar Audacity uygulamasından işlemci zamanını çalıyor olabilir
-
-Doğrudan yavaş bir dış disk sürücüsüne kayıt yapıyor olabilirsiniz
-</translation>
-    </message>
-    <message>
-        <source>Turn off dropout detection</source>
-        <translation type="vanished">Kesinti algılama devre dışı bırakılsın</translation>
-    </message>
-    <message>
-        <source>Frequency Analysis</source>
-        <translation type="vanished">Frekans çözümlemesi</translation>
-    </message>
-    <message>
-        <source>Spectrum</source>
-        <translation type="vanished">Spektrum</translation>
-    </message>
-    <message>
-        <source>Standard Autocorrelation</source>
-        <translation type="vanished">Standart özilinti</translation>
-    </message>
-    <message>
-        <source>Cuberoot Autocorrelation</source>
-        <translation type="vanished">Küpkök otobağıntılama</translation>
-    </message>
-    <message>
-        <source>Enhanced Autocorrelation</source>
-        <translation type="vanished">Gelişmiş özilinti</translation>
-    </message>
-    <message>
-        <source>Cepstrum</source>
-        <extracomment>i18n-hint: This is a technical term, derived from the word
-* "spectrum".  Do not translate it unless you are sure you
-* know the correct technical word in your language.</extracomment>
-        <translation type="vanished">Kepstrum</translation>
-    </message>
-    <message>
-        <source>%s window</source>
-        <extracomment>i18n-hint: This refers to a "window function",
-* such as Hann or Rectangular, used in the
-* Frequency analyze dialog box.</extracomment>
-        <translation type="vanished">%1 aralığı</translation>
-    </message>
-    <message>
-        <source>Linear frequency</source>
-        <translation type="vanished">Doğrusal frekans</translation>
-    </message>
-    <message>
-        <source>Log frequency</source>
-        <translation type="vanished">Günlükleme sıklığı</translation>
-    </message>
-    <message>
-        <source>Scroll</source>
-        <translation type="vanished">Kaydır</translation>
-    </message>
-    <message>
-        <source>Cursor:</source>
-        <translation type="vanished">İmleç:</translation>
-    </message>
-    <message>
-        <source>Peak:</source>
-        <translation type="vanished">Tepe:</translation>
-    </message>
-    <message>
-        <source>&amp;Grids</source>
-        <translation type="vanished">Iz&amp;garalar</translation>
-    </message>
-    <message>
-        <source>&amp;Algorithm:</source>
-        <translation type="vanished">&amp;Algoritma:</translation>
-    </message>
-    <message>
-        <source>&amp;Size:</source>
-        <translation type="vanished">&amp;Boyut:</translation>
-    </message>
-    <message>
-        <source>&amp;Export...</source>
-        <translation type="vanished">&amp;Dışa aktar...</translation>
-    </message>
-    <message>
-        <source>&amp;Function:</source>
-        <translation type="vanished">İş&amp;lev:</translation>
-    </message>
-    <message>
-        <source>&amp;Axis:</source>
-        <translation type="vanished">&amp;Eksen:</translation>
-    </message>
-    <message>
-        <source>&amp;Replot...</source>
-        <translation type="vanished">&amp;Yeniden çiz...</translation>
-    </message>
-    <message>
-        <source>Not enough data selected.</source>
-        <translation type="vanished">Yeterli veri seçilmemiş.</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %d dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %.1f dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 saniye (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %.3f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 saniye (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>spectrum.txt</source>
-        <translation type="vanished">spectrum.txt</translation>
-    </message>
-    <message>
-        <source>Export Spectral Data As:</source>
-        <translation type="vanished">Spektral veriyi şu şekilde dışa aktar:</translation>
-    </message>
-    <message>
-        <source>Frequency (Hz)	Level (dB)</source>
-        <translation type="vanished">Frekans (Hz)	Düzey (dB)</translation>
-    </message>
-    <message>
-        <source>Lag (seconds)	Frequency (Hz)	Level</source>
-        <translation type="vanished">Gecikme (saniye)	Frekans (Hz)	Düzey</translation>
-    </message>
-    <message>
-        <source>Plot Spectrum...</source>
-        <translation type="vanished">Spektrum çiz...</translation>
-    </message>
-    <message>
-        <source>Save %s</source>
-        <translation type="vanished">%1 kaydet</translation>
-    </message>
-    <message>
-        <source>Unable to save %s</source>
-        <translation type="vanished">%1 kaydedilemedi</translation>
-    </message>
-    <message>
-        <source>&amp;Manage History</source>
-        <translation type="vanished">&amp;Geçmişi yönet</translation>
-    </message>
-    <message>
-        <source>Used Space</source>
-        <translation type="vanished">Kullanılan alan</translation>
-    </message>
-    <message>
-        <source>&amp;Total space used</source>
-        <translation type="vanished">&amp;Kullanılan toplam alan</translation>
-    </message>
-    <message>
-        <source>&amp;Undo levels available</source>
-        <translation type="vanished">K&amp;ullanılabilecek geri alma noktaları</translation>
-    </message>
-    <message>
-        <source>&amp;Levels to discard</source>
-        <translation type="vanished">&amp;Yok sayılacak noktalar</translation>
-    </message>
-    <message>
-        <source>&amp;Discard</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Yok say</translation>
-    </message>
-    <message>
-        <source>Clip&amp;board space used</source>
-        <translation type="vanished">Kullanılan &amp;pano alanı</translation>
-    </message>
-    <message>
-        <source>D&amp;iscard</source>
-        <translation type="vanished">&amp;Yok say</translation>
-    </message>
-    <message>
-        <source>&amp;Compact</source>
-        <translation type="vanished">&amp;Sıkıştır</translation>
-    </message>
-    <message>
-        <source>Compacting actually freed %s of disk space.</source>
-        <translation type="vanished">Sıkıştırma ile %1 disk alanı kazanıldı.</translation>
-    </message>
-    <message>
-        <source>&amp;History</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the various editing steps
-that have been taken.</extracomment>
-        <translation type="vanished">&amp;Geçmiş</translation>
-    </message>
-    <message>
-        <source>New Plugins</source>
-        <translation type="vanished">Yeni uygulama ekleri</translation>
-    </message>
-    <message>
-        <source>Incompatible plugin(s) found</source>
-        <translation type="vanished">Uyumsuz uygulama ekleri bulundu</translation>
-    </message>
-    <message>
-        <source>&amp;Manage Plugins</source>
-        <translation type="vanished">&amp;Uygulama ekleri yönetimi</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using "Manage Plugins". Otherwise, select "Continue".</source>
-        <translation type="vanished">Audacity, yüklenemeyen %1 uyumsuz eklenti buldu. Herhangi bir duraklama veya çökmeyi önlemek için bu eklentiler kapatıldı. Bu eklentileri yine de kullanmayı denemek istiyorsanız, "Eklenti yönetimi" bölümünden bu eklentileri açabilirsiniz. Bunu istemiyorsanız "İlerle" üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes.</source>
-        <translation type="vanished">Audacity, yüklenemeyen uyumsuz uygulama ekleri buldu %1. Herhangi bir duraklama veya çökmeyi önlemek için bu uygulama ekleri kapatıldı.</translation>
-    </message>
-    <message>
-        <source>Journal recording failed</source>
-        <translation type="vanished">Günlük kaydedilemedi</translation>
-    </message>
-    <message>
-        <source>Edit Labels</source>
-        <translation type="vanished">Etiketleri düzenle</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Başlangıç zamanı</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Bitiş zamanı</translation>
-    </message>
-    <message>
-        <source>Low Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Düşük frekans</translation>
-    </message>
-    <message>
-        <source>High Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Yüksek frekans</translation>
-    </message>
-    <message>
-        <source>New...</source>
-        <translation type="vanished">Yeni...</translation>
-    </message>
-    <message>
-        <source>Press F2 or double click to edit cell contents.</source>
-        <translation type="vanished">Hücre içeriğini düzenlemek için F2 tuşuna basın ya da çift tıklayın.</translation>
-    </message>
-    <message>
-        <source>Select a text file containing labels</source>
-        <translation type="vanished">Etiketleri içeren metin dosyasını seçin</translation>
-    </message>
-    <message>
-        <source>No labels to export.</source>
-        <translation type="vanished">Dışa aktarılacak bir etiket yok.</translation>
-    </message>
-    <message>
-        <source>Export Labels As:</source>
-        <translation type="vanished">Etiketleri şu şekilde dışa aktar:</translation>
-    </message>
-    <message>
-        <source>New Label Track</source>
-        <translation type="vanished">Yeni etiket izi</translation>
-    </message>
-    <message>
-        <source>Enter track name</source>
-        <translation type="vanished">İz adını yazın</translation>
-    </message>
-    <message>
-        <source>Exported Label Style:</source>
-        <translation type="vanished">Dışa aktarılan etiket biçemi:</translation>
-    </message>
-    <message>
-        <source>Audacity First Run</source>
-        <extracomment>i18n-hint: Title on a dialog indicating that this is the first
-* time Audacity has been run.</extracomment>
-        <translation type="vanished">Audacity ilk kez çalıştırıldı</translation>
-    </message>
-    <message>
-        <source>Choose Language for Audacity to use:</source>
-        <translation type="vanished">Audacity içinde kullanacağınız dili seçin:</translation>
-    </message>
-    <message>
-        <source>The language you have chosen, %s (%s), is not the same as the system language, %s (%s).</source>
-        <extracomment>i18n-hint: The %s's are replaced by translated and untranslated
-* versions of language names.</extracomment>
-        <translation type="vanished">Seçtiğiniz %1 (%2) dili, %3 (%4) sistem diliniz, ile aynı değil.</translation>
-    </message>
-    <message>
-        <source>Error Converting Legacy Project File</source>
-        <translation type="vanished">Eski proje dosyası dönüştürülürken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Converted a 1.0 project file to the new format.
-The old file has been saved as '%s'</source>
-        <translation type="vanished">1.0 proje dosyası yeni biçime dönüştürüldü.
-Eski dosya '%1' olarak kaydedildi</translation>
-    </message>
-    <message>
-        <source>Opening Audacity Project</source>
-        <translation type="vanished">Audacity projesi açılıyor</translation>
-    </message>
-    <message>
-        <source>The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command.</source>
-        <translation type="vanished">Varsayılan kısayolları yeni ya da değiştirilmiş ve sizin tarafınızdan başka bir komuta atanmış olduğundan şu komutların kısayolları kaldırıldı.</translation>
-    </message>
-    <message>
-        <source>Shortcuts have been removed</source>
-        <translation type="vanished">Kısayollar kaldırıldı</translation>
-    </message>
-    <message>
-        <source>Audacity Mixer%s</source>
-        <translation type="vanished">Audacity karıştırıcı %1</translation>
-    </message>
-    <message>
-        <source>Velocity</source>
-        <extracomment>i18n-hint: title of the MIDI Velocity slider
-i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks</extracomment>
-        <translation type="vanished">Hız</translation>
-    </message>
-    <message>
-        <source>Musical Instrument</source>
-        <translation type="vanished">Muzik enstrumanı</translation>
-    </message>
-    <message>
-        <source>Mute</source>
-        <extracomment>i18n-hint: This is on a button that will silence this track.</extracomment>
-        <translation type="vanished">Kıs</translation>
-    </message>
-    <message>
-        <source>Solo</source>
-        <extracomment>i18n-hint: This is on a button that will silence all the other tracks.</extracomment>
-        <translation type="vanished">Solo</translation>
-    </message>
-    <message>
-        <source>Signal Level Meter</source>
-        <translation type="vanished">İşaret düzeyi ölçer</translation>
-    </message>
-    <message>
-        <source>Moved gain slider</source>
-        <translation type="vanished">Kazanç düğmesi oynatıldı</translation>
-    </message>
-    <message>
-        <source>Moved velocity slider</source>
-        <translation type="vanished">Hız düğmesi oynatıldı</translation>
-    </message>
-    <message>
-        <source>Moved pan slider</source>
-        <translation type="vanished">Pan düğmesi oynatıldı</translation>
-    </message>
-    <message>
-        <source>&amp;Mixer</source>
-        <translation type="vanished">&amp;Karıştırıcı</translation>
-    </message>
-    <message>
-        <source>Effect or Command at %s failed to register:
-%s</source>
-        <translation type="vanished">%1 zamanındaki etki ya da komut kaydedilemedi:
-%2</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="vanished">Kapat</translation>
-    </message>
-    <message>
-        <source>Enable</source>
-        <translation type="vanished">Etkinleştir</translation>
-    </message>
-    <message>
-        <source>Generator</source>
-        <translation type="vanished">Üreteç</translation>
-    </message>
-    <message>
-        <source>Analyzer</source>
-        <translation type="vanished">İnceleyici</translation>
-    </message>
-    <message>
-        <source>Tool</source>
-        <translation type="vanished">Araç</translation>
-    </message>
-    <message>
-        <source>Manage Plugins</source>
-        <translation type="vanished">Uygulama ekleri yönetimi</translation>
-    </message>
-    <message>
-        <source>Native Audacity</source>
-        <translation type="vanished">Doğal Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Show:</source>
-        <translation type="vanished">&amp;Görüntüle:</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="vanished">&amp;Tür:</translation>
-    </message>
-    <message>
-        <source>C&amp;ategory:</source>
-        <translation type="vanished">K&amp;ategori:</translation>
-    </message>
-    <message>
-        <source>Searc&amp;h:</source>
-        <translation type="vanished">Ara&amp;ma:</translation>
-    </message>
-    <message>
-        <source>Plugin</source>
-        <translation type="vanished">Uygulama eki</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan</source>
-        <translation type="vanished">&amp;Yeniden tara</translation>
-    </message>
-    <message>
-        <source>&amp;Get more effects...</source>
-        <translation type="vanished">Başka etkiler alın...</translation>
-    </message>
-    <message>
-        <source>Searching for plugins</source>
-        <translation type="vanished">Uygulama ekleri aranıyor</translation>
-    </message>
-    <message>
-        <source>Actual Rate: %d</source>
-        <translation type="vanished">Geçerli hız: %1</translation>
-    </message>
-    <message>
-        <source>Error opening sound device.
-Try changing the audio host, playback device and the project sample rate.</source>
-        <translation type="vanished">Ses aygıtı açılırken sorun çıktı.
-Ses sunucusunu, oynatma aygıtını ve proje örnekleme hızını değiştirmeyi deneyin.</translation>
-    </message>
-    <message>
-        <source>Mismatched Sampling Rates</source>
-        <translation type="vanished">Örnekleme hızları uyumlu değil</translation>
-    </message>
-    <message>
-        <source>Too few tracks are selected for recording at this sample rate.
-(Audacity requires two channels at the same sample rate for
-each stereo track)</source>
-        <translation type="vanished">Bu örnekleme hızında kayıt için çok az sayıda iz seçilmiş.
-(Audacity, her çift kanallı iz için aynı örnekleme hızında
-iki kanal ister)</translation>
-    </message>
-    <message>
-        <source>Too Few Compatible Tracks Selected</source>
-        <translation type="vanished">Seçilmiş uyumlu iz sayısı çok az</translation>
-    </message>
-    <message>
-        <source>%s.%d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>Recorded Audio</source>
-        <translation type="vanished">Kaydedilmiş ses</translation>
-    </message>
-    <message>
-        <source>Project check read faulty Sequence tags.</source>
-        <extracomment>i18n-hint: The audacity project file is XML and has 'tags' in it,
-rather like html tags &lt;something&gt;some stuff&lt;/something&gt;.
-This error message is about the tags that hold the sequence information.
-The error message is confusing to users in English, and could just say
-"Found problems with &lt;sequence&gt; when checking project file."</extracomment>
-        <translation type="vanished">Proje denetimi hatalı sıralama etiketleri okudu.</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no changes</source>
-        <translation type="vanished">Projeyi bir değişiklik yapmadan hemen kapat</translation>
-    </message>
-    <message>
-        <source>Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you "Close project immediately" on further error alerts.</source>
-        <translation type="vanished">Günlüğe kaydedilen onarımlarla ilerleniyor ve başka sorun var mı bakılıyor. Bu işlem, daha sonraki sorun iletilerinde "Projeyi hemen kapat" komutunu seçmedikçe projenizi geçerli haliyle kaydedecek.</translation>
-    </message>
-    <message>
-        <source>Warning - Problems Reading Sequence Tags</source>
-        <translation type="vanished">Dikkat - Sıralama etiketlerini okumada sorunlar var</translation>
-    </message>
-    <message>
-        <source>Inspecting project file data</source>
-        <translation type="vanished">Proje dosyası verisi araştırılıyor</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing external audio file(s) 
-('aliased files'). There is no way for Audacity 
-to recover these files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence. 
-
-If you choose the third option, this will save the 
-project in its current state, unless you "Close 
-project immediately" on further error alerts.</source>
-        <translation type="vanished">"%1" klasöründe yapılan proje denetimi 
-%2 kayıp dış dosya ('takma adlı dosyalar') 
-algıladı. Bu dosyaların Audacity tarafından 
-otomatik olarak kurtarılmasının bir yolu yok. 
-
-Aşağıdaki birinci ya da ikinci seçeneği 
-seçerseniz, kayıp dosyaları daha önce bulundukları 
-yerlerden bulup geri yüklemeyi deneyebilirsiniz. 
-
-İkinci seçenek için dalga şeklinin sessizliği 
-göstermeyebileceğini unutmayın.
-Üçüncü seçeneği seçtiğinizde ve daha sonraki 
-sorun iletilerinde "Projeyi hemen kapat" komutunu 
-seçmezseniz, proje şimdiki şekliyle kaydedilir.</translation>
-    </message>
-    <message>
-        <source>Treat missing audio as silence (this session only)</source>
-        <translation type="vanished">Kayıp veriyi sessizlik olarak kabul et (yalnızca bu oturum için)</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately).</source>
-        <translation type="vanished">Kayıp sesi sessizlik ile değiştir (hemen kalıcı olacak).</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Aliased File(s)</source>
-        <translation type="vanished">Dikkat - Kayıp takma adlı dosyalar</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing alias (.auf) blockfile(s). 
-Audacity can fully regenerate these files 
-from the current audio in the project.</source>
-        <translation type="vanished">Proje denetimi "%1" klasöründe 
-%2 kayıp takma adlı blok dosyaları (.auf) algıladı. 
-Audacity bu dosyaları projedeki özgün ses 
-verisini kullanarak tümüyle yeniden oluşturabilir.</translation>
-    </message>
-    <message>
-        <source>Regenerate alias summary files (safe and recommended)</source>
-        <translation type="vanished">Takma adlı özet dosyalarını yeniden oluştur (güvenli ve önerilen)</translation>
-    </message>
-    <message>
-        <source>Fill in silence for missing display data (this session only)</source>
-        <translation type="vanished">Kayıp görünüm verisini sessizlikle doldur (yalnızca bu oturum için)</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no further changes</source>
-        <translation type="vanished">Hiç bir değişiklik yapmadan projeyi hemen kapat</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Alias Summary File(s)</source>
-        <translation type="vanished">Dikkat - Kayıp takma adlı özet dosyaları</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing audio data (.au) blockfile(s), 
-probably due to a bug, system crash, or accidental 
-deletion. There is no way for Audacity to recover 
-these missing files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence.</source>
-        <translation type="vanished">"%1" klasöründe yapılan proje denetimi 
-%2 kayıp dış dosyalar ('takma adlı dosyalar') 
-algıladı. Bu dosyaların Audacity tarafından 
-otomatik olarak kurtarılmasının bir yolu yok. 
-
-Aşağıdaki birinci ya da ikinci seçeneği 
-seçerseniz, kayıp dosyaları daha önce bulundukları 
-yerlerden bulup geri yüklemeyi deneyebilirsiniz. 
-
-İkinci seçenek için dalga şeklinin sessizliği 
-göstermeyebileceğini unutmayın.
-Üçüncü seçeneği seçtiğinizde ve daha sonraki 
-sorun iletilerinde "Projeyi hemen kapat" komutunu 
-seçmezseniz, proje şimdiki şekliyle kaydedilir.</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately)</source>
-        <translation type="vanished">Kayıp sesi sessizlik ile değiştir (kalıcı olarak)</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Audio Data Block File(s)</source>
-        <translation type="vanished">Dikkat - Kayıp ses veri blok dosyaları</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-found %d orphan block file(s). These files are 
-unused by this project, but might belong to other projects. 
-They are doing no harm and are small.</source>
-        <translation type="vanished">Proje denetimi "%1" klasöründe 
-%2 sahipsiz blok dosyaları buldu. Bu dosyalar 
-bu projede kullanılmıyor, ancak diğer projelere ait olabilir. 
-Bunlar küçük dosyalar ve bir zararları dokunmaz.</translation>
-    </message>
-    <message>
-        <source>Continue without deleting; ignore the extra files this session</source>
-        <translation type="vanished">Silmeden ilerle; bu oturumdaki fazladan dosyaları yok say</translation>
-    </message>
-    <message>
-        <source>Delete orphan files (permanent immediately)</source>
-        <translation type="vanished">Sahipsiz dosyaları sil (güvenli ve önerilen)</translation>
-    </message>
-    <message>
-        <source>Warning - Orphan Block File(s)</source>
-        <translation type="vanished">Dikkat - Sahipsiz blok dosyaları</translation>
-    </message>
-    <message>
-        <source>Cleaning up unused directories in project data</source>
-        <translation type="vanished">Proje verisinde kullanılmayan klasörler temizleniyor</translation>
-    </message>
-    <message>
-        <source>Project check found file inconsistencies during automatic recovery.
-
-Select 'Help &gt; Diagnostics &gt; Show Log...' to see details.</source>
-        <translation type="vanished">Proje denetimi otomatik kurtarma sırasında dosya tutarsızlıkları buldu.
-
-Ayrıntıları görmek için 'Yardım &gt; Tanılama &gt; Günlüğü Görüntüle...' yolunu izleyin.</translation>
-    </message>
-    <message>
-        <source>Warning: Problems in Automatic Recovery</source>
-        <translation type="vanished">Dikkat: Otomatik kurtarma sırasında sorun çıktı</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-As a result, some realtime effects may be missing.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to open a project created by Audacity version prior to 3.4.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">%1
-Bu özellik Audacity 3.3.3 sonrasındaki sürümlerde desteklenmiyor.
-Bu çift kanallı parçalar tek kanallı parçalara bölünmüştür.
-Sonuç olarak bazı gerçek zamanlı etkiler eksik olabilir.
-Lütfen kaydetmeden önce her şeyin amaçlandığı gibi çalıştığını doğrulayın.</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot.</source>
-        <translation type="vanished">Audacity son kullanıldığında bu proje doğru şekilde kaydedilmemiş.
-Son yedekleme noktası geri yüklendi.</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot, but you must save it
-to preserve its contents.</source>
-        <translation type="vanished">Audacity son kullanıldığında bu proje doğru şekilde kaydedilmemiş.
-Son yedekleme noktası geri yüklendi ancak içeriğini
-korumak için projeyi kaydetmelisiniz.</translation>
-    </message>
-    <message>
-        <source>Project Recovered</source>
-        <translation type="vanished">Proje kurtarıldı</translation>
-    </message>
-    <message>
-        <source>Projects cannot be saved to FAT drives.</source>
-        <translation type="vanished">Projeler FAT olarak biçimlendirilmiş sürücülere kaydedilemez.</translation>
-    </message>
-    <message>
-        <source>Insufficient Disk Space</source>
-        <translation type="vanished">Disk alanı yetersiz</translation>
-    </message>
-    <message>
-        <source>The project size exceeds the available free space on the target disk.
-
-Please select a different disk with more free space.</source>
-        <translation type="vanished">Proje boyutu hedef diskteki boş alandan büyük.
-
-Lütfen daha fazla boş alanı olan başka bir disk seçin.</translation>
-    </message>
-    <message>
-        <source>The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem.</source>
-        <translation type="vanished">Proje FAT32 olarak biçimlendirilmiş dosya sisteminin izin verdiği en büyük 4GB boyutundan büyük.</translation>
-    </message>
-    <message>
-        <source>Saved %s</source>
-        <translation type="vanished">%1 kaydedildi</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the file name provided would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">Verdiğiniz ad başka bir proje ile aynı olduğundan proje kaydedilemedi.
-Lütfen özgün bir ad kullanarak yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>%sSave Project "%s" As...</source>
-        <translation type="vanished">%1Projeyi farklı "%2" kaydet...</translation>
-    </message>
-    <message>
-        <source>   Do you want to overwrite the project:
-"%s"?
-
-   If you select "Yes" the project
-"%s"
-   will be irreversibly overwritten.</source>
-        <extracomment>i18n-hint: In each case, %s is the name
-of the file being overwritten.</extracomment>
-        <translation type="vanished"> Şu projenin üzerine yazılmasını ister misiniz:
-"%1"?
-
- "Evet" seçerseniz geri dönülemeyecek şekilde 
-"%2"
- projesinin üzerine yazılacak.</translation>
-    </message>
-    <message>
-        <source>Overwrite Project Warning</source>
-        <extracomment>i18n-hint: Heading: A warning that a project is about to be overwritten.</extracomment>
-        <translation type="vanished">Proje üzerine yazma uyarısı</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the selected project is open in another window.
-Please try again and select an original name.</source>
-        <translation type="vanished">Proje, seçilmiş proje başka bir pencerede açık olduğundan kaydedilemedi.
-Lütfen özgün bir ad kullanarak yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>%sSave Copy of Project "%s" As...</source>
-        <translation type="vanished">%1 "%2" projesinin kopyasını farklı kaydet...</translation>
-    </message>
-    <message>
-        <source>Saving a copy must not overwrite an existing saved project.
-Please try again and select an original name.</source>
-        <translation type="vanished">Kopya kaydedilirken var olan kaydedilmiş bir projenin üzerine yazılmamalıdır.
-Lütfen özgün bir ad seçerek yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>Error Saving Copy of Project</source>
-        <translation type="vanished">Projenin kopyası kaydedilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Select one or more files</source>
-        <translation type="vanished">Bir ya da daha fazla dosya seçin</translation>
-    </message>
-    <message>
-        <source>%s is already open in another window.</source>
-        <translation type="vanished">%1 başka bir pencerede zaten açık.</translation>
-    </message>
-    <message>
-        <source>Error Opening Project</source>
-        <translation type="vanished">Proje açılırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>You are trying to open an automatically created backup file.
-Doing this may result in severe data loss.
-
-Please open the actual Audacity project file instead.</source>
-        <translation type="vanished">Otomatik olarak oluşturulmuş bir yedek dosyasını açmayı deniyorsunuz.
-Bu işlem ciddi büyüklükte veri kaybına neden olabilir.
-
-Bunun yerine güncel Audacity proje dosyasını açmayı deneyin.</translation>
-    </message>
-    <message>
-        <source>Warning - Backup File Detected</source>
-        <translation type="vanished">Dikkat - Yedek dosyası algılandı</translation>
-    </message>
-    <message>
-        <source>Error Opening File</source>
-        <translation type="vanished">Dosya açılırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>File may be invalid or corrupted: 
-%s</source>
-        <translation type="vanished">Dosya geçersiz ya da bozuk: 
-%1</translation>
-    </message>
-    <message>
-        <source>Error Opening File or Project</source>
-        <translation type="vanished">Dosya ya da proje açılırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Project resides on FAT formatted drive.
-Copy it to another drive to open it.</source>
-        <translation type="vanished">Proje FAT olarak biçimlendirilmiş bir sürücü üzerinde.
-Projeyi açabilmek için başka bir sürücüye kopyalayın.</translation>
-    </message>
-    <message>
-        <source>A channel of a stereo track was missing.</source>
-        <translation type="vanished">Çift kanallı bir izin bir kanalı eksik.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample rates per channel.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">Bu projede, kanallarının örnekleme hızları farklı olan çift kanallı izler var.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample formats in channels.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">Bu projede, kanallarının örnekleme biçimleri farklı olan çift kanallı izler var.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with non-aligned content.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">Bu projede, içerikleri hizalanmamış çift kanallı izler var.</translation>
-    </message>
-    <message>
-        <source>Project was recovered</source>
-        <translation type="vanished">Proje kurtarıldı</translation>
-    </message>
-    <message>
-        <source>Recover</source>
-        <translation type="vanished">Kurtar</translation>
-    </message>
-    <message>
-        <source>%s %d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Name default name assigned to a clip on track import</extracomment>
-        <translation type="vanished">%1 %2</translation>
-    </message>
-    <message>
-        <source>Imported '%s'</source>
-        <translation type="vanished">'%1' içe aktarıldı</translation>
-    </message>
-    <message>
-        <source>Select stream(s) to import</source>
-        <translation type="vanished">İçe aktarılacak akışları seçin</translation>
-    </message>
-    <message>
-        <source>Music Information Retrieval</source>
-        <translation type="vanished">Müzik bilgileri alma</translation>
-    </message>
-    <message>
-        <source>Analyzing imported audio</source>
-        <translation type="vanished">İçe aktarılan ses inceleniyor</translation>
-    </message>
-    <message>
-        <source>Failed to import project</source>
-        <translation type="vanished">Proje içe aktarılamadı</translation>
-    </message>
-    <message>
-        <source>Error Importing</source>
-        <translation type="vanished">İçe aktarılırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Cannot import AUP3 format.  Use File &gt; Open instead</source>
-        <translation type="vanished">AUP3 biçimi içe aktarılamaz. Dosya &gt; Aç komutunu kullanın</translation>
-    </message>
-    <message>
-        <source>Compact Project</source>
-        <translation type="vanished">Projeyi sıkıştır</translation>
-    </message>
-    <message>
-        <source>Compacting this project will free up disk space by removing unused bytes within the file.
-
-There is %s of free disk space and this project is currently using %s.
-
-If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.
-
-Do you want to continue?</source>
-        <translation type="vanished">Bu projeyi sıkıştırıldığında dosya içindeki kullanılmayan baytları silinerek disk alanı boşaltılır.
-
-Şu anda %1 boş disk alanı var ve bu proje %2 alan kullanıyor.
-
-İlerlediğinizde geçerli Geri Al/Yinele Geçmişi ve pano içerikleri silinecek ve yaklaşık olarak %3 disk alanı kazanacaksınız.
-
-İlerlemek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Compacted project file</source>
-        <translation type="vanished">Sıkıştırılmış proje dosyası</translation>
-    </message>
-    <message>
-        <source>Compact</source>
-        <translation type="vanished">Sıkıştır</translation>
-    </message>
-    <message>
-        <source>[Project %02i] </source>
-        <translation type="vanished">[%1 Projesi] </translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity version %s</source>
-        <translation type="vanished">Audacity %1 sürümüne hoş geldiniz</translation>
-    </message>
-    <message>
-        <source>%sSave changes to %s?</source>
-        <extracomment>i18n-hint: The first %s numbers the project, the second %s is the project name.</extracomment>
-        <translation type="vanished">%1Değişiklikler şuraya kaydedilsin mi %2?</translation>
-    </message>
-    <message>
-        <source>Save project before closing?</source>
-        <translation type="vanished">Proje kapatılmadan önce kaydedilsin mi?</translation>
-    </message>
-    <message>
-        <source>Disk space remaining for recording: %s</source>
-        <translation type="vanished">Kalan disk alanıyla yapılabilecek kayıt: %1</translation>
-    </message>
-    <message>
-        <source>Less than 1 minute</source>
-        <translation type="vanished">1 dakikadan az</translation>
-    </message>
-    <message numerus="yes">
-        <source>%d hour</source>
-        <oldsource>%d hours</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 saat</numerusform>
-            <numerusform>%1 saat</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%d minute</source>
-        <oldsource>%d minutes</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 dakika</numerusform>
-            <numerusform>%1 dakika</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%s and %s.</source>
-        <extracomment>i18n-hint: A time in hours and minutes. Only translate the "and".</extracomment>
-        <translation type="vanished">%1 ve %2.</translation>
-    </message>
-    <message>
-        <source>Horizontal Scrollbar</source>
-        <translation type="vanished">Yatay kaydırma çubuğu</translation>
-    </message>
-    <message>
-        <source>Vertical Scrollbar</source>
-        <translation type="vanished">Dikey kaydırma çubuğu</translation>
-    </message>
-    <message>
-        <source>No Effect</source>
-        <translation type="vanished">Etki yok</translation>
-    </message>
-    <message>
-        <source>Get more effects...</source>
-        <translation type="vanished">Başka etkiler alın...</translation>
-    </message>
-    <message>
-        <source>Analyze</source>
-        <translation type="vanished">İncele</translation>
-    </message>
-    <message>
-        <source>%s (missing)</source>
-        <translation type="vanished">%1 (eksik)</translation>
-    </message>
-    <message>
-        <source>Effect %d</source>
-        <extracomment>i18n-hint: argument - position of the effect in the effect stack</extracomment>
-        <translation type="vanished">%1 etkisi</translation>
-    </message>
-    <message>
-        <source>Power</source>
-        <translation type="vanished">Güç</translation>
-    </message>
-    <message>
-        <source>Replace effect</source>
-        <translation type="vanished">Etkiyi değiştir</translation>
-    </message>
-    <message>
-        <source>Removed %s from %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1, %2 üzerinden silindi</translation>
-    </message>
-    <message>
-        <source>Remove %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">%1 sil</translation>
-    </message>
-    <message>
-        <source>Replaced %s with %s</source>
-        <extracomment>i18n-hint: undo history,
-first and second parameters - realtime effect names</extracomment>
-        <translation type="vanished">%1, %2 ile değiştirildi</translation>
-    </message>
-    <message>
-        <source>Replace %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">%1 değiştir</translation>
-    </message>
-    <message>
-        <source>Moved %s up in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1, %2 içinde yukarı taşındı</translation>
-    </message>
-    <message>
-        <source>Moved %s down in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1, %2 içinde aşağı taşındı</translation>
-    </message>
-    <message>
-        <source>Change effect order</source>
-        <translation type="vanished">Etki sıralamasını değiştir</translation>
-    </message>
-    <message>
-        <source>This plugin could not be loaded.
-It may have been deleted.</source>
-        <translation type="vanished">Bu uygulama eki yüklenemedi.
-Silinmiş olabilir.</translation>
-    </message>
-    <message>
-        <source>Plugin Error</source>
-        <translation type="vanished">Uygulama eki sorunu</translation>
-    </message>
-    <message>
-        <source>Added %s to %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1, %2 üzerine eklendi</translation>
-    </message>
-    <message>
-        <source>Add %s</source>
-        <extracomment>i18n-hint: undo history record</extracomment>
-        <translation type="vanished">%1 ekle</translation>
-    </message>
-    <message>
-        <source>Realtime effects for %s</source>
-        <extracomment>i18n-hint: argument - track name</extracomment>
-        <translation type="vanished">%1 için gerçek zamanlı etkiler</translation>
-    </message>
-    <message>
-        <source>Realtime Effects</source>
-        <translation type="vanished">Gerçek zamanlı etkiler</translation>
-    </message>
-    <message>
-        <source>Master Effects</source>
-        <translation type="vanished">Gerçek zamanlı etkiler</translation>
-    </message>
-    <message>
-        <source>Applies to all tracks</source>
-        <translation type="vanished">Yeni ize ayır</translation>
-    </message>
-    <message>
-        <source>Sound Activated Record</source>
-        <translation type="vanished">Sese göre kayıt</translation>
-    </message>
-    <message>
-        <source>Activation level (dB):</source>
-        <translation type="vanished">Etkinleşme düzeyi (dB):</translation>
-    </message>
-    <message>
-        <source>Spectral Data Control Panel</source>
-        <translation type="vanished">Spektral veri denetim panosu</translation>
-    </message>
-    <message>
-        <source>Brush Tool</source>
-        <translation type="vanished">Fırça aracı</translation>
-    </message>
-    <message>
-        <source>Spectral Brush</source>
-        <translation type="vanished">Özel fırça</translation>
-    </message>
-    <message>
-        <source>Brush radius</source>
-        <translation type="vanished">Fırça yarıçapı</translation>
-    </message>
-    <message>
-        <source>Custom brush size</source>
-        <translation type="vanished">Özel fırça boyutu</translation>
-    </message>
-    <message>
-        <source>Auto-select overtones (beta)</source>
-        <translation type="vanished">Harmonikleri otomatik olarak seç (beta)</translation>
-    </message>
-    <message>
-        <source>Enable smart selection</source>
-        <translation type="vanished">Akıllı seçim kullanılsın</translation>
-    </message>
-    <message>
-        <source>Select the fundamental frequency
-and release the mouse</source>
-        <translation type="vanished">Temel frekansı seçin 
-ve fareyi bırakın</translation>
-    </message>
-    <message>
-        <source>Spectra&amp;l Selection Panel</source>
-        <translation type="vanished">Spektra&amp;l seçim panosu</translation>
-    </message>
-    <message>
-        <source>Applied effect to selection</source>
-        <translation type="vanished">Etki seçime uygulandı</translation>
-    </message>
-    <message>
-        <source>Artist Name</source>
-        <translation type="vanished">Sanatçı adı</translation>
-    </message>
-    <message>
-        <source>Album Title</source>
-        <translation type="vanished">Albüm adı</translation>
-    </message>
-    <message>
-        <source>Track Number</source>
-        <translation type="vanished">İz sayısı</translation>
-    </message>
-    <message>
-        <source>Genre</source>
-        <translation type="vanished">Tür</translation>
-    </message>
-    <message>
-        <source>Use arrow keys (or ENTER key after editing) to navigate fields.</source>
-        <translation type="vanished">Alanlarda gezinmek için ok (ya da düzenlemeden sonra ENTER) tuşlarını kullanın.</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation type="vanished">&amp;Ekle</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation type="vanished">&amp;Kaldır</translation>
-    </message>
-    <message>
-        <source>Genres</source>
-        <translation type="vanished">Türler</translation>
-    </message>
-    <message>
-        <source>E&amp;dit...</source>
-        <translation type="vanished">&amp;Düzenle...</translation>
-    </message>
-    <message>
-        <source>Rese&amp;t...</source>
-        <translation type="vanished">&amp;Sıfırla...</translation>
-    </message>
-    <message>
-        <source>Template</source>
-        <translation type="vanished">Kalıp</translation>
-    </message>
-    <message>
-        <source>&amp;Load...</source>
-        <translation type="vanished">Yük&amp;le...</translation>
-    </message>
-    <message>
-        <source>Set De&amp;fault</source>
-        <translation type="vanished">&amp;Varsayılan ayarla</translation>
-    </message>
-    <message>
-        <source>Edit Genres</source>
-        <translation type="vanished">Türleri düzenle</translation>
-    </message>
-    <message>
-        <source>Unable to save genre file.</source>
-        <translation type="vanished">Tür dosyası kaydedilemedi.</translation>
-    </message>
-    <message>
-        <source>Reset Genres</source>
-        <translation type="vanished">Türleri sıfırla</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to reset the genre list to defaults?</source>
-        <translation type="vanished">Tür listesini varsayılan değerlere sıfırlamak istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Unable to open genre file.</source>
-        <translation type="vanished">Tür dosyası açılamadı.</translation>
-    </message>
-    <message>
-        <source>Load Metadata As:</source>
-        <translation type="vanished">Üst veriyi faklı yükle:</translation>
-    </message>
-    <message>
-        <source>Error Loading Metadata</source>
-        <translation type="vanished">Üst veri yüklenirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Save Metadata As:</source>
-        <translation type="vanished">Üst veriyi farklı kaydet:</translation>
-    </message>
-    <message>
-        <source>Error Saving Tags File</source>
-        <translation type="vanished">Etiket dosyası kaydedilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Edit Metadata Tags</source>
-        <translation type="vanished">Üst veri etiketlerini düzenle</translation>
-    </message>
-    <message>
-        <source>Metadata Tags</source>
-        <translation type="vanished">Üst veri etiketleri</translation>
-    </message>
-    <message>
-        <source>&amp;Metadata Editor</source>
-        <translation type="vanished">Üst &amp;veri düzenleyici</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record</source>
-        <translation type="vanished">Audacity zamanlanmış kayıt</translation>
-    </message>
-    <message>
-        <source>Save Timer Recording As</source>
-        <translation type="vanished">Zamanlanmış kayıtları farklı kaydet</translation>
-    </message>
-    <message>
-        <source>The selected file name could not be used
-for Timer Recording because it would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">Verdiğiniz ad başka bir proje ile aynı olduğundan
-diğer projenin üzerine yazılmaması için zamanlanmış kayıt için kullanılamaz.
-Lütfen özgün bir ad kullanarak yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>Error Saving Timer Recording Project</source>
-        <translation type="vanished">Zamanlanmış kayıt projesi kaydedilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Duration is zero. Nothing will be recorded.</source>
-        <translation type="vanished">Süre sıfır. Hiç bir şey kaydedilmeyecek.</translation>
-    </message>
-    <message>
-        <source>Error in Duration</source>
-        <translation type="vanished">Süre sorunu</translation>
-    </message>
-    <message>
-        <source>Automatic Save path is invalid.</source>
-        <translation type="vanished">Otomatik kayıt yolu geçersiz.</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Save</source>
-        <translation type="vanished">Otomatik kayıt sırasında sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Automatic Export path is invalid.</source>
-        <translation type="vanished">Otomatik dışa aktarma yolu geçersiz.</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Export</source>
-        <translation type="vanished">Otomatik dışa aktarma sırasında sorun çıktı</translation>
-    </message>
-    <message>
-        <source>You may not have enough free disk space to complete this Timer Recording, based on your current settings.
-
-Do you wish to continue?
-
-Planned recording duration:   %s
-Recording time remaining on disk:   %s</source>
-        <translation type="vanished">Geçerli ayarlarınıza göre bu zamanlanmış kaydı tamamlamak için yeterli disk alanınız olmayabilir.
-
-İlerlemek istiyor musunuz?
-
-Planlanan kayıt süresi: %1
-Diske yapılabilecek kayıt süresi: %2</translation>
-    </message>
-    <message>
-        <source>Timer Recording Disk Space Warning</source>
-        <translation type="vanished">Zamanlanmış kayıt disk alanı uyarısı</translation>
-    </message>
-    <message>
-        <source>Current Project</source>
-        <translation type="vanished">Geçerli proje</translation>
-    </message>
-    <message>
-        <source>Recording start:</source>
-        <translation type="vanished">Kayıt başlangıcı:</translation>
-    </message>
-    <message>
-        <source>Recording end:</source>
-        <translation type="vanished">Kayıt bitişi:</translation>
-    </message>
-    <message>
-        <source>Automatic Save enabled:</source>
-        <translation type="vanished">Otomatik kayıt açık:</translation>
-    </message>
-    <message>
-        <source>Automatic Export enabled:</source>
-        <translation type="vanished">Otomatik dışa aktarma açık:</translation>
-    </message>
-    <message>
-        <source>Action after Timer Recording:</source>
-        <translation type="vanished">Zamanlamış kayıt sonrasında yapılacak işlem:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record Progress</source>
-        <translation type="vanished">Audacity zamanlanmış kayıt ilerlemesi</translation>
-    </message>
-    <message>
-        <source>All audio is muted.</source>
-        <translation type="vanished">Tüm sesler kısıldı.</translation>
-    </message>
-    <message>
-        <source>Timer Recording stopped.</source>
-        <translation type="vanished">Zamanlanmış kayıt durduruldu.</translation>
-    </message>
-    <message>
-        <source>Timer Recording completed.</source>
-        <translation type="vanished">Zamanlanmış kayıt tamamlandı.</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording saved: %s</source>
-        <translation type="vanished">%1
-
-Ses kaydı kaydedildi: %2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error saving recording.</source>
-        <translation type="vanished">%1
-
-Ses kaydı kaydedilemedi.</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording exported: %s</source>
-        <translation type="vanished">%1
-
-Ses kaydı dışa aktarıldı: %2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error exporting recording.</source>
-        <translation type="vanished">%1
-
-Ses kaydı dışa aktarılamadı.</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled due to the error(s) noted above.</source>
-        <translation type="vanished">%1
-
-'%2' yukarıda belirtilen sorunlar nedeniyle iptal edildi.</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled as the recording was stopped.</source>
-        <translation type="vanished">%1
-
-'%2' kayıt durdurulduğundan iptal edildi.</translation>
-    </message>
-    <message>
-        <source>Timer Recording</source>
-        <translation type="vanished">Zamanlanmış kayıt</translation>
-    </message>
-    <message>
-        <source>099 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099 sa 060 dk 060 sn</translation>
-    </message>
-    <message>
-        <source>099 days 024 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for days, hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099 gün 024 sa 060 dk 060 sn</translation>
-    </message>
-    <message>
-        <source>Start Date and Time</source>
-        <extracomment>i18n-hint: This string is used to configure the controls for times when the recording is
-* started and stopped. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-* displayed is minutes, and the 's' indicates that the third number displayed is seconds.</extracomment>
-        <translation type="vanished">Başlangıç tarihi ve zamanı</translation>
-    </message>
-    <message>
-        <source>Start Date</source>
-        <translation type="vanished">Başlangıç tarihi</translation>
-    </message>
-    <message>
-        <source>End Date and Time</source>
-        <translation type="vanished">Bitiş tarihi ve zamanı</translation>
-    </message>
-    <message>
-        <source>End Date</source>
-        <translation type="vanished">Bitiş tarihi</translation>
-    </message>
-    <message>
-        <source>Automatic Save</source>
-        <translation type="vanished">Otomatik kayıt</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Automatic Save?</source>
-        <translation type="vanished">Otomatik &amp;kayıt açılsın mı?</translation>
-    </message>
-    <message>
-        <source>Save Project As:</source>
-        <translation type="vanished">Projeyi farklı kaydet:</translation>
-    </message>
-    <message>
-        <source>Select...</source>
-        <translation type="vanished">Seçin...</translation>
-    </message>
-    <message>
-        <source>Automatic Export</source>
-        <translation type="vanished">Otomatik dışa aktarma</translation>
-    </message>
-    <message>
-        <source>Enable Automatic &amp;Export?</source>
-        <translation type="vanished">&amp;Otomatik dışa aktarma açılsın mı?</translation>
-    </message>
-    <message>
-        <source>Export Project As:</source>
-        <translation type="vanished">Projeyi şu şekilde dışa aktar:</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="vanished">Seçenekler</translation>
-    </message>
-    <message>
-        <source>After Recording completes:</source>
-        <translation type="vanished">Kayıt tamamlandıktan sonra:</translation>
-    </message>
-    <message>
-        <source>Exit Audacity</source>
-        <translation type="vanished">Audacity kapatılsın</translation>
-    </message>
-    <message>
-        <source>Restart system</source>
-        <translation type="vanished">Sistem yeniden başlatılsın</translation>
-    </message>
-    <message>
-        <source>Shutdown system</source>
-        <translation type="vanished">Sistem kapatılsın</translation>
-    </message>
-    <message>
-        <source>Waiting to start recording at:</source>
-        <translation type="vanished">Kayıda başlanacak zaman bekleniyor:</translation>
-    </message>
-    <message>
-        <source>Recording duration:</source>
-        <translation type="vanished">Kayıt süresi:</translation>
-    </message>
-    <message>
-        <source>Scheduled to stop at:</source>
-        <translation type="vanished">Ayarlanan durma zamanı:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting for Start</source>
-        <translation type="vanished">Audacity zamanlanmış kayıt - Başlamak için bekliyor</translation>
-    </message>
-    <message>
-        <source>Recording will commence in:</source>
-        <extracomment>i18n-hint: "in" means after a duration of time,
-which is shown below this string</extracomment>
-        <translation type="vanished">Kayıt şu kadar süre sonra başlayacak:</translation>
-    </message>
-    <message>
-        <source>%s in:</source>
-        <extracomment>i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
-or "Shutdown system", and
-"in" means after a duration of time, shown below this string</extracomment>
-        <translation type="vanished">Şu sürede %1:</translation>
-    </message>
-    <message>
-        <source>Recording Saved:</source>
-        <translation type="vanished">Kayıt tamamlandı:</translation>
-    </message>
-    <message>
-        <source>Recording Exported:</source>
-        <translation type="vanished">Kayıt dışa aktarıldı:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting</source>
-        <translation type="vanished">Audacity zamanlanmış kayıt - Bekliyor</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used with more than one open project.
-
-Please close any additional projects and try again.</source>
-        <translation type="vanished">Birden çok proje açıkken zamanlanmış kayıt kullanılamaz.
-
-Lütfen diğer projeleri kapatıp yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used while you have unsaved changes.
-
-Please save or close this project and try again.</source>
-        <translation type="vanished">Kaydedilmemiş değişiklikler varken zamanlanmış kayıt kullanılamaz.
-
-Lütfen bu projeyi kaydettikten ya da kapattıktan sonra yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>&amp;Timer Record...</source>
-        <translation type="vanished">&amp;Zamanlanmış kayı&amp;t...</translation>
-    </message>
-    <message>
-        <source>Export Audio</source>
-        <translation type="vanished">Sesi dışa aktar</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Metadata...</source>
-        <translation type="vanished">Üst &amp;verileri düzenle...</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="vanished">&amp;Tamam</translation>
-    </message>
-    <message>
-        <source>Exported Tags</source>
-        <translation type="vanished">Dışa aktarılan etiketler</translation>
-    </message>
-    <message>
-        <source>Track Panel</source>
-        <translation type="vanished">İz panosu</translation>
-    </message>
-    <message>
-        <source>(Esc to cancel)</source>
-        <extracomment>i18n-hint Esc is a key on the keyboard</extracomment>
-        <translation type="vanished">(İptal etmek için Esc)</translation>
-    </message>
-    <message>
-        <source>TrackView</source>
-        <translation type="vanished">İz görünümü</translation>
-    </message>
-    <message>
-        <source> Muted</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is muted. (The mute button is on.)</extracomment>
-        <translation type="vanished"> Kısılmış</translation>
-    </message>
-    <message>
-        <source> Soloed</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is soloed. (The Solo button is on.)</extracomment>
-        <translation type="vanished"> Solo olarak</translation>
-    </message>
-    <message>
-        <source> Selected</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is selected.</extracomment>
-        <translation type="vanished"> Seçilmiş</translation>
-    </message>
-    <message>
-        <source> Sync Locked</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is shown with a sync-locked icon.
-The absence of a dash between Sync and Locked is deliberate -
-if present, Jaws reads it as "dash".</extracomment>
-        <translation type="vanished"> Eş kilitlenmiş</translation>
-    </message>
-    <message>
-        <source>Track %d</source>
-        <extracomment>i18n-hint: The %d is replaced by the number of the track.</extracomment>
-        <translation type="vanished">İz %1</translation>
-    </message>
-    <message>
-        <source> Mute On</source>
-        <translation type="vanished"> Kıs</translation>
-    </message>
-    <message>
-        <source> Solo On</source>
-        <translation type="vanished"> Solo açık</translation>
-    </message>
-    <message>
-        <source> Select On</source>
-        <translation type="vanished"> Seçimi aç</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust relative size of stereo tracks, double-click to make heights equal</source>
-        <translation type="vanished">Çift kanallı izlerin bağıl boyutunu ayarlamak için tıklayıp sürükleyin. Yükseklikleri eşit kılmak için çift tıklayın</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize the track.</source>
-        <translation type="vanished">İzi yeniden boyutlandırmak için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Removed audio track(s)</source>
-        <translation type="vanished">Ses izleri kaldırıldı</translation>
-    </message>
-    <message>
-        <source>Remove Track</source>
-        <translation type="vanished">İzi kaldır</translation>
-    </message>
-    <message>
-        <source>Removed track '%s'.</source>
-        <translation type="vanished">'%1' izi kaldırıldı.</translation>
-    </message>
-    <message>
-        <source>Track Remove</source>
-        <translation type="vanished">İz kaldırma</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Top</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1' en üste taşındı</translation>
-    </message>
-    <message>
-        <source>Move Track to Top</source>
-        <translation type="vanished">İzi en üste taşı</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Bottom</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1' en alta taşındı</translation>
-    </message>
-    <message>
-        <source>Move Track to Bottom</source>
-        <translation type="vanished">İzi en alta taşı</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1' yukarı taşındı</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Down</source>
-        <translation type="vanished">'%1' aşağı taşındı</translation>
-    </message>
-    <message>
-        <source>Move Track Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">İzi yukarı taşı</translation>
-    </message>
-    <message>
-        <source>Move Track Down</source>
-        <translation type="vanished">İzi aşağı taşı</translation>
-    </message>
-    <message>
-        <source>Playing</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Oynatılıyor</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Kaydetme</translation>
-    </message>
-    <message>
-        <source>Selection is too small to use voice key.</source>
-        <extracomment>i18n-hint: Voice key is an experimental/incomplete feature that
-is used to navigate in vocal recordings, to move forwards and
-backwards by words.  So 'key' is being used in the sense of an index.
-This error message means that you've selected too short
-a region of audio to be able to use this feature.</extracomment>
-        <translation type="vanished">Ses tuşunu kullanmak için seçim çok küçük.</translation>
-    </message>
-    <message>
-        <source>Calibration Results
-</source>
-        <translation type="vanished">Ayar sonuçları
-</translation>
-    </message>
-    <message>
-        <source>Energy                  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <extracomment>i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'</extracomment>
-        <translation type="vanished">Enerji                  -- ortalama: %1.4f  sd: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Sign Changes        -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">İşaret değişimleri        -- ortalama: %1.4f  sd: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Direction Changes  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">Yön değişimleri  -- ortalama: %1.4f  sd: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Calibration Complete</source>
-        <translation type="vanished">Ayarlama tamamlandı</translation>
-    </message>
-    <message>
-        <source>What's new in Audacity %s</source>
-        <translation type="vanished">Audacity %1 yenilikleri</translation>
-    </message>
-    <message>
-        <source>Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!&lt;/p&gt;</source>
-        <translation type="vanished">Ayrıntılı bilgi almak için [[%1|yayın videosunu]] izleyin ya da [[https://support.audacityteam.org/additional-resources/changelog|changelog]] dosyasını okuyun!&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Get free plugins &amp; sounds</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&lt;p&gt;Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users&lt;/p&gt;</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Welcome to Audacity!</source>
-        <translation type="vanished">Audacity uygulamasına hoş geldiniz!</translation>
-    </message>
-    <message>
-        <source>View tutorials</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Visit our forum</source>
-        <translation type="vanished">Audio.com sitesine git</translation>
-    </message>
-    <message>
-        <source>Don't show this again at start up</source>
-        <translation type="vanished">Bu pencere açılışta bir daha görüntülenmesin</translation>
-    </message>
-    <message>
-        <source>%s: %s</source>
-        <extracomment>i18n-hint: An item name followed by a value, with appropriate separating punctuation</extracomment>
-        <translation type="vanished">%1: %2</translation>
-    </message>
-    <message>
-        <source>FAIL</source>
-        <translation type="vanished">TAMAMLANAMADI</translation>
-    </message>
-    <message>
-        <source>Batch Command</source>
-        <translation type="vanished">Toplu komut</translation>
-    </message>
-    <message>
-        <source>%s is not a parameter accepted by %s</source>
-        <translation type="vanished">%1 %2 tarafından kabul edilen bir parametre değil</translation>
-    </message>
-    <message>
-        <source>Invalid value for parameter '%s': should be %s</source>
-        <translation type="vanished">'%1' parametresinin değeri geçersiz: %2 olmalı</translation>
-    </message>
-    <message>
-        <source>Compare Audio</source>
-        <translation type="vanished">Sesi karşılaştır</translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="vanished">Eşik:</translation>
-    </message>
-    <message>
-        <source>Compare Audio...</source>
-        <translation type="vanished">Sesi karşılaştır...</translation>
-    </message>
-    <message>
-        <source>Compares a range on two tracks.</source>
-        <translation type="vanished">İki izi belirli bir aralıkta karşılaştırır.</translation>
-    </message>
-    <message>
-        <source>Demo</source>
-        <translation type="vanished">Tanıtım</translation>
-    </message>
-    <message>
-        <source>Delay time (seconds):</source>
-        <translation type="vanished">Gecikme zamanı (saniye):</translation>
-    </message>
-    <message>
-        <source>Decay factor:</source>
-        <translation type="vanished">Düşme çarpanı:</translation>
-    </message>
-    <message>
-        <source>Does the demo action.</source>
-        <translation type="vanished">Tanıtım işlemlerini yapar.</translation>
-    </message>
-    <message>
-        <source>Drag</source>
-        <translation type="vanished">Sürükle</translation>
-    </message>
-    <message>
-        <source>Track 0</source>
-        <translation type="vanished">0. iz</translation>
-    </message>
-    <message>
-        <source>Track 1</source>
-        <translation type="vanished">1. iz</translation>
-    </message>
-    <message>
-        <source>Id:</source>
-        <extracomment>i18n-hint abbreviates "Identity" or "Identifier"</extracomment>
-        <translation type="vanished">Kod:</translation>
-    </message>
-    <message>
-        <source>Window Name:</source>
-        <translation type="vanished">Pencere adı:</translation>
-    </message>
-    <message>
-        <source>From X:</source>
-        <translation type="vanished">X başlangıcı:</translation>
-    </message>
-    <message>
-        <source>From Y:</source>
-        <translation type="vanished">Y başlangıcı:</translation>
-    </message>
-    <message>
-        <source>To X:</source>
-        <translation type="vanished">X bitişi:</translation>
-    </message>
-    <message>
-        <source>To Y:</source>
-        <translation type="vanished">Y bitişi:</translation>
-    </message>
-    <message>
-        <source>Relative To:</source>
-        <translation type="vanished">Şununla ilişkili:</translation>
-    </message>
-    <message>
-        <source>Move Mouse...</source>
-        <translation type="vanished">Fareyi oynat...</translation>
-    </message>
-    <message>
-        <source>Drags mouse from one place to another.</source>
-        <translation type="vanished">Fareyi bir konumdan diğerine sürükler.</translation>
-    </message>
-    <message>
-        <source>Get Info</source>
-        <translation type="vanished">Bilgileri al</translation>
-    </message>
-    <message>
-        <source>Commands</source>
-        <translation type="vanished">Komutlar</translation>
-    </message>
-    <message>
-        <source>Menus</source>
-        <translation type="vanished">Menüler</translation>
-    </message>
-    <message>
-        <source>Clips</source>
-        <translation type="vanished">Parçalar</translation>
-    </message>
-    <message>
-        <source>Envelopes</source>
-        <translation type="vanished">Zarflar</translation>
-    </message>
-    <message>
-        <source>Boxes</source>
-        <translation type="vanished">Kutular</translation>
-    </message>
-    <message>
-        <source>JSON</source>
-        <extracomment>i18n-hint JavaScript Object Notation</extracomment>
-        <translation type="vanished">JSON</translation>
-    </message>
-    <message>
-        <source>LISP</source>
-        <extracomment>i18n-hint name of a computer programming language</extracomment>
-        <translation type="vanished">LISP</translation>
-    </message>
-    <message>
-        <source>Brief</source>
-        <translation type="vanished">Kısa</translation>
-    </message>
-    <message>
-        <source>Get Info...</source>
-        <translation type="vanished">Bilgileri al...</translation>
-    </message>
-    <message>
-        <source>Gets information in JSON format.</source>
-        <translation type="vanished">Bilgileri JSON biçiminde alır.</translation>
-    </message>
-    <message>
-        <source>Get Track Info</source>
-        <translation type="vanished">İz bilgilerini al</translation>
-    </message>
-    <message>
-        <source>Types:</source>
-        <translation type="vanished">Türler:</translation>
-    </message>
-    <message>
-        <source>Gets track values as JSON.</source>
-        <translation type="vanished">İz bilgilerini JSON biçiminde alır.</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation type="vanished">Yorum</translation>
-    </message>
-    <message>
-        <source>_</source>
-        <translation type="vanished">_</translation>
-    </message>
-    <message>
-        <source>Help...</source>
-        <translation type="vanished">Yardım...</translation>
-    </message>
-    <message>
-        <source>Gives help on a command.</source>
-        <translation type="vanished">Bir komut hakkında yardım bilgilerini görüntüler.</translation>
-    </message>
-    <message>
-        <source>For comments in a macro.</source>
-        <translation type="vanished">Bir makro içindeki yorumlar için.</translation>
-    </message>
-    <message>
-        <source>Import2</source>
-        <translation type="vanished">İçe aktar 2</translation>
-    </message>
-    <message>
-        <source>File Name:</source>
-        <translation type="vanished">Dosya adı:</translation>
-    </message>
-    <message>
-        <source>Export2</source>
-        <translation type="vanished">Dışa aktar 2</translation>
-    </message>
-    <message>
-        <source>Number of Channels:</source>
-        <translation type="vanished">Kanal sayısı:</translation>
-    </message>
-    <message>
-        <source>Import...</source>
-        <translation type="vanished">İçe aktar...</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="vanished">Dışa aktar...</translation>
-    </message>
-    <message>
-        <source>Imports from a file.</source>
-        <translation type="vanished">Bir dosyayı içe aktarır.</translation>
-    </message>
-    <message>
-        <source>Exports to a file.</source>
-        <translation type="vanished">Bilgileri bir dosyaya dışa aktarır.</translation>
-    </message>
-    <message>
-        <source>Builtin Commands</source>
-        <translation type="vanished">İç komutlar</translation>
-    </message>
-    <message>
-        <source>Provides builtin commands to Audacity</source>
-        <translation type="vanished">Audacity için iç komutları sağlar</translation>
-    </message>
-    <message>
-        <source>Unknown built-in command name</source>
-        <translation type="vanished">İç komut adı bilinmiyor</translation>
-    </message>
-    <message>
-        <source>Text:</source>
-        <translation type="vanished">Metin:</translation>
-    </message>
-    <message>
-        <source>Message...</source>
-        <translation type="vanished">İleti...</translation>
-    </message>
-    <message>
-        <source>Echos a message.</source>
-        <translation type="vanished">Bir iletiyi görüntüler.</translation>
-    </message>
-    <message>
-        <source>Open Project2</source>
-        <translation type="vanished">Proje aç 2</translation>
-    </message>
-    <message>
-        <source>Add to History</source>
-        <translation type="vanished">Geçmişe ekle</translation>
-    </message>
-    <message>
-        <source>Save Project2</source>
-        <translation type="vanished">Projeyi kaydet 2</translation>
-    </message>
-    <message>
-        <source>Save Copy</source>
-        <translation type="vanished">Kopyayı Kaydet</translation>
-    </message>
-    <message>
-        <source>Save Log</source>
-        <translation type="vanished">Günlüğü kaydet</translation>
-    </message>
-    <message>
-        <source>Clear Log</source>
-        <translation type="vanished">Günlüğü temizle</translation>
-    </message>
-    <message>
-        <source>Open Project...</source>
-        <translation type="vanished">Proje aç...</translation>
-    </message>
-    <message>
-        <source>Save Project...</source>
-        <translation type="vanished">Projeyi Kaydet...</translation>
-    </message>
-    <message>
-        <source>Opens a project.</source>
-        <translation type="vanished">Bir proje açar.</translation>
-    </message>
-    <message>
-        <source>Saves a project.</source>
-        <translation type="vanished">Bir projeyi kaydeder.</translation>
-    </message>
-    <message>
-        <source>Saves a copy of current project.</source>
-        <translation type="vanished">Geçerli projenin bir kopyasını kaydeder.</translation>
-    </message>
-    <message>
-        <source>Saves the log contents.</source>
-        <translation type="vanished">Günlük kayıtlarını kaydeder.</translation>
-    </message>
-    <message>
-        <source>Clears the log contents.</source>
-        <translation type="vanished">Günlük kayıtlarını temizler.</translation>
-    </message>
-    <message>
-        <source>Get Preference</source>
-        <translation type="vanished">Ayarı al</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation type="vanished">Ad:</translation>
-    </message>
-    <message>
-        <source>Set Preference</source>
-        <translation type="vanished">Ayarı yap</translation>
-    </message>
-    <message>
-        <source>Value:</source>
-        <translation type="vanished">Değer:</translation>
-    </message>
-    <message>
-        <source>Reload</source>
-        <translation type="vanished">Yeniden yükle</translation>
-    </message>
-    <message>
-        <source>Get Preference...</source>
-        <translation type="vanished">Ayarları al...</translation>
-    </message>
-    <message>
-        <source>Set Preference...</source>
-        <translation type="vanished">Ayarları yap...</translation>
-    </message>
-    <message>
-        <source>Gets the value of a single preference.</source>
-        <translation type="vanished">Tek bir ayarın değerini alır.</translation>
-    </message>
-    <message>
-        <source>Sets the value of a single preference.</source>
-        <translation type="vanished">Tek bir ayarın değerini yapar.</translation>
-    </message>
-    <message>
-        <source>Select Time</source>
-        <translation type="vanished">Zamanı seçin</translation>
-    </message>
-    <message>
-        <source>Project Start</source>
-        <translation type="vanished">Proje başlangıcı</translation>
-    </message>
-    <message>
-        <source>Project End</source>
-        <translation type="vanished">Proje sonu</translation>
-    </message>
-    <message>
-        <source>Selection Start</source>
-        <translation type="vanished">Seçim başlangıcı</translation>
-    </message>
-    <message>
-        <source>Selection End</source>
-        <translation type="vanished">Seçim sonu</translation>
-    </message>
-    <message>
-        <source>Start Time:</source>
-        <translation type="vanished">Başlangıç zamanı:</translation>
-    </message>
-    <message>
-        <source>End Time:</source>
-        <translation type="vanished">Bitiş zamanı:</translation>
-    </message>
-    <message>
-        <source>Select Frequencies</source>
-        <translation type="vanished">Frekansları seçin</translation>
-    </message>
-    <message>
-        <source>High:</source>
-        <translation type="vanished">Yüksek:</translation>
-    </message>
-    <message>
-        <source>Low:</source>
-        <translation type="vanished">Düşük:</translation>
-    </message>
-    <message>
-        <source>Select Tracks</source>
-        <translation type="vanished">İzleri seçin</translation>
-    </message>
-    <message>
-        <source>Set</source>
-        <extracomment>i18n-hint verb, imperative</extracomment>
-        <translation type="vanished">Ayarla</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="vanished">Ekle</translation>
-    </message>
-    <message>
-        <source>First Track:</source>
-        <translation type="vanished">İlk iz:</translation>
-    </message>
-    <message>
-        <source>Track Count:</source>
-        <translation type="vanished">İz sayısı:</translation>
-    </message>
-    <message>
-        <source>Mode:</source>
-        <translation type="vanished">Kip:</translation>
-    </message>
-    <message>
-        <source>Select Time...</source>
-        <translation type="vanished">Zamanı seçin...</translation>
-    </message>
-    <message>
-        <source>Select Frequencies...</source>
-        <translation type="vanished">Frekansları seçin...</translation>
-    </message>
-    <message>
-        <source>Select Tracks...</source>
-        <translation type="vanished">İzleri seçin...</translation>
-    </message>
-    <message>
-        <source>Selects a time range.</source>
-        <translation type="vanished">Bir zaman aralığı seçer.</translation>
-    </message>
-    <message>
-        <source>Selects a frequency range.</source>
-        <translation type="vanished">Bir frekans aralığı seçer.</translation>
-    </message>
-    <message>
-        <source>Selects a range of tracks.</source>
-        <translation type="vanished">Bir iz aralığı seçer.</translation>
-    </message>
-    <message>
-        <source>Selects Audio.</source>
-        <translation type="vanished">Sesi seçer.</translation>
-    </message>
-    <message>
-        <source>Set Clip</source>
-        <translation type="vanished">Parçayı ayarla</translation>
-    </message>
-    <message>
-        <source>Color 0</source>
-        <translation type="vanished">0. renk</translation>
-    </message>
-    <message>
-        <source>Color 1</source>
-        <translation type="vanished">1. renk</translation>
-    </message>
-    <message>
-        <source>Color 2</source>
-        <translation type="vanished">2. renk</translation>
-    </message>
-    <message>
-        <source>Color 3</source>
-        <translation type="vanished">3. renk</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation type="vanished">Zaman:</translation>
-    </message>
-    <message>
-        <source>Start:</source>
-        <translation type="vanished">Başlangıç:</translation>
-    </message>
-    <message>
-        <source>Set Clip...</source>
-        <translation type="vanished">Parçayı ayarla...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a clip.</source>
-        <translation type="vanished">Bir parça için çeşitli değerler ayarlar.</translation>
-    </message>
-    <message>
-        <source>Set Envelope</source>
-        <translation type="vanished">Zarfı ayarla</translation>
-    </message>
-    <message>
-        <source>Time:</source>
-        <translation type="vanished">Zaman:</translation>
-    </message>
-    <message>
-        <source>Edited Envelope</source>
-        <translation type="vanished">Düzenlenmiş zarf</translation>
-    </message>
-    <message>
-        <source>Envelope</source>
-        <extracomment>i18n-hint: The envelope is a curve that controls the audio loudness.</extracomment>
-        <translation type="vanished">Kılıf</translation>
-    </message>
-    <message>
-        <source>Set Envelope...</source>
-        <translation type="vanished">Zarfı ayarla...</translation>
-    </message>
-    <message>
-        <source>Sets an envelope point position.</source>
-        <translation type="vanished">Bir zarf noktasının konumunu ayarlar.</translation>
-    </message>
-    <message>
-        <source>Set Label</source>
-        <translation type="vanished">Etiketi ayarla</translation>
-    </message>
-    <message>
-        <source>Label Index</source>
-        <translation type="vanished">Etiket numarası</translation>
-    </message>
-    <message>
-        <source>End:</source>
-        <translation type="vanished">Bitiş:</translation>
-    </message>
-    <message>
-        <source>Selected</source>
-        <translation type="vanished">Seçilmiş</translation>
-    </message>
-    <message>
-        <source>Edited Label</source>
-        <translation type="vanished">Düzenlenen etiket</translation>
-    </message>
-    <message>
-        <source>Set Label...</source>
-        <translation type="vanished">Etiketi ayarla...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a label.</source>
-        <translation type="vanished">Bir etiket için çeşitli değerler ayarlar.</translation>
-    </message>
-    <message>
-        <source>Set Project</source>
-        <translation type="vanished">Projeyi ayarla</translation>
-    </message>
-    <message>
-        <source>Rate:</source>
-        <translation type="vanished">Hız:</translation>
-    </message>
-    <message>
-        <source>Resize:</source>
-        <translation type="vanished">Yeniden adlandır:</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation type="vanished">X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation type="vanished">Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation type="vanished">Genişlik:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation type="vanished">Yükseklik:</translation>
-    </message>
-    <message>
-        <source>Set Project...</source>
-        <translation type="vanished">Projeyi ayarla...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a project.</source>
-        <translation type="vanished">Bir proje için çeşitli değerler ayarlar.</translation>
-    </message>
-    <message>
-        <source>Set Track Status</source>
-        <translation type="vanished">İz durumunu Ayarla</translation>
-    </message>
-    <message>
-        <source>Unnamed</source>
-        <translation type="vanished">Adsız</translation>
-    </message>
-    <message>
-        <source>Focused</source>
-        <translation type="vanished">Odaklanmış</translation>
-    </message>
-    <message>
-        <source>Set Track Audio</source>
-        <translation type="vanished">İz sesini ayarla</translation>
-    </message>
-    <message>
-        <source>Gain:</source>
-        <translation type="vanished">Kazanç:</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals</source>
-        <translation type="vanished">İz görsellerini ayarla</translation>
-    </message>
-    <message>
-        <source>Times 2</source>
-        <translation type="vanished">2 kat</translation>
-    </message>
-    <message>
-        <source>HalfWave</source>
-        <translation type="vanished">Yarım dalga</translation>
-    </message>
-    <message>
-        <source>Display:</source>
-        <translation type="vanished">Görünüm:</translation>
-    </message>
-    <message>
-        <source>Scale:</source>
-        <translation type="vanished">Ölçek:</translation>
-    </message>
-    <message>
-        <source>VZoom:</source>
-        <translation type="vanished">Sanal yakınlaştırma:</translation>
-    </message>
-    <message>
-        <source>VZoom Top:</source>
-        <translation type="vanished">Sanal yakınlaştırma üst:</translation>
-    </message>
-    <message>
-        <source>VZoom Bottom:</source>
-        <translation type="vanished">Sanal yakınlaştırma alt:</translation>
-    </message>
-    <message>
-        <source>Use Spectral Prefs</source>
-        <translation type="vanished">Spektral ayarlar kullanılsın</translation>
-    </message>
-    <message>
-        <source>Spectral Select</source>
-        <translation type="vanished">Spektral seçim</translation>
-    </message>
-    <message>
-        <source>Sche&amp;me:</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint Scheme refers to a color scheme for spectrogram colors</extracomment>
-        <translation type="vanished">Şe&amp;ma:</translation>
-    </message>
-    <message>
-        <source>Set Track</source>
-        <translation type="vanished">İzi ayarla</translation>
-    </message>
-    <message>
-        <source>Set Track Status...</source>
-        <translation type="vanished">İz durumunu ayarla...</translation>
-    </message>
-    <message>
-        <source>Set Track Audio...</source>
-        <translation type="vanished">İz sesini ayarla...</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals...</source>
-        <translation type="vanished">İz görsellerini ayarla...</translation>
-    </message>
-    <message>
-        <source>Set Track...</source>
-        <translation type="vanished">İzi ayarla...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a track.</source>
-        <translation type="vanished">Bir iz için çeşitli değerler ayarlar.</translation>
-    </message>
-    <message>
-        <source>Long Message</source>
-        <translation type="vanished">Uzun ileti</translation>
-    </message>
-    <message>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation type="vanished">Seçtiğiniz sesin düzeyini azaltır ya da arttırır</translation>
-    </message>
-    <message>
-        <source>&amp;Amplification (dB):</source>
-        <translation type="vanished">&amp;Yükseltme (dB):</translation>
-    </message>
-    <message>
-        <source>Amplification dB</source>
-        <translation type="vanished">Yükseltme dB</translation>
-    </message>
-    <message>
-        <source>&amp;New Peak Amplitude (dB):</source>
-        <translation type="vanished">Yeni &amp;tepe genliği (dB):</translation>
-    </message>
-    <message>
-        <source>Allo&amp;w clipping</source>
-        <translation type="vanished">&amp;Kırpılmaya izin ver</translation>
-    </message>
-    <message>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified "control" track reaches a particular level</source>
-        <translation type="vanished">Belirtilen "denetim" izi belirli bir düzeye geldiğinde bir ya da bir kaç izin düzeyini kısar</translation>
-    </message>
-    <message>
-        <source>db</source>
-        <translation type="vanished">db</translation>
-    </message>
-    <message>
-        <source>Duck &amp;amount:</source>
-        <translation type="vanished">Kısma &amp;miktarı:</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ximum pause:</source>
-        <translation type="vanished">En &amp;uzun ara:</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;down length:</source>
-        <translation type="vanished">&amp;Dış azalarak çıkma uzunluğu:</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;up length:</source>
-        <translation type="vanished">Dış artarak &amp;girme uzunluğu:</translation>
-    </message>
-    <message>
-        <source>Inner fade d&amp;own length:</source>
-        <translation type="vanished">İç &amp;azalarak çıkma uzunluğu:</translation>
-    </message>
-    <message>
-        <source>Inner &amp;fade up length:</source>
-        <translation type="vanished">İç artarak girme &amp;uzunluğu:</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold:</source>
-        <translation type="vanished">&amp;Eşik:</translation>
-    </message>
-    <message>
-        <source>Preview not available</source>
-        <translation type="vanished">Ön izleme yapılamaz</translation>
-    </message>
-    <message>
-        <source>Export Effect Parameters</source>
-        <translation type="vanished">Etki parametrelerini dışa aktar</translation>
-    </message>
-    <message>
-        <source>Import Effect Parameters</source>
-        <translation type="vanished">Etki parametrelerini içe aktar</translation>
-    </message>
-    <message>
-        <source>%s: is not a valid presets file.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1 hazır ayar dosyası geçersiz.
-</translation>
-    </message>
-    <message>
-        <source>%s: is for a different Effect, Generator or Analyzer.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1 başka bir etki, üreteç ya da inceleyici için.
-</translation>
-    </message>
-    <message>
-        <source>Tone controls</source>
-        <translation type="vanished">Ton denetimleri</translation>
-    </message>
-    <message>
-        <source>Bass (dB):</source>
-        <translation type="vanished">Bas (dB):</translation>
-    </message>
-    <message>
-        <source>Ba&amp;ss (dB):</source>
-        <translation type="vanished">Ba&amp;s (dB):</translation>
-    </message>
-    <message>
-        <source>Bass</source>
-        <translation type="vanished">Bas</translation>
-    </message>
-    <message>
-        <source>&amp;Treble (dB):</source>
-        <translation type="vanished">&amp;Tiz (dB):</translation>
-    </message>
-    <message>
-        <source>Treble</source>
-        <translation type="vanished">Tiz</translation>
-    </message>
-    <message>
-        <source>&amp;Volume (dB):</source>
-        <translation type="vanished">&amp;Düzey (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Link Volume control to Tone controls</source>
-        <translation type="vanished">Düze&amp;y denetimi ton denetimlerine bağlansın</translation>
-    </message>
-    <message>
-        <source>Change Pitch</source>
-        <translation type="vanished">Perdeyi değiştir</translation>
-    </message>
-    <message>
-        <source>Estimated Start Pitch: %s%d (%.3f Hz)</source>
-        <translation type="vanished">Kestirilen başlangıç perdesi: %1%2 (%3 Hz)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">şundan</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">ş&amp;undan</translation>
-    </message>
-    <message>
-        <source>from Octave</source>
-        <translation type="vanished">başlangıç oktavı</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">şuna</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">şu&amp;na</translation>
-    </message>
-    <message>
-        <source>to Octave</source>
-        <translation type="vanished">bitiş oktavı</translation>
-    </message>
-    <message>
-        <source>Semitones (half-steps)</source>
-        <translation type="vanished">Yarım tonlar (yarım adımlar)</translation>
-    </message>
-    <message>
-        <source>&amp;Semitones (half-steps):</source>
-        <translation type="vanished">&amp;Yarım tonlar (yarım adımlar):</translation>
-    </message>
-    <message>
-        <source>from (Hz)</source>
-        <translation type="vanished">başlangıç (Hz)</translation>
-    </message>
-    <message>
-        <source>f&amp;rom</source>
-        <translation type="vanished">şun&amp;dan</translation>
-    </message>
-    <message>
-        <source>to (Hz)</source>
-        <translation type="vanished">bitiş (Hz)</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <translation type="vanished">ş&amp;una</translation>
-    </message>
-    <message>
-        <source>Percent C&amp;hange:</source>
-        <translation type="vanished">&amp;Yüzde değişim:</translation>
-    </message>
-    <message>
-        <source>Percent Change</source>
-        <translation type="vanished">Yüzde değişim</translation>
-    </message>
-    <message>
-        <source>&amp;Use high quality stretching (slow)</source>
-        <translation type="vanished">Yüksek &amp;kaliteli esnetme kullanılsın (yavaş)</translation>
-    </message>
-    <message>
-        <source>33⅓</source>
-        <translation type="vanished">33⅓</translation>
-    </message>
-    <message>
-        <source>45</source>
-        <translation type="vanished">45</translation>
-    </message>
-    <message>
-        <source>78</source>
-        <translation type="vanished">78</translation>
-    </message>
-    <message>
-        <source>&amp;Speed Multiplier:</source>
-        <translation type="vanished">&amp;Tempo çarpanı:</translation>
-    </message>
-    <message>
-        <source>Standard Vinyl rpm:</source>
-        <extracomment>i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
-"vinyl" refers to old-fashioned phonograph records</extracomment>
-        <translation type="vanished">Standart plak devri:</translation>
-    </message>
-    <message>
-        <source>From rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">Başlangıç devri</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">ş&amp;undan</translation>
-    </message>
-    <message>
-        <source>To rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">Bitiş devri</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">şu&amp;na</translation>
-    </message>
-    <message>
-        <source>Selection Length</source>
-        <translation type="vanished">Seçim uzunluğu</translation>
-    </message>
-    <message>
-        <source>C&amp;urrent Length:</source>
-        <translation type="vanished">&amp;Geçerli uzunluk:</translation>
-    </message>
-    <message>
-        <source>Current length of selection.</source>
-        <translation type="vanished">Seçimin geçerli uzunluğu.</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">şundan</translation>
-    </message>
-    <message>
-        <source>&amp;New Length:</source>
-        <translation type="vanished">&amp;Yeni uzunluk:</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">şuna</translation>
-    </message>
-    <message>
-        <source>Beats per minute</source>
-        <translation type="vanished">Dakikadaki vuruş</translation>
-    </message>
-    <message>
-        <source>Beats per minute, from</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">Dakikadaki vuruş, şuradan</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">ş&amp;undan</translation>
-    </message>
-    <message>
-        <source>Beats per minute, to</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">Dakikadaki vuruş, şuraya</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">şu&amp;na</translation>
-    </message>
-    <message>
-        <source>Length (seconds)</source>
-        <translation type="vanished">Uzunluk (saniye)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">şundan</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">ş&amp;una</translation>
-    </message>
-    <message>
-        <source>Length in seconds from %s, to</source>
-        <translation type="vanished">Saniye olarak uzunluk. Başlangıç: %1 Bitiş:</translation>
-    </message>
-    <message>
-        <source>Click Removal</source>
-        <translation type="vanished">Tıkırtı kaldırma</translation>
-    </message>
-    <message>
-        <source>Click Removal is designed to remove clicks on audio tracks</source>
-        <translation type="vanished">Tıkırtı kaldırma ses izlerindeki tıklamaları kaldırmak için tasarlanmıştır</translation>
-    </message>
-    <message>
-        <source>Selection must be larger than %d samples.</source>
-        <translation type="vanished">Seçimde en az %1 örnek bulunmalı.</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (lower is more sensitive):</source>
-        <translation type="vanished">&amp;Eşik (daha alçak daha duyarlıdır):</translation>
-    </message>
-    <message>
-        <source>Max &amp;Spike Width (higher is more sensitive):</source>
-        <translation type="vanished">En &amp;büyük iğne genişliği (daha yüksek daha duyarlıdır):</translation>
-    </message>
-    <message>
-        <source>Max Spike Width</source>
-        <translation type="vanished">En büyük iğne genişliği</translation>
-    </message>
-    <message>
-        <source>Reduces "dynamic range", or differences between loud and quiet parts.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Contrast Analyzer, for measuring RMS volume differences between two selections of audio.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">Karşıtlık inceleyici, seçilmiş iki sesin, ortalama ses düzeyleri arasındaki farkları ölçmek içindir.</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Bitiş</translation>
-    </message>
-    <message>
-        <source>Volume    </source>
-        <translation type="vanished">Ses düzeyi    </translation>
-    </message>
-    <message>
-        <source>&amp;Foreground:</source>
-        <translation type="vanished">Ö&amp;n plan:</translation>
-    </message>
-    <message>
-        <source>Foreground start time</source>
-        <translation type="vanished">Ön plan başlangıç zamanı</translation>
-    </message>
-    <message>
-        <source>Foreground end time</source>
-        <translation type="vanished">Ön plan bitiş zamanı</translation>
-    </message>
-    <message>
-        <source>&amp;Measure selection</source>
-        <translation type="vanished">Ölçü&amp;m seçimi</translation>
-    </message>
-    <message>
-        <source>&amp;Background:</source>
-        <translation type="vanished">A&amp;rka plan:</translation>
-    </message>
-    <message>
-        <source>Background start time</source>
-        <translation type="vanished">Arka plan başlangıç zamanı</translation>
-    </message>
-    <message>
-        <source>Background end time</source>
-        <translation type="vanished">Arka plan bitiş zamanı</translation>
-    </message>
-    <message>
-        <source>Mea&amp;sure selection</source>
-        <translation type="vanished">Ö&amp;lçüm seçimi</translation>
-    </message>
-    <message>
-        <source>Result</source>
-        <translation type="vanished">Sonuç</translation>
-    </message>
-    <message>
-        <source>Co&amp;ntrast Result:</source>
-        <translation type="vanished">Karşıtlık so&amp;nucu:</translation>
-    </message>
-    <message>
-        <source>R&amp;eset</source>
-        <translation type="vanished">&amp;Sıfırla</translation>
-    </message>
-    <message>
-        <source>&amp;Difference:</source>
-        <translation type="vanished">&amp;Fark:</translation>
-    </message>
-    <message>
-        <source>RMS = %s.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">RMS = %1.</translation>
-    </message>
-    <message>
-        <source>%s dB</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>zero</source>
-        <translation type="vanished">sıfır</translation>
-    </message>
-    <message>
-        <source>indeterminate</source>
-        <translation type="vanished">belirsiz</translation>
-    </message>
-    <message>
-        <source>%.2f dB RMS</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-* RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">%1 dB RMS</translation>
-    </message>
-    <message>
-        <source>Infinite dB difference</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">Sonsuz dB farkı</translation>
-    </message>
-    <message>
-        <source>Difference is indeterminate.</source>
-        <translation type="vanished">Fark belirsiz.</translation>
-    </message>
-    <message>
-        <source>Difference = %.2f RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">Fark = %1 RMS dB.</translation>
-    </message>
-    <message>
-        <source>Difference = infinite RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">Fark = Sonsuz RMS dB.</translation>
-    </message>
-    <message>
-        <source>Foreground level too high</source>
-        <translation type="vanished">Ön plan düzeyi çok yüksek</translation>
-    </message>
-    <message>
-        <source>Background level too high</source>
-        <translation type="vanished">Arka plan düzeyi çok yüksek</translation>
-    </message>
-    <message>
-        <source>Background higher than foreground</source>
-        <translation type="vanished">Arka plan ön plandan yüksek</translation>
-    </message>
-    <message>
-        <source>WCAG2 Pass</source>
-        <extracomment>i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/</extracomment>
-        <translation type="vanished">WCAG2 geçti</translation>
-    </message>
-    <message>
-        <source>WCAG2 Fail</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG2 geçemedi</translation>
-    </message>
-    <message>
-        <source>Current difference</source>
-        <extracomment>i18n-hint: i.e. difference in loudness at the moment.</extracomment>
-        <translation type="vanished">Geçerli fark</translation>
-    </message>
-    <message>
-        <source>Measured foreground level</source>
-        <translation type="vanished">Ölçülen ön plan düzeyi</translation>
-    </message>
-    <message>
-        <source>%.2f dB</source>
-        <extracomment>i18n-hint: short form of 'decibels'</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>No foreground measured</source>
-        <translation type="vanished">Ön plan ölçülmemiş</translation>
-    </message>
-    <message>
-        <source>Foreground not yet measured</source>
-        <translation type="vanished">Ön plan henüz ölçülmemiş</translation>
-    </message>
-    <message>
-        <source>Measured background level</source>
-        <translation type="vanished">Ölçülen arka plan düzeyi</translation>
-    </message>
-    <message>
-        <source>No background measured</source>
-        <translation type="vanished">Arka plan ölçülmemiş</translation>
-    </message>
-    <message>
-        <source>Background not yet measured</source>
-        <translation type="vanished">Arka plan henüz ölçülmemiş</translation>
-    </message>
-    <message>
-        <source>Export Contrast Result As:</source>
-        <translation type="vanished">Karşıtlık sonuçları şu şekilde dışa aktarılsın:</translation>
-    </message>
-    <message>
-        <source>WCAG 2.0 Success Criteria 1.4.7 Contrast Results</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG 2.0 başarı ölçütü 1.4.7 karşıtlık sonuçları</translation>
-    </message>
-    <message>
-        <source>Filename = %s.</source>
-        <translation type="vanished">Dosya adı = %1.</translation>
-    </message>
-    <message>
-        <source>Foreground</source>
-        <translation type="vanished">Ön plan</translation>
-    </message>
-    <message>
-        <source>Time started = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">Başlangıç zamanı = %1 saat, %2 dakika, %3 saniye.</translation>
-    </message>
-    <message>
-        <source>Time ended = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">Bitiş zamanı = %1 saat, %2 dakika, %3 saniye.</translation>
-    </message>
-    <message>
-        <source>Background</source>
-        <translation type="vanished">Arka plan</translation>
-    </message>
-    <message>
-        <source>Results</source>
-        <translation type="vanished">Sonuçlar</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Pass</source>
-        <translation type="vanished">WCAG 2.0 başarı ölçütü 1.4.7 : Geçti</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Fail</source>
-        <translation type="vanished">WCAG 2.0 başarı ölçütü 1.4.7 : Kaldı</translation>
-    </message>
-    <message>
-        <source>Data gathered</source>
-        <translation type="vanished">Veri toplandı</translation>
-    </message>
-    <message>
-        <source>%d %s %02d %02dh %02dm %02ds</source>
-        <extracomment>i18n-hint: day of month, month, year, hour, minute, second</extracomment>
-        <translation type="vanished">%1 %2 %3 %4sa %5da %6sn</translation>
-    </message>
-    <message>
-        <source>Contrast Analysis (WCAG 2 compliance)</source>
-        <translation type="vanished">Karşıtlık çözümlemesi (WCAG 2 uyumlu)</translation>
-    </message>
-    <message>
-        <source>Contrast...</source>
-        <translation type="vanished">Karşıtlık...</translation>
-    </message>
-    <message>
-        <source>Upper Threshold</source>
-        <translation type="vanished">Üst eşik</translation>
-    </message>
-    <message>
-        <source>Noise Floor</source>
-        <translation type="vanished">Gürültü tabanı</translation>
-    </message>
-    <message>
-        <source>Parameter 1</source>
-        <translation type="vanished">1. parametre</translation>
-    </message>
-    <message>
-        <source>Parameter 2</source>
-        <translation type="vanished">2. parametre</translation>
-    </message>
-    <message>
-        <source>Number of repeats</source>
-        <translation type="vanished">Yinelenme sayısı</translation>
-    </message>
-    <message>
-        <source>Distortion type:</source>
-        <translation type="vanished">Bozma türü:</translation>
-    </message>
-    <message>
-        <source>DC blocking filter</source>
-        <translation type="vanished">DC engelleme süzgeci</translation>
-    </message>
-    <message>
-        <source>Threshold controls</source>
-        <translation type="vanished">Eşik denetimleri</translation>
-    </message>
-    <message>
-        <source>Parameter controls</source>
-        <translation type="vanished">Parametre denetimleri</translation>
-    </message>
-    <message>
-        <source>Clipping level</source>
-        <translation type="vanished">Kırpılma düzeyi</translation>
-    </message>
-    <message>
-        <source>Drive</source>
-        <translation type="vanished">Sürücü</translation>
-    </message>
-    <message>
-        <source>Make-up Gain</source>
-        <translation type="vanished">Düzeltme kazancı</translation>
-    </message>
-    <message>
-        <source>Clipping threshold</source>
-        <translation type="vanished">Kırpılma eşiği</translation>
-    </message>
-    <message>
-        <source>Hardness</source>
-        <translation type="vanished">Sertlik</translation>
-    </message>
-    <message>
-        <source>Distortion amount</source>
-        <translation type="vanished">Bozma miktarı</translation>
-    </message>
-    <message>
-        <source>Output level</source>
-        <translation type="vanished">Çıkış düzeyi</translation>
-    </message>
-    <message>
-        <source>Repeat processing</source>
-        <translation type="vanished">Yineleme işlemi</translation>
-    </message>
-    <message>
-        <source>Harmonic brightness</source>
-        <translation type="vanished">Harmonik parlaklık</translation>
-    </message>
-    <message>
-        <source>Levelling fine adjustment</source>
-        <translation type="vanished">İnce düzeyleme ayarı</translation>
-    </message>
-    <message>
-        <source>Degree of Levelling</source>
-        <translation type="vanished">Düzeyleme derecesi</translation>
-    </message>
-    <message>
-        <source>dB Limit</source>
-        <translation type="vanished">dB sınırı</translation>
-    </message>
-    <message>
-        <source>Wet level</source>
-        <translation type="vanished">Islak düzey</translation>
-    </message>
-    <message>
-        <source>Residual level</source>
-        <translation type="vanished">Kalan düzey</translation>
-    </message>
-    <message>
-        <source>(Not Used):</source>
-        <translation type="vanished">(Kullanılmıyor):</translation>
-    </message>
-    <message>
-        <source>(-100 to 0 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(-100 ile 0 dB):</translation>
-    </message>
-    <message>
-        <source>(-80 to -20 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(-80 ile -20 dB):</translation>
-    </message>
-    <message>
-        <source>(0 to 100):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(0 ile 100):</translation>
-    </message>
-    <message>
-        <source>(0 to 5):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(0 ile 5):</translation>
-    </message>
-    <message>
-        <source>DTMF sequence empty.
-Check ALL settings for this effect.</source>
-        <translation type="vanished">DTMF sırası boş.
-Bunun etkili olması için TÜM ayarları denetleyin.</translation>
-    </message>
-    <message>
-        <source>DTMF &amp;sequence:</source>
-        <translation type="vanished">DTMF &amp;sırası:</translation>
-    </message>
-    <message>
-        <source>&amp;Amplitude (0-1):</source>
-        <translation type="vanished">&amp;Genlik (0-1):</translation>
-    </message>
-    <message>
-        <source>&amp;Duration:</source>
-        <translation type="vanished">&amp;Süre:</translation>
-    </message>
-    <message>
-        <source>&amp;Tone/silence ratio:</source>
-        <translation type="vanished">&amp;Ton/sessizlik oranı:</translation>
-    </message>
-    <message>
-        <source>Duty cycle:</source>
-        <translation type="vanished">Doluluk oranı:</translation>
-    </message>
-    <message>
-        <source>%.1f %%</source>
-        <translation type="vanished">%1 %%</translation>
-    </message>
-    <message>
-        <source>Tone duration:</source>
-        <translation type="vanished">Ton süresi:</translation>
-    </message>
-    <message>
-        <source>Silence duration:</source>
-        <translation type="vanished">Sessizlik süresi:</translation>
-    </message>
-    <message>
-        <source>%0.f ms</source>
-        <extracomment>i18n-hint milliseconds</extracomment>
-        <translation type="vanished">%0.f ms</translation>
-    </message>
-    <message>
-        <source>I&amp;nput</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show input</source>
-        <extracomment>i18n-hint: show input on a graph</extracomment>
-        <translation type="vanished">Çıkışı görüntüle</translation>
-    </message>
-    <message>
-        <source>O&amp;utput</source>
-        <translation type="vanished">Çıkış</translation>
-    </message>
-    <message>
-        <source>A&amp;ctual compression</source>
-        <translation type="vanished">Sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Show actual compression</source>
-        <extracomment>i18n-hint: show actual compression on a graph</extracomment>
-        <translation type="vanished">Ses düzeyi ve sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Tar&amp;get compression</source>
-        <translation type="vanished">Sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Show target compression</source>
-        <extracomment>i18n-hint: show target compression on a graph</extracomment>
-        <translation type="vanished">Ses düzeyi ve sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Compression curve</source>
-        <translation type="vanished">Sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Smoothing</source>
-        <translation type="vanished">Hiç bir şey yapılmasın</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (dB)</source>
-        <translation type="vanished">Eşik düzeyi (dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up gain (dB)</source>
-        <translation type="vanished">Düzeltme kazancı</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up target (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Knee &amp;width (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rati&amp;o:</source>
-        <translation type="vanished">&amp;Oran:</translation>
-    </message>
-    <message>
-        <source>&amp;Lookahead (ms)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Attac&amp;k (ms)</source>
-        <translation type="vanished">Kalkma (ms)</translation>
-    </message>
-    <message>
-        <source>&amp;Release (ms)</source>
-        <translation type="vanished">Bırakma süresi</translation>
-    </message>
-    <message>
-        <source>Actual Compression</source>
-        <translation type="vanished">Sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Target Compression</source>
-        <translation type="vanished">Sıkıştırma</translation>
-    </message>
-    <message>
-        <source>awaiting playback</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Delay time (seconds):</source>
-        <translation type="vanished">&amp;Gecikme süresi (saniye):</translation>
-    </message>
-    <message>
-        <source>D&amp;ecay factor:</source>
-        <translation type="vanished">&amp;Düşme çarpanı:</translation>
-    </message>
-    <message>
-        <source>Applied command: %s</source>
-        <translation type="vanished">Uygulanmış komut: %1</translation>
-    </message>
-    <message>
-        <source>Select Preset</source>
-        <translation type="vanished">Hazır ayarı seçin</translation>
-    </message>
-    <message>
-        <source>&amp;Preset:</source>
-        <translation type="vanished">&amp;Hazır ayar:</translation>
-    </message>
-    <message>
-        <source>User Presets</source>
-        <translation type="vanished">Kullanıcı hazır ayarları</translation>
-    </message>
-    <message>
-        <source>Factory Presets</source>
-        <translation type="vanished">Fabrika ayarları</translation>
-    </message>
-    <message>
-        <source>Current Settings</source>
-        <translation type="vanished">Geçerli ayarlar</translation>
-    </message>
-    <message>
-        <source>Factory Defaults</source>
-        <translation type="vanished">Varsayılan ayarlar</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following effect failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">Şu etki hazırlanamadı:
-
-%1
-
-'Yardım &gt; Tanılama &gt; Günlüğü görüntüle' altında ayrıntılı bilgi bulabilirsiniz</translation>
-    </message>
-    <message>
-        <source>Effect failed to initialize</source>
-        <translation type="vanished">Etki hazırlanamadı</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following command failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">Şu komut hazırlanamadı:
-
-%1
-
-'Yardım &gt; Tanılama &gt; Günlüğü görüntüle' altında ayrıntılı bilgi bulabilirsiniz</translation>
-    </message>
-    <message>
-        <source>Command failed to initialize</source>
-        <translation type="vanished">Komut hazırlanamadı</translation>
-    </message>
-    <message>
-        <source>Previewing</source>
-        <translation type="vanished">Ön izleniyor</translation>
-    </message>
-    <message>
-        <source>Manage presets and options</source>
-        <translation type="vanished">Hazır ayarları ve seçeneklerini yönetin</translation>
-    </message>
-    <message>
-        <source>Presets &amp;&amp; settings</source>
-        <translation type="vanished">Hazır ayar ve ayarlar</translation>
-    </message>
-    <message>
-        <source>Preview effect</source>
-        <translation type="vanished">Etki ön izlemesi</translation>
-    </message>
-    <message>
-        <source>&amp;Apply</source>
-        <translation type="vanished">&amp;Uygula</translation>
-    </message>
-    <message>
-        <source>Save Preset...</source>
-        <translation type="vanished">Hazır ayarı kaydet...</translation>
-    </message>
-    <message>
-        <source>Defaults</source>
-        <translation type="vanished">Varsayılanlar</translation>
-    </message>
-    <message>
-        <source>Options...</source>
-        <translation type="vanished">Ayarlar...</translation>
-    </message>
-    <message>
-        <source>Type: %s</source>
-        <translation type="vanished">Tür: %1</translation>
-    </message>
-    <message>
-        <source>Name: %s</source>
-        <translation type="vanished">Ad: %1</translation>
-    </message>
-    <message>
-        <source>Version: %s</source>
-        <translation type="vanished">Sürüm: %1</translation>
-    </message>
-    <message>
-        <source>Vendor: %s</source>
-        <translation type="vanished">Satıcı: %1</translation>
-    </message>
-    <message>
-        <source>Description: %s</source>
-        <translation type="vanished">Açıklama: %1</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="vanished">Hakkında</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete "%s"?</source>
-        <translation type="vanished">"%1" silinecek emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Preset name:</source>
-        <translation type="vanished">Hazır ayar adı:</translation>
-    </message>
-    <message>
-        <source>You must specify a name</source>
-        <translation type="vanished">Bir ad yazmalısınız</translation>
-    </message>
-    <message>
-        <source>Preset already exists.
-
-Replace?</source>
-        <translation type="vanished">Hazır ayar zaten var
-
-Değiştirilsin mi?</translation>
-    </message>
-    <message>
-        <source>Effect Unavailable</source>
-        <translation type="vanished">Etki kullanılamıyor</translation>
-    </message>
-    <message>
-        <source>Benchmark times:
-Original: %s
-Default Segmented: %s
-Default Threaded: %s
-SSE: %s
-SSE Threaded: %s
-</source>
-        <translation type="vanished">Değerlendirme zamanları:
-Özgün: %1
-Varsayılan parçalı: %2
-Varsayılan işlemli: %3
-SSE: %4
-SSE işlemli: %5
-</translation>
-    </message>
-    <message>
-        <source>%d Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>%g kHz</source>
-        <translation type="vanished">%1 kHz</translation>
-    </message>
-    <message>
-        <source>%gk</source>
-        <extracomment>i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.</extracomment>
-        <translation type="vanished">%1k</translation>
-    </message>
-    <message>
-        <source>%d dB</source>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>Error Loading EQ Curves</source>
-        <translation type="vanished">Dengeleyici eğrileri yüklenirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Manage Curves List</source>
-        <translation type="vanished">Eğri listesini yönet</translation>
-    </message>
-    <message>
-        <source>Manage Curves</source>
-        <translation type="vanished">Eğrileri yönet</translation>
-    </message>
-    <message>
-        <source>&amp;Curves</source>
-        <translation type="vanished">&amp;Eğriler</translation>
-    </message>
-    <message>
-        <source>Curve Name</source>
-        <translation type="vanished">Eğri adı</translation>
-    </message>
-    <message>
-        <source>D&amp;elete...</source>
-        <translation type="vanished">Si&amp;l...</translation>
-    </message>
-    <message>
-        <source>&amp;Get More...</source>
-        <translation type="vanished">&amp;Daha fazla...</translation>
-    </message>
-    <message>
-        <source>De&amp;faults</source>
-        <translation type="vanished">&amp;Varsayılanlar</translation>
-    </message>
-    <message>
-        <source>Rename 'unnamed' to save a new entry.
-'OK' saves all changes, 'Cancel' doesn't.</source>
-        <translation type="vanished">Yeni bir kayıt oluşturmak için 'adsız' yerine yeni ad verin.
-Tüm değişiklikleri kaydetmek için 'Tamam', vazgeçmek için 'İptal' üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>'unnamed' always stays at the bottom of the list</source>
-        <translation type="vanished">'adsız' her zaman listenin en altında yer alır</translation>
-    </message>
-    <message>
-        <source>'unnamed' is special</source>
-        <translation type="vanished">'adsız' özeldir</translation>
-    </message>
-    <message>
-        <source>Rename '%s' to...</source>
-        <translation type="vanished">'%1' şuna yeniden adlandır...</translation>
-    </message>
-    <message>
-        <source>Rename...</source>
-        <translation type="vanished">Yeniden adlandır...</translation>
-    </message>
-    <message>
-        <source>Rename '%s'</source>
-        <translation type="vanished">'%1' yeniden adlandır</translation>
-    </message>
-    <message>
-        <source>Name is the same as the original one</source>
-        <translation type="vanished">Ad özgün olan ile aynı</translation>
-    </message>
-    <message>
-        <source>Same name</source>
-        <translation type="vanished">Aynı ad</translation>
-    </message>
-    <message>
-        <source>Overwrite existing curve '%s'?</source>
-        <translation type="vanished">Var olan '%1' eğrisinin üzerine yazılsın mı?</translation>
-    </message>
-    <message>
-        <source>Curve exists</source>
-        <translation type="vanished">Eğri zaten var</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve.</source>
-        <translation type="vanished">'Adsız' bir eğriyi silemezsiniz.</translation>
-    </message>
-    <message>
-        <source>Can't delete 'unnamed'</source>
-        <translation type="vanished">'adsız' silinemez</translation>
-    </message>
-    <message>
-        <source>Delete '%s'?</source>
-        <translation type="vanished">'%1' silinsin mi?</translation>
-    </message>
-    <message>
-        <source>Delete %d items?</source>
-        <translation type="vanished">%1 öge silinsin mi?</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve, it is special.</source>
-        <translation type="vanished">'adsız' eğrisini silemezsiniz, özeldir.</translation>
-    </message>
-    <message>
-        <source>Choose an EQ curve file</source>
-        <translation type="vanished">Bir EQ eğrisi dosyası seçin</translation>
-    </message>
-    <message>
-        <source>Export EQ curves as...</source>
-        <translation type="vanished">EQ eğrilerini farklı dışa aktar...</translation>
-    </message>
-    <message>
-        <source>You cannot export 'unnamed' curve, it is special.</source>
-        <translation type="vanished">'adsız' eğrisini dışa aktaramazsınız, özeldir.</translation>
-    </message>
-    <message>
-        <source>Cannot Export 'unnamed'</source>
-        <translation type="vanished">'adsız' olarak dışa aktarılamaz</translation>
-    </message>
-    <message>
-        <source>%d curves exported to %s</source>
-        <translation type="vanished">%1 eğri %2 olarak dışa aktarıldı</translation>
-    </message>
-    <message>
-        <source>Curves exported</source>
-        <translation type="vanished">Eğriler dışa aktarıldı</translation>
-    </message>
-    <message>
-        <source>No curves exported</source>
-        <translation type="vanished">Hiç bir eğri dışa aktarılmadı</translation>
-    </message>
-    <message>
-        <source>To use this filter curve in a macro, please choose a new name for it.
-Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one.</source>
-        <translation type="vanished">Bu süzgeç eğrisini bir makro içinde kullanmak için yeni bir ad verin.
-'Eğrileri kaydet/yönet...' üzerine tıklayarak 'adsız' eğriye ad verin ve bunu kullanın.</translation>
-    </message>
-    <message>
-        <source>Filter Curve EQ needs a different name</source>
-        <translation type="vanished">Süzgeç eğrisi dengeleyicinin adı farklı olmalı</translation>
-    </message>
-    <message>
-        <source>+ dB</source>
-        <translation type="vanished">+ dB</translation>
-    </message>
-    <message>
-        <source>Max dB</source>
-        <translation type="vanished">En fazla dB</translation>
-    </message>
-    <message>
-        <source>Min dB</source>
-        <translation type="vanished">En az dB</translation>
-    </message>
-    <message>
-        <source>- dB</source>
-        <translation type="vanished">- dB</translation>
-    </message>
-    <message>
-        <source>&amp;EQ Type:</source>
-        <translation type="vanished">&amp;Dengeleyici türü:</translation>
-    </message>
-    <message>
-        <source>Draw Curves</source>
-        <translation type="vanished">Eğrileri çiz</translation>
-    </message>
-    <message>
-        <source>&amp;Draw</source>
-        <translation type="vanished">Ç&amp;iz</translation>
-    </message>
-    <message>
-        <source>&amp;Graphic</source>
-        <translation type="vanished">Çi&amp;zelge</translation>
-    </message>
-    <message>
-        <source>Interpolation type</source>
-        <translation type="vanished">Ara değerleme türü</translation>
-    </message>
-    <message>
-        <source>Linear Frequency Scale</source>
-        <translation type="vanished">Doğrusal frekans ölçeği</translation>
-    </message>
-    <message>
-        <source>Li&amp;near Frequency Scale</source>
-        <translation type="vanished">Doğrusal frekans ölçeği</translation>
-    </message>
-    <message>
-        <source>Length of &amp;Filter:</source>
-        <translation type="vanished">Sü&amp;zgeç uzunluğu:</translation>
-    </message>
-    <message>
-        <source>Length of Filter</source>
-        <translation type="vanished">Süzgeç uzunluğu</translation>
-    </message>
-    <message>
-        <source>&amp;Select Curve:</source>
-        <translation type="vanished">Eğriyi &amp;seçin:</translation>
-    </message>
-    <message>
-        <source>Select Curve</source>
-        <translation type="vanished">Eğiriyi seçin</translation>
-    </message>
-    <message>
-        <source>S&amp;ave/Manage Curves...</source>
-        <translation type="vanished">Eğrileri k&amp;aydet/yönet...</translation>
-    </message>
-    <message>
-        <source>Fla&amp;tten</source>
-        <translation type="vanished">Düzel&amp;t</translation>
-    </message>
-    <message>
-        <source>&amp;Invert</source>
-        <translation type="vanished">Ev&amp;ir</translation>
-    </message>
-    <message>
-        <source>Show grid lines</source>
-        <translation type="vanished">Izgara çizgileri görüntülensin</translation>
-    </message>
-    <message>
-        <source>Show g&amp;rid lines</source>
-        <translation type="vanished">Izga&amp;ra çizgileri görüntülensin</translation>
-    </message>
-    <message>
-        <source>Requested curve not found, using 'unnamed'</source>
-        <translation type="vanished">İstenen eğri bulunamadı, 'adsız' kullanılıyor</translation>
-    </message>
-    <message>
-        <source>Curve not found</source>
-        <translation type="vanished">Eğri bulunamadı</translation>
-    </message>
-    <message>
-        <source>%lld of %lld</source>
-        <comment>find clipping</comment>
-        <extracomment>i18n-hint: Two numbers are substituted; the second is the
-size of a set, the first is the size of a subset, and not
-understood as an ordinal (i.e., not meaning "first", or
-"second", etc.)</extracomment>
-        <translation type="vanished">%1 / %2</translation>
-    </message>
-    <message>
-        <source>&amp;Start threshold (samples):</source>
-        <translation type="vanished">Eşik &amp;başlangıcı (örnekler):</translation>
-    </message>
-    <message>
-        <source>St&amp;op threshold (samples):</source>
-        <translation type="vanished">Eşik &amp;sonu (örnekler):</translation>
-    </message>
-    <message>
-        <source>%3d dB</source>
-        <extracomment>i18n-hint: usually leave this as is as dB doesn't get translated</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.2f secs</source>
-        <translation type="vanished">%1 saniye</translation>
-    </message>
-    <message>
-        <source>%.1f secs</source>
-        <translation type="vanished">%1 saniye</translation>
-    </message>
-    <message>
-        <source>%.0f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1:1</translation>
-    </message>
-    <message>
-        <source>%.1f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1:1</translation>
-    </message>
-    <message>
-        <source>Ratio %.0f to 1</source>
-        <translation type="vanished">Oran %1 -&gt; 1</translation>
-    </message>
-    <message>
-        <source>Ratio %.1f to 1</source>
-        <translation type="vanished">Oran %1 -&gt; 1</translation>
-    </message>
-    <message>
-        <source>&amp;Noise Floor:</source>
-        <translation type="vanished">&amp;Gürültü tabanı:</translation>
-    </message>
-    <message>
-        <source>&amp;Ratio:</source>
-        <translation type="vanished">&amp;Oran:</translation>
-    </message>
-    <message>
-        <source>&amp;Attack Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">&amp;Kalkma süresi:</translation>
-    </message>
-    <message>
-        <source>Attack Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">Kalkma süresi</translation>
-    </message>
-    <message>
-        <source>R&amp;elease Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">&amp;Bırakma süresi:</translation>
-    </message>
-    <message>
-        <source>Release Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">Bırakma süresi</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke-up gain for 0 dB after compressing</source>
-        <extracomment>i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.</extracomment>
-        <translation type="vanished">&amp;Sıkıştırdıktan sonra 0 dB düzeltme kazancı</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress based on Peaks</source>
-        <extracomment>i18n-hint: "Compress" here means reduce variations of sound volume,
-NOT related to file-size compression; Peaks means extremes in volume</extracomment>
-        <translation type="vanished">&amp;Tepelere göre sıkıştır</translation>
-    </message>
-    <message>
-        <source>Threshold %d dB</source>
-        <translation type="vanished">Eşik: %1 dB</translation>
-    </message>
-    <message>
-        <source>Noise Floor %d dB</source>
-        <translation type="vanished">Gürültü tabanı %1 dB</translation>
-    </message>
-    <message>
-        <source>Attack Time %.2f secs</source>
-        <translation type="vanished">Kalkma süresi %1 saniye</translation>
-    </message>
-    <message>
-        <source>Release Time %.1f secs</source>
-        <translation type="vanished">Bırakma süresi %1 saniye</translation>
-    </message>
-    <message>
-        <source>perceived loudness</source>
-        <translation type="vanished">algılanan ses yüksekliği</translation>
-    </message>
-    <message>
-        <source>Normalizing Loudness...
-</source>
-        <translation type="vanished">Güçlendirme normalleştiriliyor...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize</source>
-        <translation type="vanished">&amp;Normalleştir</translation>
-    </message>
-    <message>
-        <source>Loudness LUFS</source>
-        <extracomment>i18n-hint: LUFS is a particular method for measuring loudnesss</extracomment>
-        <translation type="vanished">Güçlendirme LUFS</translation>
-    </message>
-    <message>
-        <source>LUFS</source>
-        <translation type="vanished">LUFS</translation>
-    </message>
-    <message>
-        <source>RMS dB</source>
-        <translation type="vanished">RMS dB</translation>
-    </message>
-    <message>
-        <source>Normalize &amp;stereo channels independently</source>
-        <translation type="vanished">Çift &amp;kanalı birbirinden bağımsız olarak normalleştir</translation>
-    </message>
-    <message>
-        <source>&amp;Treat mono as dual-mono (recommended)</source>
-        <translation type="vanished">&amp;Tek kanal çift-tek kanal gibi değerlendirilsin (önerilir)</translation>
-    </message>
-    <message>
-        <source>(Maximum 0dB)</source>
-        <translation type="vanished">(En fazla 0dB)</translation>
-    </message>
-    <message>
-        <source>White</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "white noise" having a uniform spectrum</extracomment>
-        <translation type="vanished">Beyaz</translation>
-    </message>
-    <message>
-        <source>Pink</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "pink noise" having a spectrum with more power
-in low frequencies</extracomment>
-        <translation type="vanished">Pembe</translation>
-    </message>
-    <message>
-        <source>Brownian</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: a kind of noise spectrum also known as "red" or "brown"</extracomment>
-        <translation type="vanished">Kahverengi</translation>
-    </message>
-    <message>
-        <source>&amp;Noise type:</source>
-        <translation type="vanished">&amp;Gürültü türü:</translation>
-    </message>
-    <message>
-        <source>Old</source>
-        <translation type="vanished">Eski</translation>
-    </message>
-    <message>
-        <source>Noise Reduction</source>
-        <translation type="vanished">Gürültü azaltma</translation>
-    </message>
-    <message>
-        <source>Steps per block are too few for the window types.</source>
-        <translation type="vanished">Blok başına adım sayısı pencere türleri için çok küçük.</translation>
-    </message>
-    <message>
-        <source>Steps per block cannot exceed the window size.</source>
-        <translation type="vanished">Blok başına adım sayısı pencere boyutundan büyük olamaz.</translation>
-    </message>
-    <message>
-        <source>Median method is not implemented for more than four steps per window.</source>
-        <translation type="vanished">Medyan yöntemi pencere başına dört adımdan çok uygulanamaz.</translation>
-    </message>
-    <message>
-        <source>Warning: window types are not the same as for profiling.</source>
-        <translation type="vanished">Uyarı: pencere türleri profil ile aynı değil.</translation>
-    </message>
-    <message>
-        <source>&amp;Noise reduction (dB):</source>
-        <translation type="vanished">&amp;Gürültü azaltma (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Sensitivity:</source>
-        <translation type="vanished">&amp;Duyarlılık:</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k time (secs):</source>
-        <translation type="vanished">&amp;Kalkma zamanı (saniye):</translation>
-    </message>
-    <message>
-        <source>Attack time</source>
-        <translation type="vanished">Kalkma süresi</translation>
-    </message>
-    <message>
-        <source>R&amp;elease time (secs):</source>
-        <translation type="vanished">&amp;Bırakma zamanı (saniye):</translation>
-    </message>
-    <message>
-        <source>Release time</source>
-        <translation type="vanished">Bırakma süresi</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency smoothing (bands):</source>
-        <translation type="vanished">&amp;Frekans düzeltme (bantlar):</translation>
-    </message>
-    <message>
-        <source>Sensiti&amp;vity (dB):</source>
-        <translation type="vanished">D&amp;uyarlılık (dB):</translation>
-    </message>
-    <message>
-        <source>Old Sensitivity</source>
-        <translation type="vanished">Eski duyarlılık</translation>
-    </message>
-    <message>
-        <source>Select a few seconds of just noise so Audacity knows what to filter out,
-then click Get Noise Profile:</source>
-        <translation type="vanished">Yalnızca gürültünün olduğu bir kaç saniyeyi seçin. Böylece Audacity neyi süzeceğini bilir,
-sonra gürültü profilini almak için tıklayın:</translation>
-    </message>
-    <message>
-        <source>&amp;Get Noise Profile</source>
-        <translation type="vanished">&amp;Gürültü profilini getir</translation>
-    </message>
-    <message>
-        <source>Select all of the audio you want filtered, choose how much noise you want
-filtered out, and then click 'OK' to reduce noise.
-</source>
-        <translation type="vanished">Süzmek istediğiniz ses dosyalarını seçin ve gürültünün ne kadarını süzmek
-istediğinizi seçtikten sonra 'Tamam' üzerine tıklayın.
-</translation>
-    </message>
-    <message>
-        <source>Noise:</source>
-        <translation type="vanished">Gürültü:</translation>
-    </message>
-    <message>
-        <source>Re&amp;duce</source>
-        <extracomment>i18n-hint: Translate differently from "Residue" !</extracomment>
-        <translation type="vanished">A&amp;zalt</translation>
-    </message>
-    <message>
-        <source>&amp;Isolate</source>
-        <translation type="vanished">Ya&amp;lıt</translation>
-    </message>
-    <message>
-        <source>Resid&amp;ue</source>
-        <extracomment>i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !</extracomment>
-        <translation type="vanished">&amp;Kalıntı</translation>
-    </message>
-    <message>
-        <source>Advanced Settings</source>
-        <translation type="vanished">Gelişmiş ayarlar</translation>
-    </message>
-    <message>
-        <source>&amp;Window types:</source>
-        <translation type="vanished">&amp;Pencere türleri:</translation>
-    </message>
-    <message>
-        <source>Window si&amp;ze:</source>
-        <translation type="vanished">Pencere &amp;boyutu:</translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="vanished">8</translation>
-    </message>
-    <message>
-        <source>16</source>
-        <translation type="vanished">16</translation>
-    </message>
-    <message>
-        <source>32</source>
-        <translation type="vanished">32</translation>
-    </message>
-    <message>
-        <source>64</source>
-        <translation type="vanished">64</translation>
-    </message>
-    <message>
-        <source>128</source>
-        <translation type="vanished">128</translation>
-    </message>
-    <message>
-        <source>256</source>
-        <translation type="vanished">256</translation>
-    </message>
-    <message>
-        <source>512</source>
-        <translation type="vanished">512</translation>
-    </message>
-    <message>
-        <source>1024</source>
-        <translation type="vanished">1024</translation>
-    </message>
-    <message>
-        <source>2048 (default)</source>
-        <translation type="vanished">2048 (varsayılan)</translation>
-    </message>
-    <message>
-        <source>4096</source>
-        <translation type="vanished">4096</translation>
-    </message>
-    <message>
-        <source>8192</source>
-        <translation type="vanished">8192</translation>
-    </message>
-    <message>
-        <source>16384</source>
-        <translation type="vanished">16384</translation>
-    </message>
-    <message>
-        <source>S&amp;teps per window:</source>
-        <translation type="vanished">Bir &amp;penceredeki adım sayısı:</translation>
-    </message>
-    <message>
-        <source>4 (default)</source>
-        <translation type="vanished">4 (varsayılan)</translation>
-    </message>
-    <message>
-        <source>Discrimination &amp;method:</source>
-        <translation type="vanished">Ayırma yönte&amp;mi:</translation>
-    </message>
-    <message>
-        <source>Removing DC offset and Normalizing...
-</source>
-        <translation type="vanished">DC kayma kaldırılarak Normalleştiriliyor...
-</translation>
-    </message>
-    <message>
-        <source>Removing DC offset...
-</source>
-        <translation type="vanished">DC kayma kaldırılıyor...
-</translation>
-    </message>
-    <message>
-        <source>Normalizing without removing DC offset...
-</source>
-        <translation type="vanished">DC kayma kaldırılmadan Normalleştiriliyor...
-</translation>
-    </message>
-    <message>
-        <source>Not doing anything...
-</source>
-        <translation type="vanished">Herhangi bir şey yapılmıyor...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="vanished">&amp;DC kaymayı kaldır (dikeyde 0.0 üzerine ortala)</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize peak amplitude to   </source>
-        <translation type="vanished">&amp;Tepe genliğini şuna normalleştir </translation>
-    </message>
-    <message>
-        <source>Peak amplitude dB</source>
-        <translation type="vanished">Tepe genliği dB</translation>
-    </message>
-    <message>
-        <source>N&amp;ormalize stereo channels independently</source>
-        <translation type="vanished">Çift &amp;kanalı birbirinden bağımsız olarak normalleştir</translation>
-    </message>
-    <message>
-        <source>Paulstretch is only for an extreme time-stretch or "stasis" effect</source>
-        <translation type="vanished">Paulstretch yalnızca zaman esnetme ya da "statis" etkisinde kullanılır</translation>
-    </message>
-    <message>
-        <source>&amp;Stretch Factor:</source>
-        <extracomment>i18n-hint: This is how many times longer the sound will be, e.g. applying
-* the effect to a 1-second sample, with the default Stretch Factor of 10.0
-* will give an (approximately) 10 second sound</extracomment>
-        <translation type="vanished">&amp;Esnetme çarpanı:</translation>
-    </message>
-    <message>
-        <source>&amp;Time Resolution (seconds):</source>
-        <translation type="vanished">&amp;Zaman çözünürlüğü (saniye):</translation>
-    </message>
-    <message>
-        <source>Audio selection too short to preview.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">Ses seçimi ön izleme için çok kısa.
-
-Ses seçimini en az %1 saniye olacak şekilde arttırmayı ya da
-'Zaman çözünürlüğü' değerini %2 saniyeden küçük olarak ayarlamayı deneyin.</translation>
-    </message>
-    <message>
-        <source>Unable to Preview.
-
-For the current audio selection, the maximum
-'Time Resolution' is %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">Ön izleme yapılamıyor.
-
-Geçerli ses seçimi için en büyük 'Zaman çözünürlüğü'
-değeri %1 saniyedir.</translation>
-    </message>
-    <message>
-        <source>The 'Time Resolution' is too long for the selection.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">'Zaman çözünürlüğü' önizleme için çok uzun.
-
-Ses seçimini en az %1 saniye olacak şekilde arttırmayı  ya da 
-'Zaman çözünürlüğü' değerini %2 saniyeden küçük olarak ayarlamayı deneyin.</translation>
-    </message>
-    <message>
-        <source>&amp;Stages:</source>
-        <translation type="vanished">&amp;Aşamalar:</translation>
-    </message>
-    <message>
-        <source>Stages</source>
-        <translation type="vanished">Aşamalar</translation>
-    </message>
-    <message>
-        <source>&amp;Dry/Wet:</source>
-        <translation type="vanished">&amp;Kuru/ıslak:</translation>
-    </message>
-    <message>
-        <source>Dry Wet</source>
-        <translation type="vanished">Kuru ıslak</translation>
-    </message>
-    <message>
-        <source>LFO Freq&amp;uency (Hz):</source>
-        <translation type="vanished">LF&amp;O frekansı (Hz):</translation>
-    </message>
-    <message>
-        <source>LFO frequency in hertz</source>
-        <translation type="vanished">Hertz olarak LFO frekansı</translation>
-    </message>
-    <message>
-        <source>LFO Sta&amp;rt Phase (deg.):</source>
-        <translation type="vanished">LFO baş&amp;langıç fazı (drc.):</translation>
-    </message>
-    <message>
-        <source>LFO start phase in degrees</source>
-        <translation type="vanished">Derece olarak LFO başlangıç fazı</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h:</source>
-        <translation type="vanished">De&amp;rinlik:</translation>
-    </message>
-    <message>
-        <source>Depth in percent</source>
-        <translation type="vanished">Yüzde olarak derinlik</translation>
-    </message>
-    <message>
-        <source>Feedbac&amp;k (%):</source>
-        <translation type="vanished">&amp;Geri besleme (%):</translation>
-    </message>
-    <message>
-        <source>Feedback in percent</source>
-        <translation type="vanished">Yüzde olarak geri besleme</translation>
-    </message>
-    <message>
-        <source>&amp;Output gain (dB):</source>
-        <translation type="vanished">Çıkış &amp;kazancı (dB):</translation>
-    </message>
-    <message>
-        <source>Output gain (dB)</source>
-        <translation type="vanished">Çıkış kazancı (dB)</translation>
-    </message>
-    <message>
-        <source>%s - %s</source>
-        <extracomment>i18n-hint: First %s is an effect name, second is a track name</extracomment>
-        <translation type="vanished">%1 - %2</translation>
-    </message>
-    <message>
-        <source>Repair works by using audio data outside the selection region.
-
-Please select a region that has audio touching at least one side of it.
-
-The more surrounding audio, the better it performs.</source>
-        <translation type="vanished">Seçilmiş aralığın dışındaki ses verisi kullanılarak onarım deneniyor. 
-
-Lütfen en az bir yanında ses dokunuşları olan bir aralık seçin. 
-
-Çevresel ses arttıkça sonuç daha iyi olur.</translation>
-    </message>
-    <message>
-        <source>&amp;Number of repeats to add:</source>
-        <translation type="vanished">&amp;Eklenecek yineleme sayısı:</translation>
-    </message>
-    <message>
-        <source>Current selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">Geçerli seçim uzunluğu: gg:sa:dd:ss</translation>
-    </message>
-    <message>
-        <source>New selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">Yeni seçim uzunluğu: gg:sa:dd:ss</translation>
-    </message>
-    <message>
-        <source>Current selection length: %s</source>
-        <translation type="vanished">Geçerli seçim uzunluğu: %1</translation>
-    </message>
-    <message>
-        <source>New selection length: %s</source>
-        <translation type="vanished">Yeni seçim uzunluğu: %1</translation>
-    </message>
-    <message>
-        <source>Warning: No repeats.</source>
-        <translation type="vanished">Uyarı: Yineleme yok.</translation>
-    </message>
-    <message>
-        <source>Adds ambience or a "hall effect"</source>
-        <translation type="vanished">Ortam ya da "oda etkisi" ekler</translation>
-    </message>
-    <message>
-        <source>&amp;Room Size (%):</source>
-        <translation type="vanished">&amp;Oda boyutu (%):</translation>
-    </message>
-    <message>
-        <source>&amp;Pre-delay (ms):</source>
-        <translation type="vanished">Ö&amp;n gecikme (ms):</translation>
-    </message>
-    <message>
-        <source>Rever&amp;berance (%):</source>
-        <translation type="vanished">&amp;Yankılanma (%):</translation>
-    </message>
-    <message>
-        <source>Da&amp;mping (%):</source>
-        <translation type="vanished">Sönü&amp;mlenme (%):</translation>
-    </message>
-    <message>
-        <source>Tone &amp;Low (%):</source>
-        <translation type="vanished">&amp;Düşük ton (%):</translation>
-    </message>
-    <message>
-        <source>Tone &amp;High (%):</source>
-        <translation type="vanished">&amp;Yüksek ton (%):</translation>
-    </message>
-    <message>
-        <source>Wet &amp;Gain (dB):</source>
-        <translation type="vanished">I&amp;slak kazanç (dB):</translation>
-    </message>
-    <message>
-        <source>Dr&amp;y Gain (dB):</source>
-        <translation type="vanished">K&amp;uru kazanç (dB):</translation>
-    </message>
-    <message>
-        <source>Stereo Wid&amp;th (%):</source>
-        <translation type="vanished">Çif&amp;t kanal genişliği (%):</translation>
-    </message>
-    <message>
-        <source>Wet O&amp;nly</source>
-        <translation type="vanished">Yal&amp;nız ıslak</translation>
-    </message>
-    <message>
-        <source>&amp;Filter Type:</source>
-        <translation type="vanished">&amp;Süzgeç türü:</translation>
-    </message>
-    <message>
-        <source>O&amp;rder:</source>
-        <extracomment>i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.</extracomment>
-        <translation type="vanished">Sı&amp;ralama:</translation>
-    </message>
-    <message>
-        <source>&amp;Passband Ripple:</source>
-        <translation type="vanished">&amp;Bant geçiren ripple:</translation>
-    </message>
-    <message>
-        <source>Passband Ripple (dB)</source>
-        <translation type="vanished">Bant geçiren ripple (dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Subtype:</source>
-        <translation type="vanished">&amp;Alt tür:</translation>
-    </message>
-    <message>
-        <source>Cutoff (Hz)</source>
-        <translation type="vanished">Kesim (Hz)</translation>
-    </message>
-    <message>
-        <source>C&amp;utoff:</source>
-        <translation type="vanished">K&amp;esim:</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation:</source>
-        <translation type="vanished">En az ban&amp;t bastırma zayıflatması:</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation (dB)</source>
-        <translation type="vanished">En az ban&amp;t bastırma zayıflatması (dB)</translation>
-    </message>
-    <message>
-        <source>Align MIDI to Audio</source>
-        <translation type="vanished">MIDI ile sesi hizala</translation>
-    </message>
-    <message>
-        <source>Frame Period:</source>
-        <translation type="vanished">Kare aralığı:</translation>
-    </message>
-    <message>
-        <source>Frame Period</source>
-        <translation type="vanished">Kare aralığı</translation>
-    </message>
-    <message>
-        <source>Window Size:</source>
-        <translation type="vanished">Pencere boyutu:</translation>
-    </message>
-    <message>
-        <source>Window Size</source>
-        <translation type="vanished">Pencere boyutu</translation>
-    </message>
-    <message>
-        <source>Force Final Alignment</source>
-        <translation type="vanished">Son hizalamaya zorla</translation>
-    </message>
-    <message>
-        <source>Ignore Silence at Beginnings and Endings</source>
-        <translation type="vanished">Başlangıç ve bitişteki sessizlikleri yok say</translation>
-    </message>
-    <message>
-        <source>Silence Threshold:</source>
-        <translation type="vanished">Sessizlik eşiği:</translation>
-    </message>
-    <message>
-        <source>Silence Threshold</source>
-        <translation type="vanished">Sessizlik eşiği</translation>
-    </message>
-    <message>
-        <source>Presmooth Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Ön düzleme zamanı:</translation>
-    </message>
-    <message>
-        <source>Presmooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Ön düzleme zamanı</translation>
-    </message>
-    <message>
-        <source>Line Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Çizgi zamanı:</translation>
-    </message>
-    <message>
-        <source>Line Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Çizgi zamanı</translation>
-    </message>
-    <message>
-        <source>Smooth Time:</source>
-        <translation type="vanished">Düzeltme zamanı:</translation>
-    </message>
-    <message>
-        <source>Smooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Düzeltme zamanı</translation>
-    </message>
-    <message>
-        <source>Use Defaults</source>
-        <translation type="vanished">Varsayılanları kullan</translation>
-    </message>
-    <message>
-        <source>Restore Defaults</source>
-        <translation type="vanished">Varsayılanları geri yükle</translation>
-    </message>
-    <message>
-        <source>%.3f</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>generator</comment>
-        <extracomment>i18n-hint: noun</extracomment>
-        <translation type="vanished">Sessizlik</translation>
-    </message>
-    <message>
-        <source>Stereo To Mono</source>
-        <translation type="vanished">Çift kanallıdan tek kanallıya</translation>
-    </message>
-    <message>
-        <source>Converts stereo tracks to mono</source>
-        <translation type="vanished">Çift kanallı izi tek kanallıya dönüştürür</translation>
-    </message>
-    <message>
-        <source>Mixing down to mono</source>
-        <translation type="vanished">Tek kanala indirgeniyor</translation>
-    </message>
-    <message>
-        <source>Sliding Stretch</source>
-        <translation type="vanished">Kayan esnetme</translation>
-    </message>
-    <message>
-        <source>Initial Tempo Change (%)</source>
-        <translation type="vanished">Başlangıç tempo değişimi (%)</translation>
-    </message>
-    <message>
-        <source>Final Tempo Change (%)</source>
-        <translation type="vanished">Sonuç tempo değişimi (%)</translation>
-    </message>
-    <message>
-        <source>Initial Pitch Shift</source>
-        <translation type="vanished">Başlangıç perde kayması</translation>
-    </message>
-    <message>
-        <source>(&amp;semitones) [-12 to 12]:</source>
-        <translation type="vanished">(&amp;yarım tonlar)  [-12 ile 12 ]:</translation>
-    </message>
-    <message>
-        <source>(%) [-50 to 100]:</source>
-        <translation type="vanished">(%) [-50 ile 100]:</translation>
-    </message>
-    <message>
-        <source>Final Pitch Shift</source>
-        <translation type="vanished">Bitiş perde kayması</translation>
-    </message>
-    <message>
-        <source>(s&amp;emitones) [-12 to 12]:</source>
-        <translation type="vanished">(y&amp;arım tonlar)  [-12 ile 12 ]:</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>waveform</comment>
-        <translation type="vanished">Üçgen</translation>
-    </message>
-    <message>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation type="vanished">Dört türden birinde artan ya da azalan bir ton üretir</translation>
-    </message>
-    <message>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation type="vanished">Dört türden birinde sabit frekanslı bir ton üretir</translation>
-    </message>
-    <message>
-        <source>&amp;Waveform:</source>
-        <translation type="vanished">&amp;Dalga şekli:</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency (Hz):</source>
-        <translation type="vanished">&amp;Frekans (Hz):</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz Start</source>
-        <translation type="vanished">Frekans Hertz başlangıcı</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz End</source>
-        <translation type="vanished">Frekan Hertz bitişi</translation>
-    </message>
-    <message>
-        <source>Amplitude Start</source>
-        <translation type="vanished">Genlik başlangıcı</translation>
-    </message>
-    <message>
-        <source>Amplitude End</source>
-        <translation type="vanished">Genlik bitişi</translation>
-    </message>
-    <message>
-        <source>I&amp;nterpolation:</source>
-        <translation type="vanished">A&amp;ra değerleme:</translation>
-    </message>
-    <message>
-        <source>Truncate Silence</source>
-        <translation type="vanished">Sessizliği buda</translation>
-    </message>
-    <message>
-        <source>When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group.</source>
-        <translation type="vanished">Bağımsız olarak budanırken, her bir eş kilitlenmiş iz grubunda yalnızca bir seçilmiş ses izi olabilir.</translation>
-    </message>
-    <message>
-        <source>Detect Silence</source>
-        <translation type="vanished">Sessizliği algıla</translation>
-    </message>
-    <message>
-        <source>Tr&amp;uncate to:</source>
-        <translation type="vanished">Şuna &amp;buda:</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress to:</source>
-        <translation type="vanished">Şuna &amp;sıkıştır:</translation>
-    </message>
-    <message>
-        <source>Trunc&amp;ate tracks independently</source>
-        <translation type="vanished">İzleri bağımsız &amp;olarak buda</translation>
-    </message>
-    <message>
-        <source>Save VST Preset As:</source>
-        <translation type="vanished">Hazır VST ayarlarını farklı kaydet:</translation>
-    </message>
-    <message>
-        <source>Standard VST bank file</source>
-        <translation type="vanished">Standart VST bankası dosyası</translation>
-    </message>
-    <message>
-        <source>Standard VST program file</source>
-        <translation type="vanished">Standart VST program dosyası</translation>
-    </message>
-    <message>
-        <source>Audacity VST preset file</source>
-        <translation type="vanished">Audacity hazır VST ayarları dosyası</translation>
-    </message>
-    <message>
-        <source>Unrecognized file extension.</source>
-        <translation type="vanished">Dosya uzantısı anlaşılamadı.</translation>
-    </message>
-    <message>
-        <source>Load VST Preset:</source>
-        <translation type="vanished">Yüklenecek hazır VST ayarları:</translation>
-    </message>
-    <message>
-        <source>VST preset files</source>
-        <translation type="vanished">Hazır VST ayar dosyaları</translation>
-    </message>
-    <message>
-        <source>Unable to load presets file.</source>
-        <translation type="vanished">Hazır ayarlar dosyası yüklenemedi.</translation>
-    </message>
-    <message>
-        <source>VST Effect Options</source>
-        <translation type="vanished">VST etkisi ayarları</translation>
-    </message>
-    <message>
-        <source>Buffer Size</source>
-        <translation type="vanished">Ara bellek boyutu</translation>
-    </message>
-    <message>
-        <source>The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time.</source>
-        <translation type="vanished">Ara bellek boyutu, her yinelemede etkiye gönderilen örneklerin sayısını denetler. Daha küçük değerler işlemin daha yavaş olmasına neden olur ve bazı etkilerin düzgün çalışması için 8192 ya da daha az örnek gerekir. Ancak etkilerin çoğu daha büyük ara bellekleri kabul edebilir ve bunları kullanmak işlem süresini önemli ölçüde kısaltır.</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to 1048576 samples):</source>
-        <translation type="vanished">&amp;Ara bellek boyutu (8 - 1048576 örnek):</translation>
-    </message>
-    <message>
-        <source>Latency Compensation</source>
-        <translation type="vanished">Gecikme dengelemesi</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects.</source>
-        <translation type="vanished">İşlemlerinin bir parçası olarak, bazı VST etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm VST etkileri için çalışmayabilir.</translation>
-    </message>
-    <message>
-        <source>Enable &amp;compensation</source>
-        <translation type="vanished">D&amp;engeleme kullanılsın</translation>
-    </message>
-    <message>
-        <source>Graphical Mode</source>
-        <translation type="vanished">Görsel kipi</translation>
-    </message>
-    <message>
-        <source>Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">Çoğu VST etkisinin, parametre değerlerini ayarlamak için bir görsel arayüzü bulunur. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin olması için etkiyi yeniden açın.</translation>
-    </message>
-    <message>
-        <source>Enable &amp;graphical interface</source>
-        <translation type="vanished">&amp;Görsel arayüz kullanılsın</translation>
-    </message>
-    <message>
-        <source>Save VST3 Preset As:</source>
-        <translation type="vanished">VST3 hazır ayarını farklı kaydet:</translation>
-    </message>
-    <message>
-        <source>VST3 preset file</source>
-        <translation type="vanished">VST3 hazır ayar dosyası</translation>
-    </message>
-    <message>
-        <source>Load VST3 preset:</source>
-        <translation type="vanished">VST3 hazır ayarını yükle:</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects.</source>
-        <translation type="vanished">İşlemlerinin bir parçası olarak, bazı VST3 etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm VST3 etkileri için çalışmayabilir.</translation>
-    </message>
-    <message>
-        <source>Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">Çoğu VST3 etkisinin, parametre değerlerini ayarlamak için bir görsel arayüzü bulunur. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin olması için etkiyi yeniden açın.</translation>
-    </message>
-    <message>
-        <source>Rapid tone quality variations, like that guitar sound so popular in the 1970's</source>
-        <translation type="vanished">Hızlı ton kalitesi değişiklikleri, 1970'li yıllarda popüler olan gitar sesleri gibi</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h (%):</source>
-        <translation type="vanished">De&amp;rinlik (%):</translation>
-    </message>
-    <message>
-        <source>Reso&amp;nance:</source>
-        <translation type="vanished">Rezo&amp;nans:</translation>
-    </message>
-    <message>
-        <source>Resonance</source>
-        <translation type="vanished">Çınlama</translation>
-    </message>
-    <message>
-        <source>Wah Frequency Offse&amp;t (%):</source>
-        <translation type="vanished">Wah frekans &amp;kayması (%):</translation>
-    </message>
-    <message>
-        <source>Wah frequency offset in percent</source>
-        <translation type="vanished">Yüzde olarak Wah frekans kayması</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Preset As %s:</source>
-        <translation type="vanished">Hazır Audio Unit ayarını %1 olarak dışa aktar:</translation>
-    </message>
-    <message>
-        <source>Standard Audio Unit preset file</source>
-        <translation type="vanished">Standart Audio Unit hazır ayar dosyası</translation>
-    </message>
-    <message>
-        <source>Could not export "%s" preset
-
-%s</source>
-        <translation type="vanished">"%1" hazır ayarı dışa aktarılamadı
-
-%2</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Presets</source>
-        <translation type="vanished">Hazır Audio Unit ayarlarını dışa aktar</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Preset As %s:</source>
-        <translation type="vanished">Hazır Audio Unit ayarını %1 olarak içe aktar:</translation>
-    </message>
-    <message>
-        <source>Could not import "%s" preset
-
-%s</source>
-        <translation type="vanished">"%1" hazır ayarı içe aktarılamadı
-
-%2</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Presets</source>
-        <translation type="vanished">Hazır Audio Unit ayarlarını içe aktar</translation>
-    </message>
-    <message>
-        <source>Audio Unit Effect Options</source>
-        <translation type="vanished">Audio Unit etkileri ayarları</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects.</source>
-        <translation type="vanished">İşlemlerinin bir parçası olarak, bazı Ses Birimi etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm Audio Unit etkileri için çalışmayabilir.</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="vanished">Kullanıcı arayüzü</translation>
-    </message>
-    <message>
-        <source>Select "Full" to use the graphical interface if supplied by the Audio Unit. Select "Generic" to use the system supplied generic interface. Select "Basic" for a basic text-only interface. Reopen the effect for this to take effect.</source>
-        <translation type="vanished">Audio Unit tarafından sağlanmışsa, görsel arayüzü kullanmak için "Tam" olarak seçin. Sistem tarafından sağlanan genel arayüzü kullanmak için "Genel" olarak seçin. Yalnızca metin içeren temel arayüzü kullanmak için "Temel" olarak seçin. Bu seçeneğin etkin olması için etkiyi yeniden açın.</translation>
-    </message>
-    <message>
-        <source>Select &amp;interface</source>
-        <translation type="vanished">Ara&amp;yüz seçimi</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="vanished">Tam</translation>
-    </message>
-    <message>
-        <source>Generic</source>
-        <translation type="vanished">Genel</translation>
-    </message>
-    <message>
-        <source>Basic</source>
-        <translation type="vanished">Temel</translation>
-    </message>
-    <message>
-        <source>%s:</source>
-        <extracomment>i18n-hint: An item name introducing a value, which is not part of the string but
-appears in a following text box window; translate with appropriate punctuation</extracomment>
-        <translation type="vanished">%1:</translation>
-    </message>
-    <message>
-        <source>Effect Output</source>
-        <translation type="vanished">Etki çıkışı</translation>
-    </message>
-    <message>
-        <source>LADSPA Effect Options</source>
-        <translation type="vanished">LADSPA etkisi ayarları</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects.</source>
-        <translation type="vanished">İşlemlerinin bir parçası olarak, bazı LADSPA etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm LADSPA etkileri için çalışmayabilir.</translation>
-    </message>
-    <message>
-        <source>Couldn't instantiate effect</source>
-        <translation type="vanished">Etki hazırlanamadı</translation>
-    </message>
-    <message>
-        <source>LV2 Effect Settings</source>
-        <translation type="vanished">LV2 etki ayarları</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to %d) samples:</source>
-        <translation type="vanished">&amp;Ara bellek boyutu (8 - %1) örnekleri:</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects.</source>
-        <translation type="vanished">İşlemlerinin bir parçası olarak, bazı LV2 etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm LV2 etkileri için çalışmayabilir.</translation>
-    </message>
-    <message>
-        <source>LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">LV2 etkilerinin, parametre değerlerini ayarlamak için bir görsel arayüzü bulunabilir. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin olması için etkiyi yeniden açın.</translation>
-    </message>
-    <message>
-        <source>Applying Nyquist Effect...</source>
-        <translation type="vanished">Nyquist etkisi uygulanıyor...</translation>
-    </message>
-    <message>
-        <source>Enable track spectrogram view before
-applying 'Spectral' effects.</source>
-        <translation type="vanished">'Spektral' etkileri uygulamadan önce
-iz spektrogram görünümünü açın.</translation>
-    </message>
-    <message>
-        <source>To use 'Spectral effects', enable 'Spectral Selection'
-in the track Spectrogram settings and select the
-frequency range for the effect to act on.</source>
-        <translation type="vanished">'Spektral etkileri' kullanabilmek için iz Spektrogram
-ayarlarından 'Spektral seçim' özelliğini açın ve
-etkinin uygulanacağı frekans aralığını seçin.</translation>
-    </message>
-    <message>
-        <source>error: File "%s" specified in header but not found in plug-in path.
-</source>
-        <translation type="vanished">sorun: Üst bilgide belirtilen "%1" dosyası uygulama eki yolunda bulunamadı.
-</translation>
-    </message>
-    <message>
-        <source>Nyquist Error</source>
-        <translation type="vanished">Nyquist sorunu</translation>
-    </message>
-    <message>
-        <source>Debug Output: </source>
-        <translation type="vanished">Hata ayıklama çıktısı: </translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return audio from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">';type tool' etkileri Nyquist üzerinden ses alamadı.
-</translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return labels from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">';type tool' etkileri Nyquist üzerinden etiketleri alamadı.
-</translation>
-    </message>
-    <message>
-        <source>Nyquist returned the value: %d</source>
-        <translation type="vanished">Nyquist sonuç değeri: %1</translation>
-    </message>
-    <message>
-        <source>Your code looks like SAL syntax, but there is no 'return' statement.
-For SAL, use a return statement such as:
-	return *track* * 0.1
-or for LISP, begin with an open parenthesis such as:
-	(mult *track* 0.1)
- .</source>
-        <translation type="vanished">Yazdığınız SAL kodu gibi görünüyor ancak 'return' geri dönüşü yok.
-SAL için şunun gibi bir geri dönüş kodu yazın
-	return *track* * 0.1
-ya da LISP için şunun gibi parantez açarak başlayın
-	(mult *track* 0.1)
- .</translation>
-    </message>
-    <message>
-        <source>Error in Nyquist code</source>
-        <translation type="vanished">Nyquist kodunda sorun var</translation>
-    </message>
-    <message>
-        <source>Could not determine language</source>
-        <extracomment>i18n-hint: refers to programming "languages"</extracomment>
-        <translation type="vanished">Dil belirlenemedi</translation>
-    </message>
-    <message>
-        <source>"%s" is not a valid file path.</source>
-        <translation type="vanished">"%1" yolu geçersiz.</translation>
-    </message>
-    <message>
-        <source>Mismatched quotes in
-%s</source>
-        <extracomment>i18n-hint: Warning that there is one quotation mark rather than a pair.</extracomment>
-        <translation type="vanished">Şuradaki tırnak eksik
-%1</translation>
-    </message>
-    <message>
-        <source>Enter Nyquist Command: </source>
-        <translation type="vanished">Nyquist komutunu yazın: </translation>
-    </message>
-    <message>
-        <source>&amp;Load</source>
-        <translation type="vanished">Yük&amp;le</translation>
-    </message>
-    <message>
-        <source>Current program has been modified.
-Discard changes?</source>
-        <translation type="vanished">Geçerli program değiştirildi.
-Değişiklikler yok sayılsın mı?</translation>
-    </message>
-    <message>
-        <source>File could not be loaded</source>
-        <translation type="vanished">Dosya yüklenemedi</translation>
-    </message>
-    <message>
-        <source>File could not be saved</source>
-        <translation type="vanished">Dosya kaydedilemedi</translation>
-    </message>
-    <message>
-        <source>Value range:
-%s to %s</source>
-        <translation type="vanished">Değer aralığı:
-%1 - %2</translation>
-    </message>
-    <message>
-        <source>Value Error</source>
-        <translation type="vanished">Değer sorunu</translation>
-    </message>
-    <message>
-        <source>Save file as</source>
-        <translation type="vanished">Dosyayı farklı kaydet</translation>
-    </message>
-    <message>
-        <source>Vamp Effects</source>
-        <translation type="vanished">Vamp etkileri</translation>
-    </message>
-    <message>
-        <source>Provides Vamp Effects support to Audacity</source>
-        <translation type="vanished">Audacity için Vamp etkileri desteği sağlar</translation>
-    </message>
-    <message>
-        <source>Sorry, failed to load Vamp Plug-in.</source>
-        <translation type="vanished">Ne yazık ki Vamp uygulama eki yüklenemedi.</translation>
-    </message>
-    <message>
-        <source>Sorry, Vamp Plug-in failed to initialize.</source>
-        <translation type="vanished">Ne yazık ki Vamp uygulama eki hazırlanamadı.</translation>
-    </message>
-    <message>
-        <source>Plugin Settings</source>
-        <translation type="vanished">Eklenti ayarları</translation>
-    </message>
-    <message>
-        <source>Program</source>
-        <translation type="vanished">Program</translation>
-    </message>
-    <message>
-        <source>Vamp</source>
-        <extracomment>i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-It is not an abbreviation for anything.  See http://vamp-plugins.org</extracomment>
-        <translation type="vanished">Vamp</translation>
-    </message>
-    <message>
-        <source>Entire &amp;Project</source>
-        <translation type="vanished">Tüm &amp;proje</translation>
-    </message>
-    <message>
-        <source>M&amp;ultiple Files</source>
-        <translation type="vanished">&amp;Birkaç dosya</translation>
-    </message>
-    <message>
-        <source>Curren&amp;t Selection</source>
-        <translation type="vanished">&amp;Geçerli seçim</translation>
-    </message>
-    <message>
-        <source>Using Label/Track Name</source>
-        <translation type="vanished">Etiket/iz adını kullanarak</translation>
-    </message>
-    <message>
-        <source>Numbering before Label/Track Name</source>
-        <translation type="vanished">Etiket/iz adından önce numaralayarak</translation>
-    </message>
-    <message>
-        <source>Numbering after File name prefix</source>
-        <translation type="vanished">Dosya adı ön ekinden sonra numaralandır</translation>
-    </message>
-    <message>
-        <source>Export Range:</source>
-        <translation type="vanished">Dışa aktarma aralığı:</translation>
-    </message>
-    <message>
-        <source>Export entire project</source>
-        <translation type="vanished">Tüm projeyi dışa aktar</translation>
-    </message>
-    <message>
-        <source>Export multiple files</source>
-        <translation type="vanished">Birkaç dosyaya dışa aktar</translation>
-    </message>
-    <message>
-        <source>Export current selection</source>
-        <translation type="vanished">Geçerli seçimi dışa aktar</translation>
-    </message>
-    <message>
-        <source>Split files based on:</source>
-        <translation type="vanished">Dosyaları şuna göre ayır:</translation>
-    </message>
-    <message>
-        <source>Include audio before first label</source>
-        <translation type="vanished">İlk etiketten önce sesi kat</translation>
-    </message>
-    <message>
-        <source>Name files:</source>
-        <translation type="vanished">Dosya adlandırma:</translation>
-    </message>
-    <message>
-        <source>File name prefix:</source>
-        <translation type="vanished">Dosya adı ön eki:</translation>
-    </message>
-    <message>
-        <source>Overwrite existing files</source>
-        <translation type="vanished">Var olan dosyaların üzerine yaz</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="vanished">&amp;Dışa aktar</translation>
-    </message>
-    <message>
-        <source>Successfully exported the following %lld file(s).</source>
-        <translation type="vanished">%1 dosya sorunsuz dışa aktarıldı.</translation>
-    </message>
-    <message>
-        <source>Something went wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">Şu %1 dosya dışa aktarıldıktan sonra bir şeyler ters gitti.</translation>
-    </message>
-    <message>
-        <source>Export canceled after exporting the following %lld file(s).</source>
-        <translation type="vanished">Şu %1 dosya dışa aktarıldıktan sonra işlem iptal edildi.</translation>
-    </message>
-    <message>
-        <source>Export stopped after exporting the following %lld file(s).</source>
-        <translation type="vanished">Şu %1 dosya dışa aktarıldıktan sonra işlem durduruldu.</translation>
-    </message>
-    <message>
-        <source>Something went really wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">Şu %1 dosya dışa aktarıldıktan sonra bir şeyler çok ters gitti.</translation>
-    </message>
-    <message>
-        <source>A file named "%s" already exists. Replace?</source>
-        <translation type="vanished">"%1" adlı dosya zaten var. Üzerine yazılmasını ister misiniz?</translation>
-    </message>
-    <message>
-        <source>All selected audio is muted.</source>
-        <translation type="vanished">Seçilmiş tüm sesler kısıldı.</translation>
-    </message>
-    <message>
-        <source>Continue to export remaining files?</source>
-        <translation type="vanished">Kalan dosyaların dışa aktarılması sürdürülsün mü?</translation>
-    </message>
-    <message>
-        <source>Custom Sample Rate</source>
-        <translation type="vanished">Özel örnekleme hızı</translation>
-    </message>
-    <message>
-        <source>File &amp;Name:</source>
-        <translation type="vanished">Dosya &amp;adı:</translation>
-    </message>
-    <message>
-        <source>Fo&amp;lder:</source>
-        <translation type="vanished">&amp;Klasör:</translation>
-    </message>
-    <message>
-        <source>&amp;Format:</source>
-        <translation type="vanished">&amp;Biçim:</translation>
-    </message>
-    <message>
-        <source>M&amp;ono</source>
-        <translation type="vanished">&amp;Tek kanal</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation type="vanished">Çi&amp;ft kanal</translation>
-    </message>
-    <message>
-        <source>Custom mappin&amp;g</source>
-        <extracomment>i18n-hint refers to custom channel mapping configuration</extracomment>
-        <translation type="vanished">Özel &amp;eşleştirme</translation>
-    </message>
-    <message>
-        <source>Configure custom mapping</source>
-        <extracomment>i18n-hint accessibility hint, refers to export channel configuration</extracomment>
-        <translation type="vanished">Özel eşleştirme yapılandırması</translation>
-    </message>
-    <message>
-        <source>Configure</source>
-        <translation type="vanished">Yapılandır</translation>
-    </message>
-    <message>
-        <source>Sample &amp;Rate</source>
-        <translation type="vanished">Örnekleme &amp;hızı</translation>
-    </message>
-    <message>
-        <source>Choose a location to save the exported files</source>
-        <translation type="vanished">Dışa aktarılacak dosyaların kaydedileceği konumu seçin</translation>
-    </message>
-    <message>
-        <source>Advanced Mixing Options</source>
-        <translation type="vanished">Gelişmiş karıştırıcı ayarları</translation>
-    </message>
-    <message>
-        <source>%d Hz (custom)</source>
-        <translation type="vanished">%1 Hz (özel)</translation>
-    </message>
-    <message>
-        <source>Other...</source>
-        <translation type="vanished">Diğer...</translation>
-    </message>
-    <message>
-        <source>%s - L</source>
-        <extracomment>i18n-hint: track name and L abbreviating Left channel</extracomment>
-        <translation type="vanished">%1 - Sol</translation>
-    </message>
-    <message>
-        <source>%s - R</source>
-        <extracomment>i18n-hint: track name and R abbreviating Right channel</extracomment>
-        <translation type="vanished">%1 - Sağ</translation>
-    </message>
-    <message>
-        <source>Output Channels: %2d</source>
-        <translation type="vanished">Çıkış kanalları: %1</translation>
-    </message>
-    <message>
-        <source>Mixer Panel</source>
-        <translation type="vanished">Karıştırıcı panosu</translation>
-    </message>
-    <message>
-        <source>Channel: %2d</source>
-        <translation type="vanished">Kanal: %1</translation>
-    </message>
-    <message>
-        <source>No format specific options</source>
-        <translation type="vanished">Biçime özgü bir ayar yok</translation>
-    </message>
-    <message>
-        <source>Import Raw</source>
-        <extracomment>i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.</extracomment>
-        <translation type="vanished">Ham veri içe aktarma</translation>
-    </message>
-    <message>
-        <source>Import Raw Data</source>
-        <translation type="vanished">Ham veri içe aktarma</translation>
-    </message>
-    <message>
-        <source>No endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Endian yok</translation>
-    </message>
-    <message>
-        <source>Little-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Little-endian</translation>
-    </message>
-    <message>
-        <source>Big-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Big-endian</translation>
-    </message>
-    <message>
-        <source>Default endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Varsayılan endian yok</translation>
-    </message>
-    <message>
-        <source>1 Channel (Mono)</source>
-        <translation type="vanished">Tek kanallı (mono)</translation>
-    </message>
-    <message>
-        <source>2 Channels (Stereo)</source>
-        <translation type="vanished">Çift kanallı (stereo)</translation>
-    </message>
-    <message>
-        <source>%d Channels</source>
-        <translation type="vanished">%1 kanal</translation>
-    </message>
-    <message>
-        <source>Encoding:</source>
-        <translation type="vanished">Kodlama:</translation>
-    </message>
-    <message>
-        <source>Byte order:</source>
-        <translation type="vanished">Bayt sırası:</translation>
-    </message>
-    <message>
-        <source>Channels:</source>
-        <translation type="vanished">Kanallar:</translation>
-    </message>
-    <message>
-        <source>Start offset:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">Kayma başlangıcı:</translation>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="vanished">bayt</translation>
-    </message>
-    <message>
-        <source>Amount to import:</source>
-        <translation type="vanished">İçe aktarılacak miktar:</translation>
-    </message>
-    <message>
-        <source>Sample rate:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">Örnekleme hızı:</translation>
-    </message>
-    <message>
-        <source>Detect</source>
-        <extracomment>i18n-hint: Guess format of raw file</extracomment>
-        <translation type="vanished">Algıla</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="vanished">İç&amp;e aktar</translation>
-    </message>
-    <message>
-        <source>Bad data size. Could not import audio</source>
-        <translation type="vanished">Veri boyutu hatalı. Ses içe aktarılamadı</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s, %d of %d clip %s</source>
-        <oldsource>%s %s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First %s is replaced with the noun "start" or "end"
-identifying one end of a clip,
-second string is the name of that clip,
-first number gives the position of that clip in a sequence
-of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2, %3 / %4 parça %5</numerusform>
-            <numerusform>%1 %2, %3 / %4 parça %5</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>start</source>
-        <translation type="vanished">başlangıç</translation>
-    </message>
-    <message>
-        <source>end</source>
-        <translation type="vanished">bitiş</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s and %s %s, %d and %d of %d clip %s</source>
-        <oldsource>%s %s and %s %s, %d and %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First and third %s are each replaced with the noun "start"
-or with "end", identifying and end of a clip,
-second and fourth strings are the names of those clips,
-first and second numbers give the position of those clips in
-a sequence of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2 ve %3 %4, %5 ve %6 / %7 parça %8</numerusform>
-            <numerusform>%1 %2 ve %3 %4, %5 ve %6 / %7 parça %8</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip %s</source>
-        <oldsource>%s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-first string is the name of a clip,
-first number gives the position of that clip
-in a sequence of clips,
-last number counts all clips,
-last string names a track</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 / %3 parça %4</numerusform>
-            <numerusform>%1, %2 / %3 parça %4</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Moved clips to the right</source>
-        <translation type="vanished">Parçalar sağa taşındı</translation>
-    </message>
-    <message>
-        <source>Moved clips to the left</source>
-        <translation type="vanished">Parçalar sola taşındı</translation>
-    </message>
-    <message>
-        <source>Move audio clips</source>
-        <translation type="vanished">Ses parçalarını taşı</translation>
-    </message>
-    <message>
-        <source>clip not moved</source>
-        <translation type="vanished">parça taşınmadı</translation>
-    </message>
-    <message>
-        <source>Audi&amp;o Clips</source>
-        <translation type="vanished">Ses parçala&amp;rı</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary to Cursor</source>
-        <translation type="vanished">Ö&amp;nceki parça sınırından imlece</translation>
-    </message>
-    <message>
-        <source>Cursor to Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">İmleçten s&amp;onraki parça sınırına</translation>
-    </message>
-    <message>
-        <source>Previo&amp;us Clip</source>
-        <translation type="vanished">Ö&amp;nceki parça</translation>
-    </message>
-    <message>
-        <source>Select Previous Clip</source>
-        <translation type="vanished">Önceki parçayı seç</translation>
-    </message>
-    <message>
-        <source>N&amp;ext Clip</source>
-        <translation type="vanished">S&amp;onraki parça</translation>
-    </message>
-    <message>
-        <source>Select Next Clip</source>
-        <translation type="vanished">Sonraki parçayı seç</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary</source>
-        <translation type="vanished">Ö&amp;nceki parça sınırı</translation>
-    </message>
-    <message>
-        <source>Cursor to Prev Clip Boundary</source>
-        <translation type="vanished">İmleci önceki parça sınırına taşı</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">S&amp;onraki parça sınırı</translation>
-    </message>
-    <message>
-        <source>Cursor to Next Clip Boundary</source>
-        <translation type="vanished">İmleci sonraki parça sınırına taşı</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Left</source>
-        <translation type="vanished">Zamanı sol&amp;a kaydır</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Right</source>
-        <translation type="vanished">Zamanı sağa kaydı&amp;r</translation>
-    </message>
-    <message>
-        <source>Pasted text from the clipboard</source>
-        <translation type="vanished">Panodan yapıştırılan metin</translation>
-    </message>
-    <message>
-        <source>Pasted from the clipboard</source>
-        <translation type="vanished">Panodan yapıştırılan</translation>
-    </message>
-    <message>
-        <source>Nothing to undo</source>
-        <translation type="vanished">Geri alınacak birşey yok</translation>
-    </message>
-    <message>
-        <source>Nothing to redo</source>
-        <translation type="vanished">Yinelenecek birşey yok</translation>
-    </message>
-    <message>
-        <source>Cut to the clipboard</source>
-        <translation type="vanished">Panoya kes</translation>
-    </message>
-    <message>
-        <source>Deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Silindi %1 saniye t=%2 zamanında</translation>
-    </message>
-    <message>
-        <source>Paste clip</source>
-        <translation type="vanished">Parça yapıştır</translation>
-    </message>
-    <message>
-        <source>Pasting clip contents, please wait</source>
-        <translation type="vanished">Parça içeriği yapıştırılıyor. Lütfen bekleyin</translation>
-    </message>
-    <message>
-        <source>The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again.</source>
-        <translation type="vanished">Yapıştırmaya çalıştığınız içerik, şu kullanabileceğinizden daha fazla ize yayılacak. Daha fazla iz ekleyip yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again.</source>
-        <translation type="vanished">Kopyalanan içeriğe uyacak kadar iz seçilmemiş. Ek izler seçip yeniden deneyin.</translation>
-    </message>
-    <message>
-        <source>Duplicated</source>
-        <translation type="vanished">Çoğaltıldı</translation>
-    </message>
-    <message>
-        <source>Split-cut to the clipboard</source>
-        <translation type="vanished">Panoya ayır ve kes</translation>
-    </message>
-    <message>
-        <source>Split Cut</source>
-        <translation type="vanished">Ayır ve kes</translation>
-    </message>
-    <message>
-        <source>Split-deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">%1 saniye t=%2 zamanında ayrılıp-silindi</translation>
-    </message>
-    <message>
-        <source>Split Delete</source>
-        <translation type="vanished">Ayır ve sil</translation>
-    </message>
-    <message>
-        <source>Silenced selected tracks for %.2f seconds at %.2f</source>
-        <translation type="vanished">Seçilen izler %1' zamanında %2 saniye için susturuldu</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>command</comment>
-        <extracomment>i18n-hint: verb</extracomment>
-        <translation type="vanished">Sessizlik</translation>
-    </message>
-    <message>
-        <source>Trim selected audio tracks from %.2f seconds to %.2f seconds</source>
-        <translation type="vanished">Seçilmiş izleri %1 ile %2 saniyeleri arasında buda</translation>
-    </message>
-    <message>
-        <source>Trim Audio</source>
-        <translation type="vanished">Sesi buda</translation>
-    </message>
-    <message>
-        <source>Split to new track</source>
-        <translation type="vanished">Yeni ize ayır</translation>
-    </message>
-    <message>
-        <source>Split New</source>
-        <translation type="vanished">Ayır yeni</translation>
-    </message>
-    <message>
-        <source>Joined %.2f seconds at t=%.2f</source>
-        <translation type="vanished">%1 saniye t=%2 zamanında birleştirildi</translation>
-    </message>
-    <message>
-        <source>Join</source>
-        <translation type="vanished">Birleştir</translation>
-    </message>
-    <message>
-        <source>Detached %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Çıkartıldı %1 saniye t=%2 zamanında</translation>
-    </message>
-    <message>
-        <source>Detach</source>
-        <translation type="vanished">Çıkart</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">K&amp;es</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="vanished">&amp;Sil</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Kopyala</translation>
-    </message>
-    <message>
-        <source>Duplic&amp;ate</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Ç&amp;oğalt</translation>
-    </message>
-    <message>
-        <source>R&amp;emove Special</source>
-        <translation type="vanished">Ö&amp;zel kaldır</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Cut</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut</extracomment>
-        <translation type="vanished">&amp;Böl ve kes</translation>
-    </message>
-    <message>
-        <source>Split D&amp;elete</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE</extracomment>
-        <translation type="vanished">&amp;Ayır ve sil</translation>
-    </message>
-    <message>
-        <source>Silence Audi&amp;o</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Sesi &amp;sustur</translation>
-    </message>
-    <message>
-        <source>Tri&amp;m Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Sesi &amp;buda</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit</source>
-        <extracomment>i18n-hint: (verb) It's an item on a menu.</extracomment>
-        <translation type="vanished">&amp;Böl</translation>
-    </message>
-    <message>
-        <source>Split Ne&amp;w</source>
-        <translation type="vanished">&amp;Ayır ve yeni</translation>
-    </message>
-    <message>
-        <source>&amp;Join</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Ka&amp;t</translation>
-    </message>
-    <message>
-        <source>Detac&amp;h at Silences</source>
-        <translation type="vanished">Sessi&amp;zliklerde çıkar</translation>
-    </message>
-    <message>
-        <source>Pre&amp;ferences</source>
-        <translation type="vanished">A&amp;yarlar</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Key</source>
-        <translation type="vanished">Ana&amp;htarı sil</translation>
-    </message>
-    <message>
-        <source>Delete Key&amp;2</source>
-        <translation type="vanished">&amp;2. anahtarı sil</translation>
-    </message>
-    <message>
-        <source>Ext&amp;ra</source>
-        <translation type="vanished">Ek çu&amp;buklar</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Full Screen</source>
-        <translation type="vanished">&amp;Tam ekrana geç</translation>
-    </message>
-    <message>
-        <source>Cannot proceed to export.</source>
-        <translation type="vanished">Dışa aktarılamadı.</translation>
-    </message>
-    <message>
-        <source>Cannot create directory '%s'. 
-File already exists that is not a directory</source>
-        <translation type="vanished">'%1' klasörü oluşturulamadı. 
-Klasör olmayan aynı adlı bir dosya var</translation>
-    </message>
-    <message>
-        <source>labels.txt</source>
-        <extracomment>i18n-hint: filename containing exported text from label tracks</extracomment>
-        <translation type="vanished">labels.txt</translation>
-    </message>
-    <message>
-        <source>There are no label tracks to export.</source>
-        <translation type="vanished">Dışa aktarılacak bir etiket izi bulunamadı.</translation>
-    </message>
-    <message>
-        <source>Imported labels from '%s'</source>
-        <translation type="vanished">Etiketler '%1' kaynağından içe aktarıldı</translation>
-    </message>
-    <message>
-        <source>Import Labels</source>
-        <translation type="vanished">Etiketleri içe aktar</translation>
-    </message>
-    <message>
-        <source>&amp;Dangerous Reset...</source>
-        <translation type="vanished">&amp;Tehlikeli sıfırlama...</translation>
-    </message>
-    <message>
-        <source>Open Recent</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Mac OS X only</extracomment>
-        <translation type="vanished">Son kullanılanları aç</translation>
-    </message>
-    <message>
-        <source>Recent &amp;Files</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Windows and Linux</extracomment>
-        <translation type="vanished">Son k&amp;ullanılan dosyalar</translation>
-    </message>
-    <message>
-        <source>&amp;Save Project</source>
-        <translation type="vanished">&amp;Projeyi kaydet</translation>
-    </message>
-    <message>
-        <source>Save Project &amp;As...</source>
-        <translation type="vanished">Projeyi &amp;farklı kaydet...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Project...</source>
-        <translation type="vanished">Projeyi &amp;yedekle...</translation>
-    </message>
-    <message>
-        <source>&amp;Export Audio...</source>
-        <translation type="vanished">Sesi &amp;dışa aktar...</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Other</source>
-        <translation type="vanished">Başka dışa akta&amp;rma</translation>
-    </message>
-    <message>
-        <source>Export &amp;Labels...</source>
-        <translation type="vanished">&amp;Etiketleri dışa aktar...</translation>
-    </message>
-    <message>
-        <source>&amp;Audio...</source>
-        <translation type="vanished">&amp;Ses...</translation>
-    </message>
-    <message>
-        <source>&amp;Labels...</source>
-        <translation type="vanished">&amp;Etiketler...</translation>
-    </message>
-    <message>
-        <source>&amp;Raw Data...</source>
-        <translation type="vanished">&amp;Ham veri...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <extracomment>i18n-hint: (verb) It's item on a menu.</extracomment>
-        <translation type="vanished">Çı&amp;kış</translation>
-    </message>
-    <message>
-        <source>Export as MP&amp;3</source>
-        <translation type="vanished">MP&amp;3 olarak dışa aktar</translation>
-    </message>
-    <message>
-        <source>Export as &amp;WAV</source>
-        <translation type="vanished">&amp;WAV olarak dışa aktar</translation>
-    </message>
-    <message>
-        <source>Export as &amp;OGG</source>
-        <translation type="vanished">&amp;OGG olarak dışa aktar</translation>
-    </message>
-    <message>
-        <source>Export as FLAC</source>
-        <translation type="vanished">FLAC olarak dışa aktar</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Selected Audio...</source>
-        <translation type="vanished">Sesi dışa aktar...</translation>
-    </message>
-    <message>
-        <source>Do you have these problems?</source>
-        <translation type="vanished">Bu sorunları yaşıyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Fix</source>
-        <translation type="vanished">Onar</translation>
-    </message>
-    <message>
-        <source>Quick Fixes</source>
-        <translation type="vanished">Hızlı onarımlar</translation>
-    </message>
-    <message>
-        <source>Nothing to do</source>
-        <translation type="vanished">Yapılabilecek herhangi bir şey yok</translation>
-    </message>
-    <message>
-        <source>No quick, easily fixed problems were found</source>
-        <translation type="vanished">Hızlı ve kolayca onarılabilecek bir sorun bulunamadı</translation>
-    </message>
-    <message>
-        <source>Clocks on the Tracks</source>
-        <translation type="vanished">İzlerde saatler</translation>
-    </message>
-    <message>
-        <source>Can't select precisely</source>
-        <translation type="vanished">Hassas olarak seçilemedi</translation>
-    </message>
-    <message>
-        <source>Recording stops and starts</source>
-        <translation type="vanished">Kayıt durur ve başlar</translation>
-    </message>
-    <message>
-        <source>Fixed</source>
-        <translation type="vanished">Sabit</translation>
-    </message>
-    <message>
-        <source>Audio Device Info</source>
-        <translation type="vanished">Ses aygıtı bilgileri</translation>
-    </message>
-    <message>
-        <source>&amp;Quick Help...</source>
-        <translation type="vanished">&amp;Hızlı yardım...</translation>
-    </message>
-    <message>
-        <source>&amp;Manual...</source>
-        <translation type="vanished">&amp;Rehber...</translation>
-    </message>
-    <message>
-        <source>Au&amp;dio Device Info...</source>
-        <translation type="vanished">&amp;Ses aygıtı bilgileri...</translation>
-    </message>
-    <message>
-        <source>&amp;Generate Support Data...</source>
-        <translation type="vanished">Destek &amp;verilerini oluştur...</translation>
-    </message>
-    <message>
-        <source>&amp;Check for Updates...</source>
-        <translation type="vanished">&amp;Güncelleme denetimi...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity</source>
-        <translation type="vanished">Audacity &amp;hakkında</translation>
-    </message>
-    <message>
-        <source>Added label</source>
-        <translation type="vanished">Etiket eklendi</translation>
-    </message>
-    <message>
-        <source>Paste Text to New Label</source>
-        <translation type="vanished">Metni yeni etikete yapıştır</translation>
-    </message>
-    <message>
-        <source>Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
-regions.</extracomment>
-        <translation type="vanished">Etiketlenmiş ses aralıklarını keserek panoya al</translation>
-    </message>
-    <message>
-        <source>Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesi kes</translation>
-    </message>
-    <message>
-        <source>Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just deleted the labeled audio regions</extracomment>
-        <translation type="vanished">Etiketlenmiş ses aralıkları silindi</translation>
-    </message>
-    <message>
-        <source>Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesi sil</translation>
-    </message>
-    <message>
-        <source>Split Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) Audacity has just split cut the labeled audio
-regions</extracomment>
-        <translation type="vanished">Etiketlenmiş ses aralıklarını ayırıp panoya kes</translation>
-    </message>
-    <message>
-        <source>Split Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut on the labels</extracomment>
-        <translation type="vanished">Etiketlenmiş sesi ayırıp kes</translation>
-    </message>
-    <message>
-        <source>Split Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just done a special kind of DELETE on
-the labeled audio regions</extracomment>
-        <translation type="vanished">Etiketlenmiş ses aralıklarını ayırıp sil</translation>
-    </message>
-    <message>
-        <source>Split Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE on labeled audio
-regions</extracomment>
-        <translation type="vanished">Etiketlenmiş sesi ayırıp sil</translation>
-    </message>
-    <message>
-        <source>Silenced labeled audio regions</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketli ses aralıkları susturuldu</translation>
-    </message>
-    <message>
-        <source>Silence Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketli ses aralıklarını sustur</translation>
-    </message>
-    <message>
-        <source>Copied labeled audio regions to clipboard</source>
-        <translation type="vanished">Etiketlenmiş ses aralıkları panoya kopyalandı</translation>
-    </message>
-    <message>
-        <source>Copy Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesi kopyala</translation>
-    </message>
-    <message>
-        <source>Split labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just split the labeled
-audio (a point or a region)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesleri ayır (nokta ya da aralıklar)</translation>
-    </message>
-    <message>
-        <source>Split Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesi ayır</translation>
-    </message>
-    <message>
-        <source>Joined labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) Audacity has just joined the labeled audio (points or
-regions)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesler birleştirildi (nokta ya da aralıklar)</translation>
-    </message>
-    <message>
-        <source>Join Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesleri birleştir</translation>
-    </message>
-    <message>
-        <source>Detached labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-This message appears in history and tells you about something
-Audacity has done.</extracomment>
-        <translation type="vanished">Etiketlenmiş ses aralıkları ayrıldı</translation>
-    </message>
-    <message>
-        <source>Detach Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Etiketlenmiş sesleri ayır</translation>
-    </message>
-    <message>
-        <source>Created new label track</source>
-        <translation type="vanished">Yeni etiket izi oluşturuldu</translation>
-    </message>
-    <message>
-        <source>New Track</source>
-        <translation type="vanished">Yeni iz</translation>
-    </message>
-    <message>
-        <source>&amp;Labels</source>
-        <translation type="vanished">&amp;Etiketler</translation>
-    </message>
-    <message>
-        <source>Label &amp;Editor</source>
-        <translation type="vanished">&amp;Etiket düzenleyici</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Selection</source>
-        <translation type="vanished">&amp;Seçime etiket ekle</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Playback Position</source>
-        <translation type="vanished">Oynatma konumuna &amp;etiket ekle</translation>
-    </message>
-    <message>
-        <source>Paste Te&amp;xt to New Label</source>
-        <translation type="vanished">&amp;Metni yeni etikete yapıştır</translation>
-    </message>
-    <message>
-        <source>&amp;Typing Creates New Labels</source>
-        <translation type="vanished">&amp;Yazarak yeni etiketler ekleyin</translation>
-    </message>
-    <message>
-        <source>La&amp;beled Audio</source>
-        <translation type="vanished">E&amp;tiketlenmiş ses</translation>
-    </message>
-    <message>
-        <source>&amp;Cut</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Kes</translation>
-    </message>
-    <message>
-        <source>Label Cut</source>
-        <translation type="vanished">Etiketi kes</translation>
-    </message>
-    <message>
-        <source>Label Delete</source>
-        <translation type="vanished">Etiketi sil</translation>
-    </message>
-    <message>
-        <source>&amp;Split Cut</source>
-        <extracomment>i18n-hint: (verb) A special way to cut out a piece of audio</extracomment>
-        <translation type="vanished">&amp;Ayır ve kes</translation>
-    </message>
-    <message>
-        <source>Label Split Cut</source>
-        <translation type="vanished">Etiketi ayır ve kes</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit Delete</source>
-        <translation type="vanished">&amp;Böl ve sil</translation>
-    </message>
-    <message>
-        <source>Label Split Delete</source>
-        <translation type="vanished">Etiketi ayır ve sil</translation>
-    </message>
-    <message>
-        <source>Silence &amp;Audio</source>
-        <translation type="vanished">S&amp;esi sustur</translation>
-    </message>
-    <message>
-        <source>Label Silence</source>
-        <translation type="vanished">Etiketi sustur</translation>
-    </message>
-    <message>
-        <source>Co&amp;py</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Kopyala</translation>
-    </message>
-    <message>
-        <source>Label Copy</source>
-        <translation type="vanished">Etiketi kopyala</translation>
-    </message>
-    <message>
-        <source>Spli&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Bö&amp;l</translation>
-    </message>
-    <message>
-        <source>Label Split</source>
-        <translation type="vanished">Etiketi ayır</translation>
-    </message>
-    <message>
-        <source>Label Join</source>
-        <translation type="vanished">Etiketi birleştir</translation>
-    </message>
-    <message>
-        <source>&amp;Label Track</source>
-        <translation type="vanished">&amp;Etiket izi</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="vanished">...</translation>
-    </message>
-    <message>
-        <source>Uncategorized</source>
-        <translation type="vanished">Kategorisiz</translation>
-    </message>
-    <message>
-        <source>Move Backward Through Active Windows</source>
-        <translation type="vanished">Etkin pencerelerde geriye doğru git</translation>
-    </message>
-    <message>
-        <source>Move Forward Through Active Windows</source>
-        <translation type="vanished">Etkin pencerelerde ileriye doğru git</translation>
-    </message>
-    <message>
-        <source>Foc&amp;us</source>
-        <translation type="vanished">&amp;Odaklan</translation>
-    </message>
-    <message>
-        <source>Move &amp;Backward from Toolbars to Tracks</source>
-        <translation type="vanished">Araç çubuklarından izlere &amp;geri git</translation>
-    </message>
-    <message>
-        <source>Move F&amp;orward from Toolbars to Tracks</source>
-        <translation type="vanished">Araç çubuklarından izlere i&amp;leri git</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Previous Track</source>
-        <translation type="vanished">Ö&amp;nceki ize odaklan</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Next Track</source>
-        <translation type="vanished">&amp;Sonraki ize odaklan</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;First Track</source>
-        <translation type="vanished">İl&amp;k ize odaklan</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Last Track</source>
-        <translation type="vanished">Son i&amp;ze odaklan</translation>
-    </message>
-    <message>
-        <source>Move Focus to P&amp;revious and Select</source>
-        <translation type="vanished">Ön&amp;cekine odaklan ve seç</translation>
-    </message>
-    <message>
-        <source>Move Focus to N&amp;ext and Select</source>
-        <translation type="vanished">Sonrakin&amp;e odaklan ve seç</translation>
-    </message>
-    <message>
-        <source>&amp;Toggle Focused Track</source>
-        <translation type="vanished">O&amp;daklanılan izi değiştir</translation>
-    </message>
-    <message>
-        <source>Toggle Focuse&amp;d Track</source>
-        <translation type="vanished">&amp;Odaklanılan izi değiştir</translation>
-    </message>
-    <message>
-        <source>A journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Audacity yeniden başlatıldıktan sonra bir günlük kaydedilecek.</translation>
-    </message>
-    <message>
-        <source>No journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Audacity yeniden başlatıldıktan sonra bir günlük kaydedilmeyecek.</translation>
-    </message>
-    <message>
-        <source>Plugin Manager</source>
-        <translation type="vanished">Uygulama eki yönetimi</translation>
-    </message>
-    <message>
-        <source>Repeat Last Generator</source>
-        <translation type="vanished">Son üreteci yinele</translation>
-    </message>
-    <message>
-        <source>Effe&amp;ct</source>
-        <translation type="vanished">Et&amp;kiler</translation>
-    </message>
-    <message>
-        <source>Add Realtime Effects</source>
-        <translation type="vanished">Gerçek zamanlı etkiler ekle</translation>
-    </message>
-    <message>
-        <source>Get AI effects...</source>
-        <translation type="vanished">Başka etkiler alın...</translation>
-    </message>
-    <message>
-        <source>Repeat Last Effect</source>
-        <translation type="vanished">Son etkiyi yinele</translation>
-    </message>
-    <message>
-        <source>Repeat Last Analyzer</source>
-        <translation type="vanished">Son inceleyiciyi yinele</translation>
-    </message>
-    <message>
-        <source>T&amp;ools</source>
-        <translation type="vanished">A&amp;raçlar</translation>
-    </message>
-    <message>
-        <source>Reset &amp;Configuration</source>
-        <translation type="vanished">&amp;Yapılandırmayı sıfırla</translation>
-    </message>
-    <message>
-        <source>&amp;Run Benchmark...</source>
-        <translation type="vanished">&amp;Hız sınaması yap...</translation>
-    </message>
-    <message>
-        <source>Simulate Recording Errors</source>
-        <translation type="vanished">Kayıt sorunlarını taklit et</translation>
-    </message>
-    <message>
-        <source>Detect Upstream Dropouts</source>
-        <translation type="vanished">Yükleme kesintileri algılansın</translation>
-    </message>
-    <message>
-        <source>Write Journal</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Günlük kaydedilsin</translation>
-    </message>
-    <message>
-        <source>Set Left Selection Boundary</source>
-        <translation type="vanished">Sol seçim sınırını ayarla</translation>
-    </message>
-    <message>
-        <source>Set Right Selection Boundary</source>
-        <translation type="vanished">Sağ seçim sınırını ayarla</translation>
-    </message>
-    <message>
-        <source>Zero-crossing search regions intersect stretched clip(s).</source>
-        <translation type="vanished">Sıfır geçişli arama bölgeleri esnetilmiş parçalarla kesişiyor.</translation>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation type="vanished">&amp;Tümü</translation>
-    </message>
-    <message>
-        <source>&amp;None</source>
-        <translation type="vanished">&amp;Hiç biri</translation>
-    </message>
-    <message>
-        <source>Select None</source>
-        <translation type="vanished">Olmayanı seç</translation>
-    </message>
-    <message>
-        <source>In All &amp;Tracks</source>
-        <translation type="vanished">&amp;Tüm izler içinde</translation>
-    </message>
-    <message>
-        <source>In All &amp;Sync-Locked Tracks</source>
-        <translation type="vanished">Tüm eş kilitlenmiş i&amp;zlerde</translation>
-    </message>
-    <message>
-        <source>Select Sync-Locked</source>
-        <translation type="vanished">Eş kilitlenmiş seç</translation>
-    </message>
-    <message>
-        <source>R&amp;egion</source>
-        <translation type="vanished">&amp;Bölge</translation>
-    </message>
-    <message>
-        <source>&amp;Left at Playback Position</source>
-        <translation type="vanished">Oynatma konumunda so&amp;lda</translation>
-    </message>
-    <message>
-        <source>Set Selection Left at Play Position</source>
-        <translation type="vanished">Oynatma konumunun solunu seç</translation>
-    </message>
-    <message>
-        <source>&amp;Right at Playback Position</source>
-        <translation type="vanished">Oynatma konumunda sağ&amp;da</translation>
-    </message>
-    <message>
-        <source>Set Selection Right at Play Position</source>
-        <translation type="vanished">Oynatma konumunun sağını seç</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start to Cursor</source>
-        <translation type="vanished">İ&amp;z başını imlece getir</translation>
-    </message>
-    <message>
-        <source>Select Track Start to Cursor</source>
-        <translation type="vanished">İz başlangıcından imlece kadar seç</translation>
-    </message>
-    <message>
-        <source>Cursor to Track &amp;End</source>
-        <translation type="vanished">İmleci iz bitişine götür</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Track End</source>
-        <translation type="vanished">İmleçten iz sonuna kadar seç</translation>
-    </message>
-    <message>
-        <source>Track Start to En&amp;d</source>
-        <translation type="vanished">İz başlangıcından sonuna ka&amp;dar</translation>
-    </message>
-    <message>
-        <source>Select Track Start to End</source>
-        <translation type="vanished">İz başlangıcından sonuna kadar seç</translation>
-    </message>
-    <message>
-        <source>S&amp;tore Selection</source>
-        <translation type="vanished">Seçimi &amp;kaydet</translation>
-    </message>
-    <message>
-        <source>Retrieve Selectio&amp;n</source>
-        <translation type="vanished">Seçimi &amp;geri getir</translation>
-    </message>
-    <message>
-        <source>Cursor to Stored &amp;Cursor Position</source>
-        <translation type="vanished">İmleci kaydedilen k&amp;onuma taşı</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Stored</source>
-        <translation type="vanished">İmleçten kaydedilmişe kadar seç</translation>
-    </message>
-    <message>
-        <source>Store Cursor Pos&amp;ition</source>
-        <translation type="vanished">İmleç konumunu kayde&amp;t</translation>
-    </message>
-    <message>
-        <source>At &amp;Zero Crossings</source>
-        <translation type="vanished">Sıfır &amp;geçişlerinde</translation>
-    </message>
-    <message>
-        <source>Select Zero Crossing</source>
-        <translation type="vanished">Sıfır geçişini seç</translation>
-    </message>
-    <message>
-        <source>&amp;Selection</source>
-        <translation type="vanished">&amp;Seçim</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Off</source>
-        <translation type="vanished">Hizalama &amp;kapalı</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Nearest</source>
-        <translation type="vanished">En &amp;yakına hizala</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Prior</source>
-        <translation type="vanished">Ö&amp;ncekine hizala</translation>
-    </message>
-    <message>
-        <source>Selection to &amp;Start</source>
-        <translation type="vanished">&amp;Başlangıca Kadar seç</translation>
-    </message>
-    <message>
-        <source>Selection to En&amp;d</source>
-        <translation type="vanished">&amp;Sonuna kadar seç</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Left</source>
-        <translation type="vanished">Seçimi so&amp;la genişlet</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Right</source>
-        <translation type="vanished">Seçimi &amp;sağa genişlet</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Le&amp;ft Selection</source>
-        <translation type="vanished">So&amp;ldan seç (ya da genişlet)</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Rig&amp;ht Selection</source>
-        <translation type="vanished">&amp;Sağdan seç (ya da genişlet)</translation>
-    </message>
-    <message>
-        <source>Selection Contract L&amp;eft</source>
-        <translation type="vanished">Seçimi so&amp;la daralt</translation>
-    </message>
-    <message>
-        <source>Selection Contract R&amp;ight</source>
-        <translation type="vanished">Seçimi s&amp;ağa daralt</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor to</source>
-        <translation type="vanished">İmle&amp;ci taşı</translation>
-    </message>
-    <message>
-        <source>Selection Star&amp;t</source>
-        <translation type="vanished">S&amp;eçim başına</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection Start</source>
-        <translation type="vanished">İmleci seçim başlangıcına taşı</translation>
-    </message>
-    <message>
-        <source>Selection En&amp;d</source>
-        <translation type="vanished">Seçi&amp;m sonuna</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection End</source>
-        <translation type="vanished">İmleci seçim sonuna taşı</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start</source>
-        <translation type="vanished">İz &amp;başına</translation>
-    </message>
-    <message>
-        <source>Cursor to Track Start</source>
-        <translation type="vanished">İmleci iz başlangıcına taşı</translation>
-    </message>
-    <message>
-        <source>Track &amp;End</source>
-        <translation type="vanished">İ&amp;z sonuna</translation>
-    </message>
-    <message>
-        <source>Cursor to Track End</source>
-        <translation type="vanished">İmleci iz sonuna taşı</translation>
-    </message>
-    <message>
-        <source>&amp;Project Start</source>
-        <translation type="vanished">&amp;Proje başına</translation>
-    </message>
-    <message>
-        <source>Cursor to Project Start</source>
-        <translation type="vanished">İmleci proje başlangıcına taşı</translation>
-    </message>
-    <message>
-        <source>Project E&amp;nd</source>
-        <translation type="vanished">Proje so&amp;nuna</translation>
-    </message>
-    <message>
-        <source>Cursor to Project End</source>
-        <translation type="vanished">İmleci proje sonuna taşı</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor</source>
-        <translation type="vanished">İm&amp;leç</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Left</source>
-        <translation type="vanished">İmleç so&amp;la</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Right</source>
-        <translation type="vanished">İmleç &amp;sağa</translation>
-    </message>
-    <message>
-        <source>Cursor Sh&amp;ort Jump Left</source>
-        <translation type="vanished">İmleci s&amp;ola doğru kısa atlat</translation>
-    </message>
-    <message>
-        <source>Cursor Shor&amp;t Jump Right</source>
-        <translation type="vanished">İmleci sağa doğru kısa a&amp;tlat</translation>
-    </message>
-    <message>
-        <source>Cursor Long J&amp;ump Left</source>
-        <translation type="vanished">İmleci sola doğru &amp;uzun atlat</translation>
-    </message>
-    <message>
-        <source>Cursor Long Ju&amp;mp Right</source>
-        <translation type="vanished">İ&amp;mleci sağa doğru uzun atlat</translation>
-    </message>
-    <message>
-        <source>See&amp;k</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">A&amp;ra</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Left During Playback</source>
-        <translation type="vanished">Oynatmada so&amp;la doğru kısa tarama</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Right During Playback</source>
-        <translation type="vanished">Oynatmada &amp;sağa doğru kısa tarama</translation>
-    </message>
-    <message>
-        <source>Long Seek Le&amp;ft During Playback</source>
-        <translation type="vanished">Oynatmada s&amp;ola doğru uzun tarama</translation>
-    </message>
-    <message>
-        <source>Long Seek Rig&amp;ht During Playback</source>
-        <translation type="vanished">Oynatmada s&amp;ağa doğru uzun tarama</translation>
-    </message>
-    <message>
-        <source>Tim&amp;eline</source>
-        <translation type="vanished">&amp;Zaman akışı</translation>
-    </message>
-    <message>
-        <source>&amp;Toolbars</source>
-        <translation type="vanished">&amp;Araç çubukları</translation>
-    </message>
-    <message>
-        <source>Reset Toolb&amp;ars</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">A&amp;raç çubuklarını sıfırla</translation>
-    </message>
-    <message>
-        <source>Mix</source>
-        <translation type="vanished">Karıştır</translation>
-    </message>
-    <message>
-        <source>Rendered all audio in track '%s'</source>
-        <translation type="vanished">'%1' izindeki tüm ses çevrildi</translation>
-    </message>
-    <message>
-        <source>Render</source>
-        <extracomment>i18n-hint: Convert the audio into a more usable form, so apply
-* panning and amplification and write to some external file.</extracomment>
-        <translation type="vanished">Çevir</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new stereo track</source>
-        <translation type="vanished">%1 iz yeni bir çift kanallı ize karıştırılıp çevrildi</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new mono track</source>
-        <translation type="vanished">%1 iz yeni bir tek kanallı ize karıştırılıp çevrildi</translation>
-    </message>
-    <message>
-        <source>Panned audio track(s)</source>
-        <extracomment>i18n-hint: One or more audio tracks have been panned</extracomment>
-        <translation type="vanished">Konumu değiştirilmiş ses izleri</translation>
-    </message>
-    <message>
-        <source>Pan Track</source>
-        <translation type="vanished">İzin konumunu değiştir</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Zero</source>
-        <translation type="vanished">Başlangıç sı&amp;fıra</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Cursor/Selection Start</source>
-        <translation type="vanished">Başlangıç im&amp;leç/seçim başlangıcına</translation>
-    </message>
-    <message>
-        <source>Start to Selection &amp;End</source>
-        <translation type="vanished">Başlangıç seçi&amp;m bitişine</translation>
-    </message>
-    <message>
-        <source>End to Cu&amp;rsor/Selection Start</source>
-        <translation type="vanished">Bitiş s&amp;eçim başlangıcına</translation>
-    </message>
-    <message>
-        <source>End to Selection En&amp;d</source>
-        <translation type="vanished">Bitiş seçi&amp;m bitişine</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to zero</source>
-        <extracomment>i18n-hint: In this and similar messages describing editing actions,
-the starting or ending points of tracks are re-"aligned" to other
-times, and the time selection may be "moved" too.  The first
-noun -- "start" in this example -- is the object of a verb (not of
-an implied preposition "from").</extracomment>
-        <translation type="vanished">Başlangıç sıfıra hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned start to zero</source>
-        <translation type="vanished">Başlangıç sıfıra hizalandı</translation>
-    </message>
-    <message>
-        <source>Align/Move Start</source>
-        <extracomment>i18n-hint: This and similar messages give shorter descriptions of
-the aligning and moving editing actions</extracomment>
-        <translation type="vanished">Başlangıcı hizala/taşı</translation>
-    </message>
-    <message>
-        <source>Align Start</source>
-        <translation type="vanished">Başlangıcı hizala</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to cursor/selection start</source>
-        <translation type="vanished">Başlangı imlece/seçim başlangıcına hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned start to cursor/selection start</source>
-        <translation type="vanished">Başlangıç imlece/seçim başlangıcına hizalandı</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to selection end</source>
-        <translation type="vanished">Başlangıç seçim bitişine hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned start to selection end</source>
-        <translation type="vanished">Başlangıç seçim bitişine hizalandı</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to cursor/selection start</source>
-        <translation type="vanished">Bitiş imlec/seçin başlangıcına hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned end to cursor/selection start</source>
-        <translation type="vanished">Bitiş imlec/seçim başlangıcına hizalandı</translation>
-    </message>
-    <message>
-        <source>Align/Move End</source>
-        <translation type="vanished">Bitişi hizala/taşı</translation>
-    </message>
-    <message>
-        <source>Align End</source>
-        <translation type="vanished">Bitişi hizala</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to selection end</source>
-        <translation type="vanished">Bitiş seçim bitişine hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned end to selection end</source>
-        <translation type="vanished">Bitiş seçim bitişine hizalandı</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to end</source>
-        <translation type="vanished">Bitiş bitişe hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned end to end</source>
-        <translation type="vanished">Bitiş bitişe hizalandı</translation>
-    </message>
-    <message>
-        <source>Align/Move End to End</source>
-        <translation type="vanished">Bitişi bitişe hizala/taşı</translation>
-    </message>
-    <message>
-        <source>Align End to End</source>
-        <translation type="vanished">Bitişi bitişe hizala</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved together</source>
-        <translation type="vanished">Birlikte hizalandı/taşındı</translation>
-    </message>
-    <message>
-        <source>Aligned together</source>
-        <translation type="vanished">Birlikte hizalandı</translation>
-    </message>
-    <message>
-        <source>Align/Move Together</source>
-        <translation type="vanished">Birlikte hizala/taşı</translation>
-    </message>
-    <message>
-        <source>Align Together</source>
-        <translation type="vanished">Birlikte hizala</translation>
-    </message>
-    <message>
-        <source>Synchronize MIDI with Audio</source>
-        <translation type="vanished">MIDI ile sesi eşleştir</translation>
-    </message>
-    <message>
-        <source>Synchronizing MIDI and Audio Tracks</source>
-        <translation type="vanished">MIDI ve ses izleri eşleştiriliyor</translation>
-    </message>
-    <message>
-        <source>Adjusted gain</source>
-        <translation type="vanished">Ayarlanmış kazanç</translation>
-    </message>
-    <message>
-        <source>Adjusted Pan</source>
-        <translation type="vanished">Ayarlanmış kaydırma</translation>
-    </message>
-    <message>
-        <source>The entered value is invalid</source>
-        <translation type="vanished">Yazdığınız değer geçersiz</translation>
-    </message>
-    <message>
-        <source>Resampling track %d</source>
-        <translation type="vanished">%1 izi yeniden örnekleniyor</translation>
-    </message>
-    <message>
-        <source>Resampled audio track(s)</source>
-        <translation type="vanished">Ses izleri yeniden örneklendi</translation>
-    </message>
-    <message>
-        <source>Resample Track</source>
-        <translation type="vanished">İzi yeniden örnekle</translation>
-    </message>
-    <message>
-        <source>Please select at least one audio track and one MIDI track.</source>
-        <translation type="vanished">Lütfen en az bir ses izi ve bir MIDI izi seçin.</translation>
-    </message>
-    <message>
-        <source>Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">Hizalama tamamlandı: MIDI %1 yerine %2 saniyeye, Ses %3 yerine %4 saniyeye.</translation>
-    </message>
-    <message>
-        <source>Sync MIDI with Audio</source>
-        <translation type="vanished">MIDI ile sesi eşleştir</translation>
-    </message>
-    <message>
-        <source>Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">Hizalama sorunu: giriş çok kısa: MIDI %1 yerine %2 saniyeye, Ses %3 yerine %4 saniyeye.</translation>
-    </message>
-    <message>
-        <source>Internal error reported by alignment process.</source>
-        <translation type="vanished">Hizalama işlemi tarafından iç sorun oluştuğu bildirildi.</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by time</source>
-        <translation type="vanished">Zamana göre sıralanmış izler</translation>
-    </message>
-    <message>
-        <source>Sort by Time</source>
-        <translation type="vanished">Tarihe göre sıralansın</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by name</source>
-        <translation type="vanished">İsme göre sıralanmış izler</translation>
-    </message>
-    <message>
-        <source>Sort by Name</source>
-        <translation type="vanished">Ada göre sıralansın</translation>
-    </message>
-    <message>
-        <source>Can't delete track with active audio</source>
-        <translation type="vanished">Etkin sesin bulunduğu izi silemezsiniz</translation>
-    </message>
-    <message>
-        <source>Add &amp;New</source>
-        <translation type="vanished">&amp;Yeni iz ekle</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x</source>
-        <translation type="vanished">&amp;Karıştır</translation>
-    </message>
-    <message>
-        <source>Mix Stereo Down to &amp;Mono</source>
-        <translation type="vanished">Çift ka&amp;nallıyı tek kanallıya karıştır</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x and Render</source>
-        <translation type="vanished">&amp;Karıştır ve oluştur</translation>
-    </message>
-    <message>
-        <source>Mix and Render to Ne&amp;w Track</source>
-        <translation type="vanished">Karıştır ve &amp;yeni iz oluştur</translation>
-    </message>
-    <message>
-        <source>&amp;Resample...</source>
-        <translation type="vanished">Yeniden ö&amp;rnekle...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve Tracks</source>
-        <translation type="vanished">İzleri &amp;kaldır</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute</source>
-        <translation type="vanished">Kı&amp;s/aç</translation>
-    </message>
-    <message>
-        <source>&amp;Mute All Tracks</source>
-        <translation type="vanished">Tü&amp;m izlerin sesini kıs</translation>
-    </message>
-    <message>
-        <source>&amp;Unmute All Tracks</source>
-        <translation type="vanished">Tüm izlerin &amp;sesini aç</translation>
-    </message>
-    <message>
-        <source>Mut&amp;e Tracks</source>
-        <translation type="vanished">İzleri &amp;kıs</translation>
-    </message>
-    <message>
-        <source>U&amp;nmute Tracks</source>
-        <translation type="vanished">İzleri &amp;aç</translation>
-    </message>
-    <message>
-        <source>&amp;Pan</source>
-        <translation type="vanished">Ka&amp;ydır</translation>
-    </message>
-    <message>
-        <source>&amp;Left</source>
-        <translation type="vanished">&amp;Sola</translation>
-    </message>
-    <message>
-        <source>Pan Left</source>
-        <translation type="vanished">Sola kaydır</translation>
-    </message>
-    <message>
-        <source>&amp;Right</source>
-        <translation type="vanished">S&amp;ağa</translation>
-    </message>
-    <message>
-        <source>Pan Right</source>
-        <translation type="vanished">Sağa kaydır</translation>
-    </message>
-    <message>
-        <source>&amp;Center</source>
-        <translation type="vanished">&amp;Ortaya</translation>
-    </message>
-    <message>
-        <source>Pan Center</source>
-        <translation type="vanished">Ortaya kaydır</translation>
-    </message>
-    <message>
-        <source>&amp;Align Tracks</source>
-        <translation type="vanished">İzleri hiz&amp;ala</translation>
-    </message>
-    <message>
-        <source>&amp;Align End to End</source>
-        <translation type="vanished">Sonu seçim bitişine hiza&amp;la</translation>
-    </message>
-    <message>
-        <source>Align &amp;Together</source>
-        <translation type="vanished">Birlik&amp;te hizala</translation>
-    </message>
-    <message>
-        <source>&amp;Move Selection with Tracks</source>
-        <translation type="vanished">Seçimi i&amp;zlerle taşı</translation>
-    </message>
-    <message>
-        <source>Move Sele&amp;ction and Tracks</source>
-        <translation type="vanished">Seçimi ve i&amp;zleri taşı</translation>
-    </message>
-    <message>
-        <source>S&amp;ort Tracks</source>
-        <translation type="vanished">İ&amp;zler sıralansın</translation>
-    </message>
-    <message>
-        <source>By &amp;Start Time</source>
-        <translation type="vanished">Başlangıç &amp;zamanına göre</translation>
-    </message>
-    <message>
-        <source>By &amp;Name</source>
-        <translation type="vanished">&amp;Ada göre</translation>
-    </message>
-    <message>
-        <source>Keep tracks synchronized (Sync-&amp;Lock)</source>
-        <translation type="vanished">İzler sürekli eşitlensin (eşitleme &amp;kilidi)</translation>
-    </message>
-    <message>
-        <source>&amp;Track</source>
-        <translation type="vanished">İ&amp;z</translation>
-    </message>
-    <message>
-        <source>Change P&amp;an on Focused Track...</source>
-        <translation type="vanished">Od&amp;aklanılmış izin konumunu değiştir...</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Left on Focused Track</source>
-        <translation type="vanished">Odaklanılmış izi so&amp;la kaydır</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Right on Focused Track</source>
-        <translation type="vanished">Odaklanılmış izi sağa kaydı&amp;r</translation>
-    </message>
-    <message>
-        <source>Change Gai&amp;n on Focused Track...</source>
-        <translation type="vanished">Odaklanılmış izi&amp;n kazancını değiştir...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Gain on Focused Track</source>
-        <translation type="vanished">Odaklanılmış izi&amp;n kazancını arttır</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Gain on Focused Track</source>
-        <translation type="vanished">Odaklanılmış izin kazancını a&amp;zalt</translation>
-    </message>
-    <message>
-        <source>Op&amp;en Menu on Focused Track...</source>
-        <translation type="vanished">Odaklanılmış izin menüsünü aç...</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute Focused Track</source>
-        <translation type="vanished">&amp;Odaklanılmış izi kıs/aç</translation>
-    </message>
-    <message>
-        <source>&amp;Solo/Unsolo Focused Track</source>
-        <translation type="vanished">Odaklanılmış izi &amp;solo/birlikte oynat</translation>
-    </message>
-    <message>
-        <source>Delete Fo&amp;cused Track</source>
-        <translation type="vanished">Odaklanılmış izi &amp;kapat</translation>
-    </message>
-    <message>
-        <source>Move Focused Track U&amp;p</source>
-        <translation type="vanished">Odaklanılmış izi &amp;yukarı taşı</translation>
-    </message>
-    <message>
-        <source>Move Focused Track Do&amp;wn</source>
-        <translation type="vanished">Odaklanılmış izi &amp;aşağı taşı</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to T&amp;op</source>
-        <translation type="vanished">&amp;Odaklanılmış izi en üste taşı</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to &amp;Bottom</source>
-        <translation type="vanished">Odaklanılmış izi en alta &amp;taşı</translation>
-    </message>
-    <message>
-        <source>no label track</source>
-        <translation type="vanished">herhangi bir etiket izi yok</translation>
-    </message>
-    <message>
-        <source>no label track at or below focused track</source>
-        <translation type="vanished">odaklanılan izde ve altında herhangi bir etiket izi yok</translation>
-    </message>
-    <message>
-        <source>%s %d of %d</source>
-        <extracomment>i18n-hint:
-String is replaced by the name of a label,
-first number gives the position of that label in a sequence
-of labels,
-and the last number is the total number of labels in the sequence.</extracomment>
-        <translation type="vanished">%1 %2 / %3</translation>
-    </message>
-    <message>
-        <source>no labels in label track</source>
-        <translation type="vanished">etiket izinde herhangi bir etiket yok</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;In</source>
-        <extracomment>i18n-hint Sets a starting point for looping play</extracomment>
-        <translation type="vanished">Yineleme &amp;girişi ayarla</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;Out</source>
-        <extracomment>i18n-hint Sets an ending point for looping play</extracomment>
-        <translation type="vanished">&amp;Yineleme çıkışı ayarla</translation>
-    </message>
-    <message>
-        <source>Please select in a mono track.</source>
-        <translation type="vanished">Lütfen tek kanallı bir iz seçin.</translation>
-    </message>
-    <message>
-        <source>Please select in a stereo track or two mono tracks.</source>
-        <translation type="vanished">Lütfen bir çift kanallı iz ya da iki tek kanallı iz seçin.</translation>
-    </message>
-    <message>
-        <source>Please select at least %d channels.</source>
-        <translation type="vanished">Lütfen en az %1 kanal seçin.</translation>
-    </message>
-    <message>
-        <source>Tra&amp;nsport</source>
-        <extracomment>i18n-hint: 'Transport' is the name given to the set of controls that
-play, record, pause etc.</extracomment>
-        <translation type="vanished">A&amp;ktar</translation>
-    </message>
-    <message>
-        <source>Pl&amp;aying</source>
-        <translation type="vanished">Oyn&amp;atılıyor</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay/Stop</source>
-        <extracomment>i18n-hint: (verb) Start or Stop audio playback</extracomment>
-        <translation type="vanished">Oyn&amp;at/durdur</translation>
-    </message>
-    <message>
-        <source>Play/Stop and &amp;Set Cursor</source>
-        <translation type="vanished">Oynat/durdur ve i&amp;mleci koy</translation>
-    </message>
-    <message>
-        <source>Play &amp;Once/Stop</source>
-        <translation type="vanished">Bir kez &amp;oynat/durdur</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation type="vanished">&amp;Duraklat</translation>
-    </message>
-    <message>
-        <source>&amp;Recording</source>
-        <translation type="vanished">Kaydediliyo&amp;r</translation>
-    </message>
-    <message>
-        <source>&amp;Append Record</source>
-        <translation type="vanished">&amp;Kayıt ekle</translation>
-    </message>
-    <message>
-        <source>Record &amp;New Track</source>
-        <translation type="vanished">Ye&amp;ni iz ekle</translation>
-    </message>
-    <message>
-        <source>Punch and Rol&amp;l Record</source>
-        <translation type="vanished">İşaret&amp;le ve kaydı sürdür</translation>
-    </message>
-    <message>
-        <source>&amp;Looping</source>
-        <translation type="vanished">Yine&amp;leniyor</translation>
-    </message>
-    <message>
-        <source>&amp;Clear Loop</source>
-        <translation type="vanished">Yinelemeyi &amp;temizle</translation>
-    </message>
-    <message>
-        <source>&amp;Set Loop to Selection</source>
-        <translation type="vanished">&amp;Seçimi yineleme olarak ayarla</translation>
-    </message>
-    <message>
-        <source>R&amp;escan Audio Devices</source>
-        <translation type="vanished">S&amp;es aygıtlarını yeniden tara</translation>
-    </message>
-    <message>
-        <source>Transport &amp;Options</source>
-        <translation type="vanished">&amp;Hareket ayarları</translation>
-    </message>
-    <message>
-        <source>Set sound activation le&amp;vel...</source>
-        <translation type="vanished">Kaydı &amp;başlatacak ses düzeyi...</translation>
-    </message>
-    <message>
-        <source>Enable sound a&amp;ctivated recording</source>
-        <translation type="vanished">Ses etkinleştirmeli &amp;kayıt</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks during recording</source>
-        <translation type="vanished">Kayıt sırasında &amp;diğer izler duyulsun</translation>
-    </message>
-    <message>
-        <source>Enable audible input &amp;monitoring</source>
-        <translation type="vanished">Duyulabilir &amp;giriş izlemesini aç</translation>
-    </message>
-    <message>
-        <source>A&amp;utomated Recording Level Adjustment (on/off)</source>
-        <translation type="vanished">Otomatik kayıt &amp;düzeyi ayarlaması (aç/kapat)</translation>
-    </message>
-    <message>
-        <source>T&amp;ransport</source>
-        <translation type="vanished">Ha&amp;reketler</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay Once</source>
-        <extracomment>i18n-hint: (verb) Start playing audio</extracomment>
-        <translation type="vanished">&amp;Bir kez oynat</translation>
-    </message>
-    <message>
-        <source>Sto&amp;p</source>
-        <extracomment>i18n-hint: (verb) Stop playing audio</extracomment>
-        <translation type="vanished">D&amp;urdur</translation>
-    </message>
-    <message>
-        <source>Play &amp;One Second</source>
-        <translation type="vanished">&amp;Bir saniye oynat</translation>
-    </message>
-    <message>
-        <source>Play to &amp;Selection</source>
-        <translation type="vanished">&amp;Seçime kadar oynat</translation>
-    </message>
-    <message>
-        <source>Play &amp;Before Selection Start</source>
-        <translation type="vanished">Seçim &amp;başlangıcından öncesini oynat</translation>
-    </message>
-    <message>
-        <source>Play Af&amp;ter Selection Start</source>
-        <translation type="vanished">Seçim başlangıcından sonrasını oyna&amp;t</translation>
-    </message>
-    <message>
-        <source>Play Be&amp;fore Selection End</source>
-        <translation type="vanished">Seçi&amp;m bitişinden öncesini oynat</translation>
-    </message>
-    <message>
-        <source>Play Aft&amp;er Selection End</source>
-        <translation type="vanished">S&amp;eçim bitişinden sonrasını oynat</translation>
-    </message>
-    <message>
-        <source>Play Before a&amp;nd After Selection Start</source>
-        <translation type="vanished">Seçim başla&amp;ngıcından öncesini ve sonrasını oynat</translation>
-    </message>
-    <message>
-        <source>Play Before an&amp;d After Selection End</source>
-        <translation type="vanished">Seçim bitişin&amp;den öncesini ve sonrasını oynat</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview</source>
-        <translation type="vanished">O&amp;ynatma kesme ön izlemesi</translation>
-    </message>
-    <message>
-        <source>Move to Pre&amp;vious Label</source>
-        <translation type="vanished">Önceki e&amp;tikete geç</translation>
-    </message>
-    <message>
-        <source>Move to Ne&amp;xt Label</source>
-        <translation type="vanished">Son&amp;raki etikete geç</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom</source>
-        <translation type="vanished">&amp;Yakınlaştır</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;In</source>
-        <translation type="vanished">&amp;Yakınlaştır</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Normal</source>
-        <translation type="vanished">&amp;Normal görünüm</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Out</source>
-        <translation type="vanished">&amp;Uzaklaştır</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom to Selection</source>
-        <translation type="vanished">&amp;Seçimi yakınlaştır</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Toggle</source>
-        <translation type="vanished">&amp;Yakınlaştırmayı değiştir</translation>
-    </message>
-    <message>
-        <source>T&amp;rack Size</source>
-        <translation type="vanished">İ&amp;z boyutu</translation>
-    </message>
-    <message>
-        <source>&amp;Fit to Width</source>
-        <translation type="vanished">&amp;Genişliğe sığdır</translation>
-    </message>
-    <message>
-        <source>Fit to &amp;Height</source>
-        <translation type="vanished">&amp;Yüksekliğe sığdır</translation>
-    </message>
-    <message>
-        <source>&amp;Collapse All Tracks</source>
-        <translation type="vanished">&amp;Tüm izleri daralt</translation>
-    </message>
-    <message>
-        <source>E&amp;xpand Collapsed Tracks</source>
-        <translation type="vanished">&amp;Daraltılmış izleri genişlet</translation>
-    </message>
-    <message>
-        <source>Sk&amp;ip to</source>
-        <translation type="vanished">Ş&amp;uraya atla</translation>
-    </message>
-    <message>
-        <source>Selection Sta&amp;rt</source>
-        <translation type="vanished">Seçim &amp;başlangıcı</translation>
-    </message>
-    <message>
-        <source>Skip to Selection Start</source>
-        <translation type="vanished">Seçim başlangıcına atla</translation>
-    </message>
-    <message>
-        <source>Skip to Selection End</source>
-        <translation type="vanished">Seçim sonuna atla</translation>
-    </message>
-    <message>
-        <source>Enable E&amp;xtra Menus</source>
-        <translation type="vanished">Ek &amp;menüleri aç</translation>
-    </message>
-    <message>
-        <source>&amp;Show Clipping in Waveform</source>
-        <translation type="vanished">&amp;Kırpılma görüntülensin (aç/kapat)</translation>
-    </message>
-    <message>
-        <source>Show &amp;RMS in Waveform</source>
-        <translation type="vanished">&amp;Kırpılma görüntülensin (aç/kapat)</translation>
-    </message>
-    <message>
-        <source>Preferences for Application</source>
-        <translation type="vanished">Uygulama ayarları</translation>
-    </message>
-    <message>
-        <source>Update notifications</source>
-        <extracomment>i18n-hint: Title for the update notifications panel in the preferences dialog.</extracomment>
-        <translation type="vanished">Güncelleme bildirimleri</translation>
-    </message>
-    <message>
-        <source>&amp;Check for updates</source>
-        <comment>application preferences</comment>
-        <extracomment>i18n-hint: Check-box title that configures periodic updates checking.</extracomment>
-        <translation type="vanished">&amp;Güncelleme denetimi</translation>
-    </message>
-    <message>
-        <source>App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.</source>
-        <translation type="vanished">Uygulama güncelleme denetimi özelliği için ağ erişimi gereklidir. Audacity, kişisel gizliliğinizi korumak için herhangi bir kişisel bilgiyi kaydetmez.</translation>
-    </message>
-    <message>
-        <source>Batch</source>
-        <translation type="vanished">Yığın</translation>
-    </message>
-    <message>
-        <source>Preferences for Batch</source>
-        <translation type="vanished">Toplu işlem ayarları</translation>
-    </message>
-    <message>
-        <source>Behaviors</source>
-        <translation type="vanished">Davranışlar</translation>
-    </message>
-    <message>
-        <source>&amp;Don't apply effects in batch mode</source>
-        <translation type="vanished">&amp;Yığın kipinde etkileri uygulama</translation>
-    </message>
-    <message>
-        <source>Audio Settings</source>
-        <translation type="vanished">Ses ayarları</translation>
-    </message>
-    <message>
-        <source>%i Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>device</comment>
-        <extracomment>i18n-hint Software interface to audio devices</extracomment>
-        <translation type="vanished">Arayüz</translation>
-    </message>
-    <message>
-        <source>&amp;Host:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">&amp;Sunucu:</translation>
-    </message>
-    <message>
-        <source>Using:</source>
-        <translation type="vanished">Şunu kullanarak:</translation>
-    </message>
-    <message>
-        <source>&amp;Device:</source>
-        <translation type="vanished">Ay&amp;gıt:</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <comment>preference</comment>
-        <extracomment>i18n-hint: modifier as in "Recording preferences", not progressive verb</extracomment>
-        <translation type="vanished">Kayıt</translation>
-    </message>
-    <message>
-        <source>De&amp;vice:</source>
-        <translation type="vanished">Aygı&amp;t:</translation>
-    </message>
-    <message>
-        <source>Cha&amp;nnels:</source>
-        <translation type="vanished">Ka&amp;nallar:</translation>
-    </message>
-    <message>
-        <source>&amp;Project Sample Rate:</source>
-        <translation type="vanished">&amp;Proje örnekleme hızı:</translation>
-    </message>
-    <message>
-        <source>Sample Rate used when recording new tracks, mixing down tracks and for playback in this project.</source>
-        <translation type="vanished">Bu projede yeni parçalar kaydederken ve izleri indirgerken kullanılacak proje örnekleme hızı.</translation>
-    </message>
-    <message>
-        <source>D&amp;efault Sample Rate:</source>
-        <translation type="vanished">&amp;Varsayılan örnekleme hızı:</translation>
-    </message>
-    <message>
-        <source>Default Sample &amp;Format:</source>
-        <translation type="vanished">Varsayılan örnekleme &amp;biçimi:</translation>
-    </message>
-    <message>
-        <source>Latency</source>
-        <translation type="vanished">Gecikme</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer length:</source>
-        <translation type="vanished">Ara &amp;bellek boyutu:</translation>
-    </message>
-    <message>
-        <source>&amp;Latency compensation:</source>
-        <translation type="vanished">&amp;Gecikme dengelemesi:</translation>
-    </message>
-    <message>
-        <source>No audio interfaces</source>
-        <translation type="vanished">Herhangi bir ses arayüzü yok</translation>
-    </message>
-    <message>
-        <source>No devices found</source>
-        <translation type="vanished">Herhangi bir aygıt bulunamadı</translation>
-    </message>
-    <message>
-        <source>1 (Mono)</source>
-        <translation type="vanished">1 (tek kanallı)</translation>
-    </message>
-    <message>
-        <source>2 (Stereo)</source>
-        <translation type="vanished">2 (çift kanallı)</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <extracomment>i18n-hint:  Directories, also called directories, in computer file systems</extracomment>
-        <translation type="vanished">Klasörler</translation>
-    </message>
-    <message>
-        <source>Preferences for Directories</source>
-        <translation type="vanished">Klasör Ayarları</translation>
-    </message>
-    <message>
-        <source>Default directories</source>
-        <translation type="vanished">Varsayılan klasörler</translation>
-    </message>
-    <message>
-        <source>Leave a field empty to go to the last directory used for that operation.
-Fill in a field to always go to that directory for that operation.</source>
-        <translation type="vanished">Bu işlemin yapıldığı son klasörü kullanmak için alanı boş bırakın.
-Bu işlem için her zaman aynı klasörün kullanılmasını istiyorsanız alana yazın.</translation>
-    </message>
-    <message>
-        <source>O&amp;pen:</source>
-        <translation type="vanished">&amp;Aç:</translation>
-    </message>
-    <message>
-        <source>S&amp;ave:</source>
-        <translation type="vanished">&amp;Kaydet:</translation>
-    </message>
-    <message>
-        <source>B&amp;rowse...</source>
-        <translation type="vanished">Gö&amp;z at...</translation>
-    </message>
-    <message>
-        <source>&amp;Import:</source>
-        <translation type="vanished">İçe akta&amp;r:</translation>
-    </message>
-    <message>
-        <source>Br&amp;owse...</source>
-        <translation type="vanished">Gö&amp;z at...</translation>
-    </message>
-    <message>
-        <source>&amp;Export:</source>
-        <translation type="vanished">&amp;Dışa aktar:</translation>
-    </message>
-    <message>
-        <source>Bro&amp;wse...</source>
-        <translation type="vanished">Göz a&amp;t...</translation>
-    </message>
-    <message>
-        <source>&amp;Macro output:</source>
-        <translation type="vanished">&amp;Makro çıktısı:</translation>
-    </message>
-    <message>
-        <source>Temporary files directory</source>
-        <translation type="vanished">Geçici dosyalar klasörü</translation>
-    </message>
-    <message>
-        <source>Brow&amp;se...</source>
-        <translation type="vanished">&amp;Göz at...</translation>
-    </message>
-    <message>
-        <source>&amp;Free Space:</source>
-        <translation type="vanished">&amp;Boş alan:</translation>
-    </message>
-    <message>
-        <source>unavailable - above location doesn't exist</source>
-        <translation type="vanished">geçersiz - yukarıdaki konum bulunamadı</translation>
-    </message>
-    <message>
-        <source>Choose a location</source>
-        <translation type="vanished">Bir konum seçin</translation>
-    </message>
-    <message>
-        <source>
-Directory %s does not exist. Create it?</source>
-        <translation type="vanished">
-%1 klasörü bulunamadı. Oluşturulsun mu?</translation>
-    </message>
-    <message>
-        <source>Directory creation failed.</source>
-        <translation type="vanished">Klasör oluşturulamadı</translation>
-    </message>
-    <message>
-        <source>
-%s</source>
-        <translation type="vanished">
-%1</translation>
-    </message>
-    <message>
-        <source>Directory %s is not suitable (at risk of being cleaned out)</source>
-        <translation type="vanished">%1 klasörü uygun değil (temizlenme riski var)</translation>
-    </message>
-    <message>
-        <source>'Temporary Directory' cannot be set.</source>
-        <translation type="vanished">'Geçici klasör' ayarlanamadı.</translation>
-    </message>
-    <message>
-        <source>'Temporary files' directory cannot be set.</source>
-        <translation type="vanished">'Geçici dosyalar' klasörü ayarlanamadı.</translation>
-    </message>
-    <message>
-        <source>Directory %s is not writable</source>
-        <translation type="vanished">%1 klasörü yazılabilir değil</translation>
-    </message>
-    <message>
-        <source>Temp Directory Update</source>
-        <translation type="vanished">Geçici Klasör güncelleme</translation>
-    </message>
-    <message>
-        <source>'Open' directory cannot be set.</source>
-        <translation type="vanished">'Açma' klasörü ayarlanamadı.</translation>
-    </message>
-    <message>
-        <source>'Save' directory cannot be set.</source>
-        <translation type="vanished">'Kaydetme' klasörü açıklanamadı.</translation>
-    </message>
-    <message>
-        <source>'Import' directory cannot be set.</source>
-        <translation type="vanished">'İçe aktarma' klasörü ayarlanamadı.</translation>
-    </message>
-    <message>
-        <source>'Export' directory cannot be set.</source>
-        <translation type="vanished">'Dışa aktarma' klasörü ayarlanamadı.</translation>
-    </message>
-    <message>
-        <source>'Macro Output' directory cannot be set.</source>
-        <translation type="vanished">'Makro çıktısı' klasörü ayarlanamadı.</translation>
-    </message>
-    <message>
-        <source>Preferences for Effects</source>
-        <translation type="vanished">Etki ayarları</translation>
-    </message>
-    <message>
-        <source>Sort by effect name</source>
-        <translation type="vanished">Etki adına göre sırala</translation>
-    </message>
-    <message>
-        <source>Sort by publisher and effect name</source>
-        <translation type="vanished">Yayıncı ve etki adına göre sırala</translation>
-    </message>
-    <message>
-        <source>Sort by type and effect name</source>
-        <translation type="vanished">Tür ve etki adına göre sırala</translation>
-    </message>
-    <message>
-        <source>Group by publisher</source>
-        <translation type="vanished">Yayıncıya göre grupla</translation>
-    </message>
-    <message>
-        <source>Group by type</source>
-        <translation type="vanished">Türe göre grupla</translation>
-    </message>
-    <message>
-        <source>Group by category</source>
-        <translation type="vanished">Kategoriye göre grupla</translation>
-    </message>
-    <message>
-        <source>Group by type and publisher</source>
-        <translation type="vanished">Türe ve yayıncıya göre grupla</translation>
-    </message>
-    <message>
-        <source>Effect Options</source>
-        <translation type="vanished">Etki ayarları</translation>
-    </message>
-    <message>
-        <source>Effect menu &amp;organization:</source>
-        <translation type="vanished">Etki &amp;menüsü düzeni:</translation>
-    </message>
-    <message>
-        <source>Realtime effect o&amp;rganization:</source>
-        <translation type="vanished">&amp;Gerçek zamanlı etki düzeni:</translation>
-    </message>
-    <message>
-        <source>Instruction Set</source>
-        <translation type="vanished">Komut kümesi</translation>
-    </message>
-    <message>
-        <source>&amp;Use SSE/SSE2/.../AVX</source>
-        <translation type="vanished">SSE/SSE2/.../AVX k&amp;ullan</translation>
-    </message>
-    <message>
-        <source>%s plugin locations</source>
-        <extracomment>i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-* First argument is replaced with plugin type (e.g. "LV2 plugin locations")</extracomment>
-        <translation type="vanished">Bir konum seçin</translation>
-    </message>
-    <message>
-        <source>&amp;Skip effects scanning at startup</source>
-        <translation type="vanished">&amp;Başlangıçta etkiler taranmasın</translation>
-    </message>
-    <message>
-        <source>Open Plugin &amp;Manager</source>
-        <translation type="vanished">&amp;Uygulama eki yönetimini aç</translation>
-    </message>
-    <message>
-        <source>Extended Import</source>
-        <extracomment>i18n-hint:  Title of dialog governing "Extended", or "advanced,"
-* audio file import options</extracomment>
-        <translation type="vanished">Genişletilmiş içe aktarma</translation>
-    </message>
-    <message>
-        <source>Preferences for ExtImport</source>
-        <translation type="vanished">Genişletilmiş içe aktarma ayarları</translation>
-    </message>
-    <message>
-        <source>A&amp;ttempt to use filter in OpenFile dialog first</source>
-        <translation type="vanished">&amp;Süzgeç önce dosya aç penceresinde denensin</translation>
-    </message>
-    <message>
-        <source>Rules to choose import filters</source>
-        <translation type="vanished">İçe aktarma süzgeçlerini seçecek kurallar</translation>
-    </message>
-    <message>
-        <source>File extensions</source>
-        <translation type="vanished">Dosya uzantıları</translation>
-    </message>
-    <message>
-        <source>Mime-types</source>
-        <translation type="vanished">MIME türleri</translation>
-    </message>
-    <message>
-        <source>Importer order</source>
-        <translation type="vanished">İçe aktarıcı sıralaması</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;up</source>
-        <translation type="vanished">Kuralı y&amp;ukarı taşı</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;down</source>
-        <translation type="vanished">Kuralı &amp;aşağı taşı</translation>
-    </message>
-    <message>
-        <source>Move f&amp;ilter up</source>
-        <translation type="vanished">Süzgec&amp;i yukarı taşı</translation>
-    </message>
-    <message>
-        <source>Move &amp;filter down</source>
-        <translation type="vanished">Süzgeci &amp;aşağı taşı</translation>
-    </message>
-    <message>
-        <source>&amp;Add new rule</source>
-        <translation type="vanished">Yeni kur&amp;al ekle</translation>
-    </message>
-    <message>
-        <source>De&amp;lete selected rule</source>
-        <translation type="vanished">Seçilmiş kuralı si&amp;l</translation>
-    </message>
-    <message>
-        <source>Unused filters:</source>
-        <translation type="vanished">Kullanılmayan süzgeçler:</translation>
-    </message>
-    <message>
-        <source>There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?</source>
-        <translation type="vanished">Ögelerden birinde boşluk karakterleri (boşluk, yeni satır, sekme ya da satır sonu) var. Bunlar düzen uydurmayı engelleyecek gibi. Ne yaptığınızdan emin değilseniz boşlukları budamanız önerilir. Audacity boşlukları budasın mı?</translation>
-    </message>
-    <message>
-        <source>Spaces detected</source>
-        <translation type="vanished">Algılanan boşluklar</translation>
-    </message>
-    <message>
-        <source>Do you really want to delete selected rule?</source>
-        <translation type="vanished">Seçilmiş kuralı silmek istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Rule deletion confirmation</source>
-        <translation type="vanished">Kural silme onayı</translation>
-    </message>
-    <message>
-        <source>Ext Import</source>
-        <translation type="vanished">Genişletilmiş İçe aktarma</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>GUI</comment>
-        <extracomment>i18n-hint: refers to Audacity's user interface settings</extracomment>
-        <translation type="vanished">Arayüz</translation>
-    </message>
-    <message>
-        <source>Preferences for GUI</source>
-        <translation type="vanished">Görsel arayüz ayarları</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation type="vanished">Görünüm</translation>
-    </message>
-    <message>
-        <source>&amp;Language:</source>
-        <translation type="vanished">Di&amp;l:</translation>
-    </message>
-    <message>
-        <source>Th&amp;eme:</source>
-        <translation type="vanished">T&amp;ema:</translation>
-    </message>
-    <message>
-        <source>Meter dB &amp;range:</source>
-        <translation type="vanished">Ölçer dB a&amp;ralığı:</translation>
-    </message>
-    <message>
-        <source>Show 'How to Get &amp;Help' at launch</source>
-        <translation type="vanished">Başlangıçta '&amp;Yardım almak için' görüntülensin</translation>
-    </message>
-    <message>
-        <source>Show e&amp;xtra menus</source>
-        <translation type="vanished">Ek &amp;menüler görüntülensin</translation>
-    </message>
-    <message>
-        <source>Show alternative &amp;styling (Mac vs PC)</source>
-        <translation type="vanished">Alternatif biçem &amp;görüntülensin (Mac x PC)</translation>
-    </message>
-    <message>
-        <source>&amp;Beep on completion of longer activities</source>
-        <translation type="vanished">&amp;Uzun işlemler sonunda uyarı sesi çıkarılsın</translation>
-    </message>
-    <message>
-        <source>Re&amp;tain labels if selection snaps to a label</source>
-        <translation type="vanished">Seçim e&amp;tikete denk gelirse etiketler korunsun</translation>
-    </message>
-    <message>
-        <source>Use mostly Left-to-Right layouts in RTL languages</source>
-        <extracomment>i18n-hint: RTL stands for 'Right to Left'</extracomment>
-        <translation type="vanished">Sağdan sola yazılan dillerde genellikle soldan sağa görünümler kullanılsın</translation>
-    </message>
-    <message>
-        <source>Never use comma as decimal point</source>
-        <translation type="vanished">Asla ondalık ayracı olarak virgül kullanmayın</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="vanished">Görsel arayüz</translation>
-    </message>
-    <message>
-        <source>Language "%s" is unknown</source>
-        <translation type="vanished">"%1" dili bilinmiyor</translation>
-    </message>
-    <message>
-        <source>Import / Export</source>
-        <translation type="vanished">İçe/dışa aktarma</translation>
-    </message>
-    <message>
-        <source>Preferences for ImportExport</source>
-        <translation type="vanished">İçe/dışa aktarma ayarları</translation>
-    </message>
-    <message>
-        <source>S&amp;witch view to Beats and Measures and align with musical grid</source>
-        <translation type="vanished">&amp;Vuruşlar ve ölçüler görünümüne geçip müzik ızgarasıyla hizalayın</translation>
-    </message>
-    <message>
-        <source>&amp;Ask me each time</source>
-        <translation type="vanished">&amp;Her defasında sorulsun</translation>
-    </message>
-    <message>
-        <source>Do &amp;nothing</source>
-        <translation type="vanished">Hiç bir şey &amp;yapılmasın</translation>
-    </message>
-    <message>
-        <source>Music Imports</source>
-        <translation type="vanished">Music içe aktarmaları</translation>
-    </message>
-    <message>
-        <source>When Audacity detects music in file imported on empty project</source>
-        <translation type="vanished">Audacity boş projeye aktarılan dosyada müzik algıladığında</translation>
-    </message>
-    <message>
-        <source>IMPORT EXPORT</source>
-        <translation type="vanished">İçe/dışa aktarma</translation>
-    </message>
-    <message>
-        <source>Preferences for KeyConfig</source>
-        <translation type="vanished">Tuş yapılandırma ayarları</translation>
-    </message>
-    <message>
-        <source>Keyboard preferences currently unavailable.</source>
-        <translation type="vanished">Tuş takımı ayarları şu anda geçersiz.</translation>
-    </message>
-    <message>
-        <source>Open a new project to modify keyboard shortcuts.</source>
-        <translation type="vanished">Tuş takımı kısayollarını düzenlemek için yeni bir proje açın.</translation>
-    </message>
-    <message>
-        <source>&amp;Hotkey:</source>
-        <translation type="vanished">&amp;Kısayol:</translation>
-    </message>
-    <message>
-        <source>&amp;Tree</source>
-        <translation type="vanished">&amp;Ağaç</translation>
-    </message>
-    <message>
-        <source>&amp;Name</source>
-        <translation type="vanished">&amp;Ad</translation>
-    </message>
-    <message>
-        <source>&amp;Key</source>
-        <translation type="vanished">A&amp;nahtar</translation>
-    </message>
-    <message>
-        <source>Key Bindings</source>
-        <translation type="vanished">Tuş bağlantıları</translation>
-    </message>
-    <message>
-        <source>View by:</source>
-        <translation type="vanished">&amp;Görünüm:</translation>
-    </message>
-    <message>
-        <source>View by tree</source>
-        <translation type="vanished">Ağaç görünümü</translation>
-    </message>
-    <message>
-        <source>View by name</source>
-        <translation type="vanished">Ada göre görünüm</translation>
-    </message>
-    <message>
-        <source>View by key</source>
-        <translation type="vanished">Anahtara göre görünüm</translation>
-    </message>
-    <message>
-        <source>Bindings</source>
-        <translation type="vanished">Tuş bağlantıları</translation>
-    </message>
-    <message>
-        <source>Short cut</source>
-        <translation type="vanished">Kısayol</translation>
-    </message>
-    <message>
-        <source>&amp;Set</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">A&amp;yarla</translation>
-    </message>
-    <message>
-        <source>Note: Pressing Cmd+Q will quit. All other keys are valid.</source>
-        <translation type="vanished">Not: Cmd+Q basarsanız uygulamadan çıkılır. Tüm diğer tuşlar geçerlidir.</translation>
-    </message>
-    <message>
-        <source>&amp;Import...</source>
-        <translation type="vanished">İçe akta&amp;r...</translation>
-    </message>
-    <message>
-        <source>&amp;Defaults</source>
-        <translation type="vanished">&amp;Varsayılanlar</translation>
-    </message>
-    <message>
-        <source>
-   *   "%s"  (because the shortcut '%s' is used by "%s")
-</source>
-        <translation type="vanished">
-   *   "%1"  ('%2' kısayolu "%3" tarafından kullanıldığından)
-</translation>
-    </message>
-    <message>
-        <source>Select an XML file containing Audacity keyboard shortcuts...</source>
-        <translation type="vanished">Audacity tuş takımı kısayollarını içeren bir XML dosyası seçin...</translation>
-    </message>
-    <message>
-        <source>Error Importing Keyboard Shortcuts</source>
-        <translation type="vanished">Tuş takımı kısayolları içe aktarılırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>The file with the shortcuts contains illegal shortcut duplicates for "%s" and "%s".
-Nothing is imported.</source>
-        <translation type="vanished">Kısayollar dosyasında "%1" ve "%2" için çakışan kayıtlar var.
-İçe bir şey aktarılmadı.</translation>
-    </message>
-    <message>
-        <source>Loaded %d keyboard shortcuts
-</source>
-        <translation type="vanished">%1 tuş takımı kısayolları yüklendi
-</translation>
-    </message>
-    <message>
-        <source>
-The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:
-</source>
-        <translation type="vanished">
-İçe aktarılan dosyada şu komutlar anılmamış. Ancak bazı yeni kısayollar ile çakıştığından bu komutların kısayolları kaldırıldı:
-</translation>
-    </message>
-    <message>
-        <source>Loading Keyboard Shortcuts</source>
-        <translation type="vanished">Tuş takımı kısayolları yükleniyor</translation>
-    </message>
-    <message>
-        <source>Export Keyboard Shortcuts As:</source>
-        <translation type="vanished">Tuş takımı kısayollarını farklı dışa aktar:</translation>
-    </message>
-    <message>
-        <source>Error Exporting Keyboard Shortcuts</source>
-        <translation type="vanished">Tuş takımı kısayolları dışa aktarılırken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>You may not assign a key to this entry</source>
-        <translation type="vanished">Bu kayıda bir kısayol atamamalısınız</translation>
-    </message>
-    <message>
-        <source>You must select a binding before assigning a shortcut</source>
-        <translation type="vanished">Kısayol atamadan önce bir bağlantı seçmelisiniz</translation>
-    </message>
-    <message>
-        <source>
-
-	 and
-
-	</source>
-        <translation type="vanished">
-
-	 ve
-
-	</translation>
-    </message>
-    <message>
-        <source>The keyboard shortcut '%s' is already assigned to:
-
-	%s
-
-
-Click OK to assign the shortcut to
-
-	%s
-
-instead. Otherwise, click Cancel.</source>
-        <translation type="vanished">'%1' tuş takımı kısayolu zaten şuna atanmış:
-
-	%2
-
-
-Onun yerine kısayolu şuna atamak için Tamam üzerine tıklayın
-
-	%3
-
-Atamak istemiyorsanız İptal üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>Key Config</source>
-        <translation type="vanished">Tuş yapılandırması</translation>
-    </message>
-    <message>
-        <source>MIDI Devices</source>
-        <extracomment>i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"</extracomment>
-        <translation type="vanished">MIDI aygıtları</translation>
-    </message>
-    <message>
-        <source>Preferences for MidiIO</source>
-        <translation type="vanished">Midi giriş çıkış ayarları</translation>
-    </message>
-    <message>
-        <source>No MIDI interfaces</source>
-        <translation type="vanished">MIDI arayüzü yok</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>MIDI</comment>
-        <extracomment>i18n-hint Software interface to MIDI</extracomment>
-        <translation type="vanished">Arayüz</translation>
-    </message>
-    <message>
-        <source>Using: PortMidi</source>
-        <translation type="vanished">Kullanılan: PortMidi</translation>
-    </message>
-    <message>
-        <source>MIDI Synth L&amp;atency (ms):</source>
-        <translation type="vanished">MIDI sentezleyici &amp;gecikmesi (ms):</translation>
-    </message>
-    <message>
-        <source>The MIDI Synthesizer Latency must be an integer</source>
-        <translation type="vanished">MIDI sentezleyici gecikmesi bir tamsayı olmalıdır</translation>
-    </message>
-    <message>
-        <source>Midi IO</source>
-        <translation type="vanished">Midi giriş çıkış</translation>
-    </message>
-    <message>
-        <source>Modules</source>
-        <extracomment>i18n-hint: Modules are optional extensions to Audacity that add NEW features.</extracomment>
-        <translation type="vanished">Modüller</translation>
-    </message>
-    <message>
-        <source>Preferences for Module</source>
-        <translation type="vanished">Modül ayarları</translation>
-    </message>
-    <message>
-        <source>Modules are optional components of Audacity that enable some functionality, such as importing and exporting. 
-It is generally not necessary to change these settings.</source>
-        <translation type="vanished">Modüller, içe ve dışa aktarma gibi bazı Audacity işlevleri etkinleştiren isteğe bağlı bileşenleridir.
-Genellikle bu ayarları değiştirmek gerekmez.</translation>
-    </message>
-    <message>
-        <source>Changes to these settings only take effect when restarting Audacity.
-</source>
-        <translation type="vanished">Bu ayarlarda yapılan değişikliklerin etkin olması için Audacity yeniden başlatılmalıdır.
-</translation>
-    </message>
-    <message>
-        <source>Always ask</source>
-        <translation type="vanished">Her zaman sorulsun</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="vanished">Başarısız</translation>
-    </message>
-    <message>
-        <source>No choice made</source>
-        <translation type="vanished">Herhangi bir seçim yapılmamış</translation>
-    </message>
-    <message>
-        <source>Error: No modules were found. This may indicate a faulty installation.</source>
-        <translation type="vanished">Hata: Herhangi bir modül bulunamadı. Bu durum hatalı bir kurulumdan kaynaklanıyor olabilir.</translation>
-    </message>
-    <message>
-        <source>Module</source>
-        <translation type="vanished">Modül</translation>
-    </message>
-    <message>
-        <source>Preferences for Playback</source>
-        <translation type="vanished">Oynatma ayarları</translation>
-    </message>
-    <message>
-        <source>Effects Preview</source>
-        <translation type="vanished">Etki ön izleme</translation>
-    </message>
-    <message>
-        <source>&amp;Length:</source>
-        <translation type="vanished">&amp;Uzunluk:</translation>
-    </message>
-    <message>
-        <source>Cut Preview</source>
-        <extracomment>i18n-hint: (noun) this is a preview of the cut</extracomment>
-        <translation type="vanished">Kesme ön izleme</translation>
-    </message>
-    <message>
-        <source>&amp;Before cut region:</source>
-        <translation type="vanished">Kesme &amp;bölgesinden önce:</translation>
-    </message>
-    <message>
-        <source>&amp;After cut region:</source>
-        <translation type="vanished">Kesme bölgesinden sonr&amp;a:</translation>
-    </message>
-    <message>
-        <source>Seek Time when playing</source>
-        <translation type="vanished">Oynatmada zaman atlaması</translation>
-    </message>
-    <message>
-        <source>&amp;Short period:</source>
-        <translation type="vanished">Kı&amp;sa aralık:</translation>
-    </message>
-    <message>
-        <source>Lo&amp;ng period:</source>
-        <translation type="vanished">Uzu&amp;n aralık:</translation>
-    </message>
-    <message>
-        <source>&amp;Micro-fades</source>
-        <translation type="vanished">&amp;Mikro kısmalar</translation>
-    </message>
-    <message>
-        <source>Always scrub un&amp;pinned</source>
-        <translation type="vanished">Her &amp;zaman sabitlenmemiş olarak sar</translation>
-    </message>
-    <message>
-        <source>Audacity Preferences</source>
-        <translation type="vanished">Audacity ayarları</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="vanished">Kategori</translation>
-    </message>
-    <message>
-        <source>Preferences:</source>
-        <translation type="vanished">Ayarlar:</translation>
-    </message>
-    <message>
-        <source>Preferences for Quality</source>
-        <translation type="vanished">Kalite ayarları</translation>
-    </message>
-    <message>
-        <source>Real-time Conversion</source>
-        <translation type="vanished">Gerçek zamanlı dönüştürme</translation>
-    </message>
-    <message>
-        <source>Sample Rate Con&amp;verter:</source>
-        <translation type="vanished">Örnekleme &amp;hızı dönüştürücü:</translation>
-    </message>
-    <message>
-        <source>&amp;Dither:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">&amp;Titreme:</translation>
-    </message>
-    <message>
-        <source>High-quality Conversion</source>
-        <translation type="vanished">Yüksek kalite dönüştürme</translation>
-    </message>
-    <message>
-        <source>Sample Rate Conver&amp;ter:</source>
-        <translation type="vanished">Örnek hızı dönüş&amp;türücü:</translation>
-    </message>
-    <message>
-        <source>Dit&amp;her:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">Titr&amp;eme:</translation>
-    </message>
-    <message>
-        <source>Preferences for Recording</source>
-        <translation type="vanished">Kayıt ayarları</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks while recording (overdub)</source>
-        <translation type="vanished">Kayıt sırasında &amp;diğer izler duyulsun (üste kayıt)</translation>
-    </message>
-    <message>
-        <source>Use &amp;hardware to play other tracks</source>
-        <translation type="vanished">Diğer izleri oynatmak için d&amp;onanım kullanılsın</translation>
-    </message>
-    <message>
-        <source>Audible input &amp;monitoring</source>
-        <translation type="vanished">Duyulabilir giriş izle&amp;mesi</translation>
-    </message>
-    <message>
-        <source>Record on a new track</source>
-        <translation type="vanished">Yeni bir ize kaydedilsin</translation>
-    </message>
-    <message>
-        <source>Detect dropouts</source>
-        <extracomment>i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording</extracomment>
-        <translation type="vanished">Kesintiler algılansın</translation>
-    </message>
-    <message>
-        <source>Sound Activated Recording</source>
-        <translation type="vanished">Ses etkinleştirmeli kayıt</translation>
-    </message>
-    <message>
-        <source>&amp;Enable</source>
-        <translation type="vanished">&amp;Aç</translation>
-    </message>
-    <message>
-        <source>Le&amp;vel (dB):</source>
-        <translation type="vanished">Dü&amp;zey (dB):</translation>
-    </message>
-    <message>
-        <source>Name newly recorded tracks</source>
-        <extracomment>i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">Yeni kaydedilen izlerin adlandırılması</translation>
-    </message>
-    <message>
-        <source>With:</source>
-        <extracomment>i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">Şununla:</translation>
-    </message>
-    <message>
-        <source>Custom Track &amp;Name</source>
-        <translation type="vanished">Ö&amp;zel iz adı</translation>
-    </message>
-    <message>
-        <source>Custom name text</source>
-        <translation type="vanished">Özel ad metni</translation>
-    </message>
-    <message>
-        <source>Recorded_Audio</source>
-        <translation type="vanished">Kaydedilmis_ses</translation>
-    </message>
-    <message>
-        <source>&amp;Track Number</source>
-        <translation type="vanished">İz &amp;numarası</translation>
-    </message>
-    <message>
-        <source>System &amp;Date</source>
-        <translation type="vanished">Sistem &amp;tarihi</translation>
-    </message>
-    <message>
-        <source>System T&amp;ime</source>
-        <translation type="vanished">Sistem &amp;saati</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanması</translation>
-    </message>
-    <message>
-        <source>Enable Automated Recording Level Adjustment.</source>
-        <translation type="vanished">Kayıt düzeyinin otomatik olarak ayarlanmasını açar.</translation>
-    </message>
-    <message>
-        <source>Target Peak:</source>
-        <extracomment>i18n-hint: Desired maximum (peak) volume for sound</extracomment>
-        <translation type="vanished">Hedef tepe:</translation>
-    </message>
-    <message>
-        <source>Within:</source>
-        <translation type="vanished">İçinde:</translation>
-    </message>
-    <message>
-        <source>Analysis Time:</source>
-        <translation type="vanished">Çözümleme süresi:</translation>
-    </message>
-    <message>
-        <source>milliseconds (time of one analysis)</source>
-        <translation type="vanished">milisaniye (bir çözümleme süresi)</translation>
-    </message>
-    <message>
-        <source>Number of consecutive analysis:</source>
-        <translation type="vanished">Birbirini izleyen çözümleme sayısı:</translation>
-    </message>
-    <message>
-        <source>0 means endless</source>
-        <translation type="vanished">0 sonsuz anlamına gelir</translation>
-    </message>
-    <message>
-        <source>Punch and Roll Recording</source>
-        <translation type="vanished">İşaretle ve kaydı sürdür</translation>
-    </message>
-    <message>
-        <source>Pre-ro&amp;ll:</source>
-        <translation type="vanished">Ön &amp;sarma:</translation>
-    </message>
-    <message>
-        <source>Cross&amp;fade:</source>
-        <translation type="vanished">Çapraz &amp;geçiş:</translation>
-    </message>
-    <message>
-        <source>Color (Roseus)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme</extracomment>
-        <translation type="vanished">Renk (gül)</translation>
-    </message>
-    <message>
-        <source>Color (classic)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Classic color scheme(from theme) for spectrograms</extracomment>
-        <translation type="vanished">Renk (klasik)</translation>
-    </message>
-    <message>
-        <source>Grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">Gri tonlamalı</translation>
-    </message>
-    <message>
-        <source>Inverse grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Inverse grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">Ters gri tonlamalı</translation>
-    </message>
-    <message>
-        <source>Pitch (EAC)</source>
-        <extracomment>i18n-hint: EAC abbreviates "Enhanced Autocorrelation"</extracomment>
-        <translation type="vanished">Perde (EAC)</translation>
-    </message>
-    <message>
-        <source>Maximum frequency must be 100 Hz or above</source>
-        <translation type="vanished">En yüksek frekans 100 Hz ya da üstü olmalı</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be at least 0 Hz</source>
-        <translation type="vanished">En düşük frekans en az 0 Hz olmalı</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be less than maximum frequency</source>
-        <translation type="vanished">En düşük frekans, en yüksek frekansın altında olmalı</translation>
-    </message>
-    <message>
-        <source>The range must be at least 1 dB</source>
-        <translation type="vanished">Aralık en az 1 dB olmalı</translation>
-    </message>
-    <message>
-        <source>The frequency gain cannot be negative</source>
-        <translation type="vanished">Frekans kazancı negatif olamaz</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be no more than 60 dB/dec</source>
-        <translation type="vanished">Frekans kazancı 60 dB/dec değerinden yüksek olamaz</translation>
-    </message>
-    <message>
-        <source>Spectrogram Settings</source>
-        <translation type="vanished">Spektrogram ayarları</translation>
-    </message>
-    <message>
-        <source>Spectrograms</source>
-        <translation type="vanished">Spektrogramlar</translation>
-    </message>
-    <message>
-        <source>Preferences for Spectrum</source>
-        <translation type="vanished">Spektrum ayarları</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preferences</source>
-        <extracomment>i18n-hint: use is a verb</extracomment>
-        <translation type="vanished">Ayarlar k&amp;ullanılsın</translation>
-    </message>
-    <message>
-        <source>S&amp;cale:</source>
-        <translation type="vanished">Ö&amp;lçek:</translation>
-    </message>
-    <message>
-        <source>Mi&amp;n Frequency (Hz):</source>
-        <translation type="vanished">E&amp;n alçak frekans (Hz):</translation>
-    </message>
-    <message>
-        <source>Ma&amp;x Frequency (Hz):</source>
-        <translation type="vanished">En &amp;yüksek frekans (Hz):</translation>
-    </message>
-    <message>
-        <source>&amp;Gain (dB):</source>
-        <translation type="vanished">&amp;Kazanç (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Range (dB):</source>
-        <translation type="vanished">&amp;Aralık (dB):</translation>
-    </message>
-    <message>
-        <source>High &amp;boost (dB/dec):</source>
-        <translation type="vanished">&amp;Yüksek güçlendirme (dB/dec):</translation>
-    </message>
-    <message>
-        <source>A&amp;lgorithm:</source>
-        <translation type="vanished">A&amp;lgoritma:</translation>
-    </message>
-    <message>
-        <source>Window &amp;size:</source>
-        <translation type="vanished">Pencere &amp;boyutu:</translation>
-    </message>
-    <message>
-        <source>2048</source>
-        <translation type="vanished">2048</translation>
-    </message>
-    <message>
-        <source>Window &amp;type:</source>
-        <translation type="vanished">Pencere &amp;türü:</translation>
-    </message>
-    <message>
-        <source>&amp;Zero padding factor:</source>
-        <translation type="vanished">&amp;Sıfır aralık çarpanı:</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble Spectral Selection</source>
-        <translation type="vanished">S&amp;pektral seçim kullanılsın</translation>
-    </message>
-    <message>
-        <source>Show a grid along the &amp;Y-axis</source>
-        <translation type="vanished">&amp;Y ekseni boyunca ızgara görüntülensin</translation>
-    </message>
-    <message>
-        <source>FFT Find Notes</source>
-        <extracomment>i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated</extracomment>
-        <translation type="vanished">FFT nota bulma</translation>
-    </message>
-    <message>
-        <source>Minimum Amplitude (dB):</source>
-        <translation type="vanished">En küçük genlik (dB):</translation>
-    </message>
-    <message>
-        <source>Max. Number of Notes (1..128):</source>
-        <translation type="vanished">En fazla nota sayısı (1..128):</translation>
-    </message>
-    <message>
-        <source>&amp;Find Notes</source>
-        <translation type="vanished">&amp;Notaları bul</translation>
-    </message>
-    <message>
-        <source>&amp;Quantize Notes</source>
-        <translation type="vanished">Notaları &amp;kuantala</translation>
-    </message>
-    <message>
-        <source>Global settings</source>
-        <translation type="vanished">Genel ayarlar</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble spectral selection</source>
-        <translation type="vanished">S&amp;pektral seçim kullanılsın</translation>
-    </message>
-    <message>
-        <source>The maximum frequency must be an integer</source>
-        <translation type="vanished">En yüksek frekans bir tamsayı olmalı</translation>
-    </message>
-    <message>
-        <source>The minimum frequency must be an integer</source>
-        <translation type="vanished">En düşük frekans bir tam sayı olmalı</translation>
-    </message>
-    <message>
-        <source>The gain must be an integer</source>
-        <translation type="vanished">Kazanç, bir tamsayı olmalı</translation>
-    </message>
-    <message>
-        <source>The range must be a positive integer</source>
-        <translation type="vanished">Aralık, pozitif bir tamsayı olmalı</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be an integer</source>
-        <translation type="vanished">Frekans kazancı bir tamsayı olmalı</translation>
-    </message>
-    <message>
-        <source>The minimum amplitude (dB) must be an integer</source>
-        <translation type="vanished">En küçük genlik (dB) bir tamsayı olmalı</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be an integer</source>
-        <translation type="vanished">En fazla nota sayısı bir tamsayı olmalı</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be in the range 1..128</source>
-        <translation type="vanished">En fazla nota sayısı 1 ile 128 aralığında olmalı</translation>
-    </message>
-    <message>
-        <source>Preferences for Theme</source>
-        <translation type="vanished">Tema ayarları</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="vanished">Bilgi</translation>
-    </message>
-    <message>
-        <source>Themability is an experimental feature.
-
-To try it out, click "Save Theme Cache" then find and modify the images and colors in
-ImageCacheVxx.png using an image editor such as the Gimp.
-
-Click "Load Theme Cache" to load the changed images and colors back into Audacity.</source>
-        <translation type="vanished">Temalaştırma deneysel bir özelliktir.
-
-Denemek için, "Tema ön belleğini kaydet" üzerine tıklayın. Ardından Gimp gibi bir 
-görsel düzenleyici kullanarak ImageCacheVxx.png üzerindeki görsel ve renkleri 
-bulup değiştirin.
-
-Değiştirilmiş gorse ve renkleri yeniden Audacity üzerine yüklemek için 
-"Tema ön belleğini yükle" üzerine tıklayın.</translation>
-    </message>
-    <message>
-        <source>Saving and loading individual theme files uses a separate file for each image, but is
-otherwise the same idea.</source>
-        <translation type="vanished">Tema dosyalarını ayrı ayrı kaydetmek ve yüklemek her bir görsel için ayrı bir dosya kullanır
-ancak düşünce aynıdır.</translation>
-    </message>
-    <message>
-        <source>Theme Cache - Images &amp;&amp; Color</source>
-        <extracomment>i18n-hint: &amp;&amp; in here is an escape character to get a single &amp; on screen,
-* so keep it as is</extracomment>
-        <translation type="vanished">Tema ön belleği - Görseller &amp;ve renk</translation>
-    </message>
-    <message>
-        <source>Save Theme Cache</source>
-        <translation type="vanished">Tema ön belleğini kaydet</translation>
-    </message>
-    <message>
-        <source>Load Theme Cache</source>
-        <translation type="vanished">Tema ön belleğini yükle</translation>
-    </message>
-    <message>
-        <source>Individual Theme Files</source>
-        <translation type="vanished">Kişisel tema dosyaları</translation>
-    </message>
-    <message>
-        <source>Save Files</source>
-        <translation type="vanished">Dosyaları kaydet</translation>
-    </message>
-    <message>
-        <source>Load Files</source>
-        <translation type="vanished">Dosyaları yükle</translation>
-    </message>
-    <message>
-        <source>Tracks Behaviors</source>
-        <extracomment>i18n-hint: i.e. the behaviors of tracks</extracomment>
-        <translation type="vanished">İz davranışları</translation>
-    </message>
-    <message>
-        <source>Preferences for TracksBehaviors</source>
-        <translation type="vanished">İz davranışı ayarları</translation>
-    </message>
-    <message>
-        <source>Ask me each time.
-Show dialog each time audio is pasted.</source>
-        <translation type="vanished">Her defasında sorulsun.
-Her ses yapıştırıldığında pencere görüntülenir.</translation>
-    </message>
-    <message>
-        <source>&amp;Select all audio, if selection required</source>
-        <translation type="vanished">&amp;Seçim zorunlu ise tüm ses seçilsin</translation>
-    </message>
-    <message>
-        <source>Enable cut &amp;lines</source>
-        <extracomment>i18n-hint: Cut-lines are lines that can expand to show the cut audio.</extracomment>
-        <translation type="vanished">Kesme çizgi&amp;leri kullanılsın</translation>
-    </message>
-    <message>
-        <source>Editing a clip can &amp;move other clips</source>
-        <translation type="vanished">Bir parçayı düzenle&amp;mek diğerlerini taşıyabilir</translation>
-    </message>
-    <message>
-        <source>&amp;Always paste audio as new clips</source>
-        <translation type="vanished">Ses &amp;her zaman yeni parça olarak yapıştırılsın</translation>
-    </message>
-    <message>
-        <source>"Move track focus" c&amp;ycles repeatedly through tracks</source>
-        <translation type="vanished">"İz odağını değiştir" i&amp;zler arasında sürekli dolaşır</translation>
-    </message>
-    <message>
-        <source>&amp;Type to create a label</source>
-        <translation type="vanished">Yazarak e&amp;tiket oluşturulabilsin</translation>
-    </message>
-    <message>
-        <source>Use dialog for the &amp;name of a new label</source>
-        <translation type="vanished">Ye&amp;ni bir etiketin adı için pencere kullanılsın</translation>
-    </message>
-    <message>
-        <source>Solo &amp;Button:</source>
-        <translation type="vanished">Solo &amp;düğmesi:</translation>
-    </message>
-    <message>
-        <source>Pasted audio</source>
-        <translation type="vanished">Yapıştırılmış ses</translation>
-    </message>
-    <message>
-        <source>Paste audio from other Audacity project as</source>
-        <translation type="vanished">Başka bir Audacity projesindeki sesi şöyle yapıştır</translation>
-    </message>
-    <message>
-        <source>Connect dots</source>
-        <translation type="vanished">Noktaları birleştir</translation>
-    </message>
-    <message>
-        <source>Stem plot</source>
-        <translation type="vanished">Stem çizelgesi</translation>
-    </message>
-    <message>
-        <source>Preferences for Tracks</source>
-        <translation type="vanished">İz ayarları</translation>
-    </message>
-    <message>
-        <source>Auto-&amp;fit track height</source>
-        <translation type="vanished">İz &amp;yüksekliği otomatik ayarlansın</translation>
-    </message>
-    <message>
-        <source>Use &amp;half-wave display when collapsed</source>
-        <translation type="vanished">&amp;Daraltıldığında yarım dalga görünümü kullanılsın</translation>
-    </message>
-    <message>
-        <source>&amp;Pinned Recording/Playback head</source>
-        <translation type="vanished">&amp;Sabitlenmiş kayıt/oynatma kafası</translation>
-    </message>
-    <message>
-        <source>A&amp;uto-scroll if head unpinned</source>
-        <translation type="vanished">&amp;Kafa sabitlenmemiş ise otomatik kaydırılsın</translation>
-    </message>
-    <message>
-        <source>Pinned &amp;head position</source>
-        <translation type="vanished">&amp;Sabitlenmiş kafa konumu</translation>
-    </message>
-    <message>
-        <source>Default &amp;view mode:</source>
-        <translation type="vanished">&amp;Varsayılan görünüm kipi:</translation>
-    </message>
-    <message>
-        <source>Default Waveform scale:</source>
-        <translation type="vanished">Varsayılan dalga şekli ölçeği:</translation>
-    </message>
-    <message>
-        <source>Display &amp;samples:</source>
-        <translation type="vanished">Ö&amp;rnekleri görüntüle:</translation>
-    </message>
-    <message>
-        <source>Default audio track &amp;name:</source>
-        <translation type="vanished">Varsayıla&amp;n ses izi adı:</translation>
-    </message>
-    <message>
-        <source>Zoom Toggle</source>
-        <translation type="vanished">Yakınlaştırmayı değiştir</translation>
-    </message>
-    <message>
-        <source>Preset 1:</source>
-        <translation type="vanished">1. hazır ayar:</translation>
-    </message>
-    <message>
-        <source>Preset 2:</source>
-        <translation type="vanished">2. hazır ayar:</translation>
-    </message>
-    <message>
-        <source>Waveforms</source>
-        <extracomment>i18n-hint: A waveform is a visual representation of vibration</extracomment>
-        <translation type="vanished">Dalga Şekilleri</translation>
-    </message>
-    <message>
-        <source>Preferences for Waveforms</source>
-        <translation type="vanished">Dalga şekli ayarları</translation>
-    </message>
-    <message>
-        <source>Waveform dB &amp;range:</source>
-        <translation type="vanished">Dalga şekli dB a&amp;ralığı:</translation>
-    </message>
-    <message>
-        <source>Audio Setup</source>
-        <extracomment>i18n-hint: Audio setup button text, keep as short as possible</extracomment>
-        <translation type="vanished">Ses kurulumu</translation>
-    </message>
-    <message>
-        <source>&amp;Host</source>
-        <extracomment>i18n-hint: Audio setup menu</extracomment>
-        <translation type="vanished">&amp;Sunucu</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Device</source>
-        <translation type="vanished">&amp;Oynatma aygıtı</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Device</source>
-        <translation type="vanished">&amp;Kayıt aygıtı</translation>
-    </message>
-    <message>
-        <source>Recording &amp;Channels</source>
-        <translation type="vanished">K&amp;ayıt kanalları</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Settings...</source>
-        <translation type="vanished">&amp;Ses ayarları...</translation>
-    </message>
-    <message>
-        <source>1 (Mono) Recording Channel</source>
-        <translation type="vanished">1 (mono) kayıt kanalı</translation>
-    </message>
-    <message>
-        <source>2 (Stereo) Recording Channels</source>
-        <translation type="vanished">2 (stereo) kayıt kanalı</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Setup Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages the audio devices</extracomment>
-        <translation type="vanished">&amp;Ses kurulumu araç çubuğu</translation>
-    </message>
-    <message>
-        <source>Stopped</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Durduruldu</translation>
-    </message>
-    <message>
-        <source>Transport</source>
-        <translation type="vanished">Hareket</translation>
-    </message>
-    <message>
-        <source>Skip to Start</source>
-        <translation type="vanished">Başlangıca git</translation>
-    </message>
-    <message>
-        <source>Skip to End</source>
-        <translation type="vanished">Bitişe git</translation>
-    </message>
-    <message>
-        <source>Play Once</source>
-        <translation type="vanished">Bir kez oynat</translation>
-    </message>
-    <message>
-        <source>Record New Track</source>
-        <translation type="vanished">Yeni iz kaydet</translation>
-    </message>
-    <message>
-        <source>Append Record</source>
-        <translation type="vanished">Kayıt ekle</translation>
-    </message>
-    <message>
-        <source>Select to End</source>
-        <translation type="vanished">Bitişe kadar seç</translation>
-    </message>
-    <message>
-        <source>Select to Start</source>
-        <translation type="vanished">Başlangıca Kadar seç</translation>
-    </message>
-    <message>
-        <source>%s Paused.</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused.</extracomment>
-        <translation type="vanished">%1 duraklatıldı.</translation>
-    </message>
-    <message>
-        <source>%s.</source>
-        <translation type="vanished">%1.</translation>
-    </message>
-    <message>
-        <source>&amp;Transport Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-with the big buttons on it (play record etc)</extracomment>
-        <translation type="vanished">&amp;Hareketler çubuğu</translation>
-    </message>
-    <message>
-        <source>Playback Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for playback.</extracomment>
-        <translation type="vanished">Oynatma aygıtı</translation>
-    </message>
-    <message>
-        <source>Recording Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for recording.</extracomment>
-        <translation type="vanished">Kayıt aygıtı</translation>
-    </message>
-    <message>
-        <source>Audio Host</source>
-        <translation type="vanished">Ses sunucusu</translation>
-    </message>
-    <message>
-        <source>Recording Channels</source>
-        <translation type="vanished">Kayıt kanalları</translation>
-    </message>
-    <message>
-        <source>Select Recording Device</source>
-        <translation type="vanished">Kayıt aygıtını seçin</translation>
-    </message>
-    <message>
-        <source>Select Playback Device</source>
-        <translation type="vanished">Oynatma aygıtını seçin</translation>
-    </message>
-    <message>
-        <source>Select Audio Host</source>
-        <translation type="vanished">Ses sunucusunu seçin</translation>
-    </message>
-    <message>
-        <source>Select Recording Channels</source>
-        <translation type="vanished">Kayıt kanallarını seçin</translation>
-    </message>
-    <message>
-        <source>Device information is not available.</source>
-        <translation type="vanished">Aygıt bilgileri bulunamadı.</translation>
-    </message>
-    <message>
-        <source>&amp;Device Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages devices</extracomment>
-        <translation type="vanished">Ay&amp;gıt çubuğu</translation>
-    </message>
-    <message>
-        <source>De&amp;vice</source>
-        <translation type="vanished">Ay&amp;gıt</translation>
-    </message>
-    <message>
-        <source>Change &amp;Recording Device...</source>
-        <translation type="vanished">&amp;Kayıt aygıtını değiştir...</translation>
-    </message>
-    <message>
-        <source>Change &amp;Playback Device...</source>
-        <translation type="vanished">&amp;Oynatma aygıtını değiştir...</translation>
-    </message>
-    <message>
-        <source>Change Audio &amp;Host...</source>
-        <translation type="vanished">&amp;Ses sunucusunu değiştir...</translation>
-    </message>
-    <message>
-        <source>Change Recording Cha&amp;nnels...</source>
-        <translation type="vanished">Kayıt ka&amp;nallarını değiştir...</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation type="vanished">Yakınlaştır</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation type="vanished">Uzaklaştır</translation>
-    </message>
-    <message>
-        <source>Fit selection to width</source>
-        <translation type="vanished">Seçimi genişliğe sığdır</translation>
-    </message>
-    <message>
-        <source>Fit project to width</source>
-        <translation type="vanished">Projeyi genişliğe sığdır</translation>
-    </message>
-    <message>
-        <source>Trim audio outside selection</source>
-        <translation type="vanished">Seçim dışındaki sesi buda</translation>
-    </message>
-    <message>
-        <source>Silence audio selection</source>
-        <translation type="vanished">Seçilmiş sesi sustur</translation>
-    </message>
-    <message>
-        <source>Sync-Lock Tracks</source>
-        <translation type="vanished">Eş kilitlenmiş izler</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar for editing</extracomment>
-        <translation type="vanished">&amp;Düzenleme çubuğu</translation>
-    </message>
-    <message>
-        <source> Monitoring </source>
-        <translation type="vanished"> İzleme </translation>
-    </message>
-    <message>
-        <source> Active </source>
-        <translation type="vanished"> Etkin </translation>
-    </message>
-    <message>
-        <source> Peak %2.f dB</source>
-        <translation type="vanished"> Tepe %2.f dB</translation>
-    </message>
-    <message>
-        <source> Peak %.2f </source>
-        <translation type="vanished"> Tepe %1 </translation>
-    </message>
-    <message>
-        <source> Clipped </source>
-        <translation type="vanished"> Kırpıldı </translation>
-    </message>
-    <message>
-        <source>Record Meter</source>
-        <translation type="vanished">Kayıt ölçeri</translation>
-    </message>
-    <message>
-        <source>Recording Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.</extracomment>
-        <translation type="vanished">Kayıt düzeyi</translation>
-    </message>
-    <message>
-        <source>Meter-Record</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">Kayıt ölçeri</translation>
-    </message>
-    <message>
-        <source>Playback Meter</source>
-        <translation type="vanished">Oynatma ölçeri</translation>
-    </message>
-    <message>
-        <source>Playback Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.</extracomment>
-        <translation type="vanished">Oynatma düzeyi</translation>
-    </message>
-    <message>
-        <source>Meter-Play</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">Oynatma ölçeri</translation>
-    </message>
-    <message>
-        <source>Recording Meter</source>
-        <translation type="vanished">Kayıt ölçeri</translation>
-    </message>
-    <message>
-        <source>Combined Meter</source>
-        <translation type="vanished">Birleştirilmiş ölçer</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Meter Toolbar</source>
-        <translation type="vanished">&amp;Kayıt ölçüm çubuğu</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Meter Toolbar</source>
-        <translation type="vanished">&amp;Oynatma ölçüm çubuğu</translation>
-    </message>
-    <message>
-        <source>Mi&amp;xer</source>
-        <translation type="vanished">&amp;Karıştırıcı</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Volume...</source>
-        <translation type="vanished">&amp;Oynatma ses düzeyini ayarla...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Volume</source>
-        <translation type="vanished">Oynatma ses düzeyini &amp;arttır</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Volume</source>
-        <translation type="vanished">Oynatma ses düzeyini a&amp;zalt</translation>
-    </message>
-    <message>
-        <source>Adj&amp;ust Recording Volume...</source>
-        <translation type="vanished">&amp;Kayıt ses düzeyini ayarla...</translation>
-    </message>
-    <message>
-        <source>I&amp;ncrease Recording Volume</source>
-        <translation type="vanished">Kayıt ses düzeyi&amp;ni arttır</translation>
-    </message>
-    <message>
-        <source>D&amp;ecrease Recording Volume</source>
-        <translation type="vanished">Kayıt s&amp;es düzeyini azalt</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Uzunluk</translation>
-    </message>
-    <message>
-        <source>Center</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Orta</translation>
-    </message>
-    <message>
-        <source>Selection Toolbar Setup</source>
-        <translation type="vanished">Seçim çubuğu ayarları</translation>
-    </message>
-    <message>
-        <source>Start and End of Selection</source>
-        <translation type="vanished">Seçimin başlangıç ve bitişi</translation>
-    </message>
-    <message>
-        <source>Start and Length of Selection</source>
-        <translation type="vanished">Seçimin başlangıç ve uzunluğu</translation>
-    </message>
-    <message>
-        <source>Length and End of Selection</source>
-        <translation type="vanished">Seçimin uzunluk ve bitişi</translation>
-    </message>
-    <message>
-        <source>Length and Center of Selection</source>
-        <translation type="vanished">Seçimin uzunluk ve ortası</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">&amp;Seçim çubuğu</translation>
-    </message>
-    <message>
-        <source>Snap to combo box</source>
-        <extracomment>i18n-hint: combo box is the type of the control/widget</extracomment>
-        <translation type="vanished">Açılan kutuya hizala</translation>
-    </message>
-    <message>
-        <source>&amp;Snapping Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">&amp;Hizalama çubuğu</translation>
-    </message>
-    <message>
-        <source>Spectral Selection</source>
-        <translation type="vanished">Spektral seçim</translation>
-    </message>
-    <message>
-        <source>Center frequency and Width</source>
-        <translation type="vanished">Merkez frekansı ve genişliği</translation>
-    </message>
-    <message>
-        <source>Low and High Frequencies</source>
-        <translation type="vanished">Alçak ve yüksek frekanslar</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="vanished">Görüntüle</translation>
-    </message>
-    <message>
-        <source>Center Frequency</source>
-        <translation type="vanished">Merkez frekansı</translation>
-    </message>
-    <message>
-        <source>Bandwidth</source>
-        <translation type="vanished">Bant genişliği</translation>
-    </message>
-    <message>
-        <source>Spe&amp;ctral Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a frequency range of audio</extracomment>
-        <translation type="vanished">S&amp;pektral seçim çubuğu</translation>
-    </message>
-    <message>
-        <source>Time Signature</source>
-        <translation type="vanished">Zaman imzası</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature</source>
-        <translation type="vanished">Üst zaman imzası</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature</source>
-        <translation type="vanished">Alt zaman imzası</translation>
-    </message>
-    <message>
-        <source>Tempo Changed</source>
-        <translation type="vanished">Tempo değişti</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature Changed</source>
-        <translation type="vanished">Üst zaman imzası değişti</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature Changed</source>
-        <translation type="vanished">Alt zaman imzası değişti</translation>
-    </message>
-    <message>
-        <source>Time Signature Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">Zaman imzası araç çubuğu</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation type="vanished">Zaman</translation>
-    </message>
-    <message>
-        <source>Audio Position</source>
-        <translation type="vanished">Ses konumu</translation>
-    </message>
-    <message>
-        <source>&amp;Time Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for viewing actual time of the cursor</extracomment>
-        <translation type="vanished">&amp;Zaman araç çubuğu</translation>
-    </message>
-    <message>
-        <source>Audacity %s Toolbar</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of the kind of toolbar.</extracomment>
-        <translation type="vanished">Audacity %1 araç çubuğu</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize toolbar</source>
-        <translation type="vanished">Araç çubuğunu yeniden boyutlandırmak için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>ToolDock</source>
-        <translation type="vanished">Araç alanı</translation>
-    </message>
-    <message>
-        <source>Selection Tool</source>
-        <translation type="vanished">Seçim aracı</translation>
-    </message>
-    <message>
-        <source>Envelope Tool</source>
-        <translation type="vanished">Kılıf aracı</translation>
-    </message>
-    <message>
-        <source>Draw Tool</source>
-        <translation type="vanished">Çizim aracı</translation>
-    </message>
-    <message>
-        <source>Multi-Tool</source>
-        <translation type="vanished">Çoklu araç</translation>
-    </message>
-    <message>
-        <source>T&amp;ools Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows a toolbar
-that has some tools in it</extracomment>
-        <translation type="vanished">&amp;Araçlar çubuğu</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Tool</source>
-        <translation type="vanished">&amp;Seçim aracı</translation>
-    </message>
-    <message>
-        <source>&amp;Envelope Tool</source>
-        <translation type="vanished">&amp;Kılıf aracı</translation>
-    </message>
-    <message>
-        <source>&amp;Draw Tool</source>
-        <translation type="vanished">Çi&amp;zim aracı</translation>
-    </message>
-    <message>
-        <source>&amp;Multi Tool</source>
-        <translation type="vanished">Ç&amp;oklu araç</translation>
-    </message>
-    <message>
-        <source>&amp;Previous Tool</source>
-        <translation type="vanished">Ö&amp;nceki araç</translation>
-    </message>
-    <message>
-        <source>&amp;Next Tool</source>
-        <translation type="vanished">&amp;Sonraki araç</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed</source>
-        <translation type="vanished">Seçilmiş tempoda oynat</translation>
-    </message>
-    <message>
-        <source>Play at selected speed</source>
-        <translation type="vanished">Seçilmiş tempoda oynat</translation>
-    </message>
-    <message>
-        <source>Playback Speed</source>
-        <translation type="vanished">Oynatma temposu</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed Once</source>
-        <translation type="vanished">Seçilmiş tempoda bir kez oynat</translation>
-    </message>
-    <message>
-        <source>Pla&amp;y-at-Speed Toolbar</source>
-        <translation type="vanished">Seçilmiş tempoda &amp;oynatma çubuğu</translation>
-    </message>
-    <message>
-        <source>&amp;Play-at-Speed</source>
-        <extracomment>i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.</extracomment>
-        <translation type="vanished">Seçilmiş tempoada &amp;oynat</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed &amp;Once</source>
-        <translation type="vanished">Seçilmiş tempoda bir kez &amp;oynat</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview-at-Speed</source>
-        <translation type="vanished">O&amp;ynatma kesme ön izlemesi temposu</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Speed...</source>
-        <translation type="vanished">Oynatma &amp;temposunu ayarla...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Speed</source>
-        <translation type="vanished">Oynatma temposunu &amp;artır</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Speed</source>
-        <translation type="vanished">Oynatma temposunu a&amp;zalt</translation>
-    </message>
-    <message>
-        <source>Drag label. Hold shift and drag to move all labels on the same track.</source>
-        <translation type="vanished">Etiketlerin konumunu değiştirmek için sürükleyin. Aynı iz üzerindeki tüm etiketleri taşımak için Shift tuşuna basılı tutarak sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Drag one or more label boundaries.</source>
-        <translation type="vanished">Bir ya da daha fazla etiket sınırını sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Drag label boundary.</source>
-        <translation type="vanished">Etiket sınırını sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Modified Label</source>
-        <translation type="vanished">Düzenlenmiş etiket</translation>
-    </message>
-    <message>
-        <source>Label Edit</source>
-        <translation type="vanished">Etiket düzenle</translation>
-    </message>
-    <message>
-        <source>Click to edit label text</source>
-        <translation type="vanished">Etiket metnini düzenlemek için tıklayın</translation>
-    </message>
-    <message>
-        <source>&amp;Font...</source>
-        <translation type="vanished">&amp;Yazı türü...</translation>
-    </message>
-    <message>
-        <source>Label Track Font</source>
-        <extracomment>i18n-hint: (noun) This is the font for the label track.</extracomment>
-        <translation type="vanished">Etiket izi yazı türü</translation>
-    </message>
-    <message>
-        <source>Face name</source>
-        <extracomment>i18n-hint: (noun) The name of the typeface</extracomment>
-        <translation type="vanished">Yazı türü</translation>
-    </message>
-    <message>
-        <source>Face size</source>
-        <extracomment>i18n-hint: (noun) The size of the typeface</extracomment>
-        <translation type="vanished">Yazı türü boyutu</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t Label text</source>
-        <translation type="vanished">E&amp;tiket metnini kes</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Label text</source>
-        <translation type="vanished">Etiket &amp;metnini kopyala</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Label</source>
-        <translation type="vanished">E&amp;tiketi sil</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Label...</source>
-        <translation type="vanished">&amp;Etiketi düzenle...</translation>
-    </message>
-    <message>
-        <source>Deleted Label</source>
-        <translation type="vanished">Silinen etiket</translation>
-    </message>
-    <message>
-        <source>Edited labels</source>
-        <translation type="vanished">Etiketler düzenlendi</translation>
-    </message>
-    <message>
-        <source>New label</source>
-        <translation type="vanished">Etiket ekle</translation>
-    </message>
-    <message>
-        <source>Up &amp;Octave</source>
-        <translation type="vanished">Ü&amp;st oktav</translation>
-    </message>
-    <message>
-        <source>Down Octa&amp;ve</source>
-        <translation type="vanished">Alt okta&amp;v</translation>
-    </message>
-    <message>
-        <source>MIDI Device Info</source>
-        <translation type="vanished">MIDI aygıtı bilgileri</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI Device Info...</source>
-        <translation type="vanished">&amp;MIDI aygıtı bilgileri...</translation>
-    </message>
-    <message>
-        <source>Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.</source>
-        <translation type="vanished">Dikey olarak yakınlaştırmak için tıklayın, uzaklaştırmak için Shift ile Tıklayın, Yakınlaştırma aralığını seçmek için sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Zoom Reset</source>
-        <translation type="vanished">Yakınlaştırmayı sıfırla</translation>
-    </message>
-    <message>
-        <source>Shift-Right-Click</source>
-        <translation type="vanished">Shift ile sağ tıklama</translation>
-    </message>
-    <message>
-        <source>Left-Click/Left-Drag</source>
-        <translation type="vanished">Sol tıklama/sol sürükleme</translation>
-    </message>
-    <message>
-        <source>Shift-Left-Click</source>
-        <translation type="vanished">Shift ile sol tıklama</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch selected region.</source>
-        <translation type="vanished">Seçilmiş aralığı esnetmek için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Stretch Note Track</source>
-        <extracomment>i18n-hint: (noun) The track that is used for MIDI notes which can be
-dragged to change their duration.</extracomment>
-        <translation type="vanished">Not izini esnet</translation>
-    </message>
-    <message>
-        <source>Stretch</source>
-        <extracomment>i18n-hint: In the history list, indicates a MIDI note has
-been dragged to change its duration (stretch it). Using either past
-or present tense is fine here.  If unsure, go for whichever is
-shorter.</extracomment>
-        <translation type="vanished">Esnetme</translation>
-    </message>
-    <message>
-        <source>Click to open clip context menu.</source>
-        <translation type="vanished">Parça sağ tık menüsünü açmak için tıklayın.</translation>
-    </message>
-    <message>
-        <source>Reset Clip Pitch</source>
-        <translation type="vanished">Parça perdesini sıfırla</translation>
-    </message>
-    <message>
-        <source>Not enough space</source>
-        <translation type="vanished">Yeterli alan yok</translation>
-    </message>
-    <message>
-        <source>There is not enough space to expand the clip to its original speed.</source>
-        <translation type="vanished">Parçayı özgün temposuna esnetmek için yeterli alan yok.</translation>
-    </message>
-    <message>
-        <source>Reset Clip Speed</source>
-        <translation type="vanished">Parça temposunu sıfırla</translation>
-    </message>
-    <message>
-        <source>Click to reset clip pitch.</source>
-        <translation type="vanished">Parça perdesini sıfırlamak için tıklayın.</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Cmd + click to reset.</source>
-        <translation type="vanished">Parça perdesini değiştirmek için tıklayın. Sıfırlamak için Cmd ile tıklayın</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Ctrl + click to reset.</source>
-        <translation type="vanished">Parça perdesini değiştirmek için tıklayın. Sıfırlamak için Ctrl ile tıklayın</translation>
-    </message>
-    <message>
-        <source>Click to reset clip speed.</source>
-        <translation type="vanished">Parça temposunu sıfırlamak için tıklayın.</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Cmd + click to reset.</source>
-        <translation type="vanished">Parça temposunu değiştirmek için tıklayın. Sıfırlamak için Cmd ile tıklayın</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Ctrl + click to reset.</source>
-        <translation type="vanished">Parça temposunu değiştirmek için tıklayın. Sıfırlamak için Ctrl ile tıklayın</translation>
-    </message>
-    <message>
-        <source>Left-Click to expand, Right-Click to remove</source>
-        <translation type="vanished">Genişletmek için sol, kaldırmak için sağ tıklayın</translation>
-    </message>
-    <message>
-        <source>Expanded Cut Line</source>
-        <translation type="vanished">Kesme çizgisini genişlet</translation>
-    </message>
-    <message>
-        <source>Expand</source>
-        <translation type="vanished">Genişlet</translation>
-    </message>
-    <message>
-        <source>Removed Cut Line</source>
-        <translation type="vanished">Kesme çizgisi kaldırıldı</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed</source>
-        <translation type="vanished">Perde ve tempo</translation>
-    </message>
-    <message>
-        <source>Clip Pitch</source>
-        <translation type="vanished">Parça perdesi</translation>
-    </message>
-    <message>
-        <source>se&amp;mitones:</source>
-        <translation type="vanished">&amp;yarımtonlar:</translation>
-    </message>
-    <message>
-        <source>&amp;cents:</source>
-        <translation type="vanished">&amp;komalar:</translation>
-    </message>
-    <message>
-        <source>Clip Speed</source>
-        <translation type="vanished">Parça temposu</translation>
-    </message>
-    <message>
-        <source>&amp;speed %: </source>
-        <translation type="vanished">&amp;Tempo %:</translation>
-    </message>
-    <message>
-        <source>&amp;Optimize for Voice</source>
-        <translation type="vanished">&amp;Ses için iyileştir</translation>
-    </message>
-    <message>
-        <source>Changed Speed</source>
-        <translation type="vanished">Değiştirilmiş tempo</translation>
-    </message>
-    <message>
-        <source>Changed Pitch</source>
-        <translation type="vanished">Değiştirilmiş perde</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the samples</source>
-        <translation type="vanished">Örnekleri düzenlemek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>To use Draw, zoom in further until you can see the individual samples.</source>
-        <translation type="vanished">Çizimi kullanmak için, tek tek örnekleri görene kadar yakınlaştırın.</translation>
-    </message>
-    <message>
-        <source>Moved Samples</source>
-        <translation type="vanished">Taşınan Örnekler</translation>
-    </message>
-    <message>
-        <source>Sample Edit</source>
-        <translation type="vanished">Örnek düzenleme</translation>
-    </message>
-    <message>
-        <source>Zoom to Fit</source>
-        <translation type="vanished">Sığdır</translation>
-    </message>
-    <message>
-        <source>Reset Zoom</source>
-        <translation type="vanished">Yakınlaştırmayı sıfırla</translation>
-    </message>
-    <message>
-        <source>&amp;Spectrogram</source>
-        <translation type="vanished">&amp;Spektrogram</translation>
-    </message>
-    <message>
-        <source>To change Spectrogram Settings, stop any
- playing or recording first.</source>
-        <translation type="vanished">Spektrogram ayarlarını değiştirmek için önce
- tüm oynatma ya da kaydetme işlemlerini durdurun.</translation>
-    </message>
-    <message>
-        <source>Stop the Audio First</source>
-        <translation type="vanished">Önce sesi durdurun</translation>
-    </message>
-    <message>
-        <source>S&amp;pectrogram Settings...</source>
-        <translation type="vanished">S&amp;pektrogam ayarları...</translation>
-    </message>
-    <message>
-        <source>S&amp;pectral</source>
-        <translation type="vanished">&amp;Spektral</translation>
-    </message>
-    <message>
-        <source>To&amp;ggle Spectral Selection</source>
-        <translation type="vanished">Spektral seçimi &amp;tersine çevir</translation>
-    </message>
-    <message>
-        <source>Next &amp;Higher Peak Frequency</source>
-        <translation type="vanished">Sonraki en &amp;yüksek tepe frekansı</translation>
-    </message>
-    <message>
-        <source>Next &amp;Lower Peak Frequency</source>
-        <translation type="vanished">Sonraki en &amp;düşük tepe frekansı</translation>
-    </message>
-    <message>
-        <source>Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">Yakınlaştırma bölgesini belirtmek için sürükleyin. Menü için sağ tıklayın. Yakınlaştırmak için Ctrl ile kaydırın.</translation>
-    </message>
-    <message>
-        <source>Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">Menü için sağ tıklayın. Yakınlaştırmak için Ctrl ile kaydırın.</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust sizes of sub-views, double-click to split evenly</source>
-        <translation type="vanished">Alt görünümlerin boyutlarını ayarlamak için tıklayıp sürükleyin, eşit olarak bölmek için çift tıklayın</translation>
-    </message>
-    <message>
-        <source>Click and drag to rearrange sub-views</source>
-        <translation type="vanished">Alt görünümleri yeniden düzenlemek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Rearrange sub-views</source>
-        <translation type="vanished">Alt görünümleri yeniden düzenleyin</translation>
-    </message>
-    <message>
-        <source>Close sub-view</source>
-        <translation type="vanished">Alt görünümü kapat</translation>
-    </message>
-    <message>
-        <source>Mute/Unmute Track</source>
-        <translation type="vanished">İzin sesini kıs/aç</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip</source>
-        <oldsource>%s, %d of %d clips</oldsource>
-        <extracomment>i18n-hint:
-string is the name of a clip
-first number is the position of that clip in a sequence of clips,
-second number counts the clips</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 / %3 parça</numerusform>
-            <numerusform>%1, %2 / %3 parça</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Adjust left trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished">Sol kırpmayı %1 saniye olarak ayarla</translation>
-    </message>
-    <message>
-        <source>Trim by %.02fs</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown</extracomment>
-        <translation type="vanished">%1s kırp</translation>
-    </message>
-    <message>
-        <source>Adjust right trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished">Sağ kırpmayı %1 saniye olarak ayarla</translation>
-    </message>
-    <message>
-        <source>Click and drag to move clip boundary in time</source>
-        <translation type="vanished">Parça sınırlarını zamanda taşımak için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch clip</source>
-        <translation type="vanished">Parçayı esnetmek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Split Clip</source>
-        <translation type="vanished">Parçayı ayır</translation>
-    </message>
-    <message>
-        <source>Join Clips</source>
-        <translation type="vanished">Parçaları birleştir</translation>
-    </message>
-    <message>
-        <source>Rename Clip...</source>
-        <translation type="vanished">Parçayı yeniden adlandır...</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed...</source>
-        <translation type="vanished">Perde ve tempo...</translation>
-    </message>
-    <message>
-        <source>Render Pitch and Speed</source>
-        <translation type="vanished">Oluşturma perdesi ve temposu</translation>
-    </message>
-    <message>
-        <source>Changed Clip Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">Parça temposu %%%1 olarak değiştirildi</translation>
-    </message>
-    <message>
-        <source>Changed Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">Tempo %%%1 olarak değiştirildi</translation>
-    </message>
-    <message>
-        <source>Set Wave Clip Name</source>
-        <translation type="vanished">Dalga parçası adını ayarla</translation>
-    </message>
-    <message>
-        <source>Click and drag to select text</source>
-        <translation type="vanished">Metni seçmek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Modified Clip Name</source>
-        <translation type="vanished">Değiştirilmiş parça adı</translation>
-    </message>
-    <message>
-        <source>Clip Name Edit</source>
-        <translation type="vanished">Parça adını düzenle</translation>
-    </message>
-    <message>
-        <source>Rendered time-stretched audio</source>
-        <translation type="vanished">Oluşturulan zamanı esnetilmiş ses</translation>
-    </message>
-    <message>
-        <source>Pitch Shift</source>
-        <translation type="vanished">Perde kayması</translation>
-    </message>
-    <message>
-        <source>Changed Pitch Shift</source>
-        <translation type="vanished">Değiştirilmiş perde kayması</translation>
-    </message>
-    <message>
-        <source>&amp;Rename Clip...</source>
-        <translation type="vanished">&amp;Parçayı yeniden adlandır...</translation>
-    </message>
-    <message>
-        <source>&amp;Pitch and Speed...</source>
-        <translation type="vanished">&amp;Perde ve tempo...</translation>
-    </message>
-    <message>
-        <source>Render Pitch and &amp;Speed</source>
-        <translation type="vanished">Oluşturma perdesi ve &amp;temposu</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Up</source>
-        <translation type="vanished">Perde &amp;yukarı</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Down</source>
-        <translation type="vanished">Perde &amp;aşağı</translation>
-    </message>
-    <message>
-        <source>&amp;Format</source>
-        <translation type="vanished">&amp;Biçim</translation>
-    </message>
-    <message>
-        <source>Changing sample format</source>
-        <translation type="vanished">Örnek biçimi değiştiriliyor</translation>
-    </message>
-    <message>
-        <source>Processing...   0%%</source>
-        <translation type="vanished">İşleniyor...   0%%</translation>
-    </message>
-    <message>
-        <source>Processing...   %i%%</source>
-        <translation type="vanished">İşleniyor...   %1%%</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s</source>
-        <extracomment>i18n-hint: The strings name a track and a format</extracomment>
-        <translation type="vanished">'%1' %2 olarak değiştirildi</translation>
-    </message>
-    <message>
-        <source>Format Change</source>
-        <translation type="vanished">Biçim değişimi</translation>
-    </message>
-    <message>
-        <source>Rat&amp;e</source>
-        <translation type="vanished">&amp;Oran</translation>
-    </message>
-    <message>
-        <source>8000 Hz</source>
-        <translation type="vanished">8000 Hz</translation>
-    </message>
-    <message>
-        <source>11025 Hz</source>
-        <translation type="vanished">11025 Hz</translation>
-    </message>
-    <message>
-        <source>16000 Hz</source>
-        <translation type="vanished">16000 Hz</translation>
-    </message>
-    <message>
-        <source>22050 Hz</source>
-        <translation type="vanished">22050 Hz</translation>
-    </message>
-    <message>
-        <source>44100 Hz</source>
-        <translation type="vanished">44100 Hz</translation>
-    </message>
-    <message>
-        <source>48000 Hz</source>
-        <translation type="vanished">48000 Hz</translation>
-    </message>
-    <message>
-        <source>88200 Hz</source>
-        <translation type="vanished">88200 Hz</translation>
-    </message>
-    <message>
-        <source>96000 Hz</source>
-        <translation type="vanished">96000 Hz</translation>
-    </message>
-    <message>
-        <source>176400 Hz</source>
-        <translation type="vanished">176400 Hz</translation>
-    </message>
-    <message>
-        <source>192000 Hz</source>
-        <translation type="vanished">192000 Hz</translation>
-    </message>
-    <message>
-        <source>352800 Hz</source>
-        <translation type="vanished">352800 Hz</translation>
-    </message>
-    <message>
-        <source>384000 Hz</source>
-        <translation type="vanished">384000 Hz</translation>
-    </message>
-    <message>
-        <source>&amp;Other...</source>
-        <translation type="vanished">&amp;Diğer...</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s Hz</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' değeri %2 Hz olarak değiştirildi</translation>
-    </message>
-    <message>
-        <source>Rate Change</source>
-        <translation type="vanished">Hız değişimi</translation>
-    </message>
-    <message>
-        <source>Set Rate</source>
-        <translation type="vanished">Oranı ayarla</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke Stereo Track</source>
-        <translation type="vanished">İzi çift &amp;kanallı yap</translation>
-    </message>
-    <message>
-        <source>Swap Stereo &amp;Channels</source>
-        <translation type="vanished">&amp;Kanalların yerini değiştir</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Stereo Track</source>
-        <translation type="vanished">Çift kanallı izi a&amp;yır</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mo&amp;no</source>
-        <translation type="vanished">Çift ka&amp;nallıyı tek kanallıya ayır</translation>
-    </message>
-    <message>
-        <source>The tracks you are attempting to merge to stereo contain clips at
-different positions, or otherwise mismatching clips. Merging them
-will render the tracks.
-
-This causes any realtime effects to be applied to the waveform and
-hidden data to be removed. Additionally, the entire track will
-become one large clip.
-
-Do you wish to continue?</source>
-        <translation type="vanished">Çift kanallı olarak birleştirmeye çalıştığınız parçalar farklı konumlarda
-bulunan parçalar ya da başka türlü uyumsuz olan parçalar. Bunları
-birleştirmek izleri oluşturur.
-
-Oluşturma işlemi, dalga şekline gerçek zamanlı etkilerin uygulanmasına
-ve gizli verilerin kaldırılmasına neden olur. Ayrıca parçanın tamamı büyük
-bir parça haline gelir.
-
-İlerlemek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Combine mono to stereo</source>
-        <translation type="vanished">Tek kanallıyı çift kanala kat</translation>
-    </message>
-    <message>
-        <source>Made '%s' a stereo track</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' izi çift kanallı yapıldı</translation>
-    </message>
-    <message>
-        <source>Make Stereo</source>
-        <translation type="vanished">Çift kanallı yap</translation>
-    </message>
-    <message>
-        <source>Swapped Channels in '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' içindeki kanallar değiştirildi</translation>
-    </message>
-    <message>
-        <source>Swap Channels</source>
-        <translation type="vanished">Kanalları değiştir</translation>
-    </message>
-    <message>
-        <source>Split stereo track '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' çift kanallı izini ayır</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mono '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' çift kanallıdan tek kanallıya ayır</translation>
-    </message>
-    <message>
-        <source>Split to Mono</source>
-        <translation type="vanished">Tek kanallıya ayır</translation>
-    </message>
-    <message>
-        <source>Created new audio track</source>
-        <translation type="vanished">Yeni ses izi oluşturuldu</translation>
-    </message>
-    <message>
-        <source>Created new stereo audio track</source>
-        <translation type="vanished">Yeni çift kanallı ses izi oluşturuldu</translation>
-    </message>
-    <message>
-        <source>&amp;Mono Track</source>
-        <translation type="vanished">&amp;Tek kanallı iz</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo Track</source>
-        <translation type="vanished">&amp;Çift kanallı iz</translation>
-    </message>
-    <message>
-        <source>%+.1f dB</source>
-        <extracomment>i18n-hint dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.0f%% Left</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% sola</translation>
-    </message>
-    <message>
-        <source>%.0f%% Right</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% sağa</translation>
-    </message>
-    <message>
-        <source>Half Wave</source>
-        <translation type="vanished">Yarım dalga</translation>
-    </message>
-    <message>
-        <source>Wa&amp;veform</source>
-        <translation type="vanished">&amp;Dalga şekli</translation>
-    </message>
-    <message>
-        <source>&amp;Wave Color</source>
-        <translation type="vanished">&amp;Dalga rengi</translation>
-    </message>
-    <message>
-        <source>Instrument %i</source>
-        <translation type="vanished">%1 enstrumanı</translation>
-    </message>
-    <message>
-        <source>WaveColor Change</source>
-        <translation type="vanished">Dalga rengini değiştir</translation>
-    </message>
-    <message>
-        <source>Change Speed Limits</source>
-        <translation type="vanished">Değiştirilmiş tempo</translation>
-    </message>
-    <message>
-        <source>Change speed limit (%) to:</source>
-        <translation type="vanished">Alt tempo sınırını (%) şuna değiştir:</translation>
-    </message>
-    <message>
-        <source>Lower Speed Limit</source>
-        <translation type="vanished">Daha düşük tempo sınırı</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit</source>
-        <translation type="vanished">Daha yüksek tempo sınırı</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit must be greater than the Lower Speed Limit</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid Limits</source>
-        <translation type="vanished">Sert sınır</translation>
-    </message>
-    <message>
-        <source>Set range to '%ld' - '%ld'</source>
-        <translation type="vanished">Aralığı '%1' - '%2' olarak ayarla</translation>
-    </message>
-    <message>
-        <source>Set Range</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Aralık ayarı</translation>
-    </message>
-    <message>
-        <source>Set time track display to linear</source>
-        <translation type="vanished">Zaman izi görüntüsü doğrusal olsun</translation>
-    </message>
-    <message>
-        <source>Set Display</source>
-        <translation type="vanished">Görünüm ayarı</translation>
-    </message>
-    <message>
-        <source>Set time track display to logarithmic</source>
-        <translation type="vanished">Zaman izi görüntüsü logaritmik olsun</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to linear</source>
-        <translation type="vanished">Zaman izi aradeğerlemesi doğrusal olsun</translation>
-    </message>
-    <message>
-        <source>Set Interpolation</source>
-        <translation type="vanished">Ara değerleme ayarı</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to logarithmic</source>
-        <translation type="vanished">Zaman izi ara değerlemesi logaritmik olsun</translation>
-    </message>
-    <message>
-        <source>&amp;Linear scale</source>
-        <translation type="vanished">&amp;Doğrusal ölçek</translation>
-    </message>
-    <message>
-        <source>L&amp;ogarithmic scale</source>
-        <translation type="vanished">L&amp;ogaritmik ölçek</translation>
-    </message>
-    <message>
-        <source>&amp;Range...</source>
-        <translation type="vanished">A&amp;ralık...</translation>
-    </message>
-    <message>
-        <source>Logarithmic &amp;Interpolation</source>
-        <translation type="vanished">Logaritmik a&amp;ra değerleme</translation>
-    </message>
-    <message>
-        <source>Created new time track</source>
-        <translation type="vanished">Yeni zaman izi oluşturuldu</translation>
-    </message>
-    <message>
-        <source>&amp;Time Track</source>
-        <translation type="vanished">&amp;Zaman izi</translation>
-    </message>
-    <message>
-        <source>Right-click for menu.</source>
-        <translation type="vanished">Menüyü açmak için sağ tıklayın.</translation>
-    </message>
-    <message>
-        <source>Drag clips to reposition them. Hold Shift and drag to move all clips on the same track.</source>
-        <extracomment>i18n-hint Appears on hovering mouse over clip affordance</extracomment>
-        <translation type="vanished">Parçaların konumunu değiştirmek için sürükleyin. Aynı iz üzerindeki tüm parçaları taşımak için Shift tuşuna basılı tutarak sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Add Mono Track</source>
-        <translation type="vanished">Tek kanallı iz ekle</translation>
-    </message>
-    <message>
-        <source>Add Stereo Track</source>
-        <translation type="vanished">Çift kanallı iz ekle</translation>
-    </message>
-    <message>
-        <source>Add Label Track</source>
-        <translation type="vanished">Etiket izi ekle</translation>
-    </message>
-    <message>
-        <source>Export Audio...</source>
-        <translation type="vanished">Sesi dışa aktar...</translation>
-    </message>
-    <message>
-        <source>Erased selected area</source>
-        <translation type="vanished">Seçilmiş bölge silindi</translation>
-    </message>
-    <message>
-        <source>Selected area using Brush Tool</source>
-        <translation type="vanished">Bölge fırça aracıyla seçildi</translation>
-    </message>
-    <message>
-        <source>Brush tool selection</source>
-        <translation type="vanished">Fırça aracı seçimi</translation>
-    </message>
-    <message>
-        <source>Re&amp;name Track...</source>
-        <translation type="vanished">İzi ye&amp;niden adlandır...</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Up</source>
-        <translation type="vanished">İzi y&amp;ukarı taşı</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Down</source>
-        <translation type="vanished">İ&amp;zi aşağı taşı</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Top</source>
-        <translation type="vanished">İzi en üs&amp;te taşı</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Bottom</source>
-        <translation type="vanished">İzi en alta taşı</translation>
-    </message>
-    <message>
-        <source>Set Track Name</source>
-        <translation type="vanished">İz adını ayarla</translation>
-    </message>
-    <message>
-        <source>Renamed '%s' to '%s'</source>
-        <translation type="vanished">'%1', '%2' olarak yeniden adlandırıldı</translation>
-    </message>
-    <message>
-        <source>Name Change</source>
-        <translation type="vanished">Ad değiştir</translation>
-    </message>
-    <message>
-        <source>Click and drag to warp playback time</source>
-        <translation type="vanished">Oynatma zamanında atlamak için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the amplitude envelope</source>
-        <translation type="vanished">Genlik kılıfını düzenlemek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Adjusted envelope.</source>
-        <extracomment>i18n-hint: (verb) Audacity has just adjusted the envelope .</extracomment>
-        <translation type="vanished">Ayarlanmış kılıf.</translation>
-    </message>
-    <message>
-        <source>&amp;Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">&amp;Sar</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="vanished">Taranıyor</translation>
-    </message>
-    <message>
-        <source>Scrub &amp;Ruler</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">Sarma &amp;cetveli</translation>
-    </message>
-    <message>
-        <source>Playing at Speed</source>
-        <translation type="vanished">Seçilmiş tempoda oynatılıyor</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Seek</source>
-        <translation type="vanished">Fare imlecini taramaya taşıyın</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Scrub</source>
-        <translation type="vanished">Fare imlecini sarmaya taşıyın</translation>
-    </message>
-    <message>
-        <source>Scru&amp;bbing</source>
-        <translation type="vanished">&amp;Sarma</translation>
-    </message>
-    <message>
-        <source>Scrub Bac&amp;kwards</source>
-        <translation type="vanished">&amp;Geriye sar</translation>
-    </message>
-    <message>
-        <source>Scrub For&amp;wards</source>
-        <translation type="vanished">İ&amp;leriye sar</translation>
-    </message>
-    <message>
-        <source>Click and drag to move left selection boundary.</source>
-        <translation type="vanished">Sol seçim sınırını değiştirmek için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move right selection boundary.</source>
-        <translation type="vanished">Sağ seçim sınırını değiştirmek için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move bottom selection frequency.</source>
-        <translation type="vanished">Alt seçim frekansını değiştirmek için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move top selection frequency.</source>
-        <translation type="vanished">Üst seçim frekansını taşımak için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency to a spectral peak.</source>
-        <translation type="vanished">Orta seçim frekansını spektral tepeye taşımak için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency.</source>
-        <translation type="vanished">Orta seçim frekansını taşımak için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust frequency bandwidth.</source>
-        <translation type="vanished">Frekans bant genişliğini değiştirmek için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Edit, Preferences...</source>
-        <extracomment>i18n-hint: These are the names of a menu and a command in that menu</extracomment>
-        <translation type="vanished">Ayarları düzenle...</translation>
-    </message>
-    <message>
-        <source>Multi-Tool Mode: %s for Mouse and Keyboard Preferences.</source>
-        <extracomment>i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac</extracomment>
-        <translation type="vanished">Çoklu araç kipi: Fare ve tuş takımı ayarları için %1.</translation>
-    </message>
-    <message>
-        <source>Click and drag to set frequency bandwidth.</source>
-        <translation type="vanished">Frekans bant genişliğini ayarlamak için tıklayıp sürükleyin.</translation>
-    </message>
-    <message>
-        <source>Click and drag to select audio</source>
-        <translation type="vanished">Sesi seçmek için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>(snapping)</source>
-        <extracomment>i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries</extracomment>
-        <translation type="vanished">(hizalanıyor)</translation>
-    </message>
-    <message>
-        <source>Click and drag to move a track in time</source>
-        <translation type="vanished">İzi zamanda taşımak için tıklayıp sürükleyin</translation>
-    </message>
-    <message>
-        <source>Could not shift between tracks</source>
-        <translation type="vanished">İzler arasında kaydırılamadı</translation>
-    </message>
-    <message>
-        <source>Moved clips to another track</source>
-        <translation type="vanished">Parçalar başka bir ize taşındı</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips right %.02f seconds</source>
-        <translation type="vanished">İzler/parçalar zamanda %1 saniye sağa kaydırıldı</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips left %.02f seconds</source>
-        <translation type="vanished">İzler/parçalar zamanda %1 saniye sola kaydırıldı</translation>
-    </message>
-    <message>
-        <source>Move Clip</source>
-        <translation type="vanished">Parçayı taşı</translation>
-    </message>
-    <message>
-        <source>Collapse</source>
-        <translation type="vanished">Daralt</translation>
-    </message>
-    <message>
-        <source>Delete Track</source>
-        <translation type="vanished">İzi sil</translation>
-    </message>
-    <message>
-        <source>Open menu...</source>
-        <translation type="vanished">Menüyü aç...</translation>
-    </message>
-    <message>
-        <source>Command+Click</source>
-        <extracomment>i18n-hint: Command names a modifier key on Macintosh keyboards</extracomment>
-        <translation type="vanished">Command ile tıklama</translation>
-    </message>
-    <message>
-        <source>Ctrl+Click</source>
-        <extracomment>i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards</extracomment>
-        <translation type="vanished">Ctrl ile tıklama</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track. Drag up or down to change track order.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">İzi seçmek ya da bırakmak için %1. İz sıralamasını değiştirmek için aşağı ya da yukarı sürükleyin.</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">İzi seçmek ya da bırakmak için %1.</translation>
-    </message>
-    <message>
-        <source>Moved '%s' up</source>
-        <extracomment>i18n-hint: will substitute name of track for %s</extracomment>
-        <translation type="vanished">'%1' yukarı taşındı</translation>
-    </message>
-    <message>
-        <source>Moved '%s' down</source>
-        <translation type="vanished">'%1' aşağı taşındı</translation>
-    </message>
-    <message>
-        <source>Move Track</source>
-        <translation type="vanished">İzi taşı</translation>
-    </message>
-    <message>
-        <source>Click to Zoom In, Shift-Click to Zoom Out</source>
-        <translation type="vanished">Yakınlaştırmak için tıklayın, uzaklaştırmak için Shift ile tıklayın</translation>
-    </message>
-    <message>
-        <source>Drag to Zoom Into Region, Right-Click to Zoom Out</source>
-        <translation type="vanished">Aralığı yakınlaştırmak için sürükleyin, uzaklaştırmak için sağ tıklayın</translation>
-    </message>
-    <message>
-        <source>Left=Zoom In, Right=Zoom Out, Middle=Normal</source>
-        <translation type="vanished">Sol=Yakınlaştır, Sağ=Uzaklaştır, Orta=Normal</translation>
-    </message>
-    <message>
-        <source>No Updates Available</source>
-        <extracomment>i18n-hint: Title of the dialog no updates available.</extracomment>
-        <translation type="vanished">Herhangi bir güncelleme yok</translation>
-    </message>
-    <message>
-        <source>Check for Updates</source>
-        <translation type="vanished">Güncelleme denetimi</translation>
-    </message>
-    <message>
-        <source>If you want to change your preference for automatic updates checking, you can find it in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Application'.</extracomment>
-        <translation type="vanished">Otomatik güncelleme denetimi ayarını %1 bölümünden değiştirebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Application</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
-i18n-hint: a page in the Preferences dialog; use same name</extracomment>
-        <translation type="vanished">Ayarlar &gt; Uygulama</translation>
-    </message>
-    <message>
-        <source>Error checking for update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Güncelleme denetlenirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Unable to connect to Audacity update server.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Audacity güncelleme sunucusu ile bağlantı kurulamadı.</translation>
-    </message>
-    <message>
-        <source>Update data was corrupted.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Güncelleme verileri bozuk.</translation>
-    </message>
-    <message>
-        <source>Error downloading update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Güncelleme indirilirken sorun çıktı</translation>
-    </message>
-    <message>
-        <source>Can't open the Audacity download link.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Audacity indirme bağlantısı açılamadı.</translation>
-    </message>
-    <message>
-        <source>Audacity update</source>
-        <translation type="vanished">Audacity güncelleme</translation>
-    </message>
-    <message>
-        <source>Downloading %s</source>
-        <translation type="vanished">%1 indiriliyor</translation>
-    </message>
-    <message>
-        <source>App update checking</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">Uygulama güncelleme denetimi</translation>
-    </message>
-    <message>
-        <source>To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.</source>
-        <extracomment>i18n-hint: The first paragraph of app update notice dialog.</extracomment>
-        <translation type="vanished">Güncel kalmanız amacıyla yeni bir Audacity sürümü yayınlandığında uygulama içinde bir bildirim görüntülenecek.</translation>
-    </message>
-    <message>
-        <source>In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.</source>
-        <extracomment>i18n-hint: The second paragraph of app update notice dialog</extracomment>
-        <translation type="vanished">Audacity, kişisel gizliliğinizi korumak için herhangi bir kişisel bilgi toplamaz. Bununla birlikte, uygulama güncelleme denetimi özelliği için ağ erişimi gereklidir.</translation>
-    </message>
-    <message>
-        <source>You can turn off app update checking at any time in %s.</source>
-        <extracomment>i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences &gt; Application" link</extracomment>
-        <translation type="vanished">Uygulama güncelleme denetimini istediğiniz zaman %1 kapatabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>App updates</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">Uygulama güncellemeleri</translation>
-    </message>
-    <message>
-        <source>Update Audacity</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Audacity uygulamasını güncelle</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">A&amp;tla</translation>
-    </message>
-    <message>
-        <source>&amp;Install update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">&amp;Güncellemeyi kur</translation>
-    </message>
-    <message>
-        <source>Audacity %s is available!</source>
-        <comment>update dialog</comment>
-        <extracomment>i18n-hint Substitution of version number for %s.</extracomment>
-        <translation type="vanished">Audacity %1 yayınlanmış!</translation>
-    </message>
-    <message>
-        <source>Changelog</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Değişiklik günlüğü</translation>
-    </message>
-    <message>
-        <source>Read more on GitHub</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">GitHub üzerinden bilgi alın</translation>
-    </message>
-    <message>
-        <source>(disabled)</source>
-        <translation type="vanished">(kapalı)</translation>
-    </message>
-    <message>
-        <source>Press</source>
-        <translation type="vanished">Basın</translation>
-    </message>
-    <message>
-        <source>Button</source>
-        <translation type="vanished">Düğme</translation>
-    </message>
-    <message>
-        <source>pressed</source>
-        <extracomment>i18n-hint: whether a button is pressed or not pressed</extracomment>
-        <translation type="vanished">basıldı</translation>
-    </message>
-    <message>
-        <source>not pressed</source>
-        <translation type="vanished">basılmadı</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Left, in the Pan slider
-i18n-hint: One-letter abbreviation for Left, in VU Meter</extracomment>
-        <translation type="vanished">L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Right, in the Pan slider
-i18n-hint: One-letter abbreviation for Right, in VU Meter</extracomment>
-        <translation type="vanished">R</translation>
-    </message>
-    <message>
-        <source>%.3fx</source>
-        <extracomment>i18n-hint: "x" suggests a multiplicative factor</extracomment>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>&amp;Clear</source>
-        <translation type="vanished">&amp;Temizle</translation>
-    </message>
-    <message>
-        <source>Grabber</source>
-        <extracomment>i18n-hint: A 'Grabber' is a region you can click and drag on
-It's used to drag a track around (when in multi-tool mode) rather
-than requiring that you use the drag tool.  It's shown as a series
-of horizontal bumps</extracomment>
-        <translation type="vanished">Yakalayıcı</translation>
-    </message>
-    <message>
-        <source>Empty</source>
-        <translation type="vanished">Boş</translation>
-    </message>
-    <message>
-        <source>Menu</source>
-        <translation type="vanished">Menü</translation>
-    </message>
-    <message>
-        <source>Meter</source>
-        <extracomment>i18n-hint: Noun (the meter is used for playback or record level monitoring)</extracomment>
-        <translation type="vanished">Ölçer</translation>
-    </message>
-    <message>
-        <source>Disable Silent Monitoring</source>
-        <translation type="vanished">Sessiz izlemeyi kapat</translation>
-    </message>
-    <message>
-        <source>Enable Silent Monitoring</source>
-        <translation type="vanished">Sessiz izlemeyi aç</translation>
-    </message>
-    <message>
-        <source>Recording Meter Options</source>
-        <translation type="vanished">Kayıt ölçer ayarları</translation>
-    </message>
-    <message>
-        <source>Playback Meter Options</source>
-        <translation type="vanished">Oynatma ölçer ayarları</translation>
-    </message>
-    <message>
-        <source>Refresh Rate</source>
-        <translation type="vanished">Yenileme hızı</translation>
-    </message>
-    <message>
-        <source>Higher refresh rates make the meter show more frequent
-changes. A rate of 30 per second or less should prevent
-the meter affecting audio quality on slower machines.</source>
-        <translation type="vanished">Yüksek yineleme değerleri ölçerin daha sık güncellenmesini
-sağlar. Saniyede 30 ve üstü gibi bir rakam yavaş bilgisayarlarda
-ses kalitesinin bozulmasına neden olabilir.</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]</source>
-        <translation type="vanished">Ölçer yenileme hızı [saniyede 1-100]:</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]: </source>
-        <translation type="vanished">Ölçer yenileme oranı [saniyede 1-100]: </translation>
-    </message>
-    <message>
-        <source>Meter Style</source>
-        <translation type="vanished">Ölçer biçemi</translation>
-    </message>
-    <message>
-        <source>Meter Type</source>
-        <translation type="vanished">Ölçer türü</translation>
-    </message>
-    <message>
-        <source>Orientation</source>
-        <translation type="vanished">Doğrultu</translation>
-    </message>
-    <message>
-        <source>Missing Plugins</source>
-        <translation type="vanished">Eksik uygulama ekleri</translation>
-    </message>
-    <message>
-        <source>This project contains some realtime effect plugins that cannot be found on this system.</source>
-        <translation type="vanished">Bu projede, bu sistem üzerinde bulunamayan bazı gerçek zamanlı etki uygulama ekleri var.</translation>
-    </message>
-    <message>
-        <source>The project may sound different than intended. %s</source>
-        <extracomment>i18n-hint: %s will be replaced with "Learn more"</extracomment>
-        <translation type="vanished">Proje amaçlandığından farklı şekilde duyulabilir. %1</translation>
-    </message>
-    <message>
-        <source>Learn more</source>
-        <translation type="vanished">Ayrıntılı bilgi alın</translation>
-    </message>
-    <message>
-        <source>(Use context menu to change format.)</source>
-        <translation type="vanished">(Biçimi değiştirmek için kısa yol menüsünü kullanın)</translation>
-    </message>
-    <message>
-        <source>%s (%s)</source>
-        <translation type="vanished">%1 (%2)</translation>
-    </message>
-    <message>
-        <source>Unable to write files to directory: %s.</source>
-        <extracomment>i18n-hint: %s is replaced with a directory path.</extracomment>
-        <translation type="vanished">Dosyalar klasöre yazılamadı: %1.</translation>
-    </message>
-    <message>
-        <source>Please check that the directory exists, has the necessary permissions, and the drive isn't full.</source>
-        <extracomment>i18n-hint: This message describes the error in the Error dialog.</extracomment>
-        <translation type="vanished">Lütfen klasörün var ve gerekli izinlere sahip olduğunu ve sürücüde boş alan olduğunu denetleyin.</translation>
-    </message>
-    <message>
-        <source>You can change the directory in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Directories'.</extracomment>
-        <translation type="vanished">%1 içindeki klasörü değiştirebilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Directories</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.</extracomment>
-        <translation type="vanished">Ayarlar &gt; Klasörler</translation>
-    </message>
-    <message>
-        <source>Don't show this warning again</source>
-        <translation type="vanished">Bu uyarı bir daha görüntülenmesin</translation>
-    </message>
-    <message>
-        <source>NaN</source>
-        <translation type="vanished">Sayı değil</translation>
-    </message>
-    <message>
-        <source>Infinity</source>
-        <translation type="vanished">Sonsuzluk</translation>
-    </message>
-    <message>
-        <source>-Infinity</source>
-        <translation type="vanished">-Sonsuzluk</translation>
-    </message>
-    <message>
-        <source>Validation error</source>
-        <translation type="vanished">Doğrulama sorunu</translation>
-    </message>
-    <message>
-        <source>Empty value</source>
-        <translation type="vanished">Değer boş</translation>
-    </message>
-    <message>
-        <source>Malformed number</source>
-        <translation type="vanished">Biçimsiz sayı</translation>
-    </message>
-    <message>
-        <source>Not in range %d to %d</source>
-        <translation type="vanished">%1 - %2 aralığında değil</translation>
-    </message>
-    <message>
-        <source>Value overflow</source>
-        <translation type="vanished">Değer aşımı</translation>
-    </message>
-    <message>
-        <source>Too many decimal digits</source>
-        <translation type="vanished">Çok sayıda ondalık hane var</translation>
-    </message>
-    <message>
-        <source>Value not in range: %s to %s</source>
-        <translation type="vanished">Değer aralıkta değil: %1 - %2</translation>
-    </message>
-    <message>
-        <source>Value must not be less than %s</source>
-        <translation type="vanished">%1 değerinden küçük olamaz</translation>
-    </message>
-    <message>
-        <source>Value must not be greater than %s</source>
-        <translation type="vanished">%1 değerinden büyük olamaz</translation>
-    </message>
-    <message>
-        <source>Shelf Filter</source>
-        <translation type="vanished">Raf süzgeci</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Multi Tool</source>
-        <translation type="vanished">Spektral düzenleme çoklu araç</translation>
-    </message>
-    <message>
-        <source>~aNotch filter parameters cannot be applied.~%~
-                      Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'.</source>
-        <translation type="vanished">~aÇentik süzgeç parametreleri uygulanamaz.~%~
-                      Alt frekans bağlantısı değerini arttırmayı~%~
-                      ya da süzgeç 'Genişliğini' arttırmayı deneyin.</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Parametric EQ</source>
-        <translation type="vanished">Spektral düzenleme parametrik dengeleyici</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Shelves</source>
-        <translation type="vanished">Spektral düzenleme elekleri</translation>
-    </message>
-    <message>
-        <source>Studio Fade Out</source>
-        <translation type="vanished">Stüdyo azalarak çık</translation>
-    </message>
-    <message>
-        <source>Adjustable Fade</source>
-        <translation type="vanished">Ayarlanabilir kısma</translation>
-    </message>
-    <message>
-        <source>Beat Finder</source>
-        <translation type="vanished">Vuruş bulucu</translation>
-    </message>
-    <message>
-        <source>Clip Fix</source>
-        <translation type="vanished">Parça düzeltme</translation>
-    </message>
-    <message>
-        <source>Crossfade Clips</source>
-        <translation type="vanished">Çapraz parça geçişi</translation>
-    </message>
-    <message>
-        <source>Crossfade Tracks</source>
-        <translation type="vanished">Çapraz iz geçişi</translation>
-    </message>
-    <message>
-        <source>Regular Interval Labels</source>
-        <translation type="vanished">Normal aralık etiketleri</translation>
-    </message>
-    <message>
-        <source>Error: There is insufficient space to create labels.~%</source>
-        <translation type="vanished">Hata: Etiketleri oluşturmak için yeterli boş alan yok.~%</translation>
-    </message>
-    <message>
-        <source>High-Pass Filter</source>
-        <translation type="vanished">Yüksek geçiren süzgeç</translation>
-    </message>
-    <message>
-        <source>Label Sounds</source>
-        <extracomment>i18n-hint: Name of effect that labels sounds</extracomment>
-        <translation type="vanished">Sesleri etiketle</translation>
-    </message>
-    <message>
-        <source>No sounds found.~%~
-                 Try lowering 'Threshold level (dB)'.</source>
-        <translation type="vanished">Herhangi bir ses bulunamadı.~%~
-                 'Eşik düzeyi (dB)' değerini azaltmayı deneyin.</translation>
-    </message>
-    <message>
-        <source>Legacy Limiter</source>
-        <translation type="vanished">Sınırlayıcı</translation>
-    </message>
-    <message>
-        <source>Low-Pass Filter</source>
-        <translation type="vanished">Alçak geçiren süzgeç</translation>
-    </message>
-    <message>
-        <source>Noise Gate</source>
-        <translation type="vanished">Gürültü engelleme kapısı</translation>
-    </message>
-    <message>
-        <source>Don't Link Stereo</source>
-        <translation type="vanished">Çift kanal olarak bağlama</translation>
-    </message>
-    <message>
-        <source>Notch Filter</source>
-        <translation type="vanished">Çentik süzgeç</translation>
-    </message>
-    <message>
-        <source>Nyquist Plugin Installer</source>
-        <translation type="vanished">Nyquist uygulama eki kurucu</translation>
-    </message>
-    <message>
-        <source>Files already installed ('Allow Overwriting' disabled):</source>
-        <translation type="vanished">Dosyalar zaten kurulmuş ('Üzerine yazma izni' kapalı):</translation>
-    </message>
-    <message>
-        <source>Rhythm Track</source>
-        <translation type="vanished">Ritim izi</translation>
-    </message>
-    <message>
-        <source>Set 'Number of bars' to zero to enable the 'Rhythm track duration'.</source>
-        <translation type="vanished">'Ritim izi süresi' seçeneğini kullanabilmek için 'Çubuk sayısı' seçeneğini sıfır yapın.</translation>
-    </message>
-    <message>
-        <source>Used if 'Number of bars' = 0</source>
-        <translation type="vanished">'Çubuk sayısı' = 0 olduğunda kullanılır</translation>
-    </message>
-    <message>
-        <source>Set either 'Number of bars' or~%~
-                    'Rhythm track duration' to greater than zero.</source>
-        <translation type="vanished">'Çubuk sayısı' ya da 'Ritim izi süresi'~%~
-                    değerlerinden birini sıfırdan büyük olarak ayarlayın.</translation>
-    </message>
-    <message>
-        <source>Risset Drum</source>
-        <translation type="vanished">Risset davulu</translation>
-    </message>
-    <message>
-        <source>Error.~%"~a" cannot be written.</source>
-        <translation type="vanished">Hata.~%"~a" yazılamadı.</translation>
-    </message>
-    <message>
-        <source>Sample Data Import</source>
-        <translation type="vanished">Örnek veri içe aktarma</translation>
-    </message>
-    <message>
-        <source>Error~%~
-                        '~a' could not be opened.~%~
-                        Check that file exists.</source>
-        <translation type="vanished">Hata~%~
-                          '~a' açılamadı.~%~
-                          Dosyanın var olduğunu denetleyin.</translation>
-    </message>
-    <message>
-        <source>Error:~%~
-              The file must contain only plain ASCII text.~%~
-              (Invalid byte '~a' at byte number: ~a)</source>
-        <translation type="vanished">Hata:~%~
-                Dosya içeriği yalnızca düz ASCII metni biçiminde olmalıdır.~%~
-                ('~a' baytı geçersiz. Bayt numarası: ~a)</translation>
-    </message>
-    <message>
-        <source>Error~%~
-              Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value.</source>
-        <translation type="vanished">Sorun~%~
-              Veriler düz ASCII metni biçiminde olmalıdır.~%~
-              '~a' sayısal bir değer değil.</translation>
-    </message>
-    <message>
-        <source>Spectral Delete</source>
-        <translation type="vanished">Spektral Silme</translation>
-    </message>
-    <message>
-        <source>Volume and Compression</source>
-        <extracomment>Effects menu group name; audio dynamics compression, not data compression</extracomment>
-        <translation type="vanished">Ses düzeyi ve sıkıştırma</translation>
-    </message>
-    <message>
-        <source>Fading</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">Aşamalı değişim</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo</source>
-        <translation type="vanished">Perde ve tempo</translation>
-    </message>
-    <message>
-        <source>EQ and Filters</source>
-        <translation type="vanished">Dengeleyici ve süzgeçler</translation>
-    </message>
-    <message>
-        <source>Noise Removal and Repair</source>
-        <translation type="vanished">Gürültü kaldırma ve onarma</translation>
-    </message>
-    <message>
-        <source>Delay and Reverb</source>
-        <translation type="vanished">Gecikme ve yankı</translation>
-    </message>
-    <message>
-        <source>Distortion and Modulation</source>
-        <translation type="vanished">Bozulma ve modülasyon</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">Özel</translation>
-    </message>
-    <message>
-        <source>Vocal Reduction and Isolation</source>
-        <translation type="vanished">Vokal azaltma ve ayırma</translation>
-    </message>
-    <message>
-        <source>Vocal Remover</source>
-        <translation type="vanished">Vokal kaldırıcı</translation>
-    </message>
-    <message>
-        <source>Spectral Tools</source>
-        <translation type="vanished">Spektral araçlar</translation>
-    </message>
-    <message>
-        <source>Legacy</source>
-        <translation type="vanished">Yasal</translation>
     </message>
 </context>
 </TS>
