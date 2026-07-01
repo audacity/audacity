@@ -109,7 +109,7 @@ Column {
             title: qsTrc("projectscene", "Cents")
 
             currentValue: root.pitch % 100
-            minValue: 0
+            minValue: -99
             maxValue: 100
             decimals: 0
 
