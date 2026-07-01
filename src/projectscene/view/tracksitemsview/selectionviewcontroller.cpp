@@ -3,6 +3,8 @@
 */
 #include <QApplication>
 
+#include <cmath>
+
 #include "selectionviewcontroller.h"
 
 #include "spectrogram/spectrogramtypes.h"
@@ -15,6 +17,7 @@ using namespace au::trackedit;
 
 //! NOTE: sync with ItemsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
+constexpr double SELECTION_DRAG_THRESHOLD_PX = 5.0;
 
 SelectionViewController::SelectionViewController(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -51,10 +54,14 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     m_selectionStarted = true;
-    //! NOTE: do not update start point when user holds Shift or Ctrl
-    if (!(modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier))) {
-        m_startPoint = QPointF(x, y);
-        selectionController()->setSelectionStartTime(m_context->positionToTime(m_startPoint.x()));
+    {
+        const bool modifierHeld = modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier);
+        m_selectionThresholdCrossed = modifierHeld;
+        //! NOTE: do not update start point when user holds Shift or Ctrl
+        if (!modifierHeld) {
+            m_startPoint = QPointF(x, y);
+            selectionController()->setSelectionStartTime(m_context->positionToTime(m_startPoint.x()));
+        }
     }
     emit selectionStarted();
     emit selectionInProgressChanged();
@@ -147,6 +154,15 @@ bool SelectionViewController::doOnPositionChanged(double x, double y)
         return false;
     }
 
+    if (!m_selectionThresholdCrossed) {
+        if (std::abs(x - m_startPoint.x()) < SELECTION_DRAG_THRESHOLD_PX
+            && std::abs(y - m_startPoint.y()) < SELECTION_DRAG_THRESHOLD_PX) {
+            // Micro-drag ; ignore
+            return false;
+        }
+        m_selectionThresholdCrossed = true;
+    }
+
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     x = std::max(x, 0.0);
@@ -225,8 +241,8 @@ void SelectionViewController::onReleased(double x, double y)
         tracks = vs->tracksInRange(m_startPoint.y(), y);
     }
 
-    if ((x2 - x1) < MIN_SELECTION_PX) {
-        // Click without drag
+    if (!m_selectionThresholdCrossed || (x2 - x1) < MIN_SELECTION_PX) {
+        // Click without drag (or a drag that never crossed the threshold)
         if (!tracks.empty()) {
             selectionController()->setSelectedTracks(tracks);
         } else {
