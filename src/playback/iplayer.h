@@ -62,40 +62,11 @@ public:
     // tracks
     virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;
 
-    // session status
+    // raw playback status (the transport session state lives on ITransport)
     virtual bool isPlaying() const = 0;
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
     virtual muse::async::Notification isPlayingChanged() const = 0;
-    virtual bool isPlayAllowed() const = 0;
-    virtual muse::async::Notification isPlayAllowedChanged() const = 0;
-
-    virtual muse::secs_t lastPlaybackSeekTime() const = 0;
-    virtual void setLastPlaybackSeekTime(muse::secs_t secs) = 0;
-    virtual muse::async::Notification lastPlaybackSeekTimeChanged() const = 0;
-    virtual muse::secs_t totalPlayTime() const = 0;
-
-    // High-level transport intents
-    virtual void togglePlay(bool ignoreSelection) = 0;
-    virtual void rewindToStart() = 0;
-    virtual void rewindToEnd() = 0;
-    virtual void seekTo(muse::secs_t secs, bool triggerPlay) = 0;
-    virtual void changePlaybackRegion(muse::secs_t start, muse::secs_t end) = 0;
-    virtual void stopSeekAndUpdatePlaybackRegion() = 0;
-    virtual void toggleLoopPlayback() = 0;
-    virtual void setLoopRegionToSelection() = 0;
-    virtual void setSelectionToLoop() = 0;
-    virtual void setLoopRegionInOut() = 0;
-    virtual void setSelectionFollowsLoopRegion() = 0;
-
-    // Audio device/configuration changes. Each can't be applied on an open
-    // stream, so playback is stopped first and, if the user was actively
-    // playing, resumed from the same position afterwards.
-    virtual void setAudioApi(const std::string& api) = 0;
-    virtual void setAudioOutputDevice(const std::string& device) = 0;
-    virtual void setAudioInputDevice(const std::string& device) = 0;
-    virtual void setInputChannels(int channels) = 0;
-    virtual void rescanAudioDevices() = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

@@ -72,7 +72,7 @@ void PlaybackController::deinit()
 void PlaybackController::togglePlayAction()
 {
     const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
-    m_player->togglePlay(isShiftPressed /* ignoreSelection */);
+    transport()->togglePlay(isShiftPressed /* ignoreSelection */);
 }
 
 void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
@@ -82,22 +82,22 @@ void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
 
 void PlaybackController::pauseAction()
 {
-    m_player->pause();
+    transport()->pause();
 }
 
 void PlaybackController::stopAction()
 {
-    m_player->stopSeekAndUpdatePlaybackRegion();
+    transport()->stopSeekAndUpdatePlaybackRegion();
 }
 
 void PlaybackController::rewindToStartAction()
 {
-    m_player->rewindToStart();
+    transport()->rewindToStart();
 }
 
 void PlaybackController::rewindToEndAction()
 {
-    m_player->rewindToEnd();
+    transport()->rewindToEnd();
 }
 
 void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
@@ -112,7 +112,7 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
     const muse::secs_t secs = q.param("seekTime").toDouble();
     const bool triggerPlay = q.param("triggerPlay").toBool();
 
-    m_player->seekTo(secs, triggerPlay);
+    transport()->seekTo(secs, triggerPlay);
 }
 
 void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
@@ -127,7 +127,7 @@ void PlaybackController::onChangePlaybackRegionAction(const muse::actions::Actio
     const muse::secs_t start = q.param("start").toDouble();
     const muse::secs_t end = q.param("end").toDouble();
 
-    m_player->changePlaybackRegion(start, end);
+    transport()->changePlaybackRegion(start, end);
 }
 
 void PlaybackController::togglePlayRepeats()
@@ -150,7 +150,7 @@ void PlaybackController::toggleAutomaticallyPan()
 
 void PlaybackController::toggleLoopPlayback()
 {
-    m_player->toggleLoopPlayback();
+    transport()->toggleLoopPlayback();
     notifyActionCheckedChanged("toggle-loop-region");
 }
 
@@ -161,42 +161,42 @@ void PlaybackController::clearLoopRegion()
 
 void PlaybackController::setLoopRegionToSelection()
 {
-    m_player->setLoopRegionToSelection();
+    transport()->setLoopRegionToSelection();
 }
 
 void PlaybackController::setSelectionToLoop()
 {
-    m_player->setSelectionToLoop();
+    transport()->setSelectionToLoop();
 }
 
 void PlaybackController::setLoopRegionInOut()
 {
-    m_player->setLoopRegionInOut();
+    transport()->setLoopRegionInOut();
 }
 
 void PlaybackController::setSelectionFollowsLoopRegion()
 {
-    m_player->setSelectionFollowsLoopRegion();
+    transport()->setSelectionFollowsLoopRegion();
 }
 
 void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 {
     changeAudioDeviceFromQuery(q, "api_index", audioDevicesProvider()->apis(), [this](const std::string& api) {
-        m_player->setAudioApi(api);
+        transport()->setAudioApi(api);
     });
 }
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
 {
     changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->outputDevices(), [this](const std::string& device) {
-        m_player->setAudioOutputDevice(device);
+        transport()->setAudioOutputDevice(device);
     });
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
 {
     changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->inputDevices(), [this](const std::string& device) {
-        m_player->setAudioInputDevice(device);
+        transport()->setAudioInputDevice(device);
     });
 }
 
@@ -225,12 +225,12 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
         return;
     }
 
-    m_player->setInputChannels(q.param("input-channels_index").toInt());
+    transport()->setInputChannels(q.param("input-channels_index").toInt());
 }
 
 void PlaybackController::rescanAudioDevices()
 {
-    m_player->rescanAudioDevices();
+    transport()->rescanAudioDevices();
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)

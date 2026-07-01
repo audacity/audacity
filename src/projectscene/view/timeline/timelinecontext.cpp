@@ -139,7 +139,7 @@ void TimelineContext::init(double frameWidth)
         emit pinnedPlayHeadEnabledChanged();
     });
 
-    playback()->player()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
+    transport()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
         emit lastPlaybackSeekPositionChanged();
     });
 
@@ -1276,5 +1276,5 @@ bool TimelineContext::pinnedPlayHeadEnabled() const
 
 double TimelineContext::lastPlaybackSeekPosition() const
 {
-    return timeToPosition(playback()->player()->lastPlaybackSeekTime());
+    return timeToPosition(transport()->lastPlaybackSeekTime());
 }

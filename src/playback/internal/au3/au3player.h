@@ -8,38 +8,30 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/types/retval.h"
 #include "framework/global/modularity/ioc.h"
-#include "framework/interactive/iinteractive.h"
 
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
 #include "audio/iaudioengine.h"
-#include "audio/iaudiodevicesprovider.h"
 #include "record/irecord.h"
 #include "record/irecordcontroller.h"
-#include "playback/iplaybackconfiguration.h"
 
 #include "au3wrap/au3types.h"
 
 #include <QTimer>
 
 #include <chrono>
-#include <functional>
 #include <optional>
-#include <string>
 
 struct TransportSequences;
 namespace au::playback {
 class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
-    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<au::record::IRecord> record{ this };
     muse::ContextInject<au::record::IRecordController> recordController{ this };
-    muse::ContextInject<muse::IInteractive> interactive{ this };
-    muse::ContextInject<au::audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
 
@@ -81,42 +73,13 @@ public:
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
-    // --- session status (merged from the former Transport layer) ---
+    // --- raw playback status (read by the Transport coordinator and consumers) ---
     bool isPlaying() const override;
     bool isPaused() const override;
     bool isStopped() const override;
     muse::async::Notification isPlayingChanged() const override;
-    bool isPlayAllowed() const override;
-    muse::async::Notification isPlayAllowedChanged() const override;
-
-    muse::secs_t lastPlaybackSeekTime() const override;
-    void setLastPlaybackSeekTime(muse::secs_t secs) override;
-    muse::async::Notification lastPlaybackSeekTimeChanged() const override;
-    muse::secs_t totalPlayTime() const override;
-
-    // High-level transport intents, driven by PlaybackController.
-    void togglePlay(bool ignoreSelection) override;
-    void rewindToStart() override;
-    void rewindToEnd() override;
-    void seekTo(muse::secs_t secs, bool triggerPlay) override;
-    void changePlaybackRegion(muse::secs_t start, muse::secs_t end) override;
-    void stopSeekAndUpdatePlaybackRegion() override;
-    void toggleLoopPlayback() override;
-    void setLoopRegionToSelection() override;
-    void setSelectionToLoop() override;
-    void setLoopRegionInOut() override;
-    void setSelectionFollowsLoopRegion() override;
-
-    // Audio device/configuration changes (applied via withStreamRestart).
-    void setAudioApi(const std::string& api) override;
-    void setAudioOutputDevice(const std::string& device) override;
-    void setAudioInputDevice(const std::string& device) override;
-    void setInputChannels(int channels) override;
-    void rescanAudioDevices() override;
 
 private:
-    friend class PlaybackControllerTests;
-
     au3::Au3Project& projectRef() const;
 
     bool canStopAudioStream() const;
@@ -128,41 +91,8 @@ private:
     void updateStreamState();
     void updatePlaybackState();
 
-    // --- transport session logic (merged from the former Transport layer) ---
-    PlaybackRegion selectionPlaybackRegion() const;
-    bool isSelectionPlaybackRegionChanged() const;
-    void updatePlaybackRegion();
-
-    void onProjectChanged();
-    void onPlaybackPositionChanged();
-
-    void doPlay(bool ignoreSelection);
-    void doSeek(const muse::secs_t secs, bool applyIfPlaying);
-    void doChangePlaybackRegion(const PlaybackRegion& region);
-    void doPauseStream();
-    void playFrom(muse::secs_t pos);
-
-    //! Applies `change` while the audio stream is inactive (it can't be done on
-    //! an open stream): stop the transport, apply, and resume from the same
-    //! position if the user was actively playing.
-    void withStreamRestart(const std::function<void()>& change);
-
-    bool isEqualToPlaybackPosition(muse::secs_t position) const;
-    bool isPlaybackPositionOnTheEndOfProject() const;
-    bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
-    bool isPlaybackStartPositionValid() const;
-    bool isSeekPositionValid(const muse::secs_t& seekTime) const;
-
     muse::async::Notification m_loopRegionChanged;
-
-    muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
-    muse::async::Notification m_lastPlaybackSeekTimeChanged;
-    muse::secs_t m_lastPlaybackSeekTime = 0.0;
-    PlaybackRegion m_lastPlaybackRegion;
-    bool m_pauseShouldStopPlayback = false;
-
-    std::optional<muse::secs_t> m_pausedResumePos;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;

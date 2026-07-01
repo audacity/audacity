@@ -12,6 +12,7 @@
 #include "internal/playbackcontroller.h"
 #include "internal/playbackmetercontroller.h"
 #include "internal/playbackuiactions.h"
+#include "internal/transport.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
 
@@ -107,8 +108,10 @@ void PlaybackContext::registerExports()
     m_controller = std::make_shared<PlaybackController>(iocContext());
     m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
     m_playback = std::make_shared<Au3Playback>(iocContext());
+    m_transport = std::make_shared<Transport>(iocContext());
 
     ioc()->registerExport<playback::IPlayback>(mname, m_playback);
+    ioc()->registerExport<playback::ITransport>(mname, m_transport);
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));
 }
 
@@ -126,6 +129,9 @@ void PlaybackContext::onInit(const IApplication::RunMode& mode)
     // Force-create the player so its constructor subscriptions (project / record /
     // selection) are live from startup and it is registered as the global player.
     m_playback->player();
+    // The transport coordinates the (now-created) player and the recorder; wire its
+    // subscriptions before the controller starts dispatching intents to it.
+    m_transport->init();
     m_controller->init();
 
     auto ar = ioc()->resolve<IUiActionsRegister>(mname);

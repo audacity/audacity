@@ -235,7 +235,7 @@ void PlaybackUiActions::init()
         m_actionCheckedChanged.send({ code });
     });
 
-    playback()->player()->isPlayAllowedChanged().onNotify(this, [this]() {
+    transport()->isPlayAllowedChanged().onNotify(this, [this]() {
         ActionCodeList codes;
 
         for (const UiAction& action : actionsList()) {

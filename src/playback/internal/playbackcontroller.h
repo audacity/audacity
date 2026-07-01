@@ -13,6 +13,7 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplayback.h"
+#include "playback/itransport.h"
 #include "record/irecordcontroller.h"
 
 namespace au::playback {
@@ -27,6 +28,7 @@ public:
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
     muse::ContextInject<playback::IPlayback> playback { this };
+    muse::ContextInject<playback::ITransport> transport { this };
 
 public:
     PlaybackController(const muse::modularity::ContextPtr& ctx)
@@ -41,7 +43,7 @@ public:
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
-    friend class PlaybackControllerTests;
+    friend class TransportTests;
 
     void togglePlayAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
@@ -63,7 +65,7 @@ private:
     void setSelectionFollowsLoopRegion();
 
     // Audio device/configuration actions: resolve the selected index against the
-    // current device list, then call the matching method on the player.
+    // current device list, then call the matching method on the transport.
     void setAudioApi(const muse::actions::ActionQuery& q);
     void setAudioOutputDevice(const muse::actions::ActionQuery& q);
     void setAudioInputDevice(const muse::actions::ActionQuery& q);
