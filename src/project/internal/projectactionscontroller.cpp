@@ -320,7 +320,8 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     };
 
     std::optional<io::path_t> localPath = audioComService()->projectLocalPath(cloudProjectId.toStdString());
-    if (localPath) {
+
+    if (localPath && snapshotId.isEmpty()) {
         if (isProjectOpened(localPath.value())) {
             openPageIfNeed(PROJECT_PAGE_URI);
             return;
