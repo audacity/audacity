@@ -77,6 +77,8 @@ Row {
     Timecode {
         id: durationTimecode
 
+        appearance: Timecode.Appearance.Clock
+
         value: selectionModel.endTime - selectionModel.startTime
         mode: TimecodeModeSelector.Duration
 

@@ -161,6 +161,8 @@ Item {
             Timecode {
                 property var itemData: null
 
+                appearance: Timecode.Appearance.Clock
+
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
                 mode: TimecodeModeSelector.TimePoint
