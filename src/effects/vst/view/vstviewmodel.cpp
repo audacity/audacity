@@ -26,6 +26,7 @@ VstViewModel::~VstViewModel()
     // (e.g. when the vendor UI is swapped for the fallback UI). Clear the
     // handler so a later endEdit doesn't invoke a lambda capturing a freed this.
     if (m_auVst3Instance) {
+        m_auVst3Instance->GetWrapper().EndParameterEdit();
         m_auVst3Instance->GetWrapper().ParamChangedHandler = nullptr;
     }
 
@@ -49,6 +50,8 @@ void VstViewModel::doInit()
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;
     }
+
+    m_auVst3Instance->GetWrapper().BeginParameterEdit(*m_settingsAccess);
 
     instancesRegister()->settingsChanged(id).onNotify(this, [this]() {
         settingsToView();
