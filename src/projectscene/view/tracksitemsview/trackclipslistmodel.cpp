@@ -95,6 +95,12 @@ void TrackClipsListModel::onReload()
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    // When recording ends, the playhead pin disengages: recompute so the clip
+    // edge lands on the real data end together with the playhead's final seek.
+    globalContext()->isRecordingChanged().onNotify(this, [this]() {
+        updateItemsMetrics();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     m_allClipList.onItemChanged(this, [this](const Clip& clip) {
         for (size_t i = 0; i < m_allClipList.size(); ++i) {
             if (m_allClipList.at(i).key != clip.key) {
@@ -247,12 +253,14 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         return;
     }
 
-    // Extend recording clip's visual boundary to the smooth record position
+    // Pin the recording clip's visual boundary to the smooth playhead: data is
+    // committed in chunks, so following the committed end would make the edge
+    // jump. Data ahead of the playhead is revealed as the playhead reaches it.
     if (globalContext()->isRecording()) {
         for (const auto& rk : recordController()->recordingClipKeys()) {
             if (rk == item->key().key) {
                 double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
-                clip.endTime = std::max(clip.endTime, projectedEnd);
+                clip.endTime = std::max(clip.startTime, projectedEnd);
                 break;
             }
         }

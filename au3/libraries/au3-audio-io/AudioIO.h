@@ -415,6 +415,11 @@ protected:
     // we get ceil(96000 / 10 / 30) = 360. The rounding to the next power of two should accommodate jitter.
     AudioCallbackInfoQueue mAudioCallbackInfoQueue { 512 };
 
+    //! Captured frames the audio callback must skip before feeding the queue
+    //! above for recording-only streams; mirrors the leading frames that
+    //! DrainInputBuffers discards for latency compensation.
+    unsigned long long mCaptureClockDiscardFrames = 0;
+
 private:
     /*!
      Privatize the inherited array but give access by Extensions().

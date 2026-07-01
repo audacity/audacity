@@ -1005,6 +1005,14 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     mListener = options.listener;
     mRate    = options.rate;
 
+    mCaptureClockDiscardFrames = static_cast<unsigned long long>(
+        std::max(0.0, -mRecordingSchedule.TotalCorrection()) * mRate);
+
+    // Discard callback info left unconsumed by the previous stream: the
+    // consumer stops reading before the callbacks stop pushing, and a stale
+    // backlog would be misattributed to this stream's timeline.
+    mAudioCallbackInfoQueue.Clear();
+
     mSeek    = 0;
     mLastRecordingOffset = 0;
     mCaptureSequences = sequences.captureSequences;
@@ -3439,6 +3447,24 @@ int AudioIoCallback::AudioCallback(
         framesPerBuffer,
         statusFlags,
         tempFloats);
+
+    // Recording without playback produces no DAC callback info, so the main
+    // thread would never advance the schedule time.  Queue the captured frames
+    // instead, minus the leading frames that DrainInputBuffers discards for
+    // latency compensation, so the schedule time tracks the frames that
+    // actually become recorded data.
+    if (mStreamToken > 0 && !IsPaused() && numCaptureChannels > 0 && numPlaybackChannels == 0) {
+        unsigned long keptFrames = framesPerBuffer;
+        if (mCaptureClockDiscardFrames > 0) {
+            const auto skip = std::min<unsigned long long>(keptFrames, mCaptureClockDiscardFrames);
+            mCaptureClockDiscardFrames -= skip;
+            keptFrames -= static_cast<unsigned long>(skip);
+        }
+        if (keptFrames > 0) {
+            mAudioCallbackInfoQueue.Put(
+                { std::chrono::steady_clock::now(), static_cast<int>(keptFrames) });
+        }
+    }
 
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer, levelDisplayTime);
 
