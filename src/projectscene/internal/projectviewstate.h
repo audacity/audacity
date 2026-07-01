@@ -44,6 +44,12 @@ public:
     int trackVerticalPosition(const trackedit::TrackId& trackId) const override;
     void changeTrackHeight(const trackedit::TrackId& trackId, int delta) override;
     void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
+    void decreaseAllTrackHeights() override;
+    void increaseAllTrackHeights() override;
+    void decreaseTrackHeight(const trackedit::TrackId& trackId) override;
+    void increaseTrackHeight(const trackedit::TrackId& trackId) override;
+    void autoFitTrackHeights() override;
+    void setTracksViewportHeight(int height) override;
     void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) override;
     trackedit::TrackId trackAtPosition(double y) const override;
     trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
@@ -145,8 +151,14 @@ private:
 
     mutable muse::ValCh<int> m_totalTracksHeight;
     mutable muse::ValCh<int> m_verticalRulerWidth;
+    int m_tracksViewportHeight = 0;
+    bool m_autoFitTrackHeightsEnabled = true;
 
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
+    bool setTrackHeightInternal(const trackedit::TrackId& trackId, int height, bool recomputeTotalHeight);
+    bool applyAutoFitTrackHeights();
+    bool applyAutoFitTrackHeightsIfEnabled();
+    void disengageAutoFitTrackHeights();
     void recomputeTotalTrackHeight();
     bool doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType);
 
