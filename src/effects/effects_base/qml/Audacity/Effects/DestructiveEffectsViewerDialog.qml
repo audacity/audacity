@@ -186,12 +186,16 @@ EffectStyledDialogView {
         anchors.fill: parent
 
         WindowContainer {
+            id: topPanelContainer
+
+            width: parent.width
+
             visible: prv.showTopPanel
 
             window: Window {
                 id: topPanel
 
-                width: root.contentWidth
+                width: topPanelContainer.width
                 height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
 
                 color: ui.theme.backgroundPrimaryColor
@@ -246,23 +250,28 @@ EffectStyledDialogView {
         }
 
         WindowContainer {
+            id: bottomPanelContainer
+
+            width: parent.width
+
             window: Window {
                 id: bottomPanel
 
-                width: root.contentWidth
+                width: bottomPanelContainer.width
                 height: prv.panelMargins * 2 + bbox.height
 
                 color: ui.theme.backgroundPrimaryColor
 
                 Item {
-
                     anchors.fill: parent
                     anchors.margins: prv.panelMargins
 
                     ButtonBox {
                         id: bbox
 
-                        width: root.contentWidth - prv.panelMargins * 2
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
                         spacing: prv.panelMargins
                         navigationPanel.section: root.navigationSection
                         navigationPanel.order: (prv.showTopPanel ? 1 : 0) + (prv.viewer && prv.viewer.numNavigationPanels !== undefined ? prv.viewer.numNavigationPanels : (viewerModel.effectFamily == EffectFamily.Builtin ? 2 : 0))
