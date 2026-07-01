@@ -68,6 +68,11 @@ WaveView::WaveView(QQuickItem* parent)
     configuration()->isClippingInWaveformVisibleChanged().onReceive(this, [this](bool) {
         update();
     });
+
+    configuration()->clipStyleChanged().onReceive(this, [this](projectscene::ClipStyles::Style) {
+        emit backgroundColorChanged();
+        update();
+    });
 }
 
 WaveView::~WaveView()
@@ -244,6 +249,7 @@ void WaveView::setClipColor(const QColor& newClipColor)
     }
     m_clipColor = newClipColor;
     emit clipColorChanged();
+    emit backgroundColorChanged();
 
     update();
 }
@@ -260,6 +266,7 @@ void WaveView::setClipSelectedColor(const QColor& newClipSelectedColor)
     }
     m_clipSelectedColor = newClipSelectedColor;
     emit clipSelectedColorChanged();
+    emit backgroundColorChanged();
 
     update();
 }
@@ -276,8 +283,20 @@ void WaveView::setClipSelected(bool newClipSelected)
     }
     m_clipSelected = newClipSelected;
     emit clipSelectedChanged();
+    emit backgroundColorChanged();
 
     update();
+}
+
+QColor WaveView::backgroundColor() const
+{
+    const IWavePainter::Params params = getWavePainterParams();
+
+    const bool endWithinSelection = m_clipTime.selectionStartTime < m_clipTime.selectionEndTime
+                                    && m_clipTime.selectionStartTime <= m_clipTime.endTime
+                                    && m_clipTime.selectionEndTime >= m_clipTime.endTime;
+
+    return endWithinSelection ? params.style.selectedBackground : params.style.normalBackground;
 }
 
 ClipTime WaveView::clipTime() const
@@ -292,6 +311,7 @@ void WaveView::setClipTime(const ClipTime& newClipTime)
     }
     m_clipTime = newClipTime;
     emit clipTimeChanged();
+    emit backgroundColorChanged();
 
     update();
 }
