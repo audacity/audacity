@@ -17,7 +17,6 @@
 #include "audacityproject.h"
 #include "projecterrors.h"
 #include "project/types/projecttypes.h"
-#include "thirdparty/kors_logger/src/log_base.h"
 
 using namespace muse;
 using namespace au::project;
