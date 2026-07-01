@@ -34,6 +34,14 @@ enum class Type {
 Q_ENUM_NS(Type)
 }
 
+// User-facing label for a plugin's cache lifecycle state, as shown in the
+// Status column and filter. Undefined is bucketed with Error as "Broken".
+QString pluginStateToString(muse::audioplugins::AudioPluginState state);
+
+// Name shown in the table: the title when validated meta is available,
+// otherwise derived from the id (basename for never-validated entries).
+QString effectDisplayName(const EffectMeta& meta);
+
 class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus, muse::Contextable
 {
     Q_OBJECT
@@ -51,6 +59,9 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(muse::uicomponents::MenuItemList effectTypeOptions READ effectTypeOptions NOTIFY effectTypeSelectedIndexChanged)
     Q_PROPERTY(
         int effectTypeSelectedIndex READ effectTypeSelectedIndex WRITE setEffectTypeSelectedIndex NOTIFY effectTypeSelectedIndexChanged)
+
+    Q_PROPERTY(muse::uicomponents::MenuItemList statusOptions READ statusOptions NOTIFY statusSelectedIndexChanged)
+    Q_PROPERTY(int statusSelectedIndex READ statusSelectedIndex WRITE setStatusSelectedIndex NOTIFY statusSelectedIndexChanged)
 
     Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
     Q_PROPERTY(
@@ -79,6 +90,10 @@ public:
     int effectTypeSelectedIndex() const { return m_effectTypeSelectedIndex; }
     void setEffectTypeSelectedIndex(int index);
 
+    muse::uicomponents::MenuItemList statusOptions();
+    int statusSelectedIndex() const { return m_statusSelectedIndex; }
+    void setStatusSelectedIndex(int index);
+
     int totalWidth() const;
 
     bool alsoRescanBrokenPlugins() const { return m_alsoRescanBrokenPlugins; }
@@ -101,6 +116,7 @@ signals:
     void enabledDisabledSelectedIndexChanged();
     void effectFamilySelectedIndexChanged();
     void effectTypeSelectedIndexChanged();
+    void statusSelectedIndexChanged();
     void alsoRescanBrokenPluginsChanged();
 
 private:
@@ -108,10 +124,11 @@ private:
 
     static constexpr auto s_enabledDisabledColumnIndex = 0;
     static constexpr auto s_nameColumnIndex = 1;
-    static constexpr auto s_vendorColumnIndex = 2;
-    static constexpr auto s_pathColumnIndex = 3;
-    static constexpr auto s_typeColumnIndex = 4;
-    static constexpr auto s_columnCount = 5;
+    static constexpr auto s_statusColumnIndex = 2;
+    static constexpr auto s_vendorColumnIndex = 3;
+    static constexpr auto s_pathColumnIndex = 4;
+    static constexpr auto s_typeColumnIndex = 5;
+    static constexpr auto s_columnCount = 6;
 
     void classBegin() override {}
     void componentComplete() override;
@@ -140,6 +157,9 @@ private:
 
     int m_effectTypeSelectedIndex = 0;
     EffectFilter m_acceptType = allPassFilter;
+
+    int m_statusSelectedIndex = 0;
+    EffectFilter m_acceptStatus = allPassFilter;
 
     PluginManagerSortFilterProxy* const m_sortFilterProxy;
 };

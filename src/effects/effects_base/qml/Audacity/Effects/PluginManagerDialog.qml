@@ -14,7 +14,9 @@ StyledDialogView {
 
     title: qsTrc("effects", "Manage plugins")
 
-    contentWidth: tableViewModel.totalWidth
+    // + 2: StyledTableView insets its scroll viewport by a 1px border on each
+    // side; without it the columns overflow and trigger a horizontal scrollbar.
+    contentWidth: tableViewModel.totalWidth + 2
     contentHeight: 528
     margins: 12
 

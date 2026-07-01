@@ -19,7 +19,7 @@ public:
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
 
 public:
-    Au3EffectLoader(PluginProvider& provider, muse::audio::AudioResourceType resourceType);
+    Au3EffectLoader(PluginProvider& provider, EffectFamily family);
 
     void init();
     void deinit();
@@ -32,7 +32,7 @@ private:
     virtual void doInit() {}
 
     PluginProvider& m_pluginProvider;
-    const muse::audio::AudioResourceType m_resourceType;
+    const EffectFamily m_family;
     std::map<EffectId, std::unique_ptr<::ComponentInterface> > m_loadedInterfaces;
 };
 } // namespace au::effects

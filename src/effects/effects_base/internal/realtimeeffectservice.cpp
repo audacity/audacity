@@ -2,6 +2,7 @@
 
 #include "realtimeeffectrestorer.h"
 #include "realtimeeffectserviceutils.h"
+#include "effectsutils.h"
 
 #include "au3-audio-io/AudioIO.h"
 
@@ -14,6 +15,7 @@
 #include "project/iaudacityproject.h"
 
 #include "global/types/translatablestring.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 namespace au::effects {
 /*!
@@ -259,7 +261,10 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         return nullptr;
     }
 
-    effectsProvider()->loadEffect(effectId);
+    if (!effectsProvider()->loadEffect(effectId)) {
+        LOGW() << "cannot load the effect: " << effectId;
+        return nullptr;
+    }
     if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
@@ -308,7 +313,10 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
 
-    effectsProvider()->loadEffect(newEffectId);
+    if (!effectsProvider()->loadEffect(newEffectId)) {
+        LOGW() << "cannot replace with unavailable effect: " << newEffectId;
+        return nullptr;
+    }
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
     if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
         const auto oldEffectName = getEffectName(*oldState);
@@ -432,15 +440,31 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     });
 }
 
+wxString RealtimeEffectService::resolveEffectId(const PluginID& id)
+{
+    const auto provider = wEffectsProvider.lock();
+    if (!provider) {
+        return {};
+    }
+
+    const EffectId resolved = utils::findRelocatedVst3EffectId(EffectId::fromStdString(id.ToStdString()),
+                                                               provider->effectMetaList());
+    return resolved.empty() ? wxString {} : au3::wxFromString(resolved);
+}
+
 bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) const
 {
     if (!state) {
         return false;
     }
+    // `isValid()` only checks the id is non-empty — Missing / Error / Discovered
+    // cache entries pass that. `isLoadable` (= state == Validated) is what gates
+    // actual usability; anything else routes to the missing-plugin popup.
     const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
-    return meta.isValid();
+    return meta.isValid() && meta.isLoadable();
 }
 }
 
 // Inject a factory for realtime effects
 static RealtimeEffectState::EffectFactory::Scope scope{ &au::effects::RealtimeEffectService::getInstanceFactory };
+static RealtimeEffectState::EffectIdResolver::Scope idResolverScope{ &au::effects::RealtimeEffectService::resolveEffectId };

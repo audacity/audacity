@@ -10,14 +10,16 @@
 
 #include "RealtimeEffectState.h"
 
+#include <wx/arrstr.h>
+
+#include <thread>
+#include <condition_variable>
+
 #include "au3-channel/Channel.h"
 #include "au3-components/EffectInterface.h"
 #include "au3-utility/MessageBuffer.h"
 #include "au3-module-manager/PluginManager.h"
 #include "au3-math/SampleCount.h"
-
-#include <thread>
-#include <condition_variable>
 
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase
@@ -800,6 +802,50 @@ static const auto nameAttribute = "name";
 static const auto valueAttribute = "value";
 static constexpr auto activeAttribute = "active";
 
+static wxArrayString splitEffectId(const PluginID& id)
+{
+    wxArrayString parts;
+    wxString part;
+    for (size_t i = 0; i < id.length(); ++i) {
+        const wxChar ch = id[i];
+        if (ch == '\\' && i + 1 < id.length() && id[i + 1] == '_') {
+            part += '_';
+            ++i;
+        } else if (ch == '_') {
+            parts.push_back(part);
+            part.clear();
+        } else {
+            part += ch;
+        }
+    }
+    parts.push_back(part);
+    return parts;
+}
+
+static PluginID normalizeEffectIdPathSeparators(const PluginID& id)
+{
+    auto parts = splitEffectId(id);
+    if (parts.size() != 5 || parts[0] != wxString("Effect")) {
+        return id;
+    }
+
+    wxString& path = parts[4];
+    if (path.Find('\\') == wxNOT_FOUND) {
+        return id;
+    }
+
+    path.Replace("\\", "/");
+    return wxJoin(parts, '_');
+}
+
+static PluginID resolveEffectId(const PluginID& id)
+{
+    if (const PluginID resolved = RealtimeEffectState::EffectIdResolver::Call(id); !resolved.empty()) {
+        return resolved;
+    }
+    return id;
+}
+
 bool RealtimeEffectState::HandleXMLTag(
     const std::string_view& tag, const AttributesList& attrs)
 {
@@ -809,7 +855,7 @@ bool RealtimeEffectState::HandleXMLTag(
         mID.clear();
         for (auto&[attr, value] : attrs) {
             if (attr == idAttribute) {
-                SetID(value.ToWString());
+                SetID(resolveEffectId(normalizeEffectIdPathSeparators(value.ToWString())));
                 if (!mPlugin) {
                     // TODO - complain!!!!
                 }

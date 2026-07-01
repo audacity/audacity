@@ -11,7 +11,7 @@ class Vst3EffectLoader final : public Au3EffectLoader
 {
 public:
     Vst3EffectLoader()
-        : Au3EffectLoader(m_module, muse::audio::AudioResourceType::VstPlugin) {}
+        : Au3EffectLoader(m_module, EffectFamily::VST3) {}
 
 private:
     VST3EffectsModule m_module;

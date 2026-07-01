@@ -134,4 +134,55 @@ TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveRel
 
     testtools::removeProjectIfExists(dstPath);
 }
+
+TEST_F(Project_RealtimeEffectsPersistenceTests, RealtimeEffectState_LoadNormalizesWindowsEffectIdPathSeparators)
+{
+    const std::string aup3Id
+        = "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:\\Program Files\\Common Files\\VST3\\Soap Voice Cleaner.vst3;"
+          "ABCDEF019182FAEB536F6170536F6170";
+    const std::string aup4Id
+        = "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:/Program Files/Common Files/VST3/Soap Voice Cleaner.vst3;"
+          "ABCDEF019182FAEB536F6170536F6170";
+
+    RealtimeEffectState::EffectFactory::Scope effectFactoryScope {
+        [](const PluginID&) -> const EffectInstanceFactory* { return &dummyFactory(); }
+    };
+
+    RealtimeEffectState state { {} };
+    const AttributesList attrs {
+        { "id", XMLAttributeValueView { std::string_view { aup3Id } } }
+    };
+
+    ASSERT_TRUE(state.HandleXMLTag(RealtimeEffectState::XMLTag(), attrs));
+    EXPECT_EQ(state.GetID().ToStdString(), aup4Id);
+}
+
+TEST_F(Project_RealtimeEffectsPersistenceTests, RealtimeEffectState_LoadStoresResolvedEffectId)
+{
+    const PluginID loadedId = wxString::FromUTF8(
+        "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:\\Program Files\\Common Files\\VST3\\Soap Voice Cleaner.vst3;"
+        "ABCDEF019182FAEB536F6170536F6170");
+    const PluginID normalizedId = wxString::FromUTF8(
+        "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:/Program Files/Common Files/VST3/Soap Voice Cleaner.vst3;"
+        "ABCDEF019182FAEB536F6170536F6170");
+    const PluginID resolvedId = wxString::FromUTF8(
+        "Effect_VST3_Soap Audio_Soap Voice Cleaner_D:/Audio/VST3/Soap Voice Cleaner.vst3;"
+        "ABCDEF019182FAEB536F6170536F6170");
+
+    RealtimeEffectState::EffectIdResolver::Scope resolverScope {
+        [&](const PluginID& id) -> PluginID { return id == normalizedId ? resolvedId : PluginID {}; }
+    };
+    RealtimeEffectState::EffectFactory::Scope effectFactoryScope {
+        [](const PluginID&) -> const EffectInstanceFactory* { return &dummyFactory(); }
+    };
+
+    RealtimeEffectState state { {} };
+    const std::string loadedIdString = loadedId.ToStdString();
+    const AttributesList attrs {
+        { "id", XMLAttributeValueView { std::string_view { loadedIdString } } }
+    };
+
+    ASSERT_TRUE(state.HandleXMLTag(RealtimeEffectState::XMLTag(), attrs));
+    EXPECT_EQ(state.GetID(), resolvedId);
+}
 }

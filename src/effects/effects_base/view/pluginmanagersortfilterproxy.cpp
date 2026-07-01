@@ -30,9 +30,9 @@ bool PluginManagerSortFilterProxy::acceptsRow(int sourceRow) const
 
     if (!m_view->m_searchText.isEmpty()) {
         const QString searchTextLower = m_view->m_searchText.toLower();
-        const auto fields = { meta.title, meta.vendor, meta.path.toString() };
-        if (std::none_of(fields.begin(), fields.end(), [&](const auto& str) {
-            return str.toQString().toLower().contains(searchTextLower);
+        const auto fields = { effectDisplayName(meta), meta.vendor.toQString(), meta.path.toQString() };
+        if (std::none_of(fields.begin(), fields.end(), [&](const QString& str) {
+            return str.toLower().contains(searchTextLower);
         })) {
             return false;
         }
@@ -40,7 +40,8 @@ bool PluginManagerSortFilterProxy::acceptsRow(int sourceRow) const
 
     return m_view->m_acceptEnabledDisabledState(meta)
            && m_view->m_acceptFamily(meta)
-           && m_view->m_acceptType(meta);
+           && m_view->m_acceptType(meta)
+           && m_view->m_acceptStatus(meta);
 }
 
 int PluginManagerSortFilterProxy::compareCells(int column, int leftSourceRow, int rightSourceRow) const
@@ -73,7 +74,12 @@ int PluginManagerSortFilterProxy::compareCells(int column, int leftSourceRow, in
     case PluginManagerTableViewModel::s_enabledDisabledColumnIndex:
         return cmpBool(a.isActivated, b.isActivated);
     case PluginManagerTableViewModel::s_nameColumnIndex:
-        return cmpStr(a.title, b.title);
+        // Compare displayed names so never-validated entries (empty title) sort
+        // by their fallback name rather than clumping together.
+        return QString::compare(effectDisplayName(a), effectDisplayName(b), Qt::CaseInsensitive);
+    case PluginManagerTableViewModel::s_statusColumnIndex:
+        // Sort by the displayed label so rows group as the user sees them.
+        return QString::compare(pluginStateToString(a.state), pluginStateToString(b.state), Qt::CaseInsensitive);
     case PluginManagerTableViewModel::s_pathColumnIndex:
         return cmpStr(a.path.toString(), b.path.toString());
     case PluginManagerTableViewModel::s_typeColumnIndex:

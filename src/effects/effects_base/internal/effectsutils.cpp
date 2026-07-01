@@ -3,16 +3,28 @@
  */
 
 #include "effectsutils.h"
-#include "effectstypes.h"
 
-#include "au3-components/EffectInterface.h"
+#include <wx/string.h>
 
+#include "framework/global/iglobalconfiguration.h"
+#include "framework/global/modularity/ioc.h"
 #include "framework/global/log.h"
 #include "framework/global/stringutils.h"
 
-#include <wx/string.h>
+#include "effectstypes.h"
+#include "effects/vst/internal/vsttypes.h"
+#include "effects/audio_unit/internal/audiounittypes.h"
+#include "effects/lv2/internal/lv2types.h"
+#include "effects/nyquist/internal/nyquisttypes.h"
+#include "effects/builtin/internal/builtintypes.h"
+
+#include "au3-components/EffectInterface.h"
 #include "au3-strings/wxArrayStringEx.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+
+#include <algorithm>
+#include <cctype>
+#include <iterator>
 
 namespace au::effects {
 muse::String utils::effectFamilyToString(EffectFamily family)
@@ -54,6 +66,54 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
     return EffectFamily::Unknown;
 }
 
+std::string utils::effectFamilyToCacheType(EffectFamily family)
+{
+    switch (family) {
+    case EffectFamily::VST3:      return std::string(vst::AUDIO_RESOURCE_TYPE_NAME);
+#ifdef Q_OS_MACOS
+    case EffectFamily::AudioUnit: return std::string(audio_unit::AUDIO_RESOURCE_TYPE_NAME);
+#endif
+#ifdef Q_OS_LINUX
+    case EffectFamily::LV2:       return std::string(lv2::AUDIO_RESOURCE_TYPE_NAME);
+#endif
+    case EffectFamily::Nyquist:   return std::string(nyquist::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Builtin:   return std::string(builtin::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Unknown:
+    case EffectFamily::_count:
+        break;
+    }
+    return {};
+}
+
+EffectFamily utils::effectFamilyFromCacheType(const std::string& cacheType)
+{
+    if (cacheType == vst::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::VST3;
+    }
+#ifdef Q_OS_MACOS
+    if (cacheType == audio_unit::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::AudioUnit;
+    }
+#endif
+#ifdef Q_OS_LINUX
+    if (cacheType == lv2::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::LV2;
+    }
+#endif
+    if (cacheType == nyquist::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Nyquist;
+    }
+    if (cacheType == builtin::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Builtin;
+    }
+    return EffectFamily::Unknown;
+}
+
+bool utils::isFamilyType(const muse::audioplugins::PluginMeta& meta, EffectFamily family)
+{
+    return utils::effectFamilyFromCacheType(meta.type) == family;
+}
+
 namespace {
 static const muse::String unspecifiedEffectCategoryString{ "Third-party" };
 static const muse::String noneEffectCategoryString{ "None" };
@@ -71,6 +131,12 @@ static const muse::String legacyEffectCategoryString{ "Legacy" };
 
 EffectId utils::effectId(const EffectDefinitionInterface* effect)
 {
+    static muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    const muse::io::path_t rawPath = au3::wxToStdString(effect->GetPath());
+    const muse::io::path_t portablePath = globalConfiguration()->isBundledWithApp(rawPath)
+                                          ? globalConfiguration()->toBundledPath(rawPath)
+                                          : rawPath;
+
     // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
     // (e.g. an effect vendor that has an underscore in its name.)
     // TODO add defense in muse::strings utils.
@@ -79,7 +145,7 @@ EffectId utils::effectId(const EffectDefinitionInterface* effect)
             effect->GetFamily().Internal(),
             effect->GetVendor().Internal(),
             effect->GetSymbol().Internal(),
-            effect->GetPath()
+            au3::wxFromStdString(portablePath.toStdString())
         }, '_'));
 }
 
@@ -97,12 +163,73 @@ std::string parseEffectIdPart(const effects::EffectId& effectId, size_t partInde
     }
     return {};
 }
+
+std::string toLower(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char ch) {
+        return static_cast<char>(std::tolower(ch));
+    });
+    return value;
+}
+
+std::string vst3ClassId(const EffectId& effectId)
+{
+    const std::string path = utils::parseEffectPath(effectId);
+    const auto separator = path.rfind(';');
+    if (separator == std::string::npos || separator + 1 == path.size()) {
+        return {};
+    }
+    return toLower(path.substr(separator + 1));
+}
 }
 
 bool utils::isEffectId(const EffectId& effectId)
 {
     const auto strings = wxSplit(au3::wxFromString(effectId), '_');
     return strings.size() == effectIdPartCount && strings[0] == wxString("Effect");
+}
+
+EffectId utils::findRelocatedVst3EffectId(const EffectId& effectId, const EffectMetaList& metaList)
+{
+    if (utils::parseEffectFamily(effectId) != "VST3") {
+        return {};
+    }
+
+    const std::string classId = vst3ClassId(effectId);
+    if (classId.empty()) {
+        return {};
+    }
+
+    const auto exact = std::find_if(metaList.begin(), metaList.end(), [&](const EffectMeta& meta) {
+        return meta.family == EffectFamily::VST3
+               && meta.isLoadable()
+               && meta.id == effectId;
+    });
+    if (exact != metaList.end()) {
+        return {};
+    }
+
+    EffectMetaList candidates;
+    std::copy_if(metaList.begin(), metaList.end(), std::back_inserter(candidates), [&](const EffectMeta& meta) {
+        return meta.family == EffectFamily::VST3
+               && meta.isLoadable()
+               && meta.id != effectId
+               && vst3ClassId(meta.id) == classId;
+    });
+
+    if (candidates.size() == 1) {
+        return candidates.front().id;
+    }
+
+    const std::string vendor = utils::parseEffectVendor(effectId);
+    const std::string name = utils::parseEffectName(effectId);
+
+    candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const EffectMeta& meta) {
+        return utils::parseEffectVendor(meta.id) != vendor
+               || utils::parseEffectName(meta.id) != name;
+    }), candidates.end());
+
+    return candidates.size() == 1 ? candidates.front().id : EffectId {};
 }
 
 std::string utils::parseEffectName(const EffectId& effectId)
@@ -220,13 +347,13 @@ EffectType utils::effectTypeFromString(const muse::String& type)
     return EffectType::Unknown;
 }
 
-muse::audio::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
+muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
 {
-    muse::audio::AudioResourceMeta museMeta;
+    muse::audioplugins::PluginMeta museMeta;
     // Use the AU3 plugin ID (same as Audio Unit does)
     // This is necessary for looking up the plugin in PluginManager later
     museMeta.id = meta.id.toStdString();
-    museMeta.type = toMuseAudioResourceType(meta.family);
+    museMeta.type = utils::effectFamilyToCacheType(meta.family);
     museMeta.vendor = meta.vendor.toStdString();
 
     // Add attributes using the map interface
@@ -258,33 +385,38 @@ bool value<bool>(const muse::String& str)
 }
 
 template<typename T = muse::String>
-T attributeValue(const muse::audio::AudioResourceMeta& meta, const muse::String& key, bool enabled)
+T attributeValue(const muse::audioplugins::PluginMeta& meta, const muse::String& key, bool isLoadable)
 {
     const auto valStr = meta.attributeVal(key);
-    IF_ASSERT_FAILED(!enabled || !valStr.empty()) {
+    IF_ASSERT_FAILED(!isLoadable || !valStr.empty()) {
         return {};
     }
     return value<T>(valStr);
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled)
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::PluginMeta& meta,
+                                     muse::audioplugins::AudioPluginState state)
 {
+    // A Validated entry must carry complete metadata, so the attribute asserts
+    // are gated on that; Discovered/Missing/Error entries may have sparse meta.
+    const bool isLoadable = (state == muse::audioplugins::AudioPluginState::Validated);
+
     EffectMeta effectMeta;
     effectMeta.path = path;
     effectMeta.id = muse::String::fromStdString(meta.id);
-    effectMeta.family = fromMuseAudioResourceType(meta.type);
+    effectMeta.family = utils::effectFamilyFromCacheType(meta.type);
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
-    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, enabled));
-    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, enabled);
-    effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, enabled);
-    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, enabled);
-    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, enabled);
-    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, enabled);
-    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, enabled);
-    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, enabled);
-    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, enabled);
-    effectMeta.isLoadable = enabled;
+    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, isLoadable));
+    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, isLoadable);
+    effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, isLoadable);
+    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, isLoadable);
+    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, isLoadable);
+    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, isLoadable);
+    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, isLoadable);
+    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, isLoadable);
+    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, isLoadable);
+    effectMeta.state = state;
 
     return effectMeta;
 }
@@ -513,7 +645,7 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
 void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
-        return !meta.isLoadable || !meta.isActivated || filter(meta);
+        return !meta.isLoadable() || !meta.isActivated || filter(meta);
     }), effects.end());
 }
 } // namespace
