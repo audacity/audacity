@@ -146,6 +146,7 @@ wxString EffectConfigSettings::GetGroup() const
 wxArrayString EffectConfigSettings::GetChildGroups() const
 {
     wxArrayString child;
+    std::set<std::string> seen;
     std::string group = m_currentGroup;
     for (const auto& p : m_vals) {
         const std::string& fullKey = p.first;
@@ -172,7 +173,9 @@ wxArrayString EffectConfigSettings::GetChildGroups() const
             subgroup = fullSub.substr(0, sep);
         }
 
-        child.push_back(subgroup);
+        if (seen.insert(subgroup).second) {
+            child.push_back(subgroup);
+        }
     }
 
     return child;
