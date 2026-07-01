@@ -370,6 +370,12 @@ const
         // Issue 3441: Some factory presets of some effects do not reassign all
         // controls.  So first put controls into a default state, not contaminated
         // by previous importing or other loading of settings into this wrapper.
+        //
+        // Effects with lossy or unreadable factory-defaults class-info fail to
+        // load here; we deliberately ignore the result and still apply the
+        // requested factory preset below. Treating the failure as fatal
+        // (the previous `return false`) aborted the whole load and
+        // surfaced as a factory-preset "internal error" for such effects.
         LoadPreset(effect, FactoryDefaultsGroup(), *pSettings);
     }
 

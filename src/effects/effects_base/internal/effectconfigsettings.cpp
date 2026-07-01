@@ -173,7 +173,8 @@ wxArrayString EffectConfigSettings::GetChildGroups() const
             subgroup = fullSub.substr(0, sep);
         }
 
-        if (seen.insert(subgroup).second) {
+        if (seen.find(subgroup) == seen.end()) {
+            seen.insert(subgroup);
             child.push_back(subgroup);
         }
     }

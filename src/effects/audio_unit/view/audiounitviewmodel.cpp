@@ -217,12 +217,18 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     auto& parameter = event.mArgument.mParameter;
     parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
 
-    // Register each parameter as something we're interested in
+    // Register each parameter as something we're interested in, seeding the
+    // cache with its current value so a genuine first change is propagated
+    // instead of being mistaken for the AU's open-time notification and dropped.
     if (auto& parameters = m_instance->GetParameters()) {
         for (const auto& ID : parameters) {
             parameter.mParameterID = ID;
             if (AUEventListenerAddEventType(result.get(), this, &event)) {
                 return nullptr;
+            }
+            AudioUnitParameterValue value;
+            if (!AudioUnitGetParameter(unit, ID, kAudioUnitScope_Global, 0, &value)) {
+                m_parameterValues.insert_or_assign(ID, value);
             }
         }
     }

@@ -367,7 +367,9 @@ OptionalMessage AudioUnitEffectBase::LoadUserPreset(
     if (GetConfig(*this, PluginSettings::Private, name, wxT("Parameters"),
                   parms, wxEmptyString)
         && !parms.IsEmpty()) {
-        return LoadSettingsFromString(parms, settings);
+        if (auto msg = LoadSettingsFromString(parms, settings)) {
+            return msg;
+        }
     }
     // To do: externalize state so const_cast isn't needed
     return const_cast<AudioUnitEffectBase*>(this)->LoadPreset(name, settings);
