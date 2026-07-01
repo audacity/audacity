@@ -582,8 +582,18 @@ bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyLi
     }
 
     if (completed) {
-        std::string msg = hasLabels ? "Stretch items left" : "Stretch clip left";
-        projectHistory()->pushHistoryState("Stretch", msg, type);
+        std::string longDesc;
+        std::string msg;
+        if (!hasLabels && clipKeyList.size() == 1) {
+            const double speed = globalContext()->currentTrackeditProject()->clip(clipKeyList[0]).speed;
+            const int speedPct = static_cast<int>(100.0 / speed + 0.5);
+            msg = "Changed speed to " + std::to_string(speedPct) + "%";
+            longDesc = "Changed Speed";
+        } else {
+            msg = hasLabels ? "Stretch items left" : "Stretch clips left";
+            longDesc = "Stretch Left";
+        }
+        projectHistory()->pushHistoryState(longDesc, msg, type);
     }
 
     return success;
@@ -607,8 +617,18 @@ bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyL
     }
 
     if (completed) {
-        std::string msg = hasLabels ? "Stretch items right" : "Stretch clips right";
-        projectHistory()->pushHistoryState("Stretch", msg, type);
+        std::string longDesc;
+        std::string msg;
+        if (!hasLabels && clipKeyList.size() == 1) {
+            const double speed = globalContext()->currentTrackeditProject()->clip(clipKeyList[0]).speed;
+            const int speedPct = static_cast<int>(100.0 / speed + 0.5);
+            msg = "Changed speed to " + std::to_string(speedPct) + "%";
+            longDesc = "Changed Speed";
+        } else {
+            msg = hasLabels ? "Stretch items right" : "Stretch clips right";
+            longDesc = "Stretch Right";
+        }
+        projectHistory()->pushHistoryState(longDesc, msg, type);
     }
 
     return success;
