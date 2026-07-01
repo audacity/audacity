@@ -428,7 +428,8 @@ void ApplicationActionController::revertToFactorySettings()
                                                { interactive()->buttonData(muse::IInteractive::Button::Cancel),
                                                  muse::IInteractive::ButtonData(restartBtn,
                                                                                 muse::trc("appshell", "Restart"), true) },
-                                               restartBtn);
+                                               restartBtn, {},
+                                               muse::trc("appshell", "Restart Audacity"));
 
         promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
             if (!res.isButton(muse::IInteractive::Button::Cancel)) {

@@ -295,7 +295,9 @@ void StartupScenario::restoreLastSession()
 {
     muse::IInteractive::Result result = interactive()->questionSync(muse::trc("appshell", "The previous session quit unexpectedly."),
                                                                     muse::trc("appshell", "Do you want to restore the session?"),
-                                                                    { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes });
+                                                                    { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes },
+                                                                    muse::IInteractive::Button::NoButton, {},
+                                                                    muse::trc("appshell", "Restore session"));
 
     if (result.button() == static_cast<int>(muse::IInteractive::Button::Yes)) {
         sessionsManager()->restore();

@@ -1709,7 +1709,9 @@ void TrackeditActionsController::selectAllTracks()
 
 void TrackeditActionsController::selectLeftOfPlaybackPos()
 {
-    RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_time");
+    muse::UriQuery leftOfPlaybackUri("audacity://trackedit/custom_time");
+    leftOfPlaybackUri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
+    RetVal<Val> rv = interactive()->openSync(leftOfPlaybackUri);
     if (!rv.ret) {
         return;
     }
@@ -1726,7 +1728,9 @@ void TrackeditActionsController::selectLeftOfPlaybackPos()
 
 void TrackeditActionsController::selectRightOfPlaybackPos()
 {
-    RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_time");
+    muse::UriQuery rightOfPlaybackUri("audacity://trackedit/custom_time");
+    rightOfPlaybackUri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
+    RetVal<Val> rv = interactive()->openSync(rightOfPlaybackUri);
     if (!rv.ret) {
         return;
     }
@@ -2061,7 +2065,7 @@ void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&
         availableSampleRates.push_back(muse::Val(static_cast<int>(rate)));
     }
     resampleUri.addParam("availableRates", muse::Val(availableSampleRates));
-    resampleUri.addParam("title", muse::Val(muse::trc("trackedit", "Resample")));
+    resampleUri.addParam("title", muse::Val(muse::trc("trackedit", "Resample track")));
     resampleUri.addParam("rate", muse::Val(static_cast<int>(focused.value().rate)));
 
     const RetVal<Val> rv = interactive()->openSync(resampleUri);

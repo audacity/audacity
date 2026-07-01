@@ -1441,7 +1441,10 @@ bool NyquistBase::ProcessOne(
             if (!isOk) {
                 mLastError = msg.Translation();
             } else {
-                BasicUI::ShowMessageBox(msg);
+                const bool isErrorMsg = msg.Translation().Contains(wxT("\n"));
+                BasicUI::ShowMessageBox(msg, BasicUI::MessageBoxOptions{}
+                    .Caption(mName)
+                    .IconStyle(isErrorMsg ? BasicUI::Icon::Error : BasicUI::Icon::Information));
             }
         } else if (GetType() == EffectTypeTool) {
             // ;tools may change the project with aud-do commands so
@@ -1460,7 +1463,9 @@ bool NyquistBase::ProcessOne(
         auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_double());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
-            BasicUI::ShowMessageBox(str);
+            BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions{}
+                .Caption(mName)
+                .IconStyle(BasicUI::Icon::Information));
         } else {
             mLastError = str.Translation();
         }
@@ -1471,7 +1476,9 @@ bool NyquistBase::ProcessOne(
         auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_int());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
-            BasicUI::ShowMessageBox(str);
+            BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions{}
+                .Caption(mName)
+                .IconStyle(BasicUI::Icon::Information));
         } else {
             mLastError = str.Translation();
         }

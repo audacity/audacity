@@ -15,7 +15,6 @@ StyledDialogView {
 
     property var availableRates: []
     property int rate: 44100
-    property string title: ""
 
     QtObject {
         id: prv
