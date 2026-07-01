@@ -445,8 +445,6 @@ void Au3AudioComService::stopProjectSync()
             const auto projectId = projectCloudExtension.GetCloudProjectId();
             if (!projectId.empty()) {
                 for (const auto& snapshot : db.GetPendingSnapshots(projectId)) {
-                    db.RemovePendingProjectBlocks(projectId, snapshot.SnapshotId);
-                    db.RemovePendingProjectBlob(projectId, snapshot.SnapshotId);
                     db.RemovePendingSnapshot(projectId, snapshot.SnapshotId);
                 }
             }
