@@ -67,7 +67,7 @@ BaseSection {
 
         StyledTextLabel {
             text: qsTrc("preferences", "Example: 1,000,000.99")
-            color: ui.theme.fontSecondaryColor
+            opacity: 0.7
         }
     }
 }
