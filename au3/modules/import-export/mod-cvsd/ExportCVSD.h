@@ -27,8 +27,15 @@ class ExportCVSDProcessor final : public ExportProcessor
 {
 private:
     CVSD_CONFIG config;
-    std::unique_ptr<FileIO> mfile;
-    std::unique_ptr<Mixer> mMixer;
+    struct {
+        std::unique_ptr<FileIO> mfile;
+        std::unique_ptr<Mixer> mMixer;
+        TranslatableString status;
+        double t0;
+        double t1;
+        size_t max_block_len;
+        unsigned channels;
+    } context;
 public:
     ExportCVSDProcessor() = default;
 

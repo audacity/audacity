@@ -1,11 +1,9 @@
-#ifndef AUDACITY_CVSD_H
-#define AUDACITY_CVSD_H
-#include <au3-files/wxFileNameWrapper.h>
+// #ifndef AUDACITY_CVSD_H
+// #define AUDACITY_CVSD_H
+#include "au3-math/SampleFormat.h"
 
 struct CVSD_CONFIG {
-    // 5-seconds blocks of audio
-    const size_t max_block_len = 44100 * 5;
-    unsigned channels = 1;
+
     unsigned int num_bits = 1;
     unsigned char bitref = 4;
     unsigned char bitmask = 0; // Fixed garbage value
@@ -22,8 +20,4 @@ struct CVSD_CONFIG {
     float beta = 0.0f;
 };
 
-// Declarations of your functions
-void CVSDEncode();
-void CVSDDecode(std::unique_ptr<wxFFile> openedFile);
-
-#endif //AUDACITY_CVSD_H
+// #endif //AUDACITY_CVSD_H
