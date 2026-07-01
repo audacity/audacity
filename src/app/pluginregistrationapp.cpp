@@ -5,6 +5,7 @@
 
 #include <QCoreApplication>
 
+#include "backgroundprocess.h"
 #include "modularity/ioc.h"
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "types/ret.h"
@@ -17,6 +18,7 @@ using namespace au::app;
 PluginRegistrationApp::PluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options)
     : muse::BaseApplication(options)
 {
+    makeProcessBackground();
 }
 
 void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& ctxId)
