@@ -116,6 +116,7 @@ private:
     QMetaObject::Connection m_autoScrollConnection;
 
     bool m_selectionStarted = false;
+    bool m_selectionThresholdCrossed = false;
     bool m_selectionActive = false;
     bool m_selectionEditInProgress = false;
     bool m_verticalSelectionEditInProgress = false;
