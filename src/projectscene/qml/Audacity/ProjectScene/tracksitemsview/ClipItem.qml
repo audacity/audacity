@@ -822,7 +822,9 @@ Rectangle {
                         Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
 
-                    onClicked: function (mouse) {
+                    //! NOTE: Override doClicked function from FlatButton to run clip selection logic before the base
+                    //! menu button emits clicked
+                    function doClicked(mouse) {
                         if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
                         } else {
@@ -835,6 +837,8 @@ Rectangle {
                             }
                             root.requestSelected()
                         }
+
+                        Qt.callLater(menuBtn.clicked, mouse)
                     }
                 }
             }
