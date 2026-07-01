@@ -91,7 +91,7 @@ TEST_F(Au3TracksInteractionTests, ChangeTrackColor)
     //! [WHEN] Change the color of the track
     m_tracksInteraction->changeTracksColor({ trackMinSilenceId }, 9);
 
-    //! [THEN] Clip color index is cleared to follow the track color
+    //! [THEN] Auto-color clip (index 0) is unaffected; explicit-color clips keep their color
     const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, trackMinSilenceId, 0);
     EXPECT_EQ(au3UpdatedClip->GetColorIndex(), 0);
 
