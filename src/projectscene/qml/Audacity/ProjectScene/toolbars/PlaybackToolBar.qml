@@ -41,7 +41,7 @@ Item {
         id: view
 
         navigationPanel.name: "PlaybackToolBar"
-        navigationPanel.accessible.name: qsTrc("projectscene", "Playback toolbar")
+        navigationPanel.accessible.name: qsTrc("projectscene", "Playback toolbar") + ", " + view.navigationPanel.directionInfo
 
         anchors.verticalCenter: parent.verticalCenter
 
@@ -160,6 +160,8 @@ Item {
 
             Timecode {
                 property var itemData: null
+
+                accessibleName: qsTrc("projectscene", "Playback position: ")
 
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
@@ -307,6 +309,8 @@ Item {
                 height: 28
 
                 title: qsTrc("projectscene", "Snap")
+                toggleAccessibleName: qsTrc("projectscene", "Snapping")
+                dropdownAccessibleName: qsTrc("projectscene", "Snap to")
 
                 current: Boolean(itemData) ? itemData.currentValue : ""
                 model: Boolean(itemData) ? itemData.availableSnapTypes : null

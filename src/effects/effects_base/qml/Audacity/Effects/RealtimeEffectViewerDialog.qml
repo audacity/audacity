@@ -167,6 +167,7 @@ EffectStyledDialogView {
                         navigation.panel: root.navigationPanel
                         navigation.order: 0
                         navigation.name: "Bypass effect"
+                        toolTipTitle: qsTrc("effects", "Bypass effect")
                         size: presetsBar.implicitHeight
                         isMasterEffect: viewerModel.isMasterEffect
                         accentButton: viewerModel.isActive

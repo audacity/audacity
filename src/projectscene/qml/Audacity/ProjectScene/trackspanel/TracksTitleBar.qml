@@ -54,7 +54,7 @@ Item {
                 direction: NavigationPanel.Vertical
                 order: 0
 
-                accessible.name: qsTrc("projectscene", "Realtime effects")
+                accessible.name: qsTrc("projectscene", "Real-time effects panel")
             }
 
             Layout.preferredWidth: root.effectsSectionWidth
@@ -95,6 +95,8 @@ Item {
                     navigation.name: "CloseEffectsSection"
                     navigation.panel: effectsTitleBar.navigation
                     navigation.order: 0
+
+                    toolTipTitle: qsTrc("projectscene", "Close real-time effects panel")
 
                     normalColor: ui.theme.backgroundPrimaryColor
                     hoverHitColor: ui.theme.buttonColor

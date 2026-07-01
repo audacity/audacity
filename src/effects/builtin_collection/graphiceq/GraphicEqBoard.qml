@@ -163,6 +163,7 @@ Item {
 
                     navigation.panel: root.navigationPanel
                     navigation.order: root.navigationOrderStart + index
+                    navigation.accessible.name: qsTrc("effects/graphiceq", "%1 Hz").arg(model.centerFreq)
 
                     value: model.dbGain
 
