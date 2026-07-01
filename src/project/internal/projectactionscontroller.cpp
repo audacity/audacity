@@ -704,9 +704,10 @@ muse::io::paths_t ProjectActionsController::selectImportFiles()
     std::string rawFileExt
         =
             "*.al *.ul *.s16be *.u16be *.s8 *.u8 *.ub *.uw *.4xm *.MTV *.afc *.aifc *.apc *.apl *.mac *.avs *.302 *.daud *.ffm *.cgi *.mm *.mpegtsraw *.mpegvideo *.nuv *.sw *.sb *.son *.sol *.vfwcap";
+    std::string textFileExt = "*.txt *.srt *.vtt";
 
     std::string allExt = audioFileExt + " " + videoFileExt + " " + gameMediaFileExt + " " + streamingFileExt + " "
-                         + animationAndImageFileExt + " " + rawFileExt;
+                         + animationAndImageFileExt + " " + rawFileExt + " " + textFileExt;
 
     std::vector<std::string> filter {
         trc("project", "All supported files") + " (*.mp3,*.aac, ...) (" + allExt + ")",
