@@ -566,7 +566,9 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
     }
 
     if (!splitClipKeys.empty()) {
+        selectionController()->resetDataSelection();
         selectionController()->setSelectedClips(splitClipKeys, true);
+        trackNavigationController()->setFocusedItem(splitClipKeys.front(), true);
     }
 
     return true;
