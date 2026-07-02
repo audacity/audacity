@@ -1445,9 +1445,9 @@ bool NyquistBase::ProcessOne(
             } else {
                 const auto firstLine = msg.Translation().BeforeFirst('\n');
                 BasicUI::Icon icon = BasicUI::Icon::Information;
-                if (firstLine == wxT("Error")) {
+                if (firstLine == wxT("Error") || firstLine == wxT("Error.")) {
                     icon = BasicUI::Icon::Error;
-                } else if (firstLine == wxT("Warning")) {
+                } else if (firstLine == wxT("Warning") || firstLine == wxT("Warning.")) {
                     icon = BasicUI::Icon::Warning;
                 }
                 BasicUI::ShowMessageBox(msg, BasicUI::MessageBoxOptions {}
@@ -2375,9 +2375,9 @@ bool NyquistBase::ParseProgram(wxInputStream& stream)
         /* i1n-hint: SAL and LISP are names for variant syntaxes for the
          Nyquist programming language.  Leave them, and 'return', untranslated. */
         mLastError = TranslatableString("effects-nyquist",
-                                        "Your code looks like SAL syntax, but there is no ‘return’ statement.\n\
-            For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
-            or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
+                                        "Your code looks like SAL syntax, but there is no ‘return’ statement.\n"
+                                        "For SAL, use a return statement such as:\n\treturn *track* * 0.1\n"
+                                        "or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
         return false;
         // Else just throw it at Nyquist to see what happens
     }

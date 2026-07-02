@@ -106,11 +106,10 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& m
         buttons.push_back(inter->buttonData(muse::IInteractive::Button::No));
     }
 
-    std::string dialogTitle;
     const std::string defaultCaption = BasicUI::DefaultCaption().Translation().ToStdString();
-    if (options.caption.Translation().ToStdString() != defaultCaption) {
-        dialogTitle = options.caption.Translation().ToStdString();
-    }
+    const std::string dialogTitle = options.caption.Translation().ToStdString() != defaultCaption
+                                    ? options.caption.Translation().ToStdString()
+                                    : defaultCaption;
 
     const std::string contentTitle = dialogTitle;
     const std::string body = message.Translation().ToStdString();
