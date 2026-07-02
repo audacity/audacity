@@ -100,10 +100,8 @@ muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& p
     muse::Ret ret = doPerformEffect(project, effectId, flags, params);
     if (!ret && muse::Ret::Code(ret.code()) != muse::Ret::Code::Cancel) {
         const auto msg = makeErrorMsg(ret, effectId);
-        const bool isMultiLine = msg.second.find('\n') != std::string::npos;
-        const std::string dialogTitle = isMultiLine ? msg.first : msg.second;
-        interactive()->error(msg.first, msg.second, {}, int(muse::IInteractive::Button::NoButton),
-                             { muse::IInteractive::Option::WithIcon }, dialogTitle);
+        interactive()->error(msg.first, ret.text(), {}, int(muse::IInteractive::Button::NoButton),
+                             { muse::IInteractive::Option::WithIcon }, msg.first);
     }
     return ret;
 }

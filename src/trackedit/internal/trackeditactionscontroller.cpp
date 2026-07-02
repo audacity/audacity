@@ -1709,9 +1709,7 @@ void TrackeditActionsController::selectAllTracks()
 
 void TrackeditActionsController::selectLeftOfPlaybackPos()
 {
-    muse::UriQuery leftOfPlaybackUri("audacity://trackedit/custom_time");
-    leftOfPlaybackUri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
-    RetVal<Val> rv = interactive()->openSync(leftOfPlaybackUri);
+    RetVal<Val> rv = interactive()->openSync(makePlaybackPosUri());
     if (!rv.ret) {
         return;
     }
@@ -1728,9 +1726,7 @@ void TrackeditActionsController::selectLeftOfPlaybackPos()
 
 void TrackeditActionsController::selectRightOfPlaybackPos()
 {
-    muse::UriQuery rightOfPlaybackUri("audacity://trackedit/custom_time");
-    rightOfPlaybackUri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
-    RetVal<Val> rv = interactive()->openSync(rightOfPlaybackUri);
+    RetVal<Val> rv = interactive()->openSync(makePlaybackPosUri());
     if (!rv.ret) {
         return;
     }
@@ -2383,6 +2379,13 @@ au::trackedit::TrackId TrackeditActionsController::resolveNextTrackIdForMove(con
     }
 
     return INVALID_TRACK;
+}
+
+muse::UriQuery TrackeditActionsController::makePlaybackPosUri() const
+{
+    muse::UriQuery uri("audacity://trackedit/custom_time");
+    uri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
+    return uri;
 }
 
 au::context::IPlaybackStatePtr TrackeditActionsController::playbackState() const

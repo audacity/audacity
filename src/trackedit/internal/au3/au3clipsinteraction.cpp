@@ -1413,7 +1413,9 @@ bool Au3ClipsInteraction::userIsOkWithDownmixing() const
     const muse::IInteractive::Result result = interactive()->warningSync(title, body, {
         muse::IInteractive::Button::Cancel,
         muse::IInteractive::Button::Yes
-    }, muse::IInteractive::Button::Cancel, muse::IInteractive::Option::WithDontShowAgainCheckBox);
+    }, muse::IInteractive::Button::Cancel,
+                                                                         muse::IInteractive::Option::WithIcon | muse::IInteractive::Option::WithDontShowAgainCheckBox,
+                                                                         title);
 
     if (!result.showAgain()) {
         configuration()->setAskBeforeConvertingToMonoOrStereo(false);

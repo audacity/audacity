@@ -199,6 +199,7 @@ private:
     TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
     TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
 
+    muse::UriQuery makePlaybackPosUri() const;
     context::IPlaybackStatePtr playbackState() const;
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;

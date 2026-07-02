@@ -106,29 +106,26 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& m
         buttons.push_back(inter->buttonData(muse::IInteractive::Button::No));
     }
 
-    std::string msgStr = message.Translation().ToStdString();
-    std::string contentTitle, body;
-    auto nlPos = msgStr.find('\n');
-    if (nlPos != std::string::npos) {
-        contentTitle = msgStr.substr(0, nlPos);
-        body = msgStr.substr(nlPos + 1);
-    } else {
-        contentTitle = msgStr;
-    }
-
     std::string dialogTitle;
     const std::string defaultCaption = BasicUI::DefaultCaption().Translation().ToStdString();
     if (options.caption.Translation().ToStdString() != defaultCaption) {
         dialogTitle = options.caption.Translation().ToStdString();
     }
 
+    const std::string contentTitle = dialogTitle;
+    const std::string body = message.Translation().ToStdString();
+
     muse::IInteractive::Result iret;
 
     switch (options.iconStyle) {
     case BasicUI::Icon::None:
-    case BasicUI::Icon::Information:
         iret = inter->infoSync(contentTitle, body, buttons,
                                int(muse::IInteractive::Button::NoButton), {}, dialogTitle);
+        break;
+    case BasicUI::Icon::Information:
+        iret = inter->infoSync(contentTitle, body, buttons,
+                               int(muse::IInteractive::Button::NoButton),
+                               { muse::IInteractive::Option::WithIcon }, dialogTitle);
         break;
     case BasicUI::Icon::Question:
         iret = inter->questionSync(contentTitle, body, buttons,
