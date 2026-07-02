@@ -196,6 +196,45 @@ void WaveView::paint(QPainter* painter)
     setAntialiasing(isStemPlot);
 
     wavePainter()->paint(*painter, m_clipKey.key, params, pType);
+
+    if (globalContext()->isRecording()) {
+        paintRecordingPlaceholder(*painter, params);
+    }
+}
+
+void WaveView::paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Clip clip = prj->clip(m_clipKey.key);
+    if (!clip.isValid() || m_clipTime.itemEndTime <= clip.endTime) {
+        return;
+    }
+
+    const double x0 = std::max(0.0, (clip.endTime - m_clipTime.itemStartTime) * params.zoom);
+    const double x1 = std::min(width(), (m_clipTime.itemEndTime - m_clipTime.itemStartTime) * params.zoom);
+    if (x1 - x0 < 1.0) {
+        return;
+    }
+
+    const double height = params.geometry.height;
+    std::vector<std::pair<double, double> > channelBands;
+    if (muse::is_equal(m_channelHeightRatio, 1.0)) {
+        channelBands.emplace_back(0.0, height);
+    } else {
+        channelBands.emplace_back(0.0, height * m_channelHeightRatio);
+        channelBands.emplace_back(height * m_channelHeightRatio, height * (1.0 - m_channelHeightRatio));
+    }
+
+    for (const auto& [top, bandHeight] : channelBands) {
+        const double centerY = top + bandHeight / 2.0;
+
+        painter.setPen(params.style.samplePen);
+        painter.drawLine(QPointF(x0, centerY), QPointF(x1, centerY));
+    }
 }
 
 ClipKey WaveView::clipKey() const

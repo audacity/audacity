@@ -118,6 +118,7 @@ private:
 
     void updateView();
     void onWaveZoomChanged();
+    void paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params);
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, const QColor& clipSelectedColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
