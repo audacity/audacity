@@ -311,8 +311,9 @@ Rectangle {
             onClicked: function (e) {
                 let position = convertToTimelinePosition(e)
                 if (!playRegionActivated) {
-                    playCursorController.seekToX(position.x, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
-                    playCursorController.setPlaybackRegion(position.x, position.x)
+                    let time = timeline.context.positionToTime(position.x)
+                    playCursorController.seekToTime(time, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
+                    playCursorController.setPlaybackRegionByTime(time, time)
                 }
                 playRegionActivated = false
             }
@@ -417,17 +418,18 @@ Rectangle {
                         if (pressed) {
                             head.dragPositionX = ix
                             timeline.displayedPlayCursorX = ix
-                            playCursorController.seekToX(ix)
+                            playCursorController.seekToTime(timeline.context.positionToTime(ix))
                         }
                         timeline.updateCursorPosition(ix, 0)
                     }
 
                     onReleased: function (e) {
                         var ix = mapToItem(timeline, e.x, e.y).x
-                        playCursorController.seekToX(ix)
+                        let ixTime = timeline.context.positionToTime(ix)
+                        playCursorController.seekToTime(ixTime)
                         if (!timelineMouseArea.playRegionActivated) {
-                            playCursorController.seekToX(ix, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
-                            playCursorController.setPlaybackRegion(ix, ix)
+                            playCursorController.seekToTime(ixTime, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
+                            playCursorController.setPlaybackRegionByTime(ixTime, ixTime)
                         }
                         playCursorReleaseTimer.restart()
                     }
@@ -565,15 +567,16 @@ Rectangle {
                         content.forceActiveFocus()
 
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
+                            let time = timeline.context.positionToTime(e.x)
                             if (playbackState.isPlaying) {
-                                playbackState.setLastPlaybackSeekTime(timeline.context.positionToTime(e.x))
+                                playbackState.setLastPlaybackSeekTime(time)
                             }
-                            playCursorController.seekToX(e.x)
+                            playCursorController.seekToTime(time)
                         }
 
                         if (!splitToolController.active) {
                             const spectrogramHit = tracksItemsView.getSpectrogramHit(e.y)
-                            selectionViewController.onPressed(e.x, e.y, spectrogramHit)
+                            selectionViewController.onPressed(timeline.context.positionToTime(e.x), e.y, spectrogramHit)
                             selectionViewController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
@@ -610,7 +613,7 @@ Rectangle {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
-                    selectionViewController.onPositionChanged(e.x, e.y)
+                    selectionViewController.onPositionChanged(timeline.context.positionToTime(e.x), e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
                     snapGuidelineToPosition(e.x)
@@ -637,19 +640,20 @@ Rectangle {
                 } else {
                     splitToolController.mouseUp(e.x)
 
-                    if (selectionViewController.isLeftSelection(e.x)) {
-                        playCursorController.seekToX(e.x)
+                    let releaseTime = timeline.context.positionToTime(e.x)
+                    if (selectionViewController.isLeftSelection(releaseTime)) {
+                        playCursorController.seekToTime(releaseTime)
                     }
                     if (!splitToolController.active) {
-                        selectionViewController.onReleased(e.x, e.y)
+                        selectionViewController.onReleased(releaseTime, e.y)
                         itemsSelection.visible = false
                     }
                     hideGuideline()
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
-                        playCursorController.seekToX(timeline.context.selectionStartPosition)
+                        playCursorController.seekToTime(timeline.context.selectionStartTime)
                     }
 
-                    playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
+                    playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                 }
             }
 
@@ -679,10 +683,10 @@ Rectangle {
 
                 if (root.itemHovered) {
                     selectionViewController.selectItemData(root.hoveredItemKey)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
+                    playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
                     selectionViewController.selectTrackAudioData(e.y)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
+                    playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 }
                 itemsSelection.visible = false
             }
@@ -978,11 +982,11 @@ Rectangle {
                             }
 
                             onSelectionResize: function (x1, x2, completed) {
-                                selectionViewController.onSelectionHorizontalResize(x1, x2, completed)
+                                selectionViewController.onSelectionHorizontalResize(timeline.context.positionToTime(x1), timeline.context.positionToTime(x2), completed)
                             }
 
                             onSeekToX: function (x) {
-                                playCursorController.seekToX(x)
+                                playCursorController.seekToTime(timeline.context.positionToTime(x))
                             }
 
                             onInsureVerticallyVisible: function () {
@@ -1152,11 +1156,11 @@ Rectangle {
                             }
 
                             onSeekToX: function (x) {
-                                playCursorController.seekToX(x)
+                                playCursorController.seekToTime(timeline.context.positionToTime(x))
                             }
 
                             onSelectionResize: function (x1, x2, completed) {
-                                selectionViewController.onSelectionHorizontalResize(x1, x2, completed)
+                                selectionViewController.onSelectionHorizontalResize(timeline.context.positionToTime(x1), timeline.context.positionToTime(x2), completed)
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {

@@ -23,9 +23,9 @@
 using namespace ::testing;
 
 namespace au::projectscene {
-//! Exercises PlayCursorController's seek/play-region dispatch, focusing on the
-//! play-cursor snapping: the controller must ask the
-//! TimelineContext to snap (withSnap = true) before dispatching.
+//! Exercises PlayCursorController's seek/play-region dispatch.
+//! Snap is applied by the caller via TimelineContext::positionToTime(x, true)
+//! before passing the time to seekToTime/setPlaybackRegionByTime.
 //! Default zoom (1.0) / frame start (0.0) make position and time 1:1.
 class PlayCursorControllerTests : public ::testing::Test
 {
@@ -99,23 +99,25 @@ protected:
     PlayCursorController* m_controller = nullptr;
 };
 
-TEST_F(PlayCursorControllerTests, SeekToX_GridSnapOff_SnapsToBoundary)
+TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_SnapsToBoundary)
 {
     //! CASE Seeking near an item boundary dispatches a seek at the snapped boundary.
+    //! Snap is applied by the caller via positionToTime(x, true).
     useGridSnapOff({ 10.0 });
 
     muse::actions::ActionQuery captured;
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
     .WillOnce(SaveArg<0>(&captured));
 
-    m_controller->seekToX(10.5); // within the 4px(=4s at zoom 1) clip-snap tolerance
+    double time = m_context->positionToTime(10.5, true); // within the 4px(=4s at zoom 1) clip-snap tolerance
+    m_controller->seekToTime(time);
 
     EXPECT_TRUE(captured.contains("seekTime"));
     EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 10.0);
     EXPECT_FALSE(captured.param("triggerPlay").toBool());
 }
 
-TEST_F(PlayCursorControllerTests, SeekToX_GridSnapOff_FarFromBoundary_UsesRawTime)
+TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_FarFromBoundary_UsesRawTime)
 {
     //! CASE Outside the snap tolerance, the raw time is used.
     useGridSnapOff({ 10.0 });
@@ -124,12 +126,13 @@ TEST_F(PlayCursorControllerTests, SeekToX_GridSnapOff_FarFromBoundary_UsesRawTim
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
     .WillOnce(SaveArg<0>(&captured));
 
-    m_controller->seekToX(20.0); // 10s away from the only boundary
+    double time = m_context->positionToTime(20.0, true); // 10s away from the only boundary
+    m_controller->seekToTime(time);
 
     EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 20.0);
 }
 
-TEST_F(PlayCursorControllerTests, SeekToX_GridSnapOn_SnapsToGrid)
+TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOn_SnapsToGrid)
 {
     //! CASE With grid snap on, the seek lands on the nearest grid line.
     useGridSnapOn(SnapType::Seconds);
@@ -138,14 +141,15 @@ TEST_F(PlayCursorControllerTests, SeekToX_GridSnapOn_SnapsToGrid)
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
     .WillOnce(SaveArg<0>(&captured));
 
-    m_controller->seekToX(7.4);
+    double time = m_context->positionToTime(7.4, true);
+    m_controller->seekToTime(time);
 
     EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 7.0);
 }
 
-TEST_F(PlayCursorControllerTests, SeekToX_NegativeTime_ClampsToZero_WhenNotAtStart)
+TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_ClampsToZero_WhenNotAtStart)
 {
-    //! CASE A negative resulting time seeks to 0, provided we are not already there.
+    //! CASE A negative time seeks to 0, provided we are not already there.
     useGridSnapOff({});
     ON_CALL(*m_playbackState, playbackPosition())
     .WillByDefault(Return(muse::secs_t(5.0)));
@@ -154,12 +158,12 @@ TEST_F(PlayCursorControllerTests, SeekToX_NegativeTime_ClampsToZero_WhenNotAtSta
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
     .WillOnce(SaveArg<0>(&captured));
 
-    m_controller->seekToX(-3.0);
+    m_controller->seekToTime(-3.0);
 
     EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 0.0);
 }
 
-TEST_F(PlayCursorControllerTests, SeekToX_NegativeTime_AlreadyAtStart_DoesNotDispatch)
+TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_AlreadyAtStart_DoesNotDispatch)
 {
     //! CASE Negative time while already at 0 is a no-op.
     useGridSnapOff({});
@@ -169,10 +173,10 @@ TEST_F(PlayCursorControllerTests, SeekToX_NegativeTime_AlreadyAtStart_DoesNotDis
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
     .Times(0);
 
-    m_controller->seekToX(-3.0);
+    m_controller->seekToTime(-3.0);
 }
 
-TEST_F(PlayCursorControllerTests, SetPlaybackRegion_SnapsAndClampsEdges)
+TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
 {
     //! CASE Region edges snap to boundaries and are clamped to >= 0.
     useGridSnapOff({ 10.0 });
@@ -181,7 +185,9 @@ TEST_F(PlayCursorControllerTests, SetPlaybackRegion_SnapsAndClampsEdges)
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
     .WillOnce(SaveArg<0>(&captured));
 
-    m_controller->setPlaybackRegion(-3.0, 10.4); // start clamps to 0, end snaps to 10.0
+    double t1 = m_context->positionToTime(-3.0, true); // negative — clamped to 0 by setPlaybackRegionByTime
+    double t2 = m_context->positionToTime(10.4, true); // snaps to 10.0
+    m_controller->setPlaybackRegionByTime(t1, t2);
 
     EXPECT_DOUBLE_EQ(captured.param("start").toDouble(), 0.0);
     EXPECT_DOUBLE_EQ(captured.param("end").toDouble(), 10.0);
