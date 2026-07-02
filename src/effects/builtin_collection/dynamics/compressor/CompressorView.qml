@@ -101,6 +101,7 @@ DynamicsEffectBase {
 
                     columns: 2
                     spacing: 24
+                    horizontalItemAlignment: Grid.AlignHCenter
 
                     Repeater {
                         model: ["attackMs", "releaseMs", "lookaheadMs"]
@@ -132,6 +133,7 @@ DynamicsEffectBase {
 
                     columns: 2
                     spacing: 24
+                    horizontalItemAlignment: Grid.AlignHCenter
 
                     Repeater {
                         model: ["thresholdDb", "compressionRatio", "kneeWidthDb", "makeupGainDb"]

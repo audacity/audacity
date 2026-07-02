@@ -171,6 +171,7 @@ ListItemBlank {
 
                 Loader {
                     id: headerTrailingControls
+                    visible: root.collapsed && item !== null
                 }
 
                 MenuButton {
@@ -227,9 +228,9 @@ ListItemBlank {
                 // Pass the event forward to allow
                 // child elements to handle the input
                 e.accepted = false
-                let toggleModifier = e.modifiers & Qt.ControlModifier
+                let multiSelectionModifier = e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)
 
-                if (!toggleModifier) {
+                if (!multiSelectionModifier) {
                     root.selectionRequested(true)
                     root.dataSelectionRequested()
                     return

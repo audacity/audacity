@@ -82,6 +82,8 @@ Item {
     Column {
         id: content
 
+        anchors.horizontalCenter: parent.horizontalCenter
+
         spacing: 6
 
         StyledTextLabel {

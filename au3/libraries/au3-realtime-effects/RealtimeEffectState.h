@@ -50,6 +50,9 @@ public:
 public:
     ~RealtimeEffectState();
 
+    //! Create a deep copy of the effect state
+    std::shared_ptr<RealtimeEffectState> Clone() const;
+
     //! May be called with nonempty id at most once in the lifetime of a state
     /*!
      Call with empty id is ignored.

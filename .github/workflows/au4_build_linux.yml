@@ -241,6 +241,10 @@ jobs:
     steps:
     - name: Clone repository
       uses: actions/checkout@v6
+      with:
+        repository: ${{ inputs.app_repo || job.workflow_repository }}
+        ref: ${{ inputs.app_ref || job.workflow_sha }}
+        persist-credentials: false
 
     - name: Setup environment
       run: |

@@ -506,6 +506,21 @@ Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
     return modifiers;
 }
 
+au::trackedit::SelectionMode TrackItemsListModel::selectionMode() const
+{
+    const Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        return SelectionMode::Range;
+    }
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        return SelectionMode::Toggle;
+    }
+
+    return SelectionMode::Replace;
+}
+
 int TrackItemsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;
@@ -616,7 +631,9 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
         vs->updateItemsBoundaries(true, key.key);
     }
 
-    setFocusedItem(key);
+    if (selectionMode() != SelectionMode::Range) {
+        setFocusedItem(key);
+    }
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
