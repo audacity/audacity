@@ -44,7 +44,7 @@ static std::string getPreferredAudioHost(const std::vector<std::string>& hosts)
     }
 
 #if defined(_WIN32)
-    constexpr const char* preferred[] = { "ASIO", "Windows WASAPI", "Windows DirectSound", "MME" };
+    constexpr const char* preferred[] = { "Windows WASAPI", "ASIO", "Windows DirectSound", "MME"};
 #elif defined(__APPLE__)
     constexpr const char* preferred[] = { "Core Audio" };
 #elif defined(__linux__)
@@ -70,6 +70,11 @@ void Au3AudioDevicesProvider::init()
     initHosts();
 
     muse::settings()->setDefaultValue(AUDIO_HOST, muse::Val(getPreferredAudioHost(apis())));
+
+    if (!m_audioApis.empty() && !muse::contains(m_audioApis, currentApi())) {
+        muse::settings()->setLocalValue(AUDIO_HOST, muse::Val(getPreferredAudioHost(m_audioApis)));
+    }
+
     const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
     const auto inputDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
     const auto outputDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
@@ -433,6 +438,8 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
         if (device.hostString != host || deviceName != newDevice) {
             continue;
         }
+
+        DeviceManager::Instance()->UpdateAsioDeviceCaps(device.deviceIndex);
 
         muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(newDevice));
         muse::settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device.sourceIndex));
