@@ -11,6 +11,8 @@
 #include "internal/au3/au3effectsutils.h"
 #include "log.h"
 
+#include <exception>
+
 namespace au::effects {
 Au3AudioPluginMetaReader::Au3AudioPluginMetaReader(PluginProvider& provider)
     : m_pluginProvider{provider}
@@ -83,8 +85,27 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
             desc.SetEffectAutomatable(effect->SupportsAutomation());
             desc.SetParamsAreInputAgnostic(effect->ParamsAreInputAgnostic());
 
-            desc.SetEnabled(true);
-            desc.SetValid(true);
+            bool failed = false;
+            std::string reason;
+            try {
+                if (validator) {
+                    validator->Validate(*ident);
+                }
+            } catch (const std::exception& e) {
+                failed = true;
+                reason = e.what();
+            } catch (...) {
+                failed = true;
+                reason = "unknown";
+            }
+
+            desc.SetEnabled(!failed);
+            desc.SetValid(!failed);
+
+            if (failed) {
+                LOGW() << "Plugin failed validation: " << ident->GetPath().ToStdString()
+                       << " reason: " << reason;
+            }
 
             return desc.GetID();
         });
