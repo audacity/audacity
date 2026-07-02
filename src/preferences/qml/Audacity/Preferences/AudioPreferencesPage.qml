@@ -62,6 +62,26 @@ PreferencesPage {
             }
         }
 
+        SeparatorLine {
+            visible: asioSection.visible
+        }
+
+        AsioSection {
+            id: asioSection
+
+            visible: apiModel.isAsio
+            apiModel: apiModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
         SeparatorLine {}
 
         SampleRateSection {
@@ -70,7 +90,7 @@ PreferencesPage {
             apiModel: apiModel
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 1
+            navigation.order: root.navigationOrderStart + 2
 
             onFocusChanged: {
                 if (activeFocus) {
@@ -87,7 +107,7 @@ PreferencesPage {
             apiModel: apiModel
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 2
+            navigation.order: root.navigationOrderStart + 3
 
             onFocusChanged: {
                 if (activeFocus) {
@@ -102,7 +122,7 @@ PreferencesPage {
             id: meterDbRangeSection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 3
+            navigation.order: root.navigationOrderStart + 4
 
             onFocusChanged: {
                 if (activeFocus) {

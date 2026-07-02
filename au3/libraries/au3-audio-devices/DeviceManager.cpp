@@ -14,6 +14,7 @@
 
 #include "portaudio.h"
 #ifdef __WXMSW__
+#include <windows.h>
 #include "pa_asio.h"
 #include "pa_win_wasapi.h"
 #endif
@@ -405,6 +406,17 @@ double DeviceManager::GetAsioDeviceCurrentSampleRate(int paDeviceIndex)
 #else
     (void)paDeviceIndex;
     return 0.0;
+#endif
+}
+
+void DeviceManager::ShowAsioControlPanel(int paDeviceIndex)
+{
+#ifdef __WXMSW__
+    if (IsAsioDevice(paDeviceIndex)) {
+        PaAsio_ShowControlPanel(paDeviceIndex, GetDesktopWindow());
+    }
+#else
+    (void)paDeviceIndex;
 #endif
 }
 

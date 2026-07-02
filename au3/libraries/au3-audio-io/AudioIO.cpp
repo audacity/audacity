@@ -500,10 +500,14 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     // rate is suggested, but we may get something else if it isn't supported
     mRate = 0.0;
 
-    // Open ASIO streams at the device's current rate to allow simultaneous playback on drivers that support it
-    const int asioDevIndex = numPlaybackChannels > 0 ? getPlayDevIndex() : getRecordDevIndex();
-    if (DeviceManager::IsAsioDevice(asioDevIndex)) {
-        mRate = DeviceManager::GetAsioDeviceCurrentSampleRate(asioDevIndex);
+    // Opening ASIO streams at the device's current rate allows simultaneous playback
+    // with drivers that support it
+    if (gPrefs->ReadBool(wxT("/AudioIO/ASIO/UseDeviceSampleRate"), true)) {
+        const int asioDevIndex
+            =numPlaybackChannels > 0 ? getPlayDevIndex() : getRecordDevIndex();
+        if (DeviceManager::IsAsioDevice(asioDevIndex)) {
+            mRate = DeviceManager::GetAsioDeviceCurrentSampleRate(asioDevIndex);
+        }
     }
 
     if (mRate == 0.0) {

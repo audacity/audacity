@@ -82,6 +82,27 @@ void CommonAudioApiConfigurationModel::load()
         }
     });
     audioDevicesProvider()->defaultSampleFormatChanged().onNotify(this, [this](){ emit defaultSampleFormatChanged(); });
+    audioDevicesProvider()->asioUseDeviceSampleRateChanged().onNotify(this, [this](){ emit asioUseDeviceSampleRateChanged(); });
+}
+
+bool CommonAudioApiConfigurationModel::isAsio() const
+{
+    return audioDevicesProvider()->currentApi() == "ASIO";
+}
+
+bool CommonAudioApiConfigurationModel::asioUseDeviceSampleRate() const
+{
+    return audioDevicesProvider()->asioUseDeviceSampleRate();
+}
+
+void CommonAudioApiConfigurationModel::setAsioUseDeviceSampleRate(bool use)
+{
+    audioDevicesProvider()->setAsioUseDeviceSampleRate(use);
+}
+
+void CommonAudioApiConfigurationModel::showAsioControlPanel()
+{
+    audioDevicesProvider()->showAsioControlPanel();
 }
 
 int CommonAudioApiConfigurationModel::currentAudioApiIndex() const
