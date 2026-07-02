@@ -151,6 +151,13 @@ void AudioIOBase::HandleDeviceChange()
         mPortMixer = NULL;
     }
 
+    // portmixer does not support asio
+    if (DeviceManager::IsAsioDevice(playDeviceNum)
+        || DeviceManager::IsAsioDevice(recDeviceNum)) {
+        mInputMixerWorks = false;
+        return;
+    }
+
     // Looking for highest supported sample rate for a given
     // play/rec device pair
     long highestSampleRate = GetClosestSupportedSampleRate(playDeviceNum, recDeviceNum, INT_MAX);
@@ -688,6 +695,16 @@ std::vector<long> AudioIOBase::GetSupportedSampleRates(int playDevice, int recDe
  * the real rates. */
 int AudioIOBase::GetOptimalSupportedSampleRate()
 {
+    // for ASIO use the last known device rate
+    const int playDevice = getPlayDevIndex();
+    if (DeviceManager::IsAsioDevice(playDevice)) {
+        const PaDeviceInfo* info = Pa_GetDeviceInfo(playDevice);
+        if (info && info->defaultSampleRate > 0) {
+            return static_cast<int>(info->defaultSampleRate);
+        }
+        return 44100;
+    }
+
     auto rate = GetClosestSupportedSampleRate(-1, -1, 44100);
 
     // if there are no supported rates, the next bit crashes. So check first,
