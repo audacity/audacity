@@ -69,8 +69,6 @@ void CommandLineParser::init()
     m_parser.addOption(internalCommandLineOption("import-media-file", "Import media file on startup", "path"));
     m_parser.addOption(internalCommandLineOption("remove-media-after-import", "Remove imported media files after import"));
     m_parser.addOption(internalCommandLineOption("project-display-name-override", "Display name override", "name"));
-    m_parser.addOption(internalCommandLineOption("cloud-project-id",
-                                                 "Cloud project to open, as 'projectId@snapshotId' (snapshotId optional)", "id"));
 
     m_parser.addOption(QCommandLineOption({ "u", "url" }, "Open the given URL on startup", "url"));
 
@@ -141,10 +139,6 @@ void CommandLineParser::parse(int argc, char** argv)
         m_options->startup.projectDisplayNameOverride = m_parser.value("project-display-name-override");
     }
 
-    if (m_parser.isSet("cloud-project-id")) {
-        m_options->startup.cloudProject = m_parser.value("cloud-project-id");
-    }
-
     if (m_parser.isSet("u")) {
         m_options->startup.startupUrl = m_parser.value("u");
     }
@@ -205,17 +199,20 @@ void CommandLineParser::parse(int argc, char** argv)
     // Startup
     if (m_options->runMode == IApplication::RunMode::GuiApp) {
         for (const QString& file : projectfiles) {
-            const muse::io::path_t filePath(file);
-            if (project::isAudacityFile(filePath)) {
+            const QUrl url = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+            const bool isCloudUrl = !url.isLocalFile() && url.scheme() == QStringLiteral("audacity");
+            const bool isLocalProject = url.isLocalFile() && project::isAudacityFile(muse::io::path_t(file));
+
+            if (isCloudUrl || isLocalProject) {
                 if (!m_options->startup.projectUrl.has_value()) {
-                    m_options->startup.projectUrl = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+                    m_options->startup.projectUrl = url;
                 }
                 m_options->startup.mediaFiles.clear();
                 continue;
             }
 
             if (!m_options->startup.projectUrl.has_value()) {
-                m_options->startup.mediaFiles.emplace_back(filePath);
+                m_options->startup.mediaFiles.emplace_back(muse::io::path_t(file));
             }
         }
     }

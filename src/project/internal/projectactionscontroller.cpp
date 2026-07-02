@@ -215,10 +215,18 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
         return openProject(filename, file.displayNameOverride);
     }
 
-    //! TODO: Fix me
-    // if (file.url.scheme() == AUDACITY_URL_SCHEME) {
-    //     return openMuseScoreUrl(file.url);
-    // }
+    if (file.url.scheme() == AUDACITY_URL_SCHEME) {
+        muse::UriQuery query(file.url.toString().toStdString());
+        const std::string projectId = query.param("projectId").toString();
+        if (!projectId.empty()) {
+            const std::string snapshotId = query.param("snapshotId").toString();
+            dispatcher()->dispatch("cloud-file-open",
+                                   muse::actions::ActionData::make_arg2<QString, QString>(
+                                       QString::fromStdString(projectId),
+                                       QString::fromStdString(snapshotId)));
+            return muse::make_ok();
+        }
+    }
 
     return make_ret(Err::UnsupportedUrl);
 }
@@ -269,13 +277,20 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 {
     const QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
-    const muse::io::paths_t filePaths = url.isLocalFile() ? muse::io::paths_t { muse::io::path_t(url) } : selectOpeningFiles();
 
     Ret ret = make_ret(Ret::Code::Cancel);
 
     if (url.isValid() && !url.isEmpty() && !url.isLocalFile()) {
         ret = openProject(ProjectFile(url, displayNameOverride));
-    } else if (filePaths.empty()) {
+        if (!ret) {
+            openPageIfNeed(HOME_PAGE_URI);
+        }
+        return;
+    }
+
+    const muse::io::paths_t filePaths = url.isLocalFile() ? muse::io::paths_t { muse::io::path_t(url) } : selectOpeningFiles();
+
+    if (filePaths.empty()) {
         ret = make_ret(Ret::Code::Cancel);
     } else if (filePaths.size() > 1) {
         auto projectIt = std::find_if(filePaths.cbegin(), filePaths.cend(), [](const auto& filePath) {
@@ -347,13 +362,14 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     }
 
     if (globalContext()->currentProject()) {
-        QString cloudArg = cloudProjectId;
+        muse::UriQuery cloudUri(AUDACITY_URL_SCHEME.toStdString() + "://open");
+        cloudUri.addParam("projectId", muse::Val(cloudProjectId.toStdString()));
         if (!snapshotId.isEmpty()) {
-            cloudArg += "@" + snapshotId;
+            cloudUri.addParam("snapshotId", muse::Val(snapshotId.toStdString()));
         }
 
         QStringList newWindowArgs;
-        newWindowArgs << "--cloud-project-id" << cloudArg;
+        newWindowArgs << QString::fromStdString(cloudUri.toString());
         multiwindowsProvider()->openNewWindow(newWindowArgs);
         return;
     }

@@ -48,7 +48,6 @@ enum class StartupModeType
     ContinueLastSession,
     StartWithNewProject,
     StartWithProject,
-    StartWithCloudProject,
     Recovery,
     FirstLaunch
 };

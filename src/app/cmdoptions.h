@@ -26,7 +26,6 @@ struct AudacityCmdOptions : public muse::CmdOptions {
         std::optional<std::string> type;
         std::optional<QUrl> projectUrl;
         std::optional<QString> projectDisplayNameOverride;
-        std::optional<QString> cloudProject;
         std::optional<QString> startupUrl;
         muse::io::paths_t mediaFiles;
         bool removeMediaFilesAfterImport = false;

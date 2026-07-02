@@ -83,7 +83,7 @@ bool needsNewSnapshot(au::project::IAudacityProjectPtr project,
         return true;
     }
 
-    IF_ASSERT_FAILED(extension.IsCloudProject()) {
+    if (!extension.IsCloudProject()) {
         return true;
     }
 
