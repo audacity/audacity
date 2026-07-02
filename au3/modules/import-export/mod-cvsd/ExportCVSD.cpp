@@ -1,10 +1,13 @@
 #include "ExportCVSD.h"
 
-void CVSDEncode(constSamplePtr temp, unsigned int channels)
+void CVSDEncode(constSamplePtr temp)
 {
+    // get the raw floating bits
+    float* audiobuffer = (float*) temp;
+    // initialize a new config everytime for the buffer
+    CVSD_CONFIG config;
 
 };
-
 void CVSDDecode(std::unique_ptr<wxFFile> openedFile)
 {
 
@@ -58,10 +61,6 @@ bool ExportCVSDProcessor::Initialize(AudacityProject& project,
         maxBlockLen, true, sampleRate,
         floatSample, mixerSpec);
 
-    // resetting config to default
-    config.mAccumulator = 0.0f;
-    config.step_size = 10.0f;
-
     return (context.mMixer != nullptr);
 };
 
@@ -75,19 +74,20 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
         {
             // get the samples
             auto samplesThisRun = context.mMixer->Process();
-            if (samplesThisRun == 0 )
-            {
+            if (samplesThisRun == 0 ) {
                 context.status = TranslatableString("import-export", "Exporting is done");
                 delegate.SetStatusString(context.status);
                 break;
             } else {
                 for (size_t i = 0; i < context.channels; i++) {
-                     constSamplePtr temp = context.mMixer->GetBuffer(i);
-                    CVSDEncode(temp, context.channels);
+                    constSamplePtr temp = context.mMixer->GetBuffer(i);
+                    CVSDEncode(temp);
                 }
             }
         }
     }
+
+    return exportResult;
 };
 
 std::unique_ptr<ExportOptionsEditor> ExportCVSD::CreateOptionsEditor(int formatIndex, ExportOptionsEditor::Listener* listener) const
