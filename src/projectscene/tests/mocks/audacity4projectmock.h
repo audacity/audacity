@@ -25,7 +25,6 @@ public:
     MOCK_METHOD(bool, needAutoSave, (), (const, override));
     MOCK_METHOD(void, setNeedAutoSave, (bool), (override));
     MOCK_METHOD(muse::Ret, save, (const muse::io::path_t&, project::SaveMode), (override));
-    MOCK_METHOD(muse::async::Notification, captureThumbnailRequested, (), (const, override));
     MOCK_METHOD(const au::trackedit::ITrackeditProjectPtr, trackeditProject, (), (const, override));
     MOCK_METHOD(projectscene::IProjectViewStatePtr, viewState, (), (const, override));
 
