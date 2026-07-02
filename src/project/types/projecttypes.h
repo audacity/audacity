@@ -71,10 +71,9 @@ struct CloudProjectInfo {
 
     muse::cloud::Visibility visibility = muse::cloud::Visibility::Private;
 
-    bool isValid() const
-    {
-        return !sourceUrl.isEmpty();
-    }
+    std::string projectId;
+    std::string snapshotId;
+    muse::io::path_t localPath;
 };
 
 struct CloudAudioInfo {
@@ -234,6 +233,7 @@ using ProjectFilesList = std::vector<ProjectFile>;
 struct RecentFile {
     muse::io::path_t path;
     QString displayNameOverride = {};
+    std::optional<CloudProjectInfo> cloudInfo;
 
     RecentFile() = default;
 

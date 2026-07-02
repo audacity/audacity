@@ -38,11 +38,6 @@ public:
     std::string getCloudAudioPage(const std::string& audioId) const override;
     std::string getCloudProfilePage() const override;
 
-    bool isCloudProject(const muse::io::path_t& projectPath) const override;
-
-    std::optional<muse::io::path_t> projectLocalPath(const std::string& projectId) const override;
-    std::optional<std::string> cloudProjectId(const muse::io::path_t& projectPath) const override;
-
     void deinit() override;
 };
 }

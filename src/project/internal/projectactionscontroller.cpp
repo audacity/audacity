@@ -13,6 +13,7 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "au3cloud/au3clouderrors.h"
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 
 #include "audacityproject.h"
 #include "projecterrors.h"
@@ -20,6 +21,19 @@
 
 using namespace muse;
 using namespace au::project;
+
+namespace {
+std::optional<muse::io::path_t> cloudProjectLocalPath(const std::string& projectId)
+{
+    namespace sync = audacity::cloud::audiocom::sync;
+    const auto data = sync::CloudProjectsDatabase::Get().GetProjectData(projectId);
+    if (!data.has_value() || data->LocalPath.empty()) {
+        return std::nullopt;
+    }
+
+    return muse::io::path_t(data->LocalPath);
+}
+}
 
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri HOME_PAGE_URI("audacity://home");
@@ -318,7 +332,7 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
         m_isProjectProcessing = false;
     };
 
-    std::optional<io::path_t> localPath = audioComService()->projectLocalPath(cloudProjectId.toStdString());
+    std::optional<io::path_t> localPath = cloudProjectLocalPath(cloudProjectId.toStdString());
 
     if (localPath && snapshotId.isEmpty()) {
         if (isProjectOpened(localPath.value())) {
@@ -1139,11 +1153,7 @@ RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
 {
     RecentFile file;
     file.path = project->path();
-
-    //! TODO AU4
-    // if (project->isCloudProject()) {
-    //     file.displayNameOverride = project->cloudInfo().name;
-    // }
+    file.cloudInfo = project->cloudInfo();
 
     return file;
 }

@@ -1,11 +1,12 @@
 #include "audacityproject.h"
 
-#include "au3wrap/iau3project.h"
+#include "framework/global/log.h"
+#include "framework/global/io/fileinfo.h"
+#include "framework/global/io/ioretcodes.h"
+
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
+
 #include "project/projecterrors.h"
-#include "global/log.h"
-#include "global/io/file.h"
-#include "global/io/fileinfo.h"
-#include "global/io/ioretcodes.h"
 
 using namespace muse;
 using namespace au::project;
@@ -255,6 +256,18 @@ void Audacity4Project::setPath(const io::path_t& path)
     }
 
     m_path = path;
+
+    const auto data = audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().GetProjectDataForPath(m_path.toStdString());
+    if (data.has_value() && !data->ProjectId.empty()) {
+        CloudProjectInfo info;
+        info.projectId = data->ProjectId;
+        info.snapshotId = data->SnapshotId;
+        info.localPath = muse::io::path_t(data->LocalPath);
+        m_cloudInfo = std::move(info);
+    } else {
+        m_cloudInfo.reset();
+    }
+
     m_pathChanged.notify();
 }
 
@@ -270,7 +283,12 @@ bool Audacity4Project::isImported() const
 
 bool Audacity4Project::isCloudProject() const
 {
-    return audioComService()->isCloudProject(m_path);
+    return m_cloudInfo.has_value();
+}
+
+const std::optional<CloudProjectInfo>& Audacity4Project::cloudInfo() const
+{
+    return m_cloudInfo;
 }
 
 String Audacity4Project::title() const

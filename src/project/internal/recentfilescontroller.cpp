@@ -156,17 +156,26 @@ void RecentFilesController::loadRecentFilesList()
     for (size_t i = 0; i < array.size(); ++i) {
         const JsonValue val = array.at(i);
 
+        RecentFile file;
         if (val.isString()) {
-            newList.emplace_back(muse::io::path_t(val.toStdString()));
+            file.path = val.toStdString();
         } else if (val.isObject()) {
             const JsonObject obj = val.toObject();
-            RecentFile file;
             file.path = obj["path"].toStdString();
             file.displayNameOverride = QString::fromStdString(obj["displayName"].toStdString());
-            newList.emplace_back(std::move(file));
+
+            const std::string cloudProjectId = obj["cloudProjectId"].toStdString();
+            if (!cloudProjectId.empty()) {
+                CloudProjectInfo info;
+                info.projectId = cloudProjectId;
+                info.snapshotId = obj["cloudSnapshotId"].toStdString();
+                file.cloudInfo = std::move(info);
+            }
         } else {
             continue;
         }
+
+        newList.emplace_back(std::move(file));
     }
 }
 
@@ -223,10 +232,21 @@ void RecentFilesController::saveRecentFilesList() const
 
     JsonArray jsonArray;
     for (const RecentFile& file : m_recentFilesList) {
-        if (!file.displayNameOverride.isEmpty()) {
+        const bool hasDisplayName = !file.displayNameOverride.isEmpty();
+        const bool hasCloudInfo = file.cloudInfo.has_value();
+
+        if (hasDisplayName || hasCloudInfo) {
             JsonObject obj;
             obj["path"] = file.path.toStdString();
-            obj["displayName"] = file.displayNameOverride.toStdString();
+            if (hasDisplayName) {
+                obj["displayName"] = file.displayNameOverride.toStdString();
+            }
+            if (hasCloudInfo) {
+                obj["cloudProjectId"] = file.cloudInfo->projectId;
+                if (!file.cloudInfo->snapshotId.empty()) {
+                    obj["cloudSnapshotId"] = file.cloudInfo->snapshotId;
+                }
+            }
             jsonArray << obj;
         } else {
             jsonArray << file.path.toStdString();

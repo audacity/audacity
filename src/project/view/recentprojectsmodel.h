@@ -29,7 +29,6 @@
 #include "modularity/ioc.h"
 #include "irecentfilescontroller.h"
 #include "io/ifilesystem.h"
-#include "au3cloud/iau3audiocomservice.h"
 
 namespace au::project {
 class RecentProjectsModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
@@ -38,8 +37,6 @@ class RecentProjectsModel : public AbstractItemModel, public muse::async::Asynca
 
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IRecentFilesController> recentFilesController;
-
-    muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
 
 public:
     RecentProjectsModel(QObject* parent = nullptr);
