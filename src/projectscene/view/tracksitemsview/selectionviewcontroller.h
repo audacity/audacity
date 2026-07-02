@@ -55,14 +55,13 @@ public:
 
     Q_INVOKABLE void load();
 
-    //! NOTE The x coordinates must match the timeline.
+    //! NOTE The time parameters are in seconds (audio time).
     //! The y coordinates must match the track view
-    //! If this is not the case, then appropriate adjustments must be made.
-    Q_INVOKABLE void onPressed(double x, double y, spectrogram::SpectrogramHit spectrogramHit = {});
-    Q_INVOKABLE void onPositionChanged(double x, double y);
-    Q_INVOKABLE void onReleased(double x, double y);
+    Q_INVOKABLE void onPressed(double time, double y, spectrogram::SpectrogramHit spectrogramHit = {});
+    Q_INVOKABLE void onPositionChanged(double time, double y);
+    Q_INVOKABLE void onReleased(double time, double y);
 
-    Q_INVOKABLE void onSelectionHorizontalResize(double x, double x2, bool completed);
+    Q_INVOKABLE void onSelectionHorizontalResize(double time1, double time2, bool completed);
     Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop);
     Q_INVOKABLE void updateSelectionVerticalResize(double y, bool completed);
     Q_INVOKABLE void cancelSpectrogramEdit();
@@ -74,7 +73,7 @@ public:
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE void resetSelectedLabel();
     Q_INVOKABLE void resetDataSelection();
-    Q_INVOKABLE bool isLeftSelection(double x) const;
+    Q_INVOKABLE bool isLeftSelection(double time) const;
 
     bool selectionActive() const;
     bool selectionEditInProgress() const;
@@ -95,16 +94,15 @@ signals:
     void pressedSpectrogramChanged();
 
     void selectionStarted();
-    void selectionChanged(QPointF p1, QPointF p2);
-    void selectionEnded(QPointF p1, QPointF p2);
 
 private:
 
     IProjectViewStatePtr viewState() const;
     trackedit::TrackIdList trackIdList() const;
 
-    bool doOnPositionChanged(double x, double y);
-    void setSelection(double x1, double x2, bool complete);
+    bool doOnPositionChanged(double time, double y);
+    void setSelectionTimes(double time1, double time2, bool complete);
+    double snapTime(double time) const;
     void setFrequencySelectionEdge(double y, bool complete = true, uintptr_t handle = 0); // If handle is 0, sets both
 
     Qt::KeyboardModifiers keyboardModifiers() const;
@@ -120,8 +118,11 @@ private:
     bool m_selectionActive = false;
     bool m_selectionEditInProgress = false;
     bool m_verticalSelectionEditInProgress = false;
-    QPointF m_startPoint;
-    QPointF m_lastPoint;
+
+    double m_selectionStartTime = 0.0;
+    double m_startY = 0.0;
+    double m_autoScrollLastX = 0.0;
+    double m_autoScrollLastY = 0.0;
 
     double spectrogramHitFrequency(const spectrogram::SpectrogramHit& hit, double y) const;
     bool isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const;
