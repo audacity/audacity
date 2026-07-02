@@ -2,7 +2,6 @@
 
 #include "framework/global/settings.h"
 #include "framework/global/translation.h"
-#include "framework/global/io/dir.h"
 
 #include "au3-files/FileNames.h"
 
@@ -95,11 +94,6 @@ muse::io::path_t ProjectConfiguration::cloudProjectsPath() const
 void ProjectConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
 {
     cloudConfiguration()->setCloudProjectsPath(path);
-}
-
-bool ProjectConfiguration::isCloudProject(const muse::io::path_t& projectPath) const
-{
-    return muse::io::dirpath(projectPath) == cloudProjectsPath();
 }
 
 muse::io::path_t ProjectConfiguration::lastOpenedProjectsPath() const

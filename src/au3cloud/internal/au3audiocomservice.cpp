@@ -445,8 +445,6 @@ void Au3AudioComService::stopProjectSync()
             const auto projectId = projectCloudExtension.GetCloudProjectId();
             if (!projectId.empty()) {
                 for (const auto& snapshot : db.GetPendingSnapshots(projectId)) {
-                    db.RemovePendingProjectBlocks(projectId, snapshot.SnapshotId);
-                    db.RemovePendingProjectBlob(projectId, snapshot.SnapshotId);
                     db.RemovePendingSnapshot(projectId, snapshot.SnapshotId);
                 }
             }
@@ -724,6 +722,31 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
             AudiocomTrace::ShareAudioButton);
     }).detach();
     return muse::RetVal<muse::ProgressPtr>::make_ok(progress);
+}
+
+bool Au3AudioComService::isCloudProject(const muse::io::path_t& projectPath) const
+{
+    return CloudSyncService::IsCloudProject(projectPath.toStdString());
+}
+
+std::optional<muse::io::path_t> Au3AudioComService::projectLocalPath(const std::string& projectId) const
+{
+    const auto dbProjectData = sync::CloudProjectsDatabase::Get().GetProjectData(projectId);
+    if (!dbProjectData.has_value() || dbProjectData->LocalPath.empty()) {
+        return std::nullopt;
+    }
+
+    return muse::io::path_t(dbProjectData->LocalPath);
+}
+
+std::optional<std::string> Au3AudioComService::cloudProjectId(const muse::io::path_t& projectPath) const
+{
+    const auto dbProjectData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(projectPath.toStdString());
+    if (!dbProjectData.has_value() || dbProjectData->ProjectId.empty()) {
+        return std::nullopt;
+    }
+
+    return dbProjectData->ProjectId;
 }
 
 void Au3AudioComService::removeProjectFromDatabase(const muse::io::path_t& localPath)

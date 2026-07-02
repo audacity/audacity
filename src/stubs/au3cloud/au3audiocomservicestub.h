@@ -25,16 +25,22 @@ public:
 
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                                   std::function<bool()> projectSaveCallback = nullptr, bool forceOverwrite = false) override;
+
     muse::RetVal<muse::ProgressPtr> shareAudio(const std::string& title) override;
     muse::RetVal<muse::ProgressPtr> downloadAudioFile(const std::string& audioId) override;
 
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
-                                                     bool forceOverwrite = false) override;
+                                                     const std::string& snapshotId = {}, bool forceOverwrite = false) override;
     muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) override;
 
     std::string getCloudProjectPage(const std::string& projectId) const override;
     std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;
     std::string getCloudAudioPage(const std::string& audioId) const override;
+
+    bool isCloudProject(const muse::io::path_t& projectPath) const override;
+
+    std::optional<muse::io::path_t> projectLocalPath(const std::string& projectId) const override;
+    std::optional<std::string> cloudProjectId(const muse::io::path_t& projectPath) const override;
 
     void deinit() override;
 };

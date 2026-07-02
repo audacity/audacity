@@ -48,7 +48,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::downloadAudioFile(const 
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
-muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, bool)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, const std::string&,
+                                                                         bool)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
@@ -76,6 +77,21 @@ std::string Au3AudioComServiceStub::getCloudProjectPage(const std::string& /*unu
 std::string Au3AudioComServiceStub::getCloudProjectPage(const muse::io::path_t& /*unused*/) const
 {
     return {};
+}
+
+bool Au3AudioComServiceStub::isCloudProject(const muse::io::path_t&) const
+{
+    return false;
+}
+
+std::optional<muse::io::path_t> Au3AudioComServiceStub::projectLocalPath(const std::string&) const
+{
+    return std::nullopt;
+}
+
+std::optional<std::string> Au3AudioComServiceStub::cloudProjectId(const muse::io::path_t&) const
+{
+    return std::nullopt;
 }
 
 void Au3AudioComServiceStub::deinit()

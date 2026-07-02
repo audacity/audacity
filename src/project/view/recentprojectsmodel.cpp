@@ -31,7 +31,7 @@ using namespace muse;
 using namespace au::project;
 
 RecentProjectsModel::RecentProjectsModel(QObject* parent)
-    : AbstractItemModel(parent)
+    : AbstractItemModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -89,21 +89,23 @@ void RecentProjectsModel::updateRecentProjects()
         RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
         QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
 
-        const bool isCloud = configuration()->isCloudProject(file.path);
+        const std::optional<std::string> cloudId = audioComService()->cloudProjectId(file.path);
+        const bool isCloud = cloudId.has_value();
+        const QString cloudProjectId = isCloud ? QString::fromStdString(cloudId.value()) : QString();
 
         obj[NAME_KEY] = file.displayName(false);
         obj[PATH_KEY] = file.path.toQString();
         obj[THUMBNAIL_URL_KEY] = obj[PATH_KEY];
         obj[FILE_SIZE_KEY] = fileSizeString;
         obj[IS_CLOUD_KEY] = isCloud;
+        obj[CLOUD_ITEM_ID_KEY] = cloudProjectId;
         obj[SHOW_INDICATOR_KEY] = obj[IS_CLOUD_KEY];
-        // obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);
         obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
         obj[IS_CREATE_NEW_KEY] = false;
         obj[IS_NO_RESULTS_FOUND_KEY] = false;
 
         obj[CONTEXT_MENU_MODEL_KEY] = QVariant::fromValue(
-            new RecentProjectContextMenuModel(isCloud, file.path.toQString(), file.displayNameOverride, this));
+            new RecentProjectContextMenuModel(isCloud, file.path.toQString(), file.displayNameOverride, cloudProjectId, this));
 
         items.push_back(obj);
     }
