@@ -434,14 +434,17 @@ muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Ef
         const auto clipsAfter = getAllClips(*prj);
         const std::vector<const au::trackedit::Clip*> newClips = trackedit::utils::clipSetDifference(clipsAfter, clipsBefore);
         if (!newClips.empty()) {
-            trackedit::ClipKeyList newClipsKeys;
-            std::transform(newClips.begin(), newClips.end(), std::back_inserter(newClipsKeys),
-                           [](const auto clip) { return clip->key; });
             for (const auto* clip : newClips) {
                 prj->notifyAboutClipAdded(*clip);
             }
-            selectionController()->resetDataSelection();
-            selectionController()->setSelectedClips(newClipsKeys, true);
+
+            if (effect.GetType() == EffectTypeGenerate) {
+                trackedit::ClipKeyList newClipsKeys;
+                std::transform(newClips.begin(), newClips.end(), std::back_inserter(newClipsKeys),
+                               [](const auto clip) { return clip->key; });
+                selectionController()->resetDataSelection();
+                selectionController()->setSelectedClips(newClipsKeys, true);
+            }
         }
     }
 
