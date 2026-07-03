@@ -69,6 +69,11 @@ public:
     int GetInputDevicePaIndex(const std::string& hostName, const std::string& deviceId);
     int GetOutputDevicePaIndex(const std::string& hostName, const std::string& deviceId);
 
+    bool UpdateAsioDeviceCaps(int paDeviceIndex);
+    static bool IsAsioDevice(int paDeviceIndex);
+    static double GetAsioDeviceCurrentSampleRate(int paDeviceIndex);
+    static void ShowAsioControlPanel(int paDeviceIndex);
+
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
     // DeviceChangeHandler implementation

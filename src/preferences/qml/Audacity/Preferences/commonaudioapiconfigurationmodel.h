@@ -61,6 +61,9 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     Q_PROPERTY(double longestDeviceNameLength READ longestDeviceNameLength NOTIFY longestDeviceNameLengthChanged)
 
+    Q_PROPERTY(bool isAsio READ isAsio NOTIFY currentAudioApiIndexChanged)
+    Q_PROPERTY(bool asioUseDeviceSampleRate READ asioUseDeviceSampleRate NOTIFY asioUseDeviceSampleRateChanged)
+
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
@@ -114,6 +117,11 @@ public:
 
     double longestDeviceNameLength() const;
 
+    bool isAsio() const;
+    bool asioUseDeviceSampleRate() const;
+    Q_INVOKABLE void setAsioUseDeviceSampleRate(bool use);
+    Q_INVOKABLE void showAsioControlPanel();
+
 signals:
     void currentAudioApiIndexChanged();
 
@@ -139,6 +147,8 @@ signals:
     void defaultSampleFormatListChanged();
 
     void longestDeviceNameLengthChanged();
+
+    void asioUseDeviceSampleRateChanged();
 
 private:
     std::vector<std::pair<uint64_t, QString> > m_sampleRateMapping;
