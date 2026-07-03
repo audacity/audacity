@@ -567,6 +567,10 @@ std::shared_ptr<WaveClip> WaveClip::SplitChannels()
     // This call asserts invariants for this clip
     DiscardRightChannel();
 
+    // Assign new IDs from newly created clips
+    SetId(NewID());
+    result->SetId(NewID());
+
     // Assert postconditions
     assert(NChannels() == 1);
     assert(result->NChannels() == 1);
