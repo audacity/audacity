@@ -648,10 +648,46 @@ bool Au3TracksInteraction::mergeSelectedOnTracks(const TrackIdList& tracksIds, s
 
 bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
+    auto& tracks = Au3TrackList::Get(projectRef());
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    std::vector<std::shared_ptr<Au3Track> > copies;
+    copies.reserve(tracksIds.size());
+
     for (const auto& trackId : tracksIds) {
-        bool ok = duplicateSelectedOnTrack(trackId, begin, end);
-        if (!ok) {
-            return false;
+        std::shared_ptr<Au3Track> dest;
+
+        if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+            dest = waveTrack->Copy(begin, end, false);
+            dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
+        } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+            dest = labelTrack->Copy(begin, end, false);
+            dest->MoveTo(std::max(static_cast<double>(begin), labelTrack->GetStartTime()));
+        }
+
+        if (dest) {
+            copies.push_back(dest);
+        }
+    }
+
+    std::vector<Au3WaveTrack*> waveCopies;
+    for (const auto& copy : copies) {
+        if (auto waveCopy = dynamic_cast<Au3WaveTrack*>(copy.get())) {
+            waveCopies.push_back(waveCopy);
+        }
+    }
+    utils::remapCopiedClipGroups(*prj, tracks, waveCopies);
+
+    for (const auto& dest : copies) {
+        tracks.Add(dest);
+
+        prj->notifyAboutTrackAdded(DomConverter::track(dest.get()));
+
+        if (dynamic_cast<Au3WaveTrack*>(dest.get())) {
+            for (const auto& clip : prj->clipList(dest->GetId())) {
+                prj->notifyAboutClipAdded(clip);
+            }
         }
     }
 
@@ -760,6 +796,11 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    std::vector<std::shared_ptr<Au3Track> > clones;
+    clones.reserve(trackIds.size());
+
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
 
@@ -769,12 +810,22 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
 
         auto au3Clone = au3Track->Duplicate();
         Au3TrackList::AssignUniqueId(au3Clone);
+        clones.push_back(au3Clone);
+    }
 
+    std::vector<Au3WaveTrack*> waveClones;
+    for (const auto& clone : clones) {
+        if (auto waveClone = dynamic_cast<Au3WaveTrack*>(clone.get())) {
+            waveClones.push_back(waveClone);
+        }
+    }
+    utils::remapCopiedClipGroups(*prj, tracks, waveClones);
+
+    for (const auto& au3Clone : clones) {
         tracks.Add(au3Clone, ::TrackList::DoAssignId::Yes);
 
         auto clone = DomConverter::track(au3Clone.get());
 
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackInserted(clone, tracks.Size());
 
         if (dynamic_cast<Au3WaveTrack*>(au3Clone.get())) {
@@ -1642,34 +1693,6 @@ bool Au3TracksInteraction::mergeSelectedOnTrack(const TrackId trackId, secs_t be
     });
 
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-
-    return true;
-}
-
-bool Au3TracksInteraction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
-{
-    auto& tracks = Au3TrackList::Get(projectRef());
-
-    std::shared_ptr<Au3Track> dest;
-
-    if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
-        dest = waveTrack->Copy(begin, end, false);
-        dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
-        tracks.Add(dest);
-    } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
-        dest = labelTrack->Copy(begin, end, false);
-        dest->MoveTo(std::max(static_cast<double>(begin), labelTrack->GetStartTime()));
-        tracks.Add(dest);
-    }
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackAdded(DomConverter::track(dest.get()));
-
-    if (dynamic_cast<Au3WaveTrack*>(dest.get())) {
-        for (const auto& clip : prj->clipList(dest->GetId())) {
-            prj->notifyAboutClipAdded(clip);
-        }
-    }
 
     return true;
 }

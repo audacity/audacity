@@ -108,7 +108,6 @@ private:
                           bool& projectWasModified);
 
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
-    bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
     void insertBlankSpace(const TrackIdList& trackIds, secs_t begin, secs_t duration);
     std::shared_ptr<WaveTrack> createMonoTrack();
