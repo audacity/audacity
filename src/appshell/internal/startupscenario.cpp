@@ -239,6 +239,10 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 
 void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
 {
+    if (!multiwindowsProvider()->isFirstWindow()) {
+        return;
+    }
+
     const auto showWelcomePage = [this]() {
         const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
         const std::string currentAudacityVersion(configuration()->audacityVersion());
