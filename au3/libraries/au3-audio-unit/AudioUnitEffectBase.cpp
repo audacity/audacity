@@ -349,9 +349,28 @@ bool AudioUnitEffectBase::LoadSettings(
     return true;
 }
 
+bool AudioUnitEffectBase::VisitSettings(SettingsVisitor&, EffectSettings&)
+{
+    return false;
+}
+
+bool AudioUnitEffectBase::VisitSettings(
+    ConstSettingsVisitor&, const EffectSettings&) const
+{
+    return false;
+}
+
 OptionalMessage AudioUnitEffectBase::LoadUserPreset(
     const RegistryPath& name, EffectSettings& settings) const
 {
+    wxString parms;
+    if (GetConfig(*this, PluginSettings::Private, name, wxT("Parameters"),
+                  parms, wxEmptyString)
+        && !parms.IsEmpty()) {
+        if (auto msg = LoadSettingsFromString(parms, settings)) {
+            return msg;
+        }
+    }
     // To do: externalize state so const_cast isn't needed
     return const_cast<AudioUnitEffectBase*>(this)->LoadPreset(name, settings);
 }
@@ -359,7 +378,18 @@ OptionalMessage AudioUnitEffectBase::LoadUserPreset(
 bool AudioUnitEffectBase::SaveUserPreset(
     const RegistryPath& name, const EffectSettings& settings) const
 {
-    return SavePreset(name, GetSettings(settings));
+    bool saved = false;
+
+    wxString parms;
+    if (SaveSettingsAsString(settings, parms) && !parms.IsEmpty()) {
+        saved = SetConfig(*this, PluginSettings::Private, name, wxT("Parameters"), parms);
+    }
+
+    if (SavePreset(name, GetSettings(settings))) {
+        saved = true;
+    }
+
+    return saved;
 }
 
 OptionalMessage
@@ -369,6 +399,27 @@ AudioUnitEffectBase::LoadFactoryPreset(int id, EffectSettings& settings) const
         return { nullptr };
     }
     return {};
+}
+
+OptionalMessage
+AudioUnitEffectBase::LoadFactoryDefaults(EffectSettings& settings) const
+{
+    if (auto msg = LoadUserPreset(FactoryDefaultsGroup(), settings)) {
+        return msg;
+    }
+
+    auto& mySettings = GetSettings(settings);
+    mySettings.mPresetNumber = {};
+    ForEachParameter([&mySettings](const ParameterInfo& pi, AudioUnitParameterID ID) {
+        auto& slot = mySettings.values[ID];
+        slot.reset();
+        if (pi.mName) {
+            slot.emplace(mySettings.Intern(*pi.mName), pi.mInfo.defaultValue);
+        }
+        return true;
+    });
+
+    return { nullptr };
 }
 
 RegistryPaths AudioUnitEffectBase::GetFactoryPresets() const

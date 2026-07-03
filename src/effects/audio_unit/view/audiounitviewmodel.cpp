@@ -165,28 +165,28 @@ void au::effects::AudioUnitViewModel::EventListener(const AudioUnitEvent* inEven
     if (!globalContext()->currentProject()) {
         return;
     }
-    // Modify the instance and its workers
-    m_instance->EventListener(inEvent, inParameterValue);
-    const auto unit = m_instance->GetAudioUnit();
 
     if (inEvent->mEventType == kAudioUnitEvent_ParameterValueChange) {
         constexpr AudioUnitParameterValue epsilon = 1e-6;
+        const auto ID = inEvent->mArgument.mParameter.mParameterID;
 
-        auto it = m_parameterValues.find(inEvent->mArgument.mParameter.mParameterID);
-
+        auto it = m_parameterValues.find(ID);
         // When the UI is opened - EventListener is called for each parameter
         // with the current value.
         if (it == m_parameterValues.end()) {
-            m_parameterValues.insert(std::make_pair(inEvent->mArgument.mParameter.mParameterID, inParameterValue));
-        } else if (std::abs(it->second - inParameterValue) > epsilon) {
-            it->second = inParameterValue;
-            AudioUnitSetParameter(unit, inEvent->mArgument.mParameter.mParameterID, kAudioUnitScope_Global, 0, inParameterValue, 0);
-            projectHistory()->modifyState();
-            projectHistory()->markUnsaved();
+            m_parameterValues.insert(std::make_pair(ID, inParameterValue));
+            return;
         }
 
-        const auto ID = inEvent->mArgument.mParameter.mParameterID;
+        if (std::abs(it->second - inParameterValue) <= epsilon) {
+            return;
+        }
+        it->second = inParameterValue;
+
+        m_instance->EventListener(inEvent, inParameterValue);
         m_toUpdate.emplace_back(ID, inParameterValue);
+        projectHistory()->modifyState();
+        projectHistory()->markUnsaved();
     } else if (inEvent->mEventType == kAudioUnitEvent_PropertyChange
                && inEvent->mArgument.mProperty.mPropertyID == kAudioUnitProperty_PresentPreset) {
         m_settingsAccess->ModifySettings([this](EffectSettings& settings) {
@@ -217,12 +217,18 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     auto& parameter = event.mArgument.mParameter;
     parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
 
-    // Register each parameter as something we're interested in
+    // Register each parameter as something we're interested in, seeding the
+    // cache with its current value so a genuine first change is propagated
+    // instead of being mistaken for the AU's open-time notification and dropped.
     if (auto& parameters = m_instance->GetParameters()) {
         for (const auto& ID : parameters) {
             parameter.mParameterID = ID;
             if (AUEventListenerAddEventType(result.get(), this, &event)) {
                 return nullptr;
+            }
+            AudioUnitParameterValue value;
+            if (!AudioUnitGetParameter(unit, ID, kAudioUnitScope_Global, 0, &value)) {
+                m_parameterValues.insert_or_assign(ID, value);
             }
         }
     }
