@@ -155,7 +155,7 @@ jobs:
 
     - name: Setup x64 Python (WoA)
       if: matrix.runner == 'windows-11-arm'
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
         architecture: x64
@@ -254,7 +254,7 @@ jobs:
     steps:
     - name: Setup x64 Python (WoA)
       if: matrix.runner == 'windows-11-arm'
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
         architecture: x64
