@@ -13,7 +13,6 @@ Item {
     property string cloudTitle: ""
     property bool userIsAuthorized: false
     property string userName: ""
-    property url userProfileUrl
     property url userAvatarUrl
     property url userCollectionUrl
 
@@ -37,6 +36,7 @@ Item {
     signal signInRequested
     signal signOutRequested
     signal createAccountRequested
+    signal myProfileRequested
 
     AccessibleItem {
         id: accessibleInfo
@@ -149,7 +149,7 @@ Item {
 
                     onClicked: {
                         if (Boolean(root.userIsAuthorized)) {
-                            api.launcher.openUrl(root.userProfileUrl)
+                            root.myProfileRequested()
                         } else {
                             root.signInRequested()
                         }

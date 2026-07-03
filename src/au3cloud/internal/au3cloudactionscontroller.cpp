@@ -19,6 +19,7 @@ const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/ope
 const muse::actions::ActionQuery OPEN_CREATE_ACCOUNT_DIALOG_ACTION("audacity://cloud/open-create-account-dialog");
 const muse::actions::ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
 const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/open-audio-page");
+const muse::actions::ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("audacity://cloud/open-profile-page");
 
 constexpr const char* createAccountModeParam = "isCreateAccountMode";
 }
@@ -39,6 +40,7 @@ void Au3CloudActionsController::init()
     dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openCreateAccountDialog);
     dispatcher()->reg(this, OPEN_CLOUD_PROJECT_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProjectPage);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_PAGE_ACTION, this, &Au3CloudActionsController::openCloudAudioPage);
+    dispatcher()->reg(this, OPEN_CLOUD_PROFILE_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProfilePage);
     dispatcher()->reg(this, "open-url", this, &Au3CloudActionsController::openUrl);
 }
 
@@ -138,6 +140,22 @@ void Au3CloudActionsController::openCloudAudioPage(const muse::actions::ActionQu
     const auto url = audioComService()->getCloudAudioPage(slug);
     if (url.empty()) {
         LOGE() << "Cannot open cloud audio page: empty URL";
+        return;
+    }
+
+    platformInteractive()->openUrl(url);
+}
+
+void Au3CloudActionsController::openCloudProfilePage()
+{
+    if (!authorization()->isAuthorized()) {
+        LOGE() << "Cannot open cloud profile page: not signed in";
+        return;
+    }
+
+    const auto url = audioComService()->getCloudProfilePage();
+    if (url.empty()) {
+        LOGE() << "Cannot open cloud profile page: empty URL";
         return;
     }
 

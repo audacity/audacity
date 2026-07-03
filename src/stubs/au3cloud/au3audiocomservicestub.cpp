@@ -68,6 +68,11 @@ std::string Au3AudioComServiceStub::getCloudAudioPage(const std::string& /*unuse
     return {};
 }
 
+std::string Au3AudioComServiceStub::getCloudProfilePage() const
+{
+    return {};
+}
+
 std::string Au3AudioComServiceStub::getCloudProjectPage(const std::string& /*unused*/) const
 {
     return {};
