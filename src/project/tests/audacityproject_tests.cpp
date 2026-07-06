@@ -32,6 +32,7 @@
 
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
+#include "project/tests/mocks/cloudprojectsprovidermock.h"
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 #include "testtools.h"
@@ -82,6 +83,7 @@ protected:
     std::shared_ptr<au::project::TrackeditProjectCreatorMock> m_trackeditProjectCreator;
     std::shared_ptr<au::projectscene::ProjectViewStateCreatorMock> m_projectViewStateCreator;
     std::shared_ptr<au::trackedit::ClipboardMock> m_clipboard;
+    std::shared_ptr<au::au3cloud::CloudProjectsProviderMock> m_cloudProjectsProvider;
 
     void SetUp() override
     {
@@ -89,10 +91,13 @@ protected:
 
         m_clipboard = std::make_shared<::testing::NiceMock<au::trackedit::ClipboardMock> >();
 
+        m_cloudProjectsProvider = std::make_shared<::testing::NiceMock<au::au3cloud::CloudProjectsProviderMock> >();
+
         m_currentProject = std::make_unique<Audacity4Project>(m_testCtx);
         m_currentProject->trackeditProjectCreator.set(m_trackeditProjectCreator);
         m_currentProject->viewStateCreator.set(m_projectViewStateCreator);
         m_currentProject->clipboard.set(m_clipboard);
+        m_currentProject->cloudProjectsProvider.set(m_cloudProjectsProvider);
     }
 
     void TearDown() override

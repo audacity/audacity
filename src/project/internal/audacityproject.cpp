@@ -4,8 +4,6 @@
 #include "framework/global/io/fileinfo.h"
 #include "framework/global/io/ioretcodes.h"
 
-#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
-
 #include "project/projecterrors.h"
 
 using namespace muse;
@@ -238,7 +236,7 @@ QString Audacity4Project::displayName() const
 
     //! TODO AU4
     // if (isCloudProject()) {
-    //     return m_cloudInfo.name;
+    //     return m_cloudRecord.name;
     // }
 
     return io::filename(m_path, false /*isSuffixInteresting*/).toQString();
@@ -257,16 +255,7 @@ void Audacity4Project::setPath(const io::path_t& path)
 
     m_path = path;
 
-    const auto data = audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().GetProjectDataForPath(m_path.toStdString());
-    if (data.has_value() && !data->ProjectId.empty()) {
-        CloudProjectInfo info;
-        info.projectId = data->ProjectId;
-        info.snapshotId = data->SnapshotId;
-        info.localPath = muse::io::path_t(data->LocalPath);
-        m_cloudInfo = std::move(info);
-    } else {
-        m_cloudInfo.reset();
-    }
+    m_cloudRecord = cloudProjectsProvider()->projectRecordForPath(m_path);
 
     m_pathChanged.notify();
 }
@@ -283,12 +272,12 @@ bool Audacity4Project::isImported() const
 
 bool Audacity4Project::isCloudProject() const
 {
-    return m_cloudInfo.has_value();
+    return m_cloudRecord.has_value();
 }
 
-const std::optional<CloudProjectInfo>& Audacity4Project::cloudInfo() const
+const std::optional<CloudProjectRecord>& Audacity4Project::cloudRecord() const
 {
-    return m_cloudInfo;
+    return m_cloudRecord;
 }
 
 String Audacity4Project::title() const

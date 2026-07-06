@@ -89,8 +89,8 @@ void RecentProjectsModel::updateRecentProjects()
         RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
         QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
 
-        const bool isCloud = file.cloudInfo.has_value();
-        const QString cloudProjectId = isCloud ? QString::fromStdString(file.cloudInfo->projectId) : QString();
+        const bool isCloud = file.cloudRecord.has_value();
+        const QString cloudProjectId = isCloud ? QString::fromStdString(file.cloudRecord->projectId) : QString();
 
         obj[NAME_KEY] = file.displayName(false);
         obj[PATH_KEY] = file.path.toQString();

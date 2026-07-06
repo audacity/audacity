@@ -8,6 +8,7 @@
 namespace au::au3cloud {
 class Au3CloudConfiguration;
 class Au3CloudService;
+class CloudProjectsProvider;
 class Au3AudioComService;
 class Au3CloudActionsController;
 class CloudUiActions;
@@ -27,6 +28,7 @@ public:
 private:
     std::shared_ptr<Au3CloudConfiguration> m_cloudConfiguration;
     std::shared_ptr<Au3CloudService> m_cloudService;
+    std::shared_ptr<CloudProjectsProvider> m_cloudProjectsProvider;
 };
 
 class Au3CloudContext : public muse::modularity::IContextSetup

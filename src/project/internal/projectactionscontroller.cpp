@@ -13,7 +13,6 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "au3cloud/au3clouderrors.h"
-#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 
 #include "audacityproject.h"
 #include "projecterrors.h"
@@ -21,19 +20,6 @@
 
 using namespace muse;
 using namespace au::project;
-
-namespace {
-std::optional<muse::io::path_t> cloudProjectLocalPath(const std::string& projectId)
-{
-    namespace sync = audacity::cloud::audiocom::sync;
-    const auto data = sync::CloudProjectsDatabase::Get().GetProjectData(projectId);
-    if (!data.has_value() || data->LocalPath.empty()) {
-        return std::nullopt;
-    }
-
-    return muse::io::path_t(data->LocalPath);
-}
-}
 
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri HOME_PAGE_URI("audacity://home");
@@ -347,7 +333,11 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
         m_isProjectProcessing = false;
     };
 
-    std::optional<io::path_t> localPath = cloudProjectLocalPath(cloudProjectId.toStdString());
+    std::optional<io::path_t> localPath;
+    if (const auto record = cloudProjectsProvider()->projectRecordForId(cloudProjectId.toStdString());
+        record&& !record->localPath.empty()) {
+        localPath = record->localPath;
+    }
 
     if (localPath && snapshotId.isEmpty()) {
         if (isProjectOpened(localPath.value())) {
@@ -838,7 +828,7 @@ bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType s
 
     if (saveMode == SaveMode::Save && !project->isNewlyCreated()) {
         if (project->isCloudProject()) {
-            return saveProjectAt(SaveLocation(SaveLocationType::Cloud, CloudProjectInfo { QUrl {}, {}, project->displayName() }));
+            return saveProjectAt(SaveLocation(SaveLocationType::Cloud, CloudProjectInfo { project->displayName() }));
         }
 
         return saveProjectAt(SaveLocation(SaveLocationType::Local));
@@ -1175,7 +1165,7 @@ RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
 {
     RecentFile file;
     file.path = project->path();
-    file.cloudInfo = project->cloudInfo();
+    file.cloudRecord = project->cloudRecord();
 
     return file;
 }
@@ -1424,7 +1414,7 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         if (!project) {
             break;
         }
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        saveProjectToCloud(CloudProjectInfo { project->displayName() }, SaveMode::Save);
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
@@ -1472,10 +1462,10 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        saveProjectToCloud(CloudProjectInfo { project->displayName() }, SaveMode::Save);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save, true);
+        saveProjectToCloud(CloudProjectInfo { project->displayName() }, SaveMode::Save, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();

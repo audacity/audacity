@@ -26,8 +26,6 @@
 #include "framework/global/serialization/json.h"
 #include "framework/multiwindows/resourcelockguard.h"
 
-#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
-
 using namespace au::project;
 using namespace muse;
 using namespace muse::async;
@@ -171,14 +169,7 @@ void RecentFilesController::loadRecentFilesList()
 
         //! NOTE Cloud info is not persisted in the recent-files JSON: the cloud projects DB
         //! is the source of truth (the sync engine keeps it up to date), so derive it by path
-        const auto data = audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().GetProjectDataForPath(file.path.toStdString());
-        if (data.has_value() && !data->ProjectId.empty()) {
-            CloudProjectInfo info;
-            info.projectId = data->ProjectId;
-            info.snapshotId = data->SnapshotId;
-            info.localPath = file.path;
-            file.cloudInfo = std::move(info);
-        }
+        file.cloudRecord = cloudProjectsProvider()->projectRecordForPath(file.path);
 
         newList.emplace_back(std::move(file));
     }
