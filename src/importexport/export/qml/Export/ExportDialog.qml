@@ -179,25 +179,57 @@ StyledDialogView {
                         }
                     }
 
-                    FilePicker {
-                        id: dirPicker
+                    RowLayout {
+                        Layout.fillWidth: true
 
-                        pickerType: FilePicker.PickerType.Any
-                        pathFieldWidth: root.dropdownWidth
                         spacing: 8
-                        filter: exportPreferencesModel.fileFilter()
 
-                        buttonType: FlatButton.Horizontal
-                        buttonOrientation: Qt.Horizontal
+                        FilePickerModel {
+                            id: dirPickerModel
 
-                        path: exportPreferencesModel.directoryPath
-                        dir: exportPreferencesModel.suggestedFilePath
+                            filter: exportPreferencesModel.fileFilter()
+                            dir: exportPreferencesModel.suggestedFilePath
+                        }
 
-                        navigation: fileSection.navigation
-                        navigationRowOrderStart: filenameField.navigation.order + 1
+                        TextInputField {
+                            id: dirField
 
-                        onPathEdited: function (newPath) {
-                            exportPreferencesModel.setFilePickerPath(newPath)
+                            Layout.fillWidth: true
+                            Layout.minimumWidth: implicitWidth
+
+                            currentText: exportPreferencesModel.directoryPath
+
+                            implicitWidth: root.dropdownWidth
+
+                            navigation.name: "FolderFieldBox"
+                            navigation.panel: fileSection.navigation
+                            navigation.order: filenameField.navigation.order + 1
+                            navigation.accessible.name: folderLabel.text + ": " + currentText
+
+                            onTextEditingFinished: function (newTextValue) {
+                                exportPreferencesModel.setFilePickerPath(newTextValue)
+                            }
+                        }
+
+                        FlatButton {
+                            id: dirBrowseButton
+
+                            icon: IconCode.OPEN_FILE
+                            text: qsTrc("ui", "Browse")
+
+                            buttonType: FlatButton.Horizontal
+                            orientation: Qt.Horizontal
+
+                            navigation.name: "FolderBrowseButton"
+                            navigation.panel: fileSection.navigation
+                            navigation.order: dirField.navigation.order + 1
+
+                            onClicked: {
+                                var selectedFile = dirPickerModel.selectAny()
+                                if (Boolean(selectedFile)) {
+                                    exportPreferencesModel.setFileDialogPath(selectedFile)
+                                }
+                            }
                         }
                     }
                 }
@@ -229,7 +261,7 @@ StyledDialogView {
 
                         navigation.name: "FormatDropdown"
                         navigation.panel: fileSection.navigation
-                        navigation.order: dirPicker.navigationRowOrderStart + 2
+                        navigation.order: dirBrowseButton.navigation.order + 1
                         navigation.accessible.name: formatLabel.text + ": " + currentText
 
                         indeterminateText: ""
