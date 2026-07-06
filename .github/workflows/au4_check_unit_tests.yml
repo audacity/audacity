@@ -115,7 +115,8 @@ jobs:
           --s3_key '${{ secrets.S3_KEY }}' \
           --s3_secret '${{ secrets.S3_SECRET }}' \
           --s3_url "${S3_URL}" \
-          --file_path "coverage_badge.svg"
+          --file_path "coverage_badge.svg" \
+          --cache_control "max-age=300"
 
     - name: Prepare ccache files for saving
       id: prepare-save-ccache

@@ -24,6 +24,7 @@ S3_SECRET=""
 S3_URL=""
 
 FILE_PATH=""
+CACHE_CONTROL=""
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -31,6 +32,7 @@ while [[ "$#" -gt 0 ]]; do
         --s3_secret) S3_SECRET="$2"; shift ;;
         --s3_url) S3_URL="$2"; shift ;;
         --file_path) FILE_PATH="$2"; shift ;;
+        --cache_control) CACHE_CONTROL="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -40,4 +42,9 @@ bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${S3_KEY} --s3_secret ${S3_S
 
 echo "=== Publish to S3 ==="
 
-s3cmd put --acl-public --guess-mime-type $FILE_PATH "$S3_URL"
+EXTRA_ARGS=()
+if [ -n "$CACHE_CONTROL" ]; then
+    EXTRA_ARGS+=(--add-header="Cache-Control: ${CACHE_CONTROL}")
+fi
+
+s3cmd put --acl-public --guess-mime-type "${EXTRA_ARGS[@]}" $FILE_PATH "$S3_URL"
