@@ -11,6 +11,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 
 #include <atomic>
+#include <mutex>
 #include <sqlite3.h>
 #include <optional>
 #include <cstring>
@@ -1823,6 +1824,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
                              const char* schema /* = "main" */)
 {
     auto db = DB();
+    std::lock_guard<std::mutex> lock(CurrConn()->TransactionMutex());
 
     TransactionScope transaction(mProject, "UpdateProject");
 

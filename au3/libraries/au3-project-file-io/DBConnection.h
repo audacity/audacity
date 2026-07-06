@@ -83,6 +83,8 @@ public:
     };
     sqlite3_stmt* Prepare(enum StatementID id, const char* sql);
 
+    std::mutex& TransactionMutex() { return mTransactionMutex; }
+
     void SetBypass(bool bypass);
     bool ShouldBypass();
 
@@ -116,6 +118,8 @@ private:
     std::mutex mStatementMutex;
     using StatementIndex = std::pair<enum StatementID, std::thread::id>;
     std::map<StatementIndex, sqlite3_stmt*> mStatements;
+
+    std::mutex mTransactionMutex;
 
     std::shared_ptr<DBConnectionErrors> mpErrors;
     CheckpointFailureCallback mCallback;
