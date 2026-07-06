@@ -218,7 +218,7 @@ endif()
 
 if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
     set(COVERAGE_FLAGS -fprofile-arcs -ftest-coverage --coverage)
-    set(COVERAGE_LINK_FLAGS -lgcov --coverage)
+    set(COVERAGE_LINK_FLAGS --coverage)
     target_compile_options(audacity PRIVATE ${COVERAGE_FLAGS})
     target_link_options(audacity PRIVATE ${COVERAGE_LINK_FLAGS})
 endif()
