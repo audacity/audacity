@@ -102,8 +102,12 @@ jobs:
         lcov --capture --directory "$(pwd)/build.debug/" --output-file coverage.info
         lcov --remove coverage.info '/usr/*' '*/tests/*' '*/thirdparty/*' '*/moc_*' '*framework/Headers/*' '*/hb-*' '*/Qt/*' --output-file filtered_coverage.info
 
-        python3 buildscripts/ci/linux/tools/lcov_badger.py filtered_coverage.info coverage_badge.svg
+        COVERAGE=$(lcov --summary filtered_coverage.info --ignore-errors inconsistent,corrupt,unsupported,empty,negative,mismatch,gcov | grep -oP 'lines\.+:\s+\K[0-9.]+')
+        python3 buildscripts/ci/linux/tools/lcov_badger.py "${COVERAGE}" coverage_badge.svg
 
+    - name: Push to S3
+      if: ( github.event_name == 'schedule' || inputs.code_coverage ) && github.repository == 'audacity/audacity'
+      run: |
         S3_URL='s3://extensions.musescore.org/test/code_coverage/au_coverage_badge.svg'
 
         bash ./buildscripts/ci/tools/s3_push_file.sh \
