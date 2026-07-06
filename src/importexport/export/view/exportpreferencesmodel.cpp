@@ -422,6 +422,19 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
 {
     muse::io::FileInfo info(path);
 
+    if (info.entryType() == muse::io::EntryType::File) {
+        setDirectoryPath(info.absolutePath());
+        setFilename(info.baseName());
+        return;
+    }
+
+    setDirectoryPath(info.absoluteFilePath());
+}
+
+void ExportPreferencesModel::setFileDialogPath(const QString& path)
+{
+    muse::io::FileInfo info(path);
+
     if (info.entryType() == muse::io::EntryType::Dir) {
         setDirectoryPath(info.absoluteFilePath());
         return;
@@ -506,9 +519,13 @@ void ExportPreferencesModel::updateExportChannels()
 
 bool ExportPreferencesModel::verifyExportPossible()
 {
-    muse::Ret directoryExists = fileSystem()->makePath(directoryPath());
-    if (!directoryExists || directoryPath().isEmpty()) {
-        interactive()->error(muse::trc("export", "Export audio"), muse::trc("export", "Unable to create destination folder"));
+    muse::Ret directoryCreated = fileSystem()->makePath(directoryPath());
+    if (!directoryCreated || directoryPath().isEmpty()) {
+        interactive()->error(muse::trc("export", "Export audio"),
+                             muse::mtrc("export",
+                                        "Could not export to “%1”: the destination folder could not be created. "
+                                        "Check that the path is valid and that you have permission to write to it.")
+                             .arg(muse::String::fromQString(directoryPath())).toStdString());
         return false;
     }
 
