@@ -27,7 +27,9 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.isRealtimeCapable = desc.IsEffectRealtime();
     meta.paramsAreInputAgnostic = desc.ParamsAreInputAgnostic();
     meta.isActivated = desc.IsEnabled();
-    meta.isLoadable = desc.IsValid();
+    meta.state = desc.IsValid()
+                 ? muse::audioplugins::AudioPluginState::Validated
+                 : muse::audioplugins::AudioPluginState::Error;
 
     return meta;
 }
