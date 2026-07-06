@@ -26,6 +26,8 @@
 #include "framework/global/serialization/json.h"
 #include "framework/multiwindows/resourcelockguard.h"
 
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
+
 using namespace au::project;
 using namespace muse;
 using namespace muse::async;
@@ -163,16 +165,19 @@ void RecentFilesController::loadRecentFilesList()
             const JsonObject obj = val.toObject();
             file.path = obj["path"].toStdString();
             file.displayNameOverride = QString::fromStdString(obj["displayName"].toStdString());
-
-            const std::string cloudProjectId = obj["cloudProjectId"].toStdString();
-            if (!cloudProjectId.empty()) {
-                CloudProjectInfo info;
-                info.projectId = cloudProjectId;
-                info.snapshotId = obj["cloudSnapshotId"].toStdString();
-                file.cloudInfo = std::move(info);
-            }
         } else {
             continue;
+        }
+
+        //! NOTE Cloud info is not persisted in the recent-files JSON: the cloud projects DB
+        //! is the source of truth (the sync engine keeps it up to date), so derive it by path
+        const auto data = audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().GetProjectDataForPath(file.path.toStdString());
+        if (data.has_value() && !data->ProjectId.empty()) {
+            CloudProjectInfo info;
+            info.projectId = data->ProjectId;
+            info.snapshotId = data->SnapshotId;
+            info.localPath = file.path;
+            file.cloudInfo = std::move(info);
         }
 
         newList.emplace_back(std::move(file));
@@ -232,21 +237,10 @@ void RecentFilesController::saveRecentFilesList() const
 
     JsonArray jsonArray;
     for (const RecentFile& file : m_recentFilesList) {
-        const bool hasDisplayName = !file.displayNameOverride.isEmpty();
-        const bool hasCloudInfo = file.cloudInfo.has_value();
-
-        if (hasDisplayName || hasCloudInfo) {
+        if (!file.displayNameOverride.isEmpty()) {
             JsonObject obj;
             obj["path"] = file.path.toStdString();
-            if (hasDisplayName) {
-                obj["displayName"] = file.displayNameOverride.toStdString();
-            }
-            if (hasCloudInfo) {
-                obj["cloudProjectId"] = file.cloudInfo->projectId;
-                if (!file.cloudInfo->snapshotId.empty()) {
-                    obj["cloudSnapshotId"] = file.cloudInfo->snapshotId;
-                }
-            }
+            obj["displayName"] = file.displayNameOverride.toStdString();
             jsonArray << obj;
         } else {
             jsonArray << file.path.toStdString();

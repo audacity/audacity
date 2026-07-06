@@ -240,6 +240,16 @@ struct RecentFile {
 
     bool operator ==(const RecentFile& other) const
     {
+        if (cloudInfo.has_value() != other.cloudInfo.has_value()) {
+            return false;
+        }
+
+        if (cloudInfo.has_value()
+            && (cloudInfo->projectId != other.cloudInfo->projectId
+                || cloudInfo->snapshotId != other.cloudInfo->snapshotId)) {
+            return false;
+        }
+
         return path == other.path
                && displayNameOverride == other.displayNameOverride;
     }
