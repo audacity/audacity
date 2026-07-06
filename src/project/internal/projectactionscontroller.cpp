@@ -896,21 +896,26 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         m_isProjectProcessing = false;
     };
 
+    //! Step 1. Take absolute path
     io::path_t actualPath = fileSystem()->absoluteFilePath(path);
     if (actualPath.empty()) {
         // We assume that a valid path has been specified to this method
         return make_ret(Ret::Code::UnknownError);
     }
 
+    //! Step 2. If the project is already open in the current window, then just switch to showing the project
     if (isProjectOpened(actualPath)) {
         return openPageIfNeed(PROJECT_PAGE_URI);
     }
 
+    //! Step 3. Check, if the project already opened in another window, then activate the window with the project
     if (multiwindowsProvider()->isProjectAlreadyOpened(actualPath)) {
         multiwindowsProvider()->activateWindowWithProject(actualPath);
         return make_ret(Ret::Code::Ok);
     }
 
+    //! Step 4. Check, if a any project is already open in the current window,
+    //! then create a new instance
     if (globalContext()->currentProject()) {
         QStringList args;
         args << actualPath.toQString();
@@ -922,6 +927,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         return make_ret(Ret::Code::Ok);
     }
 
+    //! Step 5. Open project in the current window
     return doOpenProject(actualPath);
 }
 
