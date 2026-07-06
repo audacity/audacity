@@ -50,6 +50,10 @@ jobs:
       run: |
         sudo docker system prune -a -f
         sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc /usr/local/.ghcup
+        sudo rm -rf /usr/share/swift
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
