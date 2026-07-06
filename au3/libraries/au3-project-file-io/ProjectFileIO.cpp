@@ -2024,6 +2024,14 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
         return {};
     }
 
+    // Prevent opening file read only
+    if (sqlite3_db_readonly(DB(), "main") == 1) {
+        SetError(
+            TranslatableString("project-file-io", "The project file is read-only"),
+            {}, SQLITE_READONLY);
+        return {};
+    }
+
     int64_t rowId = -1;
 
     bool useAutosave
@@ -2058,18 +2066,6 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
                 TranslatableString("project-file-io", "Unable to parse project information.")
                 );
             return {};
-        }
-
-        // Check for orphans blocks...sets mRecovered if any were deleted
-
-        auto blockids = WaveTrackFactory::Get(mProject)
-                        .GetSampleBlockFactory()
-                        ->GetActiveBlockIDs();
-        if (blockids.size() > 0) {
-            success = DeleteBlocks(blockids, true);
-            if (!success) {
-                return {};
-            }
         }
 
         // Remember if we used autosave or not
