@@ -494,6 +494,17 @@ std::string Au3AudioComService::getCloudAudioPage(const std::string& slug) const
     return oauthService.MakeAudioComAuthorizeURL(userId, audioPage);
 }
 
+std::string Au3AudioComService::getCloudProfilePage() const
+{
+    auto& oauthService = GetOAuthService();
+    const auto& serviceConfig = GetServiceConfig();
+
+    const auto userId = GetUserService().GetUserId().ToStdString();
+    const auto userSlug = GetUserService().GetUserSlug().ToStdString();
+    const auto profilePage = serviceConfig.GetProfilePagePath(userSlug, AudiocomTrace::OpenFromCloudMenu);
+    return oauthService.MakeAudioComAuthorizeURL(userId, profilePage);
+}
+
 muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std::string& audioId)
 {
     if (audioId.empty()) {

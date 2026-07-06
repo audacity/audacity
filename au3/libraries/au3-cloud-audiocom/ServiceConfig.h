@@ -77,6 +77,8 @@ public:
     std::string GetProjectPagePath(std::string_view userSlug, std::string_view projectId, AudiocomTrace) const;
     std::string
     GetProjectsPagePath(std::string_view userSlug, AudiocomTrace) const;
+    std::string
+    GetProfilePagePath(std::string_view userSlug, AudiocomTrace) const;
 
     std::string GetTaskPollUrl() const;
     std::string GetTaskAckUrl(std::string_view taskId) const;

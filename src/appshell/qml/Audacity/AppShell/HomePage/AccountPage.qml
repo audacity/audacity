@@ -83,6 +83,10 @@ FocusScope {
             model.openSignInDialog()
         }
 
+        onMyProfileRequested: {
+            model.openProfile()
+        }
+
         onSignOutRequested: {
             model.signOut()
         }

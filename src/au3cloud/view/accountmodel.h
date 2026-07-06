@@ -31,6 +31,7 @@ public:
     Q_INVOKABLE void signOut() const;
     Q_INVOKABLE void openSignInDialog() const;
     Q_INVOKABLE void openCreateAccountDialog() const;
+    Q_INVOKABLE void openProfile() const;
 
     bool isAuthorized() const;
     QUrl avatarPath() const;
