@@ -143,6 +143,7 @@ signals:
 
 private:
     void updateCurrentSampleRate();
+    void openCustomSampleRateDialog();
     void updateExportChannels();
 
     QString m_filename;

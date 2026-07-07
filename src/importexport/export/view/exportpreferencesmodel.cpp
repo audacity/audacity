@@ -32,6 +32,16 @@ QString prepareExtensionsString(const QStringList& extensionList)
 
     return result;
 }
+
+QString otherSampleRateLabel()
+{
+    return muse::qtrc("export", "Other…");
+}
+
+QString customSampleRateName(int rate)
+{
+    return muse::qtrc("export", "%1 Hz (custom)").arg(QString::number(rate));
+}
 }
 
 const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
@@ -361,13 +371,18 @@ QString ExportPreferencesModel::exportSampleRate() const
         }
     }
 
+    if (currentSampleRate > 0) {
+        return customSampleRateName(currentSampleRate);
+    }
+
     return {};
 }
 
 QVariantList ExportPreferencesModel::exportSampleRateList()
 {
     std::vector<int> sampleRateList = exporter()->sampleRateList();
-    if (sampleRateList.empty()) {
+    const bool anySampleRateAllowed = sampleRateList.empty();
+    if (anySampleRateAllowed) {
         sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
     }
 
@@ -379,11 +394,27 @@ QVariantList ExportPreferencesModel::exportSampleRateList()
         result << QVariant::fromValue(sampleRateName);
     }
 
+    if (anySampleRateAllowed) {
+        const int currentSampleRate = exportConfiguration()->exportSampleRate();
+        if (currentSampleRate > 0 && !muse::contains(sampleRateList, currentSampleRate)) {
+            const QString sampleRateName = customSampleRateName(currentSampleRate);
+            m_sampleRateMapping.push_back(std::make_pair(currentSampleRate, sampleRateName));
+            result << QVariant::fromValue(sampleRateName);
+        }
+
+        result << QVariant::fromValue(otherSampleRateLabel());
+    }
+
     return result;
 }
 
 void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
 {
+    if (rateName == otherSampleRateLabel()) {
+        openCustomSampleRateDialog();
+        return;
+    }
+
     if (rateName == exportSampleRate()) {
         return;
     }
@@ -401,6 +432,28 @@ void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
         emit exportSampleRateChanged();
         return;
     }
+}
+
+void ExportPreferencesModel::openCustomSampleRateDialog()
+{
+    muse::UriQuery customRateUri("audacity://trackedit/custom_rate");
+    customRateUri.addParam("title", muse::Val(muse::trc("export", "Set sample rate")));
+    customRateUri.addParam("rate", muse::Val(exportConfiguration()->exportSampleRate()));
+
+    interactive()->open(customRateUri)
+    .onResolve(this, [this](const muse::Val& val) {
+        const int customRate = val.toInt();
+        if (customRate > 0) {
+            exportConfiguration()->setExportSampleRate(customRate);
+        }
+
+        emit exportSampleRateListChanged();
+        emit exportSampleRateChanged();
+    })
+    .onReject(this, [this](int, const std::string&) {
+        emit exportSampleRateListChanged();
+        emit exportSampleRateChanged();
+    });
 }
 
 void ExportPreferencesModel::openCustomFFmpegDialog()
@@ -455,10 +508,11 @@ void ExportPreferencesModel::updateCurrentSampleRate()
 
     std::vector<int> sampleRateList = exporter()->sampleRateList();
     if (sampleRateList.empty()) {
-        // TODO: if sampleRateList is empty - means that codec accepts any sampleRate,
-        // so no need to update, can return - but first "Other" sampleRate needs
-        // to be implemented
-        // return;
+        //! NOTE An empty list means the codec accepts any sample rate,
+        //! so a valid current rate (including a custom one) can be kept
+        if (sampleRate > 0) {
+            return;
+        }
         sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
     }
 
