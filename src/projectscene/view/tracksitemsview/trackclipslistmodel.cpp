@@ -318,8 +318,15 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     item->setIntersectsSelection(muse::contains(m_cachedIntersectingClips, item->key().key));
 
     item->setTime(time);
-    item->setX(m_context->timeToPosition(time.itemStartTime));
-    item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
+    // Integer edges keep the clip's rounded-corner layer texture aligned to the
+    // screen pixel grid: at fractional positions the texture is resampled with
+    // a changing sub-pixel phase and its content shimmers while the clip moves
+    // (e.g. left trim). WaveView compensates for the sub-pixel residual. Both
+    // edges are rounded, so that trimming one does not move the other.
+    const double left = std::floor(0.5 + m_context->timeToPosition(time.itemStartTime));
+    const double right = std::floor(0.5 + m_context->timeToPosition(time.itemEndTime));
+    item->setX(left);
+    item->setWidth(right - left);
     item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
 }

@@ -387,6 +387,7 @@ TrackItemsContainer {
                                 clipColor: itemData.color
                                 clipSelectedColor: itemData.selectedColor
                                 isGrouped: itemData.isGrouped
+                                isDragGhost: itemData.isDragGhost
                                 clipKey: itemData.key
                                 clipTime: itemData.time
                                 pitch: itemData.pitch
