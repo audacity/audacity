@@ -78,6 +78,7 @@ private:
 
     void update();
     void updatePendingTitleEdit();
+    void prepareItemsMetrics() override;
     void updateItemMetrics(ViewTrackItem* item) override;
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
@@ -90,5 +91,7 @@ private:
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
+
+    trackedit::ClipKeyList m_cachedIntersectingClips;
 };
 }

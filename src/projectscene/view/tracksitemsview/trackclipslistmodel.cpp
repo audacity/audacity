@@ -96,6 +96,7 @@ void TrackClipsListModel::onReload()
         if (!globalContext()->isRecording()) {
             return;
         }
+        prepareItemsMetrics();
         for (const auto& rk : recordController()->recordingClipKeys()) {
             if (TrackClipItem* item = clipItemByKey(rk)) {
                 updateItemMetrics(item);
@@ -271,23 +272,21 @@ void TrackClipsListModel::titleEditRequestHandled(const ClipKey& key)
     tracksViewRequestsService()->clipTitleEditRequestHandled(key.key);
 }
 
+void TrackClipsListModel::prepareItemsMetrics()
+{
+    m_cachedIntersectingClips = selectionController()->clipsIntersectingRangeSelection();
+}
+
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 {
     TrackClipItem* item = static_cast<TrackClipItem*>(viewItem);
 
-    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    trackedit::Clip clip = prj->clip(item->key().key);
-    if (!clip.isValid()) {
-        return;
-    }
+    double clipStartTime = item->clipStartTime();
+    double clipEndTime = item->clipEndTime();
 
     if (item->isDragGhost()) {
-        clip.startTime += moveTimeOffset();
-        clip.endTime += moveTimeOffset();
+        clipStartTime += moveTimeOffset();
+        clipEndTime += moveTimeOffset();
     }
 
     // Pin the recording clip's visual boundary to the smooth playhead: data is
@@ -297,7 +296,7 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         for (const auto& rk : recordController()->recordingClipKeys()) {
             if (rk == item->key().key) {
                 double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
-                clip.endTime = std::max(clip.startTime, projectedEnd);
+                clipEndTime = std::max(clipStartTime, projectedEnd);
                 break;
             }
         }
@@ -307,16 +306,16 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     const double cacheTime = cacheBufferPx() / m_context->zoom();
 
     ClipTime time;
-    time.startTime = clip.startTime;
-    time.endTime = clip.endTime;
-    time.itemStartTime = std::max(clip.startTime, (m_context->frameStartTime() - cacheTime));
-    time.itemEndTime = std::min(clip.endTime, (m_context->frameEndTime() + cacheTime));
+    time.startTime = clipStartTime;
+    time.endTime = clipEndTime;
+    time.itemStartTime = std::max(clipStartTime, (m_context->frameStartTime() - cacheTime));
+    time.itemEndTime = std::min(clipEndTime, (m_context->frameEndTime() + cacheTime));
 
     if (selectionController()->isDataSelectedOnTrack(m_trackId)) {
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
         time.selectionEndTime = selectionController()->dataSelectedEndTime();
     }
-    item->setIntersectsSelection(muse::contains(selectionController()->clipsIntersectingRangeSelection(), item->key().key));
+    item->setIntersectsSelection(muse::contains(m_cachedIntersectingClips, item->key().key));
 
     item->setTime(time);
     item->setX(m_context->timeToPosition(time.itemStartTime));
