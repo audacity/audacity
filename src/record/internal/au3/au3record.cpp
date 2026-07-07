@@ -680,14 +680,17 @@ Ret Au3Record::doRecord(Au3Project& project,
     bool appendRecord = !sequences.captureSequences.empty();
 
     auto insertEmptyInterval
-        =[&](Au3WaveTrack& track, double t0, bool placeholder) {
+        =[&](Au3WaveTrack& track, double t0, bool placeholder, const Au3WaveTrack* nameSource = nullptr) {
+        //! NOTE The pending track is an empty copy of the original, so the take
+        //! number must be resolved against the original track's clips
+        const Au3WaveTrack& source = nameSource ? *nameSource : track;
         wxString name;
         for (auto i = 1;; ++i) {
             //: a numerical suffix added to distinguish otherwise like-named clips when new record started
             //: %1 is the track name, %2 is the numerical suffix distinguishing like-named clips
             name = ::au3::qtToWx(::TranslatableString("audacity", "%1 #%2", "clip name template")
-                                 .arg(track.GetName()).arg(i).translated());
-            if (!track.HasClipNamed(name)) {
+                                 .arg(source.GetName()).arg(i).translated());
+            if (!source.HasClipNamed(name)) {
                 break;
             }
         }
@@ -750,7 +753,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                     );
 
                 // Insert clip on pending track only
-                auto pendingClip = insertEmptyInterval(*pending, t0, false);
+                auto pendingClip = insertEmptyInterval(*pending, t0, false, wt);
                 *clipIdHolder = pendingClip->GetId();
 
                 transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
