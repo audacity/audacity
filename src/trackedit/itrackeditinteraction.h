@@ -56,7 +56,7 @@ public:
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
-                                                bool completed, bool& clipsMovedToOtherTrack) = 0;
+                                                bool completed, bool& clipsMovedToOtherTrack, UndoPushType type) = 0;
     virtual bool moveRangeSelection(secs_t timePositionOffset, bool completed) = 0;
     virtual void cancelItemDragEdit() = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) = 0;
@@ -137,9 +137,9 @@ public:
     virtual bool cutLabel(const LabelKey& labelKey) = 0;
     virtual bool copyLabel(const LabelKey& labelKey) = 0;
 
-    virtual bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed) = 0;
+    virtual bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed, UndoPushType type) = 0;
     virtual muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset,
-                                                  bool completed) = 0;
+                                                  bool completed, UndoPushType type) = 0;
     virtual muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) = 0;
 
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;

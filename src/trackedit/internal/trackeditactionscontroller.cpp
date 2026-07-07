@@ -2122,10 +2122,11 @@ void TrackeditActionsController::moveFocusedItemLeft()
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
-        trackeditInteraction()->moveLabels(labelsForInteraction(), -stepSize, 0, completed);
+        trackeditInteraction()->moveLabels(labelsForInteraction(), -stepSize, 0, completed, UndoPushType::CONSOLIDATE);
     } else {
         static bool itemsMovedToOtherTrack = false;
-        trackeditInteraction()->moveClips(clipsForInteraction(), -stepSize, 0, completed, itemsMovedToOtherTrack);
+        trackeditInteraction()->moveClips(clipsForInteraction(), -stepSize, 0, completed, itemsMovedToOtherTrack,
+                                          UndoPushType::CONSOLIDATE);
     }
 }
 
@@ -2135,10 +2136,11 @@ void TrackeditActionsController::moveFocusedItemRight()
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
-        trackeditInteraction()->moveLabels(labelsForInteraction(), stepSize, 0, completed);
+        trackeditInteraction()->moveLabels(labelsForInteraction(), stepSize, 0, completed, UndoPushType::CONSOLIDATE);
     } else {
         static bool itemsMovedToOtherTrack = false;
-        trackeditInteraction()->moveClips(clipsForInteraction(), stepSize, 0, completed, itemsMovedToOtherTrack);
+        trackeditInteraction()->moveClips(clipsForInteraction(), stepSize, 0, completed, itemsMovedToOtherTrack,
+                                          UndoPushType::CONSOLIDATE);
     }
 }
 
@@ -2147,14 +2149,16 @@ void TrackeditActionsController::moveFocusedItemUp()
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, -1, completed);
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, -1, completed,
+                                                                               UndoPushType::CONSOLIDATE);
         if (result.ret) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }
     } else {
         static bool itemsMovedToOtherTrack = false;
         muse::RetVal<ClipKeyList> result
-            = trackeditInteraction()->moveClips(clipsForInteraction(), 0, -1, completed, itemsMovedToOtherTrack);
+            = trackeditInteraction()->moveClips(clipsForInteraction(), 0, -1, completed, itemsMovedToOtherTrack,
+                                                UndoPushType::CONSOLIDATE);
         if (result.ret) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }
@@ -2166,14 +2170,16 @@ void TrackeditActionsController::moveFocusedItemDown()
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, 1, completed);
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, 1, completed,
+                                                                               UndoPushType::CONSOLIDATE);
         if (result.ret) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }
     } else {
         static bool itemsMovedToOtherTrack = false;
         muse::RetVal<ClipKeyList> result
-            = trackeditInteraction()->moveClips(clipsForInteraction(), 0, 1, completed, itemsMovedToOtherTrack);
+            = trackeditInteraction()->moveClips(clipsForInteraction(), 0, 1, completed, itemsMovedToOtherTrack,
+                                                UndoPushType::CONSOLIDATE);
         if (result.ret) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }

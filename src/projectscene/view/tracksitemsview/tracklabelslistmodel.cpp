@@ -391,7 +391,8 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
             ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
         } else {
             auto selectedLabels = selectionController()->selectedLabels();
-            ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, moveOffset.trackOffset, completed).ret;
+            ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, moveOffset.trackOffset, completed,
+                                                    UndoPushType::NONE).ret;
         }
     }
 
