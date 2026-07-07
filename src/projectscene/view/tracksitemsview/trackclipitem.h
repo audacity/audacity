@@ -45,6 +45,8 @@ public:
     double fadeOutDuration() const;
     FadeTypes::Type fadeInType() const;
     FadeTypes::Type fadeOutType() const;
+    double clipStartTime() const { return m_clipStartTime; }
+    double clipEndTime() const { return m_clipEndTime; }
 
 signals:
     void groupIdChanged();
@@ -61,5 +63,7 @@ private:
     double m_fadeOutDuration = 0.0;
     FadeTypes::Type m_fadeInType = toFadeTypesType(trackedit::defaultFadeType);
     FadeTypes::Type m_fadeOutType = toFadeTypesType(trackedit::defaultFadeType);
+    double m_clipStartTime = 0.0;
+    double m_clipEndTime = 0.0;
 };
 }

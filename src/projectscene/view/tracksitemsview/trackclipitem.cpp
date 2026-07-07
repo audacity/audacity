@@ -26,6 +26,8 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_fadeOutDuration = clip.fadeOutDuration;
     m_fadeInType = toFadeTypesType(clip.fadeInType);
     m_fadeOutType = toFadeTypesType(clip.fadeOutType);
+    m_clipStartTime = clip.startTime;
+    m_clipEndTime = clip.endTime;
 
     emit titleChanged();
     emit pitchChanged();
