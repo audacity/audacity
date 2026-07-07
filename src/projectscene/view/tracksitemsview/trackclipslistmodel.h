@@ -86,6 +86,7 @@ private:
 
     void update();
     void updatePendingTitleEdit();
+    void prepareItemsMetrics() override;
     void updateItemMetrics(ViewTrackItem* item) override;
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
@@ -102,5 +103,7 @@ private:
     bool m_isStereo = false;
     //! As it was before the fade edit
     std::optional<trackedit::Clip> m_fadeEditedClip;
+
+    trackedit::ClipKeyList m_cachedIntersectingClips;
 };
 }

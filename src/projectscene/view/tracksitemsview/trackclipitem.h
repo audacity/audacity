@@ -44,6 +44,8 @@ public:
     double fadeOutDuration() const;
     FadeTypes::Type fadeInType() const;
     FadeTypes::Type fadeOutType() const;
+    double clipStartTime() const { return m_clipStartTime; }
+    double clipEndTime() const { return m_clipEndTime; }
 
 signals:
     void groupIdChanged();
@@ -60,5 +62,7 @@ private:
     double m_fadeOutDuration = 0.0;
     FadeTypes::Type m_fadeInType = FadeTypes::Type::LINEAR;
     FadeTypes::Type m_fadeOutType = FadeTypes::Type::LINEAR;
+    double m_clipStartTime = 0.0;
+    double m_clipEndTime = 0.0;
 };
 }
