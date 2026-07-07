@@ -41,6 +41,7 @@
 namespace au::project {
 enum class AccessMode
 {
+    Full,
     ReadProtected,
     WriteProtected
 };
@@ -55,6 +56,9 @@ public:
         assert(source != destination && "ScopedTestFile: source and destination paths must not be the same");
 
         switch (mode) {
+        case AccessMode::Full:
+            testtools::copyFile(source, destination);
+            break;
         case AccessMode::ReadProtected:
             testtools::copyFileAndRestrictRead(source, destination);
             break;
@@ -66,7 +70,7 @@ public:
 
     ~ScopedTestFile()
     {
-        testtools::removeIfExists(m_destinationPath);
+        testtools::removeProjectIfExists(m_destinationPath);
     }
 
     const std::string& getPath() const { return m_destinationPath; }
@@ -112,7 +116,7 @@ protected:
 
 TEST_F(Project_Audacity4ProjectTests, Load_ValidFile_ReturnsSuccess)
 {
-    const muse::io::path_t testPath = muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup3";
+    const muse::io::path_t testPath = muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4";
 
     EXPECT_EQ(muse::io::FileInfo::exists(testPath), true);
 
@@ -123,9 +127,54 @@ TEST_F(Project_Audacity4ProjectTests, Load_ValidFile_ReturnsSuccess)
     m_currentProject->close();
 }
 
+TEST_F(Project_Audacity4ProjectTests, Load_LegacySchema_UpgradesInPlace)
+{
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/legacy_schema.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/legacy_schema_copy.aup4").toStdString();
+
+    const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::Full };
+
+    const auto readSchemaState = [&tempFile]() {
+        sqlite3* db = nullptr;
+        EXPECT_EQ(sqlite3_open(tempFile.getPath().c_str(), &db), SQLITE_OK);
+
+        int userVersion = 0;
+        sqlite3_stmt* stmt = nullptr;
+        EXPECT_EQ(sqlite3_prepare_v2(db, "PRAGMA user_version;", -1, &stmt, nullptr), SQLITE_OK);
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            userVersion = sqlite3_column_int(stmt, 0);
+        }
+        sqlite3_finalize(stmt);
+
+        int historyTables = 0;
+        stmt = nullptr;
+        EXPECT_EQ(sqlite3_prepare_v2(
+                      db, "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='project_history';",
+                      -1, &stmt, nullptr), SQLITE_OK);
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            historyTables = sqlite3_column_int(stmt, 0);
+        }
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return std::make_pair(userVersion, historyTables);
+    };
+
+    const auto [versionBefore, historyBefore] = readSchemaState();
+    EXPECT_GT(versionBefore, 0);
+    EXPECT_EQ(historyBefore, 0);
+
+    const muse::Ret ret = m_currentProject->load(muse::io::path_t(tempFile.getPath()), false, "");
+    EXPECT_TRUE(ret.success());
+    m_currentProject->close();
+
+    const auto [versionAfter, historyAfter] = readSchemaState();
+    EXPECT_GT(versionAfter, versionBefore);
+    EXPECT_EQ(historyAfter, 1);
+}
+
 TEST_F(Project_Audacity4ProjectTests, Load_FileDoesNotExist_ReturnsProjectFileNotFound)
 {
-    const muse::io::path_t testPath = "/nonexistent/project.aup3";
+    const muse::io::path_t testPath = "/nonexistent/project.aup4";
 
     // Ensure the path truly doesn't exist
     ASSERT_FALSE(muse::io::FileInfo::exists(testPath));
@@ -146,8 +195,8 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileDoesNotExist_ReturnsProjectFileNo
 
 TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsCantOpen)
 {
-    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup3").toStdString();
-    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty_read_protected.aup3").toStdString();
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty_read_protected.aup4").toStdString();
 
     const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::ReadProtected };
 
@@ -159,24 +208,25 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsCantOpen)
     //can't close m_currentProject->close();
 }
 
-TEST_F(Project_Audacity4ProjectTests, Load_EmptyFileIsWriteProtected_ReturnsSuccess)
+TEST_F(Project_Audacity4ProjectTests, Load_EmptyFileIsWriteProtected_ReturnsReadOnly)
 {
-    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup3").toStdString();
-    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty_write_protected.aup3").toStdString();
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty_write_protected.aup4").toStdString();
 
     const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::WriteProtected };
 
     const muse::Ret ret = m_currentProject->load(muse::io::path_t(tempFile.getPath()), false, "");
 
-    EXPECT_TRUE(ret.success());
-    EXPECT_EQ(ret.code(), static_cast<int>(Err::NoError));
+    EXPECT_FALSE(ret.success());
+    EXPECT_EQ(ret.code(), SQLITE_READONLY);
+    EXPECT_TRUE(!ret.data<std::string>("body", std::string("")).empty());
     m_currentProject->close();
 }
 
 TEST_F(Project_Audacity4ProjectTests, Load_NonEmptyFileIsWriteProtected_ReturnsReadOnly)
 {
-    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/test.aup3").toStdString();
-    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/test_write_protected.aup3").toStdString();
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/test.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/test_write_protected.aup4").toStdString();
 
     const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::WriteProtected };
 

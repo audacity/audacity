@@ -122,7 +122,7 @@ inline bool removeIfExists(const std::string& path)
     return true;
 }
 
-//! Remove an .aup3 project file along with its SQLite WAL/SHM sidecar files, if present.
+//! Remove a project file along with its SQLite WAL/SHM sidecar files, if present.
 inline bool removeProjectIfExists(const std::string& path)
 {
     bool ok = removeIfExists(path);
