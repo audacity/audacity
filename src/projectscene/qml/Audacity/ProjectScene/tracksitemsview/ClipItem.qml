@@ -937,15 +937,29 @@ Rectangle {
                     lineColor: ui.theme.extra["audio_envelope_line"]
                     lineWidth: 2
 
-                    pointRadius: 4.0
-                    pointOutlineColor: ui.theme.extra["audio_envelope_point"]
-                    pointCentreColor: ui.theme.extra["audio_envelope_point"]
-                    pointOutlineWidth: 2.0
-
-                    ghostPointRadius: 3.0
-                    ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
-
                     points: clipGainModel.points
+
+                    standardPointStyle {
+                        centerRadius: 5.0
+                        centerColor: ui.theme.extra["audio_envelope_point"]
+                    }
+
+                    hoveredPointStyle {
+                        centerRadius: 1.0
+                        centerColor: ui.theme.extra["white_color"]
+
+                        middleRingWidth: 2.0
+                        middleRingColor: ui.theme.extra["black_color"]
+
+                        outlineWidth: 3.0
+                        outlineColor: ui.theme.extra["audio_envelope_point"]
+                    }
+
+                    ghostPointStyle {
+                        centerRadius: 4.0
+                        centerColor: ui.theme.extra["audio_envelope_point"]
+                    }
+
                     defaultValue: clipGainModel.defaultValue
 
                     xRangeFrom: waveView.itemStartTime
@@ -989,7 +1003,7 @@ Rectangle {
                     onActivePointChanged: {
                         if (automation.hasActivePoint) {
                             fake.x = automation.activePointX
-                            fake.y = automation.activePointY - (automation.pointRadius + 2)
+                            fake.y = automation.activePointY - (automation.standardPointStyle.centerRadius + 2)
                             tooltip.gain = gainToDb(automation.activePointValue)
                             tooltip.show(true)
                         } else {
@@ -1005,7 +1019,7 @@ Rectangle {
                         width: 1
 
                         x: automation.activePointX
-                        y: automation.activePointY - (automation.pointRadius + 2)
+                        y: automation.activePointY - (automation.standardPointStyle.centerRadius + 2)
 
                         enabled: false // so it doesn't steal mouse events
 
