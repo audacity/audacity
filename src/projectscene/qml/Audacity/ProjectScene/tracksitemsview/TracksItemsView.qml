@@ -686,7 +686,8 @@ Rectangle {
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
                     selectionViewController.selectTrackAudioData(e.y)
-                    playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
+                    playCursorController.seekToTime(timeline.context.selectionStartTime)
+                    playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                 }
                 itemsSelection.visible = false
             }
