@@ -12,6 +12,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iauthorization.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audiocomservice.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3cloudconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/icloudprojectsprovider.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
@@ -25,6 +26,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudprojectsprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudprojectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomtypeconv.cpp

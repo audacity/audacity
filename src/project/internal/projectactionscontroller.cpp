@@ -2,12 +2,10 @@
 
 #include <QFileDialog>
 
-#include "au3cloud/internal/au3audiocomservice.h"
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
 #include "framework/global/io/path.h"
-#include "framework/global/io/fileinfo.h"
 #include "framework/global/progress.h"
 #include "framework/global/log.h"
 #include "framework/global/types/ret.h"
@@ -203,10 +201,18 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
         return openProject(filename, file.displayNameOverride);
     }
 
-    //! TODO: Fix me
-    // if (file.url.scheme() == AUDACITY_URL_SCHEME) {
-    //     return openMuseScoreUrl(file.url);
-    // }
+    if (file.url.scheme() == AUDACITY_URL_SCHEME) {
+        muse::UriQuery query(file.url.toString().toStdString());
+        const std::string projectId = query.param("projectId").toString();
+        if (!projectId.empty()) {
+            const std::string snapshotId = query.param("snapshotId").toString();
+            dispatcher()->dispatch("cloud-file-open",
+                                   muse::actions::ActionData::make_arg2<QString, QString>(
+                                       QString::fromStdString(projectId),
+                                       QString::fromStdString(snapshotId)));
+            return muse::make_ok();
+        }
+    }
 
     return make_ret(Err::UnsupportedUrl);
 }
@@ -257,13 +263,20 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 {
     const QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
-    const muse::io::paths_t filePaths = url.isLocalFile() ? muse::io::paths_t { muse::io::path_t(url) } : selectOpeningFiles();
 
     Ret ret = make_ret(Ret::Code::Cancel);
 
     if (url.isValid() && !url.isEmpty() && !url.isLocalFile()) {
         ret = openProject(ProjectFile(url, displayNameOverride));
-    } else if (filePaths.empty()) {
+        if (!ret) {
+            openPageIfNeed(HOME_PAGE_URI);
+        }
+        return;
+    }
+
+    const muse::io::paths_t filePaths = url.isLocalFile() ? muse::io::paths_t { muse::io::path_t(url) } : selectOpeningFiles();
+
+    if (filePaths.empty()) {
         ret = make_ret(Ret::Code::Cancel);
     } else if (filePaths.size() > 1) {
         auto projectIt = std::find_if(filePaths.cbegin(), filePaths.cend(), [](const auto& filePath) {
@@ -304,27 +317,54 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 
 void ProjectActionsController::openCloudProject(const muse::actions::ActionData& args)
 {
-    if (args.count() < 3) {
+    if (args.count() > 2 || args.count() < 1) {
         return;
     }
 
     const QString cloudProjectId = args.arg<QString>(0);
-    const QUrl url = args.arg<QUrl>(1);
-    const QString displayName = args.arg<QString>(2);
-    const QString snapshotId = args.count() >= 4 ? args.arg<QString>(3) : QString();
+    const QString snapshotId = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
-    //! An empty URL means the project is not in the local cloud DB yet (or a
-    //! specific snapshot was requested, which can't be served from local), so
-    //! route into the download flow and let audioComService resolve the path.
-    if (url.isEmpty()) {
-        Ret ret = openCloudProject({}, cloudProjectId, snapshotId);
-        if (!ret) {
-            openPageIfNeed(HOME_PAGE_URI);
+    if (m_isProjectProcessing) {
+        return;
+    }
+    m_isProjectProcessing = true;
+
+    DEFER {
+        m_isProjectProcessing = false;
+    };
+
+    std::optional<io::path_t> localPath;
+    if (const auto record = cloudProjectsProvider()->projectRecordForId(cloudProjectId.toStdString());
+        record&& !record->localPath.empty()) {
+        localPath = record->localPath;
+    }
+
+    if (localPath && snapshotId.isEmpty()) {
+        if (isProjectOpened(localPath.value())) {
+            openPageIfNeed(PROJECT_PAGE_URI);
+            return;
         }
+
+        if (multiwindowsProvider()->isProjectAlreadyOpened(localPath.value())) {
+            multiwindowsProvider()->activateWindowWithProject(localPath.value());
+            return;
+        }
+    }
+
+    if (globalContext()->currentProject()) {
+        muse::UriQuery cloudUri(AUDACITY_URL_SCHEME.toStdString() + "://open");
+        cloudUri.addParam("projectId", muse::Val(cloudProjectId.toStdString()));
+        if (!snapshotId.isEmpty()) {
+            cloudUri.addParam("snapshotId", muse::Val(snapshotId.toStdString()));
+        }
+
+        QStringList newWindowArgs;
+        newWindowArgs << QString::fromStdString(cloudUri.toString());
+        multiwindowsProvider()->openNewWindow(newWindowArgs);
         return;
     }
 
-    Ret ret = openProject(muse::io::path_t(url), displayName, cloudProjectId);
+    Ret ret = openCloudProject(localPath.value_or(io::path_t {}), cloudProjectId, snapshotId);
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
@@ -788,7 +828,7 @@ bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType s
 
     if (saveMode == SaveMode::Save && !project->isNewlyCreated()) {
         if (project->isCloudProject()) {
-            return saveProjectAt(SaveLocation(SaveLocationType::Cloud, CloudProjectInfo { QUrl {}, {}, project->displayName() }));
+            return saveProjectAt(SaveLocation(SaveLocationType::Cloud, CloudProjectInfo { project->displayName() }));
         }
 
         return saveProjectAt(SaveLocation(SaveLocationType::Local));
@@ -877,12 +917,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         return make_ret(Ret::Code::Ok);
     }
 
-    //! Step 5. If it's a cloud project, download the latest version
-    if (configuration()->isCloudProject(actualPath)) {
-        return openCloudProject(actualPath, projectId);
-    }
-
-    //! Step 6. Open project in the current window
+    //! Step 5. Open project in the current window
     return doOpenProject(actualPath);
 }
 
@@ -1130,11 +1165,7 @@ RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
 {
     RecentFile file;
     file.path = project->path();
-
-    //! TODO AU4
-    // if (project->isCloudProject()) {
-    //     file.displayNameOverride = project->cloudInfo().name;
-    // }
+    file.cloudRecord = project->cloudRecord();
 
     return file;
 }
@@ -1383,7 +1414,7 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         if (!project) {
             break;
         }
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        saveProjectToCloud(CloudProjectInfo { project->displayName() }, SaveMode::Save);
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
@@ -1431,10 +1462,10 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        saveProjectToCloud(CloudProjectInfo { project->displayName() }, SaveMode::Save);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save, true);
+        saveProjectToCloud(CloudProjectInfo { project->displayName() }, SaveMode::Save, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();

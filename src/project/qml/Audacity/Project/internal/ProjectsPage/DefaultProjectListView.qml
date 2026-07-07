@@ -32,7 +32,7 @@ Item {
 
     signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
-    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId)
 
     Loader {
         id: loader
@@ -77,8 +77,8 @@ Item {
                 root.openProjectRequested(projectPath, displayName)
             }
 
-            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
-                root.openCloudProjectRequested(projectId, projectPath, displayName)
+            onOpenCloudProjectRequested: function (projectId) {
+                root.openCloudProjectRequested(projectId)
             }
         }
     }
@@ -121,8 +121,8 @@ Item {
                 root.openProjectRequested(projectPath, displayName)
             }
 
-            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
-                root.openCloudProjectRequested(projectId, projectPath, displayName)
+            onOpenCloudProjectRequested: function (projectId) {
+                root.openCloudProjectRequested(projectId)
             }
 
             columns: [

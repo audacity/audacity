@@ -22,6 +22,7 @@
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
+#include "project/tests/mocks/cloudprojectsprovidermock.h"
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 #include "testtools.h"
@@ -42,11 +43,13 @@ protected:
     std::shared_ptr<au::project::TrackeditProjectCreatorMock> m_trackeditProjectCreator;
     std::shared_ptr<au::projectscene::ProjectViewStateCreatorMock> m_projectViewStateCreator;
     std::shared_ptr<au::trackedit::ClipboardMock> m_clipboard;
+    std::shared_ptr<au::au3cloud::CloudProjectsProviderMock> m_cloudProjectsProvider;
 
     void SetUp() override
     {
         m_testCtx = au::testutils::makeTestContext();
         m_clipboard = std::make_shared<::testing::NiceMock<au::trackedit::ClipboardMock> >();
+        m_cloudProjectsProvider = std::make_shared<::testing::NiceMock<au::au3cloud::CloudProjectsProviderMock> >();
         m_currentProject = makeProject();
     }
 
@@ -63,6 +66,7 @@ protected:
         project->trackeditProjectCreator.set(m_trackeditProjectCreator);
         project->viewStateCreator.set(m_projectViewStateCreator);
         project->clipboard.set(m_clipboard);
+        project->cloudProjectsProvider.set(m_cloudProjectsProvider);
         return project;
     }
 

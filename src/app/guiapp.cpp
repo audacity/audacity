@@ -4,6 +4,7 @@
 #include "guiapp.h"
 
 #include <QCoreApplication>
+#include <optional>
 
 #include "framework/global/async/async.h"
 #include "framework/global/modularity/ioc.h"

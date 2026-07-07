@@ -492,8 +492,6 @@ void LocalProjectSnapshot::OnSnapshotCreated(
 
         if (result.Code != SyncResultCode::Success) {
             db.RemovePendingSnapshot(projectId, snapshotId);
-            db.RemovePendingProjectBlob(projectId, snapshotId);
-            db.RemovePendingProjectBlocks(projectId, snapshotId);
 
             DataUploadFailed(result);
             return;

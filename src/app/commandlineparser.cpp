@@ -199,17 +199,20 @@ void CommandLineParser::parse(int argc, char** argv)
     // Startup
     if (m_options->runMode == IApplication::RunMode::GuiApp) {
         for (const QString& file : projectfiles) {
-            const muse::io::path_t filePath(file);
-            if (project::isAudacityFile(filePath)) {
+            const QUrl url = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+            const bool isCloudUrl = !url.isLocalFile() && url.scheme() == QStringLiteral("audacity");
+            const bool isLocalProject = url.isLocalFile() && project::isAudacityFile(muse::io::path_t(file));
+
+            if (isCloudUrl || isLocalProject) {
                 if (!m_options->startup.projectUrl.has_value()) {
-                    m_options->startup.projectUrl = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+                    m_options->startup.projectUrl = url;
                 }
                 m_options->startup.mediaFiles.clear();
                 continue;
             }
 
             if (!m_options->startup.projectUrl.has_value()) {
-                m_options->startup.mediaFiles.emplace_back(filePath);
+                m_options->startup.mediaFiles.emplace_back(muse::io::path_t(file));
             }
         }
     }

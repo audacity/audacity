@@ -27,16 +27,14 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "iprojectconfiguration.h"
 #include "irecentfilescontroller.h"
 #include "io/ifilesystem.h"
 
 namespace au::project {
-class RecentProjectsModel : public AbstractItemModel, public muse::async::Asyncable
+class RecentProjectsModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
-    muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IRecentFilesController> recentFilesController;
 

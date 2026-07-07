@@ -1,11 +1,10 @@
 #include "audacityproject.h"
 
-#include "au3wrap/iau3project.h"
+#include "framework/global/log.h"
+#include "framework/global/io/fileinfo.h"
+#include "framework/global/io/ioretcodes.h"
+
 #include "project/projecterrors.h"
-#include "global/log.h"
-#include "global/io/file.h"
-#include "global/io/fileinfo.h"
-#include "global/io/ioretcodes.h"
 
 using namespace muse;
 using namespace au::project;
@@ -237,7 +236,7 @@ QString Audacity4Project::displayName() const
 
     //! TODO AU4
     // if (isCloudProject()) {
-    //     return m_cloudInfo.name;
+    //     return m_cloudRecord.name;
     // }
 
     return io::filename(m_path, false /*isSuffixInteresting*/).toQString();
@@ -255,6 +254,9 @@ void Audacity4Project::setPath(const io::path_t& path)
     }
 
     m_path = path;
+
+    m_cloudRecord = cloudProjectsProvider()->projectRecordForPath(m_path);
+
     m_pathChanged.notify();
 }
 
@@ -270,7 +272,12 @@ bool Audacity4Project::isImported() const
 
 bool Audacity4Project::isCloudProject() const
 {
-    return configuration()->isCloudProject(m_path);
+    return m_cloudRecord.has_value();
+}
+
+const std::optional<CloudProjectRecord>& Audacity4Project::cloudRecord() const
+{
+    return m_cloudRecord;
 }
 
 String Audacity4Project::title() const

@@ -23,6 +23,7 @@
 #include "importexport/import/iimporter.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
+#include "au3cloud/icloudprojectsprovider.h"
 #include "effects/effects_base/imissingeffectchecker.h"
 
 #include "project/iprojectconfiguration.h"
@@ -42,6 +43,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<toast::IToastService> toastService;
     muse::GlobalInject<au3cloud::IAuthorization> authorization;
+    muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };

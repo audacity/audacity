@@ -48,7 +48,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::downloadAudioFile(const 
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
-muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, bool)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, const std::string&,
+                                                                         bool)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
