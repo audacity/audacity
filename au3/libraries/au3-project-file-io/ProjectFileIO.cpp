@@ -64,7 +64,7 @@ Paul Licameli split from AudacityProject.cpp
 
 // Identifies the XML format version embedded in the project blob.
 // Update this only when making irrevocable changes to the XML schema.
-// For db schema changes, bump PRAGMA user_version / ProjectFormatVersion instead.
+// For db schema changes, bump PRAGMA user_version / ProjectSchemaVersion instead.
 #define AUDACITY_FILE_FORMAT_VERSION "2.0.0"
 
 #undef NO_SHM
@@ -738,6 +738,25 @@ bool ProjectFileIO::GetValue(const char* sql, int64_t& value, bool silent)
     return Query(sql, cb, silent) && success;
 }
 
+static bool UpgradeSchema(sqlite3* db)
+{
+    // Schema revision 1
+    if (sqlite3_exec(
+            db,
+            "CREATE TABLE IF NOT EXISTS main.project_history"
+            "("
+            "  generation           INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "  saved_at             INTEGER,"
+            "  dict                 BLOB,"
+            "  doc                  BLOB"
+            ");",
+            nullptr, nullptr, nullptr) != SQLITE_OK) {
+        return false;
+    }
+
+    return true;
+}
+
 bool ProjectFileIO::CheckVersion()
 {
     auto db = DB();
@@ -786,11 +805,27 @@ bool ProjectFileIO::CheckVersion()
 
     // Project file version is higher than ours. We will refuse to
     // process it since we can't trust anything about it.
-    if (SupportedProjectFormatVersion < version) {
+    if (ProjectSchemaVersion < version) {
         SetError(
             TranslatableString("project-file-io", "This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
             );
         return false;
+    }
+
+    if (version < ProjectSchemaVersion) {
+        if (UpgradeSchema(db)) {
+            const wxString sql = wxString::Format(
+                "PRAGMA user_version = %u;", ProjectSchemaVersion.GetPacked());
+            if (!Query(sql.c_str(), [](auto...) { return 0; })) {
+                return false;
+            }
+        } else {
+            SetError(
+                TranslatableString("project-file-io",
+                                   "Failed to upgrade the project schema.\n\nFile might be corrupted or read only.")
+                );
+            return false;
+        }
     }
 
     return true;
@@ -801,7 +836,7 @@ bool ProjectFileIO::InstallSchema(sqlite3* db, const char* schema /* = "main" */
     int rc;
 
     wxString sql;
-    sql.Printf(ProjectFileSchema, ProjectFileID, BaseProjectFormatVersion.GetPacked());
+    sql.Printf(ProjectFileSchema, ProjectFileID, ProjectSchemaVersion.GetPacked());
     sql.Replace("<schema>", schema);
 
     rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
@@ -1052,7 +1087,11 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
         // Prepare the statement only once
         rc = sqlite3_prepare_v2(db,
                                 "INSERT INTO outbound.sampleblocks"
-                                "  SELECT * FROM main.sampleblocks"
+                                "  (blockid, sampleformat, summin, summax,"
+                                "   sumrms, summary256, summary64k, samples)"
+                                "  SELECT blockid, sampleformat, summin, summax,"
+                                "   sumrms, summary256, summary64k, samples"
+                                "  FROM main.sampleblocks"
                                 "  WHERE blockid = ?;",
                                 -1,
                                 &stmt,
@@ -2029,7 +2068,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
     }
 
     const wxString setVersionSql
-        =wxString::Format("PRAGMA user_version = %u", BaseProjectFormatVersion.GetPacked());
+        =wxString::Format("PRAGMA user_version = %u", ProjectSchemaVersion.GetPacked());
 
     if (!Query(setVersionSql.c_str(), [](auto...) { return 0; })) {
         // DV: Very unlikely case.
