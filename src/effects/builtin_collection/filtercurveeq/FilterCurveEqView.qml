@@ -231,19 +231,32 @@ BuiltinEffectBase {
                     lineColor: ui.theme.accentColor
                     lineWidth: 2
 
-                    pointRadius: 4.0
-                    pointOutlineColor: ui.theme.accentColor
-                    pointCentreColor: ui.theme.accentColor
-                    pointOutlineWidth: 2.0
-
-                    isSnapEnabled: false
-
-                    ghostPointRadius: 3.0
-                    ghostPointOutlineColor: ui.theme.accentColor
-
                     drawBackground: false
 
                     points: filterCurveEq.curveModel.points
+                    isSnapEnabled: false
+
+                    standardPointStyle {
+                        centerRadius: 5.0
+                        centerColor: ui.theme.accentColor
+                    }
+
+                    hoveredPointStyle {
+                        centerRadius: 1.0
+                        centerColor: ui.theme.extra["white_color"]
+
+                        middleRingWidth: 2.0
+                        middleRingColor: ui.theme.extra["black_color"]
+
+                        outlineWidth: 3.0
+                        outlineColor: ui.theme.accentColor
+                    }
+
+                    ghostPointStyle {
+                        centerRadius: 4.0
+                        centerColor: ui.theme.accentColor
+                    }
+
                     defaultValue: filterCurveEq.curveModel.defaultValue
 
                     xRangeFrom: 0.0
@@ -306,7 +319,7 @@ BuiltinEffectBase {
                     onActivePointChanged: {
                         if (curve.hasActivePoint) {
                             fake.x = curve.activePointX
-                            fake.y = curve.activePointY - (curve.pointRadius + 2)
+                            fake.y = curve.activePointY - (curve.standardPointStyle.centerRadius + 2)
                             tooltip.gain = curve.activePointValue
                             tooltip.freq = curve.activePointFreq()
                             tooltip.show(true)
