@@ -604,6 +604,9 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
     auto& trackFactory = WaveTrackFactory::Get(projectRef());
     auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
+    std::vector<std::shared_ptr<Au3WaveTrack> > newTracks;
+    newTracks.reserve(waveTracks.size());
+
     for (const auto& track : waveTracks) {
         auto newTrack = track->EmptyCopy(pSampleBlockFactory);
 
@@ -621,6 +624,17 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
 
             newTrack->InsertInterval(track->CopyClip(*clip, true), false);
         }
+        newTracks.push_back(newTrack);
+    }
+
+    std::vector<Au3WaveTrack*> copies;
+    copies.reserve(newTracks.size());
+    for (const auto& newTrack : newTracks) {
+        copies.push_back(newTrack.get());
+    }
+    utils::remapCopiedClipGroups(*prj, projectTracks, copies);
+
+    for (const auto& newTrack : newTracks) {
         projectTracks.Add(newTrack);
         prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
         for (const auto& clip : prj->clipList(newTrack->GetId())) {

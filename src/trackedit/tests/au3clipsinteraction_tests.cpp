@@ -432,6 +432,158 @@ TEST_F(Au3ClipsInteractionTests, DuplicateSingleClip)
     removeTrack(newTrackId);
 }
 
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsRemapsClipGroups)
+{
+    //! [GIVEN] A track whose clips form one group
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+
+    constexpr int64_t originalGroupId = 42;
+    ClipKeyList clipKeys;
+    for (const auto& clip : origTrack->Intervals()) {
+        clip->SetGroupId(originalGroupId);
+        clipKeys.push_back({ origTrack->GetId(), clip->GetId() });
+    }
+
+    constexpr int64_t remappedGroupId = 77;
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(remappedGroupId));
+    ON_CALL(*m_trackEditProject, trackIdList()).WillByDefault(Return(std::vector<trackedit::TrackId> { origTrack->GetId() }));
+
+    //! [WHEN] Duplicate all clips of the track
+    m_clipsInteraction->duplicateClips(clipKeys);
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+
+    //! [THEN] The duplicate's clips form their own group, independent of the original
+    for (const auto& clip : clone->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), remappedGroupId);
+    }
+
+    //! [THEN] The original clips keep their group
+    for (const auto& clip : origTrack->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), originalGroupId);
+    }
+
+    //Cleanup
+    removeTrack(trackId);
+    removeTrack(TrackId(clone->GetId()));
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsPreservesGroupSpanningTracks)
+{
+    //! [GIVEN] Two tracks whose clips all belong to one group
+    const TrackId trackId1 = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    const TrackId trackId2 = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    Au3WaveTrack* origTrack1 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId1));
+    Au3WaveTrack* origTrack2 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId2));
+    ASSERT_TRUE(origTrack1 && origTrack2) << "Precondition failed: original tracks not found";
+
+    constexpr int64_t originalGroupId = 42;
+    ClipKeyList clipKeys;
+    for (Au3WaveTrack* origTrack : { origTrack1, origTrack2 }) {
+        for (const auto& clip : origTrack->Intervals()) {
+            clip->SetGroupId(originalGroupId);
+            clipKeys.push_back({ origTrack->GetId(), clip->GetId() });
+        }
+    }
+
+    int64_t nextGroupId = 100;
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault([&nextGroupId](int64_t) { return nextGroupId++; });
+    ON_CALL(*m_trackEditProject, trackIdList()).WillByDefault(Return(std::vector<trackedit::TrackId> { origTrack1->GetId(),
+                                                                                                       origTrack2->GetId() }));
+
+    //! [WHEN] Duplicate all clips of both tracks in one pass
+    m_clipsInteraction->duplicateClips(clipKeys);
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 4) << "The number of tracks after the duplicate operation is not 4";
+
+    std::vector<Au3WaveTrack*> clones;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId1 && TrackId(track->GetId()) != trackId2) {
+            clones.push_back(dynamic_cast<Au3WaveTrack*>(track));
+        }
+    }
+    ASSERT_EQ(clones.size(), 2) << "The duplicated tracks were not found";
+
+    //! [THEN] All copied clips share one new group id, since the whole group was duplicated
+    for (Au3WaveTrack* clone : clones) {
+        ASSERT_TRUE(clone);
+        for (const auto& clip : clone->Intervals()) {
+            EXPECT_EQ(clip->GetGroupId(), 100);
+        }
+    }
+
+    //Cleanup
+    removeTrack(trackId1);
+    removeTrack(trackId2);
+    for (Au3WaveTrack* clone : clones) {
+        removeTrack(TrackId(clone->GetId()));
+    }
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsDissolvesPartiallyIncludedGroup)
+{
+    //! [GIVEN] A track whose three clips form one group
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+
+    constexpr int64_t originalGroupId = 42;
+    for (const auto& clip : origTrack->Intervals()) {
+        clip->SetGroupId(originalGroupId);
+    }
+
+    //! [GIVEN] Only two of the three clips are selected
+    ClipKeyList clipKeys {
+        { origTrack->GetId(), origTrack->GetSortedClipByIndex(0)->GetId() },
+        { origTrack->GetId(), origTrack->GetSortedClipByIndex(1)->GetId() }
+    };
+
+    ON_CALL(*m_trackEditProject, trackIdList()).WillByDefault(Return(std::vector<trackedit::TrackId> { origTrack->GetId() }));
+
+    //! [WHEN] Duplicate the selected clips
+    m_clipsInteraction->duplicateClips(clipKeys);
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+    ASSERT_EQ(clone->NIntervals(), 2) << "The number of intervals in the new track is not 2";
+
+    //! [THEN] The copies are ungrouped, since only part of the group was duplicated
+    for (const auto& clip : clone->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), -1);
+    }
+
+    //! [THEN] The original clips keep their group
+    for (const auto& clip : origTrack->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), originalGroupId);
+    }
+
+    //Cleanup
+    removeTrack(trackId);
+    removeTrack(TrackId(clone->GetId()));
+}
+
 TEST_F(Au3ClipsInteractionTests, MoveClipsRight)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
