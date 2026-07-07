@@ -41,6 +41,8 @@
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
+#include "basstreble/basstrebleeffect.h"
+#include "basstreble/basstrebleviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -96,6 +98,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
+    static BuiltinEffectsModule::Registration< BassTrebleEffect > regBassTreble;
     static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
@@ -156,6 +159,9 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ReverbViewModelFactory);
     regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(BassTrebleViewModelFactory);
+    regView(BassTrebleEffect::Symbol, u"qrc:/basstreble/BassTrebleView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
