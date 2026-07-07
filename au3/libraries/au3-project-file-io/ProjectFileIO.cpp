@@ -108,6 +108,9 @@ static const int ProjectFileID = PACK('A', 'U', 'D', 'Y');
 // A search for "SQL sampleblocks" will find all SQL related
 // to sampleblocks.
 
+// How many past project documents project_history keeps
+static constexpr int kProjectHistoryDepth = 10;
+
 static const char* ProjectFileSchema
     =// These are persistent and not connection based
      //
@@ -179,6 +182,17 @@ static const char* ProjectFileSchema
       "  summary256           BLOB,"
       "  summary64k           BLOB,"
       "  samples              BLOB"
+      ");"
+      ""
+      // CREATE SQL project_history
+      // A few documents written to the project table, kept
+      // so a corrupt current document can be rolled back to a previous good one
+      "CREATE TABLE IF NOT EXISTS <schema>.project_history"
+      "("
+      "  generation           INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "  saved_at             INTEGER,"
+      "  dict                 BLOB,"
+      "  doc                  BLOB"
       ");";
 
 class SQLiteBlobStream final
@@ -1120,6 +1134,20 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
             }
         }
 
+        // Copy the project journal. Columns are named for the same reason as
+        // in the sampleblocks copy above.
+        if (sqlite3_exec(db,
+                         "INSERT INTO outbound.project_history"
+                         "  (generation, saved_at, dict, doc)"
+                         "  SELECT generation, saved_at, dict, doc"
+                         "  FROM main.project_history;",
+                         nullptr, nullptr, nullptr) != SQLITE_OK) {
+            SetDBError(
+                TranslatableString("project-file-io", "Failed to copy the project history.")
+                );
+            return false;
+        }
+
         // Write the doc.
         //
         // If we're compacting a temporary project (user initiated from the File
@@ -2009,6 +2037,23 @@ bool ProjectFileIO::WriteDoc(const char* table,
         // the generic message for now, so no new strings are needed
         reportError(setVersionSql);
         return false;
+    }
+
+    // Write the project journal
+    if (!strcmp(table, "project") && !strcmp(schema, "main")) {
+        const wxString journalSql = wxString::Format(
+            "INSERT INTO main.project_history(saved_at, dict, doc)"
+            "  SELECT CAST(strftime('%%s','now') AS INTEGER), dict, doc"
+            "  FROM main.project WHERE id = 1;"
+            "DELETE FROM main.project_history WHERE generation NOT IN"
+            "  (SELECT generation FROM main.project_history"
+            "   ORDER BY generation DESC LIMIT %d);",
+            kProjectHistoryDepth);
+
+        if (!Query(journalSql.c_str(), [](auto...) { return 0; })) {
+            reportError(journalSql);
+            return false;
+        }
     }
 
     return transaction.Commit();
