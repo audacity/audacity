@@ -18,9 +18,6 @@ void PlaybackPreferencesModel::init()
 {
     playbackConfiguration()->playbackQualityChanged().onNotify(this, [this](){ emit currentPlaybackQualityChanged(); });
     playbackConfiguration()->ditheringChanged().onNotify(this, [this](){ emit currentDitheringChanged(); });
-    playbackConfiguration()->soloBehaviorChanged().onNotify(this, [this](){
-        emit soloBehaviorChanged();
-    });
     playbackConfiguration()->shortSkipChanged().onNotify(this, [this](){ emit shortSkipChanged(); });
     playbackConfiguration()->longSkipChanged().onNotify(this, [this](){ emit longSkipChanged(); });
 }
@@ -71,20 +68,6 @@ void PlaybackPreferencesModel::setDithering(playback::DitherTypePrefs::DitherTyp
     }
 
     playbackConfiguration()->setDithering(dithering);
-}
-
-au::playback::TracksBehaviors::SoloBehavior PlaybackPreferencesModel::soloBehavior() const
-{
-    return playbackConfiguration()->currentSoloBehavior();
-}
-
-void PlaybackPreferencesModel::setSoloBehavior(playback::TracksBehaviors::SoloBehavior behavior)
-{
-    if (soloBehavior() == behavior) {
-        return;
-    }
-
-    playbackConfiguration()->setSoloBehavior(behavior);
 }
 
 double PlaybackPreferencesModel::shortSkip() const

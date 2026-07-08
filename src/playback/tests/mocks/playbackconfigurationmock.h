@@ -46,10 +46,6 @@ public:
     MOCK_METHOD(void, setDithering, (DitherTypePrefs::DitherType dithering), (override));
     MOCK_METHOD(muse::async::Notification, ditheringChanged, (), (const, override));
 
-    MOCK_METHOD(TracksBehaviors::SoloBehavior, currentSoloBehavior, (), (const, override));
-    MOCK_METHOD(void, setSoloBehavior, (TracksBehaviors::SoloBehavior behavior), (override));
-    MOCK_METHOD(muse::async::Notification, soloBehaviorChanged, (), (const, override));
-
     MOCK_METHOD(trackedit::secs_t, shortSkip, (), (const, override));
     MOCK_METHOD(void, setShortSkip, (trackedit::secs_t seconds), (override));
     MOCK_METHOD(muse::async::Notification, shortSkipChanged, (), (const, override));

@@ -20,7 +20,6 @@ static const muse::Settings::Key PLAYBACK_HORIZONTAL_METER_SIZE(moduleName, "pla
 
 static const muse::Settings::Key PLAYBACK_QUALITY("au3wrap", "/Quality/LibsoxrSampleRateConverterChoice");
 static const muse::Settings::Key DITHERING("au3wrap", "Quality/DitherAlgorithmChoice");
-static const muse::Settings::Key SOLO_BEHAVIOR(moduleName, "playback/soloBehavior");
 static const muse::Settings::Key SEEK_SHORT_PERIOD(moduleName, "playback/seekShortPeriod");
 static const muse::Settings::Key SEEK_LONG_PERIOD(moduleName, "playback/seekLongPeriod");
 static const muse::Settings::Key SELECTION_FOLLOWS_LOOP_REGION(moduleName, "playback/selectionFollowsLoopRegion");
@@ -178,11 +177,6 @@ void PlaybackConfiguration::init()
         m_ditheringChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(SOLO_BEHAVIOR, muse::Val(TracksBehaviors::SoloBehavior::SoloBehaviorMulti));
-    muse::settings()->valueChanged(SOLO_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
-        m_soloBehaviorChanged.notify();
-    });
-
     muse::settings()->setDefaultValue(SEEK_SHORT_PERIOD, muse::Val(5.0));
     muse::settings()->valueChanged(SEEK_SHORT_PERIOD).onReceive(nullptr, [this](const muse::Val&) {
         m_shortSkipChanged.notify();
@@ -253,21 +247,6 @@ async::Notification PlaybackConfiguration::ditheringChanged() const
 async::Notification PlaybackConfiguration::playbackQualityChanged() const
 {
     return m_playbackQualityChanged;
-}
-
-TracksBehaviors::SoloBehavior PlaybackConfiguration::currentSoloBehavior() const
-{
-    return muse::settings()->value(SOLO_BEHAVIOR).toEnum<playback::TracksBehaviors::SoloBehavior>();
-}
-
-void PlaybackConfiguration::setSoloBehavior(playback::TracksBehaviors::SoloBehavior behavior)
-{
-    muse::settings()->setSharedValue(SOLO_BEHAVIOR, muse::Val(behavior));
-}
-
-muse::async::Notification PlaybackConfiguration::soloBehaviorChanged() const
-{
-    return m_soloBehaviorChanged;
 }
 
 au::trackedit::secs_t PlaybackConfiguration::shortSkip() const

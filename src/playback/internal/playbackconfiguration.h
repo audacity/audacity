@@ -45,10 +45,6 @@ public:
     void setDithering(DitherTypePrefs::DitherType dithering) override;
     muse::async::Notification ditheringChanged() const override;
 
-    TracksBehaviors::SoloBehavior currentSoloBehavior() const override;
-    void setSoloBehavior(TracksBehaviors::SoloBehavior behavior) override;
-    muse::async::Notification soloBehaviorChanged() const override;
-
     trackedit::secs_t shortSkip() const override;
     void setShortSkip(trackedit::secs_t seconds) override;
     muse::async::Notification shortSkipChanged() const override;
@@ -70,7 +66,6 @@ private:
     muse::async::Notification m_playbackHorizontalMeterSizeChanged;
     muse::async::Notification m_playbackQualityChanged;
     muse::async::Notification m_ditheringChanged;
-    muse::async::Notification m_soloBehaviorChanged;
     muse::async::Notification m_shortSkipChanged;
     muse::async::Notification m_longSkipChanged;
     muse::async::Notification m_selectionFollowsLoopRegionChanged;
