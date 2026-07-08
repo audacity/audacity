@@ -125,6 +125,11 @@ public:
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
 
+    muse::ValCh<bool> keyboardMoveActive() const override;
+    void setKeyboardMoveActive(bool active) override;
+
+    muse::async::Notification modifiersReleased() const override;
+
     int trackDefaultHeight() const override;
 
 private:
@@ -186,6 +191,8 @@ private:
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;
+    muse::ValCh<bool> m_keyboardMoveActive;
+    muse::async::Notification m_modifiersReleased;
 
     muse::async::Notification m_rolledBack;
 };

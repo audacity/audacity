@@ -750,10 +750,10 @@ Rectangle {
                 anchors.fill: parent
                 clip: false // do not clip so clip handles are visible
 
-                property bool moveActive: false
+                property bool mouseMoveActive: false
 
-                onMoveActiveChanged: {
-                    if (moveActive) {
+                onMouseMoveActiveChanged: {
+                    if (mouseMoveActive) {
                         CustomCursorProvider.overrideStandardCursor(Qt.ClosedHandCursor)
                     } else {
                         CustomCursorProvider.restoreCursor()
@@ -912,7 +912,7 @@ Rectangle {
                             isWaveformViewVisible: itemData.isWaveformViewVisible
                             isSpectrogramViewVisible: itemData.isSpectrogramViewVisible
 
-                            moveActive: tracksItemsView.moveActive
+                            moveActive: tracksItemsView.mouseMoveActive || tracksViewState.keyboardMoveActive
 
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
@@ -974,11 +974,11 @@ Rectangle {
                                 selectionViewController.resetDataSelection()
                             }
 
-                            onUpdateMoveActive: function (completed) {
-                                if (tracksItemsView.moveActive !== completed) {
+                            onUpdateMouseMoveActive: function (completed) {
+                                if (tracksItemsView.mouseMoveActive !== completed) {
                                     return
                                 }
-                                tracksItemsView.moveActive = !completed
+                                tracksItemsView.mouseMoveActive = !completed
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
@@ -1009,7 +1009,7 @@ Rectangle {
                             onItemDragEditCanceled: {
                                 root.hoveredItemKey = null
                                 root.itemHeaderHovered = false
-                                tracksItemsView.moveActive = false
+                                tracksItemsView.mouseMoveActive = false
                                 timeline.context.updateSelectedClipTime()
                             }
 
@@ -1107,7 +1107,7 @@ Rectangle {
                             isMultiSelectionActive: itemData.isMultiSelectionActive
                             isTrackAudible: itemData.isTrackAudible
 
-                            moveActive: tracksItemsView.moveActive
+                            moveActive: tracksItemsView.mouseMoveActive || tracksViewState.keyboardMoveActive
 
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
@@ -1157,7 +1157,7 @@ Rectangle {
                             onItemDragEditCanceled: {
                                 root.hoveredItemKey = null
                                 root.itemHeaderHovered = false
-                                tracksItemsView.moveActive = false
+                                tracksItemsView.mouseMoveActive = false
                             }
 
                             onSeekToX: function (x) {
@@ -1182,11 +1182,11 @@ Rectangle {
                                 selectionViewController.resetDataSelection()
                             }
 
-                            onUpdateMoveActive: function (completed) {
-                                if (tracksItemsView.moveActive !== completed) {
+                            onUpdateMouseMoveActive: function (completed) {
+                                if (tracksItemsView.mouseMoveActive !== completed) {
                                     return
                                 }
-                                tracksItemsView.moveActive = !completed
+                                tracksItemsView.mouseMoveActive = !completed
                             }
 
                             onUpdateItemGuideline: function (time) {

@@ -329,6 +329,7 @@ void TrackeditActionsController::init()
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
+        setFocusedItemMoveInProgress(false);
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -2118,70 +2119,97 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
 
 void TrackeditActionsController::moveFocusedItemLeft()
 {
-    const double stepSize = calculateStepSize();
-    static bool completed = true;
-
-    if (!labelsForInteraction().empty()) {
-        trackeditInteraction()->moveLabels(labelsForInteraction(), -stepSize, 0, completed, UndoPushType::CONSOLIDATE);
-    } else {
-        static bool itemsMovedToOtherTrack = false;
-        trackeditInteraction()->moveClips(clipsForInteraction(), -stepSize, 0, completed, itemsMovedToOtherTrack,
-                                          UndoPushType::CONSOLIDATE);
-    }
+    moveFocusedItem(-calculateStepSize(), 0);
 }
 
 void TrackeditActionsController::moveFocusedItemRight()
 {
-    const double stepSize = calculateStepSize();
-    static bool completed = true;
-
-    if (!labelsForInteraction().empty()) {
-        trackeditInteraction()->moveLabels(labelsForInteraction(), stepSize, 0, completed, UndoPushType::CONSOLIDATE);
-    } else {
-        static bool itemsMovedToOtherTrack = false;
-        trackeditInteraction()->moveClips(clipsForInteraction(), stepSize, 0, completed, itemsMovedToOtherTrack,
-                                          UndoPushType::CONSOLIDATE);
-    }
+    moveFocusedItem(calculateStepSize(), 0);
 }
 
 void TrackeditActionsController::moveFocusedItemUp()
 {
-    static bool completed = true;
-
-    if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, -1, completed,
-                                                                               UndoPushType::CONSOLIDATE);
-        if (result.ret) {
-            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
-        }
-    } else {
-        static bool itemsMovedToOtherTrack = false;
-        muse::RetVal<ClipKeyList> result
-            = trackeditInteraction()->moveClips(clipsForInteraction(), 0, -1, completed, itemsMovedToOtherTrack,
-                                                UndoPushType::CONSOLIDATE);
-        if (result.ret) {
-            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
-        }
-    }
+    moveFocusedItem(0.0, -1);
 }
 
 void TrackeditActionsController::moveFocusedItemDown()
 {
-    static bool completed = true;
+    moveFocusedItem(0.0, 1);
+}
+
+void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset)
+{
+    constexpr bool completed = false;
 
     if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, 1, completed,
-                                                                               UndoPushType::CONSOLIDATE);
-        if (result.ret) {
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), timePositionOffset,
+                                                                               trackPositionOffset, completed, UndoPushType::NONE);
+        if (!result.ret) {
+            return;
+        }
+        selectionController()->setSelectedLabels(result.val, completed);
+        if (trackPositionOffset != 0 && !result.val.empty()) {
+            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
+        }
+    } else if (!clipsForInteraction().empty()) {
+        bool itemsMovedToOtherTrack = false;
+        muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(clipsForInteraction(), timePositionOffset,
+                                                                             trackPositionOffset, completed, itemsMovedToOtherTrack,
+                                                                             UndoPushType::NONE);
+        if (!result.ret) {
+            return;
+        }
+        selectionController()->setSelectedClips(result.val, completed);
+        if (trackPositionOffset != 0 && !result.val.empty()) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }
     } else {
-        static bool itemsMovedToOtherTrack = false;
-        muse::RetVal<ClipKeyList> result
-            = trackeditInteraction()->moveClips(clipsForInteraction(), 0, 1, completed, itemsMovedToOtherTrack,
-                                                UndoPushType::CONSOLIDATE);
+        return;
+    }
+
+    setFocusedItemMoveInProgress(true);
+}
+
+void TrackeditActionsController::setFocusedItemMoveInProgress(bool inProgress)
+{
+    if (m_focusedItemMoveInProgress == inProgress) {
+        return;
+    }
+    m_focusedItemMoveInProgress = inProgress;
+
+    if (auto project = globalContext()->currentProject()) {
+        if (auto viewState = project->viewState()) {
+            viewState->setKeyboardMoveActive(inProgress);
+            if (inProgress) {
+                viewState->modifiersReleased().onNotify(this, [this]() {
+                    completeFocusedItemMove();
+                }, muse::async::Asyncable::Mode::SetReplace);
+            }
+        }
+    }
+}
+
+void TrackeditActionsController::completeFocusedItemMove()
+{
+    if (!m_focusedItemMoveInProgress) {
+        return;
+    }
+    setFocusedItemMoveInProgress(false);
+
+    constexpr bool completed = true;
+
+    if (!labelsForInteraction().empty()) {
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0.0, 0, completed,
+                                                                               UndoPushType::NONE);
         if (result.ret) {
-            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
+            selectionController()->setSelectedLabels(result.val, completed);
+        }
+    } else if (!clipsForInteraction().empty()) {
+        bool itemsMovedToOtherTrack = false;
+        muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(clipsForInteraction(), 0.0, 0, completed,
+                                                                             itemsMovedToOtherTrack, UndoPushType::NONE);
+        if (result.ret) {
+            selectionController()->setSelectedClips(result.val, completed);
         }
     }
 }

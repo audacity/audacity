@@ -1126,6 +1126,23 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
     return m_ctrlPressed;
 }
 
+muse::ValCh<bool> ProjectViewState::keyboardMoveActive() const
+{
+    return m_keyboardMoveActive;
+}
+
+void ProjectViewState::setKeyboardMoveActive(bool active)
+{
+    if (m_keyboardMoveActive.val != active) {
+        m_keyboardMoveActive.set(active);
+    }
+}
+
+muse::async::Notification ProjectViewState::modifiersReleased() const
+{
+    return m_modifiersReleased;
+}
+
 int ProjectViewState::trackDefaultHeight() const
 {
     return TRACK_DEFAULT_HEIGHT;
@@ -1200,6 +1217,20 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::ControlModifier)) {
             m_ctrlPressed.set(false);
         }
+
+        const QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        if (!keyEvent->isAutoRepeat()) {
+            switch (keyEvent->key()) {
+            case Qt::Key_Control:
+            case Qt::Key_Meta:
+            case Qt::Key_Alt:
+            case Qt::Key_Shift:
+                m_modifiersReleased.notify();
+                break;
+            default:
+                break;
+            }
+        }
     } else if (event->type() == QEvent::ApplicationStateChange) {
         if (qApp->applicationState() != Qt::ApplicationState::ApplicationActive) {
             if (m_altPressed.val) {
@@ -1209,6 +1240,8 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
             }
+
+            m_modifiersReleased.notify();
         }
     }
 

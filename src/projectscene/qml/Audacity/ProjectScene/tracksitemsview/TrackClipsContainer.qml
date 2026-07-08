@@ -736,8 +736,8 @@ TrackItemsContainer {
         target: root.container
 
         function onItemMoveRequested(itemKey, completed) {
-            // this one notifies every ClipListModel about moveActive
-            root.updateMoveActive(completed);
+            // this one notifies every ClipListModel about mouseMoveActive
+            root.updateMouseMoveActive(completed);
 
             // this one moves the clips
             let clipMovedToOtherTrack = clipsModel.moveSelectedClips(itemKey, completed);
