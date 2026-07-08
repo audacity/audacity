@@ -3450,12 +3450,14 @@ int AudioIoCallback::AudioCallback(
         statusFlags,
         tempFloats);
 
-    // Recording without playback produces no DAC callback info, so the main
-    // thread would never advance the schedule time.  Queue the captured frames
-    // instead, minus the leading frames that DrainInputBuffers discards for
-    // latency compensation, so the schedule time tracks the frames that
-    // actually become recorded data.
-    if (mStreamToken > 0 && !IsPaused() && numCaptureChannels > 0 && numPlaybackChannels == 0) {
+    // Recording without playback sequences produces no DAC callback info (with
+    // no sequences FillOutputBuffers never queues any, even when input
+    // monitoring opens playback channels), so the main thread would never
+    // advance the schedule time.  Queue the captured frames instead, minus the
+    // leading frames that DrainInputBuffers discards for latency compensation,
+    // so the schedule time tracks the frames that actually become recorded
+    // data.
+    if (mStreamToken > 0 && !IsPaused() && numCaptureChannels > 0 && mPlaybackSequences.empty()) {
         unsigned long keptFrames = drainedCaptureFrames;
         if (mCaptureClockDiscardFrames > 0) {
             const auto skip = std::min<unsigned long long>(keptFrames, mCaptureClockDiscardFrames);
