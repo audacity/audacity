@@ -333,7 +333,6 @@ void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& p
 
         auto leftClip = waveTrack->CopyClip(*otherClip, true);
         waveTrack->InsertInterval(std::move(leftClip), false);
-        project->notifyAboutTrackChanged(au::au3::DomConverter::track(waveTrack));
 
         secs_t rightClipOverlap = (end - otherClip->GetPlayStartTime());
         otherClip->TrimLeft(rightClipOverlap);
