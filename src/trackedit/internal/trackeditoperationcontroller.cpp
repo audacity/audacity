@@ -175,7 +175,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
     const auto paths = clipboard()->systemClipboardFilePaths();
 
     bool recreateRangeSelection = false;
-    secs_t pastedDataDuration = 0.0;
+    secs_t pastedDataEndTime = 0.0;
 
     if (!paths.empty()) {
         ret = importer()->importFromSystemClipboard(paths, begin);
@@ -184,7 +184,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
     } else {
         const std::vector<ITrackDataPtr> trackData = clipboard()->trackDataCopy();
         for (const ITrackDataPtr& data : trackData) {
-            pastedDataDuration = std::max(pastedDataDuration, data->duration());
+            pastedDataEndTime = std::max(pastedDataEndTime, data->endTime());
         }
         recreateRangeSelection = !clipboard()->isMultiSelectionCopy();
 
@@ -197,7 +197,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
         if (recreateRangeSelection) {
             selectionController()->setDataSelectedStartTime(begin, true);
-            selectionController()->setDataSelectedEndTime(begin + pastedDataDuration, true);
+            selectionController()->setDataSelectedEndTime(begin + pastedDataEndTime, true);
         }
     } else if (modifiedState) {
         projectHistory()->rollbackState();

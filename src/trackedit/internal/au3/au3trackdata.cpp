@@ -11,7 +11,7 @@ Au3TrackData::Au3TrackData(std::shared_ptr<au3::Au3Track> track)
 {
 }
 
-secs_t Au3TrackData::duration() const
+secs_t Au3TrackData::endTime() const
 {
     return m_track ? secs_t(m_track->GetEndTime()) : secs_t(0.0);
 }

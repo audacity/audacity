@@ -116,10 +116,8 @@ void TrackClipsListModel::onReload()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList.onItemAdded(this, [this](const Clip& clip) {
-        for (const Clip& c : m_allClipList) {
-            if (c.key == clip.key) {
-                return;
-            }
+        IF_ASSERT_FAILED(!muse::contains_if(m_allClipList, [&clip](const Clip& c) { return c.key == clip.key; })) {
+            return;
         }
 
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
