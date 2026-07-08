@@ -115,6 +115,7 @@ private:
     void clearRecentProjects();
 
     void exportAudio();
+    void exportOverwriteOriginal();
     void exportLabels(const muse::actions::ActionData& args);
     void exportMIDI();
 
