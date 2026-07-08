@@ -120,6 +120,26 @@ ListItemBlank {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        onPressed: function (e) {
+            // Pass the event forward to allow
+            // child elements to handle the input
+            e.accepted = false
+
+            let multiSelectionModifier = e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)
+
+            if (!multiSelectionModifier) {
+                root.selectionRequested(true)
+                root.dataSelectionRequested()
+                return
+            }
+
+            root.selectionRequested(false)
+        }
+    }
+
     Item {
         anchors.fill: parent
 
@@ -222,23 +242,6 @@ ListItemBlank {
 
     Item {
         anchors.fill: parent
-        MouseArea {
-            anchors.fill: parent
-            onPressed: function (e) {
-                // Pass the event forward to allow
-                // child elements to handle the input
-                e.accepted = false
-                let multiSelectionModifier = e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)
-
-                if (!multiSelectionModifier) {
-                    root.selectionRequested(true)
-                    root.dataSelectionRequested()
-                    return
-                }
-
-                root.selectionRequested(false)
-            }
-        }
 
         HoverHandler {
             id: hoverHandler
