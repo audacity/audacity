@@ -342,6 +342,13 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
+    if (m_selectionStarted) {
+        m_selectionStarted = false;
+        m_context->stopAutoScroll();
+        disconnect(m_autoScrollConnection);
+        emit selectionInProgressChanged();
+    }
+
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
 
