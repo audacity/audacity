@@ -14,6 +14,8 @@ public:
 
     ~Au3TrackData() override = default;
 
+    secs_t duration() const override;
+
     const std::shared_ptr<au3::Au3Track>& track() const { return m_track; }
 
 private:
