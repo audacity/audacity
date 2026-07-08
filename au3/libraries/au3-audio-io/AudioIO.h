@@ -205,7 +205,7 @@ public:
         float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats);
     constSamplePtr ApplyRecordGain(
         constSamplePtr inputBuffer, float gain, size_t numSamples, samplePtr scratch);
-    void DrainInputBuffers(
+    unsigned long DrainInputBuffers(
         constSamplePtr inputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackFlags statusFlags, float* tempFloats);
     void UpdateTimePosition(
         unsigned long framesPerBuffer);

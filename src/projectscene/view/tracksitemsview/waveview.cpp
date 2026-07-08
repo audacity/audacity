@@ -220,13 +220,13 @@ void WaveView::paintRecordingPlaceholder(QPainter& painter, const IWavePainter::
         return;
     }
 
-    const double height = params.geometry.height;
+    const double bandsHeight = params.geometry.height;
     std::vector<std::pair<double, double> > channelBands;
     if (muse::is_equal(m_channelHeightRatio, 1.0)) {
-        channelBands.emplace_back(0.0, height);
+        channelBands.emplace_back(0.0, bandsHeight);
     } else {
-        channelBands.emplace_back(0.0, height * m_channelHeightRatio);
-        channelBands.emplace_back(height * m_channelHeightRatio, height * (1.0 - m_channelHeightRatio));
+        channelBands.emplace_back(0.0, bandsHeight * m_channelHeightRatio);
+        channelBands.emplace_back(bandsHeight * m_channelHeightRatio, bandsHeight * (1.0 - m_channelHeightRatio));
     }
 
     for (const auto& [top, bandHeight] : channelBands) {
