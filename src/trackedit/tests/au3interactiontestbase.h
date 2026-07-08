@@ -17,6 +17,8 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 
+#include "project/tests/testtools.h"
+
 using ::testing::NiceMock;
 using ::testing::Return;
 
@@ -163,9 +165,16 @@ public:
     void initTestProject()
     {
         m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>(muse::modularity::globalCtx());
-        const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/empty.aup3";
+
+        // Load a working copy: the tests edit the project, which would modify
+        // the committed fixture if opened in place.
+        const std::string source = (muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
+        m_workingProjectPath = (muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/empty_working.aup4").toStdString();
+        testtools::removeProjectIfExists(m_workingProjectPath);
+        testtools::copyFile(source, m_workingProjectPath);
+
         constexpr auto discardAutosave = false;
-        muse::Ret ret = m_au3ProjectAccessor->load(TEST_PROJECT_PATH, discardAutosave);
+        muse::Ret ret = m_au3ProjectAccessor->load(muse::io::path_t(m_workingProjectPath), discardAutosave);
 
         ON_CALL(*m_currentProject, au3ProjectPtr())
         .WillByDefault(Return(m_au3ProjectAccessor->au3ProjectPtr()));
@@ -279,6 +288,8 @@ public:
 
         m_au3ProjectAccessor->clearSavedState();
         m_au3ProjectAccessor->close();
+
+        testtools::removeProjectIfExists(m_workingProjectPath);
     }
 
     void ValidateClipProperties(const WaveTrack::IntervalHolder& clip, double sequenceStart, double sequenceEnd, double playStart,
@@ -316,5 +327,7 @@ protected:
     std::shared_ptr<context::PlaybackStateMock> m_playbackState;
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
+
+    std::string m_workingProjectPath;
 };
 }

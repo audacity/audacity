@@ -38,7 +38,5 @@ PROJECT_API bool operator==(ProjectFormatVersion lhs, ProjectFormatVersion rhs) 
 PROJECT_API bool operator!=(ProjectFormatVersion lhs, ProjectFormatVersion rhs) noexcept;
 PROJECT_API bool operator<(ProjectFormatVersion lhs, ProjectFormatVersion rhs) noexcept;
 
-//! This constant represents the current version of Audacity
-PROJECT_API extern const ProjectFormatVersion SupportedProjectFormatVersion;
-//! This is a helper constant for the "most compatible" project version which is the current MAJ.MIN.0.0
-PROJECT_API extern const ProjectFormatVersion BaseProjectFormatVersion;
+//! This constant represents the current version of Audacity project db schema
+PROJECT_API extern const ProjectFormatVersion ProjectSchemaVersion;

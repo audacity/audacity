@@ -749,6 +749,8 @@ void SqliteSampleBlock::Commit(Sizes sizes)
     auto db = DB();
     int rc;
 
+    std::lock_guard<std::mutex> lock(Conn()->TransactionMutex());
+
     // Prepare and cache statement...automatically finalized at DB close
     sqlite3_stmt* stmt = Conn()->Prepare(DBConnection::InsertSampleBlock,
                                          "INSERT INTO sampleblocks (sampleformat, summin, summax, sumrms,"
@@ -814,6 +816,8 @@ void SqliteSampleBlock::Delete()
     int rc;
 
     wxASSERT(!IsSilent());
+
+    std::lock_guard<std::mutex> lock(Conn()->TransactionMutex());
 
     // Prepare and cache statement...automatically finalized at DB close
     sqlite3_stmt* stmt = Conn()->Prepare(DBConnection::DeleteSampleBlock,

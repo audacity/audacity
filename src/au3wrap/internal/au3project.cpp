@@ -253,7 +253,19 @@ void Au3ProjectAccessor::close()
     //! ============================================================================
     auto& projectFileIO = ProjectFileIO::Get(project);
 
-    if (m_lastSavedTracks) {
+    // Recovered and never saved this session
+    if (projectFileIO.IsRecovered() && !projectFileIO.IsTemporary()) {
+        // the project doc in the file is still the last save
+        // so dropping the autosave is reverting to the last saved state
+        //
+        // Compacting here would silently commit the recovered state, that was presumably declined
+        if (m_lastSavedTracks) {
+            for (auto wt : m_lastSavedTracks->Any<WaveTrack>()) {
+                WaveTrackUtilities::CloseLock(*wt);
+            }
+        }
+        projectFileIO.AutoSaveDelete();
+    } else if (m_lastSavedTracks) {
         // Lock all blocks in all tracks of the last saved version, so that
         // the sample blocks aren't deleted from the database when we destroy the
         // sample block objects in memory.

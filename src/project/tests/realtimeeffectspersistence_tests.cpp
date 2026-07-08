@@ -87,9 +87,9 @@ protected:
 TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveReload)
 {
     const std::string srcPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup3").toStdString();
+        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
     const std::string dstPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/master_effect_roundtrip.aup3").toStdString();
+        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/master_effect_roundtrip.aup4").toStdString();
 
     // Writable working copy of the (empty) project.
     testtools::removeProjectIfExists(dstPath);
