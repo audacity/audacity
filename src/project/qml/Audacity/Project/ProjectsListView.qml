@@ -40,7 +40,7 @@ Item {
 
     signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
-    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId)
 
     function scrollColumnIntoView(columnX, columnWidth) {
         var viewport = headerFlickable.width
@@ -311,7 +311,7 @@ Item {
 
                         onClicked: {
                             if (item.isCloud) {
-                                root.openCloudProjectRequested(item.itemId, item.path, item.name)
+                                root.openCloudProjectRequested(item.itemId)
                             } else {
                                 root.openProjectRequested(item.path, item.name)
                             }

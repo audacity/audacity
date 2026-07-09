@@ -448,6 +448,18 @@ std::string ServiceConfig::GetProjectsPagePath(
         });
 }
 
+std::string ServiceConfig::GetProfilePagePath(
+    std::string_view userSlug, AudiocomTrace trace) const
+{
+    return Substitute(
+        "/{user_slug}?" MTM_CAMPAIGN,
+        {
+            { "user_slug", userSlug },
+            { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
+            { "button_name", GetButtonName(trace) },
+        });
+}
+
 std::string ServiceConfig::GetTaskPollUrl() const
 {
     return Substitute(

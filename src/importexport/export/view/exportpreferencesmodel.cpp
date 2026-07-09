@@ -32,6 +32,16 @@ QString prepareExtensionsString(const QStringList& extensionList)
 
     return result;
 }
+
+QString otherSampleRateLabel()
+{
+    return muse::qtrc("export", "Other…");
+}
+
+QString customSampleRateName(int rate)
+{
+    return muse::qtrc("export", "%1 Hz (custom)").arg(QString::number(rate));
+}
 }
 
 const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
@@ -361,13 +371,18 @@ QString ExportPreferencesModel::exportSampleRate() const
         }
     }
 
+    if (currentSampleRate > 0) {
+        return customSampleRateName(currentSampleRate);
+    }
+
     return {};
 }
 
 QVariantList ExportPreferencesModel::exportSampleRateList()
 {
     std::vector<int> sampleRateList = exporter()->sampleRateList();
-    if (sampleRateList.empty()) {
+    const bool anySampleRateAllowed = sampleRateList.empty();
+    if (anySampleRateAllowed) {
         sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
     }
 
@@ -379,11 +394,27 @@ QVariantList ExportPreferencesModel::exportSampleRateList()
         result << QVariant::fromValue(sampleRateName);
     }
 
+    if (anySampleRateAllowed) {
+        const int currentSampleRate = exportConfiguration()->exportSampleRate();
+        if (currentSampleRate > 0 && !muse::contains(sampleRateList, currentSampleRate)) {
+            const QString sampleRateName = customSampleRateName(currentSampleRate);
+            m_sampleRateMapping.push_back(std::make_pair(currentSampleRate, sampleRateName));
+            result << QVariant::fromValue(sampleRateName);
+        }
+
+        result << QVariant::fromValue(otherSampleRateLabel());
+    }
+
     return result;
 }
 
 void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
 {
+    if (rateName == otherSampleRateLabel()) {
+        openCustomSampleRateDialog();
+        return;
+    }
+
     if (rateName == exportSampleRate()) {
         return;
     }
@@ -403,6 +434,28 @@ void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
     }
 }
 
+void ExportPreferencesModel::openCustomSampleRateDialog()
+{
+    muse::UriQuery customRateUri("audacity://trackedit/custom_rate");
+    customRateUri.addParam("title", muse::Val(muse::trc("export", "Set sample rate")));
+    customRateUri.addParam("rate", muse::Val(exportConfiguration()->exportSampleRate()));
+
+    interactive()->open(customRateUri)
+    .onResolve(this, [this](const muse::Val& val) {
+        const int customRate = val.toInt();
+        if (customRate > 0) {
+            exportConfiguration()->setExportSampleRate(customRate);
+        }
+
+        emit exportSampleRateListChanged();
+        emit exportSampleRateChanged();
+    })
+    .onReject(this, [this](int, const std::string&) {
+        emit exportSampleRateListChanged();
+        emit exportSampleRateChanged();
+    });
+}
+
 void ExportPreferencesModel::openCustomFFmpegDialog()
 {
     dispatcher()->dispatch("open-custom-ffmpeg-options");
@@ -419,6 +472,19 @@ void ExportPreferencesModel::openCustomMappingDialog()
 }
 
 void ExportPreferencesModel::setFilePickerPath(const QString& path)
+{
+    muse::io::FileInfo info(path);
+
+    if (info.entryType() == muse::io::EntryType::File) {
+        setDirectoryPath(info.absolutePath());
+        setFilename(info.baseName());
+        return;
+    }
+
+    setDirectoryPath(info.absoluteFilePath());
+}
+
+void ExportPreferencesModel::setFileDialogPath(const QString& path)
 {
     muse::io::FileInfo info(path);
 
@@ -442,10 +508,11 @@ void ExportPreferencesModel::updateCurrentSampleRate()
 
     std::vector<int> sampleRateList = exporter()->sampleRateList();
     if (sampleRateList.empty()) {
-        // TODO: if sampleRateList is empty - means that codec accepts any sampleRate,
-        // so no need to update, can return - but first "Other" sampleRate needs
-        // to be implemented
-        // return;
+        //! NOTE An empty list means the codec accepts any sample rate,
+        //! so a valid current rate (including a custom one) can be kept
+        if (sampleRate > 0) {
+            return;
+        }
         sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
     }
 
@@ -506,9 +573,13 @@ void ExportPreferencesModel::updateExportChannels()
 
 bool ExportPreferencesModel::verifyExportPossible()
 {
-    muse::Ret directoryExists = fileSystem()->makePath(directoryPath());
-    if (!directoryExists || directoryPath().isEmpty()) {
-        interactive()->error(muse::trc("export", "Export audio"), muse::trc("export", "Unable to create destination folder"));
+    muse::Ret directoryCreated = fileSystem()->makePath(directoryPath());
+    if (!directoryCreated || directoryPath().isEmpty()) {
+        interactive()->error(muse::trc("export", "Export audio"),
+                             muse::mtrc("export",
+                                        "Could not export to “%1”: the destination folder could not be created. "
+                                        "Check that the path is valid and that you have permission to write to it.")
+                             .arg(muse::String::fromQString(directoryPath())).toStdString());
         return false;
     }
 

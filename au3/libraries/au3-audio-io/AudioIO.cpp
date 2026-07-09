@@ -498,7 +498,21 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     mLastPaError = paNoError;
     // pick a rate to do the audio I/O at, from those available. The project
     // rate is suggested, but we may get something else if it isn't supported
-    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
+    mRate = 0.0;
+
+    // Opening ASIO streams at the device's current rate allows simultaneous playback
+    // with drivers that support it
+    if (gPrefs->ReadBool(wxT("/AudioIO/ASIO/UseDeviceSampleRate"), true)) {
+        const int asioDevIndex
+            =numPlaybackChannels > 0 ? getPlayDevIndex() : getRecordDevIndex();
+        if (DeviceManager::IsAsioDevice(asioDevIndex)) {
+            mRate = DeviceManager::GetAsioDeviceCurrentSampleRate(asioDevIndex);
+        }
+    }
+
+    if (mRate == 0.0) {
+        mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
+    }
 
     // GetBestRate() will return 0.0 for bidirectional streams when there is no
     // common sample rate supported by both the input and output devices.

@@ -17,7 +17,7 @@ Item {
         name: "PluginManagerTopPanel"
         direction: NavigationPanel.Horizontal
         accessible.role: MUAccessible.ComboBox
-        accessible.name: showModel.label + ", " + typeModel.label + ", " + categoryModel.label + ", " + searchField.accessible.name
+        accessible.name: showModel.label + ", " + typeModel.label + ", " + categoryModel.label + ", " + statusModel.label + ", " + searchField.accessible.name
     }
 
     signal searchTextChanged(string newText)
@@ -35,7 +35,7 @@ Item {
         id: accessibleInfo
         visualItem: root
         role: MUAccessible.ComboBox
-        name: showModel.label + ", " + typeModel.label + ", " + categoryModel.label + ", " + searchField.accessible.name
+        name: showModel.label + ", " + typeModel.label + ", " + categoryModel.label + ", " + statusModel.label + ", " + searchField.accessible.name
     }
 
     Component.onCompleted: {
@@ -47,6 +47,9 @@ Item {
         })
         tableViewModel.effectTypeSelectedIndex = Qt.binding(function () {
             return categoryModel.selectedIndex
+        })
+        tableViewModel.statusSelectedIndex = Qt.binding(function () {
+            return statusModel.selectedIndex
         })
     }
 
@@ -68,6 +71,12 @@ Item {
         options: tableViewModel.effectTypeOptions
     }
 
+    DropdownOptionsModel {
+        id: statusModel
+        label: qsTrc("effects", "Status:")
+        options: tableViewModel.statusOptions
+    }
+
     RowLayout {
         id: rowLayout
 
@@ -77,7 +86,7 @@ Item {
         Repeater {
             id: dropdownsRepeater
 
-            model: [showModel, typeModel, categoryModel]
+            model: [showModel, typeModel, categoryModel, statusModel]
 
             DropdownWithTitle {
                 id: dropdown

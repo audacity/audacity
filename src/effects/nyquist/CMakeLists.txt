@@ -20,6 +20,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsscanner.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsmetareader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/nyquisttypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/nyquistprompt/nyquistprompteffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/nyquistprompt/nyquistprompteffect.h

@@ -11,7 +11,7 @@ class NyquistEffectsLoader final : public Au3EffectLoader
 {
 public:
     NyquistEffectsLoader()
-        : Au3EffectLoader(m_module, muse::audio::AudioResourceType::NyquistPlugin) {}
+        : Au3EffectLoader(m_module, EffectFamily::Nyquist) {}
 
 private:
     ::NyquistEffectsModule m_module;

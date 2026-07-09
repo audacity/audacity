@@ -5,6 +5,7 @@
 
 #include <QCoreApplication>
 #include <QNetworkReply>
+#include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUrl>
@@ -27,10 +28,16 @@ public:
 
     QUrl m_redirectUrl;
 
+    bool hasPendingSocket();
+    void sendRedirect(const QUrl& url);
+    void sendError();
+
 private:
     void onClientConnected();
     void readData(QTcpSocket* socket);
     void answerClient(QTcpSocket* socket, const QUrl& url);
+    void answerPendingClient(const QByteArray& response);
+    QByteArray makeResponse(const QByteArray& status, const QUrl& location, const QString& text) const;
 
     struct HttpRequest {
         quint16 port = 0;
@@ -66,6 +73,7 @@ private:
     };
 
     QMap<QTcpSocket*, HttpRequest> m_clients;
+    QPointer<QTcpSocket> m_pendingSocket;
 
     OAuthHttpServerReplyHandler* m_public = nullptr;
 };
@@ -149,27 +157,75 @@ void OAuthHttpServerReplyHandler::Impl::answerClient(QTcpSocket* socket, const Q
         receivedData.insert(it->first, it->second);
     }
 
+    if (!receivedData.contains(QStringLiteral("code")) && !receivedData.contains(QStringLiteral("error"))) {
+        // Not an OAuth callback (e.g. a favicon request); don't touch the pending socket
+        socket->write(QByteArrayLiteral("HTTP/1.0 404 Not Found\r\nContent-Length: 0\r\n\r\n"));
+        socket->disconnectFromHost();
+        return;
+    }
+
+    if (m_pendingSocket) {
+        m_pendingSocket->disconnectFromHost();
+    }
+
+    m_pendingSocket = socket;
+
     Q_EMIT m_public->callbackReceived(receivedData);
+}
 
-    // Fallback text, shown while redirecting
+bool OAuthHttpServerReplyHandler::Impl::hasPendingSocket()
+{
+    return m_pendingSocket;
+}
+
+void OAuthHttpServerReplyHandler::Impl::sendRedirect(const QUrl& url)
+{
+    if (!m_pendingSocket) {
+        return;
+    }
+
+    const QUrl target = url.isEmpty() ? m_redirectUrl : url;
     const QString text = muse::qtrc("cloud", "Sign in successful! You’re good to go back to Audacity.");
+    const QByteArray status = target.isEmpty() ? QByteArrayLiteral("200 OK") : QByteArrayLiteral("302 Found");
 
+    answerPendingClient(makeResponse(status, target, text));
+}
+
+void OAuthHttpServerReplyHandler::Impl::sendError()
+{
+    if (!m_pendingSocket) {
+        return;
+    }
+
+    const QString text = muse::qtrc("cloud", "Sign in failed. Please return to Audacity and try again.");
+    answerPendingClient(makeResponse(QByteArrayLiteral("200 OK"), QUrl(), text));
+}
+
+QByteArray OAuthHttpServerReplyHandler::Impl::makeResponse(const QByteArray& status, const QUrl& location, const QString& text) const
+{
     const QByteArray html = QByteArrayLiteral("<html><head><title>")
                             + qApp->applicationName().toUtf8()
                             + QByteArrayLiteral("</title></head><body>")
                             + text.toUtf8()
-                            + ("</body></html>");
+                            + QByteArrayLiteral("</body></html>");
 
-    const QByteArray htmlSize = QByteArray::number(html.size());
-    const QByteArray replyMessage = QByteArrayLiteral("HTTP/1.0 301 Moved Permanently \r\n"
-                                                      "Location: ") + m_redirectUrl.toString().toUtf8()
-                                    + QByteArrayLiteral("\r\nContent-Type: text/html; "
-                                                        "charset=\"utf-8\"\r\n"
-                                                        "Content-Length: ") + htmlSize
-                                    + QByteArrayLiteral("\r\n\r\n")
-                                    + html;
+    QByteArray response = QByteArrayLiteral("HTTP/1.0 ") + status + QByteArrayLiteral("\r\n");
+    if (!location.isEmpty()) {
+        response += QByteArrayLiteral("Location: ") + location.toString().toUtf8() + QByteArrayLiteral("\r\n");
+    }
+    response += QByteArrayLiteral("Content-Type: text/html; charset=\"utf-8\"\r\n"
+                                  "Content-Length: ") + QByteArray::number(html.size())
+                + QByteArrayLiteral("\r\n\r\n")
+                + html;
 
-    socket->write(replyMessage);
+    return response;
+}
+
+void OAuthHttpServerReplyHandler::Impl::answerPendingClient(const QByteArray& response)
+{
+    m_pendingSocket->write(response);
+    m_pendingSocket->disconnectFromHost();
+    m_pendingSocket.clear();
 }
 
 bool OAuthHttpServerReplyHandler::Impl::HttpRequest::readMethod(QTcpSocket* socket)
@@ -352,7 +408,26 @@ bool OAuthHttpServerReplyHandler::isListening() const
     return m_impl->m_httpServer.isListening();
 }
 
+bool OAuthHttpServerReplyHandler::hasPendingSocket()
+{
+    return m_impl->hasPendingSocket();
+}
+
 void OAuthHttpServerReplyHandler::setRedirectUrl(const QUrl& url)
 {
     m_impl->m_redirectUrl = url;
+}
+
+void OAuthHttpServerReplyHandler::sendRedirect(const QUrl& url)
+{
+    QMetaObject::invokeMethod(this, [this, url]() {
+        m_impl->sendRedirect(url);
+    }, Qt::QueuedConnection);
+}
+
+void OAuthHttpServerReplyHandler::sendError()
+{
+    QMetaObject::invokeMethod(this, [this]() {
+        m_impl->sendError();
+    }, Qt::QueuedConnection);
 }

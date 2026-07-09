@@ -22,6 +22,7 @@
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
+#include "project/tests/mocks/cloudprojectsprovidermock.h"
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 #include "testtools.h"
@@ -42,11 +43,13 @@ protected:
     std::shared_ptr<au::project::TrackeditProjectCreatorMock> m_trackeditProjectCreator;
     std::shared_ptr<au::projectscene::ProjectViewStateCreatorMock> m_projectViewStateCreator;
     std::shared_ptr<au::trackedit::ClipboardMock> m_clipboard;
+    std::shared_ptr<au::au3cloud::CloudProjectsProviderMock> m_cloudProjectsProvider;
 
     void SetUp() override
     {
         m_testCtx = au::testutils::makeTestContext();
         m_clipboard = std::make_shared<::testing::NiceMock<au::trackedit::ClipboardMock> >();
+        m_cloudProjectsProvider = std::make_shared<::testing::NiceMock<au::au3cloud::CloudProjectsProviderMock> >();
         m_currentProject = makeProject();
     }
 
@@ -63,6 +66,7 @@ protected:
         project->trackeditProjectCreator.set(m_trackeditProjectCreator);
         project->viewStateCreator.set(m_projectViewStateCreator);
         project->clipboard.set(m_clipboard);
+        project->cloudProjectsProvider.set(m_cloudProjectsProvider);
         return project;
     }
 
@@ -83,9 +87,9 @@ protected:
 TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveReload)
 {
     const std::string srcPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup3").toStdString();
+        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
     const std::string dstPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/master_effect_roundtrip.aup3").toStdString();
+        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/master_effect_roundtrip.aup4").toStdString();
 
     // Writable working copy of the (empty) project.
     testtools::removeProjectIfExists(dstPath);
@@ -133,5 +137,56 @@ TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveRel
     m_currentProject->close();
 
     testtools::removeProjectIfExists(dstPath);
+}
+
+TEST_F(Project_RealtimeEffectsPersistenceTests, RealtimeEffectState_LoadNormalizesWindowsEffectIdPathSeparators)
+{
+    const std::string aup3Id
+        = "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:\\Program Files\\Common Files\\VST3\\Soap Voice Cleaner.vst3;"
+          "ABCDEF019182FAEB536F6170536F6170";
+    const std::string aup4Id
+        = "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:/Program Files/Common Files/VST3/Soap Voice Cleaner.vst3;"
+          "ABCDEF019182FAEB536F6170536F6170";
+
+    RealtimeEffectState::EffectFactory::Scope effectFactoryScope {
+        [](const PluginID&) -> const EffectInstanceFactory* { return &dummyFactory(); }
+    };
+
+    RealtimeEffectState state { {} };
+    const AttributesList attrs {
+        { "id", XMLAttributeValueView { std::string_view { aup3Id } } }
+    };
+
+    ASSERT_TRUE(state.HandleXMLTag(RealtimeEffectState::XMLTag(), attrs));
+    EXPECT_EQ(state.GetID().ToStdString(), aup4Id);
+}
+
+TEST_F(Project_RealtimeEffectsPersistenceTests, RealtimeEffectState_LoadStoresResolvedEffectId)
+{
+    const PluginID loadedId = wxString::FromUTF8(
+        "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:\\Program Files\\Common Files\\VST3\\Soap Voice Cleaner.vst3;"
+        "ABCDEF019182FAEB536F6170536F6170");
+    const PluginID normalizedId = wxString::FromUTF8(
+        "Effect_VST3_Soap Audio_Soap Voice Cleaner_C:/Program Files/Common Files/VST3/Soap Voice Cleaner.vst3;"
+        "ABCDEF019182FAEB536F6170536F6170");
+    const PluginID resolvedId = wxString::FromUTF8(
+        "Effect_VST3_Soap Audio_Soap Voice Cleaner_D:/Audio/VST3/Soap Voice Cleaner.vst3;"
+        "ABCDEF019182FAEB536F6170536F6170");
+
+    RealtimeEffectState::EffectIdResolver::Scope resolverScope {
+        [&](const PluginID& id) -> PluginID { return id == normalizedId ? resolvedId : PluginID {}; }
+    };
+    RealtimeEffectState::EffectFactory::Scope effectFactoryScope {
+        [](const PluginID&) -> const EffectInstanceFactory* { return &dummyFactory(); }
+    };
+
+    RealtimeEffectState state { {} };
+    const std::string loadedIdString = loadedId.ToStdString();
+    const AttributesList attrs {
+        { "id", XMLAttributeValueView { std::string_view { loadedIdString } } }
+    };
+
+    ASSERT_TRUE(state.HandleXMLTag(RealtimeEffectState::XMLTag(), attrs));
+    EXPECT_EQ(state.GetID(), resolvedId);
 }
 }

@@ -58,6 +58,12 @@ public:
     virtual void setDefaultSampleFormat(const std::string& format) = 0;
     virtual muse::async::Notification defaultSampleFormatChanged() const = 0;
 
+    virtual bool asioUseDeviceSampleRate() const = 0;
+    virtual void setAsioUseDeviceSampleRate(bool use) = 0;
+    virtual muse::async::Notification asioUseDeviceSampleRateChanged() const = 0;
+
+    virtual void showAsioControlPanel() = 0;
+
     virtual void handleDeviceChange() = 0;
 
     virtual void rescan() = 0;

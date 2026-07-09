@@ -13,6 +13,7 @@
 #include "internal/au3cloudconfiguration.h"
 #include "internal/au3cloudservice.h"
 #include "internal/au3audiocomservice.h"
+#include "internal/cloudprojectsprovider.h"
 #include "internal/au3cloudactionscontroller.h"
 #include "internal/clouduiactions.h"
 
@@ -36,6 +37,9 @@ void Au3CloudModule::registerExports()
 
     m_cloudService = std::make_shared<Au3CloudService>();
     globalIoc()->registerExport<au3cloud::IAuthorization>(mname, m_cloudService);
+
+    m_cloudProjectsProvider = std::make_shared<CloudProjectsProvider>();
+    globalIoc()->registerExport<au3cloud::ICloudProjectsProvider>(mname, m_cloudProjectsProvider);
 }
 
 void Au3CloudModule::onInit(const muse::IApplication::RunMode&)

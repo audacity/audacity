@@ -366,3 +366,59 @@ void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& p
         return;
     }
 }
+
+void au::trackedit::utils::remapCopiedClipGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
+                                                 const std::vector<au3::Au3WaveTrack*>& copies)
+{
+    std::map<int64_t, size_t> copiedClipCounts;
+    for (au3::Au3WaveTrack* copy : copies) {
+        for (const auto& clip : copy->Intervals()) {
+            const int64_t groupId = clip->GetGroupId();
+            if (groupId != -1) {
+                ++copiedClipCounts[groupId];
+            }
+        }
+    }
+
+    if (copiedClipCounts.empty()) {
+        return;
+    }
+
+    std::map<int64_t, size_t> projectClipCounts;
+    for (const au3::Au3Track* track : projectTracks) {
+        const auto waveTrack = dynamic_cast<const au3::Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
+        for (const auto& clip : waveTrack->Intervals()) {
+            const int64_t groupId = clip->GetGroupId();
+            if (muse::contains(copiedClipCounts, groupId)) {
+                ++projectClipCounts[groupId];
+            }
+        }
+    }
+
+    std::map<int64_t, int64_t> remappedGroupIds;
+    int64_t searchFrom = 0;
+    for (au3::Au3WaveTrack* copy : copies) {
+        for (const auto& clip : copy->Intervals()) {
+            const int64_t oldGroupId = clip->GetGroupId();
+            if (oldGroupId == -1) {
+                continue;
+            }
+
+            if (copiedClipCounts[oldGroupId] != projectClipCounts[oldGroupId]) {
+                clip->SetGroupId(-1);
+                continue;
+            }
+
+            auto it = remappedGroupIds.find(oldGroupId);
+            if (it == remappedGroupIds.end()) {
+                const int64_t newGroupId = prj.createNewGroupID(searchFrom);
+                searchFrom = newGroupId + 1;
+                it = remappedGroupIds.insert({ oldGroupId, newGroupId }).first;
+            }
+            clip->SetGroupId(it->second);
+        }
+    }
+}

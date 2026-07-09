@@ -82,4 +82,10 @@ struct DownloadRequest {
     std::string url;
     muse::io::path_t localPath;
 };
+
+struct CloudProjectRecord {
+    std::string projectId;
+    std::string snapshotId;
+    muse::io::path_t localPath;
+};
 }

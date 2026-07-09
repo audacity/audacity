@@ -99,6 +99,7 @@ public:
     Q_INVOKABLE void openMetadataDialog();
     Q_INVOKABLE void openCustomMappingDialog();
     Q_INVOKABLE void setFilePickerPath(const QString& path);
+    Q_INVOKABLE void setFileDialogPath(const QString& path);
     Q_INVOKABLE bool verifyExportPossible();
     Q_INVOKABLE QStringList fileFilter();
     QStringList formatExtensions(const QString& format) const;
@@ -142,6 +143,7 @@ signals:
 
 private:
     void updateCurrentSampleRate();
+    void openCustomSampleRateDialog();
     void updateExportChannels();
 
     QString m_filename;

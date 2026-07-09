@@ -59,6 +59,10 @@ public:
     bool LoadSettings(
         const CommandParameters& parms, EffectSettings& settings) const override;
 
+    bool VisitSettings(SettingsVisitor& visitor, EffectSettings& settings) override;
+    bool VisitSettings(
+        ConstSettingsVisitor& visitor, const EffectSettings& settings) const override;
+
     OptionalMessage LoadUserPreset(
         const RegistryPath& name, EffectSettings& settings) const override;
     bool SaveUserPreset(
@@ -67,6 +71,7 @@ public:
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings)
     const override;
+    OptionalMessage LoadFactoryDefaults(EffectSettings& settings) const override;
 
     bool InitializePlugin();
 

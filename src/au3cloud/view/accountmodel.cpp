@@ -70,3 +70,8 @@ void AccountModel::openCreateAccountDialog() const
 
     dispatcher()->dispatch(query);
 }
+
+void AccountModel::openProfile() const
+{
+    dispatcher()->dispatch(muse::actions::ActionQuery("audacity://cloud/open-profile-page"));
+}

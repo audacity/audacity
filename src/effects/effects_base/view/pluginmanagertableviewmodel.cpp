@@ -14,13 +14,54 @@
 #include "framework/uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
 
+#include <array>
+
 namespace au::effects {
 namespace {
 constexpr auto enabledColumnWidth = 100;
 constexpr auto nameColumnWidth = 152;
+constexpr auto statusColumnWidth = 120;
 constexpr auto vendorColumnWidth = 152;
 constexpr auto pathColumnWidth = 296;
 constexpr auto typeColumnWidth = 152;
+
+// dropdown order of the status filter; index 0 in the dropdown is "All"
+constexpr std::array<muse::audioplugins::AudioPluginState, 4> statusFilterOrder {
+    muse::audioplugins::AudioPluginState::Validated,
+    muse::audioplugins::AudioPluginState::Discovered,
+    muse::audioplugins::AudioPluginState::Missing,
+    muse::audioplugins::AudioPluginState::Error,
+};
+}
+
+QString effectDisplayName(const EffectMeta& meta)
+{
+    if (!meta.title.empty()) {
+        return meta.title.toQString();
+    }
+    // never-validated entries have no title; their id is the binary's basename,
+    // unless it's a full effect id we can parse a name out of
+    return utils::isEffectId(meta.id)
+           ? QString::fromStdString(utils::parseEffectName(meta.id))
+           : meta.id.toQString();
+}
+
+QString pluginStateToString(muse::audioplugins::AudioPluginState state)
+{
+    using muse::audioplugins::AudioPluginState;
+    switch (state) {
+    case AudioPluginState::Validated:
+        return muse::qtrc("effects", "OK");
+    case AudioPluginState::Discovered:
+        //: The plugin was found but the user chose to validate it later
+        return muse::qtrc("effects", "Not validated");
+    case AudioPluginState::Missing:
+        return muse::qtrc("effects", "Missing");
+    case AudioPluginState::Error:
+    case AudioPluginState::Undefined:
+    default:
+        return muse::qtrc("effects", "Broken");
+    }
 }
 
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
@@ -38,7 +79,9 @@ void PluginManagerTableViewModel::componentComplete()
     m_initialState = effectsProvider()->effectMetaList();
     m_initialState.erase(std::remove_if(m_initialState.begin(), m_initialState.end(), [](const EffectMeta& meta) {
         // 3rd-party plugins typically also have instruments (e.g. VSTi) but we don't support them yet.
-        return meta.type == EffectType::Unknown;
+        // Only validated entries carry a trustworthy type; non-validated ones
+        // (type Unknown) must stay visible so the Status column can report them.
+        return meta.isLoadable() && meta.type == EffectType::Unknown;
     }), m_initialState.end());
     rebuildSourceTable(m_initialState);
 
@@ -183,9 +226,44 @@ void PluginManagerTableViewModel::setEffectTypeSelectedIndex(int index)
     m_sortFilterProxy->invalidateFilters();
 }
 
+muse::uicomponents::MenuItemList PluginManagerTableViewModel::statusOptions()
+{
+    std::vector<DropdownOption> options = { { "all", muse::qtrc("effects", "All") } };
+    for (size_t i = 0; i < statusFilterOrder.size(); ++i) {
+        options.push_back({ QString::number(i), pluginStateToString(statusFilterOrder[i]) });
+    }
+    return utils::toMenuItemList(options, m_statusSelectedIndex, this);
+}
+
+void PluginManagerTableViewModel::setStatusSelectedIndex(int index)
+{
+    if (index == m_statusSelectedIndex) {
+        return;
+    }
+
+    m_statusSelectedIndex = index;
+    emit statusSelectedIndexChanged();
+
+    if (index == 0) {
+        m_acceptStatus = allPassFilter;
+    } else {
+        m_acceptStatus = [target = statusFilterOrder[index - 1]](const EffectMeta& meta) {
+            // Undefined shows as Broken in the Status column, so the Broken
+            // filter must catch it too
+            auto state = meta.state;
+            if (state == muse::audioplugins::AudioPluginState::Undefined) {
+                state = muse::audioplugins::AudioPluginState::Error;
+            }
+            return state == target;
+        };
+    }
+
+    m_sortFilterProxy->invalidateFilters();
+}
+
 int PluginManagerTableViewModel::totalWidth() const
 {
-    return enabledColumnWidth + nameColumnWidth + vendorColumnWidth + pathColumnWidth + typeColumnWidth;
+    return enabledColumnWidth + nameColumnWidth + statusColumnWidth + vendorColumnWidth + pathColumnWidth + typeColumnWidth;
 }
 
 void PluginManagerTableViewModel::setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins)
@@ -214,6 +292,8 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeH
                                      TableViewCellEditMode::Mode::StartInEdit, enabledColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Name"),
                                      TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, nameColumnWidth);
+    hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Status"),
+                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, statusColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Vendor"),
                                      TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, vendorColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Path"),
@@ -244,15 +324,10 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
     QVector<QVector<muse::uicomponents::TableViewCell*> > table;
 
     for (const auto& meta : effects) {
-        auto title = meta.title.toQString();
-        if (!meta.isLoadable) {
-            //: %1 is the name of the plugin that failed to load
-            title = muse::qtrc("effects", "“%1” (broken)").arg(title);
-        }
-
         QVector<muse::uicomponents::TableViewCell*> row;
-        row.append(makeCell(muse::Val(meta.isActivated && meta.isLoadable)));
-        row.append(makeCell(muse::Val(std::move(title))));
+        row.append(makeCell(muse::Val(meta.isActivated && meta.isLoadable())));
+        row.append(makeCell(muse::Val(effectDisplayName(meta))));
+        row.append(makeCell(muse::Val(pluginStateToString(meta.state))));
         row.append(makeCell(muse::Val(meta.vendor.toQString())));
         row.append(makeCell(muse::Val(meta.path.toQString())));
         row.append(makeCell(muse::Val(utils::effectFamilyToString(meta.family).toQString())));
@@ -275,7 +350,7 @@ void PluginManagerTableViewModel::handleEdit(int proxyRow, int column)
         return;
     }
 
-    if (!effectsProvider()->meta(verticalHeader->effectId()).isLoadable) {
+    if (!effectsProvider()->meta(verticalHeader->effectId()).isLoadable()) {
         return;
     }
 
@@ -308,14 +383,11 @@ void PluginManagerTableViewModel::rescanPlugins()
 
     if (m_alsoRescanBrokenPlugins) {
         effectsProvider()->forgetPlugins([](const EffectMeta& meta) {
-            return !meta.isLoadable;
+            return !meta.isLoadable();
         });
     }
 
-    const auto excludeFromScan = [this](const EffectMeta& meta) {
-        return !m_acceptFamily(meta) || !m_acceptType(meta);
-    };
-    effectsProvider()->rescanPlugins(iocContext(), *interactive(), *registerAudioPluginsScenario(), excludeFromScan);
+    effectsProvider()->rescanPlugins(iocContext(), *interactive(), *registerAudioPluginsScenario());
 
     rebuildSourceTable(effectsProvider()->effectMetaList());
 }

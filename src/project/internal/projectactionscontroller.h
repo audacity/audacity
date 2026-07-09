@@ -23,6 +23,7 @@
 #include "importexport/import/iimporter.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
+#include "au3cloud/icloudprojectsprovider.h"
 #include "effects/effects_base/imissingeffectchecker.h"
 
 #include "project/iprojectconfiguration.h"
@@ -42,6 +43,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<toast::IToastService> toastService;
     muse::GlobalInject<au3cloud::IAuthorization> authorization;
+    muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
@@ -67,7 +69,7 @@ public:
     bool closeOpenedProject(bool quitApp = false) override;
     bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
     bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
-    bool saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode = SaveMode::Save, bool forceOverwrite = false) override;
+    muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate) override;
 
     const ProjectBeingDownloaded& projectBeingDownloaded() const override;
     muse::async::Notification projectBeingDownloadedChanged() const override;

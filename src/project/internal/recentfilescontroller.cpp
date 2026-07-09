@@ -156,17 +156,22 @@ void RecentFilesController::loadRecentFilesList()
     for (size_t i = 0; i < array.size(); ++i) {
         const JsonValue val = array.at(i);
 
+        RecentFile file;
         if (val.isString()) {
-            newList.emplace_back(muse::io::path_t(val.toStdString()));
+            file.path = val.toStdString();
         } else if (val.isObject()) {
             const JsonObject obj = val.toObject();
-            RecentFile file;
             file.path = obj["path"].toStdString();
             file.displayNameOverride = QString::fromStdString(obj["displayName"].toStdString());
-            newList.emplace_back(std::move(file));
         } else {
             continue;
         }
+
+        //! NOTE Cloud info is not persisted in the recent-files JSON: the cloud projects DB
+        //! is the source of truth (the sync engine keeps it up to date), so derive it by path
+        file.cloudRecord = cloudProjectsProvider()->projectRecordForPath(file.path);
+
+        newList.emplace_back(std::move(file));
     }
 }
 

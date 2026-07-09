@@ -33,7 +33,7 @@ void Au3AudioComServiceStub::clearAudioListCache()
 }
 
 muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&,
-                                                                      std::function<bool()>, bool)
+                                                                      std::function<bool()>, UploadMode)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
@@ -48,7 +48,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::downloadAudioFile(const 
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
-muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, bool)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, const std::string&,
+                                                                         bool)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
@@ -63,7 +64,17 @@ muse::async::Channel<std::string, muse::io::path_t> Au3AudioComServiceStub::audi
     return {};
 }
 
+muse::Ret Au3AudioComServiceStub::deleteCloudProject(const muse::io::path_t&)
+{
+    return muse::make_ret(muse::Ret::Code::NotSupported);
+}
+
 std::string Au3AudioComServiceStub::getCloudAudioPage(const std::string& /*unused*/) const
+{
+    return {};
+}
+
+std::string Au3AudioComServiceStub::getCloudProfilePage() const
 {
     return {};
 }

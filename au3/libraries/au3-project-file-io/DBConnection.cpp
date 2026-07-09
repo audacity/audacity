@@ -275,6 +275,13 @@ bool DBConnection::Close()
         mCheckpointThread.join();
     }
 
+    // Force checkpointing on close (moves data from wal to main project file)
+    rc = sqlite3_wal_checkpoint_v2(mDB, nullptr, SQLITE_CHECKPOINT_TRUNCATE, nullptr, nullptr);
+    if (rc != SQLITE_OK) {
+        wxLogMessage("Failed final checkpoint on %s\n\tErrMsg: %s",
+                     sqlite3_db_filename(mDB, nullptr), sqlite3_errmsg(mDB));
+    }
+
     // We're done with the prepared statements
     {
         std::lock_guard<std::mutex> guard(mStatementMutex);
@@ -474,7 +481,8 @@ sqlite3_stmt* DBConnection::Prepare(enum StatementID id, const char* sql)
 void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
 {
     int rc = SQLITE_OK;
-    bool giveUp = false;
+    // do not giveUp on checkpointing
+    bool warned = false;
 
     while (true)
     {
@@ -501,8 +509,7 @@ void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
         // in the WAL.  They'll be gotten the next time around.
         using namespace std::chrono;
         do {
-            rc = giveUp ? SQLITE_OK
-                 : sqlite3_wal_checkpoint_v2(
+            rc = sqlite3_wal_checkpoint_v2(
                 db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
         }
         // Contentions for an exclusive lock on the database are possible,
@@ -512,6 +519,10 @@ void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
 
         // Reset
         mCheckpointActive = false;
+
+        if (rc == SQLITE_OK) {
+            warned = false;
+        }
 
         if (rc != SQLITE_OK) {
             ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
@@ -539,8 +550,11 @@ void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
             //: %1 is an additional detail message, possibly empty
             auto message = TranslatableString("project-file-io", "Disk is full.\n%1").arg(message1);
 
-            // Stop trying to checkpoint
-            giveUp = true;
+            // Display error once
+            if (warned) {
+                continue;
+            }
+            warned = true;
 
             // Stop the audio.
             GuardedCall(

@@ -24,17 +24,21 @@ public:
     muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                  std::function<bool()> projectSaveCallback = nullptr, bool forceOverwrite = false) override;
+                                                  std::function<bool()> projectSaveCallback = nullptr,
+                                                  UploadMode uploadMode = UploadMode::NormalUpdate) override;
     muse::RetVal<muse::ProgressPtr> shareAudio(const std::string& title) override;
     muse::RetVal<muse::ProgressPtr> downloadAudioFile(const std::string& audioId) override;
 
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
-                                                     bool forceOverwrite = false) override;
+                                                     const std::string& snapshotId = {}, bool forceOverwrite = false) override;
     muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+
+    muse::Ret deleteCloudProject(const muse::io::path_t& localPath) override;
 
     std::string getCloudProjectPage(const std::string& projectId) const override;
     std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;
     std::string getCloudAudioPage(const std::string& audioId) const override;
+    std::string getCloudProfilePage() const override;
 
     void deinit() override;
 };

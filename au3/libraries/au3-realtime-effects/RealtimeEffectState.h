@@ -39,6 +39,9 @@ public:
     struct REALTIME_EFFECTS_API EffectFactory : GlobalHook<EffectFactory,
                                                            const EffectInstanceFactory* (const PluginID&)
                                                            > {};
+    struct REALTIME_EFFECTS_API EffectIdResolver : GlobalHook<EffectIdResolver,
+                                                              PluginID(const PluginID&)
+                                                              > {};
 
     explicit RealtimeEffectState(const PluginID& id);
     RealtimeEffectState& operator =(const RealtimeEffectState& other);

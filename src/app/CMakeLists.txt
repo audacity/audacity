@@ -104,6 +104,7 @@ set(LINK_LIB
 
 add_to_link_if_exists(muse::accessibility)
 add_to_link_if_exists(muse::actions)
+add_to_link_if_exists(muse::rcommand)
 add_to_link_if_exists(muse::audioplugins)
 add_to_link_if_exists(muse::cloud_qml)
 add_to_link_if_exists(muse::cloud)
@@ -154,6 +155,13 @@ add_to_link_if_exists(usageinfo)
 add_to_link_if_exists(automation)
 
 set (AUDACITY_APPEND_SRC)
+
+list(APPEND AUDACITY_APPEND_SRC backgroundprocess.h)
+if (OS_IS_MAC)
+    list(APPEND AUDACITY_APPEND_SRC internal/platform/macos/backgroundprocess.mm)
+else()
+    list(APPEND AUDACITY_APPEND_SRC internal/platform/stub/backgroundprocess.cpp)
+endif()
 
 if (OS_IS_WIN)
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_ICONS_RC})
@@ -213,6 +221,7 @@ endif (APP_OUTPUT_NAME)
 if (OS_IS_WIN)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin
+        PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 endif()
 
@@ -227,6 +236,14 @@ if (OS_IS_MAC)
     set_target_properties(audacity
         PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/MacOS/MacOSXBundleInfo.plist.in
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
+    )
+    target_link_libraries(audacity PRIVATE "-framework Cocoa")
+
+    set_source_files_properties(
+        internal/platform/macos/backgroundprocess.mm
+        PROPERTIES
+        SKIP_UNITY_BUILD_INCLUSION ON
+        SKIP_PRECOMPILE_HEADERS ON
     )
 endif (OS_IS_MAC)
 

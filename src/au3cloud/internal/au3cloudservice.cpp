@@ -38,6 +38,7 @@ void Au3CloudService::init()
 
         if (code.empty() || !error.empty()) {
             m_authState.set(NotAuthorized(error));
+            m_replyHandler->sendError();
             return;
         }
 
@@ -51,6 +52,8 @@ void Au3CloudService::init()
             const auto AUTHORIZATION_FAILED = muse::qtrc("appshell/gettingstarted", "Authorization failed");
             if (token.empty()) {
                 m_authState.set(NotAuthorized(AUTHORIZATION_FAILED.toStdString()));
+                m_replyHandler->sendError();
+                return;
             }
         });
     });
@@ -75,6 +78,7 @@ void Au3CloudService::init()
 
         auto& service = audacity::cloud::audiocom::GetUserService();
         if (message.authorised) {
+            m_silent = message.silent;
             service.UpdateUserData();
         } else {
             service.ClearUserData();
@@ -96,8 +100,14 @@ void Au3CloudService::init()
             m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
             m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
 
-            //Only set to authorized if we have user data
-            m_authState.set(AuthState(Authorized()));
+            if (!std::holds_alternative<Authorized>(m_authState.val)) {
+                //Only set to authorized if we have user data
+                m_authState.set(AuthState(Authorized()));
+
+                if (!m_silent) {
+                    openBrowserSession();
+                }
+            }
         } else {
             m_accountInfo = AccountInfo();
 
@@ -190,6 +200,23 @@ void Au3CloudService::syncUsageInfoPrefs()
     SendAnonymousUsageInfo->Write(usageInfo()->getSendAnonymousUsageInfo());
     InstanceId->Write(wxString::FromUTF8(usageInfo()->instanceId()));
     gPrefs->Flush();
+}
+
+void Au3CloudService::openBrowserSession()
+{
+    auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
+    auto& authService = audacity::cloud::audiocom::GetOAuthService();
+
+    const auto landingPage = m_accountInfo.userSlug.empty()
+                             ? serviceConfig.GetTourPage()
+                             : serviceConfig.GetProfilePagePath(m_accountInfo.userSlug, AudiocomTrace::ignore);
+    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, landingPage);
+
+    if (m_replyHandler->hasPendingSocket()) {
+        m_replyHandler->sendRedirect(QUrl(QString::fromStdString(url)));
+    } else {
+        platformInteractive()->openUrl(url);
+    }
 }
 
 std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)

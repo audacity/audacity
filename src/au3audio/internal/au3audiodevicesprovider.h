@@ -69,6 +69,12 @@ public:
     void setDefaultSampleFormat(const std::string& format) override;
     muse::async::Notification defaultSampleFormatChanged() const override;
 
+    bool asioUseDeviceSampleRate() const override;
+    void setAsioUseDeviceSampleRate(bool use) override;
+    muse::async::Notification asioUseDeviceSampleRateChanged() const override;
+
+    void showAsioControlPanel() override;
+
     void rescan() override;
 
 private:
@@ -96,6 +102,7 @@ private:
     muse::async::Notification m_latencyCompensationChanged;
     muse::async::Notification m_defaultSampleRateChanged;
     muse::async::Notification m_defaultSampleFormatChanged;
+    muse::async::Notification m_asioUseDeviceSampleRateChanged;
 };
 }
 
