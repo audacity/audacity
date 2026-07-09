@@ -12,9 +12,13 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2parameterextractorservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2parameterextractorservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2uidiscovery.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2uidiscovery.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2types.h

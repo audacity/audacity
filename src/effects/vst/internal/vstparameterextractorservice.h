@@ -19,14 +19,14 @@ class VstParameterExtractorService : public IParameterExtractorService
 public:
     EffectFamily family() const override { return EffectFamily::VST3; }
 
-    ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess = nullptr) const override;
+    ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) const override;
 
     ParameterInfo getParameter(EffectInstance* instance, const muse::String& parameterId) const override;
 
     double getParameterValue(EffectInstance* instance, const muse::String& parameterId) const override;
 
     bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
-                           EffectSettingsAccessPtr settingsAccess = nullptr) override;
+                           EffectSettingsAccessPtr settingsAccess) override;
 
     muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const override;
 

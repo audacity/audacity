@@ -123,6 +123,8 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     emit titleChanged();
     emit isMasterEffectChanged();
     emit effectFamilyChanged();
+    emit useVendorUIChanged();
+    emit viewerComponentTypeChanged();
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()
@@ -216,6 +218,15 @@ ViewerComponentType RealtimeEffectViewerDialogModel::viewerComponentType() const
     const bool shouldUseVendorUI = useVendorUI();
     if (!shouldUseVendorUI) {
         return ViewerComponentType::Generated;
+    }
+
+    // Plugins without a hostable vendor UI (e.g. GTK-only LV2 plugins) get the generated UI
+    if (m_effectState) {
+        const auto effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+        const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(family);
+        if (launcher && !launcher->canShowVendorUi(effectId)) {
+            return ViewerComponentType::Generated;
+        }
     }
 
     // Use the appropriate vendor UI

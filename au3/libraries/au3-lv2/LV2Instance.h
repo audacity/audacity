@@ -29,6 +29,8 @@ public:
 
     bool IsOk() const { return mFeatures.mOk; }
 
+    const LV2Ports& GetPorts() const { return mPorts; }
+
     const LV2PortStates& GetPortStates() const { return mPortStates; }
 
     bool ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;

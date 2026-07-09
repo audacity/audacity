@@ -114,6 +114,12 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
         return ViewerComponentType::Generated;
     }
 
+    // Plugins without a hostable vendor UI (e.g. GTK-only LV2 plugins) get the generated UI
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(family);
+    if (launcher && !launcher->canShowVendorUi(m_effectId)) {
+        return ViewerComponentType::Generated;
+    }
+
     // Use the appropriate vendor UI
     switch (family) {
 #ifdef Q_OS_LINUX
