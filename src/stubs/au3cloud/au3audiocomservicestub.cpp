@@ -33,7 +33,7 @@ void Au3AudioComServiceStub::clearAudioListCache()
 }
 
 muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&,
-                                                                      std::function<bool()>, bool)
+                                                                      std::function<bool()>, UploadMode)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
@@ -62,6 +62,11 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::resumeProjectSync(au::pr
 muse::async::Channel<std::string, muse::io::path_t> Au3AudioComServiceStub::audioThumbnailFileUpdated() const
 {
     return {};
+}
+
+muse::Ret Au3AudioComServiceStub::deleteCloudProject(const muse::io::path_t&)
+{
+    return muse::make_ret(muse::Ret::Code::NotSupported);
 }
 
 std::string Au3AudioComServiceStub::getCloudAudioPage(const std::string& /*unused*/) const
