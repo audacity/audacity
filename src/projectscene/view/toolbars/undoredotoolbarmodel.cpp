@@ -9,8 +9,8 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
-static const muse::actions::ActionCode UNDO_ACTION_CODE("action://undo");
-static const muse::actions::ActionCode REDO_ACTION_CODE("action://redo");
+static const muse::actions::ActionCode UNDO_ACTION_CODE("action://trackedit/undo");
+static const muse::actions::ActionCode REDO_ACTION_CODE("action://trackedit/redo");
 
 void UndoRedoToolBarModel::load()
 {
