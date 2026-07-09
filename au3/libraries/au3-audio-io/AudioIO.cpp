@@ -3456,8 +3456,10 @@ int AudioIoCallback::AudioCallback(
     // advance the schedule time.  Queue the captured frames instead, minus the
     // leading frames that DrainInputBuffers discards for latency compensation,
     // so the schedule time tracks the frames that actually become recorded
-    // data.
-    if (mStreamToken > 0 && !IsPaused() && numCaptureChannels > 0 && mPlaybackSequences.empty()) {
+    // data.  No pause check: while pausing with microfades the callback still
+    // drains frames that get committed, and DrainInputBuffers returns 0 in
+    // every no-capture case anyway.
+    if (mStreamToken > 0 && numCaptureChannels > 0 && mPlaybackSequences.empty()) {
         unsigned long keptFrames = drainedCaptureFrames;
         if (mCaptureClockDiscardFrames > 0) {
             const auto skip = std::min<unsigned long long>(keptFrames, mCaptureClockDiscardFrames);
@@ -3465,6 +3467,9 @@ int AudioIoCallback::AudioCallback(
             keptFrames -= static_cast<unsigned long>(skip);
         }
         if (keptFrames > 0) {
+            // The "dacTime" here is really the capture-completion time; the
+            // consumer adds the payload duration on top, so the UI clock
+            // deliberately trails the input by one buffer.
             mAudioCallbackInfoQueue.Put(
                 { std::chrono::steady_clock::now(), static_cast<int>(keptFrames) });
         }
