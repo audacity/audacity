@@ -116,6 +116,10 @@ void TrackClipsListModel::onReload()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList.onItemAdded(this, [this](const Clip& clip) {
+        IF_ASSERT_FAILED(!muse::contains_if(m_allClipList, [&clip](const Clip& c) { return c.key == clip.key; })) {
+            return;
+        }
+
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         muse::async::NotifyList<au::trackedit::Clip> newList = prj->clipList(m_trackId);
         for (size_t i = 0; i < newList.size(); ++i) {
