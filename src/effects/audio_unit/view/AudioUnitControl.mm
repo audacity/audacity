@@ -115,6 +115,7 @@ bool AUControl::create(AudioComponent comp, AudioUnit unit, bool custom)
     }
 
     if (!mView) {
+        LOGE() << "failed to create AudioUnit view (custom=" << custom << ")";
         return false;
     }
 
@@ -165,6 +166,7 @@ void AUControl::createCocoa()
                                 [asNSView(mView) retain];
                             }
                         } catch (...) {
+                            LOGE() << "exception while creating Cocoa AU view";
                         }
                     }
                 }
@@ -173,6 +175,7 @@ void AUControl::createCocoa()
     }
 
     if (!mView) {
+        LOGD() << "no Cocoa vendor view created; will fall back to generic view";
         return;
     }
     setupView();

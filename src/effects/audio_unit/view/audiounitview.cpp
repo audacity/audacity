@@ -36,13 +36,19 @@ void AudioUnitView::setInstanceId(int newInstanceId)
 void AudioUnitView::init()
 {
     const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
+    if (!instance) {
+        LOGE() << "no AudioUnit instance for instanceId: " << m_instanceId;
+        return;
+    }
 
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
     const bool isGraphical = (configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI);
 
-    m_auControl = std::make_unique<AUControl>();
+    m_auControl = std::make_unique<AUControl>(window());
     if (!m_auControl->create(instance->GetComponent(),
                              instance->GetAudioUnit(), isGraphical)) {
+        LOGE() << "failed to create AU control for effect " << effectId.toStdString()
+               << ", instanceId: " << m_instanceId << ", graphical: " << isGraphical;
         m_auControl.reset();
         return;
     }
