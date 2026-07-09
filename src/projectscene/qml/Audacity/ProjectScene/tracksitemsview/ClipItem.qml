@@ -861,7 +861,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                fillColor: root.clipSelected ? root.clipSelectedColor : root.clipColor
+                fillColor: waveView.backgroundColor
 
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 

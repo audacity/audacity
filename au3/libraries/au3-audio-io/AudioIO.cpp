@@ -1005,6 +1005,11 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     mListener = options.listener;
     mRate    = options.rate;
 
+    // Discard callback info left unconsumed by the previous stream: the
+    // consumer stops reading before the callbacks stop pushing, and a stale
+    // backlog would be misattributed to this stream's timeline.
+    mAudioCallbackInfoQueue.Clear();
+
     mSeek    = 0;
     mLastRecordingOffset = 0;
     mCaptureSequences = sequences.captureSequences;
@@ -1094,6 +1099,9 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     // Call this only after reassignment of mRate that might happen in the
     // previous call.
     mPlaybackSchedule.GetPolicy().Initialize(mPlaybackSchedule, mRate);
+
+    mCaptureClockDiscardFrames = static_cast<unsigned long long>(
+        std::max(0.0, -mRecordingSchedule.TotalCorrection()) * mRate);
 
     auto range = Extensions();
     successAudio = successAudio
@@ -2965,7 +2973,7 @@ constSamplePtr AudioIoCallback::ApplyRecordGain(
 //
 // Copy from PortAudio input buffers to our intermediate recording buffers.
 //
-void AudioIoCallback::DrainInputBuffers(
+unsigned long AudioIoCallback::DrainInputBuffers(
     constSamplePtr inputBuffer,
     unsigned long framesPerBuffer,
     const PaStreamCallbackFlags statusFlags,
@@ -2976,13 +2984,13 @@ void AudioIoCallback::DrainInputBuffers(
 
     // Quick returns if next to nothing to do.
     if (mStreamToken <= 0) {
-        return;
+        return 0;
     }
     if (!inputBuffer) {
-        return;
+        return 0;
     }
     if (numCaptureChannels <= 0) {
-        return;
+        return 0;
     }
 
     // If there are no playback sequences, and we are recording, then the
@@ -3042,7 +3050,7 @@ void AudioIoCallback::DrainInputBuffers(
     }
 
     if (len <= 0) {
-        return;
+        return 0;
     }
 
     // We have an ASSERT in the AudioIO constructor to alert us to
@@ -3092,6 +3100,8 @@ void AudioIoCallback::DrainInputBuffers(
         wxUnusedVar(put);
         mCaptureBuffers[t]->Flush();
     }
+
+    return static_cast<unsigned long>(len);
 }
 
 #if 0
@@ -3434,11 +3444,36 @@ int AudioIoCallback::AudioCallback(
     }
 
     // To capture input into sequence (sound from microphone)
-    DrainInputBuffers(
+    const unsigned long drainedCaptureFrames = DrainInputBuffers(
         inputBuffer,
         framesPerBuffer,
         statusFlags,
         tempFloats);
+
+    // Recording without playback sequences produces no DAC callback info (with
+    // no sequences FillOutputBuffers never queues any, even when input
+    // monitoring opens playback channels), so the main thread would never
+    // advance the schedule time.  Queue the captured frames instead, minus the
+    // leading frames that DrainInputBuffers discards for latency compensation,
+    // so the schedule time tracks the frames that actually become recorded
+    // data.  No pause check: while pausing with microfades the callback still
+    // drains frames that get committed, and DrainInputBuffers returns 0 in
+    // every no-capture case anyway.
+    if (mStreamToken > 0 && numCaptureChannels > 0 && mPlaybackSequences.empty()) {
+        unsigned long keptFrames = drainedCaptureFrames;
+        if (mCaptureClockDiscardFrames > 0) {
+            const auto skip = std::min<unsigned long long>(keptFrames, mCaptureClockDiscardFrames);
+            mCaptureClockDiscardFrames -= skip;
+            keptFrames -= static_cast<unsigned long>(skip);
+        }
+        if (keptFrames > 0) {
+            // The "dacTime" here is really the capture-completion time; the
+            // consumer adds the payload duration on top, so the UI clock
+            // deliberately trails the input by one buffer.
+            mAudioCallbackInfoQueue.Put(
+                { std::chrono::steady_clock::now(), static_cast<int>(keptFrames) });
+        }
+    }
 
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer, levelDisplayTime);
 
