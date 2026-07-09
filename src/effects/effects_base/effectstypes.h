@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 
+#include <QUrl>
+
 #include "framework/global/types/string.h"
 #include "framework/global/types/ratio.h"
 #include "framework/actions/actiontypes.h"
@@ -260,14 +262,24 @@ const std::string REALTIME_EFFECT_REPLACE_ACTION = "action://effects/realtime-re
 
 const std::string DESTRUCTIVE_EFFECT_VIEWER_URI = "audacity://effects/destructive_viewer?instanceId=%1&effectFamily=%2";
 
+inline std::string encodeEffectId(const EffectId& id)
+{
+    return QUrl::toPercentEncoding(id.toQString()).toStdString();
+}
+
+inline EffectId decodeEffectId(const std::string& encoded)
+{
+    return EffectId::fromQString(QUrl::fromPercentEncoding(QByteArray::fromStdString(encoded)));
+}
+
 inline std::string makeEffectAction(const std::string& action, const EffectId& id)
 {
-    return QString::fromStdString(action).arg(id).toStdString();
+    return QString::fromStdString(action).arg(QString::fromStdString(encodeEffectId(id))).toStdString();
 }
 
 inline EffectId effectIdFromAction(const muse::actions::ActionQuery& action)
 {
-    return EffectId::fromStdString(action.param("effectId").toString());
+    return decodeEffectId(action.param("effectId").toString());
 }
 
 inline EffectId effectIdFromAction(const QString& action)

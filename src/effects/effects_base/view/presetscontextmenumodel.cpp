@@ -80,7 +80,7 @@ void PresetsContextMenuModel::reload()
         items << makeSeparator();
 
         ActionQuery q("action://effects/toggle_vendor_ui");
-        q.addParam("effectId", Val(effectId.toStdString()));
+        q.addParam("effectId", Val(encodeEffectId(effectId)));
         MenuItem* item = makeMenuItem(q.toString());
 
         if (item) {
