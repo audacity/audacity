@@ -14,3 +14,9 @@ std::optional<CloudProjectRecord> CloudProjectsProviderStub::projectRecordForId(
 {
     return std::nullopt;
 }
+
+muse::io::path_t CloudProjectsProviderStub::makeSafeFilePath(const muse::io::path_t& rootDir, const std::string& fileName,
+                                                             const std::string& fileExtension) const
+{
+    return rootDir.appendingComponent(fileName).appendingSuffix(fileExtension);
+}
