@@ -44,6 +44,7 @@ public:
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
 
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
+    bool changeClipsStartTime(const ClipKeyList& clipKeys, secs_t timePositionOffset, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
@@ -78,6 +79,7 @@ public:
     bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
 
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
+    muse::Ret makeRoomForClips(const ClipKeyList& clipKeys) override;
 
     ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) override;
 
@@ -105,6 +107,7 @@ private:
 
     NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset);
 
+    muse::Ret doMakeRoomForClip(const trackedit::ClipKey& clipKey);
     bool noPlayRegionsOverlap(const trackedit::TrackId& trackId) const;
 
     std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
