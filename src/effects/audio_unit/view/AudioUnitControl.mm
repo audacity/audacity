@@ -10,6 +10,8 @@
 
 #include <AudioUnit/AUCocoaUIView.h>
 
+#include "framework/global/log.h"
+
 #include "au3-audio-unit/AudioUnitUtils.h"
 
 @interface AUView : NSView
