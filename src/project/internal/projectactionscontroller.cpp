@@ -54,6 +54,20 @@ au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
 
     return au::au3cloud::UploadMode::NormalUpdate;
 }
+
+QString safeCloudProjectName(const QString& name)
+{
+    static const QString invalidChars = QStringLiteral("/\\:*?\"'<>|@&$%^;~`[]{}");
+
+    QString result = name;
+    for (QChar& c : result) {
+        if (invalidChars.contains(c)) {
+            c = QLatin1Char('_');
+        }
+    }
+
+    return result;
+}
 }
 
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
@@ -601,7 +615,8 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         return make_ret(Ret::Code::UnknownError, std::string { "Cloud projects path is not set" });
     }
 
-    io::path_t projectFilePath = cloudProjectsPath.appendingComponent(cloudInfo.name).appendingSuffix(au::project::AUP4);
+    io::path_t projectFilePath = cloudProjectsPath.appendingComponent(safeCloudProjectName(cloudInfo.name)).appendingSuffix(
+        au::project::AUP4);
 
     IAudacityProjectPtr project = currentProject();
     if (!project) {
