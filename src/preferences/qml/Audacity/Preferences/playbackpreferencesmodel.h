@@ -26,8 +26,6 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable, 
     Q_PROPERTY(playback::DitherTypePrefs::DitherType currentDithering READ currentDithering NOTIFY currentDitheringChanged)
     Q_PROPERTY(QVariantList ditheringList READ ditheringList CONSTANT)
 
-    Q_PROPERTY(playback::TracksBehaviors::SoloBehavior soloBehavior READ soloBehavior NOTIFY soloBehaviorChanged)
-
     Q_PROPERTY(double shortSkip READ shortSkip NOTIFY shortSkipChanged)
     Q_PROPERTY(double longSkip READ longSkip NOTIFY longSkipChanged)
 
@@ -48,9 +46,6 @@ public:
     QVariantList ditheringList() const;
     Q_INVOKABLE void setDithering(playback::DitherTypePrefs::DitherType quality);
 
-    Q_INVOKABLE playback::TracksBehaviors::SoloBehavior soloBehavior() const;
-    Q_INVOKABLE void setSoloBehavior(playback::TracksBehaviors::SoloBehavior behavior);
-
     double shortSkip() const;
     Q_INVOKABLE void setShortSkip(double seconds);
 
@@ -60,8 +55,6 @@ public:
 signals:
     void currentPlaybackQualityChanged();
     void currentDitheringChanged();
-
-    void soloBehaviorChanged();
 
     void shortSkipChanged();
     void longSkipChanged();

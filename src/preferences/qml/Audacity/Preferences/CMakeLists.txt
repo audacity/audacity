@@ -79,7 +79,6 @@ qt_add_qml_module(preferences_qml
         internal/SampleRateSection.qml
         internal/SaveToCloudSection.qml
         internal/ScrollPagesSection.qml
-        internal/SoloButtonSection.qml
         internal/SpectrogramAlgorithmSection.qml
         internal/SpectrogramBaseSection.qml
         internal/SpectrogramColorsSection.qml
