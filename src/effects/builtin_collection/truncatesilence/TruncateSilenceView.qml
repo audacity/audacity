@@ -20,6 +20,9 @@ BuiltinEffectBase {
 
     builtinEffectModel: TruncateSilenceViewModelFactory.createModel(root, root.instanceId)
     property alias truncateSilence: root.builtinEffectModel
+
+    numNavigationPanels: 2
+
     property NavigationPanel detectSilenceNavigationPanel: NavigationPanel {
         name: "TruncateSilenceDetectSilence"
         enabled: root.enabled && root.visible
