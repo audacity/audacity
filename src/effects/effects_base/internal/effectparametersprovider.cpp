@@ -37,8 +37,7 @@ ParameterInfoList EffectParametersProvider::parameters(EffectInstanceId instance
         return {};
     }
 
-    const EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
-    return extractor->extractParameters(instance, settingsAccess);
+    return extractor->extractParameters(instance);
 }
 
 ParameterInfo EffectParametersProvider::parameter(EffectInstanceId instanceId, const String& parameterId) const
@@ -91,9 +90,8 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
         return false;
     }
 
-    const EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
     // Note: extractor service is responsible for converting plain/"Full Range" value to normalized if needed
-    const bool success = extractor->setParameterValue(instance, parameterId, fullRangeValue, settingsAccess);
+    const bool success = extractor->setParameterValue(instance, parameterId, fullRangeValue);
 
     if (success) {
         // Get the updated parameter info to send plain/"Full Range" value and formatted string
@@ -130,8 +128,7 @@ bool EffectParametersProvider::setParameterStringValue(EffectInstanceId instance
         return false;
     }
 
-    const EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
-    const bool success = extractor->setParameterStringValue(instance, parameterId, stringValue, settingsAccess);
+    const bool success = extractor->setParameterStringValue(instance, parameterId, stringValue);
 
     if (success) {
         // Get the updated parameter info to send the new string value
@@ -199,8 +196,7 @@ void EffectParametersProvider::beginParameterGesture(EffectInstanceId instanceId
                                             ? parameterExtractorRegistry()->extractorForFamily(family)
                                             : nullptr;
     if (extractor) {
-        EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
-        extractor->beginParameterGesture(instance, parameterId, settingsAccess);
+        extractor->beginParameterGesture(instance, parameterId);
     }
 }
 

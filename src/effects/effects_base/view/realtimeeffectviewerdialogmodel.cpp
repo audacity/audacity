@@ -116,7 +116,8 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     m_effectState = reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this();
     const auto effectId = m_effectState->GetID().ToStdString();
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
-    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
+    const auto settings = m_effectState->GetAccess();
+    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, settings);
 
     emit isActiveChanged();
     emit trackNameChanged();

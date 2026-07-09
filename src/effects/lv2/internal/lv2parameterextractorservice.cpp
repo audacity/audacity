@@ -23,19 +23,13 @@ LV2Instance* toLv2Instance(au::effects::EffectInstance* instance)
 }
 
 //! Current control-port values: from the settings if available, else the port defaults
-std::vector<float> controlPortValues(const LV2Ports& ports, const EffectSettingsAccessPtr& settingsAccess)
+std::vector<float> controlPortValues(EffectSettingsAccess& settingsAccess)
 {
-    if (settingsAccess) {
-        if (const LV2EffectSettings* lv2Settings = settingsAccess->Get().cast<LV2EffectSettings>()) {
-            return lv2Settings->values;
-        }
+    const LV2EffectSettings* lv2Settings = settingsAccess.Get().cast<LV2EffectSettings>();
+    IF_ASSERT_FAILED(lv2Settings) {
+        return std::vector<float>();
     }
-    std::vector<float> values;
-    values.reserve(ports.mControlPorts.size());
-    for (const LV2ControlPortPtr& port : ports.mControlPorts) {
-        values.push_back(port->mDef);
-    }
-    return values;
+    return lv2Settings->values;
 }
 
 //! Position among the control ports of the port with the given symbol
@@ -141,21 +135,21 @@ ParameterInfo makeParameterInfo(const LV2ControlPort& port, double value)
 }
 } // anonymous namespace
 
-ParameterInfoList Lv2ParameterExtractorService::extractParameters(EffectInstance* instance,
-                                                                  EffectSettingsAccessPtr settingsAccess) const
+ParameterInfoList Lv2ParameterExtractorService::extractParameters(EffectInstance* instance) const
 {
     const LV2Instance* lv2Instance = toLv2Instance(instance);
     if (!lv2Instance) {
-        LOGW() << "Not an LV2 instance";
+        LOGE() << "Not an LV2 instance";
         return {};
     }
 
-    if (settingsAccess) {
-        m_settingsAccess[instance] = settingsAccess;
+    const auto settingsAccess = instancesRegister()->settingsAccessById(instance->id());
+    IF_ASSERT_FAILED(settingsAccess) {
+        return {};
     }
 
     const LV2Ports& ports = lv2Instance->GetPorts();
-    const std::vector<float> values = controlPortValues(ports, settingsAccess);
+    const std::vector<float> values = controlPortValues(*settingsAccess);
 
     ParameterInfoList result;
     result.reserve(ports.mControlPorts.size());
@@ -188,9 +182,12 @@ ParameterInfo Lv2ParameterExtractorService::getParameter(EffectInstance* instanc
         return {};
     }
 
-    const auto it = m_settingsAccess.find(instance);
-    const std::vector<float> values
-        = controlPortValues(ports, it != m_settingsAccess.end() ? it->second : nullptr);
+    const auto access = instancesRegister()->settingsAccessById(instance->id());
+    IF_ASSERT_FAILED(access) {
+        return {};
+    }
+
+    const std::vector<float> values = controlPortValues(*access);
 
     const LV2ControlPortPtr& port = ports.mControlPorts[*index];
     const double value = *index < values.size() ? values[*index] : port->mDef;
@@ -203,8 +200,7 @@ double Lv2ParameterExtractorService::getParameterValue(EffectInstance* instance,
     return param.isValid() ? param.currentValue : 0.0;
 }
 
-bool Lv2ParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId,
-                                                     double fullRangeValue, EffectSettingsAccessPtr settingsAccess)
+bool Lv2ParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId, double fullRangeValue)
 {
     const LV2Instance* lv2Instance = toLv2Instance(instance);
     if (!lv2Instance) {
@@ -224,15 +220,6 @@ bool Lv2ParameterExtractorService::setParameterValue(EffectInstance* instance, c
         return false;
     }
 
-    if (!settingsAccess) {
-        const auto it = m_settingsAccess.find(instance);
-        if (it == m_settingsAccess.end()) {
-            return false;
-        }
-        settingsAccess = it->second;
-    }
-    m_settingsAccess[instance] = settingsAccess;
-
     float newValue = static_cast<float>(fullRangeValue);
     if (port->mEnumeration && !port->mScaleValues.empty()) {
         newValue = static_cast<float>(port->mScaleValues[port->Discretize(newValue)]);
@@ -243,6 +230,10 @@ bool Lv2ParameterExtractorService::setParameterValue(EffectInstance* instance, c
     }
 
     bool ok = false;
+    const auto settingsAccess = instancesRegister()->settingsAccessById(instance->id());
+    IF_ASSERT_FAILED(settingsAccess) {
+        return false;
+    }
     settingsAccess->ModifySettings([&](EffectSettings& settings) {
         LV2EffectSettings* lv2Settings = settings.cast<LV2EffectSettings>();
         if (lv2Settings && *index < lv2Settings->values.size()) {
@@ -270,21 +261,4 @@ String Lv2ParameterExtractorService::getParameterValueString(EffectInstance* ins
     }
 
     return formatValue(*ports.mControlPorts[*index], value);
-}
-
-void Lv2ParameterExtractorService::beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess)
-{
-    if (settingsAccess) {
-        m_settingsAccess[instance] = settingsAccess;
-    }
-}
-
-void Lv2ParameterExtractorService::endParameterEditing(EffectInstance* instance)
-{
-    m_settingsAccess.erase(instance);
-}
-
-void Lv2ParameterExtractorService::onInstanceDestroyed(EffectInstance* instance)
-{
-    m_settingsAccess.erase(instance);
 }

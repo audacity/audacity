@@ -4,6 +4,8 @@
 #pragma once
 
 #include "effects/effects_base/iparameterextractorservice.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
+#include "framework/global/modularity/ioc.h"
 
 namespace au::effects {
 //! Implementation of parameter extraction for Nyquist plugins.
@@ -11,20 +13,20 @@ namespace au::effects {
 //! Extracts parameters from NyquistBase::mControls vector.
 class NyquistParameterExtractorService : public IParameterExtractorService
 {
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+
 public:
     EffectFamily family() const override { return EffectFamily::Nyquist; }
 
-    ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess = nullptr) const override;
+    ParameterInfoList extractParameters(EffectInstance* instance) const override;
 
     ParameterInfo getParameter(EffectInstance* instance, const muse::String& parameterId) const override;
 
     double getParameterValue(EffectInstance* instance, const muse::String& parameterId) const override;
 
-    bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
-                           EffectSettingsAccessPtr settingsAccess = nullptr) override;
+    bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue) override;
 
-    bool setParameterStringValue(EffectInstance* instance, const muse::String& parameterId, const muse::String& stringValue,
-                                 EffectSettingsAccessPtr settingsAccess = nullptr) override;
+    bool setParameterStringValue(EffectInstance* instance, const muse::String& parameterId, const muse::String& stringValue) override;
 
     muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const override;
 
@@ -38,7 +40,7 @@ public:
     //! @param commandText The Nyquist code to set
     //! @param settingsAccess Optional settings access to persist the change
     //! @return true if successful
-    bool setPromptCommandText(EffectInstance* instance, const muse::String& commandText, EffectSettingsAccessPtr settingsAccess = nullptr);
+    bool setPromptCommandText(EffectInstance* instance, const muse::String& commandText);
 
     //! Enable debug mode for the Nyquist effect
     //! @param instance The effect instance

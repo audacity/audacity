@@ -7,6 +7,7 @@
 
 // AU3 VST3 parameter extraction bridge (does not expose VST3 SDK types)
 #include "au3-vst3/VST3ParameterExtraction.h"
+#include "au3-effects/Effect.h"
 
 using namespace au::effects;
 using namespace muse;
@@ -85,9 +86,10 @@ bool parseParameterId(const String& parameterId, uint32_t& outParamId)
 }
 } // anonymous namespace
 
-ParameterInfoList VstParameterExtractorService::extractParameters(EffectInstance* instance,
-                                                                  EffectSettingsAccessPtr settingsAccess) const
+ParameterInfoList VstParameterExtractorService::extractParameters(EffectInstance* instance) const
 {
+    const auto settingsAccess = instancesRegister()->settingsAccessById(instance->id());
+
     std::vector<VST3ParameterExtraction::ParamInfo> au3Params
         = VST3ParameterExtraction::extractParameters(instance, settingsAccess.get());
 
@@ -168,10 +170,7 @@ double VstParameterExtractorService::getParameterValue(EffectInstance* instance,
     return VST3ParameterExtraction::getParameterValue(instance, paramId);
 }
 
-bool VstParameterExtractorService::setParameterValue(EffectInstance* instance,
-                                                     const String& parameterId,
-                                                     double fullRangeValue,
-                                                     EffectSettingsAccessPtr settingsAccess)
+bool VstParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId, double fullRangeValue)
 {
     uint32_t paramId = 0;
     if (!parseParameterId(parameterId, paramId)) {
@@ -180,6 +179,8 @@ bool VstParameterExtractorService::setParameterValue(EffectInstance* instance,
 
     // Convert "Full Range" value to normalized [0,1] for VST3 API
     const double normalizedValue = VST3ParameterExtraction::fullRangeToNormalized(instance, paramId, fullRangeValue);
+
+    const auto settingsAccess = instancesRegister()->settingsAccessById(instance->id());
 
     const bool result = VST3ParameterExtraction::setParameterValue(instance, paramId, normalizedValue, settingsAccess.get());
     return result;
@@ -198,8 +199,7 @@ String VstParameterExtractorService::getParameterValueString(EffectInstance* ins
     return String::fromStdString(result);
 }
 
-void VstParameterExtractorService::beginParameterGesture(EffectInstance* instance, const String& parameterId,
-                                                         EffectSettingsAccessPtr settingsAccess)
+void VstParameterExtractorService::beginParameterGesture(EffectInstance* instance, const String& parameterId)
 {
     uint32_t paramId = 0;
     if (!parseParameterId(parameterId, paramId)) {
@@ -207,7 +207,7 @@ void VstParameterExtractorService::beginParameterGesture(EffectInstance* instanc
     }
 
     // Store settings access for this gesture
-    m_gestureSettings[instance] = settingsAccess;
+    m_gestureSettings[instance] = instancesRegister()->settingsAccessById(instance->id());
 
     // Call VST3 beginEdit
     VST3ParameterExtraction::beginEdit(instance, paramId);
@@ -238,8 +238,9 @@ void VstParameterExtractorService::onInstanceDestroyed(EffectInstance* instance)
     m_gestureSettings.erase(instance);
 }
 
-void VstParameterExtractorService::beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess)
+void VstParameterExtractorService::beginParameterEditing(EffectInstance* instance)
 {
+    const auto settingsAccess = instancesRegister()->settingsAccessById(instance->id());
     VST3ParameterExtraction::beginParameterEditing(instance, settingsAccess.get());
 }
 
