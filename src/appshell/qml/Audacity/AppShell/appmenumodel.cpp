@@ -160,13 +160,13 @@ void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
 
 void AppMenuModel::updateUndoRedoItems()
 {
-    MenuItem& undoItem = findItem(ActionCode("action://undo"));
+    MenuItem& undoItem = findItem(ActionCode("action://trackedit/undo"));
     const TranslatableString undoActionName = projectHistory()->topMostUndoActionName();
     undoItem.setTitle(undoActionName.isEmpty()
                       ? TranslatableString("action", "Undo")
                       : TranslatableString("action", "Undo ‘%1’").arg(undoActionName));
 
-    MenuItem& redoItem = findItem(ActionCode("action://redo"));
+    MenuItem& redoItem = findItem(ActionCode("action://trackedit/redo"));
     const TranslatableString redoActionName = projectHistory()->topMostRedoActionName();
     redoItem.setTitle(redoActionName.isEmpty()
                       ? TranslatableString("action", "Redo")
@@ -222,8 +222,8 @@ MenuItem* AppMenuModel::makeFileMenu()
 MenuItem* AppMenuModel::makeEditMenu()
 {
     MenuItemList editItems {
-        makeMenuItem("action://undo"),
-        makeMenuItem("action://redo"),
+        makeMenuItem("action://trackedit/undo"),
+        makeMenuItem("action://trackedit/redo"),
         makeSeparator(),
         makeMenuItem("action://cut"),
         makeMenuItem("action://copy"),

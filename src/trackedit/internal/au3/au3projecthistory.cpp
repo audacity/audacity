@@ -15,10 +15,16 @@ void au::trackedit::Au3ProjectHistory::init()
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).InitialState();
+
+    m_historyChanged.send(HistoryEvent::RestoredState);
 }
 
 bool au::trackedit::Au3ProjectHistory::undoAvailable() const
 {
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
     auto& project = projectRef();
     return ::ProjectHistory::Get(project).UndoAvailable();
 }
@@ -33,6 +39,10 @@ void au::trackedit::Au3ProjectHistory::undo()
 
 bool au::trackedit::Au3ProjectHistory::redoAvailable() const
 {
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
     auto& project = projectRef();
     return ::ProjectHistory::Get(project).RedoAvailable();
 }
