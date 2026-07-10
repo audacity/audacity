@@ -640,20 +640,23 @@ Rectangle {
                 } else {
                     splitToolController.mouseUp(e.x)
 
-                    let releaseTime = timeline.context.positionToTime(e.x)
-                    if (selectionViewController.isLeftSelection(releaseTime)) {
-                        playCursorController.seekToTime(releaseTime)
-                    }
-                    if (!splitToolController.active) {
-                        selectionViewController.onReleased(releaseTime, e.y)
-                        itemsSelection.visible = false
-                    }
-                    hideGuideline()
-                    if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
-                        playCursorController.seekToTime(timeline.context.selectionStartTime)
+                    if (selectionViewController.selectionInProgress) {
+                        let releaseTime = timeline.context.positionToTime(e.x)
+                        if (selectionViewController.isLeftSelection(releaseTime)) {
+                            playCursorController.seekToTime(releaseTime)
+                        }
+                        if (!splitToolController.active) {
+                            selectionViewController.onReleased(releaseTime, e.y)
+                        }
+                        if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
+                            playCursorController.seekToTime(timeline.context.selectionStartTime)
+                        }
+
+                        playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                     }
 
-                    playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
+                    itemsSelection.visible = false
+                    hideGuideline()
                 }
             }
 

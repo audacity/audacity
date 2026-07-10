@@ -326,6 +326,18 @@ void SelectionViewController::cancelSpectrogramEdit()
     emit pressedSpectrogramChanged();
 }
 
+void SelectionViewController::cancelSelectionGesture()
+{
+    if (!m_selectionStarted) {
+        return;
+    }
+
+    m_selectionStarted = false;
+    m_context->stopAutoScroll();
+    disconnect(m_autoScrollConnection);
+    emit selectionInProgressChanged();
+}
+
 void SelectionViewController::selectTrackAudioData(double y)
 {
     if (!isProjectOpened()) {
@@ -342,12 +354,7 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
-    if (m_selectionStarted) {
-        m_selectionStarted = false;
-        m_context->stopAutoScroll();
-        disconnect(m_autoScrollConnection);
-        emit selectionInProgressChanged();
-    }
+    cancelSelectionGesture();
 
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
@@ -364,6 +371,8 @@ void SelectionViewController::selectItemData(const TrackItemKey& key)
         LOGW() << "Track not found: " << key.key.trackId;
         return;
     }
+
+    cancelSelectionGesture();
 
     if (track->type == trackedit::TrackType::Label) {
         selectionController()->setSelectedLabels(trackedit::LabelKeyList({ key.key }));
