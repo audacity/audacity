@@ -45,8 +45,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         {
             muse::qtrc("appshell/welcome", "Video: find out what’s new in Audacity 4"),
             "qrc:/resources/welcomedialog/Audacity40Video.png",
-            muse::qtrc("appshell/welcome",
-                       "In this video, we walk you through the most important differences between version 3 and version 4."),
+            {},
             muse::qtrc("appshell/welcome", "Watch video"),
             [this]() {
                 platformInteractive()->openUrl(AU4_VIDEO_URL);
@@ -55,8 +54,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         {
             muse::qtrc("appshell/welcome", "Complete your Audacity cloud setup with Audio.com"),
             audiocomUrl,
-            muse::qtrc("appshell/welcome",
-                       "This integration allows you to save and access your Audacity projects on any device"),
+            {},
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
                 muse::actions::ActionQuery query("audacity://cloud/show-tour-page");
@@ -66,8 +64,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         {
             muse::qtrc("appshell/welcome", "Explore free plugins for sculpting your audio"),
             "qrc:/resources/welcomedialog/MuseHubPromo.jpg",
-            muse::qtrc("appshell/welcome",
-                       "There are tons of powerful plugins available that you can install for free on MuseHub"),
+            {},
             muse::qtrc("appshell/welcome", "View free plugins"),
             [this]() {
                 dispatcher()->dispatch("get-effects");
@@ -76,9 +73,8 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         {
             muse::qtrc("appshell/welcome", "Get 25th anniversary merchandise!"),
             "qrc:/resources/welcomedialog/Audacity_Merch_Store.png",
-            muse::qtrc("appshell/welcome",
-                       "A collection of merchandise that commemorates Audacity’s original appearance and branding"),
             muse::qtrc("appshell/welcome", "Visit now"),
+            {},
             [this]() {
                 platformInteractive()->openUrl(SHOP_URL);
             }
