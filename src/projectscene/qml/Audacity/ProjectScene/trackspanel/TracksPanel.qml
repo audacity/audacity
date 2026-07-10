@@ -258,6 +258,7 @@ Item {
                             }
 
                             onOpenEffectsRequested: {
+                                tracksModel.focusTrack(index)
                                 effectSectionModel.showEffectsSection = true
                                 root.openEffectsRequested()
                             }
