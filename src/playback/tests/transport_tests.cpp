@@ -825,4 +825,91 @@ TEST_F(TransportTests, ChangeAudioDevice_WhileRecording_StopsWithoutResume)
     //! [THEN] The stream was stopped before the change, with no resume afterwards
     EXPECT_EQ(m_events, (std::vector<std::string> { "stop", "apply" }));
 }
+
+/**
+ * @brief Resuming after a device change lands back at the interrupted position.
+ * @details The stream is torn down and reopened by the switch, so it must be
+ *          explicitly seeked to where playback was before it can resume there.
+ */
+TEST_F(TransportTests, ChangeAudioDevice_WhilePlaying_ResumesAtSamePosition)
+{
+    //! [GIVEN] Playback is running at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [THEN] The stream is stopped, seeked back to 30s, then played again
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(30.0), false)).Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
+
+    //! [WHEN] The device is changed
+    withStreamRestart([]() {});
+}
+
+/**
+ * @brief Stopping after a device-change resume returns to the original anchor.
+ * @details The resume seeks to where playback was interrupted (see
+ *          ChangeAudioDevice_WhilePlaying_ResumesAtSamePosition), but that must
+ *          not overwrite lastPlaybackSeekTime — the position a later Stop returns
+ *          to should still be where the user last explicitly seeked, not where
+ *          the device action happened to catch playback.
+ */
+TEST_F(TransportTests, ChangeAudioDevice_WhilePlaying_StopAfterwardsReturnsToOriginalPositionNotResumePosition)
+{
+    //! [GIVEN] Playback was explicitly seeked to 5s
+    m_transport->setLastPlaybackSeekTime(5.0);
+
+    //! [GIVEN] It has since been running, and has advanced to 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [GIVEN] The device is changed; playback resumes at 30s
+    withStreamRestart([]() {});
+
+    //! [THEN] Stopping afterwards seeks back to the original anchor (5s), not the
+    //! position where the device action took place (30s)
+    EXPECT_CALL(*m_player, seek(secs_t(5.0), false))
+    .Times(1);
+
+    //! [WHEN] User presses Stop
+    m_transport->stopSeekAndUpdatePlaybackRegion();
+}
+
+/**
+ * @brief Playing again after a device change while paused resumes at the paused position.
+ * @details The paused stream can't survive the switch (see
+ *          ChangeAudioDevice_WhilePaused_StopsWithoutResume), but the position it
+ *          was paused at must not be lost: the next Play should resume there, not
+ *          from 0 or from the last explicit seek target.
+ */
+TEST_F(TransportTests, ChangeAudioDevice_WhilePaused_TogglePlayAfterwardsResumesFromPausedPosition)
+{
+    //! [GIVEN] Playback is paused at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [WHEN] The device is changed; the stream is torn down and left stopped
+    withStreamRestart([]() {});
+
+    //! [GIVEN] The transport is now stopped (the paused stream could not survive
+    //! the switch)
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] Pressing Play resumes from the paused position
+    EXPECT_CALL(*m_player, seek(secs_t(30.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] User presses Play
+    m_transport->togglePlay(false);
+}
 }
