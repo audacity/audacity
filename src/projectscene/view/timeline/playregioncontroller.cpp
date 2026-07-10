@@ -181,7 +181,7 @@ void PlayRegionController::finishInteraction(double pos)
 
     // Toggle region active if it was a simple click without drag
     if (m_action == UserInputAction::Drag && !m_dragStarted) {
-        playback()->player()->toggleLoopPlayback();
+        transport()->toggleLoopPlayback();
     }
 
     QGuiApplication::restoreOverrideCursor();

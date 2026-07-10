@@ -17,7 +17,7 @@ void PlaybackStateModel::init()
         emit isPlayingChanged();
     });
 
-    playback()->player()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
+    transport()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
         emit lastPlaybackSeekTimeChanged();
     });
 
@@ -28,7 +28,7 @@ void PlaybackStateModel::init()
 
 void PlaybackStateModel::setLastPlaybackSeekTime(double time)
 {
-    playback()->player()->setLastPlaybackSeekTime(std::max(0.0, time));
+    transport()->setLastPlaybackSeekTime(std::max(0.0, time));
 }
 
 bool PlaybackStateModel::isPlaying() const
@@ -53,5 +53,5 @@ bool PlaybackStateModel::isRecording() const
 
 double PlaybackStateModel::lastPlaybackSeekTime() const
 {
-    return playback()->player()->lastPlaybackSeekTime();
+    return transport()->lastPlaybackSeekTime();
 }
