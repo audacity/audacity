@@ -2,15 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 
-// Regression test for the ~RealtimeEffectListItemModel() assert on project close.
-//
-// On close, TrackList::Clear() publishes per-track DELETION events while the tracks
-// are still in the list, and destroys the tracks (and the effect states they own)
-// right after. UI models react to the resulting realtimeEffectStackChanged
-// notification by re-reading effectStack(): it must already report "no stack" for
-// the unregistered track, so that the models drop their references while the
-// states are still alive.
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
@@ -91,7 +82,7 @@ TEST_F(Effects_RealtimeEffectServiceTests, EffectStackGoneOnTrackDeletionWhileSt
     m_service->init();
 
     ASSERT_TRUE(m_service->effectStack(trackId).has_value());
-    EXPECT_EQ(m_service->effectStack(trackId)->size(), 1u);
+    ASSERT_EQ(m_service->effectStack(trackId)->size(), 1u);
     ASSERT_TRUE(m_service->effectStack(IRealtimeEffectService::masterTrackId).has_value());
 
     // UI models re-read the stack from within the stack-changed notification.

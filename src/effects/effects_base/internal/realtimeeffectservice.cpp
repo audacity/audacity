@@ -218,8 +218,6 @@ std::optional<std::string> RealtimeEffectService::effectTrackName(const Realtime
 
 std::optional<std::vector<RealtimeEffectStatePtr> > RealtimeEffectService::effectStack(TrackId trackId) const
 {
-    // TrackList::Clear() publishes DELETION while tracks are still in the list; report
-    // unregistered tracks as gone so UI models drop their items while states are alive.
     if (m_rtEffectSubscriptions.count(trackId) == 0) {
         return {};
     }
