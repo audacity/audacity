@@ -173,7 +173,7 @@ void PlaybackToolBarModel::updatePlayState()
         return;
     }
 
-    bool isPlaying = playback()->player()->isPlaying();
+    bool isPlaying = player()->isPlaying();
     bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
 
@@ -251,7 +251,7 @@ void PlaybackToolBarModel::updateLoopState()
         return;
     }
 
-    bool isLooping = playback()->player()->isLoopRegionActive();
+    bool isLooping = player()->isLoopRegionActive();
     item->setSelected(isLooping);
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());

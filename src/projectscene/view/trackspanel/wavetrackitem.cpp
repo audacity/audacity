@@ -40,7 +40,7 @@ void WaveTrackItem::init(const trackedit::Track& track)
 
     emit channelCountChanged();
 
-    playback()->audioOutput()->playbackTrackSignalChanges(trackId())
+    player()->audioOutput()->playbackTrackSignalChanges(trackId())
     .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);

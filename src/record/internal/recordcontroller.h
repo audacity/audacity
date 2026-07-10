@@ -12,7 +12,7 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itracksinteraction.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -32,7 +32,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<IRecord> record{ this };
-    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayer> player{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };

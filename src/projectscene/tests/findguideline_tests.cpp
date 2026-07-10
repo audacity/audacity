@@ -16,7 +16,7 @@
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "mocks/audiooutputmock.h"
-#include "playback/tests/mocks/playbackmock.h"
+#include "playback/tests/mocks/playermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 using namespace ::testing;
@@ -34,7 +34,7 @@ protected:
         m_project = std::make_shared<NiceMock<project::AudacityProjectMock> >();
         m_trackeditProject = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
         m_viewState = std::make_shared<ProjectViewState>(muse::modularity::globalCtx());
-        m_playback = std::make_shared<NiceMock<playback::PlaybackMock> >();
+        m_player = std::make_shared<NiceMock<playback::PlayerMock> >();
         m_audioOutput = std::make_shared<NiceMock<playback::AudioOutputMock> >();
 
         ON_CALL(*m_globalContext, currentProject())
@@ -43,7 +43,7 @@ protected:
         .WillByDefault(Return(m_trackeditProject));
         ON_CALL(*m_project, viewState())
         .WillByDefault(Return(m_viewState));
-        ON_CALL(*m_playback, audioOutput())
+        ON_CALL(*m_player, audioOutput())
         .WillByDefault(Return(m_audioOutput));
         ON_CALL(*m_audioOutput, sampleRate())
         .WillByDefault(Return(static_cast<uint64_t>(44100)));
@@ -51,7 +51,7 @@ protected:
         .WillByDefault(Return(trackedit::TimeSignature { 120.0, 4, 4 }));
 
         m_context = new TimelineContext();
-        SnapTestAccess::wireContext(m_context, m_globalContext, m_playback);
+        SnapTestAccess::wireContext(m_context, m_globalContext, m_player);
     }
 
     void TearDown() override
@@ -75,7 +75,7 @@ protected:
     std::shared_ptr<NiceMock<project::AudacityProjectMock> > m_project;
     std::shared_ptr<NiceMock<trackedit::TrackeditProjectMock> > m_trackeditProject;
     std::shared_ptr<ProjectViewState> m_viewState;
-    std::shared_ptr<NiceMock<playback::PlaybackMock> > m_playback;
+    std::shared_ptr<NiceMock<playback::PlayerMock> > m_player;
     std::shared_ptr<NiceMock<playback::AudioOutputMock> > m_audioOutput;
 
     TimelineContext* m_context = nullptr;

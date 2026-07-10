@@ -6,6 +6,7 @@
 #include <gmock/gmock.h>
 
 #include "playback/iplayer.h"
+#include "playback/iaudiooutput.h"
 
 namespace au::playback {
 class PlayerMock : public IPlayer
@@ -55,5 +56,7 @@ public:
     bool isPlaying() const override { return playbackStatus() == PlaybackStatus::Running; }
     bool isPaused() const override { return playbackStatus() == PlaybackStatus::Paused; }
     bool isStopped() const override { return playbackStatus() == PlaybackStatus::Stopped; }
+
+    MOCK_METHOD(std::shared_ptr<IAudioOutput>, audioOutput, (), (const, override));
 };
 }

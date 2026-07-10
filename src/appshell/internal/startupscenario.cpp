@@ -342,7 +342,7 @@ bool StartupScenario::isAudioActive() const
         return true;
     }
 
-    if (playback() && playback()->player() && playback()->player()->isPlaying()) {
+    if (player() && player()->isPlaying()) {
         return true;
     }
 

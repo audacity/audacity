@@ -163,7 +163,7 @@ double SnapTimeFormatter::snapTypeMultiplier(SnapType type, bool triplets, track
     } else if (isTimeSnap(type)) {
         multiplier = timeMultiplier(type);
     } else if (isSamplesSnap(type)) {
-        multiplier = playback()->audioOutput()->sampleRate();
+        multiplier = player()->audioOutput()->sampleRate();
     } else if (isFrameSnap(type)) {
         multiplier = frameMultiplier(type);
     }

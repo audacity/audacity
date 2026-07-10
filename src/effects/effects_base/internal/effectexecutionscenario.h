@@ -19,7 +19,7 @@
 #include "au3wrap/au3types.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 #include <optional>
 
@@ -49,7 +49,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Co
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
-    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayer> player{ this };
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)

@@ -854,7 +854,7 @@ double TimelineContext::findGuideline(double time) const
         return time;
     }
 
-    const double LIMIT = 1. / playback()->audioOutput()->sampleRate(); // 1 sample at current project's sample rate
+    const double LIMIT = 1. / player()->audioOutput()->sampleRate(); // 1 sample at current project's sample rate
 
     if (vs->isSnapEnabled()) {
         if (muse::RealIsEqualOrLess(std::abs(time - applySnapToTime(time)), LIMIT)) {

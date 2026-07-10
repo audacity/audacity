@@ -8,7 +8,6 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
     ${CMAKE_CURRENT_LIST_DIR}/transport_tests.cpp
 
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/playbackmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/playermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/playbackconfigurationmock.h
     )

@@ -13,7 +13,7 @@ PlaybackStateModel::PlaybackStateModel(QObject* parent)
 
 void PlaybackStateModel::init()
 {
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
@@ -33,17 +33,17 @@ void PlaybackStateModel::setLastPlaybackSeekTime(double time)
 
 bool PlaybackStateModel::isPlaying() const
 {
-    return playback()->player()->isPlaying();
+    return player()->isPlaying();
 }
 
 bool PlaybackStateModel::isPaused() const
 {
-    return playback()->player()->isPaused();
+    return player()->isPaused();
 }
 
 bool PlaybackStateModel::isStopped() const
 {
-    return playback()->player()->isStopped();
+    return player()->isStopped();
 }
 
 bool PlaybackStateModel::isRecording() const

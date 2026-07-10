@@ -8,7 +8,7 @@
 
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "record/irecord.h"
 
 namespace au::playback {

@@ -84,7 +84,7 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
     IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
-    playback()->player()->stop();
+    transport()->stop();
 
     effectExecutionScenario()->performEffect(effectId);
 }
@@ -108,7 +108,7 @@ void EffectsActionsController::applyEffect(const muse::actions::ActionQuery& q)
 
     LOGI() << "applyEffect: effectId=" << effectId << ", params=" << params.ToStdString(wxConvUTF8);
 
-    playback()->player()->stop();
+    transport()->stop();
     const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, params.ToStdString(wxConvUTF8));
     if (!ret) {
         LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
@@ -117,7 +117,7 @@ void EffectsActionsController::applyEffect(const muse::actions::ActionQuery& q)
 
 void EffectsActionsController::repeatLastEffect()
 {
-    playback()->player()->stop();
+    transport()->stop();
 
     effectExecutionScenario()->repeatLastProcessor();
 }

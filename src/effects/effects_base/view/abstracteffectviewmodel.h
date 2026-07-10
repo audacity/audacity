@@ -5,7 +5,7 @@
 
 #include "effects/effects_base/effectstypes.h"
 
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -20,7 +20,7 @@ class AbstractEffectViewModel : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
 protected:
-    muse::ContextInject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<au::playback::IPlayer> player{ this };
 
 public:
     AbstractEffectViewModel(QObject* parent, int instanceId);

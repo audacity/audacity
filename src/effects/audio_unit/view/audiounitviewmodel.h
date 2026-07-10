@@ -10,7 +10,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "trackedit/iprojecthistory.h"
 
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
@@ -33,7 +33,7 @@ class AudioUnitViewModel : public AbstractEffectViewModel
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<IEffectExecutionScenario> executionScenario{ this };
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
-    muse::ContextInject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<au::playback::IPlayer> player{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:

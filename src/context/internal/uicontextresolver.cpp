@@ -51,7 +51,7 @@ void UiContextResolver::init()
     });
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         notifyAboutContextChanged();
     });
 #endif

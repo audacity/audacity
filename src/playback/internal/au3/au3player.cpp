@@ -3,6 +3,8 @@
 */
 #include "au3player.h"
 
+#include "au3audiooutput.h"
+
 #include "framework/global/types/number.h"
 #include "framework/global/defer.h"
 #include "framework/global/log.h"
@@ -25,7 +27,9 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
-    : muse::Contextable(ctx)
+    : muse::Contextable(ctx) {}
+
+void Au3Player::init()
 {
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
         m_isPlayingChanged.notify();
@@ -643,4 +647,12 @@ bool Au3Player::isStopped() const
 muse::async::Notification Au3Player::isPlayingChanged() const
 {
     return m_isPlayingChanged;
+}
+
+std::shared_ptr<IAudioOutput> Au3Player::audioOutput() const
+{
+    if (!m_audioOutput) {
+        m_audioOutput = std::make_shared<Au3AudioOutput>(iocContext());
+    }
+    return m_audioOutput;
 }

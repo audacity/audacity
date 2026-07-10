@@ -529,9 +529,4 @@ bool Transport::isSeekPositionValid(const muse::secs_t& seekTime) const
     const auto region = player()->playbackRegion();
     return region.isValid() ? (seekTime <= region.end) : (seekTime <= totalPlayTime());
 }
-
-IPlayer* Transport::player() const
-{
-    return playback()->player().get();
-}
 }

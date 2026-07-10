@@ -7,7 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 #include "uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h" // todo: public?
 
@@ -23,7 +23,7 @@ class LabelsTableViewTimecodeCell : public muse::uicomponents::TableViewCell, pu
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayer> player{ this };
 
 public:
     explicit LabelsTableViewTimecodeCell(QObject* parent = nullptr);

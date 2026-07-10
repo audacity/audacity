@@ -32,7 +32,7 @@ void SelectionStatusModel::init()
         emit endTimeChanged();
     });
 
-    playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
+    player()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
         emit sampleRateChanged();
     });
 
@@ -112,7 +112,7 @@ void SelectionStatusModel::setDurationFormat(int format)
 
 double SelectionStatusModel::sampleRate() const
 {
-    return playback()->audioOutput()->sampleRate();
+    return player()->audioOutput()->sampleRate();
 }
 
 double SelectionStatusModel::tempo() const

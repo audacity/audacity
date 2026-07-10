@@ -33,26 +33,26 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
                                                    QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+    player()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
         m_level = volume;
         emit levelChanged();
     });
 
-    playback()->audioOutput()->playbackSignalChanges().onReceive(this,
+    player()->audioOutput()->playbackSignalChanges().onReceive(this,
                                                                  [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(audioChNum,
                                       meterSignal.peak.pressure);
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
 
-    m_level = playback()->audioOutput()->playbackVolume();
+    m_level = player()->audioOutput()->playbackVolume();
     emit levelChanged();
 
     configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
         emit meterSizeChanged();
     });
 
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
@@ -70,7 +70,7 @@ void PlaybackToolBarLevelItem::setLevel(float newLevel)
         return;
     }
 
-    playback()->audioOutput()->setPlaybackVolume(newLevel);
+    player()->audioOutput()->setPlaybackVolume(newLevel);
 }
 
 float PlaybackToolBarLevelItem::leftChannelPressure() const
@@ -85,7 +85,7 @@ float PlaybackToolBarLevelItem::rightChannelPressure() const
 
 bool PlaybackToolBarLevelItem::isPlaying() const
 {
-    return playback()->player()->isPlaying();
+    return player()->isPlaying();
 }
 
 void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)

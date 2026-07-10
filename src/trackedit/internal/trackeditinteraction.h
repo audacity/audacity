@@ -1,20 +1,19 @@
 #pragma once
 
-#include "itrackeditinteraction.h"
+#include "trackedit/itrackeditinteraction.h"
 #include "trackedit/trackediterrors.h"
 
-#include "playback/iplayer.h"
+#include "playback/itransport.h"
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
 #include "au3wrap/internal/progressdialog.h"
-#include "playback/iplayback.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Contextable
 {
     muse::ContextInject<au::record::IRecordController> recordController { this };
-    muse::ContextInject<au::playback::IPlayback> playback { this };
+    muse::ContextInject<au::playback::ITransport> transport { this };
 
 public:
     TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction);
@@ -152,7 +151,7 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        playback()->player()->stop();
+        transport()->stop();
 
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
@@ -168,7 +167,7 @@ private:
             retVal.ret = make_ret(trackedit::Err::DisallowedDuringRecording);
             return retVal;
         }
-        playback()->player()->stop();
+        transport()->stop();
 
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }

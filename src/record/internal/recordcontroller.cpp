@@ -33,7 +33,7 @@ void RecordController::init()
     dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
     dispatcher()->reg(this, RECORD_LEAD_IN_RECORDING_QUERY, this, &RecordController::leadInRecording);
 
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
     });
 
@@ -60,7 +60,7 @@ void RecordController::deinit()
 
 bool RecordController::isRecordAllowed() const
 {
-    return !playback()->player()->isPlaying();
+    return !player()->isPlaying();
 }
 
 Notification RecordController::isRecordAllowedChanged() const
@@ -272,11 +272,11 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
     if (code == RECORD_START_QUERY.toString()
         || code == RECORD_ON_CURRENT_TRACK_CODE
         || code == RECORD_ON_NEW_TRACK_CODE) {
-        return !playback()->player()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
+        return !player()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
     }
 
     if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {
-        return !playback()->player()->isPlaying() && !isRecording();
+        return !player()->isPlaying() && !isRecording();
     }
 
     if (code == RECORD_STOP_QUERY.toString()) {

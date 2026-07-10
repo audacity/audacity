@@ -136,7 +136,7 @@ void Lv2ViewModel::doInit()
     m_portUIStates = std::make_unique<LV2PortUIStates>(m_instance->GetPortStates(), *m_ports);
     m_settingsAccess = instancesRegister()->settingsAccessById(instanceId());
 
-    const auto sampleRate = playback()->audioOutput()->sampleRate();
+    const auto sampleRate = player()->audioOutput()->sampleRate();
     m_wrapper = m_instance->MakeWrapper(*settings, sampleRate, nullptr);
     IF_ASSERT_FAILED(m_wrapper) {
         return;
@@ -339,7 +339,7 @@ void Lv2ViewModel::startUiTimer(bool fancy)
 
     auto& values = mySettings.values;
     {
-        const auto sampleRate = playback()->audioOutput()->sampleRate();
+        const auto sampleRate = player()->audioOutput()->sampleRate();
         size_t index = 0;
         for (auto& state : m_portUIStates->mControlPortStates) {
             auto& port = state.mpPort;
@@ -447,11 +447,11 @@ void Lv2ViewModel::onKeyPressed(Qt::Key key)
         onUiClosed();
         break;
     case Qt::Key_Space: {
-        const auto player = playback()->player();
-        if (player->playbackStatus() == playback::PlaybackStatus::Stopped) {
-            player->play();
+        const auto playerPtr = player();
+        if (playerPtr->playbackStatus() == playback::PlaybackStatus::Stopped) {
+            playerPtr->play();
         } else {
-            player->stop();
+            playerPtr->stop();
         }
     }
     break;

@@ -13,14 +13,14 @@ DynamicsPlayStateModel::DynamicsPlayStateModel(QObject* parent)
 
 void DynamicsPlayStateModel::init()
 {
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         emit playStateChanged();
     });
 }
 
 Stopwatch::PlayState DynamicsPlayStateModel::playState() const
 {
-    switch (playback()->player()->playbackStatus()) {
+    switch (player()->playbackStatus()) {
     case playback::PlaybackStatus::Running:
         return Stopwatch::PlayState::Playing;
     case playback::PlaybackStatus::Paused:

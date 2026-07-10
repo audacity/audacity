@@ -8,7 +8,7 @@
 #include "ui/iuiconfiguration.h"
 
 #include "playback/view/common/playbackmetermodel.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/playbacktypes.h"
 #include "playback/iaudiooutput.h"
@@ -20,7 +20,7 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable, p
 
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
-    muse::ContextInject<IPlayback> playback{ this };
+    muse::ContextInject<IPlayer> player{ this };
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)

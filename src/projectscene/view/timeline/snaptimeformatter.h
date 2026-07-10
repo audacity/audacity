@@ -4,7 +4,7 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 #include "projectscene/iprojectviewstate.h"
 #include "../../types/projectscenetypes.h"
@@ -13,7 +13,7 @@ namespace au::projectscene {
 using Direction = DirectionType::Direction;
 class SnapTimeFormatter : public muse::Contextable
 {
-    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayer> player{ this };
 
 public:
     SnapTimeFormatter(const muse::modularity::ContextPtr& ctx)

@@ -21,7 +21,7 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
         emit currentValueChanged();
     });
 
-    playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
+    player()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
         emit sampleRateChanged();
     });
 
@@ -80,7 +80,7 @@ au::context::IPlaybackStatePtr PlaybackToolBarTimeItem::playbackState() const
 
 double PlaybackToolBarTimeItem::sampleRate() const
 {
-    return playback()->audioOutput()->sampleRate();
+    return player()->audioOutput()->sampleRate();
 }
 
 double PlaybackToolBarTimeItem::tempo() const

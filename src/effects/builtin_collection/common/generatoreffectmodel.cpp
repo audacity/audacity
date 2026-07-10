@@ -35,7 +35,7 @@ void GeneratorEffectModel::doReload()
 
 double GeneratorEffectModel::sampleRate() const
 {
-    return playback()->audioOutput()->sampleRate();
+    return player()->audioOutput()->sampleRate();
 }
 
 double GeneratorEffectModel::tempo() const

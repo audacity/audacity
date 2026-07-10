@@ -15,7 +15,7 @@
 #include "spectrogram/ispectraleffectsregister.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
 
-#include "playback/iplayback.h"
+#include "playback/itransport.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
@@ -36,7 +36,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
     muse::ContextInject<IEffectPresetsScenario> presetsScenario{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
-    muse::ContextInject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<au::playback::ITransport> transport{ this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:

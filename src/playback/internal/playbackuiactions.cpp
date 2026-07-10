@@ -245,7 +245,7 @@ void PlaybackUiActions::init()
         m_actionEnabledChanged.send(codes);
     });
 
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         ActionCodeList codes= {
             PLAYBACK_PLAY_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),

@@ -33,7 +33,7 @@
 #include "trackedit/internal/itracknavigationcontroller.h"
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #endif
 
 namespace au::context {
@@ -45,7 +45,7 @@ class UiContextResolver : public muse::ui::IUiContextResolver, public muse::asyn
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
-    muse::ContextInject<playback::IPlayback> playback { this };
+    muse::ContextInject<playback::IPlayer> player { this };
 #endif
 public:
     UiContextResolver(const muse::modularity::ContextPtr& ctx);

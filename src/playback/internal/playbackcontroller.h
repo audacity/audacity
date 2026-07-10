@@ -12,7 +12,7 @@
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "playback/itransport.h"
 #include "record/irecordcontroller.h"
 
@@ -27,7 +27,7 @@ public:
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
-    muse::ContextInject<playback::IPlayback> playback { this };
+    muse::ContextInject<playback::IPlayer> player { this };
     muse::ContextInject<playback::ITransport> transport { this };
 
 public:

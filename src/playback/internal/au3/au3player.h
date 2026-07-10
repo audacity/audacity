@@ -22,6 +22,7 @@
 
 struct TransportSequences;
 namespace au::playback {
+class Au3AudioOutput;
 class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
@@ -32,6 +33,8 @@ class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Co
 public:
 
     Au3Player(const muse::modularity::ContextPtr& ctx);
+
+    void init();
 
     bool isBusy() const override;
 
@@ -75,6 +78,8 @@ public:
     bool isStopped() const override;
     muse::async::Notification isPlayingChanged() const override;
 
+    std::shared_ptr<IAudioOutput> audioOutput() const override;
+
 private:
     au3::Au3Project& projectRef() const;
 
@@ -106,5 +111,7 @@ private:
     std::optional<TargetPoint> m_currentTarget;
     unsigned long long m_consumedSamplesSoFar = 0;
     QTimer m_timer;
+
+    mutable std::shared_ptr<Au3AudioOutput> m_audioOutput;
 };
 }

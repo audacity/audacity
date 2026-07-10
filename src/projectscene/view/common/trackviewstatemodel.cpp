@@ -89,7 +89,7 @@ void TrackViewStateModel::init()
         emit displayBoundsChanged();
     }
 
-    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+    player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -171,7 +171,7 @@ bool TrackViewStateModel::isLinear() const
 
 bool TrackViewStateModel::isPlaying() const
 {
-    return playback()->player()->isPlaying();
+    return player()->isPlaying();
 }
 
 bool TrackViewStateModel::isRecording() const

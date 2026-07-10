@@ -52,7 +52,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
 
-        playback()->player()->isPlayingChanged().onNotify(this, [this]() {
+        player()->isPlayingChanged().onNotify(this, [this]() {
             // when the playback stops we need to restart the monitoring if mic metering is on or input monitoring is on
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
@@ -151,7 +151,7 @@ bool Au3AudioInput::canStartAudioEngineMonitoring() const
 {
     // Monitoring can't be started if we are recording or playing/pause
     // it can only be started when we are stopped
-    return !controller()->isRecording() && !playback()->player()->isPlaying() && !playback()->player()->isPaused();
+    return !controller()->isRecording() && !player()->isPlaying() && !player()->isPaused();
 }
 
 bool Au3AudioInput::audioEngineShouldBeMonitoring() const

@@ -12,7 +12,7 @@
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 namespace au::projectscene {
 class SelectionStatusModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -36,7 +36,7 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable, publ
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<trackedit::ISelectionController> selectionController { this };
-    muse::ContextInject<playback::IPlayback> playback { this };
+    muse::ContextInject<playback::IPlayer> player { this };
 
 public:
     explicit SelectionStatusModel(QObject* parent = nullptr);

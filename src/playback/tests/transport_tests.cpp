@@ -5,7 +5,6 @@
 #include <gmock/gmock.h>
 
 #include "context/tests/mocks/globalcontextmock.h"
-#include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "record/tests/mocks/recordcontrollermock.h"
@@ -40,11 +39,7 @@ public:
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_trackeditProject = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
-        m_playback = std::make_shared<NiceMock<PlaybackMock> >();
         m_player = std::make_shared<NiceMock<PlayerMock> >();
-
-        EXPECT_CALL(*m_playback, player(_))
-        .WillRepeatedly(Return(m_player));
 
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
@@ -60,7 +55,7 @@ public:
 
         m_transport = std::make_shared<Transport>(muse::modularity::globalCtx());
         m_transport->globalContext.set(m_globalContext);
-        m_transport->playback.set(m_playback);
+        m_transport->player.set(m_player);
         m_transport->recordController.set(m_recordController);
         m_transport->selectionController.set(m_selectionController);
         m_transport->init();
@@ -104,7 +99,6 @@ public:
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 
-    std::shared_ptr<PlaybackMock> m_playback;
     std::shared_ptr<PlayerMock> m_player;
 };
 

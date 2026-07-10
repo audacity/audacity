@@ -3,7 +3,7 @@
 */
 #include "playbackcontroller.h"
 
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "framework/global/log.h"
 
 using namespace muse;
@@ -29,7 +29,7 @@ static const ActionCode REPEAT_CODE("repeat");
 
 void PlaybackController::init()
 {
-    m_player = playback()->player();
+    m_player = player();
 
     dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);

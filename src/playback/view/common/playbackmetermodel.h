@@ -8,14 +8,14 @@
 
 #include "metermodel.h"
 
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 namespace au::playback {
 class PlaybackMeterModel : public MeterModel
 {
     Q_OBJECT
 
-    muse::ContextInject<IPlayback> playback{ this };
+    muse::ContextInject<IPlayer> player{ this };
     muse::ContextInject<record::IRecord> record{ this };
 
 public:

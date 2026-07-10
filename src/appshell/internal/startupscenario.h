@@ -35,7 +35,7 @@
 #include "update/iupdateconfiguration.h"
 #include "io/ifilesystem.h"
 #include "record/irecordcontroller.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 #include "appshell/iappshellconfiguration.h"
 #include "appshell/internal/isessionsmanager.h"
@@ -55,7 +55,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
     muse::ContextInject<muse::update::IAppUpdateScenario> appUpdateScenario { this };
     muse::ContextInject<record::IRecordController> recordController { this };
-    muse::ContextInject<playback::IPlayback> playback { this };
+    muse::ContextInject<playback::IPlayer> player { this };
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)

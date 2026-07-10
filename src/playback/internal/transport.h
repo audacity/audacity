@@ -12,7 +12,6 @@
 
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
 #include "playback/iplayer.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/itransport.h"
@@ -25,7 +24,7 @@ class Transport : public ITransport, public muse::async::Asyncable, public muse:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
-    muse::ContextInject<IPlayback> playback { this };
+    muse::ContextInject<IPlayer> player { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<trackedit::ISelectionController> selectionController { this };
@@ -68,8 +67,6 @@ public:
 private:
     friend class TransportTests;
 
-    IPlayer* player() const;
-
     muse::secs_t totalPlayTime() const;
 
     bool isPlaying() const;
@@ -98,8 +95,6 @@ private:
     bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
     bool isPlaybackStartPositionValid() const;
     bool isSeekPositionValid(const muse::secs_t& seekTime) const;
-
-    IPlayerPtr m_player;
 
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_lastPlaybackSeekTimeChanged;

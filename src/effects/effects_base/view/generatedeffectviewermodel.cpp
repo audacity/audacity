@@ -77,7 +77,7 @@ bool GeneratedEffectViewerModel::hasParameters() const
 
 double GeneratedEffectViewerModel::sampleRate() const
 {
-    return playback()->audioOutput()->sampleRate();
+    return player()->audioOutput()->sampleRate();
 }
 
 double GeneratedEffectViewerModel::tempo() const

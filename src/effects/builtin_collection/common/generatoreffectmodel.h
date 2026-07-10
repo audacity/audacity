@@ -6,7 +6,7 @@
 #include "effects/builtin/view/builtineffectmodel.h"
 
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 
 namespace au::effects {
 class GeneratorEffect;
@@ -24,7 +24,7 @@ class GeneratorEffectModel : public BuiltinEffectModel
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<au::playback::IPlayer> player{ this };
 
 public:
     GeneratorEffectModel(QObject* parent, int instanceId);

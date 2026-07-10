@@ -20,7 +20,7 @@ LabelsTableViewTimecodeCell::LabelsTableViewTimecodeCell(const TableViewCell* ot
 
 double LabelsTableViewTimecodeCell::sampleRate() const
 {
-    return playback()->audioOutput()->sampleRate();
+    return player()->audioOutput()->sampleRate();
 }
 
 double LabelsTableViewTimecodeCell::tempo() const

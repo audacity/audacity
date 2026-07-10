@@ -16,11 +16,11 @@ AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent, int instanceId
 
 void AbstractEffectViewModel::init()
 {
-    const auto player = playback()->player();
-    IF_ASSERT_FAILED(player) {
+    const auto playerPtr = player();
+    IF_ASSERT_FAILED(playerPtr) {
         return;
     }
-    player->playbackStatusChanged().onReceive(this, [this](auto) {
+    playerPtr->playbackStatusChanged().onReceive(this, [this](auto) {
         emit isPreviewingChanged();
     });
 
@@ -29,11 +29,11 @@ void AbstractEffectViewModel::init()
 
 bool AbstractEffectViewModel::isPreviewing() const
 {
-    const auto player = playback()->player();
-    IF_ASSERT_FAILED(player) {
+    const auto playerPtr = player();
+    IF_ASSERT_FAILED(playerPtr) {
         return false;
     }
-    return player->playbackStatus() == playback::PlaybackStatus::Running;
+    return playerPtr->playbackStatus() == playback::PlaybackStatus::Running;
 }
 
 void AbstractEffectViewModel::startPreview()

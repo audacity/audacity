@@ -4,7 +4,7 @@
 #pragma once
 
 #include "audio/iaudiodevicesprovider.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "record/irecord.h"
 
@@ -29,7 +29,7 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
     muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
-    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayer> player{ this };
     muse::ContextInject<record::IRecord> record{ this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 

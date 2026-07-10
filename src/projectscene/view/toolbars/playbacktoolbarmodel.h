@@ -13,7 +13,7 @@
 #include "context/iglobalcontext.h"
 #include "context/iuicontextresolver.h"
 #include "playback/iplaybackconfiguration.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
 #include "record/irecordconfiguration.h"
 
@@ -36,7 +36,7 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
     muse::ContextInject<context::IGlobalContext> context{ this };
     muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
-    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayer> player{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
 
 public:

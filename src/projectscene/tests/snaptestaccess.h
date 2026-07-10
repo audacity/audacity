@@ -7,7 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "actions/iactionsdispatcher.h"
 
 #include "projectscene/view/timeline/timelinecontext.h"
@@ -21,10 +21,10 @@ namespace au::projectscene {
 struct SnapTestAccess {
     static void wireContext(TimelineContext* ctx,
                             const std::shared_ptr<context::IGlobalContext>& globalContext,
-                            const std::shared_ptr<playback::IPlayback>& playback)
+                            const std::shared_ptr<playback::IPlayer>& player)
     {
         ctx->globalContext.set(globalContext);
-        ctx->playback.set(playback);
+        ctx->player.set(player);
         ctx->m_snapTimeFormatter = std::make_shared<SnapTimeFormatter>(muse::modularity::globalCtx());
     }
 

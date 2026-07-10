@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/types/ret.h"
 #include "framework/global/types/retval.h"
 #include "framework/global/async/channel.h"
@@ -12,8 +13,11 @@
 
 class TrackList;
 namespace au::playback {
-class IPlayer
+class IAudioOutput;
+class IPlayer : MODULE_EXPORT_INTERFACE
 {
+    INTERFACE_ID(IPlayer)
+
 public:
     virtual ~IPlayer() = default;
 
@@ -67,6 +71,8 @@ public:
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
     virtual muse::async::Notification isPlayingChanged() const = 0;
+
+    virtual std::shared_ptr<IAudioOutput> audioOutput() const = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

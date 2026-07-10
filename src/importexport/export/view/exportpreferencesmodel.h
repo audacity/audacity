@@ -16,7 +16,7 @@
 #include "context/iglobalcontext.h"
 #include "importexport//export/iexporter.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
-#include "playback/iplayback.h"
+#include "playback/iplayer.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::importexport {
@@ -33,7 +33,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<IExporter> exporter{ this };
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
-    muse::ContextInject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<au::playback::IPlayer> player{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
