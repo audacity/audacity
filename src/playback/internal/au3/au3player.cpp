@@ -4,6 +4,8 @@
 #include "au3player.h"
 
 #include "framework/global/types/number.h"
+#include "framework/global/realfn.h"
+#include "framework/global/translation.h"
 #include "framework/global/defer.h"
 #include "framework/global/log.h"
 
@@ -19,15 +21,21 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
+#include <QVariant>
+
 #include <algorithm>
 
 using namespace au::playback;
 using namespace au::au3;
 
+static const muse::secs_t TIME_EPS = muse::secs_t(1 / 1000.0);
+
 Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
 {
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
+        m_isPlayingChanged.notify();
+
         if (st == PlaybackStatus::Running) {
             m_currentTarget.reset();
             m_consumedSamplesSoFar = 0;
@@ -53,9 +61,12 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
             m_startOffset = 0.0;
             m_timer.start();
         }
+        m_isPlayAllowedChanged.notify();
     });
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        onProjectChanged();
+
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
             return;
@@ -75,9 +86,52 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         });
     });
 
+    playbackPositionChanged().onReceive(this, [this](const muse::secs_t&) {
+        onPlaybackPositionChanged();
+    });
+
+    m_loopRegionChanged.onNotify(this, [this]() {
+        if (playbackConfiguration()->selectionFollowsLoopRegion()) {
+            setSelectionToLoop();
+        }
+    });
+
     m_timer.setInterval(16);
     m_timer.setTimerType(Qt::PreciseTimer);
     m_timer.callOnTimeout([this]() { updatePlaybackPosition(); });
+
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeyList) {
+        if (clipKeyList.empty()) {
+            return;
+        }
+        if (!isPlaying()) {
+            stop();
+            PlaybackRegion selectionRegion = selectionPlaybackRegion();
+            if (selectionRegion.isValid()) {
+                doChangePlaybackRegion(selectionRegion);
+            }
+            doSeek(lastPlaybackSeekTime(), false);
+        }
+    });
+
+    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList& labelKeyList) {
+        if (labelKeyList.empty()) {
+            return;
+        }
+        if (!isPlaying()) {
+            stop();
+            PlaybackRegion selectionRegion = selectionPlaybackRegion();
+            if (selectionRegion.isValid()) {
+                doChangePlaybackRegion(selectionRegion);
+            }
+            auto labelStartTime = selectionController()->selectedLabelStartTime();
+            auto labelEndTime = selectionController()->selectedLabelEndTime();
+            if (labelStartTime.has_value()) {
+                doSeek(labelStartTime.value(), false);
+                m_lastPlaybackRegion = { labelStartTime.value_or(0.0), labelEndTime.value_or(0.0) };
+            }
+        }
+    });
 }
 
 bool Au3Player::isBusy() const
@@ -281,6 +335,8 @@ void Au3Player::rewind()
 
 void Au3Player::stop()
 {
+    m_pauseShouldStopPlayback = false;
+
     if (m_playbackStatus.val == PlaybackStatus::Stopped) {
         return;
     }
@@ -316,6 +372,17 @@ void Au3Player::stop()
 }
 
 void Au3Player::pause()
+{
+    if (m_pauseShouldStopPlayback && isPlaying()) {
+        m_pauseShouldStopPlayback = false;
+        stopSeekAndUpdatePlaybackRegion();
+        return;
+    }
+
+    doPauseStream();
+}
+
+void Au3Player::doPauseStream()
 {
     if (!canStopAudioStream()) {
         return;
@@ -462,6 +529,10 @@ bool Au3Player::isLoopRegionClear() const
 
 bool Au3Player::isLoopRegionActive() const
 {
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
@@ -616,4 +687,364 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
         }
     }
     return result;
+}
+
+bool Au3Player::isPlaying() const
+{
+    return playbackStatus() == PlaybackStatus::Running;
+}
+
+bool Au3Player::isPaused() const
+{
+    return playbackStatus() == PlaybackStatus::Paused;
+}
+
+bool Au3Player::isStopped() const
+{
+    return playbackStatus() == PlaybackStatus::Stopped;
+}
+
+muse::async::Notification Au3Player::isPlayingChanged() const
+{
+    return m_isPlayingChanged;
+}
+
+bool Au3Player::isPlayAllowed() const
+{
+    return !globalContext()->isRecording();
+}
+
+muse::async::Notification Au3Player::isPlayAllowedChanged() const
+{
+    return m_isPlayAllowedChanged;
+}
+
+muse::secs_t Au3Player::lastPlaybackSeekTime() const
+{
+    return m_lastPlaybackSeekTime;
+}
+
+void Au3Player::setLastPlaybackSeekTime(muse::secs_t secs)
+{
+    if (muse::RealIsEqual(lastPlaybackSeekTime(), secs)) {
+        return;
+    }
+
+    m_lastPlaybackSeekTime = secs;
+    m_pauseShouldStopPlayback = isPlaying();
+    m_lastPlaybackSeekTimeChanged.notify();
+}
+
+muse::async::Notification Au3Player::lastPlaybackSeekTimeChanged() const
+{
+    return m_lastPlaybackSeekTimeChanged;
+}
+
+muse::secs_t Au3Player::totalPlayTime() const
+{
+    au::project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return 0;
+    }
+
+    return project->trackeditProject()->totalTime();
+}
+
+void Au3Player::togglePlay(bool ignoreSelection)
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return;
+    }
+
+    if (isPlaying()) {
+        if (ignoreSelection) {
+            stopSeekAndUpdatePlaybackRegion();
+        } else {
+            pause();
+        }
+    } else if (isPaused()) {
+        if (isSelectionPlaybackRegionChanged()) {
+            //! NOTE: just stop, without seek
+            stop();
+            doPlay(false);
+        } else if (ignoreSelection) {
+            //! NOTE: set the current position as start position
+            doSeek(playbackPosition(), false);
+            doPlay(true /* ignoreSelection */);
+        } else {
+            resume();
+        }
+    } else {
+        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+            doSeek(0.0, false);
+        }
+
+        doPlay(ignoreSelection);
+    }
+}
+
+void Au3Player::doPlay(bool ignoreSelection)
+{
+    if (!ignoreSelection) {
+        PlaybackRegion selectionRegion = selectionPlaybackRegion();
+        if (selectionRegion.isValid()) {
+            doChangePlaybackRegion(selectionRegion);
+        } else {
+            //! NOTE: no selection — fall back to the user's cursor (lastPlaybackSeekTime)
+            //! and the project end.
+            const muse::secs_t end = totalPlayTime();
+            const muse::secs_t start = lastPlaybackSeekTime();
+            if (end > start) {
+                doChangePlaybackRegion({ start, end });
+            } else {
+                LOGW() << "playback region is not valid";
+                updatePlaybackRegion();
+            }
+        }
+    } else {
+        doChangePlaybackRegion({});
+        doSeek(lastPlaybackSeekTime(), false);
+    }
+
+    if (!isPlaybackStartPositionValid()) {
+        return;
+    }
+
+    play();
+}
+
+void Au3Player::rewindToStart()
+{
+    //! NOTE: In Audacity 3 we can't rewind while playing
+    stopSeekAndUpdatePlaybackRegion();
+
+    doSeek(0.0, false);
+
+    selectionController()->resetTimeSelection();
+}
+
+void Au3Player::rewindToEnd()
+{
+    //! NOTE: In Audacity 3 we can't rewind while playing
+    setLastPlaybackSeekTime(totalPlayTime());
+    m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
+    stopSeekAndUpdatePlaybackRegion();
+
+    selectionController()->resetTimeSelection();
+}
+
+void Au3Player::seekTo(const muse::secs_t secs, bool triggerPlay)
+{
+    if (globalContext()->isRecording()) {
+        return;
+    }
+
+    const bool isSeekStartPositionValid = isSeekPositionValid(secs);
+
+    if (isPaused() || (!isSeekStartPositionValid)) {
+        stop();
+    }
+
+    doSeek(secs, triggerPlay);
+
+    if (triggerPlay) {
+        if (isPlaying()) {
+            return;
+        }
+
+        if (!isSeekStartPositionValid) {
+            return;
+        }
+
+        play();
+    }
+}
+
+void Au3Player::doSeek(const muse::secs_t secs, bool applyIfPlaying)
+{
+    seek(secs, applyIfPlaying);
+    setLastPlaybackSeekTime(secs);
+    m_lastPlaybackRegion = { secs, secs };
+    m_pauseShouldStopPlayback = false;
+}
+
+void Au3Player::changePlaybackRegion(const muse::secs_t start, const muse::secs_t end)
+{
+    doChangePlaybackRegion({ start, end });
+}
+
+void Au3Player::doChangePlaybackRegion(const PlaybackRegion& region)
+{
+    m_lastPlaybackRegion = region;
+
+    if (isStopped()) {
+        updatePlaybackRegion();
+    }
+
+    if (region.isValid()) {
+        setLastPlaybackSeekTime(m_lastPlaybackRegion.start);
+    }
+}
+
+void Au3Player::stopSeekAndUpdatePlaybackRegion()
+{
+    stop();
+
+    seek(lastPlaybackSeekTime(), false);
+    updatePlaybackRegion();
+}
+
+void Au3Player::toggleLoopPlayback()
+{
+    setLoopRegionActive(!isLoopRegionActive());
+}
+
+void Au3Player::setLoopRegionToSelection()
+{
+    double start = 0;
+    double end = 0;
+
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        start = selectionController()->dataSelectedStartTime();
+        end = selectionController()->dataSelectedEndTime();
+    } else {
+        auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+        auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+        if (itemStart.has_value() && itemEnd.has_value()) {
+            start = itemStart.value();
+            end = itemEnd.value();
+        } else {
+            clearLoopRegion();
+            return;
+        }
+    }
+
+    setLoopRegion({ start, end });
+}
+
+void Au3Player::setSelectionToLoop()
+{
+    const PlaybackRegion region = loopRegion();
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    selectionController()->setSelectedTracks(tracks, false);
+    selectionController()->setDataSelectedStartTime(region.start, false);
+    selectionController()->setDataSelectedEndTime(region.end, true);
+}
+
+void Au3Player::setLoopRegionInOut()
+{
+    const PlaybackRegion region = loopRegion();
+
+    muse::UriQuery loopRegionInOutUri("audacity://playback/loop_region_in_out");
+    loopRegionInOutUri.addParam("title", muse::Val(muse::trc("trackedit", "Set looping region in/out")));
+    loopRegionInOutUri.addParam("start", muse::Val(static_cast<double>(region.start)));
+    loopRegionInOutUri.addParam("end", muse::Val(static_cast<double>(region.end)));
+
+    const muse::RetVal<muse::Val> rv = interactive()->openSync(loopRegionInOutUri);
+    if (!rv.ret.success()) {
+        return;
+    }
+
+    const QVariantMap vals = rv.val.toQVariant().toMap();
+
+    setLoopRegion({ vals["start"].toDouble(), vals["end"].toDouble() });
+}
+
+void Au3Player::setSelectionFollowsLoopRegion()
+{
+    playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
+}
+
+PlaybackRegion Au3Player::selectionPlaybackRegion() const
+{
+    // item selection has priority over time selection
+    auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+    auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+    if (itemStart.has_value() && itemEnd.has_value()) {
+        return { itemStart.value(), itemEnd.value() };
+    }
+
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        return { selectionController()->dataSelectedStartTime(),
+                 selectionController()->dataSelectedEndTime() };
+    }
+
+    return PlaybackRegion();
+}
+
+bool Au3Player::isSelectionPlaybackRegionChanged() const
+{
+    return m_lastPlaybackRegion.isValid() && m_lastPlaybackRegion != playbackRegion();
+}
+
+void Au3Player::updatePlaybackRegion()
+{
+    setPlaybackRegion(m_lastPlaybackRegion);
+}
+
+void Au3Player::onProjectChanged()
+{
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        prj->aboutCloseBegin().onNotify(this, [this]() {
+            stopSeekAndUpdatePlaybackRegion();
+        });
+
+        seek(0.0, false); // TODO: get the previous position from the project data
+        setLastPlaybackSeekTime(playbackPosition());
+    }
+}
+
+void Au3Player::onPlaybackPositionChanged()
+{
+    if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+        //! NOTE: just stop, without seek
+        stop();
+        if (playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
+            // we want to update the playback region in case user made new selection during playback
+            updatePlaybackRegion();
+        }
+    }
+}
+
+bool Au3Player::isEqualToPlaybackPosition(const muse::secs_t position) const
+{
+    const muse::secs_t playbackPos = playbackPosition();
+    return playbackPos - TIME_EPS <= position && position <= playbackPos + TIME_EPS;
+}
+
+bool Au3Player::isPlaybackPositionOnTheEndOfProject() const
+{
+    return isEqualToPlaybackPosition(totalPlayTime());
+}
+
+bool Au3Player::isPlaybackPositionOnTheEndOfPlaybackRegion() const
+{
+    PlaybackRegion region = playbackRegion();
+    return region.isValid() && isEqualToPlaybackPosition(region.end) && !isLoopRegionActive();
+}
+
+bool Au3Player::isPlaybackStartPositionValid() const
+{
+    muse::secs_t total = totalPlayTime();
+
+    if (lastPlaybackSeekTime() >= total) {
+        return false;
+    }
+
+    if (m_lastPlaybackRegion.start >= total) {
+        return false;
+    }
+
+    return true;
+}
+
+bool Au3Player::isSeekPositionValid(const muse::secs_t& seekTime) const
+{
+    const auto region = playbackRegion();
+    return region.isValid() ? (seekTime <= region.end) : (seekTime <= totalPlayTime());
 }

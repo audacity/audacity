@@ -4,24 +4,20 @@
 #pragma once
 
 #include "framework/global/async/asyncable.h"
+#include "framework/global/async/channel.h"
 #include "framework/global/iapplication.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/interactive/iinteractive.h"
-#include "framework/ui/iuiactionsregister.h"
 
-#include "audio/audiotypes.h"
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
+#include "playback/iplayback.h"
 #include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
-#include "trackedit/iselectioncontroller.h"
 
 namespace au::playback {
-class PlaybackUiActions;
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable,
     public muse::Contextable
 {
@@ -30,12 +26,10 @@ public:
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
-    muse::ContextInject<IPlayback> playback { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<record::IRecordController> recordController{ this };
-    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<playback::IPlayback> playback { this };
 
 public:
     PlaybackController(const muse::modularity::ContextPtr& ctx)
@@ -44,6 +38,10 @@ public:
     void init();
     void deinit();
 
+    //! IPlaybackController is now a thin pass-through: the playback session state
+    //! and logic live on the player. These forward to it so the existing
+    //! consumers keep working unchanged; the next commit points them straight at
+    //! the player and drops this interface.
     bool isPlayAllowed() const override;
     muse::async::Notification isPlayAllowedChanged() const override;
 
@@ -51,18 +49,19 @@ public:
     muse::async::Notification isPlayingChanged() const override;
     PlaybackStatus playbackStatus() const override;
 
-    bool isLoopRegionActive() const override;
-    void toggleLoopPlayback() override;
     PlaybackRegion loopRegion() const override;
+    void loopEditingBegin() override;
+    void loopEditingEnd() override;
     void setLoopRegion(const PlaybackRegion& region) override;
     void setLoopRegionStart(const muse::secs_t time) override;
     void setLoopRegionEnd(const muse::secs_t time) override;
-    void setLoopRegionActive(const bool active) override;
     void clearLoopRegion() override;
-    void loopEditingBegin() override;
-    void loopEditingEnd() override;
     bool isLoopRegionClear() const override;
     muse::async::Notification loopRegionChanged() const override;
+
+    bool isLoopRegionActive() const override;
+    void setLoopRegionActive(const bool active) override;
+    void toggleLoopPlayback() override;
 
     bool isPaused() const override;
     bool isStopped() const override;
@@ -75,15 +74,12 @@ public:
     muse::async::Channel<playback::TrackId> trackAdded() const override;
     muse::async::Channel<playback::TrackId> trackRemoved() const override;
 
-    // ISoloMuteState::SoloMuteState trackSoloMuteState(const TrackId& trackId) const override;
-    // void setTrackSoloMuteState(const TrackId& trackId,
-    //                            const ISoloMuteState::SoloMuteState& state) const override;
-
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
 
     muse::secs_t totalPlayTime() const override;
     muse::async::Notification totalPlayTimeChanged() const override;
+
     muse::secs_t lastPlaybackSeekTime() const override;
     void setLastPlaybackSeekTime(muse::secs_t secs) override;
     muse::async::Notification lastPlaybackSeekTimeChanged() const override;
@@ -95,37 +91,14 @@ public:
 private:
     friend class PlaybackControllerTests;
 
-    IPlayerPtr player() const;
-
-    bool isLoaded() const;
-
-    bool loopBoundariesSet() const;
-
-    PlaybackRegion selectionPlaybackRegion() const;
-    bool isSelectionPlaybackRegionChanged() const;
-    void updatePlaybackRegion();
-
-    void onProjectChanged();
-    void onPlaybackPositionChanged();
-
-    void onSelectionChanged();
-    void seekListSelection();
-    void seekRangeSelection();
-
     void togglePlayAction();
-    void doPlay(bool ignoreSelection);
-    void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
+    void pauseAction();
+    void stopAction();
     void rewindToStartAction();
     void rewindToEndAction();
     void onSeekAction(const muse::actions::ActionQuery& q);
-    void doSeek(const muse::secs_t secs, bool applyIfPlaying);
     void onChangePlaybackRegionAction(const muse::actions::ActionQuery& q);
-    void doChangePlaybackRegion(const PlaybackRegion& region);
-    void pauseAction();
-    void doPause();
-    void doResume();
-    void seek(const muse::secs_t secs, bool applyIfPlaying);
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
@@ -135,8 +108,6 @@ private:
     void setLoopRegionInOut();
     void setSelectionFollowsLoopRegion();
 
-    void openPlaybackSetupDialog();
-
     void setAudioApi(const muse::actions::ActionQuery& q);
     void setAudioOutputDevice(const muse::actions::ActionQuery& q);
     void setAudioInputDevice(const muse::actions::ActionQuery& q);
@@ -144,48 +115,17 @@ private:
     void rescanAudioDevices();
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
-    void subscribeOnAudioParamsChanges();
-    void setupSequenceTracks();
-    void setupSequencePlayer();
-
-    void initMuteStates();
-
-    void updateSoloMuteStates();
-    void updateAuxMuteStates();
-
-    bool isEqualToPlaybackPosition(muse::secs_t position) const;
-    bool isPlaybackPositionOnTheEndOfProject() const;
-    bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
-    bool isPlaybackStartPositionValid() const;
-    bool isSeekPositionValid(const muse::secs_t& seekTime) const;
-    muse::secs_t playbackPosition() const;
-
-    using TrackAddFinished = std::function<void ()>;
 
     playback::IPlayerPtr m_player;
-
-    muse::async::Notification m_isPlayAllowedChanged;
-    muse::async::Notification m_isPlayingChanged;
-    muse::async::Notification m_totalPlayTimeChanged;
-    muse::async::Notification m_lastPlaybackSeekTimeChanged;
-    muse::async::Notification m_currentTempoChanged;
-    muse::async::Channel<uint32_t> m_tickPlayed;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
-    muse::async::Notification m_currentSequenceIdChanged;
-    muse::secs_t m_lastPlaybackSeekTime = 0.0;
-    PlaybackRegion m_lastPlaybackRegion;
-    bool m_pauseShouldStopPlayback = false;
-
+    // Dead members, kept only to satisfy the IPlaybackController interface; they
+    // were never populated and have no player equivalent. Removed together with
+    // IPlaybackController in the follow-up commit.
+    muse::async::Channel<uint32_t> m_tickPlayed;
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
-
-    muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
-
+    muse::async::Notification m_totalPlayTimeChanged;
     muse::Progress m_loadingProgress;
-    size_t m_loadingTrackCount = 0;
-
-    bool m_isExportingAudio = false;
-    bool m_isRangeSelection = false;
 };
 }

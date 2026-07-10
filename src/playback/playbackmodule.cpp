@@ -6,6 +6,7 @@
 #include <QtQml>
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/ui/iuiactionsregister.h"
 
 #include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
@@ -122,6 +123,9 @@ void PlaybackContext::onInit(const IApplication::RunMode& mode)
     }
 
     m_uiActions->init();
+    // Force-create the player so its constructor subscriptions (project / record /
+    // selection) are live from startup and it is registered as the global player.
+    m_playback->player();
     m_controller->init();
 
     auto ar = ioc()->resolve<IUiActionsRegister>(mname);
