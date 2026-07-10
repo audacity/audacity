@@ -43,7 +43,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
 
     return {
         {
-            muse::qtrc("appshell/welcome", "Tutorial: what’s different in Audacity 4?"),
+            muse::qtrc("appshell/welcome", "Video: find out what’s new in Audacity 4"),
             "qrc:/resources/welcomedialog/Audacity40Video.png",
             muse::qtrc("appshell/welcome",
                        "In this video, we walk you through the most important differences between version 3 and version 4."),
