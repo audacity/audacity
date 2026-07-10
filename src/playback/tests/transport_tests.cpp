@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "audio/tests/mocks/audiodevicesprovidermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
@@ -41,6 +42,7 @@ public:
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_trackeditProject = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
+        m_audioDevicesProvider = std::make_shared<NiceMock<audio::AudioDevicesProviderMock> >();
         m_player = std::make_shared<NiceMock<PlayerMock> >();
 
         ON_CALL(*m_globalContext, currentProject())
@@ -61,6 +63,7 @@ public:
         m_transport->recordController.set(m_recordController);
         m_transport->record.set(m_record);
         m_transport->selectionController.set(m_selectionController);
+        m_transport->audioDevicesProvider.set(m_audioDevicesProvider);
         m_transport->init();
     }
 
@@ -109,6 +112,7 @@ public:
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
+    std::shared_ptr<audio::AudioDevicesProviderMock> m_audioDevicesProvider;
 
     std::shared_ptr<PlayerMock> m_player;
 };
@@ -1004,5 +1008,80 @@ TEST_F(TransportTests, ChangeAudioDevice_WhilePaused_ThenFreshSelection_PlaysFre
 
     //! [WHEN] User presses Play
     m_transport->togglePlay(false);
+}
+
+/**
+ * @brief Changing the sample rate while playing stops, applies, then resumes.
+ * @details The provider applies the new rate to the open project immediately,
+ *          while an already-running stream keeps playing at the old rate — the
+ *          shown setting and the audible stream diverge. Routing the change
+ *          through the stream restart keeps them consistent, exactly like a
+ *          device change.
+ */
+TEST_F(TransportTests, ChangeSampleRate_WhilePlaying_StopsAppliesResumes)
+{
+    //! [GIVEN] Playback is running at 30s, current default sample rate 44100
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+    ON_CALL(*m_audioDevicesProvider, defaultSampleRate())
+    .WillByDefault(Return(static_cast<uint64_t>(44100)));
+
+    //! [THEN] The stream is stopped, the rate applied, then playback resumes at 30s
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setDefaultSampleRate(48000)).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [WHEN] The default sample rate is changed
+    m_transport->setDefaultSampleRate(48000);
+}
+
+/**
+ * @brief Re-selecting the current sample rate does not touch the stream.
+ */
+TEST_F(TransportTests, ChangeSampleRate_SameValueAsCurrent_DoesNotRestartStream)
+{
+    //! [GIVEN] Playback is running, current default sample rate 44100
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_audioDevicesProvider, defaultSampleRate())
+    .WillByDefault(Return(static_cast<uint64_t>(44100)));
+
+    //! [THEN] Nothing happens at all
+    EXPECT_CALL(*m_player, stop()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
+    EXPECT_CALL(*m_audioDevicesProvider, setDefaultSampleRate(_)).Times(0);
+
+    //! [WHEN] The already-current rate is selected again
+    m_transport->setDefaultSampleRate(44100);
+}
+
+/**
+ * @brief Changing the buffer length while playing stops, applies, then resumes.
+ * @details The buffer length only takes effect when a stream is opened; without
+ *          the restart the running stream silently keeps the old value while the
+ *          UI shows the new one.
+ */
+TEST_F(TransportTests, ChangeBufferLength_WhilePlaying_StopsAppliesResumes)
+{
+    //! [GIVEN] Playback is running at 30s, current buffer length 100ms
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+    ON_CALL(*m_audioDevicesProvider, bufferLength())
+    .WillByDefault(Return(100.0));
+
+    //! [THEN] The stream is stopped, the buffer length applied, then playback
+    //! resumes at 30s
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setBufferLength(50.0)).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [WHEN] The buffer length is changed
+    m_transport->setBufferLength(50.0);
 }
 }
