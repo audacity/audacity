@@ -228,7 +228,8 @@ StyledDialogView {
             PageIndicator {
                 anchors.centerIn: indicatorArea
 
-                indicatorSize: 10
+                indicatorSize: 12
+                spacing: 12
 
                 count: model.count
                 currentIndex: model.currentIndex
