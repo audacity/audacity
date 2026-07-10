@@ -1084,4 +1084,56 @@ TEST_F(TransportTests, ChangeBufferLength_WhilePlaying_StopsAppliesResumes)
     //! [WHEN] The buffer length is changed
     m_transport->setBufferLength(50.0);
 }
+
+/**
+ * @brief Changing latency compensation while recording stops the recording.
+ * @details The compensation is baked into the capture stream at start and
+ *          consumed within the take's first moments, so the change can never
+ *          apply to the take in progress. Stopping makes that explicit instead
+ *          of letting the user believe the new value is being used — and, as
+ *          with all capture interruptions, the recording is not auto-resumed.
+ */
+TEST_F(TransportTests, ChangeLatencyCompensation_WhileRecording_StopsRecordingWithoutResume)
+{
+    //! [GIVEN] A recording is in progress; compensation is currently -130ms
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+    ON_CALL(*m_audioDevicesProvider, latencyCompensation())
+    .WillByDefault(Return(-130.0));
+
+    //! [THEN] The recording is stopped before the value is applied...
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_record, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setLatencyCompensation(-100.0)).Times(1);
+
+    //! [THEN] ...and nothing resumes
+    EXPECT_CALL(*m_record, start()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
+
+    //! [WHEN] The latency compensation is changed
+    m_transport->setLatencyCompensation(-100.0);
+}
+
+/**
+ * @brief Changing latency compensation during playback does not interrupt it.
+ * @details Playback does not consume the compensation value, so there is
+ *          nothing to reconcile: no stop, no restart.
+ */
+TEST_F(TransportTests, ChangeLatencyCompensation_WhilePlaying_AppliesWithoutInterruption)
+{
+    //! [GIVEN] Playback is running; compensation is currently -130ms
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_audioDevicesProvider, latencyCompensation())
+    .WillByDefault(Return(-130.0));
+
+    //! [THEN] The value is applied without touching the stream or the recorder
+    EXPECT_CALL(*m_audioDevicesProvider, setLatencyCompensation(-100.0)).Times(1);
+    EXPECT_CALL(*m_player, stop()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
+    EXPECT_CALL(*m_record, stop()).Times(0);
+
+    //! [WHEN] The latency compensation is changed
+    m_transport->setLatencyCompensation(-100.0);
+}
 }

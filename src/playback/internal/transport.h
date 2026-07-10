@@ -66,6 +66,7 @@ public:
     void setInputChannels(int channels) override;
     void setDefaultSampleRate(uint64_t rate) override;
     void setBufferLength(double duration) override;
+    void setLatencyCompensation(double value) override;
     void rescanAudioDevices() override;
 
 private:

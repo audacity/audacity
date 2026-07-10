@@ -224,7 +224,7 @@ void CommonAudioApiConfigurationModel::latencyCompensationSelected(
         return;
     }
 
-    audioDevicesProvider()->setLatencyCompensation(latencyCompensationStr.toDouble());
+    transport()->setLatencyCompensation(latencyCompensationStr.toDouble());
 }
 
 QString CommonAudioApiConfigurationModel::currentInputChannelsSelected() const
