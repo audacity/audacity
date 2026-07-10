@@ -78,6 +78,7 @@
     NODE(Position,               LV2_TIME__Position) \
     NODE(Gtk,                    LV2_UI__GtkUI) \
     NODE(Gtk3,                   LV2_UI__Gtk3UI) \
+    NODE(Gtk4,                   LV2_UI__Gtk4UI) \
     NODE(Unit,                   LV2_UNITS__unit) \
     NODE(Comment,                LILV_NS_RDFS "comment") \
     NODE(Label,                  LILV_NS_RDFS "label") \

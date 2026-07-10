@@ -52,7 +52,7 @@ Lv2UiCandidate findHostableUi(const LilvPlugin& plugin)
                 // Remember a GTK-family UI as a fallback, but keep scanning:
                 // a later entry in this same list may be natively hostable.
                 if (!gtkFallback
-                    && (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3))) {
+                    && (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3) || lilv_ui_is_a(ui, node_Gtk4))) {
                     gtkFallback = ui;
                 }
             }
