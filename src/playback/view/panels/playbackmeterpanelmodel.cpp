@@ -1,6 +1,7 @@
 #include "playbackmeterpanelmodel.h"
 
 #include "playback/playbacktypes.h"
+#include "playback/iplayer.h"
 
 using namespace au::playback;
 
@@ -30,7 +31,7 @@ void PlaybackMeterPanelModel::init()
     m_meterModel->setVolume(playback()->audioOutput()->playbackVolume());
     emit levelChanged();
 
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
@@ -54,7 +55,7 @@ float PlaybackMeterPanelModel::level() const
 
 bool PlaybackMeterPanelModel::isPlaying() const
 {
-    return playbackController()->isPlaying();
+    return playback()->player()->isPlaying();
 }
 
 void PlaybackMeterPanelModel::setLeftChannelPressure(float leftChannelPressure)

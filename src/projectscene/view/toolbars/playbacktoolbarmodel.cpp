@@ -7,6 +7,7 @@
 
 #include "internal/projectsceneuiactions.h"
 
+#include "playback/iplayer.h"
 #include "playback/view/toolbars/playbacktoolbarlevelitem.h"
 #include "playback/view/toolbars/playbacktoolbarcontrolitem.h"
 #include "playback/view/toolbars/playbacktoolbartimeitem.h"
@@ -172,7 +173,7 @@ void PlaybackToolBarModel::updatePlayState()
         return;
     }
 
-    bool isPlaying = playbackController()->isPlaying();
+    bool isPlaying = playback()->player()->isPlaying();
     bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
 
@@ -250,7 +251,7 @@ void PlaybackToolBarModel::updateLoopState()
         return;
     }
 
-    bool isLooping = playbackController()->isLoopRegionActive();
+    bool isLooping = playback()->player()->isLoopRegionActive();
     item->setSelected(isLooping);
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());

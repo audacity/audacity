@@ -12,7 +12,7 @@
 #include "audio/iaudiodevicesprovider.h"
 #include "audio/iaudioengine.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplaybackcontroller.h"
+#include "playback/iplayback.h"
 #include "record/iaudioinput.h"
 #include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
@@ -29,7 +29,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
-    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
     muse::ContextInject<record::IRecordController> controller{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };

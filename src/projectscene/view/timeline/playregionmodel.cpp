@@ -14,7 +14,7 @@ PlayRegionModel::PlayRegionModel(QObject* parent)
 
 void PlayRegionModel::init()
 {
-    playbackController()->loopRegionChanged().onNotify(this, [this]() {
+    playback()->player()->loopRegionChanged().onNotify(this, [this]() {
         onLoopRegionChanged();
     });
 }
@@ -63,9 +63,9 @@ void PlayRegionModel::setActive(bool newActive)
 
 void PlayRegionModel::onLoopRegionChanged()
 {
-    const auto region = playbackController()->loopRegion();
+    const auto region = playback()->player()->loopRegion();
     setStart(region.start);
     setEnd(region.end);
-    setActive(playbackController()->isLoopRegionActive());
+    setActive(playback()->player()->isLoopRegionActive());
 }
 }

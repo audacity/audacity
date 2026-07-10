@@ -6,6 +6,7 @@
 
 #include "global/types/number.h"
 
+#include "playback/iplayer.h"
 #include "playback/iaudiooutput.h"
 #include "snaptimeformatter.h"
 
@@ -138,7 +139,7 @@ void TimelineContext::init(double frameWidth)
         emit pinnedPlayHeadEnabledChanged();
     });
 
-    playbackController()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
+    playback()->player()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
         emit lastPlaybackSeekPositionChanged();
     });
 
@@ -1275,5 +1276,5 @@ bool TimelineContext::pinnedPlayHeadEnabled() const
 
 double TimelineContext::lastPlaybackSeekPosition() const
 {
-    return timeToPosition(playbackController()->lastPlaybackSeekTime());
+    return timeToPosition(playback()->player()->lastPlaybackSeekTime());
 }

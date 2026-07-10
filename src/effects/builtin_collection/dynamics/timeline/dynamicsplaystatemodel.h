@@ -4,7 +4,7 @@
 #pragma once
 
 #include "stopwatch.h"
-#include "playback/iplaybackcontroller.h"
+#include "playback/iplayback.h"
 
 #include "global/async/asyncable.h"
 #include "global/modularity/ioc.h"
@@ -18,7 +18,7 @@ class DynamicsPlayStateModel : public QObject, public muse::async::Asyncable, pu
 
     Q_PROPERTY(au::effects::Stopwatch::PlayState playState READ playState NOTIFY playStateChanged)
 
-    muse::ContextInject<playback::IPlaybackController> playbackController { this };
+    muse::ContextInject<playback::IPlayback> playback { this };
 
 public:
     DynamicsPlayStateModel(QObject* parent = nullptr);

@@ -6,6 +6,7 @@
 #include "effects/effects_base/internal/effectsutils.h"
 #include "effectsuiactions.h"
 
+#include "playback/iplayer.h"
 #include "spectrogram/spectrogramtypes.h"
 #include "wx/string.h"
 
@@ -83,7 +84,7 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
     IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
-    playbackController()->stop();
+    playback()->player()->stop();
 
     effectExecutionScenario()->performEffect(effectId);
 }
@@ -107,7 +108,7 @@ void EffectsActionsController::applyEffect(const muse::actions::ActionQuery& q)
 
     LOGI() << "applyEffect: effectId=" << effectId << ", params=" << params.ToStdString(wxConvUTF8);
 
-    playbackController()->stop();
+    playback()->player()->stop();
     const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, params.ToStdString(wxConvUTF8));
     if (!ret) {
         LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
@@ -116,7 +117,7 @@ void EffectsActionsController::applyEffect(const muse::actions::ActionQuery& q)
 
 void EffectsActionsController::repeatLastEffect()
 {
-    playbackController()->stop();
+    playback()->player()->stop();
 
     effectExecutionScenario()->repeatLastProcessor();
 }

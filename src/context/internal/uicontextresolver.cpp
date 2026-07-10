@@ -21,8 +21,9 @@
  */
 #include "uicontextresolver.h"
 
-#include "shortcutcontext.h"
-#include "log.h"
+#include "playback/iplayer.h"
+#include "context/shortcutcontext.h"
+#include "framework/global/log.h"
 
 using namespace au::context;
 using namespace muse;
@@ -50,7 +51,7 @@ void UiContextResolver::init()
     });
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
         notifyAboutContextChanged();
     });
 #endif

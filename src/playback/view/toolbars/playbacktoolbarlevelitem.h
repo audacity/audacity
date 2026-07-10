@@ -8,7 +8,6 @@
 #include "modularity/ioc.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
-#include "playback/iplaybackcontroller.h"
 
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
@@ -36,7 +35,6 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
     muse::ContextInject<IPlayback> playback{ this };
-    muse::ContextInject<IPlaybackController> playbackController{ this };
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

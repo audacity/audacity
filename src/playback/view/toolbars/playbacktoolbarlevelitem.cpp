@@ -24,6 +24,7 @@
 #include <QVariantMap>
 
 #include "iaudiooutput.h"
+#include "iplayer.h"
 
 using namespace au::playback;
 using namespace au::audio;
@@ -51,7 +52,7 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         emit meterSizeChanged();
     });
 
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+    playback()->player()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
@@ -84,7 +85,7 @@ float PlaybackToolBarLevelItem::rightChannelPressure() const
 
 bool PlaybackToolBarLevelItem::isPlaying() const
 {
-    return playbackController()->isPlaying();
+    return playback()->player()->isPlaying();
 }
 
 void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)
