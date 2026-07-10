@@ -916,7 +916,8 @@ Ret Au3Record::doRecord(Au3Project& project,
     }
 
     int token
-        = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, leadInTime, crossfadeData);
+        = audioEngine()->startStream(transportSequences, t0, t1, t1, *globalContext()->currentProject(), false, audioStreamSampleRate,
+                                     leadInTime, crossfadeData);
 
     success = (token != 0);
 
@@ -947,7 +948,7 @@ void Au3Record::commitRecording()
 
 bool Au3Record::canStopAudioStream() const
 {
-    return audioEngine()->canStopAudioStream(projectRef());
+    return audioEngine()->canStopAudioStream(*globalContext()->currentProject());
 }
 
 au::context::IPlaybackStatePtr Au3Record::playbackState() const

@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "global/modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 #include "audio/iaudioengine.h"
 #include "record/irecordconfiguration.h"
 
@@ -21,23 +21,24 @@ public:
     bool isBusy() const override;
     bool isCapturing() const override;
 
-    int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, AudacityProject& project,
-                    bool isDefaultPlayTrackPolicy, double audioStreamSampleRate, double leadInTime = 0.0,
-                    std::vector<std::vector<float> >* crossfadeData = nullptr) override;
+    int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
+                    project::IAudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
+                    double leadInTime = 0.0, std::vector<std::vector<float> >* crossfadeData = nullptr) override;
 
     void stopStream() override;
     void pauseStream(bool pause) override;
     void seekStream(double time) override;
 
-    void startMonitoring(AudacityProject& project) override;
+    void startMonitoring(project::IAudacityProject& project) override;
     void stopMonitoring() override;
+    bool isMonitoring() const override;
 
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;
     void setPlaybackVolume(float newPlaybackVolume) override;
     float getPlaybackVolume() const override;
 
-    bool canStopAudioStream(AudacityProject& project) const override;
+    bool canStopAudioStream(project::IAudacityProject& project) const override;
 
     void handleDeviceChange() override;
     muse::String lastErrorString() const override;

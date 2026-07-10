@@ -13,6 +13,7 @@
 #include "framework/global/types/string.h"
 
 #include "au3wrap/au3types.h"
+#include "project/iaudacityproject.h"
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
@@ -32,21 +33,22 @@ public:
     virtual bool isCapturing() const = 0;
 
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
-                            AudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate, double leadInTime = 0.0,
-                            std::vector<std::vector<float> >* crossfadeData = nullptr) = 0;
+                            project::IAudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
+                            double leadInTime = 0.0, std::vector<std::vector<float> >* crossfadeData = nullptr) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
     virtual void seekStream(double time) = 0;
 
-    virtual void startMonitoring(AudacityProject& project) = 0;
+    virtual void startMonitoring(project::IAudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+    virtual bool isMonitoring() const = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;
     virtual void setPlaybackVolume(float newPlaybackVolume) = 0;
     virtual float getPlaybackVolume() const = 0;
 
-    virtual bool canStopAudioStream(AudacityProject& project) const = 0;
+    virtual bool canStopAudioStream(project::IAudacityProject& project) const = 0;
 
     virtual void handleDeviceChange() = 0;
 
@@ -60,4 +62,4 @@ public:
     virtual muse::async::Notification finished() const = 0;
     virtual muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const = 0;
 };
-}
+} // namespace au::audio

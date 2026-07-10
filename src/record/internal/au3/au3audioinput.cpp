@@ -123,7 +123,7 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
 void Au3AudioInput::startAudioEngineMonitoring() const
 {
     muse::async::Async::call(this, [this]() {
-        Au3Project* project = projectRef();
+        auto project = globalContext()->currentProject();
         if (!project) {
             return;
         }

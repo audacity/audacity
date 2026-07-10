@@ -24,21 +24,22 @@ public:
     MOCK_METHOD(bool, isCapturing, (), (const, override));
 
     MOCK_METHOD(int, startStream, (const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
-                                   AudacityProject & project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
+                                   project::IAudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
                                    double leadInTime, CrossfadeData crossfadeData), (override));
     MOCK_METHOD(void, stopStream, (), (override));
     MOCK_METHOD(void, pauseStream, (bool pause), (override));
     MOCK_METHOD(void, seekStream, (double time), (override));
 
-    MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
+    MOCK_METHOD(void, startMonitoring, (project::IAudacityProject& project), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
+    MOCK_METHOD(bool, isMonitoring, (), (const, override));
 
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));
     MOCK_METHOD(float, getInputVolume, (), (const, override));
     MOCK_METHOD(void, setPlaybackVolume, (float newPlaybackVolume), (override));
     MOCK_METHOD(float, getPlaybackVolume, (), (const, override));
 
-    MOCK_METHOD(bool, canStopAudioStream, (AudacityProject & project), (const, override));
+    MOCK_METHOD(bool, canStopAudioStream, (project::IAudacityProject& project), (const, override));
 
     MOCK_METHOD(void, handleDeviceChange, (), (override));
 

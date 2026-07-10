@@ -235,7 +235,8 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
 
     AudacityProject& project = projectRef();
     const double projectRate = ProjectRate::Get(project).GetRate();
-    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy, projectRate);
+    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, *globalContext()->currentProject(),
+                                           options.isDefaultPolicy, projectRate);
     bool success = token != 0;
     if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
@@ -607,7 +608,7 @@ Au3Project& Au3Player::projectRef() const
 
 bool Au3Player::canStopAudioStream() const
 {
-    return audioEngine()->canStopAudioStream(projectRef());
+    return audioEngine()->canStopAudioStream(*globalContext()->currentProject());
 }
 
 TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool selectedOnly)
