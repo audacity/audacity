@@ -683,6 +683,7 @@ Rectangle {
 
                 if (root.itemHovered) {
                     selectionViewController.selectItemData(root.hoveredItemKey)
+                    playCursorController.seekToTime(timeline.context.selectedItemStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
                     selectionViewController.selectTrackAudioData(e.y)
