@@ -170,17 +170,19 @@ void Transport::pause()
 void Transport::stop()
 {
     m_pauseShouldStopPlayback = false;
+    m_pausedResumePos.reset();
     player()->stop();
 }
 
 void Transport::doPlay(bool ignoreSelection)
 {
     if (m_pausedResumePos.has_value()) {
-        // Resuming a stream that a device change tore down while paused: play
-        // from the pause position, leaving the stop anchor where it was.
+        // Resuming a stream that a device change tore down while paused: start
+        // the stream at the pause position. The play region, seek anchor and the
+        // rest of the session state are deliberately untouched.
         const muse::secs_t pos = *m_pausedResumePos;
         m_pausedResumePos.reset();
-        playFrom(pos);
+        player()->play(pos);
         return;
     }
 
@@ -281,6 +283,10 @@ void Transport::changePlaybackRegion(const muse::secs_t start, const muse::secs_
 
 void Transport::doChangePlaybackRegion(const PlaybackRegion& region)
 {
+    // A new region is just as much an explicit reposition as a seek: it
+    // supersedes any pending paused-stream resume.
+    m_pausedResumePos.reset();
+
     m_lastPlaybackRegion = region;
 
     if (isStopped()) {
@@ -366,23 +372,29 @@ void Transport::setSelectionFollowsLoopRegion()
 
 void Transport::setAudioApi(const std::string& api)
 {
-    withStreamRestart([this, api]() {
-        audioDevicesProvider()->setApi(api);
-    });
+    if (api != audioDevicesProvider()->currentApi()) {
+        withStreamRestart([this, api]() {
+            audioDevicesProvider()->setApi(api);
+        });
+    }
 }
 
 void Transport::setAudioOutputDevice(const std::string& device)
 {
-    withStreamRestart([this, device]() {
-        audioDevicesProvider()->setOutputDevice(device);
-    });
+    if (device != audioDevicesProvider()->currentOutputDevice()) {
+        withStreamRestart([this, device]() {
+            audioDevicesProvider()->setOutputDevice(device);
+        });
+    }
 }
 
 void Transport::setAudioInputDevice(const std::string& device)
 {
-    withStreamRestart([this, device]() {
-        audioDevicesProvider()->setInputDevice(device);
-    });
+    if (device != audioDevicesProvider()->currentInputDevice()) {
+        withStreamRestart([this, device]() {
+            audioDevicesProvider()->setInputDevice(device);
+        });
+    }
 }
 
 void Transport::setInputChannels(int channels)
@@ -390,9 +402,11 @@ void Transport::setInputChannels(int channels)
     IF_ASSERT_FAILED(channels > 0 && channels <= audioDevicesProvider()->inputChannelsAvailable()) {
         return;
     }
-    withStreamRestart([this, channels]() {
-        audioDevicesProvider()->setInputChannels(channels);
-    });
+    if (channels != audioDevicesProvider()->inputChannelsSelected()) {
+        withStreamRestart([this, channels]() {
+            audioDevicesProvider()->setInputChannels(channels);
+        });
+    }
 }
 
 void Transport::rescanAudioDevices()
@@ -409,7 +423,9 @@ void Transport::withStreamRestart(const std::function<void()>& change)
     const bool wasPaused = !isRecording && isPaused();
     const muse::secs_t resumePos = player()->playbackPosition();
 
-    if (isRecording || wasPlaying || wasPaused) {
+    if (isRecording) {
+        record()->stop();
+    } else if (wasPlaying || wasPaused) {
         stop();
     }
 
@@ -418,7 +434,12 @@ void Transport::withStreamRestart(const std::function<void()>& change)
     // Only resume when the user was actively playing. A paused or recording
     // transport is torn down for the switch and then left stopped.
     if (wasPlaying) {
-        playFrom(resumePos);
+        // Restart the stream at the interrupted position. The play region, the
+        // seek anchor and the rest of the session state are deliberately
+        // untouched: a bounded region still ends where it did, an active loop
+        // still wraps within its bounds, and a stop still returns to where
+        // playback originally started.
+        player()->play(resumePos);
     } else if (wasPaused) {
         // The paused stream can't survive the switch, so we end up stopped.
         // Remember the pause position so the next play resumes from there; the
@@ -426,18 +447,6 @@ void Transport::withStreamRestart(const std::function<void()>& change)
         // a stop still returns to where playback originally started.
         m_pausedResumePos = resumePos;
     }
-}
-
-void Transport::playFrom(muse::secs_t pos)
-{
-    // Resume plain playback from `pos` after the audio stream was torn down for a
-    // device change. Keep m_lastPlaybackRegion aligned with the player's resulting
-    // zero-length region so a following pause→play resumes from the pause position
-    // instead of being mistaken for a selection change. The user's seek bookmark
-    // (m_lastPlaybackSeekTime) is intentionally left as-is.
-    m_lastPlaybackRegion = { pos, pos };
-    seek(pos, false);
-    player()->play();
 }
 
 PlaybackRegion Transport::selectionPlaybackRegion() const

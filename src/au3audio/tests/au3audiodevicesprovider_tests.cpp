@@ -99,6 +99,11 @@ TEST_F(Au3AudioDevicesProviderTests, SetInputChannels_WhenBusy_TearsDownStream)
     ON_CALL(*m_audioEngine, isBusy())
     .WillByDefault(Return(true));
 
+    //! [GIVEN] A channel count different from the one currently selected (settings
+    //! persist across test runs via muse::settings(), so this must not assume a
+    //! fresh/default value)
+    const int newCount = m_provider->inputChannelsSelected() + 1;
+
     //! [THEN] The open stream is stopped before the low-level switch
     InSequence seq;
     EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
@@ -106,7 +111,7 @@ TEST_F(Au3AudioDevicesProviderTests, SetInputChannels_WhenBusy_TearsDownStream)
     EXPECT_CALL(*m_audioEngine, handleDeviceChange()).Times(1);
 
     //! [WHEN] The capture channel count is changed
-    m_provider->setInputChannels(2);
+    m_provider->setInputChannels(newCount);
 }
 
 /**
@@ -145,5 +150,21 @@ TEST_F(Au3AudioDevicesProviderTests, HandleDeviceChange_WhenNotMonitoring_DoesNo
 
     //! [WHEN] The device is changed
     handleDeviceChange();
+}
+
+TEST_F(Au3AudioDevicesProviderTests, SetInputChannels_SameValueAsCurrent_DoesNotTearDownStream)
+{
+    //! [GIVEN] Whatever channel count is currently selected (settings persist
+    //! across test runs via muse::settings(), so this must not assume a
+    //! fresh/default value)
+    const int currentCount = m_provider->inputChannelsSelected();
+
+    //! [THEN] Re-selecting the same count must not touch the stream at all
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(0);
+    EXPECT_CALL(*m_audioEngine, stopStream()).Times(0);
+    EXPECT_CALL(*m_audioEngine, handleDeviceChange()).Times(0);
+
+    //! [WHEN] The same channel count is selected again (a no-op selection)
+    m_provider->setInputChannels(currentCount);
 }
 }

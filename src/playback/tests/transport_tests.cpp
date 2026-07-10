@@ -8,6 +8,7 @@
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "record/tests/mocks/recordcontrollermock.h"
+#include "record/tests/mocks/recordmock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
@@ -36,6 +37,7 @@ public:
     {
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_recordController = std::make_shared<NiceMock<record::RecordControllerMock> >();
+        m_record = std::make_shared<NiceMock<record::RecordMock> >();
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_trackeditProject = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
@@ -57,6 +59,7 @@ public:
         m_transport->globalContext.set(m_globalContext);
         m_transport->player.set(m_player);
         m_transport->recordController.set(m_recordController);
+        m_transport->record.set(m_record);
         m_transport->selectionController.set(m_selectionController);
         m_transport->init();
     }
@@ -68,6 +71,13 @@ public:
     void withStreamRestart(const std::function<void()>& action)
     {
         m_transport->withStreamRestart(action);
+    }
+
+    //! m_lastPlaybackRegion is a private Transport field; same friendship caveat
+    //! as withStreamRestart() above.
+    PlaybackRegion lastPlaybackRegion() const
+    {
+        return m_transport->m_lastPlaybackRegion;
     }
 
     //! Makes the player mock behave like a small transport state machine and
@@ -82,8 +92,8 @@ public:
         .WillByDefault(::testing::Invoke([this]() { return m_status; }));
         ON_CALL(*m_player, stop())
         .WillByDefault(::testing::Invoke([this]() { m_status = PlaybackStatus::Stopped; m_events.push_back("stop"); }));
-        ON_CALL(*m_player, play())
-        .WillByDefault(::testing::Invoke([this]() { m_status = PlaybackStatus::Running; m_events.push_back("play"); }));
+        ON_CALL(*m_player, play(_))
+        .WillByDefault(::testing::Invoke([this](std::optional<secs_t>) { m_status = PlaybackStatus::Running; m_events.push_back("play"); }));
         ON_CALL(*m_player, pause())
         .WillByDefault(::testing::Invoke([this]() { m_status = PlaybackStatus::Paused; m_events.push_back("pause"); }));
     }
@@ -95,6 +105,7 @@ public:
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
+    std::shared_ptr<record::RecordMock> m_record;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
@@ -146,7 +157,7 @@ TEST_F(TransportTests, TogglePlay_WhenStopped)
     .Times(1);
 
     //! [THEN] Player should start playing from current position
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -173,7 +184,7 @@ TEST_F(TransportTests, TogglePlay_WhenStopped_OnTheEndOfProject)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -205,7 +216,7 @@ TEST_F(TransportTests, TogglePlay_WithSelection)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -243,7 +254,7 @@ TEST_F(TransportTests, TogglePlay_WithSelection_Clip)
     .Times(0);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -272,7 +283,7 @@ TEST_F(TransportTests, TogglePlay_WithIgnoreSelection)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play ignoring selection (Shift+Space)
@@ -396,7 +407,7 @@ TEST_F(TransportTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     .Times(0);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play ignoring selection (Shift+Space)
@@ -442,7 +453,7 @@ TEST_F(TransportTests, TogglePlay_WhenPaused_WithChangingSelection)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Fitst: user changed selection
@@ -477,7 +488,7 @@ TEST_F(TransportTests, TogglePlay_WithSelection_StartTimeIsMoreThanTotalTime)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(0);
 
     //! [WHEN] Toggle play
@@ -551,7 +562,7 @@ TEST_F(TransportTests, Seek_WithTriggeringPlay)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Seek to the new time with triggering play
@@ -577,7 +588,7 @@ TEST_F(TransportTests, Seek_WithTriggeringPlay_AlreadyPlaying)
     .Times(1);
 
     //! [THEN] Player shouldn't start playing again
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(0);
 
     //! [WHEN] Seek to the new time with triggering play
@@ -603,7 +614,7 @@ TEST_F(TransportTests, Seek_WithTriggeringPlay_FromTimeThatIsMoreThanTotalTime)
     .Times(1);
 
     //! [THEN] Player shouldn't start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(0);
 
     //! [WHEN] Seek to the new time with triggering play
@@ -717,7 +728,7 @@ TEST_F(TransportTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd)
     .Times(1);
 
     //! [THEN] Player starts playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] User presses Space
@@ -740,7 +751,7 @@ TEST_F(TransportTests, ChangeAudioDevice_WhilePlaying_StopsAppliesResumes)
     //! [THEN] The stream is stopped, the change is applied, then playback resumes;
     //! the playing state is not turned into a pause.
     EXPECT_CALL(*m_player, stop()).Times(1);
-    EXPECT_CALL(*m_player, play()).Times(1);
+    EXPECT_CALL(*m_player, play(_)).Times(1);
     EXPECT_CALL(*m_player, pause()).Times(0);
 
     //! [WHEN] The device is changed
@@ -764,7 +775,7 @@ TEST_F(TransportTests, ChangeAudioDevice_WhilePaused_StopsWithoutResume)
 
     //! [THEN] The stream is stopped, the change is applied, and nothing resumes
     EXPECT_CALL(*m_player, stop()).Times(1);
-    EXPECT_CALL(*m_player, play()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
     EXPECT_CALL(*m_player, pause()).Times(0);
 
     //! [WHEN] The device is changed
@@ -785,7 +796,7 @@ TEST_F(TransportTests, ChangeAudioDevice_WhileStopped_OnlyApplies)
 
     //! [THEN] The transport is left alone
     EXPECT_CALL(*m_player, stop()).Times(0);
-    EXPECT_CALL(*m_player, play()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
     EXPECT_CALL(*m_player, pause()).Times(0);
 
     //! [WHEN] The device is changed
@@ -804,26 +815,23 @@ TEST_F(TransportTests, ChangeAudioDevice_WhileStopped_OnlyApplies)
 TEST_F(TransportTests, ChangeAudioDevice_WhileRecording_StopsWithoutResume)
 {
     //! [GIVEN] A recording is in progress
-    setupStatefulTransport(PlaybackStatus::Stopped);
     EXPECT_CALL(*m_recordController, isRecording())
     .WillRepeatedly(Return(true));
 
-    //! [THEN] The stream is stopped but playback is not resumed
-    EXPECT_CALL(*m_player, stop()).Times(1);
-    EXPECT_CALL(*m_player, play()).Times(0);
-    EXPECT_CALL(*m_player, pause()).Times(0);
+    //! [THEN] The recording is stopped but not resumed
+    EXPECT_CALL(*m_record, stop()).Times(1);
+    EXPECT_CALL(*m_record, start()).Times(0);
 
     //! [WHEN] The device is changed
-    withStreamRestart([this]() { m_events.push_back("apply"); });
-
-    //! [THEN] The stream was stopped before the change, with no resume afterwards
-    EXPECT_EQ(m_events, (std::vector<std::string> { "stop", "apply" }));
+    withStreamRestart([]() {});
 }
 
 /**
  * @brief Resuming after a device change lands back at the interrupted position.
- * @details The stream is torn down and reopened by the switch, so it must be
- *          explicitly seeked to where playback was before it can resume there.
+ * @details The stream is torn down and reopened by the switch; the interrupted
+ *          position is passed straight to the new stream as its start position.
+ *          Nothing else — no seek, no play-region write — so the session and
+ *          view state survive the switch untouched.
  */
 TEST_F(TransportTests, ChangeAudioDevice_WhilePlaying_ResumesAtSamePosition)
 {
@@ -833,11 +841,14 @@ TEST_F(TransportTests, ChangeAudioDevice_WhilePlaying_ResumesAtSamePosition)
     ON_CALL(*m_player, playbackPosition())
     .WillByDefault(Return(secs_t(30.0)));
 
-    //! [THEN] The stream is stopped, seeked back to 30s, then played again
+    //! [THEN] The stream is stopped, then restarted at 30s...
     ::testing::InSequence seq;
     EXPECT_CALL(*m_player, stop()).Times(1);
-    EXPECT_CALL(*m_player, seek(secs_t(30.0), false)).Times(1);
-    EXPECT_CALL(*m_player, play()).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [THEN] ...with no other state churn on the player
+    EXPECT_CALL(*m_player, seek(_, _)).Times(0);
+    EXPECT_CALL(*m_player, setPlaybackRegion(_)).Times(0);
 
     //! [WHEN] The device is changed
     withStreamRestart([]() {});
@@ -845,7 +856,7 @@ TEST_F(TransportTests, ChangeAudioDevice_WhilePlaying_ResumesAtSamePosition)
 
 /**
  * @brief Stopping after a device-change resume returns to the original anchor.
- * @details The resume seeks to where playback was interrupted (see
+ * @details The resume restarts the stream at the interrupted position (see
  *          ChangeAudioDevice_WhilePlaying_ResumesAtSamePosition), but that must
  *          not overwrite lastPlaybackSeekTime — the position a later Stop returns
  *          to should still be where the user last explicitly seeked, not where
@@ -897,11 +908,99 @@ TEST_F(TransportTests, ChangeAudioDevice_WhilePaused_TogglePlayAfterwardsResumes
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [THEN] Pressing Play resumes from the paused position
-    EXPECT_CALL(*m_player, seek(secs_t(30.0), false))
+    //! [THEN] Pressing Play starts the stream at the paused position, without
+    //! disturbing the play region or the seek anchor
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0))))
     .Times(1);
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
+
+    //! [WHEN] User presses Play
+    m_transport->togglePlay(false);
+}
+
+TEST_F(TransportTests, ChangeAudioDevice_WhilePlayingWithinSelection_PreservesSelectionEnd)
+{
+    //! [GIVEN] Playback is stopped with a bounded selection region [10, 20]
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    m_transport->changePlaybackRegion(10.0, 20.0);
+
+    //! [GIVEN] Playback is now running within that region, currently at 15s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(15.0)));
+
+    //! [THEN] The stream restarts at 15s; the play region is not touched, so
+    //! the selection bounds [10, 20] keep governing where playback stops
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(15.0)))).Times(1);
+    EXPECT_CALL(*m_player, seek(_, _)).Times(0);
+    EXPECT_CALL(*m_player, setPlaybackRegion(_)).Times(0);
+
+    //! [WHEN] The device is changed
+    withStreamRestart([]() {});
+
+    //! [THEN] The session's region is the untouched original, not one collapsed
+    //! or rewritten around the resume position
+    EXPECT_EQ(lastPlaybackRegion(), (PlaybackRegion { secs_t(10.0), secs_t(20.0) }));
+}
+
+/**
+ * @brief Loop playback resumes at the interrupted position, not the loop start.
+ * @details Formerly the resume position was smuggled in by mutating the play
+ *          region (seek + setPlaybackRegion), and both of those writes are
+ *          no-ops while a loop region is active — so loop playback audibly
+ *          restarted at the loop start. Passing the position to play() directly
+ *          reaches the stream regardless of loop state (au3's pStartTime, which
+ *          the playback policy honors inside an active loop).
+ */
+TEST_F(TransportTests, ChangeAudioDevice_WhileLoopPlaying_ResumesAtSamePosition)
+{
+    //! [GIVEN] A loop region is active and playback is running inside it, at 17s
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(17.0)));
+
+    //! [THEN] The stream restarts at 17s, with no play-region writes for an
+    //! active loop to ignore
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(17.0)))).Times(1);
+    EXPECT_CALL(*m_player, seek(_, _)).Times(0);
+    EXPECT_CALL(*m_player, setPlaybackRegion(_)).Times(0);
+
+    //! [WHEN] The device is changed
+    withStreamRestart([]() {});
+}
+
+/**
+ * @brief A fresh selection made after a device-change pause is honored, not the
+ *        stale pre-device-change pause position.
+ */
+TEST_F(TransportTests, ChangeAudioDevice_WhilePaused_ThenFreshSelection_PlaysFreshSelectionNotStalePosition)
+{
+    //! [GIVEN] Playback is paused at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [WHEN] The device is changed; the paused stream can't survive, so 30s is
+    //! remembered as the resume position for the next Play
+    withStreamRestart([]() {});
+
+    //! [GIVEN] The transport is now stopped, and the user drags a fresh 5-10s
+    //! selection before pressing Play again
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    m_transport->changePlaybackRegion(5.0, 10.0);
+
+    //! [THEN] Pressing Play must not resume at the stale pre-device-change position
+    EXPECT_CALL(*m_player, play(_)).Times(::testing::AnyNumber());
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(0);
+    EXPECT_CALL(*m_player, seek(secs_t(30.0), _)).Times(0);
 
     //! [WHEN] User presses Play
     m_transport->togglePlay(false);

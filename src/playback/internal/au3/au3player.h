@@ -38,7 +38,7 @@ public:
 
     bool isBusy() const override;
 
-    void play() override;
+    void play(std::optional<muse::secs_t> startTime = std::nullopt) override;
     void seek(const muse::secs_t newPosition, bool applyIfPlaying = false) override;
     void rewind() override;
     void stop() override;
@@ -87,7 +87,8 @@ private:
 
     TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
-    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
+    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {},
+                           std::optional<double> pStartTime = std::nullopt);
 
     void updateStreamState();
     void updatePlaybackState();

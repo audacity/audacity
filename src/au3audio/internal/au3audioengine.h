@@ -23,7 +23,8 @@ public:
 
     int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
                     project::IAudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
-                    double leadInTime = 0.0, std::vector<std::vector<float> >* crossfadeData = nullptr) override;
+                    double leadInTime = 0.0, std::vector<std::vector<float> >* crossfadeData = nullptr,
+                    std::optional<double> pStartTime = std::nullopt) override;
 
     void stopStream() override;
     void pauseStream(bool pause) override;

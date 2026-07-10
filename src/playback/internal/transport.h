@@ -15,6 +15,7 @@
 #include "playback/iplayer.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/itransport.h"
+#include "record/irecord.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
@@ -26,6 +27,7 @@ class Transport : public ITransport, public muse::async::Asyncable, public muse:
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<IPlayer> player { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<au::record::IRecord> record { this };
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<trackedit::ISelectionController> selectionController { this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
@@ -77,7 +79,6 @@ private:
     void doSeek(muse::secs_t secs, bool applyIfPlaying);
     void doChangePlaybackRegion(const PlaybackRegion& region);
     void seek(muse::secs_t secs, bool applyIfPlaying);
-    void playFrom(muse::secs_t pos);
 
     //! Applies `change` while the audio stream is inactive: stop, apply, and
     //! resume from the same position if the user was actively playing (or

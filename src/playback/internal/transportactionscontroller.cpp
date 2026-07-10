@@ -219,11 +219,11 @@ void TransportActionsController::changeAudioDeviceFromQuery(const muse::actions:
 
 void TransportActionsController::setInputChannels(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("input-channels_index")) {
+    IF_ASSERT_FAILED(q.contains("input-channels_count")) {
         return;
     }
 
-    transport()->setInputChannels(q.param("input-channels_index").toInt());
+    transport()->setInputChannels(q.param("input-channels_count").toInt());
 }
 
 void TransportActionsController::rescanAudioDevices()

@@ -139,30 +139,30 @@ MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
     int inputChannelsSelected = audioDevicesProvider()->inputChannelsSelected();
     int inputChannelsAvailable = audioDevicesProvider()->inputChannelsAvailable();
 
-    auto makeChangeInputChannelsAction = [](int index) -> ActionQuery {
+    auto makeChangeInputChannelsAction = [](int channelCount) -> ActionQuery {
         ActionQuery q = PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY;
-        q.addParam("input-channels_index", muse::Val(index));
+        q.addParam("input-channels_count", muse::Val(channelCount));
         return q;
     };
 
-    auto channelName = [](int channelNumber) -> QString {
-        return channelNumber == 1
+    auto channelName = [](int channelCount) -> QString {
+        return channelCount == 1
                //: %1 is the recording channel number
-               ? muse::qtrc("projectscene/toolbars", "%1 (Mono) Recording channel").arg(channelNumber)
-               : channelNumber == 2
+               ? muse::qtrc("projectscene/toolbars", "%1 (Mono) Recording channel").arg(channelCount)
+               : channelCount == 2
                //: %1 is the recording channel number
-               ? muse::qtrc("projectscene/toolbars", "%1 (Stereo) Recording channels").arg(channelNumber)
-               : QString::number(channelNumber);
+               ? muse::qtrc("projectscene/toolbars", "%1 (Stereo) Recording channels").arg(channelCount)
+               : QString::number(channelCount);
     };
 
     for (int i = 0; i < inputChannelsAvailable; ++i) {
-        int channelNumber = i + 1;
-        MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(channelNumber).toString(),
-                                      muse::TranslatableString::untranslatable(channelName(channelNumber)));
+        int channelCount = i + 1;
+        MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(channelCount).toString(),
+                                      muse::TranslatableString::untranslatable(channelName(channelCount)));
 
         item->setId(QString::fromStdString(item->query().toString()));
 
-        if (inputChannelsSelected == (channelNumber)) {
+        if (inputChannelsSelected == channelCount) {
             item->setChecked(true);
         }
         items << item;
