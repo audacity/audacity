@@ -31,6 +31,8 @@ using namespace muse::ui;
 static const Uri HOME_PAGE_URI("audacity://home");
 static const Uri PROJECT_PAGE_URI("audacity://project");
 
+static const muse::Uri EXTENSIONS_DIALOG_URI("muse://extensions/viewer");
+
 //! TODO AU4: this should point to sth like ProjectView
 //! but we don't have that yet, so binding it to
 //! area that's being focused when opening a project
@@ -109,6 +111,13 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
         //! section. Treat this as implicit focus on the project view — otherwise
         //! global shortcuts (Ctrl+C/V) get silently omitted.
         return context::UiCtxProjectFocused;
+    }
+
+    if (interactive()->isCurrentUriDialog().val) {
+        bool isExtensionDialog = currentUri == EXTENSIONS_DIALOG_URI;
+        if (!isExtensionDialog) {
+            return context::UiCtxDialogOpened;
+        }
     }
 
     return context::UiCtxUnknown;

@@ -8,6 +8,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "context/iuicontextresolver.h"
 #include "au3cloud/iau3audiocomservice.h"
 
 namespace au::projectscene {
@@ -17,9 +18,10 @@ class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, pub
 
     Q_PROPERTY(bool isCompactMode READ isCompactMode WRITE setIsCompactMode NOTIFY isCompactModeChanged)
 
-    muse::ContextInject<au::context::IGlobalContext> context { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::ContextInject<au::au3cloud::IAu3AudioComService> au3CloudService { this };
+    muse::ContextInject<context::IGlobalContext> context { this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
+    muse::ContextInject<au3cloud::IAu3AudioComService> au3CloudService { this };
 
 public:
     Q_INVOKABLE void load() override;
@@ -33,6 +35,8 @@ signals:
     void isCompactModeChanged();
 
 private:
+    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+
     bool m_loaded = false;
     bool m_isCompactMode = false;
 };

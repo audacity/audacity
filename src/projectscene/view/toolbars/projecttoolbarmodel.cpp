@@ -66,3 +66,12 @@ void ProjectToolBarModel::setIsCompactMode(bool isCompactMode)
     m_isCompactMode = isCompactMode;
     emit isCompactModeChanged();
 }
+
+void ProjectToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+{
+    if (uicontextResolver()->currentUiContext() == context::UiCtxDialogOpened) {
+        return;
+    }
+
+    AbstractToolBarModel::onActionsStateChanges(codes);
+}
