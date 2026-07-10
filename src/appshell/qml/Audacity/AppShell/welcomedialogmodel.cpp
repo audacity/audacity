@@ -31,8 +31,7 @@ using namespace au::appshell;
 namespace {
 const char* AU4_VIDEO_URL {
     "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video" };
-const char* SHOP_URL {
-    "https://audacity-shop.fourthwall.com/en-gbp/?utm_source=au-app-merch-store&utm_medium=merch-25y&utm_campaign=au-app-welcome-au-app-merch-store-merch-25y&utm_id=au-app-welcome" };
+const char* FEATURE_SURVEY_URL {"https://audacityteam.org/survey"};
 }
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
@@ -71,12 +70,12 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             }
         },
         {
-            muse::qtrc("appshell/welcome", "Get 25th anniversary merchandise!"),
-            "qrc:/resources/welcomedialog/Audacity_Merch_Store.png",
-            muse::qtrc("appshell/welcome", "Visit now"),
+            muse::qtrc("appshell/welcome", "Help us decide the future of Audacity"),
+            "qrc:/resources/welcomedialog/Audacity_Feature_Survey.png",
             {},
+            muse::qtrc("appshell/welcome", "Take part in survey"),
             [this]() {
-                platformInteractive()->openUrl(SHOP_URL);
+                platformInteractive()->openUrl(FEATURE_SURVEY_URL);
             }
         },
     };
