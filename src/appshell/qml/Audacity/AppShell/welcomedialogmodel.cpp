@@ -31,7 +31,9 @@ using namespace au::appshell;
 namespace {
 const char* AU4_VIDEO_URL {
     "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video" };
-const char* FEATURE_SURVEY_URL {"https://audacityteam.org/survey"};
+const char* FEATURE_SURVEY_URL { "https://audacityteam.org/survey" };
+const char* SOAP_VOICE_CLEANER_URL {
+    "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
 }
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
@@ -78,6 +80,15 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 platformInteractive()->openUrl(FEATURE_SURVEY_URL);
             }
         },
+        {
+            muse::qtrc("appshell/welcome", "Soap Voice Cleaner: studio-quality voice-over sound"),
+            "qrc:/resources/welcomedialog/Soap_Voice_Cleaner.png",
+            {},
+            muse::qtrc("appshell/welcome", "Get it on MuseHub"),
+            [this]() {
+                platformInteractive()->openUrl(SOAP_VOICE_CLEANER_URL);
+            }
+        }
     };
 }
 
