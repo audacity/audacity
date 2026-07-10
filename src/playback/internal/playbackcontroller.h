@@ -62,11 +62,16 @@ private:
     void setLoopRegionInOut();
     void setSelectionFollowsLoopRegion();
 
+    // Audio device/configuration actions: resolve the selected index against the
+    // current device list, then call the matching method on the player.
     void setAudioApi(const muse::actions::ActionQuery& q);
     void setAudioOutputDevice(const muse::actions::ActionQuery& q);
     void setAudioInputDevice(const muse::actions::ActionQuery& q);
     void setInputChannels(const muse::actions::ActionQuery& q);
     void rescanAudioDevices();
+
+    void changeAudioDeviceFromQuery(const muse::actions::ActionQuery& q, const std::string& indexParam,
+                                    const std::vector<std::string>& options, const std::function<void(const std::string&)>& applyValue);
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 

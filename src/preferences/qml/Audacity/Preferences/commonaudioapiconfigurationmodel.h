@@ -28,6 +28,7 @@
 #include "framework/global/modularity/ioc.h"
 
 #include "audio/iaudiodevicesprovider.h"
+#include "playback/iplayback.h"
 #include "ui/iuiconfiguration.h"
 
 namespace au::appshell {
@@ -67,6 +68,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<playback::IPlayback> playback { this };
 
 public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);

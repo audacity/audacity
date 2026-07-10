@@ -299,6 +299,11 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
 void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
 {
     LOGD() << "newPosition: " << newPosition;
+
+    // Any explicit reposition (a click, a stop returning to the anchor, a rewind,
+    // a project change) supersedes a pending paused-stream resume.
+    m_pausedResumePos.reset();
+
     auto pos = std::max(0.0, newPosition.raw());
 
     Au3Project& project = projectRef();
@@ -786,6 +791,15 @@ void Au3Player::togglePlay(bool ignoreSelection)
 
 void Au3Player::doPlay(bool ignoreSelection)
 {
+    if (m_pausedResumePos.has_value()) {
+        // Resuming a stream that a device change tore down while paused: play
+        // from the pause position, leaving the stop anchor where it was.
+        const muse::secs_t pos = *m_pausedResumePos;
+        m_pausedResumePos.reset();
+        playFrom(pos);
+        return;
+    }
+
     if (!ignoreSelection) {
         PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
@@ -957,6 +971,81 @@ void Au3Player::setLoopRegionInOut()
 void Au3Player::setSelectionFollowsLoopRegion()
 {
     playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
+}
+
+void Au3Player::setAudioApi(const std::string& api)
+{
+    withStreamRestart([this, api]() {
+        audioDevicesProvider()->setApi(api);
+    });
+}
+
+void Au3Player::setAudioOutputDevice(const std::string& device)
+{
+    withStreamRestart([this, device]() {
+        audioDevicesProvider()->setOutputDevice(device);
+    });
+}
+
+void Au3Player::setAudioInputDevice(const std::string& device)
+{
+    withStreamRestart([this, device]() {
+        audioDevicesProvider()->setInputDevice(device);
+    });
+}
+
+void Au3Player::setInputChannels(int channels)
+{
+    withStreamRestart([this, channels]() {
+        audioDevicesProvider()->setInputChannels(channels);
+    });
+}
+
+void Au3Player::rescanAudioDevices()
+{
+    withStreamRestart([this]() {
+        audioDevicesProvider()->rescan();
+    });
+}
+
+void Au3Player::withStreamRestart(const std::function<void()>& change)
+{
+    const bool isRecording = globalContext()->isRecording();
+    const bool wasPlaying = !isRecording && isPlaying();
+    const bool wasPaused = !isRecording && isPaused();
+    const muse::secs_t resumePos = playbackPosition();
+
+    if (isRecording || wasPlaying || wasPaused) {
+        stop();
+    }
+
+    change();
+
+    // Only resume when the user was actively playing. A paused or recording
+    // transport is torn down for the switch and then left stopped (the teardown
+    // flushes its queues, so the paused state can't be preserved).
+    if (wasPlaying) {
+        playFrom(resumePos);
+    } else if (wasPaused) {
+        // The paused stream can't survive the switch, so we end up stopped.
+        // Remember the pause position so the next play resumes from there; the
+        // stop anchor (m_lastPlaybackSeekTime) is deliberately left untouched, so
+        // a stop still returns to where playback originally started.
+        m_pausedResumePos = resumePos;
+    }
+}
+
+void Au3Player::playFrom(muse::secs_t pos)
+{
+    // Resume plain playback from `pos` after the audio stream was torn down for a
+    // device change. Keep m_lastPlaybackRegion aligned with the player's
+    // resulting zero-length region so a following pause→play resumes from the
+    // pause position instead of being mistaken for a selection change. The user's
+    // seek bookmark (m_lastPlaybackSeekTime) is intentionally left as-is: the
+    // stream restart is our workaround, not a user gesture.
+    m_lastPlaybackRegion = { pos, pos };
+    seek(pos, false);
+    play();
 }
 
 PlaybackRegion Au3Player::selectionPlaybackRegion() const

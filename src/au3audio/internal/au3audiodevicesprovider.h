@@ -14,6 +14,8 @@
 namespace au::au3audio {
 class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Contextable
 {
+    friend class Au3AudioDevicesProviderTests;
+
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };

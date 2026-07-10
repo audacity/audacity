@@ -27,6 +27,7 @@
 #include "containers.h"
 #include "log.h"
 #include "types/translatablestring.h"
+#include "playback/iplayer.h"
 
 using namespace au::appshell;
 
@@ -122,7 +123,7 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
         return;
     }
 
-    audioDevicesProvider()->setApi(apiList[index]);
+    playback()->player()->setAudioApi(apiList[index]);
 }
 
 QStringList CommonAudioApiConfigurationModel::audioApiList() const
@@ -155,7 +156,8 @@ void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& devic
     if (device == currentOutputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setOutputDevice(device.toStdString());
+
+    playback()->player()->setAudioOutputDevice(device.toStdString());
 }
 
 QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
@@ -178,7 +180,8 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device
     if (device == currentInputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setInputDevice(device.toStdString());
+
+    playback()->player()->setAudioInputDevice(device.toStdString());
 }
 
 double CommonAudioApiConfigurationModel::bufferLength() const
@@ -242,7 +245,8 @@ QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
 
 void CommonAudioApiConfigurationModel::inputChannelsSelected(const int index)
 {
-    audioDevicesProvider()->setInputChannels(index + 1);
+    // setInputChannels() expects a 1-based channel count, the list index is 0-based.
+    playback()->player()->setInputChannels(index + 1);
 }
 
 QString CommonAudioApiConfigurationModel::defaultSampleRate() const
