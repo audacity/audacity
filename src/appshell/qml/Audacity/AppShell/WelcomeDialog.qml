@@ -174,6 +174,8 @@ StyledDialogView {
         StyledTextLabel {
             id: descriptionLabel
 
+            visible: prv.descText !== ""
+
             height: 84
             width: prv.imageWidth
             anchors.horizontalCenter: contentColumn.horizontalCenter
@@ -183,6 +185,16 @@ StyledDialogView {
             font: ui.theme.largeBodyFont
             wrapMode: Text.WordWrap
             maximumLineCount: 3
+        }
+
+        Item {
+            id: spacer
+
+            // When there is no description, keep 32px between the image and the content button
+            visible: prv.descText === ""
+
+            height: 32
+            width: 1
         }
 
         FlatButton {
