@@ -83,11 +83,11 @@ Lv2UiCandidate findHostableUi(const LilvPlugin& plugin)
     }
 
     if (result.ui == nullptr) {
-        result.unsupportedReason = "No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)";
+        result.unsupportedReason = muse::TranslatableString("effects", "No UI provided by the plugin");
     } else if (isGtk) {
         result.ui = nullptr;
         result.uiType = nullptr;
-        result.unsupportedReason = "GTK UIs not supported, falling back to plain UI";
+        result.unsupportedReason = muse::TranslatableString("effects", "GTK UIs not supported, falling back to plain UI");
     }
 
     return result;

@@ -15,7 +15,9 @@
 #include "au3-lv2/LV2Instance.h"
 #include "au3-lv2/LV2Wrapper.h"
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/translation.h"
+#include "types/translatablestring.h"
 
 #include <QObject>
 #include <QQuickItem>
@@ -107,7 +109,7 @@ private:
     QTimer m_settingsTimer;
     bool m_settingsChanged = false;
 
-    std::string m_unsupportedUiReason;
+    muse::TranslatableString m_unsupportedUiReason;
 };
 
 class Lv2ViewModelFactory : public QObject

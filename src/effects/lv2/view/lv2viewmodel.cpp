@@ -24,8 +24,8 @@
 #include "lv2/ui/ui.h"
 #include "suil/suil.h"
 
-#include "global/defer.h"
-#include "log.h"
+#include "framework/global/defer.h"
+#include "framework/global/log.h"
 
 #include <dlfcn.h>
 #include <X11/Xlib.h>
@@ -206,7 +206,7 @@ bool Lv2ViewModel::buildFancy()
     auto& features = mUiFeatures.emplace(m_wrapper->GetFeatures(), &m_handler, uinode,
                                          &m_wrapper->GetInstance(), nullptr);
     if (!features.mOk) {
-        m_unsupportedUiReason = "UI feature initialization failed";
+        m_unsupportedUiReason = muse::TranslatableString("effects", "UI feature initialization failed");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -230,7 +230,7 @@ bool Lv2ViewModel::buildFancy()
 
     // Create the suil host
     IF_ASSERT_FAILED(mSuilHost = getSuilHost()) {
-        m_unsupportedUiReason = "SUIL host creation failed";
+        m_unsupportedUiReason = muse::TranslatableString("effects", "SUIL host creation failed");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -240,7 +240,9 @@ bool Lv2ViewModel::buildFancy()
                                            uiBinaryPath.get(), featurePointers.data()));
 
     if (!m_suilInstance || suil_instance_get_widget(m_suilInstance.get()) == nullptr) {
-        m_unsupportedUiReason = usesX11(uiTypeUri) ? "X11 UI refusing to be externalized" : "Unknown reason (please report)";
+        m_unsupportedUiReason
+            = usesX11(uiTypeUri) ? muse::TranslatableString("effects", "X11 UI refusing to be externalized") : muse::TranslatableString(
+                  "effects", "Unknown reason (please report)");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -254,7 +256,7 @@ bool Lv2ViewModel::buildFancy()
     if (auto idleUi = tryCreateLv2IdleUi(*m_suilInstance, isExternalUi)) {
         m_pluginUi = std::move(idleUi);
     } else {
-        m_unsupportedUiReason = "Idle UI creation failed";
+        m_unsupportedUiReason = muse::TranslatableString("effects", "Idle UI creation failed");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -458,6 +460,6 @@ bool Lv2ViewModel::isRealtimeInstance() const
 
 QString Lv2ViewModel::unsupportedUiReason() const
 {
-    return QString::fromStdString(m_unsupportedUiReason);
+    return m_unsupportedUiReason.translated().toQString();
 }
 }
