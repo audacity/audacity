@@ -38,21 +38,23 @@ Lv2UiCandidate findHostableUi(const LilvPlugin& plugin)
     result.uis.reset(lilv_plugin_get_uis(&plugin));
 
     bool isGtk = false;
+    const LilvUI* gtkFallback = nullptr;
 
     // Determine if the plugin has a supported UI
     if (result.uis) {
         if (LilvNodePtr ui_host_uri{ lilv_new_uri(gWorld, hostNativeType) }) {
             LILV_FOREACH(uis, iter, result.uis.get()) {
-                result.ui = lilv_uis_get(result.uis.get(), iter);
-                if (lilv_ui_is_supported(result.ui, uiIsSupported, ui_host_uri.get(), &result.uiType)) {
+                const LilvUI* const ui = lilv_uis_get(result.uis.get(), iter);
+                if (lilv_ui_is_supported(ui, uiIsSupported, ui_host_uri.get(), &result.uiType)) {
+                    result.ui = ui;
                     break;
                 }
-                if (lilv_ui_is_a(result.ui, node_Gtk) || lilv_ui_is_a(result.ui, node_Gtk3)) {
-                    result.uiType = node_Gtk;
-                    isGtk = true;
-                    break;
+                // Remember a GTK-family UI as a fallback, but keep scanning:
+                // a later entry in this same list may be natively hostable.
+                if (!gtkFallback
+                    && (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3))) {
+                    gtkFallback = ui;
                 }
-                result.ui = nullptr;
             }
         }
     }
@@ -60,13 +62,19 @@ Lv2UiCandidate findHostableUi(const LilvPlugin& plugin)
     // Check for other supported UIs
     if (!result.ui && result.uis) {
         LILV_FOREACH(uis, iter, result.uis.get()) {
-            result.ui = lilv_uis_get(result.uis.get(), iter);
-            if (lilv_ui_is_a(result.ui, node_ExternalUI) || lilv_ui_is_a(result.ui, node_ExternalUIOld)) {
+            const LilvUI* const ui = lilv_uis_get(result.uis.get(), iter);
+            if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld)) {
+                result.ui = ui;
                 result.uiType = node_ExternalUI;
                 break;
             }
-            result.ui = nullptr;
         }
+    }
+
+    if (!result.ui && gtkFallback) {
+        result.ui = gtkFallback;
+        result.uiType = node_Gtk;
+        isGtk = true;
     }
 
     if (result.ui && !isGtk) {
