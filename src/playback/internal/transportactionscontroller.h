@@ -17,7 +17,7 @@
 #include "record/irecordcontroller.h"
 
 namespace au::playback {
-class PlaybackController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
+class TransportActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
@@ -31,7 +31,7 @@ public:
     muse::ContextInject<playback::ITransport> transport { this };
 
 public:
-    PlaybackController(const muse::modularity::ContextPtr& ctx)
+    TransportActionsController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     void init();
@@ -43,8 +43,6 @@ public:
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
-    friend class TransportTests;
-
     void togglePlayAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
     void pauseAction();
@@ -77,7 +75,6 @@ private:
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
-    playback::IPlayerPtr m_player;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }

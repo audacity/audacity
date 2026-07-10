@@ -11,7 +11,7 @@
 #include "context/iglobalcontext.h"
 
 #include "internal/playbackconfiguration.h"
-#include "internal/playbackcontroller.h"
+#include "internal/transportactionscontroller.h"
 #include "internal/playbackmetercontroller.h"
 #include "internal/playbackuiactions.h"
 #include "internal/transport.h"
@@ -106,7 +106,7 @@ IContextSetup* PlaybackModule::newContext(const muse::modularity::ContextPtr& ct
 
 void PlaybackContext::registerExports()
 {
-    m_controller = std::make_shared<PlaybackController>(iocContext());
+    m_controller = std::make_shared<TransportActionsController>(iocContext());
     m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
     m_player = std::make_shared<Au3Player>(iocContext());
     m_transport = std::make_shared<Transport>(iocContext());

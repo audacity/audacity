@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "playbackcontroller.h"
+#include "transportactionscontroller.h"
 
 #include "playback/iplayer.h"
 #include "framework/global/log.h"
@@ -27,36 +27,34 @@ static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
-void PlaybackController::init()
+void TransportActionsController::init()
 {
-    m_player = player();
+    dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &TransportActionsController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &TransportActionsController::playTracksAction);
+    dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &TransportActionsController::pauseAction);
+    dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &TransportActionsController::stopAction);
+    dispatcher()->reg(this, PLAYBACK_REWIND_START_QUERY, this, &TransportActionsController::rewindToStartAction);
+    dispatcher()->reg(this, PLAYBACK_REWIND_END_QUERY, this, &TransportActionsController::rewindToEndAction);
+    dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, this, &TransportActionsController::onSeekAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_QUERY, this, &TransportActionsController::onChangePlaybackRegionAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &TransportActionsController::setAudioApi);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &TransportActionsController::setAudioOutputDevice);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &TransportActionsController::setAudioInputDevice);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &TransportActionsController::setInputChannels);
 
-    dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
-    dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
-    dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
-    dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
-    dispatcher()->reg(this, PLAYBACK_REWIND_START_QUERY, this, &PlaybackController::rewindToStartAction);
-    dispatcher()->reg(this, PLAYBACK_REWIND_END_QUERY, this, &PlaybackController::rewindToEndAction);
-    dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, this, &PlaybackController::onSeekAction);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_QUERY, this, &PlaybackController::onChangePlaybackRegionAction);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
+    dispatcher()->reg(this, REPEAT_CODE, this, &TransportActionsController::togglePlayRepeats);
+    dispatcher()->reg(this, PAN_CODE, this, &TransportActionsController::toggleAutomaticallyPan);
 
-    dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
-    dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
+    dispatcher()->reg(this, "toggle-loop-region", this, &TransportActionsController::toggleLoopPlayback);
+    dispatcher()->reg(this, "clear-loop-region", this, &TransportActionsController::clearLoopRegion);
+    dispatcher()->reg(this, "set-loop-region-to-selection", this, &TransportActionsController::setLoopRegionToSelection);
+    dispatcher()->reg(this, "set-selection-to-loop", this, &TransportActionsController::setSelectionToLoop);
+    dispatcher()->reg(this, "set-loop-region-in-out", this, &TransportActionsController::setLoopRegionInOut);
+    dispatcher()->reg(this, "toggle-selection-follows-loop-region", this, &TransportActionsController::setSelectionFollowsLoopRegion);
 
-    dispatcher()->reg(this, "toggle-loop-region", this, &PlaybackController::toggleLoopPlayback);
-    dispatcher()->reg(this, "clear-loop-region", this, &PlaybackController::clearLoopRegion);
-    dispatcher()->reg(this, "set-loop-region-to-selection", this, &PlaybackController::setLoopRegionToSelection);
-    dispatcher()->reg(this, "set-selection-to-loop", this, &PlaybackController::setSelectionToLoop);
-    dispatcher()->reg(this, "set-loop-region-in-out", this, &PlaybackController::setLoopRegionInOut);
-    dispatcher()->reg(this, "toggle-selection-follows-loop-region", this, &PlaybackController::setSelectionFollowsLoopRegion);
+    dispatcher()->reg(this, "rescan-devices", this, &TransportActionsController::rescanAudioDevices);
 
-    dispatcher()->reg(this, "rescan-devices", this, &PlaybackController::rescanAudioDevices);
-
-    m_player->loopRegionChanged().onNotify(this, [this](){
+    player()->loopRegionChanged().onNotify(this, [this](){
         m_actionCheckedChanged.send("toggle-loop-region");
     });
 
@@ -65,42 +63,42 @@ void PlaybackController::init()
     });
 }
 
-void PlaybackController::deinit()
+void TransportActionsController::deinit()
 {
 }
 
-void PlaybackController::togglePlayAction()
+void TransportActionsController::togglePlayAction()
 {
     const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     transport()->togglePlay(isShiftPressed /* ignoreSelection */);
 }
 
-void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
+void TransportActionsController::playTracksAction(const muse::actions::ActionQuery&)
 {
     // Not implemented yet.
 }
 
-void PlaybackController::pauseAction()
+void TransportActionsController::pauseAction()
 {
     transport()->pause();
 }
 
-void PlaybackController::stopAction()
+void TransportActionsController::stopAction()
 {
     transport()->stopSeekAndUpdatePlaybackRegion();
 }
 
-void PlaybackController::rewindToStartAction()
+void TransportActionsController::rewindToStartAction()
 {
     transport()->rewindToStart();
 }
 
-void PlaybackController::rewindToEndAction()
+void TransportActionsController::rewindToEndAction()
 {
     transport()->rewindToEnd();
 }
 
-void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
+void TransportActionsController::onSeekAction(const muse::actions::ActionQuery& q)
 {
     IF_ASSERT_FAILED(q.contains("seekTime")) {
         return;
@@ -115,7 +113,7 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
     transport()->seekTo(secs, triggerPlay);
 }
 
-void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
+void TransportActionsController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
 {
     IF_ASSERT_FAILED(q.contains("start")) {
         return;
@@ -130,7 +128,7 @@ void PlaybackController::onChangePlaybackRegionAction(const muse::actions::Actio
     transport()->changePlaybackRegion(start, end);
 }
 
-void PlaybackController::togglePlayRepeats()
+void TransportActionsController::togglePlayRepeats()
 {
     NOT_IMPLEMENTED;
 
@@ -139,7 +137,7 @@ void PlaybackController::togglePlayRepeats()
     notifyActionCheckedChanged(REPEAT_CODE);
 }
 
-void PlaybackController::toggleAutomaticallyPan()
+void TransportActionsController::toggleAutomaticallyPan()
 {
     NOT_IMPLEMENTED;
 
@@ -148,61 +146,61 @@ void PlaybackController::toggleAutomaticallyPan()
     notifyActionCheckedChanged(PAN_CODE);
 }
 
-void PlaybackController::toggleLoopPlayback()
+void TransportActionsController::toggleLoopPlayback()
 {
     transport()->toggleLoopPlayback();
     notifyActionCheckedChanged("toggle-loop-region");
 }
 
-void PlaybackController::clearLoopRegion()
+void TransportActionsController::clearLoopRegion()
 {
-    m_player->clearLoopRegion();
+    player()->clearLoopRegion();
 }
 
-void PlaybackController::setLoopRegionToSelection()
+void TransportActionsController::setLoopRegionToSelection()
 {
     transport()->setLoopRegionToSelection();
 }
 
-void PlaybackController::setSelectionToLoop()
+void TransportActionsController::setSelectionToLoop()
 {
     transport()->setSelectionToLoop();
 }
 
-void PlaybackController::setLoopRegionInOut()
+void TransportActionsController::setLoopRegionInOut()
 {
     transport()->setLoopRegionInOut();
 }
 
-void PlaybackController::setSelectionFollowsLoopRegion()
+void TransportActionsController::setSelectionFollowsLoopRegion()
 {
     transport()->setSelectionFollowsLoopRegion();
 }
 
-void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
+void TransportActionsController::setAudioApi(const muse::actions::ActionQuery& q)
 {
     changeAudioDeviceFromQuery(q, "api_index", audioDevicesProvider()->apis(), [this](const std::string& api) {
         transport()->setAudioApi(api);
     });
 }
 
-void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
+void TransportActionsController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
 {
     changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->outputDevices(), [this](const std::string& device) {
         transport()->setAudioOutputDevice(device);
     });
 }
 
-void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
+void TransportActionsController::setAudioInputDevice(const muse::actions::ActionQuery& q)
 {
     changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->inputDevices(), [this](const std::string& device) {
         transport()->setAudioInputDevice(device);
     });
 }
 
-void PlaybackController::changeAudioDeviceFromQuery(const muse::actions::ActionQuery& q, const std::string& indexParam,
-                                                    const std::vector<std::string>& options,
-                                                    const std::function<void(const std::string&)>& applyValue)
+void TransportActionsController::changeAudioDeviceFromQuery(const muse::actions::ActionQuery& q, const std::string& indexParam,
+                                                            const std::vector<std::string>& options,
+                                                            const std::function<void(const std::string&)>& applyValue)
 {
     IF_ASSERT_FAILED(q.contains(indexParam)) {
         return;
@@ -219,7 +217,7 @@ void PlaybackController::changeAudioDeviceFromQuery(const muse::actions::ActionQ
     applyValue(options.at(index));
 }
 
-void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
+void TransportActionsController::setInputChannels(const muse::actions::ActionQuery& q)
 {
     IF_ASSERT_FAILED(q.contains("input-channels_index")) {
         return;
@@ -228,32 +226,32 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
     transport()->setInputChannels(q.param("input-channels_index").toInt());
 }
 
-void PlaybackController::rescanAudioDevices()
+void TransportActionsController::rescanAudioDevices()
 {
     transport()->rescanAudioDevices();
 }
 
-void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)
+void TransportActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
 {
     m_actionCheckedChanged.send(actionCode);
 }
 
-bool PlaybackController::actionChecked(const ActionCode& actionCode) const
+bool TransportActionsController::actionChecked(const ActionCode& actionCode) const
 {
     QMap<std::string, bool> isChecked {
-        { "toggle-loop-region", m_player->isLoopRegionActive() },
+        { "toggle-loop-region", player()->isLoopRegionActive() },
         { "toggle-selection-follows-loop-region", playbackConfiguration()->selectionFollowsLoopRegion() }
     };
 
     return isChecked[actionCode];
 }
 
-Channel<ActionCode> PlaybackController::actionCheckedChanged() const
+Channel<ActionCode> TransportActionsController::actionCheckedChanged() const
 {
     return m_actionCheckedChanged;
 }
 
-bool PlaybackController::canReceiveAction(const ActionCode& code) const
+bool TransportActionsController::canReceiveAction(const ActionCode& code) const
 {
     // note that we currently do toString() on the NAMED_CODE because those are ActionQuery, and we don't have
     // convenient way to compare ActionCode with ActionQuery
@@ -266,7 +264,7 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
     }
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
-        return !m_player->isPlaying() && !recordController()->isRecording();
+        return !player()->isPlaying() && !recordController()->isRecording();
     }
 
     return true;

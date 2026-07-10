@@ -10,7 +10,7 @@
 
 namespace au::playback {
 class PlaybackConfiguration;
-class PlaybackController;
+class TransportActionsController;
 class PlaybackUiActions;
 class PlaybackMeterController;
 class Au3Player;
@@ -45,7 +45,7 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<PlaybackController> m_controller;
+    std::shared_ptr<TransportActionsController> m_controller;
     std::shared_ptr<PlaybackUiActions> m_uiActions;
     std::shared_ptr<Au3Player> m_player;
     std::shared_ptr<Transport> m_transport;
