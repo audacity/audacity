@@ -57,8 +57,6 @@ signals:
     void minimumWidthChanged();
 
 private:
-    void embedNativeView();
-
     void updateViewGeometry();
 
     int m_instanceId = -1;

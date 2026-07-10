@@ -5,6 +5,8 @@
 
 #include <QQuickWindow>
 
+#include "framework/global/log.h"
+
 #include "au3-audio-unit/AudioUnitInstance.h"
 #include "audiounitcontrol.h"
 
@@ -36,13 +38,24 @@ void AudioUnitView::setInstanceId(int newInstanceId)
 void AudioUnitView::init()
 {
     const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
+    if (!instance) {
+        LOGE() << "no AudioUnit instance for instanceId: " << m_instanceId;
+        return;
+    }
 
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
     const bool isGraphical = (configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI);
 
-    m_auControl = std::make_unique<AUControl>();
+    if (!instance->Initialize()) {
+        LOGE() << "failed to pre-initialize AU instance for editor, instanceId: " << m_instanceId;
+        return;
+    }
+
+    m_auControl = std::make_unique<AUControl>(window());
     if (!m_auControl->create(instance->GetComponent(),
                              instance->GetAudioUnit(), isGraphical)) {
+        LOGE() << "failed to create AU control for effect " << effectId.toStdString()
+               << ", instanceId: " << m_instanceId << ", graphical: " << isGraphical;
         m_auControl.reset();
         return;
     }
@@ -51,7 +64,8 @@ void AudioUnitView::init()
         updateViewGeometry();
     });
 
-    embedNativeView();
+    m_auControl->show();
+
     updateViewGeometry();
 }
 
@@ -64,18 +78,6 @@ void AudioUnitView::reload()
 {
     deinit();
     init();
-}
-
-void AudioUnitView::embedNativeView()
-{
-    if (!window() || !m_auControl) {
-        return;
-    }
-
-    m_auControl->winId(); // Force creation of native window
-    m_auControl->setParent(window());
-
-    m_auControl->show();
 }
 
 void AudioUnitView::updateViewGeometry()
