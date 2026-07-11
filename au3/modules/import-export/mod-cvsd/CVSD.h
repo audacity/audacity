@@ -6,9 +6,8 @@ struct CVSD_CONFIG {
     // 16 bit config for CVSD
     unsigned int num_bits = 1;
 
-    // K for now
-    unsigned char bitref = 4;
-    unsigned char bitmask = 0; // Fixed garbage value
+    // J
+    // unsigned int bitref = 4;
 
     // This value can either be 1 or 0.
     // 0 = -1, 1 = 1
@@ -41,6 +40,8 @@ struct CVSD_CONFIG {
     // Accumulator step size (δ(k))
     int minAccumulatorStepSize = 10;
     int maxAccumulatorStepSize = 1280;
+
+    u_int8_t bitHistory = 0;
 
 };
 

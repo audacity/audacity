@@ -1,13 +1,74 @@
 #include "ExportCVSD.h"
 
-void CVSDEncode(constSamplePtr temp)
+std::vector<u_int8_t> CVSDEncode(constSamplePtr temp, CVSD_CONFIG& current_config, size_t temp_size)
 {
     // get the raw floating bits
-    float* audiobuffer = (float*) temp;
-    // initialize a new config everytime for the buffer
-    CVSD_CONFIG config;
+    float* audioBuffer = (float*)temp;
+    std::vector<u_int8_t> EncoderOuput;
+    u_int8_t currentByte = 0;
+    int bitCount = 0;
+    for (size_t i = 0; i < temp_size; ++i)
+    {
+        float x = audioBuffer[i];
+        float encoder_input_bit_from_the_float_sample = current_config.accumulatorDecay * current_config.accumulator;
+        current_config.b = (x >= encoder_input_bit_from_the_float_sample);
 
+        // update history
+        // syllabic Companding
+        current_config.bitHistory <<= 1;
+        current_config.bitHistory |= current_config.b ? 1 : 0;
+        current_config.bitHistory &= 0x0F;
+
+        // update alpha
+        current_config.alpha =  (current_config.bitHistory == 0x00 ||
+            current_config.bitHistory == 0x0F);
+
+        // update delta
+        if (current_config.alpha) {
+            current_config.accumulatorStepSize =
+                std::min(
+                    current_config.accumulatorStepSize +
+                    current_config.minAccumulatorStepSize,
+                    (float)current_config.maxAccumulatorStepSize);
+        } else {
+            current_config.accumulatorStepSize =
+                std::max(
+                    (float)(current_config.stepSizeDecay *
+                    current_config.accumulatorStepSize),
+                    (float)current_config.minAccumulatorStepSize);
+        }
+
+        // emit one CVSD bit
+        float encoderPredictedOutput = encoder_input_bit_from_the_float_sample +
+            (current_config.b ? 1.0f : -1.0f) * current_config.accumulatorStepSize;
+
+        // push the bit
+        // pack output bit
+        currentByte <<= 1;
+        currentByte |= current_config.b ? 1 : 0;
+        bitCount++;
+
+        // bit packing works
+        if (bitCount == 8) {
+            EncoderOuput.push_back(currentByte);
+            currentByte = 0;
+            bitCount = 0;
+        }
+        if(bitCount){
+            currentByte <<= (8-bitCount);
+            EncoderOuput.push_back(currentByte);
+        }
+
+        // update accumulator
+        current_config.accumulator =
+            std::clamp(
+                encoderPredictedOutput,
+                current_config.minAccumulatorSize,
+                current_config.maxAccumulatorSize);
+        }
+    return EncoderOuput;
 };
+
 void CVSDDecode(std::unique_ptr<wxFFile> openedFile)
 {
 
@@ -50,7 +111,7 @@ bool ExportCVSDProcessor::Initialize(AudacityProject& project,
         return false;
     }
 
-    // get the config
+    // get the current_config
     const size_t maxBlockLen = context.max_block_len;
     unsigned cvsdNumOfChannels = context.channels;
 
@@ -81,7 +142,10 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
             } else {
                 for (size_t i = 0; i < context.channels; i++) {
                     constSamplePtr temp = context.mMixer->GetBuffer(i);
-                    CVSDEncode(temp);
+                    std::vector<u_int8_t> EncoderOuputFromBuffer;
+                    EncoderOuputFromBuffer = CVSDEncode(temp, config, sizeof(temp));
+                    context.mfile->Write( EncoderOuputFromBuffer.data(),
+                        EncoderOuputFromBuffer.size());
                 }
             }
         }
