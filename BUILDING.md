@@ -59,6 +59,51 @@ cmake --build build/            # build (every build)
 cmake --install build/          # install (every successful build)
 ```
 
+#### DeepFilterNet3 with speech-swift (macOS)
+
+The optional DeepFilterNet3 Noise Suppression effect uses speech-swift's native
+Core ML runtime in a bundled Swift helper process. It requires Apple silicon,
+macOS 15 or newer, and a Swift 5.10-compatible toolchain. Enable it when
+configuring Audacity:
+
+```
+cmake -S . -B build/ -DAU_BUILD_SPEECH_SWIFT_EFFECT=ON [other options]
+cmake --build build/
+```
+
+By default, SwiftPM builds the speech-swift version pinned by the helper
+package. During development, a local checkout can be used instead:
+
+```
+cmake -S . -B build/ \
+  -DAU_BUILD_SPEECH_SWIFT_EFFECT=ON \
+  -DAU_SPEECH_SWIFT_PACKAGE_PATH=/path/to/speech-swift \
+  [other options]
+```
+
+Alternatively, pass an existing arm64 helper executable with
+`-DAU_SPEECH_SWIFT_WORKER_PATH=/path/to/audacity-speech-swift-worker`.
+The DeepFilterNet3 Core ML model is downloaded on first use and cached in
+Audacity's application cache.
+
+Run the helper's unit tests from the Audacity source directory with:
+
+```
+swift test \
+  --package-path src/effects/builtin_collection/deepfilternet3/worker \
+  --disable-sandbox \
+  --skip E2E
+```
+
+The real-model test is opt-in because it may download the model:
+
+```
+RUN_DEEPFILTER_E2E=1 swift test \
+  --package-path src/effects/builtin_collection/deepfilternet3/worker \
+  --disable-sandbox \
+  --filter E2EDeepFilterWorkerTests
+```
+
 ### With Visual Studio (Windows only)
 
 Double-click the `generate_sln.bat` script in the root of the repository. This will generate a Visual Studio solution in the `build` directory and build the `install` target. Open the generated solution (./build/audacity.sln) in Visual Studio and press F5 to run Audacity.
