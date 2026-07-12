@@ -115,6 +115,7 @@ option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
 option(AU_BUILD_RECORD_MODULE "Build record module" ON)
 option(AU_BUILD_RECORD_TESTS "Build record tests" ON)
 option(AU_BUILD_SHARED_TESTS "Build shared tests" ON)
+option(AU_BUILD_SPEECH_SWIFT_EFFECT "Build the macOS speech-swift DeepFilterNet3 effect" OFF)
 option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ON)
 option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ON)
 option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
@@ -144,6 +145,11 @@ option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
 
 # Port mixer
 option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
+
+# Optional local/prebuilt inputs for the speech-swift effect. When neither is
+# supplied, the worker package resolves its pinned speech-swift dependency.
+set(AU_SPEECH_SWIFT_PACKAGE_PATH "" CACHE PATH "Local speech-swift checkout used to build the DeepFilterNet3 worker")
+set(AU_SPEECH_SWIFT_WORKER_PATH "" CACHE FILEPATH "Prebuilt audacity-speech-swift-worker executable")
 
 # === Setup ===
 
