@@ -50,6 +50,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.compression
 
+                    navigation.accessible.name: qsTrc("export", "Compression %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setCompression(newValue)
                     }
@@ -77,6 +79,8 @@ ColumnLayout {
                     step: 1
 
                     currentValue: ffmpegPrefModel.lpc
+
+                    navigation.accessible.name: qsTrc("export", "LPC %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setLpc(newValue)
@@ -106,6 +110,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.minPdO
 
+                    navigation.accessible.name: qsTrc("export", "Min. PdO %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMinPdO(newValue)
                     }
@@ -133,6 +139,8 @@ ColumnLayout {
                     step: 1
 
                     currentValue: ffmpegPrefModel.minPtO
+
+                    navigation.accessible.name: qsTrc("export", "Min. PtO %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMinPtO(newValue)
@@ -173,6 +181,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.frameSize
 
+                    navigation.accessible.name: qsTrc("export", "Frame %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setFrameSize(newValue)
                     }
@@ -194,6 +204,8 @@ ColumnLayout {
                     model: ffmpegPrefModel.pdOMethodList
 
                     currentIndex: indexOfValue(ffmpegPrefModel.pdOMethod)
+
+                    navigation.accessible.name: qsTrc("export", "PdO method %1").arg(currentText)
 
                     onActivated: function (index, value) {
                         ffmpegPrefModel.setPdOMethod(index)
@@ -220,6 +232,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.maxPdO
 
+                    navigation.accessible.name: qsTrc("export", "Max. PdO %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMaxPdO(newValue)
                     }
@@ -244,6 +258,8 @@ ColumnLayout {
                     step: 1
 
                     currentValue: ffmpegPrefModel.maxPtO
+
+                    navigation.accessible.name: qsTrc("export", "Max. PtO %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMaxPtO(newValue)

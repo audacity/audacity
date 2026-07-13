@@ -75,6 +75,7 @@ BaseSection {
             measureUnitsSymbol: qsTrc("global", "min" /*disambiguation*/ , "abbreviation of minutes")
 
             navigation.name: "AutoSavePeriodControl"
+            navigation.accessible.name: qsTrc("appshell/preferences", "Auto save every %1 %2").arg(currentValue).arg(measureUnitsSymbol)
             navigation.panel: root.navigation
             navigation.column: 2
 

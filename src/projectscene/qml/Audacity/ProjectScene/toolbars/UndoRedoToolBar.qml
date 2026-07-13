@@ -11,7 +11,7 @@ StyledToolBarView {
     id: root
 
     navigationPanel.name: "UndoRedoToolBar"
-    navigationPanel.accessible.name: qsTrc("projectscene", "Undo/redo toolbar")
+    navigationPanel.accessible.name: qsTrc("projectscene", "Undo and redo")
 
     spacing: 0
     rowHeight: 28

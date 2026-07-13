@@ -61,7 +61,7 @@ Item {
         id: navPanel
         name: "MainToolBar"
         enabled: root.enabled && root.visible
-        accessible.name: qsTrc("appshell", "Main toolbar") + " " + navPanel.directionInfo
+        accessible.name: qsTrc("appshell", "Main toolbar")
     }
 
     RadioButtonGroup {
