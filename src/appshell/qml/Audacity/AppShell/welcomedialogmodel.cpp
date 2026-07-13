@@ -31,8 +31,9 @@ using namespace au::appshell;
 namespace {
 const char* AU4_VIDEO_URL {
     "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video" };
-const char* SHOP_URL {
-    "https://audacity-shop.fourthwall.com/en-gbp/?utm_source=au-app-merch-store&utm_medium=merch-25y&utm_campaign=au-app-welcome-au-app-merch-store-merch-25y&utm_id=au-app-welcome" };
+const char* FEATURE_SURVEY_URL { "https://audacityteam.org/survey" };
+const char* SOAP_VOICE_CLEANER_URL {
+    "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
 }
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
@@ -43,10 +44,9 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
 
     return {
         {
-            muse::qtrc("appshell/welcome", "Tutorial: what’s different in Audacity 4?"),
+            muse::qtrc("appshell/welcome", "Video: find out what’s new in Audacity 4"),
             "qrc:/resources/welcomedialog/Audacity40Video.png",
-            muse::qtrc("appshell/welcome",
-                       "In this video, we walk you through the most important differences between version 3 and version 4."),
+            {},
             muse::qtrc("appshell/welcome", "Watch video"),
             [this]() {
                 platformInteractive()->openUrl(AU4_VIDEO_URL);
@@ -55,8 +55,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         {
             muse::qtrc("appshell/welcome", "Complete your Audacity cloud setup with Audio.com"),
             audiocomUrl,
-            muse::qtrc("appshell/welcome",
-                       "This integration allows you to save and access your Audacity projects on any device"),
+            {},
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
                 muse::actions::ActionQuery query("audacity://cloud/show-tour-page");
@@ -66,23 +65,30 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         {
             muse::qtrc("appshell/welcome", "Explore free plugins for sculpting your audio"),
             "qrc:/resources/welcomedialog/MuseHubPromo.jpg",
-            muse::qtrc("appshell/welcome",
-                       "There are tons of powerful plugins available that you can install for free on MuseHub"),
+            {},
             muse::qtrc("appshell/welcome", "View free plugins"),
             [this]() {
                 dispatcher()->dispatch("get-effects");
             }
         },
         {
-            muse::qtrc("appshell/welcome", "Get 25th anniversary merchandise!"),
-            "qrc:/resources/welcomedialog/Audacity_Merch_Store.png",
-            muse::qtrc("appshell/welcome",
-                       "A collection of merchandise that commemorates Audacity’s original appearance and branding"),
-            muse::qtrc("appshell/welcome", "Visit now"),
+            muse::qtrc("appshell/welcome", "Help us decide the future of Audacity"),
+            "qrc:/resources/welcomedialog/Audacity_Feature_Survey.png",
+            {},
+            muse::qtrc("appshell/welcome", "Take part in survey"),
             [this]() {
-                platformInteractive()->openUrl(SHOP_URL);
+                platformInteractive()->openUrl(FEATURE_SURVEY_URL);
             }
         },
+        {
+            muse::qtrc("appshell/welcome", "Soap Voice Cleaner: studio-quality voice-over sound"),
+            "qrc:/resources/welcomedialog/Soap_Voice_Cleaner.png",
+            {},
+            muse::qtrc("appshell/welcome", "Get it on MuseHub"),
+            [this]() {
+                platformInteractive()->openUrl(SOAP_VOICE_CLEANER_URL);
+            }
+        }
     };
 }
 
