@@ -21,6 +21,8 @@
  */
 #include "applicationactioncontroller.h"
 
+#include "framework/ui/navigationcommands.h"
+
 #include <algorithm>
 
 #include <QApplication>
@@ -513,6 +515,7 @@ void ApplicationActionController::doGlobalCancel()
     }
 
     dispatcher()->dispatch("nav-escape");
+    commandDispatcher()->dispatch(muse::ui::ESCAPE_COMMAND);
 }
 
 void ApplicationActionController::doGlobalTrigger()
@@ -520,6 +523,6 @@ void ApplicationActionController::doGlobalTrigger()
     if (isProjectOpened()) {
         dispatcher()->dispatch("action://playback/play");
     } else {
-        dispatcher()->dispatch("nav-trigger-control");
+        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
     }
 }

@@ -6,6 +6,8 @@
 #include "../internal/tracknavigationcontroller.h"
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
+#include "framework/ui/navigationcommands.h"
+#include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "mocks/navigationcontrollermock.h"
 #include "mocks/selectioncontrollermock.h"
@@ -34,6 +36,7 @@ public:
     void SetUp() override
     {
         m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
@@ -45,6 +48,14 @@ public:
 
         //! NOTE Inject mock dependencies directly via friend access
         m_controller->dispatcher.set(m_dispatcher);
+        m_controller->commandDispatcher.set(m_commandDispatcher);
+
+        ON_CALL(*m_commandDispatcher, dispatch(_))
+        .WillByDefault([](const muse::rcommand::Request& request) {
+            return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
+                return resolve(muse::rcommand::make_response(request, muse::make_ok()));
+            });
+        });
         m_controller->navigationController.set(m_navigationController);
         m_controller->globalContext.set(m_globalContext);
         m_controller->selectionController.set(m_selectionController);
@@ -91,6 +102,7 @@ public:
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackNavigationController> m_controller;
     std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
+    std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<muse::ui::NavigationControllerMock> m_navigationController;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
@@ -202,7 +214,9 @@ TEST_F(TrackNavigationControllerTests, TabNavigatesToNextPanelWhenNoItems)
     m_controller->setFocusedTrack(1);
 
     //! [EXPECT] Framework panel navigation is dispatched
-    EXPECT_CALL(*m_dispatcher, dispatch(muse::actions::ActionCode("nav-next-panel"))).Times(1);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Truly([](const muse::rcommand::Request& request) {
+        return request.query.uri() == muse::ui::NEXT_PANEL_COMMAND;
+    }))).Times(1);
 
     //! [WHEN] Tab is pressed (track-view-next-panel is dispatched by shortcut system)
     invokeAction("track-view-next-panel");
