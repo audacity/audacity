@@ -356,6 +356,10 @@ muse::Ret Au3Record::start()
     // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
     const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
 
+    if (audioDriverController()->inputDevices().empty() || audioDriverController()->inputChannelsAvailable() <= 0) {
+        return make_ret(Err::NoRecordingDevice);
+    }
+
     Au3Project& project = projectRef();
 
     double t0 = playbackState()->playbackPosition();

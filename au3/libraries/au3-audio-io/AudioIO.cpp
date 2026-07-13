@@ -569,7 +569,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         const PaDeviceInfo* playbackDeviceInfo;
         playbackDeviceInfo = Pa_GetDeviceInfo(playbackParameters.device);
 
-        if (playbackDeviceInfo == NULL) {
+        if (playbackDeviceInfo == NULL || playbackDeviceInfo->maxOutputChannels <= 0) {
+            mLastPaError = paInvalidDevice;
             return false;
         }
 
@@ -621,7 +622,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         captureDeviceInfo = Pa_GetDeviceInfo(captureParameters.device);
 
-        if (captureDeviceInfo == NULL) {
+        if (captureDeviceInfo == NULL || captureDeviceInfo->maxInputChannels <= 0) {
+            mLastPaError = paInvalidDevice;
             return false;
         }
 

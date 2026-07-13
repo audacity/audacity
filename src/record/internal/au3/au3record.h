@@ -16,11 +16,11 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
 #include "audio/iaudioengine.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "au3wrap/au3types.h"
 
 #include "../../irecord.h"
 #include "../../irecordconfiguration.h"
-#include "irecordcontroller.h"
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
@@ -30,6 +30,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
