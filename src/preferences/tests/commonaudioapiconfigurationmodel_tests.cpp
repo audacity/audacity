@@ -52,7 +52,10 @@ public:
         .WillByDefault(Return(std::vector<std::string> { "JACK Out 1", "JACK Out 2" }));
         ON_CALL(*m_controller, inputDevices("JACK"))
         .WillByDefault(Return(std::vector<std::string> { "JACK In" }));
-        ON_CALL(*m_controller, inputChannelsAvailable("JACK", "JACK In")).WillByDefault(Return(4));
+        ON_CALL(*m_controller, inputChannelsAvailable("JACK", audio::AudioDeviceSelection { "JACK In" }))
+        .WillByDefault(Return(4));
+        ON_CALL(*m_controller, inputChannelsAvailable("JACK", audio::AudioDeviceSelection {}))
+        .WillByDefault(Return(4));
         ON_CALL(*m_controller, sampleRates())
         .WillByDefault(Return(std::vector<uint64_t> { 44100, 48000 }));
 
@@ -146,8 +149,10 @@ TEST_F(CommonAudioApiConfigurationModelTests, ApiEdit_PreviewsTheSelectedApisDev
     m_model->setCurrentAudioApiIndex(1);
 
     EXPECT_EQ(m_model->currentAudioApiIndex(), 1);
-    EXPECT_EQ(m_model->currentOutputDeviceId(), "JACK Out 1");
-    EXPECT_EQ(m_model->currentInputDeviceId(), "JACK In");
+    // The applied devices do not exist under JACK, so both fall back to the system default.
+    EXPECT_EQ(m_model->currentOutputDeviceId(), "System default");
+    EXPECT_EQ(m_model->currentInputDeviceId(), "System default");
+    EXPECT_EQ(m_model->outputDeviceList().size(), 3);
     EXPECT_EQ(m_model->inputChannelsList().size(), 4);
 }
 

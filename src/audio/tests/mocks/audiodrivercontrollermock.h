@@ -20,7 +20,7 @@ public:
     MOCK_METHOD(std::vector<std::string>, inputDevices, (), (const, override));
     MOCK_METHOD(std::vector<std::string>, inputDevices, (const std::string&), (const, override));
     MOCK_METHOD(int, inputChannelsAvailable, (), (const, override));
-    MOCK_METHOD(int, inputChannelsAvailable, (const std::string&, const std::string&), (const, override));
+    MOCK_METHOD(int, inputChannelsAvailable, (const std::string&, const AudioDeviceSelection&), (const, override));
     MOCK_METHOD(std::vector<uint64_t>, sampleRates, (), (const, override));
     MOCK_METHOD(std::vector<std::string>, sampleFormats, (), (const, override));
 

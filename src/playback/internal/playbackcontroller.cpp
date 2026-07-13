@@ -856,34 +856,42 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("device_index")) {
-        return;
-    }
-
-    const int index = q.param("device_index").toInt();
-    const auto values = audioDriverController()->outputDevices();
-    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-        return;
-    }
     AudioConfigurationChange change;
-    change.outputDevice = values[index];
+    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+        change.outputDevice = AudioDeviceSelection {};
+    } else {
+        IF_ASSERT_FAILED(q.contains("device_index")) {
+            return;
+        }
+
+        const int index = q.param("device_index").toInt();
+        const auto values = audioDriverController()->outputDevices();
+        if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+            return;
+        }
+        change.outputDevice = values[index];
+    }
     handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
                                    PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString());
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("device_index")) {
-        return;
-    }
-
-    const int index = q.param("device_index").toInt();
-    const auto values = audioDriverController()->inputDevices();
-    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-        return;
-    }
     AudioConfigurationChange change;
-    change.inputDevice = values[index];
+    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+        change.inputDevice = AudioDeviceSelection {};
+    } else {
+        IF_ASSERT_FAILED(q.contains("device_index")) {
+            return;
+        }
+
+        const int index = q.param("device_index").toInt();
+        const auto values = audioDriverController()->inputDevices();
+        if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+            return;
+        }
+        change.inputDevice = values[index];
+    }
     handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
                                    PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
 }

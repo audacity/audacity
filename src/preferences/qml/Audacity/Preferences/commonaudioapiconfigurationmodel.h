@@ -160,8 +160,8 @@ signals:
 
 private:
     std::string effectiveApi() const;
-    std::string effectiveOutputDevice() const;
-    std::string effectiveInputDevice() const;
+    audio::AudioDeviceSelection effectiveOutputDevice() const;
+    audio::AudioDeviceSelection effectiveInputDevice() const;
     int effectiveInputChannelsAvailable() const;
     int effectiveInputChannels() const;
     void setPendingSampleRate(uint64_t rateValue);

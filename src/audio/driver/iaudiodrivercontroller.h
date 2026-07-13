@@ -32,7 +32,7 @@ public:
     virtual std::vector<std::string> inputDevices() const = 0;
     virtual std::vector<std::string> inputDevices(const std::string& api) const = 0;
     virtual int inputChannelsAvailable() const = 0;
-    virtual int inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const = 0;
+    virtual int inputChannelsAvailable(const std::string& api, const AudioDeviceSelection& inputDevice) const = 0;
     virtual std::vector<uint64_t> sampleRates() const = 0;
     virtual std::vector<std::string> sampleFormats() const = 0;
 

@@ -30,7 +30,7 @@ public:
     std::vector<std::string> inputDevices() const override;
     std::vector<std::string> inputDevices(const std::string& api) const override;
     int inputChannelsAvailable() const override;
-    int inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const override;
+    int inputChannelsAvailable(const std::string& api, const audio::AudioDeviceSelection& inputDevice) const override;
     std::vector<uint64_t> sampleRates() const override;
     std::vector<std::string> sampleFormats() const override;
 
@@ -46,7 +46,7 @@ private:
 
     void initDefaults();
     audio::AudioConfiguration configurationFromSettings() const;
-    void refreshInputDeviceSettings(const std::string& api, const std::string& inputDevice);
+    void refreshInputDeviceSettings(const std::string& api, const audio::AudioDeviceSelection& inputDevice);
 
     std::optional<audio::AudioConfiguration> normalizedConfiguration(
         const audio::AudioConfiguration& current, const audio::AudioConfigurationChange& change) const;
