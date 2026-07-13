@@ -1,0 +1,18 @@
+#
+# Audacity: A Digital Audio Editor
+#
+
+set(MODULE_TEST importer_tests)
+
+set(MODULE_TEST_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/legacyaupimporter_tests.cpp
+    )
+
+set(MODULE_TEST_LINK
+    importer
+    SndFile::sndfile
+    )
+
+set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
+
+include(SetupGTest)
