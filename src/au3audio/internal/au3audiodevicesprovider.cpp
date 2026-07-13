@@ -204,6 +204,11 @@ async::Notification Au3AudioDevicesProvider::inputDeviceChanged() const
     return m_audioInputDeviceChanged;
 }
 
+bool Au3AudioDevicesProvider::hasRecordingDevices() const
+{
+    return !m_inputDevices.empty() && m_inputChannelsAvailable > 0;
+}
+
 void Au3AudioDevicesProvider::handleDeviceChange()
 {
     if (audioEngine()) {

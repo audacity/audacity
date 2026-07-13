@@ -33,6 +33,7 @@ public:
     std::string currentInputDevice() const override;
     void setInputDevice(const std::string& device) override;
     muse::async::Notification inputDeviceChanged() const override;
+    bool hasRecordingDevices() const override;
 
     void handleDeviceChange() override;
 

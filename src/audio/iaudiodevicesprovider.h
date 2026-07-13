@@ -24,6 +24,7 @@ public:
     virtual std::string currentInputDevice() const = 0;
     virtual void setInputDevice(const std::string& device) = 0;
     virtual muse::async::Notification inputDeviceChanged() const = 0;
+    virtual bool hasRecordingDevices() const = 0;
 
     virtual std::vector<std::string> apis() const = 0;
     virtual std::string currentApi() const = 0;
