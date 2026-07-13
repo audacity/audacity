@@ -34,6 +34,7 @@
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/imainwindow.h"
+#include "framework/ui/inavigationcontroller.h"
 
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
@@ -61,6 +62,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<appshell::IStartupScenario> startupScenario { this };
     muse::ContextInject<project::IProjectFilesController> projectFilesController { this };
@@ -120,6 +122,7 @@ private:
     void doGlobalDelete();
     void doGlobalCancel();
     void doGlobalTrigger();
+    void doGlobalEnter();
 
     bool m_quiting = false;
 
