@@ -98,6 +98,8 @@ Item {
         KnobControl {
             id: knob
 
+            navigation.accessible.name: root.parameter["title"]
+
             value: warper.warpedValue
 
             anchors.horizontalCenter: parent.horizontalCenter
@@ -139,6 +141,8 @@ Item {
 
         IncrementalPropertyControl {
             id: textEdit
+
+            navigation.accessible.name: root.parameter["title"] + " " + currentValue
 
             anchors.horizontalCenter: parent.horizontalCenter
 

@@ -64,6 +64,7 @@ BaseSection {
             currentIndex: dropdown.indexOfValue(root.currentLanguageCode)
 
             navigation.name: "LanguagesBox"
+            navigation.accessible.name: qsTrc("preferences", "Language %1").arg(currentText)
             navigation.panel: root.navigation
             navigation.column: 1
 

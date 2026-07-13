@@ -50,6 +50,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.muxRate
 
+                    navigation.accessible.name: qsTrc("export", "Mux rate %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMuxRate(newValue)
                     }
@@ -87,6 +89,8 @@ ColumnLayout {
                     step: 1
 
                     currentValue: ffmpegPrefModel.packetSize
+
+                    navigation.accessible.name: qsTrc("export", "Packet size %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setPacketSize(newValue)

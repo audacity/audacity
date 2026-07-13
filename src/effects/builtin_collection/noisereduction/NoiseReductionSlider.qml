@@ -11,6 +11,7 @@ Row {
     property alias from: slider.from
     property alias to: slider.to
     property alias measureUnitsSymbol: textControl.measureUnitsSymbol
+    property string accessibleName: ""
 
     property var navigationPanel: null
     property int navigationOrderStart: 0
@@ -34,6 +35,7 @@ Row {
 
         navigation.panel: root.navigationPanel
         navigation.order: root.navigationOrderStart
+        navigation.accessible.name: root.accessibleName
 
         value: root.value
         onMoved: {
@@ -51,6 +53,7 @@ Row {
 
         navigation.panel: root.navigationPanel
         navigation.order: slider.navigation.order + 1
+        navigation.accessible.name: root.accessibleName + " " + currentValue + " " + measureUnitsSymbol
 
         decimals: root.isInt ? 0 : 2
         minValue: root.from

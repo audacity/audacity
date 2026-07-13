@@ -12,6 +12,8 @@ RowLayout {
 
     property string title: ""
     property string current: ""
+    property string toggleAccessibleName: title
+    property string dropdownAccessibleName: title
     property var model: null
 
     property bool isOptionEnabled: false
@@ -41,6 +43,7 @@ RowLayout {
 
         checked: root.isOptionEnabled
         visible: root.allowOptionToggle
+        navigation.accessible.name: root.toggleAccessibleName
 
         onClicked: function () {
             root.isOptionEnableChangeRequested(!optionCheckBox.checked)
@@ -64,8 +67,8 @@ RowLayout {
 
             name: "DropdownWithTitleItem"
             enabled: dropdown.enabled && dropdown.visible
-            accessible.role: MUAccessible.ListItem
-            accessible.name: labelItem.text
+            accessible.role: MUAccessible.Button
+            accessible.name: root.dropdownAccessibleName ? root.dropdownAccessibleName + ": " + root.current : root.current
 
             panel: optionCheckBox.navigation.panel
             row: optionCheckBox.navigation.row

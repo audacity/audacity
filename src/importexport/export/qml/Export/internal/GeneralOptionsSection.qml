@@ -48,6 +48,8 @@ ColumnLayout {
 
                     currentText: ffmpegPrefModel.language
 
+                    navigation.accessible.name: qsTrc("export", "Language")
+
                     onTextChanged: function (newTextValue) {
                         ffmpegPrefModel.setLanguage(newTextValue)
                     }
@@ -70,6 +72,8 @@ ColumnLayout {
                     implicitWidth: root.controlWidth
 
                     currentText: ffmpegPrefModel.tag
+
+                    navigation.accessible.name: qsTrc("export", "Tag")
 
                     onTextChanged: function (newTextValue) {
                         ffmpegPrefModel.setTag(newTextValue)
@@ -98,6 +102,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.quality
 
+                    navigation.accessible.name: qsTrc("export", "Quality %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setQuality(newValue)
                     }
@@ -125,6 +131,8 @@ ColumnLayout {
                     step: 1
 
                     currentValue: ffmpegPrefModel.cutoff
+
+                    navigation.accessible.name: qsTrc("export", "Cutoff %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setCutoff(newValue)
@@ -165,6 +173,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.bitrate
 
+                    navigation.accessible.name: qsTrc("export", "Bit rate %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setBitrate(newValue)
                     }
@@ -197,6 +207,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.sampleRate
 
+                    navigation.accessible.name: qsTrc("export", "Sample rate %1").arg(currentValue)
+
                     onValueEdited: function (newValue) {
                         ffmpegPrefModel.setSampleRate(newValue)
                     }
@@ -218,6 +230,8 @@ ColumnLayout {
                     model: ffmpegPrefModel.profileList
 
                     currentIndex: indexOfValue(ffmpegPrefModel.profile)
+
+                    navigation.accessible.name: qsTrc("export", "Profile %1").arg(currentText)
 
                     onActivated: function (index, value) {
                         ffmpegPrefModel.setProfile(value)

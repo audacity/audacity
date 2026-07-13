@@ -55,6 +55,7 @@ BaseSection {
             currentIndex: dropdown.indexOfValue(root.currentNumberFormatCode)
 
             navigation.name: "NumberFormatBox"
+            navigation.accessible.name: qsTrc("preferences", "Number format %1").arg(currentText)
             navigation.panel: root.navigation
             navigation.column: 1
 

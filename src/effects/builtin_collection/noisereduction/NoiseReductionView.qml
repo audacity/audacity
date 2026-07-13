@@ -152,6 +152,7 @@ BuiltinEffectBase {
 
                         navigationPanel: root.slidersNavigationPanel
                         navigationOrderStart: 0
+                        accessibleName: qsTrc("effects/noisereduction", "Noise reduction")
 
                         value: noiseReduction.reduction
                         onNewValueRequested: function (newValue) {
@@ -182,6 +183,7 @@ BuiltinEffectBase {
 
                         navigationPanel: root.slidersNavigationPanel
                         navigationOrderStart: reductionSlider.navigationOrderStart + 2
+                        accessibleName: qsTrc("effects/noisereduction", "Sensitivity")
 
                         value: noiseReduction.sensitivity
                         onNewValueRequested: function (newValue) {
@@ -211,6 +213,7 @@ BuiltinEffectBase {
 
                         navigationPanel: root.slidersNavigationPanel
                         navigationOrderStart: sensitivitySlider.navigationOrderStart + 2
+                        accessibleName: qsTrc("effects/noisereduction", "Frequency smoothing")
 
                         value: noiseReduction.frequencySmoothingBands
                         onNewValueRequested: function (newValue) {

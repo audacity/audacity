@@ -61,6 +61,9 @@ StyledDialogView {
                 minValue: 1
                 maxValue: 32
                 currentValue: customMappingModel.exportChannels
+
+                navigation.accessible.name: qsTrc("export", "Channel count %1").arg(currentValue)
+
                 onValueEdited: function (newValue) {
                     customMappingModel.exportChannels = newValue
                 }

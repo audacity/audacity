@@ -59,6 +59,7 @@ TrackItem {
                     navigation.panel: root.navigation.panel
                     navigation.order: root.extraControlsNavigationStart
                     navigation.enabled: !root.collapsed
+                    navigation.accessible.name: qsTrc("projectscene", "Pan")
 
                     onNewPanRequested: function (newValue, completed) {
                         if (Boolean(root.item)) {
@@ -75,6 +76,7 @@ TrackItem {
                     navigation.panel: root.navigation.panel
                     navigation.order: panKnob.navigation.order + 1
                     navigation.enabled: !root.collapsed
+                    navigation.accessible.name: qsTrc("projectscene", "Track volume")
 
                     onNewVolumeRequested: function (newValue, completed) {
                         if (Boolean(root.item)) {
@@ -99,6 +101,7 @@ TrackItem {
                 Layout.preferredHeight: 24
 
                 text: qsTrc("projectscene", "Effects")
+                toolTipDescription: qsTrc("projectscene", "Opens effects panel")
 
                 opacity: topRow.visible && root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
@@ -244,6 +247,8 @@ TrackItem {
 
                 navigation.panel: root.navigation.panel
                 navigation.order: root.headerTrailingControlsNavigationStart
+                navigation.accessible.name: qsTrc("projectscene", "Mute")
+                navigation.accessible.role: MUAccessible.CheckBox
 
                 onToggled: {
                     if (Boolean(root.item)) {
@@ -263,6 +268,8 @@ TrackItem {
 
                 navigation.panel: root.navigation.panel
                 navigation.order: muteButton.navigation.order + 1
+                navigation.accessible.name: qsTrc("projectscene", "Solo")
+                navigation.accessible.role: MUAccessible.CheckBox
 
                 onToggled: {
                     if (Boolean(root.item)) {

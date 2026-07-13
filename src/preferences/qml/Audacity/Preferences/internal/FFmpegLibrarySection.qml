@@ -41,6 +41,8 @@ BaseSection {
 
                 currentText: ffmpegPrefModel.ffmpegLibraryPath ?? qsTrc("preferences", "FFmpeg library not found")
 
+                navigation.accessible.name: qsTrc("preferences", "FFmpeg library path")
+
                 property var newLibPath
 
                 onTextEditingFinished: function (newTextValue) {
