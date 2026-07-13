@@ -630,6 +630,11 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
 {
+    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+        audioDevicesProvider()->setOutputDevice(std::nullopt);
+        return;
+    }
+
     IF_ASSERT_FAILED(q.contains("device_index")) {
         return;
     }
@@ -641,6 +646,11 @@ void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& 
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
 {
+    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+        audioDevicesProvider()->setInputDevice(std::nullopt);
+        return;
+    }
+
     IF_ASSERT_FAILED(q.contains("device_index")) {
         return;
     }

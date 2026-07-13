@@ -46,6 +46,11 @@ QString channelName(int channelNumber)
            ? muse::qtrc("preferences", "%1 (Stereo) Recording channels").arg(channelNumber)
            : QString::number(channelNumber);
 }
+
+QString systemDefaultDeviceName()
+{
+    return muse::qtrc("preferences", "System default");
+}
 }
 
 CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)
@@ -137,13 +142,21 @@ QStringList CommonAudioApiConfigurationModel::audioApiList() const
 
 QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
 {
-    return QString::fromStdString(audioDevicesProvider()->currentOutputDevice());
+    const std::optional<std::string> device = audioDevicesProvider()->currentOutputDevice();
+    if (!device.has_value()) {
+        return systemDefaultDeviceName();
+    }
+    return QString::fromStdString(device.value());
 }
 
 QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 {
     QVariantList result;
-    for (const auto& device : audioDevicesProvider()->outputDevices()) {
+    const auto& devices = audioDevicesProvider()->outputDevices();
+    if (!devices.empty()) {
+        result << systemDefaultDeviceName();
+    }
+    for (const auto& device : devices) {
         result << QString::fromStdString(device);
     }
 
@@ -155,18 +168,30 @@ void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& devic
     if (device == currentOutputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setOutputDevice(device.toStdString());
+    if (device == systemDefaultDeviceName()) {
+        audioDevicesProvider()->setOutputDevice(std::nullopt);
+    } else {
+        audioDevicesProvider()->setOutputDevice(device.toStdString());
+    }
 }
 
 QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
 {
-    return QString::fromStdString(audioDevicesProvider()->currentInputDevice());
+    const std::optional<std::string> device = audioDevicesProvider()->currentInputDevice();
+    if (!device.has_value()) {
+        return systemDefaultDeviceName();
+    }
+    return QString::fromStdString(device.value());
 }
 
 QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 {
     QVariantList result;
-    for (const auto& device : audioDevicesProvider()->inputDevices()) {
+    const auto& devices = audioDevicesProvider()->inputDevices();
+    if (!devices.empty()) {
+        result << systemDefaultDeviceName();
+    }
+    for (const auto& device : devices) {
         result << QString::fromStdString(device);
     }
 
@@ -178,7 +203,11 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device
     if (device == currentInputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setInputDevice(device.toStdString());
+    if (device == systemDefaultDeviceName()) {
+        audioDevicesProvider()->setInputDevice(std::nullopt);
+    } else {
+        audioDevicesProvider()->setInputDevice(device.toStdString());
+    }
 }
 
 double CommonAudioApiConfigurationModel::bufferLength() const

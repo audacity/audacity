@@ -743,13 +743,19 @@ int AudioIOBase::getPlayDevIndex(const wxString& devNameArg)
         devName = AudioIOPlaybackDevice.Read();
     }
 
+    wxString hostName = AudioIOHost.Read();
+
     if (!devName.empty()) {
-        wxString hostName = AudioIOHost.Read();
         int deviceIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(hostName.ToStdString(wxConvUTF8), devName.ToStdString(
                                                                                 wxConvUTF8));
         if (deviceIndex >= 0) {
             return deviceIndex;
         }
+    }
+
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(hostName.ToStdString(wxConvUTF8));
+    if (const DeviceSourceMap* defaultDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex)) {
+        return defaultDevice->deviceIndex;
     }
 
     // Use the default output device.
@@ -780,13 +786,19 @@ int AudioIOBase::getRecordDevIndex(const wxString& devNameArg)
         devName = AudioIORecordingDevice.Read();
     }
 
+    wxString hostName = AudioIOHost.Read();
+
     if (!devName.empty()) {
-        wxString hostName = AudioIOHost.Read();
         int deviceIndex = DeviceManager::Instance()->GetInputDevicePaIndex(
             hostName.ToStdString(wxConvUTF8), devName.ToStdString(wxConvUTF8));
         if (deviceIndex >= 0) {
             return deviceIndex;
         }
+    }
+
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(hostName.ToStdString(wxConvUTF8));
+    if (const DeviceSourceMap* defaultDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex)) {
+        return defaultDevice->deviceIndex;
     }
 
     // Use the default input device

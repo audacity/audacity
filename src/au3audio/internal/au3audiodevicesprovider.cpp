@@ -22,24 +22,25 @@ using namespace muse;
 using namespace au::au3;
 using namespace au::au3audio;
 
-static const muse::Settings::Key AUDIO_HOST("au3audio", "AudioIO/Host");
-static const muse::Settings::Key PLAYBACK_DEVICE("au3audio", "AudioIO/PlaybackDevice");
-static const muse::Settings::Key RECORDING_DEVICE("au3audio", "AudioIO/RecordingDevice");
-static const muse::Settings::Key INPUT_CHANNELS("au3audio", "AudioIO/RecordChannels");
+namespace {
+const muse::Settings::Key AUDIO_HOST("au3audio", "AudioIO/Host");
+const muse::Settings::Key PLAYBACK_DEVICE("au3audio", "AudioIO/PlaybackDevice");
+const muse::Settings::Key RECORDING_DEVICE("au3audio", "AudioIO/RecordingDevice");
+const muse::Settings::Key INPUT_CHANNELS("au3audio", "AudioIO/RecordChannels");
 
-static const muse::Settings::Key AUTOMATIC_LATENCY_COMPENSATION("au3audio", "AudioIO/AutomaticLatencyCompensation");
-static const muse::Settings::Key LATENCY_DURATION("au3audio", "AudioIO/LatencyDuration");
-static const muse::Settings::Key LATENCY_COMPENSATION("au3audio", "AudioIO/LatencyCompensation");
+const muse::Settings::Key AUTOMATIC_LATENCY_COMPENSATION("au3audio", "AudioIO/AutomaticLatencyCompensation");
+const muse::Settings::Key LATENCY_DURATION("au3audio", "AudioIO/LatencyDuration");
+const muse::Settings::Key LATENCY_COMPENSATION("au3audio", "AudioIO/LatencyCompensation");
 
-static const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_RATE("au3audio", "SamplingRate/DefaultProjectSampleRate");
-static const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_FORMAT("au3audio", "SamplingRate/DefaultProjectSampleFormatChoice");
+const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_RATE("au3audio", "SamplingRate/DefaultProjectSampleRate");
+const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_FORMAT("au3audio", "SamplingRate/DefaultProjectSampleFormatChoice");
 
-static const muse::Settings::Key RECORDING_SOURCE("au3audio", "AudioIO/RecordingSource");
-static const muse::Settings::Key RECORDING_SOURCE_INDEX("au3audio", "AudioIO/RecordingSourceIndex");
+const muse::Settings::Key RECORDING_SOURCE("au3audio", "AudioIO/RecordingSource");
+const muse::Settings::Key RECORDING_SOURCE_INDEX("au3audio", "AudioIO/RecordingSourceIndex");
 
-static const muse::Settings::Key ASIO_USE_DEVICE_SAMPLE_RATE("au3audio", "AudioIO/ASIO/UseDeviceSampleRate");
+const muse::Settings::Key ASIO_USE_DEVICE_SAMPLE_RATE("au3audio", "AudioIO/ASIO/UseDeviceSampleRate");
 
-static std::string getPreferredAudioHost(const std::vector<std::string>& hosts)
+std::string getPreferredAudioHost(const std::vector<std::string>& hosts)
 {
     if (hosts.empty()) {
         return "";
@@ -66,6 +67,7 @@ static std::string getPreferredAudioHost(const std::vector<std::string>& hosts)
 
     return hosts.front();
 }
+}
 
 void Au3AudioDevicesProvider::init()
 {
@@ -77,14 +79,8 @@ void Au3AudioDevicesProvider::init()
         muse::settings()->setLocalValue(AUDIO_HOST, muse::Val(getPreferredAudioHost(m_audioApis)));
     }
 
-    const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
-    const auto inputDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
-    const auto outputDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
-    auto inputMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    auto outputMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
-
-    muse::settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(MakeDeviceSourceString(outputDevice, outputMaps)));
-    muse::settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(MakeDeviceSourceString(inputDevice, inputMaps)));
+    muse::settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(std::string()));
+    muse::settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(std::string()));
 
     muse::settings()->setDefaultValue(INPUT_CHANNELS, muse::Val(1));
     muse::settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
@@ -157,19 +153,21 @@ std::vector<std::string> Au3AudioDevicesProvider::outputDevices() const
     return m_outputDevices;
 }
 
-std::string Au3AudioDevicesProvider::currentOutputDevice() const
+std::optional<std::string> Au3AudioDevicesProvider::currentOutputDevice() const
 {
-    return muse::settings()->value(PLAYBACK_DEVICE).toString();
+    const std::string device = muse::settings()->value(PLAYBACK_DEVICE).toString();
+    if (device.empty()) {
+        return std::nullopt;
+    }
+    return device;
 }
 
-void Au3AudioDevicesProvider::setOutputDevice(const std::string& device)
+void Au3AudioDevicesProvider::setOutputDevice(const std::optional<std::string>& device)
 {
-    if (muse::contains(m_outputDevices, device)) {
-        muse::settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(device));
-    } else if (!m_outputDevices.empty()) {
-        muse::settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(m_outputDevices.front()));
+    if (device.has_value() && muse::contains(m_outputDevices, device.value())) {
+        muse::settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(device.value()));
     } else {
-        muse::settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val());
+        muse::settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(std::string()));
     }
 }
 
@@ -183,19 +181,21 @@ std::vector<std::string> Au3AudioDevicesProvider::inputDevices() const
     return m_inputDevices;
 }
 
-std::string Au3AudioDevicesProvider::currentInputDevice() const
+std::optional<std::string> Au3AudioDevicesProvider::currentInputDevice() const
 {
-    return muse::settings()->value(RECORDING_DEVICE).toString();
+    const std::string device = muse::settings()->value(RECORDING_DEVICE).toString();
+    if (device.empty()) {
+        return std::nullopt;
+    }
+    return device;
 }
 
-void Au3AudioDevicesProvider::setInputDevice(const std::string& device)
+void Au3AudioDevicesProvider::setInputDevice(const std::optional<std::string>& device)
 {
-    if (muse::contains(m_inputDevices, device)) {
-        muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(device));
-    } else if (!m_inputDevices.empty()) {
-        muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(m_inputDevices.front()));
+    if (device.has_value() && muse::contains(m_inputDevices, device.value())) {
+        muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(device.value()));
     } else {
-        muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val());
+        muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(std::string()));
     }
 }
 
@@ -297,9 +297,19 @@ muse::async::Notification Au3AudioDevicesProvider::asioUseDeviceSampleRateChange
 
 void Au3AudioDevicesProvider::showAsioControlPanel()
 {
-    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(currentApi(), currentOutputDevice());
+    std::string outputDevice = muse::settings()->value(PLAYBACK_DEVICE).toString();
+    if (outputDevice.empty()) {
+        outputDevice = systemDefaultOutputDevice();
+    }
+
+    std::string inputDevice = muse::settings()->value(RECORDING_DEVICE).toString();
+    if (inputDevice.empty()) {
+        inputDevice = systemDefaultInputDevice();
+    }
+
+    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(currentApi(), outputDevice);
     if (paIndex < 0) {
-        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(currentApi(), currentInputDevice());
+        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(currentApi(), inputDevice);
     }
 
     if (paIndex < 0) {
@@ -432,7 +442,10 @@ void Au3AudioDevicesProvider::initInputChannels()
 {
     const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
     const std::string host = currentApi();
-    const std::string inputDevice = currentInputDevice();
+    std::string inputDevice = muse::settings()->value(RECORDING_DEVICE).toString();
+    if (inputDevice.empty() || !muse::contains(m_inputDevices, inputDevice)) {
+        inputDevice = systemDefaultInputDevice();
+    }
 
     for (const auto& device : inMaps) {
         if (device.hostString != host) {
@@ -467,9 +480,6 @@ void Au3AudioDevicesProvider::updateInputOutputDevices()
         }
         m_outputDevices.push_back(MakeDeviceSourceString(&device, outputDevices));
     }
-
-    setInputDevice(defaultInputDevice());
-    setOutputDevice(defaultOutputDevice());
 }
 
 void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
@@ -479,15 +489,20 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
 
     int prevInputChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
 
+    const bool useSystemDefault = newDevice.empty();
+    const std::string effectiveDevice = useSystemDefault ? systemDefaultInputDevice() : newDevice;
+
     for (const auto& device : inMaps) {
         const auto deviceName = MakeDeviceSourceString(&device, inMaps);
-        if (device.hostString != host || deviceName != newDevice) {
+        if (device.hostString != host || deviceName != effectiveDevice) {
             continue;
         }
 
         DeviceManager::Instance()->UpdateAsioDeviceCaps(device.deviceIndex);
 
-        muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(newDevice));
+        if (!useSystemDefault) {
+            muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(newDevice));
+        }
         muse::settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device.sourceIndex));
 
         if (device.totalSources >= 1) {
@@ -505,14 +520,18 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
     }
 }
 
-std::string Au3AudioDevicesProvider::defaultOutputDevice()
+std::string Au3AudioDevicesProvider::systemDefaultOutputDevice() const
 {
-    return muse::settings()->value(PLAYBACK_DEVICE).toString();
+    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
+    return MakeDeviceSourceString(DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex), outMaps);
 }
 
-std::string Au3AudioDevicesProvider::defaultInputDevice()
+std::string Au3AudioDevicesProvider::systemDefaultInputDevice() const
 {
-    return muse::settings()->value(RECORDING_DEVICE).toString();
+    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
+    return MakeDeviceSourceString(DeviceManager::Instance()->GetDefaultInputDevice(hostIndex), inMaps);
 }
 
 void Au3AudioDevicesProvider::rescan()
