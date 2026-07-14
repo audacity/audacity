@@ -26,8 +26,8 @@ FocusScope {
         name: root.objectName !== "" ? root.objectName : "EditableLabel"
         enabled: root.enabled && root.visible && !loader.isEditState
 
-        accessible.role: MUAccessible.Information
-        accessible.name: root.text
+        accessible.role: MUAccessible.EditableText
+        accessible.name: qsTrc("projectscene", "Track name: %1").arg(root.text)
         accessible.visualItem: root
 
         onTriggered: {

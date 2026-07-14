@@ -58,6 +58,7 @@ Item {
             Layout.rightMargin: 6
 
             icon: IconCode.AUDIO
+            toolTipTitle: qsTrc("playback", "Playback meter settings")
             accentButton: popup.isOpened
 
             onClicked: {
@@ -131,6 +132,7 @@ Item {
                 navigation.panel: root.navigation.panel
                 navigation.row: root.navigation.row
                 navigation.column: root.navigation.column + 1
+                navigation.accessible.name: qsTrc("playback", "Playback volume")
 
                 onVolumeLevelMoved: function (level) {
                     leftVolumePressure.reset()

@@ -153,6 +153,7 @@ StyledPopupView {
 
                     navigation.panel: navPanel
                     navigation.order: 1
+                    navigation.accessible.name: qsTrc("record", "Recording level")
 
                     onVolumeLevelMoved: function (level) {
                         root.volumeLevelChangeRequested(Math.round(level * 100) / 100)

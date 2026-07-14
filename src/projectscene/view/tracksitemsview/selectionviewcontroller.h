@@ -66,6 +66,7 @@ public:
     Q_INVOKABLE void updateSelectionVerticalResize(double y, bool completed);
     Q_INVOKABLE void cancelSpectrogramEdit();
 
+    Q_INVOKABLE void cancelSelectionGesture();
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);
 

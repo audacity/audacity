@@ -86,6 +86,7 @@ RowLayout {
         navigation.panel: root.navigationPanel
         navigation.order: root.navigationOrder
         navigation.name: "preset dropdown"
+        navigation.accessible.name: qsTrc("effects", "Select preset")
 
         Layout.fillWidth: true
         background.color: ui.theme.backgroundPrimaryColor
@@ -158,6 +159,7 @@ RowLayout {
         navigation.panel: root.navigationPanel
         navigation.order: presetSelector.navigation.order + 1
         navigation.name: "save preset btn"
+        toolTipTitle: qsTrc("effects", "Save preset")
 
         Layout.alignment: Qt.AlignVCenter
         icon: IconCode.SAVE
@@ -173,6 +175,7 @@ RowLayout {
         navigation.panel: root.navigationPanel
         navigation.order: saveBtn.navigation.order + 1
         navigation.name: "reset preset btn"
+        toolTipTitle: qsTrc("effects", "Reset preset")
 
         Layout.alignment: Qt.AlignVCenter
 
@@ -190,6 +193,7 @@ RowLayout {
         navigation.panel: root.navigationPanel
         navigation.order: resetBtn.navigation.order + 1
         navigation.name: "delete preset btn"
+        toolTipTitle: qsTrc("effects", "Delete preset")
 
         Layout.alignment: Qt.AlignVCenter
 
@@ -207,6 +211,7 @@ RowLayout {
         navigation.panel: root.navigationPanel
         navigation.order: deleteBtn.navigation.order + 1
         navigation.name: "manage preset btn"
+        toolTipTitle: qsTrc("effects", "Preset options")
 
         Layout.alignment: Qt.AlignVCenter
 

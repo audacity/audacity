@@ -56,6 +56,8 @@ Item {
             KnobControl {
                 id: knob
 
+                navigation.accessible.name: root.parameter["title"]
+
                 onNewValueRequested: function (value) {
                     root.newValueRequested(root.parameter["key"], value)
                 }
@@ -84,6 +86,8 @@ Item {
 
             IncrementalPropertyControl {
                 id: textEdit
+
+                navigation.accessible.name: root.parameter["title"] + " " + currentValue
 
                 width: 80
 

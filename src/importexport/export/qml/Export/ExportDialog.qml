@@ -529,6 +529,7 @@ StyledDialogView {
                             property var option: ({
                                     index: model.index,
                                     type: model.type,
+                                    title: model.title,
                                     value: model.value,
                                     values: model.values,
                                     names: model.names,
@@ -697,6 +698,7 @@ StyledDialogView {
 
             navigation.panel: audioSection.navigation
             navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
+            navigation.accessible.name: option.title + " " + currentText
 
             onActivated: function (index, value) {
                 dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0), option.values[index], ExportOptionType.ValueRole)
@@ -713,6 +715,7 @@ StyledDialogView {
 
             navigation.panel: audioSection.navigation
             navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
+            navigation.accessible.name: option.title
 
             onClicked: dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0), checked, ExportOptionType.ValueRole)
         }
@@ -744,6 +747,8 @@ StyledDialogView {
             value: Number(dynamicOptionsModel.data(dynamicOptionsModel.index(option.index, 0), ExportOptionType.ValueRole))
             onValueChanged: dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0), Math.round(option.value), ExportOptionType.ValueRole)
             Layout.minimumWidth: 180
+
+            navigation.accessible.name: option.title
         }
     }
 
@@ -761,6 +766,7 @@ StyledDialogView {
 
             navigation.panel: audioSection.navigation
             navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
+            navigation.accessible.name: option.title + " " + currentValue
 
             onValueEdited: function (newValue) {
                 dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0), newValue, ExportOptionType.ValueRole)

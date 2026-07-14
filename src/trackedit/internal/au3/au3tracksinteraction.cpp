@@ -727,7 +727,6 @@ bool Au3TracksInteraction::newMonoTrack()
     selectionController()->setSelectedTracks({ trackId });
     trackNavigationController()->setFocusedTrack(trackId);
 
-    projectHistory()->pushHistoryState("Created new mono track", "New Mono Track");
     return true;
 }
 
@@ -737,7 +736,6 @@ bool Au3TracksInteraction::newStereoTrack()
     selectionController()->setSelectedTracks({ trackId });
     trackNavigationController()->setFocusedTrack(trackId);
 
-    projectHistory()->pushHistoryState("Created new stereo track", "New Stereo Track");
     return true;
 }
 
@@ -761,8 +759,9 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
     auto& tracks = Au3TrackList::Get(project);
 
     TrackId focusedTrack = trackNavigationController()->focusedTrack();
-
     const auto prj = globalContext()->currentTrackeditProject();
+    const auto indexFocusedTrack = muse::indexOf(prj->trackIdList(), focusedTrack);
+
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
         IF_ASSERT_FAILED(au3Track) {
@@ -778,9 +777,25 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
         prj->notifyAboutTrackRemoved(track);
     }
 
-    if (muse::contains(trackIds, focusedTrack)) {
-        const auto notRemovedTracks = prj->trackIdList();
-        trackNavigationController()->setFocusedTrack(notRemovedTracks.empty() ? -1 : notRemovedTracks.front());
+    if (!muse::contains(trackIds, focusedTrack)) {
+        return true;
+    }
+
+    if (indexFocusedTrack == muse::nidx) {
+        return true;
+    }
+
+    const auto notRemovedTracks = prj->trackIdList();
+    if (notRemovedTracks.empty()) {
+        trackNavigationController()->setFocusedTrack(-1);
+        return true;
+    }
+
+    const auto maxIndex = notRemovedTracks.size() - 1;
+    if (maxIndex < indexFocusedTrack) {
+        trackNavigationController()->setFocusedTrack(notRemovedTracks.back());
+    } else {
+        trackNavigationController()->setFocusedTrack(notRemovedTracks[indexFocusedTrack]);
     }
 
     return true;
@@ -789,8 +804,7 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
 bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
 {
     if (trackIds.empty()) {
-        projectHistory()->pushHistoryState("Duplicated tracks", "Duplicate Tracks");
-        return true;
+        return false;
     }
 
     auto& project = projectRef();

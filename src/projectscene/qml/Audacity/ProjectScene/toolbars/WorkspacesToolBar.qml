@@ -18,7 +18,7 @@ StyledToolBarView {
     property bool isCompactMode: false
 
     navigationPanel.name: "WorkspacesToolBar"
-    navigationPanel.accessible.name: qsTrc("projectscene", "Workspaces toolbar")
+    navigationPanel.accessible.name: qsTrc("projectscene", "Workspace selection")
 
     spacing: 0
     rowHeight: 28

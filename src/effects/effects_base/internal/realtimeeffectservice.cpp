@@ -218,6 +218,10 @@ std::optional<std::string> RealtimeEffectService::effectTrackName(const Realtime
 
 std::optional<std::vector<RealtimeEffectStatePtr> > RealtimeEffectService::effectStack(TrackId trackId) const
 {
+    if (m_rtEffectSubscriptions.count(trackId) == 0) {
+        return {};
+    }
+
     const auto data = utils::utilData(globalContext()->currentProject(), trackId);
     if (!data) {
         return {};

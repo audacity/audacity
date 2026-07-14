@@ -84,6 +84,7 @@ Slider {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Range
+        accessible.name: qsTrc("playback", "Volume")
         accessible.visualItem: root
 
         accessible.value: root.readableVolumeLevel

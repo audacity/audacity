@@ -46,6 +46,7 @@ BaseSection {
         currentIndex: dropdown.indexOfValue(root.currentKeyboardLayout)
 
         navigation.name: "LanguagesBox"
+        navigation.accessible.name: qsTrc("appshell/preferences", "Keyboard layout %1").arg(currentText)
         navigation.panel: root.navigation
         navigation.order: 1
 

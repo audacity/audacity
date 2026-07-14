@@ -622,15 +622,16 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
             return;
         }
 
-        //! When an explicit snapshot is requested, skip the local fast-path:
-        //! the local copy reflects whichever snapshot was last synced, which
-        //! may not be the one the URL is asking for.
+        //! Reuse the local copy only when the project file is present on disk and
+        //! no explicit snapshot is requested; otherwise fall through to OpenFromCloud.
         auto cancelCheck = [progress](double) -> bool { return !progress->isCanceled(); };
-        if (!forceOverwrite && snapshotId.empty()
-            && self->isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
+        if (!forceOverwrite && snapshotId.empty() && dbProjectData.has_value()) {
             const auto normalizedLocalPath = muse::io::Dir::fromNativeSeparators(muse::io::path_t(dbProjectData->LocalPath));
-            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(normalizedLocalPath))));
-            return;
+            if (self->filesystem()->exists(normalizedLocalPath)
+                && self->isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
+                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(normalizedLocalPath)));
+                return;
+            }
         }
 
         const auto syncMode = forceOverwrite

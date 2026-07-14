@@ -249,9 +249,12 @@ ListItemBlank {
             accentButton: root.innerGripReorderActive
             accentColor: ui.theme.accentColor
             iconColor: root.innerGripReorderActive ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
+            toolTipTitle: qsTrc("projectscene", "Reorder effect")
+
             mouseArea.cursorShape: Qt.SizeAllCursor
             navigation.panel: root.innerNavigationPanel
             navigation.order: 0
+            navigation.name: "grip handle - " + prv.title
 
             mouseArea.drag.target: content
             mouseArea.drag.axis: Drag.YAxis
@@ -295,6 +298,7 @@ ListItemBlank {
             navigation.panel: root.innerNavigationPanel
             navigation.order: gripButton.navigation.order + 1
             navigation.name: "panel bypass btn - " + prv.title
+            toolTipTitle: qsTrc("projectscene", "Bypass %1").arg(prv.title)
 
             isMasterEffect: item && item.isMasterEffect
             accentButton: item && item.isActive
@@ -313,6 +317,7 @@ ListItemBlank {
             navigation.panel: root.innerNavigationPanel
             navigation.order: bypassButton.navigation.order + 1
             navigation.name: "show ui btn - " + prv.title
+            toolTipTitle: qsTrc("projectscene", "Open %1").arg(prv.title)
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -353,6 +358,7 @@ ListItemBlank {
             navigation.panel: root.innerNavigationPanel
             navigation.order: effectNameButton.navigation.order + 1
             navigation.name: "replace btn - " + prv.title
+            toolTipTitle: qsTrc("projectscene", "Replace %1").arg(prv.title)
 
             Layout.fillHeight: true
             Layout.preferredWidth: height
