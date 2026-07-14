@@ -38,10 +38,10 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
 
-    Q_PROPERTY(QString currentOutputDeviceId READ currentOutputDeviceId NOTIFY currentOutputDeviceIdChanged)
+    Q_PROPERTY(int currentOutputDeviceIndex READ currentOutputDeviceIndex NOTIFY currentOutputDeviceIndexChanged)
     Q_PROPERTY(QVariantList outputDeviceList READ outputDeviceList NOTIFY outputDeviceListChanged)
 
-    Q_PROPERTY(QString currentInputDeviceId READ currentInputDeviceId NOTIFY currentInputDeviceIdChanged)
+    Q_PROPERTY(int currentInputDeviceIndex READ currentInputDeviceIndex NOTIFY currentInputDeviceIndexChanged)
     Q_PROPERTY(QVariantList inputDeviceList READ inputDeviceList NOTIFY inputDeviceListChanged)
 
     Q_PROPERTY(double bufferLength READ bufferLength NOTIFY bufferLengthChanged)
@@ -77,13 +77,13 @@ public:
     Q_INVOKABLE QStringList audioApiList() const;
     Q_INVOKABLE void setCurrentAudioApiIndex(int index);
 
-    QString currentOutputDeviceId() const;
+    int currentOutputDeviceIndex() const;
     QVariantList outputDeviceList() const;
-    Q_INVOKABLE void outputDeviceSelected(const QString& device);
+    Q_INVOKABLE void outputDeviceSelected(int index);
 
-    QString currentInputDeviceId() const;
+    int currentInputDeviceIndex() const;
     QVariantList inputDeviceList() const;
-    Q_INVOKABLE void inputDeviceSelected(const QString& device);
+    Q_INVOKABLE void inputDeviceSelected(int index);
 
     double bufferLength() const;
     Q_INVOKABLE void bufferLengthSelected(const QString& bufferLengthStr);
@@ -125,10 +125,10 @@ public:
 signals:
     void currentAudioApiIndexChanged();
 
-    void currentOutputDeviceIdChanged();
+    void currentOutputDeviceIndexChanged();
     void outputDeviceListChanged();
 
-    void currentInputDeviceIdChanged();
+    void currentInputDeviceIndexChanged();
     void inputDeviceListChanged();
 
     void bufferLengthChanged();

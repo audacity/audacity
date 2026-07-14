@@ -79,7 +79,7 @@ BaseSection {
 
                 enabled: !playbackState.isPlaying
 
-                currentIndex: indexOfValue(apiModel.currentInputDeviceId)
+                currentIndex: apiModel.currentInputDeviceIndex
                 model: apiModel.inputDeviceList
 
                 navigation.name: "RecordingDeviceBox"
@@ -88,7 +88,7 @@ BaseSection {
                 navigation.column: 0
 
                 onValueEdited: function (newIndex, newValue) {
-                    apiModel.inputDeviceSelected(newValue)
+                    apiModel.inputDeviceSelected(newIndex)
                 }
             }
         }
@@ -103,7 +103,7 @@ BaseSection {
 
                 enabled: !playbackState.isPlaying
 
-                currentIndex: indexOfValue(apiModel.currentOutputDeviceId)
+                currentIndex: apiModel.currentOutputDeviceIndex
                 model: apiModel.outputDeviceList
 
                 navigation.name: "PlaybackDeviceBox"
@@ -112,7 +112,7 @@ BaseSection {
                 navigation.column: 1
 
                 onValueEdited: function (newIndex, newValue) {
-                    apiModel.outputDeviceSelected(newValue)
+                    apiModel.outputDeviceSelected(newIndex)
                 }
             }
 
