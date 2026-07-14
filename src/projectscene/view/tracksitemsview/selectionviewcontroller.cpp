@@ -275,6 +275,8 @@ void SelectionViewController::onSelectionHorizontalResize(double time1, double t
         return;
     }
 
+    time1 = std::max(time1, 0.0);
+    time2 = std::max(time2, 0.0);
     if (time1 > time2) {
         std::swap(time1, time2);
     }
