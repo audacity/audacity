@@ -31,11 +31,13 @@ public:
     std::optional<std::string> currentOutputDevice() const override;
     void setOutputDevice(const std::optional<std::string>& device) override;
     muse::async::Notification outputDeviceChanged() const override;
+    std::string systemDefaultOutputDevice() const override;
 
     std::vector<std::string> inputDevices() const override;
     std::optional<std::string> currentInputDevice() const override;
     void setInputDevice(const std::optional<std::string>& device) override;
     muse::async::Notification inputDeviceChanged() const override;
+    std::string systemDefaultInputDevice() const override;
     bool hasRecordingDevices() const override;
 
     void handleDeviceChange() override;
@@ -91,9 +93,6 @@ private:
 
     std::string effectiveOutputDevice() const;
     std::string effectiveInputDevice() const;
-
-    std::string systemDefaultOutputDevice() const;
-    std::string systemDefaultInputDevice() const;
 
     std::vector<std::string> m_audioApis;
     std::vector<std::string> m_outputDevices;

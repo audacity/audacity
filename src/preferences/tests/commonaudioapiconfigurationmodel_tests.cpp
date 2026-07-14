@@ -177,6 +177,16 @@ TEST_F(CommonAudioApiConfigurationModelTests, OutputDevice_NamedSystemDefault_Is
     m_model->outputDeviceSelected(1);
 }
 
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceList_ShowsResolvedSystemDefaultName)
+{
+    setOutputDevices({ "Speakers", "Headphones" });
+    ON_CALL(*m_provider, systemDefaultOutputDevice()).WillByDefault(Return(std::string("Headphones")));
+
+    const QVariantList list = m_model->outputDeviceList();
+    ASSERT_FALSE(list.isEmpty());
+    EXPECT_EQ(list.at(0).toString(), QString("System default: Headphones"));
+}
+
 TEST_F(CommonAudioApiConfigurationModelTests, InputDeviceList_NoDevices_IsEmpty)
 {
     setInputDevices({});

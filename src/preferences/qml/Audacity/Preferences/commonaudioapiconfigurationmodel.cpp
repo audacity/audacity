@@ -47,9 +47,13 @@ QString channelName(int channelNumber)
            : QString::number(channelNumber);
 }
 
-QString systemDefaultDeviceName()
+QString systemDefaultDeviceName(const std::string& resolvedDevice)
 {
-    return muse::qtrc("preferences", "System default");
+    if (resolvedDevice.empty()) {
+        return muse::qtrc("preferences", "System default");
+    }
+    //: %1 is the device the system default currently resolves to
+    return muse::qtrc("preferences", "System default: %1").arg(QString::fromStdString(resolvedDevice));
 }
 }
 
@@ -162,7 +166,7 @@ QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
     QVariantList result;
     const auto& devices = audioDevicesProvider()->outputDevices();
     if (!devices.empty()) {
-        result << systemDefaultDeviceName();
+        result << systemDefaultDeviceName(audioDevicesProvider()->systemDefaultOutputDevice());
     }
     for (const auto& device : devices) {
         result << QString::fromStdString(device);
@@ -207,7 +211,7 @@ QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
     QVariantList result;
     const auto& devices = audioDevicesProvider()->inputDevices();
     if (!devices.empty()) {
-        result << systemDefaultDeviceName();
+        result << systemDefaultDeviceName(audioDevicesProvider()->systemDefaultInputDevice());
     }
     for (const auto& device : devices) {
         result << QString::fromStdString(device);

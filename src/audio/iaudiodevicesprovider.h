@@ -21,11 +21,14 @@ public:
     virtual std::optional<std::string> currentOutputDevice() const = 0;
     virtual void setOutputDevice(const std::optional<std::string>& device) = 0;
     virtual muse::async::Notification outputDeviceChanged() const = 0;
+    //! NOTE The device the system default currently resolves to, empty when unknown
+    virtual std::string systemDefaultOutputDevice() const = 0;
 
     virtual std::vector<std::string> inputDevices() const = 0;
     virtual std::optional<std::string> currentInputDevice() const = 0;
     virtual void setInputDevice(const std::optional<std::string>& device) = 0;
     virtual muse::async::Notification inputDeviceChanged() const = 0;
+    virtual std::string systemDefaultInputDevice() const = 0;
     virtual bool hasRecordingDevices() const = 0;
 
     virtual std::vector<std::string> apis() const = 0;

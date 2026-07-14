@@ -15,11 +15,13 @@ public:
     MOCK_METHOD(std::optional<std::string>, currentOutputDevice, (), (const, override));
     MOCK_METHOD(void, setOutputDevice, (const std::optional<std::string>&), (override));
     MOCK_METHOD(muse::async::Notification, outputDeviceChanged, (), (const, override));
+    MOCK_METHOD(std::string, systemDefaultOutputDevice, (), (const, override));
 
     MOCK_METHOD(std::vector<std::string>, inputDevices, (), (const, override));
     MOCK_METHOD(std::optional<std::string>, currentInputDevice, (), (const, override));
     MOCK_METHOD(void, setInputDevice, (const std::optional<std::string>&), (override));
     MOCK_METHOD(muse::async::Notification, inputDeviceChanged, (), (const, override));
+    MOCK_METHOD(std::string, systemDefaultInputDevice, (), (const, override));
     MOCK_METHOD(bool, hasRecordingDevices, (), (const, override));
 
     MOCK_METHOD(std::vector<std::string>, apis, (), (const, override));
