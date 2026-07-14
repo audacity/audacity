@@ -34,5 +34,7 @@ public:
                 (const AudioRoutingChange&), (override));
 
     MOCK_METHOD(muse::async::Notification, audioDeviceListChanged, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<std::string>, usedOutputDeviceChanged, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<std::string>, usedInputDeviceChanged, (), (const, override));
 };
 }

@@ -44,5 +44,8 @@ public:
     virtual ApplyResult openAsioDriverSettings(const AudioRoutingChange& routing) = 0;
 
     virtual muse::async::Notification audioDeviceListChanged() const = 0;
+
+    virtual muse::async::Channel<std::string> usedOutputDeviceChanged() const = 0;
+    virtual muse::async::Channel<std::string> usedInputDeviceChanged() const = 0;
 };
 }

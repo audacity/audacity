@@ -174,6 +174,49 @@ void Au3AudioDriverController::init()
           : 0;
     settings()->setLocalValue(INPUT_CHANNELS, muse::Val(inputChannels));
     m_configuration = configurationFromSettings();
+
+    systemAudioDevicesListener()->systemDevicesChanged().onNotify(this, [this]() {
+        onSystemDevicesChanged();
+    });
+
+    if (audioEngine()) {
+        audioEngine()->streamStopped().onNotify(this, [this]() {
+            if (m_pendingSystemDevicesChange) {
+                m_pendingSystemDevicesChange = false;
+                onSystemDevicesChanged();
+            }
+        });
+    }
+}
+
+void Au3AudioDriverController::onSystemDevicesChanged()
+{
+    if (audioEngine() && audioEngine()->isBusy()) {
+        m_pendingSystemDevicesChange = true;
+        return;
+    }
+
+    const auto before = m_configuration;
+    const std::string prevOutputDevice = effectiveOutputDevice(before.api, before.outputDevice);
+    const std::string prevInputDevice = effectiveInputDevice(before.api, before.inputDevice);
+
+    const auto result = rescan();
+    if (!result.succeeded()) {
+        LOGW() << "device rescan after a system change failed, status: " << static_cast<int>(result.status);
+        m_pendingSystemDevicesChange = true;
+        return;
+    }
+
+    const auto after = m_configuration;
+    const std::string outputDevice = effectiveOutputDevice(after.api, after.outputDevice);
+    const std::string inputDevice = effectiveInputDevice(after.api, after.inputDevice);
+
+    if (outputDevice != prevOutputDevice) {
+        m_usedOutputDeviceChanged.send(outputDevice);
+    }
+    if (inputDevice != prevInputDevice) {
+        m_usedInputDeviceChanged.send(inputDevice);
+    }
 }
 
 void Au3AudioDriverController::initDefaults()
@@ -865,6 +908,16 @@ ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingC
 muse::async::Notification Au3AudioDriverController::audioDeviceListChanged() const
 {
     return m_audioDeviceListChanged;
+}
+
+muse::async::Channel<std::string> Au3AudioDriverController::usedOutputDeviceChanged() const
+{
+    return m_usedOutputDeviceChanged;
+}
+
+muse::async::Channel<std::string> Au3AudioDriverController::usedInputDeviceChanged() const
+{
+    return m_usedInputDeviceChanged;
 }
 
 void Au3AudioDriverController::refreshInputDeviceSettings(const std::string& api,
