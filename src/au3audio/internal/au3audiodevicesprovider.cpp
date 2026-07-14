@@ -145,6 +145,19 @@ void Au3AudioDevicesProvider::init()
         m_defaultSampleRateChanged.notify();
     });
 
+    systemAudioDevicesListener()->systemDevicesChanged().onNotify(this, [this]() {
+        onSystemDevicesChanged();
+    });
+
+    if (audioEngine()) {
+        audioEngine()->finished().onNotify(this, [this]() {
+            if (m_pendingSystemDevicesChange) {
+                m_pendingSystemDevicesChange = false;
+                onSystemDevicesChanged();
+            }
+        });
+    }
+
     updateInputOutputDevices();
     initInputChannels();
 }
@@ -208,6 +221,41 @@ async::Notification Au3AudioDevicesProvider::inputDeviceChanged() const
 bool Au3AudioDevicesProvider::hasRecordingDevices() const
 {
     return !m_inputDevices.empty() && m_inputChannelsAvailable > 0;
+}
+
+muse::async::Channel<std::string> Au3AudioDevicesProvider::usedOutputDeviceChanged() const
+{
+    return m_usedOutputDeviceChanged;
+}
+
+muse::async::Channel<std::string> Au3AudioDevicesProvider::usedInputDeviceChanged() const
+{
+    return m_usedInputDeviceChanged;
+}
+
+void Au3AudioDevicesProvider::onSystemDevicesChanged()
+{
+    // rescanning restarts PortAudio, which is not possible while a stream
+    // is running; retried when the engine reports the stream finished
+    if (audioEngine() && audioEngine()->isBusy()) {
+        m_pendingSystemDevicesChange = true;
+        return;
+    }
+
+    const std::string prevOutputDevice = effectiveOutputDevice();
+    const std::string prevInputDevice = effectiveInputDevice();
+
+    rescan();
+
+    const std::string outputDevice = effectiveOutputDevice();
+    const std::string inputDevice = effectiveInputDevice();
+
+    if (outputDevice != prevOutputDevice) {
+        m_usedOutputDeviceChanged.send(outputDevice);
+    }
+    if (inputDevice != prevInputDevice) {
+        m_usedInputDeviceChanged.send(inputDevice);
+    }
 }
 
 void Au3AudioDevicesProvider::handleDeviceChange()

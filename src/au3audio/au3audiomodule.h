@@ -11,6 +11,7 @@ namespace au::au3audio {
 class Au3AudioEngine;
 class Au3AudioDevicesProvider;
 class Au3DeviceManager;
+class ISystemAudioDevicesListener;
 
 class Au3AudioModule : public muse::modularity::IModuleSetup
 {
@@ -27,6 +28,7 @@ private:
 
     std::shared_ptr<Au3AudioEngine> m_audioEngine;
     std::shared_ptr<Au3DeviceManager> m_deviceManager;
+    std::shared_ptr<ISystemAudioDevicesListener> m_systemAudioDevicesListener;
 };
 
 class Au3AudioContext : public muse::modularity::IContextSetup

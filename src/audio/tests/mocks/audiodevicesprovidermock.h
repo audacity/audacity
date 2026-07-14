@@ -24,6 +24,9 @@ public:
     MOCK_METHOD(std::string, systemDefaultInputDevice, (), (const, override));
     MOCK_METHOD(bool, hasRecordingDevices, (), (const, override));
 
+    MOCK_METHOD(muse::async::Channel<std::string>, usedOutputDeviceChanged, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<std::string>, usedInputDeviceChanged, (), (const, override));
+
     MOCK_METHOD(std::vector<std::string>, apis, (), (const, override));
     MOCK_METHOD(std::string, currentApi, (), (const, override));
     MOCK_METHOD(void, setApi, (const std::string&), (override));

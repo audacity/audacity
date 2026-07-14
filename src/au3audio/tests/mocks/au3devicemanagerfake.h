@@ -4,6 +4,7 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <string>
 #include <vector>
@@ -22,6 +23,10 @@ public:
     std::map<int, int> defaultInputByHost;  // host index -> device index
     std::map<int, int> defaultOutputByHost;
     int rescanCount = 0;
+
+    //! NOTE Models the PortAudio snapshot: an OS-side change staged here
+    //! becomes visible only when the provider rescans
+    std::function<void()> pendingSystemChange;
 
     DeviceSourceMap& addInputDevice(const std::string& host, const std::string& name, int deviceIndex, int numChannels)
     {
@@ -92,6 +97,10 @@ public:
     void rescan() override
     {
         ++rescanCount;
+        if (pendingSystemChange) {
+            pendingSystemChange();
+            pendingSystemChange = nullptr;
+        }
     }
 
 private:

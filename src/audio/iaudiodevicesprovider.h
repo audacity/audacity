@@ -7,6 +7,7 @@
 //! This is equivalent of IAudioDriver/IAudioConfiguration of Musescore's audio engine
 #include <optional>
 
+#include "framework/global/async/channel.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
 
@@ -30,6 +31,12 @@ public:
     virtual muse::async::Notification inputDeviceChanged() const = 0;
     virtual std::string systemDefaultInputDevice() const = 0;
     virtual bool hasRecordingDevices() const = 0;
+
+    //! NOTE Fired when the device in use changed because of a system-side
+    //! change (default device switched, device unplugged); sends the name
+    //! of the newly used device
+    virtual muse::async::Channel<std::string> usedOutputDeviceChanged() const = 0;
+    virtual muse::async::Channel<std::string> usedInputDeviceChanged() const = 0;
 
     virtual std::vector<std::string> apis() const = 0;
     virtual std::string currentApi() const = 0;

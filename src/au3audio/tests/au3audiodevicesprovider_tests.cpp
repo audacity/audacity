@@ -12,6 +12,7 @@
 #include "mocks/au3devicemanagerfake.h"
 
 #include "au3audio/internal/au3audiodevicesprovider.h"
+#include "au3audio/internal/platform/stub/stubsystemaudiodeviceslistener.h"
 
 using ::testing::AtLeast;
 using ::testing::NiceMock;
@@ -34,7 +35,11 @@ protected:
         muse::modularity::globalIoc()->registerExport<IAu3DeviceManager>("utests", m_deviceManager);
 
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
+        ON_CALL(*m_audioEngine, finished()).WillByDefault(::testing::Return(m_engineFinished));
         muse::modularity::globalIoc()->registerExport<audio::IAudioEngine>("utests", m_audioEngine);
+
+        m_devicesListener = std::make_shared<StubSystemAudioDevicesListener>();
+        muse::modularity::globalIoc()->registerExport<ISystemAudioDevicesListener>("utests", m_devicesListener);
     }
 
     void TearDown() override
@@ -42,6 +47,7 @@ protected:
         m_provider.reset();
         muse::modularity::globalIoc()->unregister<IAu3DeviceManager>("utests");
         muse::modularity::globalIoc()->unregister<audio::IAudioEngine>("utests");
+        muse::modularity::globalIoc()->unregister<ISystemAudioDevicesListener>("utests");
     }
 
     //! NOTE Settings are global state shared by all tests in the binary,
@@ -60,6 +66,8 @@ protected:
 
     std::shared_ptr<Au3DeviceManagerFake> m_deviceManager;
     std::shared_ptr<NiceMock<audio::AudioEngineMock> > m_audioEngine;
+    std::shared_ptr<StubSystemAudioDevicesListener> m_devicesListener;
+    muse::async::Notification m_engineFinished;
     std::shared_ptr<Au3AudioDevicesProvider> m_provider;
 };
 
@@ -206,6 +214,88 @@ TEST_F(Au3AudioDevicesProviderTests, SetInputDevice_ClampsSelectedChannels)
 
     EXPECT_EQ(m_provider->inputChannelsAvailable(), 1);
     EXPECT_EQ(m_provider->inputChannelsSelected(), 1);
+}
+
+TEST_F(Au3AudioDevicesProviderTests, SystemDevicesChanged_AutoRescans_AndReportsUsedInputDevice)
+{
+    m_deviceManager->addInputDevice("HostA", "Mic A", 1, 2);
+    m_deviceManager->addInputDevice("HostA", "Mic B", 2, 1);
+    m_deviceManager->setDefaultInputDevice("HostA", 1);
+
+    initProvider("HostA");
+    EXPECT_EQ(m_provider->inputChannelsAvailable(), 2);
+
+    std::string reportedDevice;
+    m_provider->usedInputDeviceChanged().onReceive(nullptr, [&reportedDevice](const std::string& device) {
+        reportedDevice = device;
+    });
+
+    m_deviceManager->pendingSystemChange = [this]() {
+        m_deviceManager->setDefaultInputDevice("HostA", 2);
+    };
+    m_devicesListener->systemDevicesChanged().notify();
+
+    EXPECT_EQ(m_deviceManager->rescanCount, 1);
+    EXPECT_EQ(reportedDevice, "Mic B");
+    EXPECT_EQ(m_provider->inputChannelsAvailable(), 1);
+}
+
+TEST_F(Au3AudioDevicesProviderTests, SystemDevicesChanged_ReportsUsedOutputDevice)
+{
+    m_deviceManager->addOutputDevice("HostA", "Speakers", 1);
+    m_deviceManager->addOutputDevice("HostA", "Headphones", 2);
+    m_deviceManager->setDefaultOutputDevice("HostA", 1);
+
+    initProvider("HostA");
+
+    std::string reportedDevice;
+    m_provider->usedOutputDeviceChanged().onReceive(nullptr, [&reportedDevice](const std::string& device) {
+        reportedDevice = device;
+    });
+
+    m_deviceManager->pendingSystemChange = [this]() {
+        m_deviceManager->setDefaultOutputDevice("HostA", 2);
+    };
+    m_devicesListener->systemDevicesChanged().notify();
+
+    EXPECT_EQ(reportedDevice, "Headphones");
+}
+
+TEST_F(Au3AudioDevicesProviderTests, SystemDevicesChanged_UsedDevicesUnchanged_ReportsNothing)
+{
+    m_deviceManager->addInputDevice("HostA", "Mic A", 1, 2);
+    m_deviceManager->setDefaultInputDevice("HostA", 1);
+    m_deviceManager->addOutputDevice("HostA", "Speakers", 2);
+    m_deviceManager->setDefaultOutputDevice("HostA", 2);
+
+    initProvider("HostA");
+
+    bool reported = false;
+    m_provider->usedInputDeviceChanged().onReceive(nullptr, [&reported](const std::string&) { reported = true; });
+    m_provider->usedOutputDeviceChanged().onReceive(nullptr, [&reported](const std::string&) { reported = true; });
+
+    m_devicesListener->systemDevicesChanged().notify();
+
+    EXPECT_EQ(m_deviceManager->rescanCount, 1);
+    EXPECT_FALSE(reported);
+}
+
+TEST_F(Au3AudioDevicesProviderTests, SystemDevicesChanged_WhileStreamActive_DefersRescanUntilFinished)
+{
+    m_deviceManager->addInputDevice("HostA", "Mic A", 1, 2);
+    m_deviceManager->setDefaultInputDevice("HostA", 1);
+
+    initProvider("HostA");
+
+    ON_CALL(*m_audioEngine, isBusy()).WillByDefault(::testing::Return(true));
+    m_devicesListener->systemDevicesChanged().notify();
+
+    EXPECT_EQ(m_deviceManager->rescanCount, 0);
+
+    ON_CALL(*m_audioEngine, isBusy()).WillByDefault(::testing::Return(false));
+    m_engineFinished.notify();
+
+    EXPECT_EQ(m_deviceManager->rescanCount, 1);
 }
 
 TEST_F(Au3AudioDevicesProviderTests, SetInputDevice_MultiSourceDevice_StoresRecordingSource)
