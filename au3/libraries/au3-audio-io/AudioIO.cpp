@@ -570,6 +570,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         playbackDeviceInfo = Pa_GetDeviceInfo(playbackParameters.device);
 
         if (playbackDeviceInfo == NULL) {
+            mLastPaError = paInvalidDevice;
             return false;
         }
 
