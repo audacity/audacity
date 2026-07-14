@@ -351,6 +351,7 @@ bool au::importexport::Au3Importer::importFromSystemClipboard(
         files.append(path.toQString());
     }
 
+    dc.startImportSession();
     dc.probeAudioFiles(files);
     int requiredTracksCount = dc.requiredTracksCount();
     dc.prepareConditionalTracks(startingTrack, requiredTracksCount);
@@ -361,6 +362,7 @@ bool au::importexport::Au3Importer::importFromSystemClipboard(
     }
 
     dc.handleDroppedFiles(dstTrackIds, startTime);
+    dc.endImportSession();
 
     return true;
 }
