@@ -270,9 +270,7 @@ Item {
             const init = prv.init[name]
             const delta = mouse.x - init.mouseX
             const newPosition = init.leftPos + delta
-            const x1 = Math.min(newPosition, init.rightPos)
-            const x2 = Math.max(newPosition, init.rightPos)
-            root.selectionHorizontalResize(x1, x2, complete)
+            root.selectionHorizontalResize(init.rightPos, newPosition, complete)
         }
     }
 
@@ -292,9 +290,7 @@ Item {
             const init = prv.init[name]
             const delta = mouse.x - init.mouseX
             const newPosition = init.rightPos + delta
-            const x1 = Math.min(init.leftPos, newPosition)
-            const x2 = Math.max(init.leftPos, newPosition)
-            root.selectionHorizontalResize(x1, x2, complete)
+            root.selectionHorizontalResize(init.leftPos, newPosition, complete)
         }
     }
 

@@ -86,7 +86,7 @@ Item {
             }
             var anchor = leftMa.startX + leftMa.startW
             var dragged = leftMa.startX + mouse.x
-            root.selectionResize(dragged, anchor, false)
+            root.selectionResize(anchor, dragged, false)
             handleGuideline(dragged <= anchor ? selRect.x : selRect.x + selRect.width, false)
         }
 
@@ -102,7 +102,14 @@ Item {
             handleGuideline(selRect.x, true)
         }
 
-        onCanceled: CustomCursorProvider.restoreCursor()
+        onCanceled: {
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
+            leftMa.x = Qt.binding(function () {
+                return selRect.x
+            })
+            CustomCursorProvider.restoreCursor()
+            handleGuideline(selRect.x, true)
+        }
 
         onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
@@ -164,7 +171,14 @@ Item {
             handleGuideline(root.context.selectionEndPosition, true)
         }
 
-        onCanceled: CustomCursorProvider.restoreCursor()
+        onCanceled: {
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
+            rightMa.x = Qt.binding(function () {
+                return selRect.x + selRect.width - rightMa.width
+            })
+            CustomCursorProvider.restoreCursor()
+            handleGuideline(root.context.selectionEndPosition, true)
+        }
 
         onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
