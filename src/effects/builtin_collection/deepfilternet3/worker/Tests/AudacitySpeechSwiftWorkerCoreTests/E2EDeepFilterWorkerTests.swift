@@ -17,16 +17,32 @@ final class E2EDeepFilterWorkerTests: XCTestCase {
 
     let inputURL = directory.appendingPathComponent("input.sspcm")
     let outputURL = directory.appendingPathComponent("output.sspcm")
+    let sampleRate = 48_000
     let header = try PlanarPCMHeader(
-      sampleRate: 48_000,
+      sampleRate: sampleRate,
       channelCount: 1,
-      frameCount: 48_000
+      frameCount: sampleRate * 3
     )
+    var noiseState: UInt64 = 0xD3_EE_5E_ED
     let input = (0..<header.frameCount).map { index -> Float in
       let time = Double(index) / Double(header.sampleRate)
-      return Float(
-        0.2 * sin(2 * .pi * 220 * time)
-          + 0.04 * sin(2 * .pi * 3_137 * time))
+      noiseState = noiseState &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+      let noise = Double(noiseState >> 40) / Double(1 << 23) - 1
+
+      let speech: Double
+      if (1..<2).contains(time) {
+        let localTime = time - 1
+        let envelope = sin(.pi * localTime)
+        let fundamental = 175 + 25 * sin(2 * .pi * 1.7 * localTime)
+        speech =
+          envelope
+          * (0.18 * sin(2 * .pi * fundamental * localTime)
+            + 0.08 * sin(2 * .pi * fundamental * 2 * localTime)
+            + 0.04 * sin(2 * .pi * fundamental * 3 * localTime))
+      } else {
+        speech = 0
+      }
+      return Float(speech + 0.06 * noise)
     }
     let writer = try PlanarPCMOutput(url: inputURL, header: header)
     try writer.appendChannel(input)
@@ -107,10 +123,39 @@ final class E2EDeepFilterWorkerTests: XCTestCase {
       },
       0.001
     )
+    let noiseOnlyRanges = [
+      sampleRate / 4..<(sampleRate * 3 / 4),
+      sampleRate * 9 / 4..<(sampleRate * 11 / 4),
+    ]
+    let inputNoiseRMS = rootMeanSquare(input, in: noiseOnlyRanges)
+    let enhancedNoiseRMS = rootMeanSquare(enhanced, in: noiseOnlyRanges)
+    let noiseSuppressionDB = 20 * log10(inputNoiseRMS / max(enhancedNoiseRMS, 1e-12))
+    XCTAssertGreaterThan(
+      noiseSuppressionDB,
+      20,
+      "Expected at least 20 dB of noise-only suppression, measured \(noiseSuppressionDB) dB"
+    )
+    XCTAssertGreaterThan(
+      rootMeanSquare(enhanced, in: [sampleRate * 5 / 4..<(sampleRate * 7 / 4)]),
+      0.005,
+      "Enhancement must not collapse the active signal to silence"
+    )
     let finalOutputInode = try XCTUnwrap(
       FileManager.default.attributesOfItem(atPath: outputURL.path)[.systemFileNumber]
         as? NSNumber
     ).uint64Value
     XCTAssertEqual(finalOutputInode, outputInode)
+  }
+
+  private func rootMeanSquare(_ samples: [Float], in ranges: [Range<Int>]) -> Double {
+    var sumOfSquares = 0.0
+    var sampleCount = 0
+    for range in ranges {
+      for sample in samples[range] {
+        sumOfSquares += Double(sample * sample)
+        sampleCount += 1
+      }
+    }
+    return sqrt(sumOfSquares / Double(sampleCount))
   }
 }

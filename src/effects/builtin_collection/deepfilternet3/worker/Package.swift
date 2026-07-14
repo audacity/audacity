@@ -9,7 +9,7 @@ if let localPath = Context.environment["SPEECH_SWIFT_PACKAGE_PATH"], !localPath.
 } else {
   speechSwiftDependency = .package(
     url: "https://github.com/soniqo/speech-swift.git",
-    exact: "0.0.21"
+    exact: "0.0.22"
   )
 }
 
