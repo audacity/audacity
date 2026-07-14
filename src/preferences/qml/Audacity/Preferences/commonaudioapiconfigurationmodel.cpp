@@ -214,8 +214,8 @@ void CommonAudioApiConfigurationModel::notifyDeviceContextChanged()
     emit outputDeviceListChanged();
     emit inputDeviceListChanged();
     emit longestDeviceNameLengthChanged();
-    emit currentOutputDeviceIdChanged();
-    emit currentInputDeviceIdChanged();
+    emit currentOutputDeviceIndexChanged();
+    emit currentInputDeviceIndexChanged();
     emit inputChannelsListChanged();
     emit currentInputChannelsSelectedChanged();
 }
@@ -322,13 +322,21 @@ QStringList CommonAudioApiConfigurationModel::audioApiList() const
     return result;
 }
 
-QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
+int CommonAudioApiConfigurationModel::currentOutputDeviceIndex() const
 {
+    const auto devices = audioDriverController()->outputDevices(effectiveApi());
+    if (devices.empty()) {
+        return -1;
+    }
+
     const auto device = effectiveOutputDevice();
     if (!device.has_value()) {
-        return systemDefaultDeviceName();
+        return 0;
     }
-    return QString::fromStdString(device.value());
+
+    // entry 0 is "System default", devices follow
+    const size_t idx = muse::indexOf(devices, device.value());
+    return idx == muse::nidx ? 0 : static_cast<int>(idx) + 1;
 }
 
 QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
@@ -345,29 +353,44 @@ QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
     return result;
 }
 
-void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& device)
+void CommonAudioApiConfigurationModel::outputDeviceSelected(int index)
 {
-    if (device == currentOutputDeviceId()) {
+    if (index == currentOutputDeviceIndex()) {
         return;
     }
-    const auto value = device == systemDefaultDeviceName()
+
+    const auto devices = audioDriverController()->outputDevices(effectiveApi());
+    if (index < 0 || index > static_cast<int>(devices.size())) {
+        return;
+    }
+
+    // entry 0 is "System default", devices follow
+    const auto value = index == 0
                        ? audio::AudioDeviceSelection {}
-    : audio::AudioDeviceSelection { device.toStdString() };
+    : audio::AudioDeviceSelection { devices[index - 1] };
     if (!m_pending.api && value == audioDriverController()->configuration().outputDevice) {
         m_pending.outputDevice.reset();
     } else {
         m_pending.outputDevice = value;
     }
-    emit currentOutputDeviceIdChanged();
+    emit currentOutputDeviceIndexChanged();
 }
 
-QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
+int CommonAudioApiConfigurationModel::currentInputDeviceIndex() const
 {
+    const auto devices = audioDriverController()->inputDevices(effectiveApi());
+    if (devices.empty()) {
+        return -1;
+    }
+
     const auto device = effectiveInputDevice();
     if (!device.has_value()) {
-        return systemDefaultDeviceName();
+        return 0;
     }
-    return QString::fromStdString(device.value());
+
+    // entry 0 is "System default", devices follow
+    const size_t idx = muse::indexOf(devices, device.value());
+    return idx == muse::nidx ? 0 : static_cast<int>(idx) + 1;
 }
 
 QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
@@ -384,21 +407,28 @@ QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
     return result;
 }
 
-void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device)
+void CommonAudioApiConfigurationModel::inputDeviceSelected(int index)
 {
-    if (device == currentInputDeviceId()) {
+    if (index == currentInputDeviceIndex()) {
         return;
     }
-    const auto value = device == systemDefaultDeviceName()
+
+    const auto devices = audioDriverController()->inputDevices(effectiveApi());
+    if (index < 0 || index > static_cast<int>(devices.size())) {
+        return;
+    }
+
+    // entry 0 is "System default", devices follow
+    const auto value = index == 0
                        ? audio::AudioDeviceSelection {}
-    : audio::AudioDeviceSelection { device.toStdString() };
+    : audio::AudioDeviceSelection { devices[index - 1] };
     if (!m_pending.api && value == audioDriverController()->configuration().inputDevice) {
         m_pending.inputDevice.reset();
     } else {
         m_pending.inputDevice = value;
     }
     m_pending.inputChannels.reset();
-    emit currentInputDeviceIdChanged();
+    emit currentInputDeviceIndexChanged();
     emit inputChannelsListChanged();
     emit currentInputChannelsSelectedChanged();
 }

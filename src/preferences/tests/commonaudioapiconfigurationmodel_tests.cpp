@@ -80,18 +80,18 @@ TEST_F(CommonAudioApiConfigurationModelTests, EditingValues_IsPendingUntilApply)
 {
     EXPECT_CALL(*m_controller, apply(_, _)).Times(0);
 
-    m_model->outputDeviceSelected("Headphones");
+    m_model->outputDeviceSelected(2);
     m_model->inputChannelsSelected(1);
     m_model->bufferLengthSelected("50");
 
-    EXPECT_EQ(m_model->currentOutputDeviceId(), "Headphones");
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 2);
     EXPECT_TRUE(m_model->currentInputChannelsSelected().startsWith("2"));
     EXPECT_DOUBLE_EQ(m_model->bufferLength(), 50.0);
 }
 
 TEST_F(CommonAudioApiConfigurationModelTests, Apply_SubmitsAllPendingFieldsInOneChangeSet)
 {
-    m_model->outputDeviceSelected("Headphones");
+    m_model->outputDeviceSelected(2);
     m_model->inputChannelsSelected(1);
     m_model->bufferLengthSelected("50");
 
@@ -120,7 +120,7 @@ TEST_F(CommonAudioApiConfigurationModelTests, ApplyFailure_KeepsPendingValuesAnd
 
 TEST_F(CommonAudioApiConfigurationModelTests, ApplySuccess_ClearsFieldsThatNormalizedToTheCurrentValue)
 {
-    m_model->outputDeviceSelected("Headphones");
+    m_model->outputDeviceSelected(2);
     m_model->bufferLengthSelected("50");
     EXPECT_CALL(*m_controller, apply(_, _))
     .WillOnce(Return(audio::ApplyResult { audio::ApplyStatus::Applied }))
@@ -150,16 +150,16 @@ TEST_F(CommonAudioApiConfigurationModelTests, ApiEdit_PreviewsTheSelectedApisDev
 
     EXPECT_EQ(m_model->currentAudioApiIndex(), 1);
     // The applied devices do not exist under JACK, so both fall back to the system default.
-    EXPECT_EQ(m_model->currentOutputDeviceId(), "System default");
-    EXPECT_EQ(m_model->currentInputDeviceId(), "System default");
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 0);
+    EXPECT_EQ(m_model->currentInputDeviceIndex(), 0);
     EXPECT_EQ(m_model->outputDeviceList().size(), 3);
     EXPECT_EQ(m_model->inputChannelsList().size(), 4);
 }
 
 TEST_F(CommonAudioApiConfigurationModelTests, EditingBackToAppliedStateProducesAnEmptyChange)
 {
-    m_model->outputDeviceSelected("Headphones");
-    m_model->outputDeviceSelected("Built-in Output");
+    m_model->outputDeviceSelected(2);
+    m_model->outputDeviceSelected(1);
 
     EXPECT_CALL(*m_controller, apply(_, _))
     .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
@@ -182,14 +182,14 @@ TEST_F(CommonAudioApiConfigurationModelTests, EditingBackToAppliedStateProducesA
 TEST_F(CommonAudioApiConfigurationModelTests,
        ExternalChangeDoesNotDiscardPendingEdit)
 {
-    m_model->outputDeviceSelected("Headphones");
+    m_model->outputDeviceSelected(2);
     m_applied.outputDevice = "External Output";
     audio::AudioConfigurationDelta delta;
     delta.fields = audio::fieldMask(audio::AudioConfigurationField::OutputDevice);
 
     m_configurationChanged.send(delta);
 
-    EXPECT_EQ(m_model->currentOutputDeviceId(), "Headphones");
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 2);
     EXPECT_CALL(*m_controller, apply(_, _))
     .WillOnce([](const muse::modularity::ContextPtr&,
                  const audio::AudioConfigurationChange& change) {
@@ -202,11 +202,11 @@ TEST_F(CommonAudioApiConfigurationModelTests,
 
 TEST_F(CommonAudioApiConfigurationModelTests, ResetDiscardsPendingEdits)
 {
-    m_model->outputDeviceSelected("Headphones");
+    m_model->outputDeviceSelected(2);
 
     m_model->reset();
 
-    EXPECT_EQ(m_model->currentOutputDeviceId(), "Built-in Output");
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 1);
     EXPECT_CALL(*m_controller, apply(_, _))
     .WillOnce([](const muse::modularity::ContextPtr&,
                  const audio::AudioConfigurationChange& change) {
