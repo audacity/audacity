@@ -102,8 +102,13 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
 
     const auto& outputDevicesList = audioDriverController()->outputDevices();
     if (!outputDevicesList.empty()) {
-        MenuItem* item = makeMenuItem(makeSystemDefaultPlaybackDeviceAction().toString(),
-                                      muse::TranslatableString("audio setup", "System default"));
+        const std::string resolvedDevice
+            = audioDriverController()->systemDefaultOutputDevice(audioDriverController()->configuration().api);
+        const muse::TranslatableString title = resolvedDevice.empty()
+                                               ? muse::TranslatableString("audio setup", "System default")
+                                               : muse::TranslatableString("audio setup", "System default: %1")
+                                               .arg(muse::String::fromStdString(resolvedDevice));
+        MenuItem* item = makeMenuItem(makeSystemDefaultPlaybackDeviceAction().toString(), title);
         item->setId(QString::fromStdString(item->query().toString()));
         if (!currentOutputDevice.has_value()) {
             item->setChecked(true);
@@ -144,8 +149,14 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
 
     const auto& inputDevicesList = audioDriverController()->inputDevices();
     if (!inputDevicesList.empty()) {
-        MenuItem* item = makeMenuItem(makeSystemDefaultRecordingDeviceAction().toString(),
-                                      muse::TranslatableString("audio setup", "System default"));
+        const std::string resolvedDevice
+            = audioDriverController()->systemDefaultInputDevice(audioDriverController()->configuration().api);
+        //: %1 is the device the system default currently resolves to
+        const muse::TranslatableString title = resolvedDevice.empty()
+                                               ? muse::TranslatableString("audio setup", "System default")
+                                               : muse::TranslatableString("audio setup", "System default: %1")
+                                               .arg(muse::String::fromStdString(resolvedDevice));
+        MenuItem* item = makeMenuItem(makeSystemDefaultRecordingDeviceAction().toString(), title);
         item->setId(QString::fromStdString(item->query().toString()));
         if (!currentInputDevice.has_value()) {
             item->setChecked(true);

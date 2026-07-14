@@ -338,6 +338,27 @@ TEST_F(CommonAudioApiConfigurationModelTests, DeviceNamedSystemDefault_IsDistinc
     EXPECT_TRUE(m_model->apply());
 }
 
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceLists_ShowTheResolvedSystemDefaultName)
+{
+    ON_CALL(*m_controller, systemDefaultOutputDevice("Core Audio"))
+    .WillByDefault(Return(std::string("Headphones")));
+    ON_CALL(*m_controller, systemDefaultInputDevice("Core Audio"))
+    .WillByDefault(Return(std::string("USB Mic")));
+
+    EXPECT_EQ(m_model->outputDeviceList().at(0).toString(), QString("System default: Headphones"));
+    EXPECT_EQ(m_model->inputDeviceList().at(0).toString(), QString("System default: USB Mic"));
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceLists_ResolvedSystemDefaultFollowsThePreviewedApi)
+{
+    ON_CALL(*m_controller, systemDefaultOutputDevice("JACK"))
+    .WillByDefault(Return(std::string("JACK Out 2")));
+
+    m_model->setCurrentAudioApiIndex(1);
+
+    EXPECT_EQ(m_model->outputDeviceList().at(0).toString(), QString("System default: JACK Out 2"));
+}
+
 TEST_F(CommonAudioApiConfigurationModelTests, ExternalDeviceChangeIsForwardedAsAnIndexChangeSignal)
 {
     int outputChangedCount = 0;

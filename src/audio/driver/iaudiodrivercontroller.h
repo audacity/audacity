@@ -29,8 +29,10 @@ public:
     virtual std::vector<std::string> apis() const = 0;
     virtual std::vector<std::string> outputDevices() const = 0;
     virtual std::vector<std::string> outputDevices(const std::string& api) const = 0;
+    virtual std::string systemDefaultOutputDevice(const std::string& api) const = 0;
     virtual std::vector<std::string> inputDevices() const = 0;
     virtual std::vector<std::string> inputDevices(const std::string& api) const = 0;
+    virtual std::string systemDefaultInputDevice(const std::string& api) const = 0;
     virtual int inputChannelsAvailable() const = 0;
     virtual int inputChannelsAvailable(const std::string& api, const AudioDeviceSelection& inputDevice) const = 0;
     virtual std::vector<uint64_t> sampleRates() const = 0;

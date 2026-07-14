@@ -27,8 +27,10 @@ public:
     std::vector<std::string> apis() const override;
     std::vector<std::string> outputDevices() const override;
     std::vector<std::string> outputDevices(const std::string& api) const override;
+    std::string systemDefaultOutputDevice(const std::string& api) const override;
     std::vector<std::string> inputDevices() const override;
     std::vector<std::string> inputDevices(const std::string& api) const override;
+    std::string systemDefaultInputDevice(const std::string& api) const override;
     int inputChannelsAvailable() const override;
     int inputChannelsAvailable(const std::string& api, const audio::AudioDeviceSelection& inputDevice) const override;
     std::vector<uint64_t> sampleRates() const override;

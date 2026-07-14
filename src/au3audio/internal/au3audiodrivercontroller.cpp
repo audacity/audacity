@@ -252,6 +252,11 @@ std::vector<std::string> Au3AudioDriverController::outputDevices(const std::stri
     return result;
 }
 
+std::string Au3AudioDriverController::systemDefaultOutputDevice(const std::string& api) const
+{
+    return ::systemDefaultOutputDevice(api);
+}
+
 std::vector<std::string> Au3AudioDriverController::inputDevices() const
 {
     return inputDevices(m_configuration.api);
@@ -267,6 +272,11 @@ std::vector<std::string> Au3AudioDriverController::inputDevices(const std::strin
         }
     }
     return result;
+}
+
+std::string Au3AudioDriverController::systemDefaultInputDevice(const std::string& api) const
+{
+    return ::systemDefaultInputDevice(api);
 }
 
 int Au3AudioDriverController::inputChannelsAvailable() const
