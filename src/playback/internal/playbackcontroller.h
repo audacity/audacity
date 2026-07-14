@@ -21,6 +21,7 @@
 #include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
 #include "record/irecord.h"
+#include "toast/itoastservice.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::playback {
@@ -32,6 +33,7 @@ public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
     muse::GlobalInject<audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<toast::IToastService> toastService;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<IPlayback> playback { this };
