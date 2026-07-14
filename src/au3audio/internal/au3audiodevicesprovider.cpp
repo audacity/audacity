@@ -93,6 +93,7 @@ void Au3AudioDevicesProvider::init()
 
     muse::settings()->valueChanged(AUDIO_HOST).onReceive(nullptr, [this](const muse::Val& val) {
         updateInputOutputDevices();
+        revalidateInputOutputDevices();
         m_audioApiChanged.notify();
     });
 
@@ -447,6 +448,8 @@ void Au3AudioDevicesProvider::initInputChannels()
         inputDevice = systemDefaultInputDevice();
     }
 
+    m_inputChannelsAvailable = 0;
+
     for (const auto& device : inMaps) {
         if (device.hostString != host) {
             continue;
@@ -482,6 +485,32 @@ void Au3AudioDevicesProvider::updateInputOutputDevices()
     }
 }
 
+void Au3AudioDevicesProvider::revalidateInputOutputDevices()
+{
+    // A stored device may not exist anymore after a host change or a rescan: reset it
+    // to the system default. Resetting fires the setting's valueChanged handler, which
+    // refreshes everything; when the stored value is kept, no notification fires even
+    // though the same name (or the system default) may now resolve to a different
+    // device, so refresh explicitly.
+    const std::string inputDevice = muse::settings()->value(RECORDING_DEVICE).toString();
+    if (!inputDevice.empty() && !muse::contains(m_inputDevices, inputDevice)) {
+        setInputDevice(std::nullopt);
+    } else {
+        setupInputDevice(inputDevice);
+        m_audioInputDeviceChanged.notify();
+        m_inputChannelsListChanged.notify();
+        m_inputChannelsChanged.notify();
+    }
+
+    const std::string outputDevice = muse::settings()->value(PLAYBACK_DEVICE).toString();
+    if (!outputDevice.empty() && !muse::contains(m_outputDevices, outputDevice)) {
+        setOutputDevice(std::nullopt);
+    } else {
+        handleDeviceChange();
+        m_audioOutputDeviceChanged.notify();
+    }
+}
+
 void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
 {
     const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
@@ -491,6 +520,8 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
 
     const bool useSystemDefault = newDevice.empty();
     const std::string effectiveDevice = useSystemDefault ? systemDefaultInputDevice() : newDevice;
+
+    m_inputChannelsAvailable = 0;
 
     for (const auto& device : inMaps) {
         const auto deviceName = MakeDeviceSourceString(&device, inMaps);
@@ -540,11 +571,7 @@ void Au3AudioDevicesProvider::rescan()
 
     initHosts();
     updateInputOutputDevices();
-    initInputChannels();
+    revalidateInputOutputDevices();
 
     m_audioApiChanged.notify();
-    m_audioOutputDeviceChanged.notify();
-    m_audioInputDeviceChanged.notify();
-    m_inputChannelsListChanged.notify();
-    m_inputChannelsChanged.notify();
 }

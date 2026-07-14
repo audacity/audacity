@@ -83,6 +83,7 @@ private:
     void initInputChannels();
 
     void updateInputOutputDevices();
+    void revalidateInputOutputDevices();
     void setupInputDevice(const std::string& newDevice);
 
     std::string systemDefaultOutputDevice() const;
