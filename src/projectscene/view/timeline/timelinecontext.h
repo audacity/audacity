@@ -231,6 +231,7 @@ private:
     void updateFrameTime();
     void autoScrollView(double scrollStep);
     void animateToFrameTime(double targetStartTime);
+    double maxFrameEndTime() const;
 
     void setSelectionStartTime(double time);
     void setSelectionEndTime(double time);
