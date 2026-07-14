@@ -177,6 +177,25 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             isTrackSelection = !selectionController()->selectedTracks().empty();
         }
 
+        if (effect->GetType() == EffectTypeGenerate && !isTimeSelection) {
+            // Generate at the current playhead position.
+            t0 = t1 = playback()->player()->playbackPosition();
+
+            const auto selectedTracks = selectionController()->selectedTracks();
+            const bool hasSelectedWaveTrack = std::any_of(selectedTracks.begin(), selectedTracks.end(),
+                                                          [&](const trackedit::TrackId& id) {
+                return au3::DomAccessor::findWaveTrack(project, ::TrackId(id)) != nullptr;
+            });
+
+            if (!hasSelectedWaveTrack) {
+                const trackedit::TrackId focused = trackNavigationController()->focusedTrack();
+                if (focused != trackedit::INVALID_TRACK && au3::DomAccessor::findWaveTrack(project, ::TrackId(focused))) {
+                    // No selected wave track, use focused track
+                    selectionController()->setSelectedTracks({ focused });
+                }
+            }
+        }
+
         if ((!isTimeSelection || !isTrackSelection) && (effect->GetType() != EffectTypeGenerate
                                                         && effect->GetType() != EffectTypeTool)
             && !isNyquistPrompt(*effect)) {
