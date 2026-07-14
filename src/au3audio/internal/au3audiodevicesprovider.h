@@ -5,16 +5,19 @@
 #ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 #define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
 #include "audio/iaudiodevicesprovider.h"
 #include "audio/iaudioengine.h"
+#include "au3audio/iau3devicemanager.h"
 
 namespace au::au3audio {
-class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Contextable
+class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<IAu3DeviceManager> deviceManager;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
 

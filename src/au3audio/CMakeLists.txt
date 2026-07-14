@@ -10,12 +10,15 @@ set(MODULE_SRC
     #public
     ${CMAKE_CURRENT_LIST_DIR}/au3audiomodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3audiomodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3devicemanager.h
 
     # AU3
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3devicemanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3devicemanager.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioiolistener.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.h
@@ -29,3 +32,7 @@ set(MODULE_DEF ${AU3_DEF})
 set(MODULE_LINK au3wrap)
 
 setup_module()
+
+if (AU_BUILD_AU3AUDIO_TESTS)
+    add_subdirectory(tests)
+endif()

@@ -7,6 +7,7 @@
 
 #include "internal/au3audioengine.h"
 #include "internal/au3audiodevicesprovider.h"
+#include "internal/au3devicemanager.h"
 
 using namespace au::au3audio;
 using namespace muse::modularity;
@@ -21,8 +22,10 @@ std::string Au3AudioModule::moduleName() const
 void Au3AudioModule::registerExports()
 {
     m_audioEngine = std::make_shared<Au3AudioEngine>();
+    m_deviceManager = std::make_shared<Au3DeviceManager>();
 
     globalIoc()->registerExport<audio::IAudioEngine>(mname, m_audioEngine);
+    globalIoc()->registerExport<IAu3DeviceManager>(mname, m_deviceManager);
 }
 
 void Au3AudioModule::onInit(const muse::IApplication::RunMode&)

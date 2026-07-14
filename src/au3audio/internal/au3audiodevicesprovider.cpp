@@ -91,18 +91,18 @@ void Au3AudioDevicesProvider::init()
     muse::settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_FORMAT,
                                       muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
 
-    muse::settings()->valueChanged(AUDIO_HOST).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(AUDIO_HOST).onReceive(this, [this](const muse::Val& val) {
         updateInputOutputDevices();
         revalidateInputOutputDevices();
         m_audioApiChanged.notify();
     });
 
-    muse::settings()->valueChanged(PLAYBACK_DEVICE).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(PLAYBACK_DEVICE).onReceive(this, [this](const muse::Val& val) {
         Au3AudioDevicesProvider::handleDeviceChange();
         m_audioOutputDeviceChanged.notify();
     });
 
-    muse::settings()->valueChanged(RECORDING_DEVICE).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(RECORDING_DEVICE).onReceive(this, [this](const muse::Val& val) {
         setupInputDevice();
 
         m_audioInputDeviceChanged.notify();
@@ -110,32 +110,32 @@ void Au3AudioDevicesProvider::init()
         m_inputChannelsChanged.notify();
     });
 
-    muse::settings()->valueChanged(INPUT_CHANNELS).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(INPUT_CHANNELS).onReceive(this, [this](const muse::Val& val) {
         m_inputChannelsChanged.notify();
     });
 
-    muse::settings()->valueChanged(AUTOMATIC_LATENCY_COMPENSATION).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(AUTOMATIC_LATENCY_COMPENSATION).onReceive(this, [this](const muse::Val& val) {
         m_automaticCompensationEnabledChanged.notify();
     });
 
-    muse::settings()->valueChanged(LATENCY_DURATION).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(LATENCY_DURATION).onReceive(this, [this](const muse::Val& val) {
         m_bufferLengthChanged.notify();
     });
 
-    muse::settings()->valueChanged(LATENCY_COMPENSATION).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(LATENCY_COMPENSATION).onReceive(this, [this](const muse::Val& val) {
         m_latencyCompensationChanged.notify();
     });
 
-    muse::settings()->valueChanged(ASIO_USE_DEVICE_SAMPLE_RATE).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(ASIO_USE_DEVICE_SAMPLE_RATE).onReceive(this, [this](const muse::Val& val) {
         m_asioUseDeviceSampleRateChanged.notify();
     });
 
-    muse::settings()->valueChanged(DEFAULT_PROJECT_SAMPLE_FORMAT).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(DEFAULT_PROJECT_SAMPLE_FORMAT).onReceive(this, [this](const muse::Val& val) {
         QualitySettings::SampleFormatSetting.Write(wxString(val.toString()));
         m_defaultSampleFormatChanged.notify();
     });
 
-    muse::settings()->valueChanged(DEFAULT_PROJECT_SAMPLE_RATE).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(DEFAULT_PROJECT_SAMPLE_RATE).onReceive(this, [this](const muse::Val& val) {
         // At the moment changing the default sample rate also changes the current project rate
         auto currentProject = globalContext()->currentProject();
         if (currentProject) {
@@ -298,9 +298,9 @@ muse::async::Notification Au3AudioDevicesProvider::asioUseDeviceSampleRateChange
 
 void Au3AudioDevicesProvider::showAsioControlPanel()
 {
-    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(currentApi(), effectiveOutputDevice());
+    int paIndex = deviceManager()->outputDevicePaIndex(currentApi(), effectiveOutputDevice());
     if (paIndex < 0) {
-        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(currentApi(), effectiveInputDevice());
+        paIndex = deviceManager()->inputDevicePaIndex(currentApi(), effectiveInputDevice());
     }
 
     if (paIndex < 0) {
@@ -312,7 +312,7 @@ void Au3AudioDevicesProvider::showAsioControlPanel()
         audioEngine()->stopMonitoring();
     }
 
-    DeviceManager::ShowAsioControlPanel(paIndex);
+    deviceManager()->showAsioControlPanel(paIndex);
 }
 
 std::vector<uint64_t> Au3AudioDevicesProvider::sampleRates() const
@@ -409,8 +409,8 @@ async::Notification Au3AudioDevicesProvider::apiChanged() const
 
 void Au3AudioDevicesProvider::initHosts()
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager()->inputDeviceMaps();
+    const std::vector<DeviceSourceMap>& outMaps = deviceManager()->outputDeviceMaps();
 
     m_audioApis.clear();
 
@@ -431,7 +431,7 @@ void Au3AudioDevicesProvider::initHosts()
 
 void Au3AudioDevicesProvider::initInputChannels()
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager()->inputDeviceMaps();
     const std::string host = currentApi();
     const std::string inputDevice = effectiveInputDevice();
 
@@ -451,8 +451,8 @@ void Au3AudioDevicesProvider::initInputChannels()
 
 void Au3AudioDevicesProvider::updateInputOutputDevices()
 {
-    const std::vector<DeviceSourceMap>& inputDevices = DeviceManager::Instance()->GetInputDeviceMaps();
-    const std::vector<DeviceSourceMap>& outputDevices = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inputDevices = deviceManager()->inputDeviceMaps();
+    const std::vector<DeviceSourceMap>& outputDevices = deviceManager()->outputDeviceMaps();
 
     m_inputDevices.clear();
     m_outputDevices.clear();
@@ -500,7 +500,7 @@ void Au3AudioDevicesProvider::revalidateInputOutputDevices()
 
 void Au3AudioDevicesProvider::setupInputDevice()
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager()->inputDeviceMaps();
     const std::string host = currentApi();
 
     int prevInputChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
@@ -515,7 +515,7 @@ void Au3AudioDevicesProvider::setupInputDevice()
             continue;
         }
 
-        DeviceManager::Instance()->UpdateAsioDeviceCaps(device.deviceIndex);
+        deviceManager()->updateAsioDeviceCaps(device.deviceIndex);
 
         muse::settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device.sourceIndex));
 
@@ -554,21 +554,21 @@ std::string Au3AudioDevicesProvider::effectiveInputDevice() const
 
 std::string Au3AudioDevicesProvider::systemDefaultOutputDevice() const
 {
-    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
-    const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
-    return MakeDeviceSourceString(DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex), outMaps);
+    const std::vector<DeviceSourceMap>& outMaps = deviceManager()->outputDeviceMaps();
+    const int hostIndex = deviceManager()->hostIndex(currentApi());
+    return MakeDeviceSourceString(deviceManager()->defaultOutputDevice(hostIndex), outMaps);
 }
 
 std::string Au3AudioDevicesProvider::systemDefaultInputDevice() const
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
-    return MakeDeviceSourceString(DeviceManager::Instance()->GetDefaultInputDevice(hostIndex), inMaps);
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager()->inputDeviceMaps();
+    const int hostIndex = deviceManager()->hostIndex(currentApi());
+    return MakeDeviceSourceString(deviceManager()->defaultInputDevice(hostIndex), inMaps);
 }
 
 void Au3AudioDevicesProvider::rescan()
 {
-    DeviceManager::Instance()->Rescan();
+    deviceManager()->rescan();
 
     initHosts();
     updateInputOutputDevices();
