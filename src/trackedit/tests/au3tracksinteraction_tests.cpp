@@ -720,7 +720,7 @@ TEST_F(Au3TracksInteractionTests, DuplicateTracksOnEmptyList)
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(0);
 
     //! [WHEN] Duplicate the tracks with an empty list
-    EXPECT_EQ(m_tracksInteraction->duplicateTracks({}), true);
+    EXPECT_EQ(m_tracksInteraction->duplicateTracks({}), false);
 
     //! [THEN] The number of tracks is still 0
     ASSERT_EQ(projectTracks.Size(), 0) << "The number of tracks after the duplicate operation is not 0";

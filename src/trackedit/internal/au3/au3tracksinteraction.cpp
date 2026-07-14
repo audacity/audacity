@@ -727,7 +727,6 @@ bool Au3TracksInteraction::newMonoTrack()
     selectionController()->setSelectedTracks({ trackId });
     trackNavigationController()->setFocusedTrack(trackId);
 
-    projectHistory()->pushHistoryState("Created new mono track", "New Mono Track");
     return true;
 }
 
@@ -737,7 +736,6 @@ bool Au3TracksInteraction::newStereoTrack()
     selectionController()->setSelectedTracks({ trackId });
     trackNavigationController()->setFocusedTrack(trackId);
 
-    projectHistory()->pushHistoryState("Created new stereo track", "New Stereo Track");
     return true;
 }
 
@@ -806,8 +804,7 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
 bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
 {
     if (trackIds.empty()) {
-        projectHistory()->pushHistoryState("Duplicated tracks", "Duplicate Tracks");
-        return true;
+        return false;
     }
 
     auto& project = projectRef();
