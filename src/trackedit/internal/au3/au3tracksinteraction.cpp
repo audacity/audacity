@@ -804,8 +804,7 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
 bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
 {
     if (trackIds.empty()) {
-        projectHistory()->pushHistoryState("Duplicated tracks", "Duplicate Tracks");
-        return true;
+        return false;
     }
 
     auto& project = projectRef();
