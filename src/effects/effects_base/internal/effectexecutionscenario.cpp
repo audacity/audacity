@@ -40,6 +40,11 @@ using namespace au::effects;
 
 static const int UNDEFINED_FREQUENCY = -1;
 
+static bool isNyquistPrompt(const Effect& effect)
+{
+    return effect.GetSymbol().Internal() == NYQUIST_PROMPT_ID;
+}
+
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
     au3::Au3Project& project = projectRef();
@@ -173,7 +178,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         }
 
         if ((!isTimeSelection || !isTrackSelection) && (effect->GetType() != EffectTypeGenerate
-                                                        && effect->GetType() != EffectTypeTool)) {
+                                                        && effect->GetType() != EffectTypeTool)
+            && !isNyquistPrompt(*effect)) {
             return make_ret(Err::EffectNoAudioSelected);
         }
 
@@ -602,7 +608,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
     {
         // We don't yet know the effect type for code in the Nyquist Prompt, so
         // assume it requires a track and handle errors when the effect runs.
-        if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
+        if ((effect->GetType() == EffectTypeGenerate || isNyquistPrompt(*effect)) && (effect->mNumTracks == 0)) {
             auto track = effect->mFactory->Create();
             track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
             // The track-added event should be issued synchronously.
