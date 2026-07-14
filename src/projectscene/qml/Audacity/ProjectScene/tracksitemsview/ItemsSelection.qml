@@ -9,8 +9,6 @@ Item {
     property bool selectionInProgress: false
     property alias active: selRect.visible
     property var context: null
-    //! NOTE: sync with SelectionViewController's MIN_SELECTION_PX
-    property real minSelection: 1
 
     signal selectionResize(var x1, var x2, var completed)
     signal requestSelectionContextMenu(real x, real y)
@@ -62,7 +60,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: isDataSelected && !root.selectionInProgress
+        visible: (isDataSelected || leftMa.pressed) && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.BlankCursor
 
@@ -86,13 +84,10 @@ Item {
             if (!(leftMa.pressedButtons & Qt.LeftButton)) {
                 return
             }
-            var newWidth = leftMa.startW + (mouse.x * -1)
-            if (newWidth < root.minSelection) {
-                root.selectionResize(selRect.x + selRect.width - root.minSelection, selRect.x + selRect.width, false)
-            } else {
-                root.selectionResize(leftMa.startX + mouse.x, leftMa.startX + mouse.x + newWidth, false)
-            }
-            handleGuideline(selRect.x, false)
+            var anchor = leftMa.startX + leftMa.startW
+            var dragged = leftMa.startX + mouse.x
+            root.selectionResize(dragged, anchor, false)
+            handleGuideline(dragged <= anchor ? selRect.x : selRect.x + selRect.width, false)
         }
 
         onReleased: function (mouse) {
@@ -127,7 +122,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: isDataSelected && !root.selectionInProgress
+        visible: (isDataSelected || rightMa.pressed) && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.BlankCursor
 
@@ -140,6 +135,7 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
+            rightMa.startX = selRect.x
             rightMa.startW = selRect.width
             rightMa.x = selRect.x + selRect.width - rightMa.width
             CustomCursorProvider.overrideCursor(":/images/customCursorShapes/SelectionRight.png")
@@ -150,12 +146,10 @@ Item {
             if (!(rightMa.pressedButtons & Qt.LeftButton)) {
                 return
             }
-            var newWidth = rightMa.startW + mouse.x
-            if (newWidth < root.minSelection) {
-                newWidth = root.minSelection
-            }
-            root.selectionResize(selRect.x, selRect.x + newWidth, false)
-            handleGuideline(root.context.selectionEndPosition, false)
+            var anchor = rightMa.startX
+            var dragged = rightMa.startX + rightMa.startW + mouse.x
+            root.selectionResize(anchor, dragged, false)
+            handleGuideline(dragged >= anchor ? root.context.selectionEndPosition : selRect.x, false)
         }
 
         onReleased: function (mouse) {

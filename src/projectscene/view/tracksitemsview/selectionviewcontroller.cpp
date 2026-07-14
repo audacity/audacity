@@ -15,7 +15,6 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-//! NOTE: sync with ItemsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
 constexpr double SELECTION_DRAG_THRESHOLD_PX = 5.0;
 
