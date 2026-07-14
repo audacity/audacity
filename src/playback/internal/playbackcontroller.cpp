@@ -86,6 +86,24 @@ void PlaybackController::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
     });
+
+    if (audioDevicesProvider()) {
+        audioDevicesProvider()->usedOutputDeviceChanged().onReceive(this, [this](const std::string& device) {
+            const std::string message = device.empty()
+                                        ? muse::trc("playback", "No playback device is available.")
+                                        : muse::qtrc("playback", "“%1” is now used for playback.")
+                                        .arg(QString::fromStdString(device)).toStdString();
+            toastService()->showInfo(muse::trc("playback", "Playback device changed"), message);
+        });
+
+        audioDevicesProvider()->usedInputDeviceChanged().onReceive(this, [this](const std::string& device) {
+            const std::string message = device.empty()
+                                        ? muse::trc("playback", "No recording device is available.")
+                                        : muse::qtrc("playback", "“%1” is now used for recording.")
+                                        .arg(QString::fromStdString(device)).toStdString();
+            toastService()->showInfo(muse::trc("playback", "Recording device changed"), message);
+        });
+    }
 }
 
 void PlaybackController::deinit()

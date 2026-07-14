@@ -5,6 +5,7 @@
 #include <gmock/gmock.h>
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
+#include "audio/tests/mocks/audiodevicesprovidermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "global/tests/mocks/applicationmock.h"
 #include "mocks/playbackmock.h"
@@ -50,6 +51,9 @@ public:
 
         m_selectionController = std::make_shared<trackedit::SelectionControllerMock>();
         m_controller->selectionController.set(m_selectionController);
+
+        m_audioDevicesProvider = std::make_shared<::testing::NiceMock<audio::AudioDevicesProviderMock> >();
+        m_controller->audioDevicesProvider.set(m_audioDevicesProvider);
 
         m_trackeditProject = std::make_shared<trackedit::TrackeditProjectMock>();
 
@@ -129,6 +133,7 @@ public:
     std::shared_ptr<actions::IActionsDispatcher> m_dispatcher;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
+    std::shared_ptr<::testing::NiceMock<audio::AudioDevicesProviderMock> > m_audioDevicesProvider;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 
