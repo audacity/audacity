@@ -148,6 +148,10 @@ int DeviceManager::GetOutputDevicePaIndex(const std::string& hostName, const std
 
 DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
 {
+    if (!m_inited) {
+        Init();
+    }
+
     if (hostIndex < 0 || hostIndex >= Pa_GetHostApiCount()) {
         return NULL;
     }
@@ -356,6 +360,7 @@ static wxString AsioCacheKeyRoot(const char* deviceName)
     escaped.Replace(L"/", L"_");
     return L"/AudioIO/ASIODeviceInfoCache/" + escaped + L"/";
 }
+
 #endif
 
 static void ApplyCachedAsioDeviceInfo()
