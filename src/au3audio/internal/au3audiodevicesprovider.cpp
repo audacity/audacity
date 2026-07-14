@@ -103,7 +103,7 @@ void Au3AudioDevicesProvider::init()
     });
 
     muse::settings()->valueChanged(RECORDING_DEVICE).onReceive(nullptr, [this](const muse::Val& val) {
-        setupInputDevice(val.toString());
+        setupInputDevice();
 
         m_audioInputDeviceChanged.notify();
         m_inputChannelsListChanged.notify();
@@ -298,19 +298,9 @@ muse::async::Notification Au3AudioDevicesProvider::asioUseDeviceSampleRateChange
 
 void Au3AudioDevicesProvider::showAsioControlPanel()
 {
-    std::string outputDevice = muse::settings()->value(PLAYBACK_DEVICE).toString();
-    if (outputDevice.empty()) {
-        outputDevice = systemDefaultOutputDevice();
-    }
-
-    std::string inputDevice = muse::settings()->value(RECORDING_DEVICE).toString();
-    if (inputDevice.empty()) {
-        inputDevice = systemDefaultInputDevice();
-    }
-
-    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(currentApi(), outputDevice);
+    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(currentApi(), effectiveOutputDevice());
     if (paIndex < 0) {
-        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(currentApi(), inputDevice);
+        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(currentApi(), effectiveInputDevice());
     }
 
     if (paIndex < 0) {
@@ -443,10 +433,7 @@ void Au3AudioDevicesProvider::initInputChannels()
 {
     const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
     const std::string host = currentApi();
-    std::string inputDevice = muse::settings()->value(RECORDING_DEVICE).toString();
-    if (inputDevice.empty() || !muse::contains(m_inputDevices, inputDevice)) {
-        inputDevice = systemDefaultInputDevice();
-    }
+    const std::string inputDevice = effectiveInputDevice();
 
     m_inputChannelsAvailable = 0;
 
@@ -496,7 +483,7 @@ void Au3AudioDevicesProvider::revalidateInputOutputDevices()
     if (!inputDevice.empty() && !muse::contains(m_inputDevices, inputDevice)) {
         setInputDevice(std::nullopt);
     } else {
-        setupInputDevice(inputDevice);
+        setupInputDevice();
         m_audioInputDeviceChanged.notify();
         m_inputChannelsListChanged.notify();
         m_inputChannelsChanged.notify();
@@ -511,15 +498,14 @@ void Au3AudioDevicesProvider::revalidateInputOutputDevices()
     }
 }
 
-void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
+void Au3AudioDevicesProvider::setupInputDevice()
 {
     const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    auto host = muse::settings()->value(AUDIO_HOST).toString();
+    const std::string host = currentApi();
 
     int prevInputChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
 
-    const bool useSystemDefault = newDevice.empty();
-    const std::string effectiveDevice = useSystemDefault ? systemDefaultInputDevice() : newDevice;
+    const std::string effectiveDevice = effectiveInputDevice();
 
     m_inputChannelsAvailable = 0;
 
@@ -531,9 +517,6 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
 
         DeviceManager::Instance()->UpdateAsioDeviceCaps(device.deviceIndex);
 
-        if (!useSystemDefault) {
-            muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(newDevice));
-        }
         muse::settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device.sourceIndex));
 
         if (device.totalSources >= 1) {
@@ -549,6 +532,24 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
 
         break;
     }
+}
+
+std::string Au3AudioDevicesProvider::effectiveOutputDevice() const
+{
+    const std::string device = muse::settings()->value(PLAYBACK_DEVICE).toString();
+    if (device.empty() || !muse::contains(m_outputDevices, device)) {
+        return systemDefaultOutputDevice();
+    }
+    return device;
+}
+
+std::string Au3AudioDevicesProvider::effectiveInputDevice() const
+{
+    const std::string device = muse::settings()->value(RECORDING_DEVICE).toString();
+    if (device.empty() || !muse::contains(m_inputDevices, device)) {
+        return systemDefaultInputDevice();
+    }
+    return device;
 }
 
 std::string Au3AudioDevicesProvider::systemDefaultOutputDevice() const

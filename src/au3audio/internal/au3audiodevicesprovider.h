@@ -84,7 +84,10 @@ private:
 
     void updateInputOutputDevices();
     void revalidateInputOutputDevices();
-    void setupInputDevice(const std::string& newDevice);
+    void setupInputDevice();
+
+    std::string effectiveOutputDevice() const;
+    std::string effectiveInputDevice() const;
 
     std::string systemDefaultOutputDevice() const;
     std::string systemDefaultInputDevice() const;
