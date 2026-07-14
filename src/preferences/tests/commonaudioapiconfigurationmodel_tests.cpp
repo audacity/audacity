@@ -13,6 +13,8 @@ using ::testing::NiceMock;
 using ::testing::Return;
 
 namespace au::appshell {
+constexpr const char* SYSTEM_DEFAULT = "System default";
+
 class CommonAudioApiConfigurationModelTests : public ::testing::Test
 {
 public:
@@ -239,5 +241,117 @@ TEST_F(CommonAudioApiConfigurationModelTests, RestoreFailureIsAnAppliedResult)
             true }));
 
     EXPECT_TRUE(m_model->apply());
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceLists_StartWithTheSystemDefaultEntry)
+{
+    const QVariantList outputs = m_model->outputDeviceList();
+    ASSERT_EQ(outputs.size(), 3);
+    EXPECT_EQ(outputs.at(0).toString(), QString(SYSTEM_DEFAULT));
+    EXPECT_EQ(outputs.at(1).toString(), QString("Built-in Output"));
+    EXPECT_EQ(outputs.at(2).toString(), QString("Headphones"));
+
+    const QVariantList inputs = m_model->inputDeviceList();
+    ASSERT_EQ(inputs.size(), 3);
+    EXPECT_EQ(inputs.at(0).toString(), QString(SYSTEM_DEFAULT));
+    EXPECT_EQ(inputs.at(1).toString(), QString("Built-in Mic"));
+    EXPECT_EQ(inputs.at(2).toString(), QString("USB Mic"));
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceLists_NoDevices_AreEmptyAndHaveNoCurrentIndex)
+{
+    ON_CALL(*m_controller, outputDevices("Core Audio"))
+    .WillByDefault(Return(std::vector<std::string> {}));
+    ON_CALL(*m_controller, inputDevices("Core Audio"))
+    .WillByDefault(Return(std::vector<std::string> {}));
+
+    EXPECT_TRUE(m_model->outputDeviceList().isEmpty());
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), -1);
+    EXPECT_TRUE(m_model->inputDeviceList().isEmpty());
+    EXPECT_EQ(m_model->currentInputDeviceIndex(), -1);
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, CurrentDeviceIndex_IsShiftedByTheSystemDefaultEntry)
+{
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 1);
+    EXPECT_EQ(m_model->currentInputDeviceIndex(), 1);
+
+    m_applied.outputDevice = std::nullopt;
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 0);
+
+    m_applied.outputDevice = "Unplugged device";
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 0);
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceSelected_SystemDefaultEntry_StagesTheDefaultSelection)
+{
+    m_model->outputDeviceSelected(0);
+
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 0);
+    EXPECT_CALL(*m_controller, apply(_, _))
+    .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        EXPECT_EQ(change.outputDevice, std::optional<audio::AudioDeviceSelection>(audio::AudioDeviceSelection {}));
+        return audio::ApplyResult { audio::ApplyStatus::Applied };
+    });
+
+    EXPECT_TRUE(m_model->apply());
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceSelected_OutOfRange_IsIgnored)
+{
+    m_model->outputDeviceSelected(3);
+    m_model->outputDeviceSelected(-1);
+    m_model->inputDeviceSelected(3);
+    m_model->inputDeviceSelected(-1);
+
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 1);
+    EXPECT_EQ(m_model->currentInputDeviceIndex(), 1);
+    EXPECT_CALL(*m_controller, apply(_, _))
+    .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        EXPECT_FALSE(change.outputDevice);
+        EXPECT_FALSE(change.inputDevice);
+        return audio::ApplyResult { audio::ApplyStatus::NoChange };
+    });
+
+    EXPECT_TRUE(m_model->apply());
+}
+
+//! NOTE A real device may carry the same name as the "System default" entry;
+//! index-based selection must keep the two distinguishable
+TEST_F(CommonAudioApiConfigurationModelTests, DeviceNamedSystemDefault_IsDistinctFromTheDefaultEntry)
+{
+    ON_CALL(*m_controller, outputDevices("Core Audio"))
+    .WillByDefault(Return(std::vector<std::string> { SYSTEM_DEFAULT }));
+    m_applied.outputDevice = SYSTEM_DEFAULT;
+
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 1);
+
+    m_model->outputDeviceSelected(0);
+
+    EXPECT_EQ(m_model->currentOutputDeviceIndex(), 0);
+    EXPECT_CALL(*m_controller, apply(_, _))
+    .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        EXPECT_EQ(change.outputDevice, std::optional<audio::AudioDeviceSelection>(audio::AudioDeviceSelection {}));
+        return audio::ApplyResult { audio::ApplyStatus::Applied };
+    });
+
+    EXPECT_TRUE(m_model->apply());
+}
+
+TEST_F(CommonAudioApiConfigurationModelTests, ExternalDeviceChangeIsForwardedAsAnIndexChangeSignal)
+{
+    int outputChangedCount = 0;
+    int inputChangedCount = 0;
+    QObject::connect(m_model.get(), &CommonAudioApiConfigurationModel::currentOutputDeviceIndexChanged,
+                     m_model.get(), [&outputChangedCount]() { ++outputChangedCount; });
+    QObject::connect(m_model.get(), &CommonAudioApiConfigurationModel::currentInputDeviceIndexChanged,
+                     m_model.get(), [&inputChangedCount]() { ++inputChangedCount; });
+
+    audio::AudioConfigurationDelta delta;
+    delta.fields = audio::fieldMask(audio::AudioConfigurationField::OutputDevice);
+    m_configurationChanged.send(delta);
+
+    EXPECT_EQ(outputChangedCount, 1);
+    EXPECT_EQ(inputChangedCount, 1);
 }
 }
