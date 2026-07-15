@@ -48,3 +48,7 @@ install(FILES
     DESTINATION share/audacityplugin/v0
     COMPONENT audacityplugin
 )
+
+if (AU_BUILD_EFFECTS_TESTS)
+    add_subdirectory(tests)
+endif()
