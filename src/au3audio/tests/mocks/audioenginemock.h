@@ -32,6 +32,7 @@ public:
 
     MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
+    MOCK_METHOD(bool, isMonitoring, (), (const, override));
 
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));
     MOCK_METHOD(float, getInputVolume, (), (const, override));

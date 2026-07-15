@@ -210,11 +210,21 @@ void Au3AudioDevicesProvider::handleDeviceChange()
         return;
     }
 
+    const bool wasMonitoring = audioEngine()->isMonitoring();
+
     audioEngine()->stopMonitoring();
     if (audioEngine()->isBusy()) {
         audioEngine()->stopStream();
     }
     audioEngine()->handleDeviceChange();
+
+    if (wasMonitoring) {
+        if (const auto currentProject = globalContext()->currentProject()) {
+            if (Au3Project* project = reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr())) {
+                audioEngine()->startMonitoring(*project);
+            }
+        }
+    }
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::apis() const

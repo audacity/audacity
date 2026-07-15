@@ -31,6 +31,7 @@ public:
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
+    bool isMonitoring() const override;
 
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;

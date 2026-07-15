@@ -40,6 +40,7 @@ public:
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+    virtual bool isMonitoring() const = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;

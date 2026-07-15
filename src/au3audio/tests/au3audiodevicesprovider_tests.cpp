@@ -4,10 +4,13 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "context/tests/mocks/globalcontextmock.h"
 #include "mocks/audioenginemock.h"
+#include "project/tests/mocks/audacityprojectmock.h"
 
 #include "../internal/au3audiodevicesprovider.h"
 
+using ::testing::_;
 using ::testing::InSequence;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -22,6 +25,20 @@ public:
 
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
         m_provider->audioEngine.set(m_audioEngine);
+
+        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
+        m_provider->globalContext.set(m_globalContext);
+
+        m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
+        ON_CALL(*m_globalContext, currentProject())
+        .WillByDefault(Return(m_currentProject));
+
+        // The provider reaches the au3 project through au3ProjectPtr(); hand it
+        // a (never dereferenced) non-null dummy so the null-guard doesn't skip
+        // the code under test.
+        static int dummyAu3Project;
+        ON_CALL(*m_currentProject, au3ProjectPtr())
+        .WillByDefault(Return(reinterpret_cast<uintptr_t>(&dummyAu3Project)));
     }
 
     void handleDeviceChange()
@@ -31,6 +48,8 @@ public:
 
     std::shared_ptr<Au3AudioDevicesProvider> m_provider;
     std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
+    std::shared_ptr<context::GlobalContextMock> m_globalContext;
+    std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 };
 
 /**
@@ -100,6 +119,44 @@ TEST_F(Au3AudioDevicesProviderTests, SetInputChannels_WhenBusy_TearsDownStream)
 
     //! [WHEN] The capture channel count is changed
     m_provider->setInputChannels(newCount);
+}
+
+/**
+ * @brief Input monitoring must survive a device action.
+ * @details handleDeviceChange() unconditionally stops monitoring to perform the
+ *          low-level switch (issue #11098); if it was on beforehand, it must be
+ *          restarted afterwards, or the user silently loses input metering.
+ */
+TEST_F(Au3AudioDevicesProviderTests, HandleDeviceChange_WhenMonitoring_RestartsMonitoringAfterSwitch)
+{
+    //! [GIVEN] Input monitoring is on
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Monitoring is stopped for the switch and restarted once it's done
+    InSequence seq;
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
+    EXPECT_CALL(*m_audioEngine, handleDeviceChange()).Times(1);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+
+    //! [WHEN] The device is changed
+    handleDeviceChange();
+}
+
+/**
+ * @brief No spurious monitoring start when it wasn't on to begin with.
+ */
+TEST_F(Au3AudioDevicesProviderTests, HandleDeviceChange_WhenNotMonitoring_DoesNotRestartMonitoring)
+{
+    //! [GIVEN] Input monitoring is off
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(false));
+
+    //! [THEN] Nothing tries to resume monitoring
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(0);
+
+    //! [WHEN] The device is changed
+    handleDeviceChange();
 }
 
 TEST_F(Au3AudioDevicesProviderTests, SetInputChannels_SameValueAsCurrent_DoesNotTearDownStream)

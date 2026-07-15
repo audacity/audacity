@@ -115,6 +115,11 @@ void Au3AudioEngine::stopMonitoring()
     AudioIO::Get()->StopMonitoring();
 }
 
+bool Au3AudioEngine::isMonitoring() const
+{
+    return AudioIO::Get()->IsMonitoring();
+}
+
 void Au3AudioEngine::setInputVolume(const float newInputVolume)
 {
     int inputSource;
