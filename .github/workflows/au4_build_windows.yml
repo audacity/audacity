@@ -156,6 +156,18 @@ jobs:
         choco install -y ccache
         bash ./buildscripts/ci/tools/setup_ccache_config.sh
 
+    - name: Install WiX 3 (WoA)
+      if: matrix.runner == 'windows-11-arm' && env.DO_BUILD == 'true'
+      shell: pwsh
+      run: |
+        $url = "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip"
+        $dst = "$env:RUNNER_TEMP\wix3"
+        New-Item -ItemType Directory -Force $dst | Out-Null
+        Invoke-WebRequest -Uri $url -OutFile "$dst\wix.zip"
+        Expand-Archive -Path "$dst\wix.zip" -DestinationPath $dst -Force
+        "WIX=$dst" | Out-File $env:GITHUB_ENV  -Append -Encoding utf8
+        $dst       | Out-File $env:GITHUB_PATH -Append -Encoding utf8
+
     - name: Register msvc problem matcher
       run: echo "::add-matcher::.github/problem_matchers/msvc.json"
 
