@@ -97,6 +97,7 @@ Item {
                 case "time":
                     return timeControl
                 case "file":
+                case "directory":
                     return fileControl
                 case "text":
                     return textControl
@@ -365,10 +366,15 @@ Item {
                 pathFieldTitle: parameterData ? parameterData.name : ""
 
                 path: parameterData ? parameterData.currentValueString : ""
+                dir: parameterData && parameterData.type === "directory" ? parameterData.currentValueString : ""
 
                 pickerType: {
                     if (!parameterData) {
                         return FilePicker.PickerType.File
+                    }
+
+                    if (parameterData.type === "directory") {
+                        return FilePicker.PickerType.Directory
                     }
 
                     // If "save" flag is set, use Any type (save dialog)

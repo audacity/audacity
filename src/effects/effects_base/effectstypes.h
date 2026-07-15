@@ -77,6 +77,7 @@ enum class ParameterType {
     ReadOnly,      // Display-only (meter, status, informational text)
     Time,          // Time value with timecode formatting
     File,          // File path with file picker
+    Directory,
     Text,          // Text input field (free-form string)
 };
 
@@ -196,6 +197,7 @@ public:
         AudioUnit,
 #endif
         Nyquist,
+        AudacityPlugin,
         _count
     };
     Q_ENUM(EffectFamily)
