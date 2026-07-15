@@ -55,6 +55,7 @@ public:
     virtual void setInputChannels(int channels) = 0;
     virtual void setDefaultSampleRate(uint64_t rate) = 0;
     virtual void setBufferLength(double duration) = 0;
+    virtual void setLatencyCompensation(double value) = 0;
 
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
 

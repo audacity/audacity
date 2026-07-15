@@ -741,6 +741,23 @@ void PlaybackController::setBufferLength(double duration)
     }
 }
 
+void PlaybackController::setLatencyCompensation(double value)
+{
+    // The compensation is baked into the capture stream at start and consumed
+    // within the take's first moments, so a change can never apply to the take
+    // in progress. Rather than letting the user believe otherwise, stop the
+    // recording — and, recording being sensitive, don't auto-resume.
+    // We may decide in the future to automatically restart the recording, but then
+    // it'd probably have to be in a new clip.
+    // Playback does not consume this value, so it is left running.
+    if (!muse::RealIsEqual(value, audioDevicesProvider()->latencyCompensation())) {
+        if (recordController()->isRecording()) {
+            record()->stop();
+        }
+        audioDevicesProvider()->setLatencyCompensation(value);
+    }
+}
+
 void PlaybackController::rescanAudioDevices()
 {
     withStreamRestart([this]() {
