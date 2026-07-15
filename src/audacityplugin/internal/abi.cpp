@@ -82,14 +82,7 @@ bool copyValue(const aup_value& source, ParameterType expected, Value& target)
         }
         target = source.as_double;
         return true;
-    case ParameterType::String: {
-        std::string value;
-        if (!copyString(source.as_string, value)) {
-            return false;
-        }
-        target = std::move(value);
-        return true;
-    }
+    case ParameterType::String:
     case ParameterType::Enumeration:
     case ParameterType::File:
     case ParameterType::Directory: {

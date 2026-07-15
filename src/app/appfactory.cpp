@@ -97,6 +97,7 @@
 #endif
 
 #include "au3wrap/au3wrapmodule.h"
+#include "audacityplugin/audacitypluginmodule.h"
 
 using namespace muse;
 using namespace au::app;
@@ -160,6 +161,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::effects::Lv2EffectsModule());
     app->addModule(new au::effects::VstEffectsModule());
     app->addModule(new au::effects::NyquistEffectsModule());
+    app->addModule(new au::audacityplugin::AudacityPluginModule());
     app->addModule(new au::context::ContextModule());
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());
