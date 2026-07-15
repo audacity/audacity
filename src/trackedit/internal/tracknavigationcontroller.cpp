@@ -4,6 +4,8 @@
 
 #include "tracknavigationcontroller.h"
 
+#include "framework/ui/navigationcommands.h"
+
 #include <algorithm>
 
 #include "framework/global/async/async.h"
@@ -314,7 +316,7 @@ void TrackNavigationController::navigateToNextPanel()
 
     if (isTrackPanel) {
         if (isTrackItemsEmpty(m_focusedItemKey.trackId)) {
-            dispatcher()->dispatch("nav-next-panel");
+            commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
         } else {
             navigateToFirstItem();
         }
@@ -322,7 +324,7 @@ void TrackNavigationController::navigateToNextPanel()
     }
 
     if (isLastTrack(m_focusedItemKey.trackId)) {
-        dispatcher()->dispatch("nav-next-panel");
+        commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
         return;
     }
 
@@ -341,7 +343,7 @@ void TrackNavigationController::navigateToPrevPanel()
     m_focusedItemKey.itemId = INVALID_TRACK_ITEM;
 
     if (isFirstTrack(m_focusedItemKey.trackId)) {
-        dispatcher()->dispatch("nav-prev-panel");
+        commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
         return;
     }
 
@@ -434,7 +436,7 @@ void TrackNavigationController::navigateToNextItem()
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        dispatcher()->dispatch("nav-right");
+        commandDispatcher()->dispatch(muse::ui::RIGHT_COMMAND);
         return;
     }
 
@@ -462,7 +464,7 @@ void TrackNavigationController::navigateToPrevItem()
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        dispatcher()->dispatch("nav-left");
+        commandDispatcher()->dispatch(muse::ui::LEFT_COMMAND);
         return;
     }
 

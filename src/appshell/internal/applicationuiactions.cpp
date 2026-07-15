@@ -186,6 +186,12 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "&Trigger"),
              TranslatableString("action", "Trigger")
              ),
+    UiAction("action://enter",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Enter"),
+             TranslatableString("action", "Trigger the focused control or select the focused track item")
+             ),
 };
 
 ApplicationUiActions::ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller)

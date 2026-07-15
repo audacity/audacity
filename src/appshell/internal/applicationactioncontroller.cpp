@@ -21,6 +21,8 @@
  */
 #include "applicationactioncontroller.h"
 
+#include "framework/ui/navigationcommands.h"
+
 #include <algorithm>
 
 #include <QApplication>
@@ -37,6 +39,8 @@
 
 using namespace au::appshell;
 using namespace muse::actions;
+
+static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 
 void ApplicationActionController::preInit()
 {
@@ -92,6 +96,7 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "action://delete", this, &ApplicationActionController::doGlobalDelete);
     dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
     dispatcher()->reg(this, "action://trigger", this, &ApplicationActionController::doGlobalTrigger);
+    dispatcher()->reg(this, "action://enter", this, &ApplicationActionController::doGlobalEnter);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -513,6 +518,7 @@ void ApplicationActionController::doGlobalCancel()
     }
 
     dispatcher()->dispatch("nav-escape");
+    commandDispatcher()->dispatch(muse::ui::ESCAPE_COMMAND);
 }
 
 void ApplicationActionController::doGlobalTrigger()
@@ -520,6 +526,22 @@ void ApplicationActionController::doGlobalTrigger()
     if (isProjectOpened()) {
         dispatcher()->dispatch("action://playback/play");
     } else {
-        dispatcher()->dispatch("nav-trigger-control");
+        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
     }
+}
+
+void ApplicationActionController::doGlobalEnter()
+{
+    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
+    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
+        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+        return;
+    }
+
+    if (isProjectOpenedAndFocused()) {
+        dispatcher()->dispatch("track-view-replace-selection");
+        return;
+    }
+
+    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
 }

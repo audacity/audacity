@@ -185,13 +185,13 @@ static UiActionList STATIC_ACTIONS = {
              ),
     UiAction("play-position-decrease",
              au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
+             muse::shortcuts::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Move play cursor left"),
              TranslatableString("action", "Move play cursor left")
              ),
     UiAction("play-position-increase",
              au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
+             muse::shortcuts::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Move play cursor right"),
              TranslatableString("action", "Move play cursor right")
              ),
