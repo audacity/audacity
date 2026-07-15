@@ -1565,6 +1565,9 @@ bool NyquistBase::ProcessOne(
     }
 
     {
+        if (GetType() != EffectTypeGenerate && mT0 + mOutputDuration < mT1) {
+            mCurChannelGroup->Clear(mT0 + mOutputDuration, mT1, true /* moveClips */);
+        }
         PasteTimeWarper warper { mT1, mT0 + tempTrack->GetEndTime() };
         auto pProject = FindProject();
         const bool mergeClips = (mMergeClips < 0)
