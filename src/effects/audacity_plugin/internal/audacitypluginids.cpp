@@ -3,20 +3,16 @@
  */
 #include "audacitypluginids.h"
 
-#include "au3-strings/wxArrayStringEx.h"
-#include "au3wrap/internal/wxtypes_convert.h"
-
 #include "audacityplugin/audacityplugintypes.h"
+#include "effects/effects_base/internal/effectsutils.h"
 
 namespace au::effects::audacity_plugin {
 EffectId makeEffectId(const au::audacityplugin::EffectDescriptor& descriptor)
 {
-    return au3::wxToString(wxJoin(wxArrayStringEx {
-            wxString { "Effect" },
-            wxString::FromUTF8(EFFECT_FAMILY_ID),
-            au3::wxFromStdString(descriptor.pluginId),
-            au3::wxFromStdString(descriptor.effectId),
-            au3::wxFromStdString(descriptor.pluginId),
-        }, '_'));
+    return utils::makeEffectId(
+        EFFECT_FAMILY_ID,
+        descriptor.pluginId,
+        descriptor.effectId,
+        descriptor.pluginId);
 }
 } // namespace au::effects::audacity_plugin

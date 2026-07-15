@@ -17,6 +17,7 @@
 #include "effects/lv2/internal/lv2types.h"
 #include "effects/nyquist/internal/nyquisttypes.h"
 #include "effects/builtin/internal/builtintypes.h"
+#include "effects/audacity_plugin/internal/audacitypluginids.h"
 
 #include "au3-components/EffectInterface.h"
 #include "au3-strings/wxArrayStringEx.h"
@@ -39,6 +40,7 @@ muse::String utils::effectFamilyToString(EffectFamily family)
     case EffectFamily::AudioUnit: return u"AudioUnit";
 #endif
     case EffectFamily::Nyquist: return u"Nyquist";
+    case EffectFamily::AudacityPlugin: return u"Audacity Plugin";
     default:
         assert(false);
         return u"Unknown";
@@ -61,6 +63,8 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
 #endif
     } else if (family == u"Nyquist") {
         return EffectFamily::Nyquist;
+    } else if (family == u"Audacity Plugin") {
+        return EffectFamily::AudacityPlugin;
     }
     assert(false);
     return EffectFamily::Unknown;
@@ -78,6 +82,7 @@ std::string utils::effectFamilyToCacheType(EffectFamily family)
 #endif
     case EffectFamily::Nyquist:   return std::string(nyquist::AUDIO_RESOURCE_TYPE_NAME);
     case EffectFamily::Builtin:   return std::string(builtin::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::AudacityPlugin: return std::string(audacity_plugin::AUDIO_RESOURCE_TYPE_NAME);
     case EffectFamily::Unknown:
     case EffectFamily::_count:
         break;
@@ -106,6 +111,9 @@ EffectFamily utils::effectFamilyFromCacheType(const std::string& cacheType)
     if (cacheType == builtin::AUDIO_RESOURCE_TYPE_NAME) {
         return EffectFamily::Builtin;
     }
+    if (cacheType == audacity_plugin::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::AudacityPlugin;
+    }
     return EffectFamily::Unknown;
 }
 
@@ -129,6 +137,23 @@ static const muse::String spectralToolsEffectCategoryString{ "Spectral tools" };
 static const muse::String legacyEffectCategoryString{ "Legacy" };
 }
 
+EffectId utils::makeEffectId(const std::string& family,
+                             const std::string& vendor,
+                             const std::string& symbol,
+                             const std::string& path)
+{
+    // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
+    // (e.g. an effect vendor that has an underscore in its name.)
+    // TODO add defense in muse::strings utils.
+    return au3::wxToString(wxJoin(wxArrayStringEx {
+            wxString { "Effect" },
+            au3::wxFromStdString(family),
+            au3::wxFromStdString(vendor),
+            au3::wxFromStdString(symbol),
+            au3::wxFromStdString(path)
+        }, '_'));
+}
+
 EffectId utils::effectId(const EffectDefinitionInterface* effect)
 {
     static muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
@@ -137,16 +162,11 @@ EffectId utils::effectId(const EffectDefinitionInterface* effect)
                                           ? globalConfiguration()->toBundledPath(rawPath)
                                           : rawPath;
 
-    // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
-    // (e.g. an effect vendor that has an underscore in its name.)
-    // TODO add defense in muse::strings utils.
-    return au3::wxToString(wxJoin(wxArrayStringEx {
-            wxString { "Effect" },
-            effect->GetFamily().Internal(),
-            effect->GetVendor().Internal(),
-            effect->GetSymbol().Internal(),
-            au3::wxFromStdString(portablePath.toStdString())
-        }, '_'));
+    return makeEffectId(
+        au3::wxToStdString(effect->GetFamily().Internal()),
+        au3::wxToStdString(effect->GetVendor().Internal()),
+        au3::wxToStdString(effect->GetSymbol().Internal()),
+        portablePath.toStdString());
 }
 
 namespace {

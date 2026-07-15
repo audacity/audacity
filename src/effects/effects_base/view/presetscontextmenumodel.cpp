@@ -75,6 +75,7 @@ void PresetsContextMenuModel::reload()
     const EffectMeta effectMeta = effectsProvider()->meta(effectId);
     const bool hasVendorUI = effectMeta.family != EffectFamily::Builtin
                              && effectMeta.family != EffectFamily::Nyquist
+                             && effectMeta.family != EffectFamily::AudacityPlugin
                              && effectMeta.family != EffectFamily::Unknown;
     if (hasVendorUI) {
         items << makeSeparator();

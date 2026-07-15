@@ -49,6 +49,7 @@
 #include "effects/effects_base/effectsmodule.h"
 #include "effects/builtin/builtineffectsmodule.h"
 #include "effects/builtin_collection/builtineffectscollectionmodule.h"
+#include "effects/audacity_plugin/audacityplugineffectsmodule.h"
 #include "importexport/import/importermodule.h"
 #include "importexport/export/exportermodule.h"
 #include "importexport/labels/labelsmodule.h"
@@ -162,6 +163,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::effects::VstEffectsModule());
     app->addModule(new au::effects::NyquistEffectsModule());
     app->addModule(new au::audacityplugin::AudacityPluginModule());
+    app->addModule(new au::effects::AudacityPluginEffectsModule());
     app->addModule(new au::context::ContextModule());
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());

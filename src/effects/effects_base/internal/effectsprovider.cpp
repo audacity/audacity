@@ -111,7 +111,8 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         thirdPartyPluginPaths.begin(), thirdPartyPluginPaths.end(),
         [&](const auto& path) {
         const auto family = utils::effectFamilyFromCacheType(pathToMetaReader.at(path)->metaType());
-        return !(family == EffectFamily::Nyquist || family == EffectFamily::Builtin);
+        return !(family == EffectFamily::Nyquist || family == EffectFamily::Builtin
+                 || family == EffectFamily::AudacityPlugin);
     });
 
     muse::io::paths_t audacityPluginPaths(mid, thirdPartyPluginPaths.end());
@@ -120,7 +121,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     knownPluginsRegister()->setPluginsState(scanResult.missingPluginPaths,
                                             muse::audioplugins::AudioPluginState::Missing);
 
-    // built-in and nyquist plugins are trusted, register in-process
+    // These plugin families are registered in-process.
     for (const io::path_t& path : audacityPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
     }
