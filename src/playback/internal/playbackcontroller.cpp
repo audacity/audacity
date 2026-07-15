@@ -723,6 +723,24 @@ void PlaybackController::setInputChannels(int channels)
     }
 }
 
+void PlaybackController::setDefaultSampleRate(uint64_t rate)
+{
+    if (rate != audioDevicesProvider()->defaultSampleRate()) {
+        withStreamRestart([this, rate]() {
+            audioDevicesProvider()->setDefaultSampleRate(rate);
+        });
+    }
+}
+
+void PlaybackController::setBufferLength(double duration)
+{
+    if (!muse::RealIsEqual(duration, audioDevicesProvider()->bufferLength())) {
+        withStreamRestart([this, duration]() {
+            audioDevicesProvider()->setBufferLength(duration);
+        });
+    }
+}
+
 void PlaybackController::rescanAudioDevices()
 {
     withStreamRestart([this]() {

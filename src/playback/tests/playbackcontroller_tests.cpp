@@ -1091,4 +1091,79 @@ TEST_F(PlaybackControllerTests, ChangeAudioDevice_WhilePaused_ThenFreshSelection
     //! [WHEN] User presses Play
     togglePlay();
 }
+
+/**
+ * @brief Changing the sample rate while playing stops, applies, then resumes.
+ * @details The provider applies the new rate to the open project immediately,
+ *          while an already-running stream keeps playing at the old rate — the
+ *          shown setting and the audible stream diverge. Routing the change
+ *          through the stream restart keeps them consistent, exactly like a
+ *          device change.
+ */
+TEST_F(PlaybackControllerTests, ChangeSampleRate_WhilePlaying_StopsAppliesResumes)
+{
+    //! [GIVEN] Playback is running at 30s, current default sample rate 44100
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+    ON_CALL(*m_audioDevicesProvider, defaultSampleRate())
+    .WillByDefault(Return(static_cast<uint64_t>(44100)));
+
+    //! [THEN] The stream is stopped, the rate applied, then playback resumes at 30s
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setDefaultSampleRate(48000)).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [WHEN] The default sample rate is changed
+    m_controller->setDefaultSampleRate(48000);
+}
+
+/**
+ * @brief Re-selecting the current sample rate does not touch the stream.
+ */
+TEST_F(PlaybackControllerTests, ChangeSampleRate_SameValueAsCurrent_DoesNotRestartStream)
+{
+    //! [GIVEN] Playback is running, current default sample rate 44100
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_audioDevicesProvider, defaultSampleRate())
+    .WillByDefault(Return(static_cast<uint64_t>(44100)));
+
+    //! [THEN] Nothing happens at all
+    EXPECT_CALL(*m_player, stop()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
+    EXPECT_CALL(*m_audioDevicesProvider, setDefaultSampleRate(_)).Times(0);
+
+    //! [WHEN] The already-current rate is selected again
+    m_controller->setDefaultSampleRate(44100);
+}
+
+/**
+ * @brief Changing the buffer length while playing stops, applies, then resumes.
+ * @details The buffer length only takes effect when a stream is opened; without
+ *          the restart the running stream silently keeps the old value while the
+ *          UI shows the new one.
+ */
+TEST_F(PlaybackControllerTests, ChangeBufferLength_WhilePlaying_StopsAppliesResumes)
+{
+    //! [GIVEN] Playback is running at 30s, current buffer length 100ms
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+    ON_CALL(*m_audioDevicesProvider, bufferLength())
+    .WillByDefault(Return(100.0));
+
+    //! [THEN] The stream is stopped, the buffer length applied, then playback
+    //! resumes at 30s
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setBufferLength(50.0)).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [WHEN] The buffer length is changed
+    m_controller->setBufferLength(50.0);
+}
 }

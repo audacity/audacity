@@ -53,6 +53,8 @@ public:
     virtual void setAudioOutputDevice(const std::string& device) = 0;
     virtual void setAudioInputDevice(const std::string& device) = 0;
     virtual void setInputChannels(int channels) = 0;
+    virtual void setDefaultSampleRate(uint64_t rate) = 0;
+    virtual void setBufferLength(double duration) = 0;
 
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
 

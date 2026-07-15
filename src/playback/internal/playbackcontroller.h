@@ -76,6 +76,8 @@ public:
     void setAudioOutputDevice(const std::string& device) override;
     void setAudioInputDevice(const std::string& device) override;
     void setInputChannels(int channels) override;
+    void setDefaultSampleRate(uint64_t rate) override;
+    void setBufferLength(double duration) override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 

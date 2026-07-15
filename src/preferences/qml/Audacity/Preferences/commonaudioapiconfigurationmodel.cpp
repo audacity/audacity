@@ -192,7 +192,7 @@ void CommonAudioApiConfigurationModel::bufferLengthSelected(const QString& buffe
         return;
     }
 
-    audioDevicesProvider()->setBufferLength(bufferLengthStr.toDouble());
+    playbackController()->setBufferLength(bufferLengthStr.toDouble());
 }
 
 bool CommonAudioApiConfigurationModel::automaticCompensationEnabled() const
@@ -285,7 +285,7 @@ void CommonAudioApiConfigurationModel::defaultSampleRateSelected(const QString& 
                            [&rateName](const auto& rate) { return rateName == rate.second; });
     if (it != m_sampleRateMapping.end()) {
         setOtherSampleRate(false);
-        audioDevicesProvider()->setDefaultSampleRate(it->first);
+        playbackController()->setDefaultSampleRate(it->first);
         return;
     }
 
@@ -305,7 +305,7 @@ void CommonAudioApiConfigurationModel::defaultSampleRateValueSelected(uint64_t r
         return;
     }
 
-    audioDevicesProvider()->setDefaultSampleRate(rateValue);
+    playbackController()->setDefaultSampleRate(rateValue);
 }
 
 bool CommonAudioApiConfigurationModel::otherSampleRate() const
