@@ -14,6 +14,8 @@ using namespace au::effects;
 
 namespace {
 constexpr int USER_PRESET_ICON_CODE = 0xEF99;
+
+const QString DEFAULT_PRESET_ID = QStringLiteral("default");
 }
 
 EffectPresetsBarModel::EffectPresetsBarModel(QObject* parent)
@@ -100,10 +102,10 @@ void EffectPresetsBarModel::reload(const EffectId& effectId, const EffectInstanc
     m_factoryPresets.clear();
 
     presets << QVariantMap {
-        { "id", "default" },
+        { "id", DEFAULT_PRESET_ID },
         { "name", muse::qtrc("effects", "Default preset") },
         { "iconCode", 0 } };
-    m_basePresetNames.insert("default", muse::qtrc("effects", "Default preset"));
+    m_basePresetNames.insert(DEFAULT_PRESET_ID, muse::qtrc("effects", "Default preset"));
 
     PresetIdList userPresets = presetsController()->userPresets(effectId);
     m_userPresets.clear();
@@ -436,7 +438,7 @@ QString EffectPresetsBarModel::matchPresetForCurrentSettings() const
         }
 
         OptionalMessage loadResult;
-        if (presetId == "default") {
+        if (presetId == DEFAULT_PRESET_ID) {
             loadResult = definition.LoadFactoryDefaults(presetSettings);
         } else if (isUserPreset(presetId)) {
             const auto name = au3::wxFromString(String::fromQString(presetId));
@@ -464,25 +466,11 @@ QString EffectPresetsBarModel::matchPresetForCurrentSettings() const
     };
 
     QString matched;
-    if (matchesPreset("default")) {
-        matched = "default";
-    }
-
-    if (matched.isEmpty()) {
-        for (const QString& presetId : m_userPresets) {
-            if (matchesPreset(presetId)) {
-                matched = presetId;
-                break;
-            }
-        }
-    }
-
-    if (matched.isEmpty()) {
-        for (const QString& presetId : m_factoryPresets) {
-            if (matchesPreset(presetId)) {
-                matched = presetId;
-                break;
-            }
+    const QStringList candidates = QStringList { DEFAULT_PRESET_ID } + m_userPresets + m_factoryPresets;
+    for (const QString& presetId : candidates) {
+        if (matchesPreset(presetId)) {
+            matched = presetId;
+            break;
         }
     }
 
@@ -536,7 +524,7 @@ bool EffectPresetsBarModel::isCurrentPresetUnsaved() const
     }
 
     OptionalMessage loadResult;
-    if (m_currentPreset == "default") {
+    if (m_currentPreset == DEFAULT_PRESET_ID) {
         loadResult = definition.LoadFactoryDefaults(presetSettings);
     } else if (isUserPreset(m_currentPreset)) {
         const auto name = au3::wxFromString(String::fromQString(m_currentPreset));
