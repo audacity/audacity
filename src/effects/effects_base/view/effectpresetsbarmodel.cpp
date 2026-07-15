@@ -463,23 +463,35 @@ QString EffectPresetsBarModel::matchPresetForCurrentSettings() const
         return currentSettingsString == selectedPresetSettingsString;
     };
 
+    QString matched;
     if (matchesPreset("default")) {
-        return "default";
+        matched = "default";
     }
 
-    for (const QString& presetId : m_userPresets) {
-        if (matchesPreset(presetId)) {
-            return presetId;
+    if (matched.isEmpty()) {
+        for (const QString& presetId : m_userPresets) {
+            if (matchesPreset(presetId)) {
+                matched = presetId;
+                break;
+            }
         }
     }
 
-    for (const QString& presetId : m_factoryPresets) {
-        if (matchesPreset(presetId)) {
-            return presetId;
+    if (matched.isEmpty()) {
+        for (const QString& presetId : m_factoryPresets) {
+            if (matchesPreset(presetId)) {
+                matched = presetId;
+                break;
+            }
         }
     }
 
-    return {};
+    EffectSettings scratchSettings = definition.MakeSettings();
+    if (!effect->LoadSettingsFromString(currentSettingsString, scratchSettings)) {
+        LOGW() << "failed to restore effect settings after preset matching";
+    }
+
+    return matched;
 }
 
 void EffectPresetsBarModel::persistPresetState()
@@ -544,7 +556,13 @@ bool EffectPresetsBarModel::isCurrentPresetUnsaved() const
     }
 
     wxString selectedPresetSettingsString;
-    if (!effect->SaveSettingsAsString(presetSettings, selectedPresetSettingsString)) {
+    const bool presetSaved = effect->SaveSettingsAsString(presetSettings, selectedPresetSettingsString);
+
+    if (!effect->LoadSettingsFromString(currentSettingsString, presetSettings)) {
+        LOGW() << "failed to restore effect settings after preset comparison";
+    }
+
+    if (!presetSaved) {
         return false;
     }
 

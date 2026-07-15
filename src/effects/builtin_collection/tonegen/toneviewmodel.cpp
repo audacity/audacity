@@ -52,6 +52,7 @@ void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
 
     effect<ToneEffect>().setAmplitudeStart(newAmplitude);
     emit amplitudeStartChanged();
+    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -73,6 +74,7 @@ void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
 
     effect<ToneEffect>().setAmplitudeEnd(newAmplitude);
     emit amplitudeEndChanged();
+    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -94,6 +96,7 @@ void ToneViewModel::prop_setFrequencyStart(double newFrequency)
 
     effect<ToneEffect>().setFrequencyStart(newFrequency);
     emit frequencyStartChanged();
+    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -115,6 +118,7 @@ void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
 
     effect<ToneEffect>().setFrequencyEnd(newFrequency);
     emit frequencyEndChanged();
+    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -134,6 +138,7 @@ void ToneViewModel::prop_setWaveform(int newWaveform)
 
     effect<ToneEffect>().setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
     emit waveformChanged();
+    notifySettingsChanged();
 }
 
 int ToneViewModel::interpolation() const
@@ -149,4 +154,5 @@ void ToneViewModel::prop_setInterpolation(int newInterpolation)
 
     effect<ToneEffect>().setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));
     emit interpolationChanged();
+    notifySettingsChanged();
 }

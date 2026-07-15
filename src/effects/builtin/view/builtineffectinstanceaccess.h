@@ -61,6 +61,11 @@ protected:
         }
     }
 
+    void notifySettingsChanged()
+    {
+        instancesRegister()->notifyAboutSettingsChanged(m_accessInstanceId);
+    }
+
     template<typename T>
     const T& settings() const
     {

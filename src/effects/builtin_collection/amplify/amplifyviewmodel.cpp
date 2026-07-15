@@ -45,6 +45,7 @@ void AmplifyViewModel::setAmpValue(float newAmpValue)
     }
     ae.setAmp(newAmp);
     emit isApplyAllowedChanged();
+    notifySettingsChanged();
 }
 
 float AmplifyViewModel::ampMin() const
@@ -91,6 +92,7 @@ void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 
     effect<AmplifyEffect>().setNewPeak(shared::Decibel(newNewPeakValue));
     emit isApplyAllowedChanged();
+    notifySettingsChanged();
 }
 
 float AmplifyViewModel::newPeakMin() const
@@ -137,6 +139,7 @@ void AmplifyViewModel::setCanClip(bool newClipping)
     ae.setCanClip(newClipping);
     emit canClipChanged();
     emit isApplyAllowedChanged();
+    notifySettingsChanged();
 }
 
 bool AmplifyViewModel::isApplyAllowed() const
