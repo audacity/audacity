@@ -4,7 +4,7 @@
 #pragma once
 
 #include "irealtimeeffectpaneltrackselection.h"
-#include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
@@ -12,7 +12,7 @@
 namespace au::projectscene {
 class RealtimeEffectPanelTrackSelection : public IRealtimeEffectPanelTrackSelection, muse::async::Asyncable, public muse::Contextable
 {
-    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:

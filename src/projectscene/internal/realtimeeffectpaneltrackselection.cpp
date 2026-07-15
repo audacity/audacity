@@ -3,13 +3,13 @@
 namespace au::projectscene {
 void RealtimeEffectPanelTrackSelection::init()
 {
-    selectionController()->tracksSelected().onReceive(this, [this](const au::trackedit::TrackIdList& tracks) {
-        if (!tracks.empty()) {
-            setTrackId(tracks.back());
+    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const au::trackedit::TrackId& trackId, bool) {
+        if (trackId != au::trackedit::INVALID_TRACK) {
+            setTrackId(trackId);
         }
     });
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] {
-        // Show effects of top-most track if there isn't one selected already and the project isn't empty.
+        // Show effects of top-most track if there isn't one focused already and the project isn't empty.
         const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
         std::optional<trackedit::TrackId> trackId;
         if (project) {

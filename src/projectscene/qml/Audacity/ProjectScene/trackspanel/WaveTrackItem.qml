@@ -116,7 +116,6 @@ TrackItem {
                 navigation.enabled: topRow.visible
 
                 onClicked: {
-                    root.selectionRequested(true)
                     root.openEffectsRequested()
                 }
             }
