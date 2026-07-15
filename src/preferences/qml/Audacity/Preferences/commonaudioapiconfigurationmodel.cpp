@@ -122,7 +122,7 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
         return;
     }
 
-    audioDevicesProvider()->setApi(apiList[index]);
+    playbackController()->setAudioApi(apiList[index]);
 }
 
 QStringList CommonAudioApiConfigurationModel::audioApiList() const
@@ -155,7 +155,7 @@ void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& devic
     if (device == currentOutputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setOutputDevice(device.toStdString());
+    playbackController()->setAudioOutputDevice(device.toStdString());
 }
 
 QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
@@ -178,7 +178,7 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device
     if (device == currentInputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setInputDevice(device.toStdString());
+    playbackController()->setAudioInputDevice(device.toStdString());
 }
 
 double CommonAudioApiConfigurationModel::bufferLength() const
@@ -242,7 +242,8 @@ QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
 
 void CommonAudioApiConfigurationModel::inputChannelsSelected(const int index)
 {
-    audioDevicesProvider()->setInputChannels(index + 1);
+    // setInputChannels() expects a 1-based channel count, the list index is 0-based.
+    playbackController()->setInputChannels(index + 1);
 }
 
 QString CommonAudioApiConfigurationModel::defaultSampleRate() const
