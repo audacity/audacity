@@ -17,6 +17,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 #include "playback/iplayer.h"
+#include "record/irecord.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
@@ -34,6 +35,7 @@ public:
     muse::ContextInject<IPlayback> playback { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<record::IRecord> record{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
@@ -69,6 +71,11 @@ public:
 
     void stop() override;
     void stopSeekAndUpdatePlaybackRegion() override;
+
+    void setAudioApi(const std::string& api) override;
+    void setAudioOutputDevice(const std::string& device) override;
+    void setAudioInputDevice(const std::string& device) override;
+    void setInputChannels(int channels) override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 
@@ -137,11 +144,20 @@ private:
 
     void openPlaybackSetupDialog();
 
-    void setAudioApi(const muse::actions::ActionQuery& q);
-    void setAudioOutputDevice(const muse::actions::ActionQuery& q);
-    void setAudioInputDevice(const muse::actions::ActionQuery& q);
-    void setInputChannels(const muse::actions::ActionQuery& q);
+    // Audio device/configuration actions: resolve the selected index against the
+    // current device list, then call the matching public setter.
+    void setAudioApiAction(const muse::actions::ActionQuery& q);
+    void setAudioOutputDeviceAction(const muse::actions::ActionQuery& q);
+    void setAudioInputDeviceAction(const muse::actions::ActionQuery& q);
+    void setInputChannelsAction(const muse::actions::ActionQuery& q);
     void rescanAudioDevices();
+
+    void changeAudioDeviceFromQuery(const muse::actions::ActionQuery& q, const std::string& indexParam,
+                                    const std::vector<std::string>& options, const std::function<void(const std::string&)>& applyValue);
+
+    // Stops playback/recording around `change` and, when the user was actively
+    // playing, resumes at the interrupted position afterwards.
+    void withStreamRestart(const std::function<void()>& change);
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
     void subscribeOnAudioParamsChanges();
@@ -176,6 +192,10 @@ private:
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
     PlaybackRegion m_lastPlaybackRegion;
     bool m_pauseShouldStopPlayback = false;
+    // Set when a device change tears down a paused stream: where the next play
+    // should resume from. Cleared by any explicit reposition (seek, new region)
+    // and on stop.
+    std::optional<muse::secs_t> m_pausedResumePos;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;

@@ -39,10 +39,10 @@ void PlaybackController::init()
     dispatcher()->reg(this, PLAYBACK_REWIND_END_QUERY, this, &PlaybackController::rewindToEndAction);
     dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, this, &PlaybackController::onSeekAction);
     dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_QUERY, this, &PlaybackController::onChangePlaybackRegionAction);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApiAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDeviceAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDeviceAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannelsAction);
 
     dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
     dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
@@ -180,6 +180,8 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
         return;
     }
 
+    // Any explicit reposition supersedes a pending paused-stream resume.
+    m_pausedResumePos.reset();
     player()->seek(secs, applyIfPlaying);
 }
 
@@ -278,6 +280,16 @@ void PlaybackController::togglePlayAction()
 void PlaybackController::doPlay(bool ignoreSelection)
 {
     IF_ASSERT_FAILED(player()) {
+        return;
+    }
+
+    if (m_pausedResumePos.has_value()) {
+        // Resuming a stream that a device change tore down while paused: start
+        // the stream at the pause position. The play region, seek anchor and the
+        // rest of the session state are deliberately untouched.
+        const muse::secs_t pos = *m_pausedResumePos;
+        m_pausedResumePos.reset();
+        player()->play(pos);
         return;
     }
 
@@ -419,6 +431,10 @@ void PlaybackController::onChangePlaybackRegionAction(const muse::actions::Actio
 
 void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 {
+    // A new region is just as much an explicit reposition as a seek: it
+    // supersedes any pending paused-stream resume.
+    m_pausedResumePos.reset();
+
     m_lastPlaybackRegion = region;
 
     if (isStopped()) {
@@ -461,6 +477,7 @@ void PlaybackController::stop()
         return;
     }
     m_pauseShouldStopPlayback = false;
+    m_pausedResumePos.reset();
     player()->stop();
 }
 
@@ -617,53 +634,133 @@ void PlaybackController::setSelectionFollowsLoopRegion()
     playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
 }
 
-void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
+void PlaybackController::setAudioApiAction(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("api_index")) {
+    changeAudioDeviceFromQuery(q, "api_index", audioDevicesProvider()->apis(), [this](const std::string& api) {
+        setAudioApi(api);
+    });
+}
+
+void PlaybackController::setAudioOutputDeviceAction(const muse::actions::ActionQuery& q)
+{
+    changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->outputDevices(), [this](const std::string& device) {
+        setAudioOutputDevice(device);
+    });
+}
+
+void PlaybackController::setAudioInputDeviceAction(const muse::actions::ActionQuery& q)
+{
+    changeAudioDeviceFromQuery(q, "device_index", audioDevicesProvider()->inputDevices(), [this](const std::string& device) {
+        setAudioInputDevice(device);
+    });
+}
+
+void PlaybackController::changeAudioDeviceFromQuery(const muse::actions::ActionQuery& q, const std::string& indexParam,
+                                                    const std::vector<std::string>& options,
+                                                    const std::function<void(const std::string&)>& applyValue)
+{
+    IF_ASSERT_FAILED(q.contains(indexParam)) {
         return;
     }
 
-    int index = q.param("api_index").toInt();
-
-    audioDevicesProvider()->setApi(audioDevicesProvider()->apis().at(index));
-}
-
-void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
-{
-    IF_ASSERT_FAILED(q.contains("device_index")) {
+    // Resolve and bounds-check the selection against the current list, then
+    // forward the resolved value (not the index) so a list that changes
+    // meanwhile can't make us pick the wrong entry or read out of range.
+    const int index = q.param(indexParam).toInt();
+    IF_ASSERT_FAILED(index >= 0 && index < static_cast<int>(options.size())) {
         return;
     }
 
-    int index = q.param("device_index").toInt();
-
-    audioDevicesProvider()->setOutputDevice(audioDevicesProvider()->outputDevices().at(index));
+    applyValue(options.at(index));
 }
 
-void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
-{
-    IF_ASSERT_FAILED(q.contains("device_index")) {
-        return;
-    }
-
-    int index = q.param("device_index").toInt();
-
-    audioDevicesProvider()->setInputDevice(audioDevicesProvider()->inputDevices().at(index));
-}
-
-void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
+void PlaybackController::setInputChannelsAction(const muse::actions::ActionQuery& q)
 {
     IF_ASSERT_FAILED(q.contains("input-channels_index")) {
         return;
     }
 
-    int index = q.param("input-channels_index").toInt();
+    //! NOTE: despite the param name, the senders pass the 1-based channel count.
+    setInputChannels(q.param("input-channels_index").toInt());
+}
 
-    audioDevicesProvider()->setInputChannels(index);
+void PlaybackController::setAudioApi(const std::string& api)
+{
+    if (api != audioDevicesProvider()->currentApi()) {
+        withStreamRestart([this, api]() {
+            audioDevicesProvider()->setApi(api);
+        });
+    }
+}
+
+void PlaybackController::setAudioOutputDevice(const std::string& device)
+{
+    if (device != audioDevicesProvider()->currentOutputDevice()) {
+        withStreamRestart([this, device]() {
+            audioDevicesProvider()->setOutputDevice(device);
+        });
+    }
+}
+
+void PlaybackController::setAudioInputDevice(const std::string& device)
+{
+    if (device != audioDevicesProvider()->currentInputDevice()) {
+        withStreamRestart([this, device]() {
+            audioDevicesProvider()->setInputDevice(device);
+        });
+    }
+}
+
+void PlaybackController::setInputChannels(int channels)
+{
+    IF_ASSERT_FAILED(channels > 0 && channels <= audioDevicesProvider()->inputChannelsAvailable()) {
+        return;
+    }
+    if (channels != audioDevicesProvider()->inputChannelsSelected()) {
+        withStreamRestart([this, channels]() {
+            audioDevicesProvider()->setInputChannels(channels);
+        });
+    }
 }
 
 void PlaybackController::rescanAudioDevices()
 {
-    audioDevicesProvider()->rescan();
+    withStreamRestart([this]() {
+        audioDevicesProvider()->rescan();
+    });
+}
+
+void PlaybackController::withStreamRestart(const std::function<void()>& change)
+{
+    const bool isRecording = recordController()->isRecording();
+    const bool wasPlaying = !isRecording && isPlaying();
+    const bool wasPaused = !isRecording && isPaused();
+    const muse::secs_t resumePos = player()->playbackPosition();
+
+    if (isRecording) {
+        record()->stop();
+    } else if (wasPlaying || wasPaused) {
+        stop();
+    }
+
+    change();
+
+    // Only resume when the user was actively playing. A paused or recording
+    // transport is torn down for the switch and then left stopped.
+    if (wasPlaying) {
+        // Restart the stream at the interrupted position. The play region, the
+        // seek anchor and the rest of the session state are deliberately
+        // untouched: a bounded region still ends where it did, an active loop
+        // still wraps within its bounds, and a stop still returns to where
+        // playback originally started.
+        player()->play(resumePos);
+    } else if (wasPaused) {
+        // The paused stream can't survive the switch, so we end up stopped.
+        // Remember the pause position so the next play resumes from there; the
+        // stop anchor (m_lastPlaybackSeekTime) is deliberately left untouched, so
+        // a stop still returns to where playback originally started.
+        m_pausedResumePos = resumePos;
+    }
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)

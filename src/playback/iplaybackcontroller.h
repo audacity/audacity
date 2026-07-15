@@ -47,6 +47,13 @@ public:
     virtual void stop() = 0;
     virtual void stopSeekAndUpdatePlaybackRegion() = 0;
 
+    // audio device/configuration changes (need both player and recorder state to
+    // decide whether/where to resume — applied via a stream restart)
+    virtual void setAudioApi(const std::string& api) = 0;
+    virtual void setAudioOutputDevice(const std::string& device) = 0;
+    virtual void setAudioInputDevice(const std::string& device) = 0;
+    virtual void setInputChannels(int channels) = 0;
+
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
 
     virtual muse::async::Channel<playback::TrackId> trackAdded() const = 0;
