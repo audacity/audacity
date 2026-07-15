@@ -50,9 +50,10 @@ void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
         return;
     }
 
-    effect<ToneEffect>().setAmplitudeStart(newAmplitude);
+    modifyEffect<ToneEffect>([newAmplitude](ToneEffect& e) {
+        e.setAmplitudeStart(newAmplitude);
+    });
     emit amplitudeStartChanged();
-    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -72,9 +73,10 @@ void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
         return;
     }
 
-    effect<ToneEffect>().setAmplitudeEnd(newAmplitude);
+    modifyEffect<ToneEffect>([newAmplitude](ToneEffect& e) {
+        e.setAmplitudeEnd(newAmplitude);
+    });
     emit amplitudeEndChanged();
-    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -94,9 +96,10 @@ void ToneViewModel::prop_setFrequencyStart(double newFrequency)
         return;
     }
 
-    effect<ToneEffect>().setFrequencyStart(newFrequency);
+    modifyEffect<ToneEffect>([newFrequency](ToneEffect& e) {
+        e.setFrequencyStart(newFrequency);
+    });
     emit frequencyStartChanged();
-    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -116,9 +119,10 @@ void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
         return;
     }
 
-    effect<ToneEffect>().setFrequencyEnd(newFrequency);
+    modifyEffect<ToneEffect>([newFrequency](ToneEffect& e) {
+        e.setFrequencyEnd(newFrequency);
+    });
     emit frequencyEndChanged();
-    notifySettingsChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -136,9 +140,10 @@ void ToneViewModel::prop_setWaveform(int newWaveform)
         return;
     }
 
-    effect<ToneEffect>().setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
+    modifyEffect<ToneEffect>([newWaveform](ToneEffect& e) {
+        e.setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
+    });
     emit waveformChanged();
-    notifySettingsChanged();
 }
 
 int ToneViewModel::interpolation() const
@@ -152,7 +157,8 @@ void ToneViewModel::prop_setInterpolation(int newInterpolation)
         return;
     }
 
-    effect<ToneEffect>().setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));
+    modifyEffect<ToneEffect>([newInterpolation](ToneEffect& e) {
+        e.setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));
+    });
     emit interpolationChanged();
-    notifySettingsChanged();
 }

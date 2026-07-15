@@ -61,8 +61,10 @@ protected:
         }
     }
 
-    void notifySettingsChanged()
+    template<typename EffectType>
+    void modifyEffect(const std::function<void(EffectType&)>& modifier)
     {
+        modifier(effect<EffectType>());
         instancesRegister()->notifyAboutSettingsChanged(m_accessInstanceId);
     }
 

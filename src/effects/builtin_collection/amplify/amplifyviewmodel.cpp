@@ -43,9 +43,10 @@ void AmplifyViewModel::setAmpValue(float newAmpValue)
     if (ae.amp().val == newAmp) {
         return;
     }
-    ae.setAmp(newAmp);
+    modifyEffect<AmplifyEffect>([newAmp](AmplifyEffect& e) {
+        e.setAmp(newAmp);
+    });
     emit isApplyAllowedChanged();
-    notifySettingsChanged();
 }
 
 float AmplifyViewModel::ampMin() const
@@ -90,9 +91,10 @@ void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
         return;
     }
 
-    effect<AmplifyEffect>().setNewPeak(shared::Decibel(newNewPeakValue));
+    modifyEffect<AmplifyEffect>([newNewPeakValue](AmplifyEffect& e) {
+        e.setNewPeak(shared::Decibel(newNewPeakValue));
+    });
     emit isApplyAllowedChanged();
-    notifySettingsChanged();
 }
 
 float AmplifyViewModel::newPeakMin() const
@@ -136,10 +138,11 @@ void AmplifyViewModel::setCanClip(bool newClipping)
     if (ae.canClip() == newClipping) {
         return;
     }
-    ae.setCanClip(newClipping);
+    modifyEffect<AmplifyEffect>([newClipping](AmplifyEffect& e) {
+        e.setCanClip(newClipping);
+    });
     emit canClipChanged();
     emit isApplyAllowedChanged();
-    notifySettingsChanged();
 }
 
 bool AmplifyViewModel::isApplyAllowed() const
