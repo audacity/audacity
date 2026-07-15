@@ -154,7 +154,7 @@ Item {
                 return
             }
             var anchor = rightMa.startX
-            var dragged = rightMa.startX + rightMa.startW + mouse.x
+            var dragged = rightMa.x + mouse.x
             root.selectionResize(anchor, dragged, false)
             handleGuideline(dragged >= anchor ? root.context.selectionEndPosition : selRect.x, false)
         }
