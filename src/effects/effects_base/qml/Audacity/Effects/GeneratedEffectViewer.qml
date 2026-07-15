@@ -3,7 +3,6 @@
  */
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 
 import Muse.Ui
 import Muse.UiComponents
@@ -14,6 +13,8 @@ Rectangle {
     id: root
 
     required property int instanceId
+
+    property bool isContentReady: false
 
     // Navigation wiring: the dialog passes itself in via `dialogView` so we
     // can attach our parameters NavigationPanel to its NavigationSection.
@@ -77,16 +78,19 @@ Rectangle {
 
     Component.onCompleted: {
         viewModel.init()
+        parametersColumn.forceLayout()
+        root.isContentReady = true
     }
 
-    ColumnLayout {
+    Column {
         id: mainLayout
         anchors.fill: parent
         spacing: prv.spaceXL
 
         Rectangle {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            width: parent.width
+            height: parent.height
+
             color: ui.theme.backgroundSecondaryColor
             border.color: ui.theme.strokeColor
             border.width: prv.borderWidth
@@ -101,7 +105,7 @@ Rectangle {
                 anchors.bottomMargin: prv.spaceXXL
                 contentHeight: parametersColumn.height
 
-                ColumnLayout {
+                Column {
                     id: parametersColumn
                     width: Math.min(parent.width, prv.maxContentWidth)
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -109,7 +113,8 @@ Rectangle {
 
                     // Show message if no parameters
                     StyledTextLabel {
-                        Layout.fillWidth: true
+                        width: parent.width
+
                         visible: !viewModel.hasParameters
                         text: viewModel.noParametersMessage
                         horizontalAlignment: Text.AlignHCenter
@@ -121,7 +126,8 @@ Rectangle {
                         model: viewModel.parametersModel
 
                         delegate: ParameterControl {
-                            Layout.fillWidth: true
+                            width: parent.width
+
                             parameterData: model
 
                             // Pass time-related properties for time controls
