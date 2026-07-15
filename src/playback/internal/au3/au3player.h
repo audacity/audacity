@@ -35,7 +35,7 @@ public:
 
     bool isBusy() const override;
 
-    void play() override;
+    void play(std::optional<muse::secs_t> startTime = std::nullopt) override;
     void seek(const muse::secs_t newPosition, bool applyIfPlaying = false) override;
     void rewind() override;
     void stop() override;

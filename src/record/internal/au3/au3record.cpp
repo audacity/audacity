@@ -915,8 +915,13 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    int token
-        = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, leadInTime, crossfadeData);
+    au::audio::IAudioEngine::StartStreamOptions options;
+    options.isDefaultPolicy = false;
+    options.sampleRate = audioStreamSampleRate;
+    options.leadInTime = leadInTime;
+    options.crossfadeData = crossfadeData;
+
+    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, options);
 
     success = (token != 0);
 
