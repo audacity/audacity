@@ -5,6 +5,10 @@
 
 #include <gmock/gmock.h>
 
+// for complete Au3TrackId/Au3ClipId types: mocking recordingClipChanged()
+// instantiates its channel, a forward declaration is not enough
+#include "au3-track/Track.h"
+
 #include "audio/iaudioengine.h"
 
 namespace au::audio {
