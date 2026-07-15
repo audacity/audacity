@@ -174,7 +174,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     .Times(1);
 
     //! [THEN] Player should start playing from current position
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -201,7 +201,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -233,7 +233,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -276,7 +276,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     .Times(0);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -309,7 +309,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -441,7 +441,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     .Times(0);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -492,7 +492,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Fitst: user changed selection
@@ -527,7 +527,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_StartTimeIsMoreThanTota
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(0);
 
     //! [WHEN] Toggle play
@@ -601,7 +601,7 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay)
     .Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] Seek to the new time with triggering play
@@ -627,7 +627,7 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_AlreadyPlaying)
     .Times(1);
 
     //! [THEN] Player shouldn't start playing again
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(0);
 
     //! [WHEN] Seek to the new time with triggering play
@@ -653,7 +653,7 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_FromTimeThatIsMoreThanTo
     .Times(1);
 
     //! [THEN] Player shouldn't start playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(0);
 
     //! [WHEN] Seek to the new time with triggering play
@@ -763,7 +763,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd
     .Times(1);
 
     //! [THEN] Player starts playing
-    EXPECT_CALL(*m_player, play())
+    EXPECT_CALL(*m_player, play(_))
     .Times(1);
 
     //! [WHEN] User presses Space

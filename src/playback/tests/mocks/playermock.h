@@ -12,7 +12,7 @@ class PlayerMock : public IPlayer
 {
 public:
     MOCK_METHOD(bool, isBusy, (), (const, override));
-    MOCK_METHOD(void, play, (), (override));
+    MOCK_METHOD(void, play, (std::optional<muse::secs_t>), (override));
     MOCK_METHOD(void, seek, (const muse::secs_t, bool), (override));
     MOCK_METHOD(void, rewind, (), (override));
     MOCK_METHOD(void, stop, (), (override));

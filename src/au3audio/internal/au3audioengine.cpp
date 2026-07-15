@@ -69,7 +69,8 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
                                 const double mixerEndTime,
                                 AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate,
                                 const double leadInTime,
-                                std::vector<std::vector<float> >* crossfadeData)
+                                std::vector<std::vector<float> >* crossfadeData,
+                                const std::optional<double> pStartTime)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
@@ -77,6 +78,13 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
     options.leadInTime = leadInTime;
     if (crossfadeData) {
         options.pCrossfadeData = crossfadeData;
+    }
+    if (pStartTime.has_value()) {
+        // Override the default (play-region start, set by the DefaultOptions
+        // scope above via GetDefaultOptions): begin producing audio here
+        // instead. The policy factory reads this from the same options object,
+        // so an active loop region resumes at this position too.
+        options.pStartTime = *pStartTime;
     }
     auto& audioIO = *AudioIO::Get();
     const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, options);
