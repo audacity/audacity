@@ -568,7 +568,7 @@ void TimelineContext::zoomIn()
 
 void TimelineContext::zoomOut()
 {
-    double newZoom = zoom() / 2.0;
+    double newZoom = clampedZoom(zoom() / 2.0);
     setZoom(newZoom, findZoomFocusPosition());
 }
 
