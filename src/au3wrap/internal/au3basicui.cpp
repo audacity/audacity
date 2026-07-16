@@ -106,13 +106,13 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& m
         buttons.push_back(inter->buttonData(muse::IInteractive::Button::No));
     }
 
-    const std::string defaultCaption = BasicUI::DefaultCaption().Translation().ToStdString();
-    const std::string dialogTitle = options.caption.Translation().ToStdString() != defaultCaption
-                                    ? options.caption.Translation().ToStdString()
+    const std::string defaultCaption = BasicUI::DefaultCaption().translated().toStdString();
+    const std::string dialogTitle = options.caption.translated().toStdString() != defaultCaption
+                                    ? options.caption.translated().toStdString()
                                     : defaultCaption;
 
     const std::string contentTitle = dialogTitle;
-    const std::string body = message.Translation().ToStdString();
+    const std::string body = message.translated().toStdString();
 
     muse::IInteractive::Result iret;
 
