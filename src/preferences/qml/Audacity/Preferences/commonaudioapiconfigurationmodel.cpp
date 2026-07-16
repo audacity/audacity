@@ -111,12 +111,11 @@ int CommonAudioApiConfigurationModel::currentAudioApiIndex() const
     return audioApiList().indexOf(currentApi);
 }
 
+// The setters below forward unconditionally: the playback controller owns the
+// "did the value actually change?" decision (and the stream restart it guards).
+
 void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
 {
-    if (index == currentAudioApiIndex()) {
-        return;
-    }
-
     std::vector<std::string> apiList = audioDevicesProvider()->apis();
     if (index < 0 || index >= static_cast<int>(apiList.size())) {
         return;
@@ -152,9 +151,6 @@ QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 
 void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& device)
 {
-    if (device == currentOutputDeviceId()) {
-        return;
-    }
     playbackController()->setAudioOutputDevice(device.toStdString());
 }
 
@@ -175,9 +171,6 @@ QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 
 void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device)
 {
-    if (device == currentInputDeviceId()) {
-        return;
-    }
     playbackController()->setAudioInputDevice(device.toStdString());
 }
 
@@ -188,10 +181,6 @@ double CommonAudioApiConfigurationModel::bufferLength() const
 
 void CommonAudioApiConfigurationModel::bufferLengthSelected(const QString& bufferLengthStr)
 {
-    if (bufferLengthStr == QString::number(bufferLength())) {
-        return;
-    }
-
     playbackController()->setBufferLength(bufferLengthStr.toDouble());
 }
 
@@ -217,10 +206,6 @@ double CommonAudioApiConfigurationModel::latencyCompensation() const
 void CommonAudioApiConfigurationModel::latencyCompensationSelected(
     const QString& latencyCompensationStr)
 {
-    if (latencyCompensationStr == QString::number(latencyCompensation())) {
-        return;
-    }
-
     playbackController()->setLatencyCompensation(latencyCompensationStr.toDouble());
 }
 
@@ -301,10 +286,6 @@ uint64_t CommonAudioApiConfigurationModel::defaultSampleRateValue() const
 
 void CommonAudioApiConfigurationModel::defaultSampleRateValueSelected(uint64_t rateValue)
 {
-    if (rateValue == defaultSampleRateValue()) {
-        return;
-    }
-
     playbackController()->setDefaultSampleRate(rateValue);
 }
 
@@ -340,10 +321,6 @@ QVariantList CommonAudioApiConfigurationModel::defaultSampleFormatList() const
 
 void CommonAudioApiConfigurationModel::defaultSampleFormatSelected(const QString& format)
 {
-    if (format == defaultSampleFormat()) {
-        return;
-    }
-
     playbackController()->setDefaultSampleFormat(format.toStdString());
 }
 
