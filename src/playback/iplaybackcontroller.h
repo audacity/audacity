@@ -54,6 +54,7 @@ public:
     virtual void setAudioInputDevice(const std::string& device) = 0;
     virtual void setInputChannels(int channels) = 0;
     virtual void setDefaultSampleRate(uint64_t rate) = 0;
+    virtual void setDefaultSampleFormat(const std::string& format) = 0;
     virtual void setBufferLength(double duration) = 0;
     virtual void setLatencyCompensation(double value) = 0;
 

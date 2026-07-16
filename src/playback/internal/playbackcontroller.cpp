@@ -748,6 +748,18 @@ void PlaybackController::setDefaultSampleRate(uint64_t rate)
     }
 }
 
+void PlaybackController::setDefaultSampleFormat(const std::string& format)
+{
+    // The format is baked into the capture stream at start, so apply it via a
+    // stream restart like the sample rate; an in-progress take otherwise keeps
+    // recording in the old format while the UI shows the new one.
+    if (format != audioDevicesProvider()->defaultSampleFormat()) {
+        withStreamRestart([this, format]() {
+            audioDevicesProvider()->setDefaultSampleFormat(format);
+        });
+    }
+}
+
 void PlaybackController::setBufferLength(double duration)
 {
     if (!muse::RealIsEqual(duration, audioDevicesProvider()->bufferLength())) {

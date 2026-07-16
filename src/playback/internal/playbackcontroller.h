@@ -77,6 +77,7 @@ public:
     void setAudioInputDevice(const std::string& device) override;
     void setInputChannels(int channels) override;
     void setDefaultSampleRate(uint64_t rate) override;
+    void setDefaultSampleFormat(const std::string& format) override;
     void setBufferLength(double duration) override;
     void setLatencyCompensation(double value) override;
 

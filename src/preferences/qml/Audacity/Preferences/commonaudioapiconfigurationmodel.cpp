@@ -344,7 +344,7 @@ void CommonAudioApiConfigurationModel::defaultSampleFormatSelected(const QString
         return;
     }
 
-    audioDevicesProvider()->setDefaultSampleFormat(format.toStdString());
+    playbackController()->setDefaultSampleFormat(format.toStdString());
 }
 
 double CommonAudioApiConfigurationModel::longestDeviceNameLength() const

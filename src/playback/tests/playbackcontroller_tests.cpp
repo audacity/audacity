@@ -1264,6 +1264,49 @@ TEST_F(PlaybackControllerTests, ChangeBufferLength_WhilePlaying_StopsAppliesResu
 }
 
 /**
+ * @brief Changing the default sample format while recording stops the take.
+ * @details The format is baked into the capture stream at start; applying it
+ *          through the stream restart makes the change effective instead of
+ *          silently leaving the running take in the old format.
+ */
+TEST_F(PlaybackControllerTests, ChangeSampleFormat_WhileRecording_StopsRecordingBeforeApplying)
+{
+    //! [GIVEN] A recording is in progress; current format is 16-bit
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+    ON_CALL(*m_audioDevicesProvider, defaultSampleFormat())
+    .WillByDefault(Return(std::string("16-bit")));
+
+    //! [THEN] The recording is stopped before the format is applied, no resume
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_record, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setDefaultSampleFormat("24-bit")).Times(1);
+    EXPECT_CALL(*m_record, start()).Times(0);
+
+    //! [WHEN] The default sample format is changed
+    m_controller->setDefaultSampleFormat("24-bit");
+}
+
+/**
+ * @brief Re-selecting the current sample format does not touch the stream.
+ */
+TEST_F(PlaybackControllerTests, ChangeSampleFormat_SameValueAsCurrent_DoesNothing)
+{
+    //! [GIVEN] Playback is running; current format is 16-bit
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_audioDevicesProvider, defaultSampleFormat())
+    .WillByDefault(Return(std::string("16-bit")));
+
+    //! [THEN] Nothing happens at all
+    EXPECT_CALL(*m_player, stop()).Times(0);
+    EXPECT_CALL(*m_audioDevicesProvider, setDefaultSampleFormat(_)).Times(0);
+
+    //! [WHEN] The already-current format is selected again
+    m_controller->setDefaultSampleFormat("16-bit");
+}
+
+/**
  * @brief Changing latency compensation while recording stops the recording.
  * @details The compensation is baked into the capture stream at start and
  *          consumed within the take's first moments, so the change can never
