@@ -568,7 +568,7 @@ void TimelineContext::zoomIn()
 
 void TimelineContext::zoomOut()
 {
-    double newZoom = zoom() / 2.0;
+    double newZoom = clampedZoom(zoom() / 2.0);
     setZoom(newZoom, findZoomFocusPosition());
 }
 
@@ -955,10 +955,10 @@ void TimelineContext::setZoom(double zoom, double mouseX)
     m_zoom = newZoom;
     emit zoomChanged();
 
-    double newStartTime = mouseTime - (mouseX / m_frameWidth) * newTimeRange;
-    setFrameStartTime(std::max(newStartTime, 0.0));
+    double newStartTime = std::max(mouseTime - (mouseX / m_frameWidth) * newTimeRange, 0.0);
+    setFrameStartTime(newStartTime);
 
-    double newEndTime = mouseTime + ((m_frameWidth - mouseX) / m_frameWidth) * newTimeRange;
+    double newEndTime = newStartTime + newTimeRange;
     m_lastZoomEndTime = newEndTime;
     setFrameEndTime(newEndTime);
 
