@@ -20,7 +20,6 @@
 #include "au3wrap/au3types.h"
 
 #include <algorithm>
-#include <cassert>
 
 using namespace au::playback;
 using namespace au::au3;
@@ -89,7 +88,9 @@ bool Au3Player::isBusy() const
 void Au3Player::play(std::optional<muse::secs_t> startTime)
 {
     if (m_playbackStatus.val == PlaybackStatus::Paused) {
-        assert(!startTime.has_value() && "Start time not taken into account when resuming playback");
+        if (startTime.has_value()) {
+            LOGW() << "startTime is not taken into account when resuming a paused stream";
+        }
         audioEngine()->pauseStream(false);
         m_playbackStatus.set(PlaybackStatus::Running);
         return;
