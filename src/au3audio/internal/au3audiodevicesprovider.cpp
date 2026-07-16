@@ -96,7 +96,12 @@ void Au3AudioDevicesProvider::init()
                                       muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
 
     muse::settings()->valueChanged(AUDIO_HOST).onReceive(nullptr, [this](const muse::Val& val) {
-        updateInputOutputDevices();
+        // The host switch cascades into an output- and an input-device change,
+        // each funneling through handleDeviceChange(); scope them so monitoring
+        // is restored once at the end, not on the half-switched configuration.
+        withMonitoringRestored([this]() {
+            updateInputOutputDevices();
+        });
         m_audioApiChanged.notify();
     });
 
@@ -210,13 +215,29 @@ void Au3AudioDevicesProvider::handleDeviceChange()
         return;
     }
 
-    const bool wasMonitoring = audioEngine()->isMonitoring();
+    withMonitoringRestored([this]() {
+        if (audioEngine()->isBusy()) {
+            audioEngine()->stopStream();
+        }
+        audioEngine()->handleDeviceChange();
+    });
+}
+
+void Au3AudioDevicesProvider::withMonitoringRestored(const std::function<void()>& change)
+{
+    if (!audioEngine()) {
+        change();
+        return;
+    }
+
+    const bool outermost = m_monitoringRestoreDepth == 0;
+    const bool wasMonitoring = outermost && audioEngine()->isMonitoring();
 
     audioEngine()->stopMonitoring();
-    if (audioEngine()->isBusy()) {
-        audioEngine()->stopStream();
-    }
-    audioEngine()->handleDeviceChange();
+
+    ++m_monitoringRestoreDepth;
+    change();
+    --m_monitoringRestoreDepth;
 
     if (wasMonitoring) {
         if (const auto currentProject = globalContext()->currentProject()) {
@@ -535,11 +556,16 @@ std::string Au3AudioDevicesProvider::defaultInputDevice()
 
 void Au3AudioDevicesProvider::rescan()
 {
-    DeviceManager::Instance()->Rescan();
+    // DeviceManager::Rescan() tears down input monitoring at the PortAudio
+    // level; scope the whole rescan so monitoring is captured beforehand and
+    // restored once the device lists are rebuilt.
+    withMonitoringRestored([this]() {
+        DeviceManager::Instance()->Rescan();
 
-    initHosts();
-    updateInputOutputDevices();
-    initInputChannels();
+        initHosts();
+        updateInputOutputDevices();
+        initInputChannels();
+    });
 
     m_audioApiChanged.notify();
     m_audioOutputDeviceChanged.notify();
