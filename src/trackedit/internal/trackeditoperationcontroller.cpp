@@ -70,6 +70,11 @@ bool TrackeditOperationController::silenceClips(const ClipKeyList& clipKeyList)
     return anySilenced;
 }
 
+bool TrackeditOperationController::tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const
+{
+    return tracksInteraction()->tracksDataIsSilent(tracksIds, begin, end);
+}
+
 bool TrackeditOperationController::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
     if (tracksInteraction()->changeTrackTitle(trackId, title)) {

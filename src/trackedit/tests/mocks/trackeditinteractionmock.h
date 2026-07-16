@@ -20,6 +20,7 @@ public:
     MOCK_METHOD(bool, trimTracksData, (const std::vector<trackedit::TrackId>&, secs_t, secs_t), (override));
     MOCK_METHOD(bool, silenceTracksData, (const std::vector<trackedit::TrackId>&, secs_t, secs_t), (override));
     MOCK_METHOD(bool, silenceClips, (const ClipKeyList&), (override));
+    MOCK_METHOD(bool, tracksDataIsSilent, (const std::vector<trackedit::TrackId>&, secs_t, secs_t), (const, override));
     MOCK_METHOD(bool, changeTrackTitle, (const trackedit::TrackId, const muse::String&), (override));
 
     MOCK_METHOD(bool, changeClipTitle, (const ClipKey&, const muse::String&), (override));
