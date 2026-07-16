@@ -338,7 +338,7 @@
         <seq>Ctrl+D</seq>
     </SC>
     <SC>
-        <key>silence</key>
+        <key>silence-audio-selection</key>
         <seq>Ctrl+L</seq>
     </SC>
     <SC>
