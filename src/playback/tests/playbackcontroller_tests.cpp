@@ -30,6 +30,8 @@ using namespace au::context;
 
 static const actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 static const actions::ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
+static const actions::ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const actions::ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
 namespace au::playback {
 class PlaybackControllerTests : public ::testing::Test
@@ -138,6 +140,26 @@ public:
     void withStreamRestart(const std::function<void()>& action)
     {
         m_controller->withStreamRestart(action);
+    }
+
+    //! Same friendship caveat for the private action handlers below.
+    void changeAudioApi(const int index)
+    {
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_AUDIO_API_QUERY);
+        q.addParam("api_index", muse::Val(index));
+        m_controller->setAudioApiAction(q);
+    }
+
+    void changeInputChannels(const int count)
+    {
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY);
+        q.addParam("input-channels_index", muse::Val(count));
+        m_controller->setInputChannelsAction(q);
+    }
+
+    void rescanDevices()
+    {
+        m_controller->rescanAudioDevices();
     }
 
     //! m_lastPlaybackRegion is a private PlaybackController field; same
@@ -1186,6 +1208,104 @@ TEST_F(PlaybackControllerTests, SetInputChannels_StaleCountAboveAvailable_IsClam
 
     //! [WHEN] A menu entry built for an 8-channel device is clicked
     m_controller->setInputChannels(8);
+}
+
+/**
+ * @brief The device-change action resolves the index against the current list.
+ * @details The dispatcher action carries an index into the list shown when the
+ *          menu was built; the handler must resolve it to the value and forward
+ *          that, so a list that changed meanwhile can't select the wrong entry.
+ */
+TEST_F(PlaybackControllerTests, ChangeAudioApiAction_ResolvesIndexToValue)
+{
+    //! [GIVEN] Two hosts are available, the first one is current
+    ON_CALL(*m_audioDevicesProvider, apis())
+    .WillByDefault(Return(std::vector<std::string> { "CoreAudio", "JACK" }));
+    ON_CALL(*m_audioDevicesProvider, currentApi())
+    .WillByDefault(Return(std::string("CoreAudio")));
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] The resolved host name (not the index) reaches the provider
+    EXPECT_CALL(*m_audioDevicesProvider, setApi("JACK")).Times(1);
+
+    //! [WHEN] The action selects the second list entry
+    changeAudioApi(1);
+}
+
+/**
+ * @brief The input-channels action forwards the 1-based channel count.
+ * @details Despite the param name ("input-channels_index"), the senders pass
+ *          the channel count itself; the handler must forward it unchanged.
+ */
+TEST_F(PlaybackControllerTests, ChangeInputChannelsAction_ForwardsTheChannelCount)
+{
+    //! [GIVEN] The device offers 2 channels, 1 is selected
+    ON_CALL(*m_audioDevicesProvider, inputChannelsAvailable())
+    .WillByDefault(Return(2));
+    ON_CALL(*m_audioDevicesProvider, inputChannelsSelected())
+    .WillByDefault(Return(1));
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] The count reaches the provider unchanged
+    EXPECT_CALL(*m_audioDevicesProvider, setInputChannels(2)).Times(1);
+
+    //! [WHEN] The action selects 2 channels
+    changeInputChannels(2);
+}
+
+/**
+ * @brief Rescanning devices goes through the same stop/rescan/resume dance.
+ */
+TEST_F(PlaybackControllerTests, RescanDevices_WhilePlaying_StopsRescansResumes)
+{
+    //! [GIVEN] Playback is running at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [THEN] The stream is stopped, the rescan runs, then playback resumes at 30s
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, rescan()).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [WHEN] The devices are rescanned
+    rescanDevices();
+}
+
+/**
+ * @brief Pressing Stop after a paused device change discards the pending resume.
+ * @details Stop is an explicit reposition back to the seek anchor; a Play after
+ *          it must start from there, not resume at the pre-device-change pause
+ *          position.
+ */
+TEST_F(PlaybackControllerTests, ChangeAudioDevice_WhilePaused_ThenStop_DiscardsPendingResume)
+{
+    //! [GIVEN] Playback is paused at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [WHEN] The device is changed; 30s is remembered as the resume position
+    withStreamRestart([]() {});
+
+    //! [GIVEN] The transport is now stopped and the user presses Stop
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillRepeatedly(Return(true));
+    m_controller->stopSeekAndUpdatePlaybackRegion();
+
+    //! [THEN] Pressing Play must not resume at the discarded pause position
+    EXPECT_CALL(*m_player, play(_)).Times(::testing::AnyNumber());
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(0);
+
+    //! [WHEN] User presses Play
+    togglePlay();
 }
 
 /**

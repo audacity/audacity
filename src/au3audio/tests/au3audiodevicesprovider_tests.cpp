@@ -46,6 +46,13 @@ public:
         m_provider->handleDeviceChange();
     }
 
+    //! withMonitoringRestored() is private; the fixture is a friend of the
+    //! provider, so this thin wrapper is how the tests reach it.
+    void withMonitoringRestored(const std::function<void()>& change)
+    {
+        m_provider->withMonitoringRestored(change);
+    }
+
     std::shared_ptr<Au3AudioDevicesProvider> m_provider;
     std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
@@ -157,6 +164,32 @@ TEST_F(Au3AudioDevicesProviderTests, HandleDeviceChange_WhenNotMonitoring_DoesNo
 
     //! [WHEN] The device is changed
     handleDeviceChange();
+}
+
+/**
+ * @brief A composite change restores monitoring once, at the outermost scope.
+ * @details A host switch cascades into an output- and an input-device change,
+ *          each funneling through handleDeviceChange(). Monitoring must not be
+ *          restarted on the half-switched configuration in between — only once,
+ *          after the whole composite change is done.
+ */
+TEST_F(Au3AudioDevicesProviderTests, WithMonitoringRestored_NestedDeviceChanges_RestoresMonitoringOnce)
+{
+    //! [GIVEN] Input monitoring is on
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Both low-level switches run before monitoring is restored, and it
+    //! is restored exactly once
+    InSequence seq;
+    EXPECT_CALL(*m_audioEngine, handleDeviceChange()).Times(2);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+
+    //! [WHEN] A composite change funnels through handleDeviceChange() twice
+    withMonitoringRestored([this]() {
+        handleDeviceChange();
+        handleDeviceChange();
+    });
 }
 
 /**
