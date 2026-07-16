@@ -296,7 +296,13 @@ void Au3AudioDevicesProvider::setBufferLength(double newBufferLength)
     if (!muse::RealIsEqualOrMore(newBufferLength, 0.0)) {
         newBufferLength = muse::settings()->defaultValue(LATENCY_DURATION).toDouble();
     }
-    muse::settings()->setLocalValue(LATENCY_DURATION, muse::Val(newBufferLength));
+    // The buffer length is consumed when a stream is opened, so an active
+    // input-monitoring stream must be reopened for the new value to take
+    // effect (playback/recording restarts are handled a level up, by
+    // PlaybackController::withStreamRestart()).
+    withMonitoringRestored([newBufferLength]() {
+        muse::settings()->setLocalValue(LATENCY_DURATION, muse::Val(newBufferLength));
+    });
 }
 
 bool Au3AudioDevicesProvider::automaticCompensationEnabled() const
@@ -371,7 +377,13 @@ uint64_t Au3AudioDevicesProvider::defaultSampleRate() const
 
 void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
 {
-    settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
+    // The rate is consumed when a stream is opened, so an active
+    // input-monitoring stream must be reopened for the new value to take
+    // effect (playback/recording restarts are handled a level up, by
+    // PlaybackController::withStreamRestart()).
+    withMonitoringRestored([newRate]() {
+        settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
+    });
 }
 
 void Au3AudioDevicesProvider::setDefaultSampleFormat(const std::string& format)

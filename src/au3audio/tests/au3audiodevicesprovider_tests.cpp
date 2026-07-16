@@ -159,6 +159,61 @@ TEST_F(Au3AudioDevicesProviderTests, HandleDeviceChange_WhenNotMonitoring_DoesNo
     handleDeviceChange();
 }
 
+/**
+ * @brief A buffer-length change must reach an active monitoring stream.
+ * @details The buffer length is consumed when a stream is opened; an already
+ *          running input-monitoring stream keeps the old value, so it has to
+ *          be reopened around the change for the setting to take effect.
+ */
+TEST_F(Au3AudioDevicesProviderTests, SetBufferLength_WhenMonitoring_RestartsMonitoring)
+{
+    //! [GIVEN] Input monitoring is on
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Monitoring is stopped, then restarted once the value is applied
+    InSequence seq;
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+
+    //! [WHEN] The buffer length is changed
+    m_provider->setBufferLength(50.0);
+}
+
+/**
+ * @brief A default-sample-rate change must reach an active monitoring stream.
+ */
+TEST_F(Au3AudioDevicesProviderTests, SetDefaultSampleRate_WhenMonitoring_RestartsMonitoring)
+{
+    //! [GIVEN] Input monitoring is on
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Monitoring is stopped, then restarted once the value is applied
+    InSequence seq;
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+
+    //! [WHEN] The default sample rate is changed
+    m_provider->setDefaultSampleRate(48000);
+}
+
+/**
+ * @brief No spurious monitoring start when it wasn't on to begin with.
+ */
+TEST_F(Au3AudioDevicesProviderTests, SetBufferLength_WhenNotMonitoring_DoesNotStartMonitoring)
+{
+    //! [GIVEN] Input monitoring is off
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(false));
+
+    //! [THEN] Nothing tries to start monitoring
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(0);
+
+    //! [WHEN] The buffer length is changed
+    m_provider->setBufferLength(50.0);
+}
+
 TEST_F(Au3AudioDevicesProviderTests, SetInputChannels_SameValueAsCurrent_DoesNotTearDownStream)
 {
     //! [GIVEN] Whatever channel count is currently selected (settings persist
