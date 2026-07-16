@@ -163,6 +163,12 @@ private:
     // playing, resumes at the interrupted position afterwards.
     void withStreamRestart(const std::function<void()>& change);
 
+    // Applies `apply(newValue)` via withStreamRestart(), but only when the value
+    // actually changed — re-selecting the current value must not interrupt the
+    // stream. Doubles are compared with muse::RealIsEqual.
+    template<typename Value, typename ApplyValue>
+    void applyWithStreamRestart(const Value& newValue, const Value& currentValue, ApplyValue apply);
+
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
     void subscribeOnAudioParamsChanges();
     void setupSequenceTracks();

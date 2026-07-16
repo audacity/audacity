@@ -694,31 +694,48 @@ void PlaybackController::setInputChannelsAction(const muse::actions::ActionQuery
     setInputChannels(q.param("input-channels_index").toInt());
 }
 
+static bool valuesEqual(double a, double b)
+{
+    return muse::RealIsEqual(a, b);
+}
+
+template<typename Value>
+static bool valuesEqual(const Value& a, const Value& b)
+{
+    return a == b;
+}
+
+template<typename Value, typename ApplyValue>
+void PlaybackController::applyWithStreamRestart(const Value& newValue, const Value& currentValue, ApplyValue apply)
+{
+    if (valuesEqual(newValue, currentValue)) {
+        return;
+    }
+
+    withStreamRestart([&]() {
+        apply(newValue);
+    });
+}
+
 void PlaybackController::setAudioApi(const std::string& api)
 {
-    if (api != audioDevicesProvider()->currentApi()) {
-        withStreamRestart([this, api]() {
-            audioDevicesProvider()->setApi(api);
-        });
-    }
+    applyWithStreamRestart(api, audioDevicesProvider()->currentApi(), [this](const std::string& value) {
+        audioDevicesProvider()->setApi(value);
+    });
 }
 
 void PlaybackController::setAudioOutputDevice(const std::string& device)
 {
-    if (device != audioDevicesProvider()->currentOutputDevice()) {
-        withStreamRestart([this, device]() {
-            audioDevicesProvider()->setOutputDevice(device);
-        });
-    }
+    applyWithStreamRestart(device, audioDevicesProvider()->currentOutputDevice(), [this](const std::string& value) {
+        audioDevicesProvider()->setOutputDevice(value);
+    });
 }
 
 void PlaybackController::setAudioInputDevice(const std::string& device)
 {
-    if (device != audioDevicesProvider()->currentInputDevice()) {
-        withStreamRestart([this, device]() {
-            audioDevicesProvider()->setInputDevice(device);
-        });
-    }
+    applyWithStreamRestart(device, audioDevicesProvider()->currentInputDevice(), [this](const std::string& value) {
+        audioDevicesProvider()->setInputDevice(value);
+    });
 }
 
 void PlaybackController::setInputChannels(int channels)
@@ -732,20 +749,16 @@ void PlaybackController::setInputChannels(int channels)
     // shrank the channel count, so clamp instead of asserting on stale input.
     channels = std::clamp(channels, 1, available);
 
-    if (channels != audioDevicesProvider()->inputChannelsSelected()) {
-        withStreamRestart([this, channels]() {
-            audioDevicesProvider()->setInputChannels(channels);
-        });
-    }
+    applyWithStreamRestart(channels, audioDevicesProvider()->inputChannelsSelected(), [this](int value) {
+        audioDevicesProvider()->setInputChannels(value);
+    });
 }
 
 void PlaybackController::setDefaultSampleRate(uint64_t rate)
 {
-    if (rate != audioDevicesProvider()->defaultSampleRate()) {
-        withStreamRestart([this, rate]() {
-            audioDevicesProvider()->setDefaultSampleRate(rate);
-        });
-    }
+    applyWithStreamRestart(rate, audioDevicesProvider()->defaultSampleRate(), [this](uint64_t value) {
+        audioDevicesProvider()->setDefaultSampleRate(value);
+    });
 }
 
 void PlaybackController::setDefaultSampleFormat(const std::string& format)
@@ -753,20 +766,16 @@ void PlaybackController::setDefaultSampleFormat(const std::string& format)
     // The format is baked into the capture stream at start, so apply it via a
     // stream restart like the sample rate; an in-progress take otherwise keeps
     // recording in the old format while the UI shows the new one.
-    if (format != audioDevicesProvider()->defaultSampleFormat()) {
-        withStreamRestart([this, format]() {
-            audioDevicesProvider()->setDefaultSampleFormat(format);
-        });
-    }
+    applyWithStreamRestart(format, audioDevicesProvider()->defaultSampleFormat(), [this](const std::string& value) {
+        audioDevicesProvider()->setDefaultSampleFormat(value);
+    });
 }
 
 void PlaybackController::setBufferLength(double duration)
 {
-    if (!muse::RealIsEqual(duration, audioDevicesProvider()->bufferLength())) {
-        withStreamRestart([this, duration]() {
-            audioDevicesProvider()->setBufferLength(duration);
-        });
-    }
+    applyWithStreamRestart(duration, audioDevicesProvider()->bufferLength(), [this](double value) {
+        audioDevicesProvider()->setBufferLength(value);
+    });
 }
 
 void PlaybackController::setLatencyCompensation(double value)
