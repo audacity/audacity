@@ -1093,6 +1093,80 @@ TEST_F(PlaybackControllerTests, ChangeAudioDevice_WhilePaused_ThenFreshSelection
 }
 
 /**
+ * @brief A fresh selection that dispatched no seek/region action still wins
+ *        over the stale pre-device-change pause position.
+ * @details Some selection paths (e.g. Select All) only write the selection
+ *          controller's state and never dispatch a seek or play-region action
+ *          that would clear the pending resume position — the fast path must
+ *          notice them by itself.
+ */
+TEST_F(PlaybackControllerTests, ChangeAudioDevice_WhilePaused_ThenSelectAll_PlaysSelectionNotStalePosition)
+{
+    //! [GIVEN] Playback is paused at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [WHEN] The device is changed; 30s is remembered as the resume position
+    withStreamRestart([]() {});
+
+    //! [GIVEN] The transport is now stopped, and the user selects all (5-10s of
+    //! content) — a selection-controller-only change, no action dispatched
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(secs_t(5.0)));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(secs_t(10.0)));
+
+    //! [THEN] Pressing Play plays the selection, not the stale resume position
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(5.0), secs_t(10.0) }))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(_)).Times(::testing::AnyNumber());
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(0);
+
+    //! [WHEN] User presses Play
+    togglePlay();
+}
+
+/**
+ * @brief A resume position beyond the (since shortened) project is discarded.
+ * @details The pause position is captured before the device change; if the user
+ *          then deletes content so the project ends before that position, the
+ *          next Play must fall back to the normal start logic instead of opening
+ *          a stream past the end of the project.
+ */
+TEST_F(PlaybackControllerTests, ChangeAudioDevice_WhilePaused_ThenProjectShrunk_DoesNotResumePastProjectEnd)
+{
+    //! [GIVEN] Playback is paused at 30s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+
+    //! [WHEN] The device is changed; 30s is remembered as the resume position
+    withStreamRestart([]() {});
+
+    //! [GIVEN] The transport is now stopped and the project has shrunk to 10s
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_trackeditProject, totalTime())
+    .WillByDefault(Return(10));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillRepeatedly(Return(true));
+
+    //! [THEN] Pressing Play must not open a stream at the unreachable 30s
+    EXPECT_CALL(*m_player, play(_)).Times(::testing::AnyNumber());
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(0);
+
+    //! [WHEN] User presses Play
+    togglePlay();
+}
+
+/**
  * @brief Changing the sample rate while playing stops, applies, then resumes.
  * @details The provider applies the new rate to the open project immediately,
  *          while an already-running stream keeps playing at the old rate — the

@@ -284,13 +284,21 @@ void PlaybackController::doPlay(bool ignoreSelection)
     }
 
     if (m_pausedResumePos.has_value()) {
-        // Resuming a stream that a device change tore down while paused: start
-        // the stream at the pause position. The play region, seek anchor and the
-        // rest of the session state are deliberately untouched.
         const muse::secs_t pos = *m_pausedResumePos;
         m_pausedResumePos.reset();
-        player()->play(pos);
-        return;
+
+        // A selection made since the device change (through any path, including
+        // ones that dispatch no seek/region action) supersedes the stale resume
+        // position, and a project that shrank below it makes it unplayable.
+        const PlaybackRegion selectionRegion = ignoreSelection ? PlaybackRegion() : selectionPlaybackRegion();
+        const bool selectionSupersedesResume = selectionRegion.isValid() && selectionRegion != m_lastPlaybackRegion;
+        if (!selectionSupersedesResume && pos < totalPlayTime()) {
+            // Resuming a stream that a device change tore down while paused: start
+            // the stream at the pause position. The play region, seek anchor and the
+            // rest of the session state are deliberately untouched.
+            player()->play(pos);
+            return;
+        }
     }
 
     if (!ignoreSelection) {
