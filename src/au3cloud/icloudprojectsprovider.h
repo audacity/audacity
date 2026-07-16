@@ -21,5 +21,8 @@ public:
 
     virtual std::optional<CloudProjectRecord> projectRecordForPath(const muse::io::path_t& projectPath) const = 0;
     virtual std::optional<CloudProjectRecord> projectRecordForId(const std::string& projectId) const = 0;
+
+    virtual muse::io::path_t makeSafeFilePath(const muse::io::path_t& rootDir, const std::string& fileName,
+                                              const std::string& fileExtension) const = 0;
 };
 }

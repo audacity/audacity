@@ -4,6 +4,8 @@
 #include "cloudprojectsprovider.h"
 
 #include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
+#include "au3-cloud-audiocom/sync/CloudSyncDTO.h"
+#include "au3-string-utils/CodeConversions.h"
 
 using namespace au::au3cloud;
 
@@ -33,4 +35,13 @@ std::optional<CloudProjectRecord> CloudProjectsProvider::projectRecordForId(cons
 {
     namespace sync = audacity::cloud::audiocom::sync;
     return toCloudProjectRecord(sync::CloudProjectsDatabase::Get().GetProjectData(projectId));
+}
+
+muse::io::path_t CloudProjectsProvider::makeSafeFilePath(const muse::io::path_t& rootDir, const std::string& fileName,
+                                                         const std::string& fileExtension) const
+{
+    namespace sync = audacity::cloud::audiocom::sync;
+    const wxString path = sync::MakeSafeFilePath(audacity::ToWXString(rootDir.toStdString()), audacity::ToWXString(fileName),
+                                                 audacity::ToWXString(fileExtension));
+    return muse::io::path_t(audacity::ToUTF8(path));
 }

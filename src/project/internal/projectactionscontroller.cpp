@@ -601,7 +601,8 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         return make_ret(Ret::Code::UnknownError, std::string { "Cloud projects path is not set" });
     }
 
-    io::path_t projectFilePath = cloudProjectsPath.appendingComponent(cloudInfo.name).appendingSuffix(au::project::AUP4);
+    io::path_t projectFilePath = cloudProjectsProvider()->makeSafeFilePath(cloudProjectsPath, cloudInfo.name.toStdString(),
+                                                                           au::project::AUP4);
 
     IAudacityProjectPtr project = currentProject();
     if (!project) {
