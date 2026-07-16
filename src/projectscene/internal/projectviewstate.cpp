@@ -4,7 +4,6 @@
 
 #include <memory>
 
-#include <QApplication>
 #include <QEvent>
 #include <QKeyEvent>
 

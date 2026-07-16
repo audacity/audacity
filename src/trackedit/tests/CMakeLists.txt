@@ -28,6 +28,8 @@ set(MODULE_TEST_SRC
 set(MODULE_TEST_LINK
     trackedit
     au3wrap
+
+    muse::ui
     )
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})

@@ -5,6 +5,7 @@
 #include <QVariantAnimation>
 
 #include "modularity/ioc.h"
+#include "global/iapplication.h"
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
 #include "actions/actionable.h"
@@ -66,6 +67,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(double invalidGuidelineTime READ invalidGuidelineTime CONSTANT FINAL)
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };

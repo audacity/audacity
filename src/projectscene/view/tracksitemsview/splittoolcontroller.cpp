@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-#include <QApplication>
+#include <QGuiApplication>
 
 #include "view/common/customcursor.h"
 
@@ -51,7 +51,7 @@ void SplitToolController::init(QObject* root)
 
     qApp->installEventFilter(this);
 
-    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+    connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
         if (state != Qt::ApplicationActive) {
             setActive(false);
             setSingleTrack(true);

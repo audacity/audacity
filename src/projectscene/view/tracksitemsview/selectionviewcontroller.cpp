@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include <QApplication>
+#include <QGuiApplication>
 
 #include <cmath>
 
@@ -25,7 +25,7 @@ SelectionViewController::SelectionViewController(QObject* parent)
 
 void SelectionViewController::load()
 {
-    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+    connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
         if (state != Qt::ApplicationActive) {
             //Application lost focus, end any selection in progress
             onReleased(m_selectionStartTime, m_startY);
@@ -462,7 +462,7 @@ TrackIdList SelectionViewController::trackIdList() const
 
 Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
 {
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
     if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {

@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
@@ -18,6 +19,8 @@ using au::audio::pan_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Contextable
 {
+    muse::GlobalInject<muse::IApplication> application;
+
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
 

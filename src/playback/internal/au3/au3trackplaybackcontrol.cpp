@@ -1,5 +1,3 @@
-#include <QApplication>
-
 #include "framework/global/log.h"
 #include "global/types/translatablestring.h"
 
@@ -87,7 +85,7 @@ void Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo
         which == MuteOrSolo::Solo ? t->SetSolo(v) : t->SetMute(v);
     };
 
-    const bool exclusiveSet = QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
+    const bool exclusiveSet = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
 
     bool changed = false;
     if (exclusiveSet) {

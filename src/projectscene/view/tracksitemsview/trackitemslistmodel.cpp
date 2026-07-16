@@ -3,8 +3,6 @@
 */
 #include "trackitemslistmodel.h"
 
-#include <QApplication>
-
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -496,7 +494,7 @@ void TrackItemsListModel::disconnectAutoScroll()
 
 Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
 {
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
     if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
