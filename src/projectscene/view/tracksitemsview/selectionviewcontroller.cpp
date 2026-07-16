@@ -15,7 +15,6 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-//! NOTE: sync with ItemsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
 constexpr double SELECTION_DRAG_THRESHOLD_PX = 5.0;
 
@@ -270,12 +269,33 @@ void SelectionViewController::onReleased(double time, double y)
     setSelectionTimes(time1, time2, true);
 }
 
-void SelectionViewController::onSelectionHorizontalResize(double time1, double time2, bool completed)
+void SelectionViewController::onSelectionHorizontalResize(double anchorTime, double draggedTime, bool completed)
 {
     if (!isProjectOpened()) {
         return;
     }
 
+    anchorTime = std::max(anchorTime, 0.0);
+    draggedTime = std::max(draggedTime, 0.0);
+
+    if (completed) {
+        m_context->stopAutoScroll();
+        disconnect(m_autoScrollConnection);
+    } else {
+        if (m_selectionEditInProgress) {
+            anchorTime = m_horizontalResizeAnchorTime;
+        } else {
+            m_horizontalResizeAnchorTime = anchorTime;
+            m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
+                onSelectionHorizontalResize(m_horizontalResizeAnchorTime, m_context->positionToTime(m_autoScrollLastX), false);
+            });
+        }
+        m_autoScrollLastX = m_context->timeToPosition(draggedTime);
+        m_context->startAutoScroll(draggedTime);
+    }
+
+    double time1 = anchorTime;
+    double time2 = draggedTime;
     if (time1 > time2) {
         std::swap(time1, time2);
     }

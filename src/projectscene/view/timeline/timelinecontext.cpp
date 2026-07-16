@@ -365,7 +365,21 @@ void TimelineContext::autoScrollView(double scrollStep)
 
     double frameTime = m_frameEndTime - m_frameStartTime;
     double scrollFactor = calculateScrollSpeed(m_autoScrollStep, 0, SCROLL_MARGIN_PX, SCROLL_MIN_SPEED, SCROLL_MAX_SPEED);
-    moveToFrameTime(m_frameStartTime + (frameTime * scrollFactor));
+    double newFrameStartTime = m_frameStartTime + (frameTime * scrollFactor);
+
+    if (m_autoScrollStep > 0) {
+        const double maxFrameStartTime = maxFrameEndTime() - frameTime;
+        if (muse::RealIsEqualOrMore(m_frameStartTime, maxFrameStartTime)) {
+            stopAutoScroll();
+            return;
+        }
+        newFrameStartTime = std::min(newFrameStartTime, maxFrameStartTime);
+    } else if (muse::RealIsEqualOrLess(m_frameStartTime, 0.0)) {
+        stopAutoScroll();
+        return;
+    }
+
+    moveToFrameTime(newFrameStartTime);
 
     trackedit::secs_t frameStartAfterShift = frameStartTime();
 
@@ -400,6 +414,11 @@ void TimelineContext::startAutoScroll(double posSec)
         // left view edge, m_autoScrollStep should be negative number
         m_autoScrollStep = newPosition - (frameStartPosition + SCROLL_MARGIN_PX);
     } else {
+        if (muse::RealIsEqualOrMore(m_frameEndTime, maxFrameEndTime())) {
+            stopAutoScroll();
+            return;
+        }
+
         // right view edge, m_autoScrollStep should be positive number
         m_autoScrollStep = newPosition - (frameEndPosition - SCROLL_MARGIN_PX);
     }
@@ -468,8 +487,7 @@ void TimelineContext::shiftFrameTime(double shift)
     double endTimeShift = shift;
 
     double minStartTime = 0.0;
-    double totalTime = trackEditProject()->totalTime().to_double();
-    double maxEndTime = std::max(m_lastZoomEndTime, totalTime + (m_frameEndTime - m_frameStartTime) * 3 / 4);
+    double maxEndTime = maxFrameEndTime();
 
     // do not shift to negative time values
     if (m_frameStartTime + timeShift < minStartTime) {
@@ -496,6 +514,12 @@ void TimelineContext::shiftFrameTime(double shift)
     setFrameEndTime(m_frameEndTime + timeShift);
 
     emit frameTimeChanged();
+}
+
+double TimelineContext::maxFrameEndTime() const
+{
+    const double totalTime = trackEditProject()->totalTime().to_double();
+    return std::max(m_lastZoomEndTime, totalTime + (m_frameEndTime - m_frameStartTime) * 3 / 4);
 }
 
 au::trackedit::ITrackeditProjectPtr TimelineContext::trackEditProject() const

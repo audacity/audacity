@@ -61,7 +61,7 @@ public:
     Q_INVOKABLE void onPositionChanged(double time, double y);
     Q_INVOKABLE void onReleased(double time, double y);
 
-    Q_INVOKABLE void onSelectionHorizontalResize(double time1, double time2, bool completed);
+    Q_INVOKABLE void onSelectionHorizontalResize(double anchorTime, double draggedTime, bool completed);
     Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop);
     Q_INVOKABLE void updateSelectionVerticalResize(double y, bool completed);
     Q_INVOKABLE void cancelSpectrogramEdit();
@@ -124,6 +124,7 @@ private:
     double m_startY = 0.0;
     double m_autoScrollLastX = 0.0;
     double m_autoScrollLastY = 0.0;
+    double m_horizontalResizeAnchorTime = 0.0;
 
     double spectrogramHitFrequency(const spectrogram::SpectrogramHit& hit, double y) const;
     bool isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const;
