@@ -1,6 +1,5 @@
 #include "timelinecontext.h"
 
-#include <QApplication>
 #include <QWheelEvent>
 #include <cmath>
 
@@ -216,7 +215,7 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
         stepsY = static_cast<qreal>(stepsScrolled.y()) / static_cast<qreal>(QWheelEvent::DefaultDeltasPerStep);
     }
 
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     if (modifiers.testFlag(Qt::ControlModifier)) {
         double zoomSpeed = qPow(2.0, 1.0 / configuration()->mouseZoomPrecision());

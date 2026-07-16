@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include <QApplication>
+#include <QGuiApplication>
 
 #include "preferencesmodel.h"
 
@@ -198,11 +198,11 @@ void PreferencesModel::load(const QString& currentPageId)
 void PreferencesModel::resetFactorySettings()
 {
     static constexpr bool KEEP_DEFAULT_SETTINGS = true;
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+    QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+    QCoreApplication::processEvents();
     configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS);
     configuration()->startEditSettings();
-    QApplication::restoreOverrideCursor();
+    QGuiApplication::restoreOverrideCursor();
 }
 
 void PreferencesModel::apply()

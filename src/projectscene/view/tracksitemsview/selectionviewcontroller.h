@@ -6,6 +6,7 @@
 #include <QObject>
 
 #include "framework/global/async/async.h"
+#include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
@@ -35,6 +36,7 @@ class SelectionViewController : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(QVariantMap pressedSpectrogram READ pressedSpectrogram NOTIFY pressedSpectrogramChanged FINAL)
 
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
+    muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<trackedit::ISelectionController> selectionController { this };

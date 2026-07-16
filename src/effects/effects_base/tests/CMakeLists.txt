@@ -16,6 +16,8 @@ set(MODULE_TEST_LINK
     effects_base
     muse_audioplugins
     au3-preferences
+
+    Qt::Qml
 )
 
 # AU3 - needed because test files include AU3 headers

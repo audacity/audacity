@@ -3,7 +3,6 @@
 */
 #include "au3cloudservice.h"
 
-#include <QApplication>
 #include <QTimer>
 
 #include <string>

@@ -13,6 +13,8 @@ set(MODULE_TEST_SRC
 set(MODULE_TEST_LINK
     appshell
     project
+
+    muse::ui
 )
 
 set(MODULE_TEST_INCLUDE
