@@ -71,6 +71,10 @@ jobs:
         ref: ${{ inputs.app_ref || github.ref }}
         submodules: recursive
 
+    - name: Switch ports mirror
+      if: matrix.arch == 'aarch64'
+      run: sudo sed -i 's|http://ports.ubuntu.com/ubuntu-ports|https://azure.ports.ubuntu.com/ubuntu-ports|' /etc/apt/sources.list.d/ubuntu.sources
+
     - name: Override muse_framework
       if: inputs.framework_ref != '' || github.event_name == 'schedule'
       uses: actions/checkout@v6
@@ -245,6 +249,10 @@ jobs:
         repository: ${{ inputs.app_repo || job.workflow_repository }}
         ref: ${{ inputs.app_ref || job.workflow_sha }}
         persist-credentials: false
+
+    - name: Switch ports mirror
+      if: matrix.arch == 'aarch64'
+      run: sudo sed -i 's|http://ports.ubuntu.com/ubuntu-ports|https://azure.ports.ubuntu.com/ubuntu-ports|' /etc/apt/sources.list.d/ubuntu.sources
 
     - name: Setup environment
       run: |
