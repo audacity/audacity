@@ -41,6 +41,11 @@ bool TrackeditInteraction::silenceClips(const ClipKeyList& clipKeyList)
     return withPlaybackStop(&ITrackeditInteraction::silenceClips, clipKeyList);
 }
 
+bool TrackeditInteraction::tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const
+{
+    return m_interaction->tracksDataIsSilent(tracksIds, begin, end);
+}
+
 bool TrackeditInteraction::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
     return m_interaction->changeTrackTitle(trackId, title);

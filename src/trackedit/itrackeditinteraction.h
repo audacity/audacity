@@ -33,6 +33,7 @@ public:
     virtual bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool silenceClips(const ClipKeyList& clipKeyList) = 0;
+    virtual bool tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const = 0;
     virtual bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;

@@ -9,6 +9,7 @@
 #include "au3-track/Track.h"
 #include "au3-track/TimeWarper.h"
 #include "au3-track/PendingTracks.h"
+#include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
@@ -92,6 +93,28 @@ bool Au3TracksInteraction::silenceTracksData(const std::vector<trackedit::TrackI
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    return true;
+}
+
+bool Au3TracksInteraction::tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const
+{
+    for (TrackId trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        if (!waveTrack) {
+            continue;
+        }
+
+        for (const auto& channel : waveTrack->Channels()) {
+            const auto [min, max] = WaveChannelUtilities::GetMinMax(*channel, begin, end, false /*mayThrow*/);
+            if (min > max) {
+                continue; // no audio data in the given range
+            }
+            if (min != 0.f || max != 0.f) {
+                return false;
+            }
+        }
     }
 
     return true;

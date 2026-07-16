@@ -64,6 +64,7 @@ private:
 
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
+    bool canSilenceAudio() const;
 
     bool isFocusedItemLabel() const;
     LabelKeyList labelsForInteraction() const;
@@ -138,7 +139,6 @@ private:
     void doGlobalSilence();
     void silenceAudioSelection();
     void silenceClips(const trackedit::ClipKeyList& clipKeys);
-    void silenceTracks();
 
     void toggleStretchClipToMatchTempo(const muse::actions::ActionData& args);
     void openClipPitchAndSpeed();

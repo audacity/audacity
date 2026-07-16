@@ -240,6 +240,7 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-clip", "Clip"), makeClipItems(), "menu-clip"),
         makeMenu(TranslatableString("appshell-menu-label", "Label"), makeLabelItems(), "menu-label"),
+        makeMenuItem("silence-audio-selection", TranslatableString("action", "Silence audio")),
         makeSeparator(),
         makeMenuItem("open-metadata-editor", TranslatableString("action", "Metadata editor")),
         makeSeparator(),
