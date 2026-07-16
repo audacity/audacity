@@ -5,6 +5,8 @@
 #include "playbackuiactions.h"
 #include "../playbacktypes.h"
 
+#include <algorithm>
+
 using namespace muse;
 using namespace au::audio;
 using namespace au::playback;
@@ -721,9 +723,15 @@ void PlaybackController::setAudioInputDevice(const std::string& device)
 
 void PlaybackController::setInputChannels(int channels)
 {
-    IF_ASSERT_FAILED(channels > 0 && channels <= audioDevicesProvider()->inputChannelsAvailable()) {
+    const int available = audioDevicesProvider()->inputChannelsAvailable();
+    if (available <= 0) {
         return;
     }
+
+    // The request may come from a menu or list built before a device change
+    // shrank the channel count, so clamp instead of asserting on stale input.
+    channels = std::clamp(channels, 1, available);
+
     if (channels != audioDevicesProvider()->inputChannelsSelected()) {
         withStreamRestart([this, channels]() {
             audioDevicesProvider()->setInputChannels(channels);

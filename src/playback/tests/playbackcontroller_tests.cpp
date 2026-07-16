@@ -1167,6 +1167,28 @@ TEST_F(PlaybackControllerTests, ChangeAudioDevice_WhilePaused_ThenProjectShrunk_
 }
 
 /**
+ * @brief A stale channel-count selection is clamped, not asserted on.
+ * @details The audio-setup menu is built from the channel list of the moment;
+ *          if the device changes to one with fewer channels before the user
+ *          clicks, the stale count must be clamped to what the new device
+ *          offers instead of tripping an assert and dropping the request.
+ */
+TEST_F(PlaybackControllerTests, SetInputChannels_StaleCountAboveAvailable_IsClamped)
+{
+    //! [GIVEN] The current device offers 2 channels, 1 is selected
+    ON_CALL(*m_audioDevicesProvider, inputChannelsAvailable())
+    .WillByDefault(Return(2));
+    ON_CALL(*m_audioDevicesProvider, inputChannelsSelected())
+    .WillByDefault(Return(1));
+
+    //! [THEN] The stale request for 8 channels is applied as 2
+    EXPECT_CALL(*m_audioDevicesProvider, setInputChannels(2)).Times(1);
+
+    //! [WHEN] A menu entry built for an 8-channel device is clicked
+    m_controller->setInputChannels(8);
+}
+
+/**
  * @brief Changing the sample rate while playing stops, applies, then resumes.
  * @details The provider applies the new rate to the open project immediately,
  *          while an already-running stream keeps playing at the old rate — the
