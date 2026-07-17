@@ -13,6 +13,15 @@ using namespace au::trackedit;
 using namespace muse::async;
 using namespace muse::actions;
 
+namespace {
+muse::UriQuery makePlaybackPosUri()
+{
+    muse::UriQuery uri("audacity://trackedit/custom_time");
+    uri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
+    return uri;
+}
+}
+
 static const ActionCode TRACKEDIT_COPY_CODE("action://trackedit/copy");
 static const ActionCode TRACKEDIT_CUT_CODE("action://trackedit/cut");
 static const ActionCode TRACKEDIT_UNDO("action://trackedit/undo");
@@ -2324,13 +2333,6 @@ au::trackedit::TrackId TrackeditActionsController::resolveNextTrackIdForMove(con
     }
 
     return INVALID_TRACK;
-}
-
-muse::UriQuery TrackeditActionsController::makePlaybackPosUri() const
-{
-    muse::UriQuery uri("audacity://trackedit/custom_time");
-    uri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
-    return uri;
 }
 
 au::context::IPlaybackStatePtr TrackeditActionsController::playbackState() const
