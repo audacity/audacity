@@ -242,7 +242,9 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenu(TranslatableString("appshell-menu-label", "Label"), makeLabelItems(), "menu-label"),
         makeSeparator(),
         makeMenuItem("open-metadata-editor", TranslatableString("action", "Metadata editor")),
+#ifndef Q_OS_MAC
         makeSeparator(),
+#endif
         makeMenuItem("preference-dialog", MenuItemRole::PreferencesRole)
     };
 
