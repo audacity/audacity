@@ -12,11 +12,13 @@ class AudioDevicesProviderMock : public IAudioDevicesProvider
 {
 public:
     MOCK_METHOD(std::vector<std::string>, outputDevices, (), (const, override));
+    MOCK_METHOD(std::vector<std::string>, outputDevices, (const std::string&), (const, override));
     MOCK_METHOD(std::string, currentOutputDevice, (), (const, override));
     MOCK_METHOD(void, setOutputDevice, (const std::string&), (override));
     MOCK_METHOD(muse::async::Notification, outputDeviceChanged, (), (const, override));
 
     MOCK_METHOD(std::vector<std::string>, inputDevices, (), (const, override));
+    MOCK_METHOD(std::vector<std::string>, inputDevices, (const std::string&), (const, override));
     MOCK_METHOD(std::string, currentInputDevice, (), (const, override));
     MOCK_METHOD(void, setInputDevice, (const std::string&), (override));
     MOCK_METHOD(muse::async::Notification, inputDeviceChanged, (), (const, override));
@@ -27,6 +29,7 @@ public:
     MOCK_METHOD(muse::async::Notification, apiChanged, (), (const, override));
 
     MOCK_METHOD(int, inputChannelsAvailable, (), (const, override));
+    MOCK_METHOD(int, inputChannelsAvailable, (const std::string&, const std::string&), (const, override));
     MOCK_METHOD(int, inputChannelsSelected, (), (const, override));
     MOCK_METHOD(void, setInputChannels, (const int), (override));
     MOCK_METHOD(muse::async::Notification, inputChannelsAvailableChanged, (), (const, override));

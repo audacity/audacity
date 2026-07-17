@@ -16,11 +16,15 @@ public:
     virtual ~IAudioDevicesProvider() = default;
 
     virtual std::vector<std::string> outputDevices() const = 0;
+    //! Devices of the given API, without switching to it — lets an editor
+    //! (e.g. the Preferences dialog) preview another API before applying.
+    virtual std::vector<std::string> outputDevices(const std::string& api) const = 0;
     virtual std::string currentOutputDevice() const = 0;
     virtual void setOutputDevice(const std::string& device) = 0;
     virtual muse::async::Notification outputDeviceChanged() const = 0;
 
     virtual std::vector<std::string> inputDevices() const = 0;
+    virtual std::vector<std::string> inputDevices(const std::string& api) const = 0;
     virtual std::string currentInputDevice() const = 0;
     virtual void setInputDevice(const std::string& device) = 0;
     virtual muse::async::Notification inputDeviceChanged() const = 0;
@@ -31,6 +35,7 @@ public:
     virtual muse::async::Notification apiChanged() const = 0;
 
     virtual int inputChannelsAvailable() const = 0;
+    virtual int inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const = 0;
     virtual int inputChannelsSelected() const = 0;
     virtual void setInputChannels(const int count) = 0;
     virtual muse::async::Notification inputChannelsAvailableChanged() const = 0;

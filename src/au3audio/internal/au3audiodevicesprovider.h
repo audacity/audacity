@@ -29,11 +29,13 @@ public:
     void init();
 
     std::vector<std::string> outputDevices() const override;
+    std::vector<std::string> outputDevices(const std::string& api) const override;
     std::string currentOutputDevice() const override;
     void setOutputDevice(const std::string& device) override;
     muse::async::Notification outputDeviceChanged() const override;
 
     std::vector<std::string> inputDevices() const override;
+    std::vector<std::string> inputDevices(const std::string& api) const override;
     std::string currentInputDevice() const override;
     void setInputDevice(const std::string& device) override;
     muse::async::Notification inputDeviceChanged() const override;
@@ -46,6 +48,7 @@ public:
     muse::async::Notification apiChanged() const override;
 
     int inputChannelsAvailable() const override;
+    int inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const override;
     int inputChannelsSelected() const override;
     void setInputChannels(const int count) override;
     muse::async::Notification inputChannelsAvailableChanged() const override;
