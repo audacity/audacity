@@ -1206,6 +1206,16 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
 
     TrackIdList tracksIds = args.arg<TrackIdList>(0);
 
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    muse::remove_if(tracksIds, [&prj](const TrackId& trackId) {
+        const std::optional<Track> track = prj->track(trackId);
+        return !track.has_value() || track->type == TrackType::Label;
+    });
+
     if (tracksIds.empty()) {
         return;
     }

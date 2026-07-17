@@ -559,14 +559,16 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
-                    if (root.itemHeaderHovered && !splitToolController.active) {
+                    if (root.itemHeaderHovered && !(splitToolController.active && splitToolController.hoveredTrackSplittable)) {
                         tracksItemsView.itemStartEditRequested(hoveredItemKey)
                         root.interactionState = TracksItemsView.State.DraggingItem
                         lastItemClickKey = root.hoveredItemKey
                     } else {
                         content.forceActiveFocus()
 
-                        if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
+                        const pressBelongsToSplitTool = splitToolController.active && splitToolController.trackSplittable(tracksViewState.trackAtPosition(e.x, e.y))
+
+                        if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || pressBelongsToSplitTool)) {
                             let time = timeline.context.positionToTime(e.x)
                             if (playbackState.isPlaying) {
                                 playbackState.setLastPlaybackSeekTime(time)
@@ -574,7 +576,7 @@ Rectangle {
                             playCursorController.seekToTime(time)
                         }
 
-                        if (!splitToolController.active) {
+                        if (!pressBelongsToSplitTool) {
                             const spectrogramHit = tracksItemsView.getSpectrogramHit(e.y)
                             selectionViewController.onPressed(timeline.context.positionToTime(e.x), e.y, spectrogramHit)
                             selectionViewController.resetSelectedItems()
@@ -645,9 +647,7 @@ Rectangle {
                         if (selectionViewController.isLeftSelection(releaseTime)) {
                             playCursorController.seekToTime(releaseTime)
                         }
-                        if (!splitToolController.active) {
-                            selectionViewController.onReleased(releaseTime, e.y)
-                        }
+                        selectionViewController.onReleased(releaseTime, e.y)
                         if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                             playCursorController.seekToTime(timeline.context.selectionStartTime)
                         }
@@ -680,7 +680,7 @@ Rectangle {
                     return
                 }
 
-                if (root.isSplitMode) {
+                if (root.isSplitMode && splitToolController.trackSplittable(tracksViewState.trackAtPosition(e.x, e.y))) {
                     return
                 }
 
