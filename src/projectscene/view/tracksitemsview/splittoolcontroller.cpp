@@ -69,7 +69,7 @@ SplitToolController::~SplitToolController() = default;
 
 void au::projectscene::SplitToolController::doSplit()
 {
-    if (!m_clipHovered) {
+    if (!m_clipHovered || !hoveredTrackSplittable()) {
         return;
     }
 
@@ -78,9 +78,29 @@ void au::projectscene::SplitToolController::doSplit()
     if (mods & Qt::ShiftModifier) {
         auto allTracks = globalContext()->currentProject()->trackeditProject()->trackIdList();
         splitTracksAt(allTracks, context()->positionToTime(m_guidelinePos));
-    } else if (m_hoveredTrack >= 0) {
+    } else {
         splitTracksAt({ m_hoveredTrack }, context()->positionToTime(m_guidelinePos));
     }
+}
+
+bool SplitToolController::hoveredTrackSplittable() const
+{
+    return trackSplittable(m_hoveredTrack);
+}
+
+bool SplitToolController::trackSplittable(int trackId) const
+{
+    if (trackId < 0) {
+        return false;
+    }
+
+    const auto prj = globalContext()->currentProject();
+    if (!prj) {
+        return false;
+    }
+
+    const std::optional<trackedit::Track> track = prj->trackeditProject()->track(trackId);
+    return track.has_value() && track->type != trackedit::TrackType::Label;
 }
 
 void SplitToolController::mouseDown(double pos)
@@ -121,7 +141,7 @@ double SplitToolController::guidelinePosition() const
 
 bool SplitToolController::guidelineVisible() const
 {
-    return m_active && m_clipHovered && muse::RealIsEqualOrMore(m_guidelinePos, 0);
+    return m_active && m_clipHovered && hoveredTrackSplittable() && muse::RealIsEqualOrMore(m_guidelinePos, 0);
 }
 
 TimelineContext* SplitToolController::context() const
@@ -194,7 +214,7 @@ void SplitToolController::updateGuideline(double pos)
 
 void SplitToolController::updateCursor()
 {
-    if (active() && clipHovered()) {
+    if (active() && clipHovered() && hoveredTrackSplittable()) {
         overrideCursor();
     } else {
         restoreCursor();
@@ -259,7 +279,11 @@ void SplitToolController::setHoveredTrack(int newHoveredTrack)
         return;
     }
     m_hoveredTrack = newHoveredTrack;
+
+    updateCursor();
+
     emit hoveredTrackChanged();
+    emit guidelineVisibleChanged();
 }
 
 bool SplitToolController::eventFilter(QObject* obj, QEvent* event)

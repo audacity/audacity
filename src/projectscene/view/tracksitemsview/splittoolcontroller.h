@@ -22,6 +22,7 @@ class SplitToolController : public QObject, public muse::actions::Actionable, pu
     Q_PROPERTY(bool active READ active NOTIFY activeChanged FINAL)
     Q_PROPERTY(bool singleTrack READ singleTrack NOTIFY singleTrackChanged FINAL)
     Q_PROPERTY(int hoveredTrack READ hoveredTrack WRITE setHoveredTrack NOTIFY hoveredTrackChanged FINAL)
+    Q_PROPERTY(bool hoveredTrackSplittable READ hoveredTrackSplittable NOTIFY hoveredTrackChanged FINAL)
     Q_PROPERTY(bool clipHovered READ clipHovered WRITE setClipHovered NOTIFY clipHoveredChanged FINAL)
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
@@ -40,6 +41,8 @@ public:
     Q_INVOKABLE void mouseUp(double pos);
     Q_INVOKABLE void mouseMove(double pos);
 
+    Q_INVOKABLE bool trackSplittable(int trackId) const;
+
     TimelineContext* context() const;
     void setContext(TimelineContext* newContext);
 
@@ -56,6 +59,8 @@ public:
 
     int hoveredTrack() const;
     void setHoveredTrack(int newHoveredTrack);
+
+    bool hoveredTrackSplittable() const;
 
     bool singleTrack() const;
     void setSingleTrack(bool enabled);
