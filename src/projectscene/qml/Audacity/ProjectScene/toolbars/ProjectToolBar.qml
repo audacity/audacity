@@ -13,7 +13,7 @@ StyledToolBarView {
     property alias isCompactMode: toolBarModel.isCompactMode
 
     navigationPanel.name: "ProjectToolBar"
-    navigationPanel.accessible.name: qsTrc("projectscene", "Project toolbar")
+    navigationPanel.accessible.name: qsTrc("projectscene", "Audio setup and sharing")
 
     spacing: 2
     rowHeight: 28

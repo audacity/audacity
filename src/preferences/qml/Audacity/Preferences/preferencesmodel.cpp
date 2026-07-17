@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include <QApplication>
+#include <QGuiApplication>
 
 #include "preferencesmodel.h"
 
@@ -164,7 +164,7 @@ void PreferencesModel::load(const QString& currentPageId)
                  "Preferences/AudioPreferencesPage.qml"),
 
         makeItem("editing", QT_TRANSLATE_NOOP("preferences",
-                                              "Audio editing"), IconCode::Code::WAVEFORM, "Preferences/EditPreferencesPage.qml"),
+                                              "Audio editing"), IconCode::Code::IBEAM, "Preferences/EditPreferencesPage.qml"),
 
         makeItem("playback-recording", QT_TRANSLATE_NOOP("preferences",
                                                          "Playback/Recording"), IconCode::Code::MICROPHONE,
@@ -174,7 +174,7 @@ void PreferencesModel::load(const QString& currentPageId)
                                                        "Spectral display"), IconCode::Code::SPECTROGRAM,
                  "Preferences/SpectrogramPreferencesPage.qml"),
 
-        makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::METRONOME,
+        makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::MUSIC_NOTES,
                  "Preferences/MusicPreferencesPage.qml"),
 
         makeItem("cloud", QT_TRANSLATE_NOOP("preferences", "Cloud"), IconCode::Code::CLOUD, ""),
@@ -198,11 +198,11 @@ void PreferencesModel::load(const QString& currentPageId)
 void PreferencesModel::resetFactorySettings()
 {
     static constexpr bool KEEP_DEFAULT_SETTINGS = true;
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+    QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+    QCoreApplication::processEvents();
     configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS);
     configuration()->startEditSettings();
-    QApplication::restoreOverrideCursor();
+    QGuiApplication::restoreOverrideCursor();
 }
 
 void PreferencesModel::apply()

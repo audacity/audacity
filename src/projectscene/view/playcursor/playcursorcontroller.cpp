@@ -54,14 +54,15 @@ void PlayCursorController::init()
     });
 }
 
-void PlayCursorController::seekToX(double x, bool triggerPlay)
+void PlayCursorController::seekToTime(double secs, bool triggerPlay)
 {
     if (playbackState()->isPlaying() && !triggerPlay) {
         //! NOTE: Ignore all seeks in play mode unless it is an activation of play or resume from a new position
         return;
     }
 
-    const double secs = m_context->positionToTime(x, /*withSnap*/ true);
+    secs = snapTime(secs);
+
     muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
     q.addParam("triggerPlay", muse::Val(triggerPlay));
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
@@ -73,15 +74,29 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
     }
 }
 
-void PlayCursorController::setPlaybackRegion(double x1, double x2)
+void PlayCursorController::animatedSeekToTime(double secs)
 {
-    const double start = std::max(0.0, m_context->positionToTime(x1, /*withSnap*/ true));
-    const double end = std::max(0.0, m_context->positionToTime(x2, /*withSnap*/ true));
+    if (!playbackState()->isPlaying()) {
+        m_seekAnimated = true;
+    }
+
+    seekToTime(secs);
+}
+
+void PlayCursorController::setPlaybackRegionByTime(double t1, double t2)
+{
+    const double start = std::max(0.0, t1);
+    const double end = std::max(0.0, t2);
 
     muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
     q.addParam("start", muse::Val(start));
     q.addParam("end", muse::Val(end));
     dispatcher()->dispatch(q);
+}
+
+double PlayCursorController::snapTime(double time) const
+{
+    return m_context ? m_context->applyDetectedSnap(time) : time;
 }
 
 au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
@@ -91,6 +106,8 @@ au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
 
 void PlayCursorController::updatePositionX(muse::secs_t secs)
 {
+    const bool seekAnimated = std::exchange(m_seekAnimated, false);
+
     if (m_positionX == m_context->timeToPosition(secs)) {
         return;
     }
@@ -128,7 +145,14 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
             }
         }
     } else {
-        m_context->insureVisible(secs);
+        const double halfFrameDuration = (m_context->frameEndTime() - m_context->frameStartTime()) * 0.5;
+        const bool zoomTooClose = halfFrameDuration < ANIMATION_DURATION_SEC;
+
+        if (seekAnimated && !zoomTooClose) {
+            m_context->animatedInsureVisible(secs);
+        } else {
+            m_context->insureVisible(secs);
+        }
     }
 
     m_positionX = m_context->timeToPosition(secs);

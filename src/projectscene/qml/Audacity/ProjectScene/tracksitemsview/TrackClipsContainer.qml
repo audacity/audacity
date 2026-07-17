@@ -28,6 +28,7 @@ TrackItemsContainer {
     required property var pressedSpectrogram
     required property double sampleRate
     required property var selectionController
+    required property bool splitToolActive
 
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
@@ -386,6 +387,7 @@ TrackItemsContainer {
                                 selectionEndFrequency: root.selectionEndFrequency
                                 pressedSpectrogram: root.pressedSpectrogram
                                 spectralSelectionEnabled: root.spectralSelectionEnabled
+                                splitToolActive: root.splitToolActive
 
                                 leftVisibleMargin: itemData.leftVisibleMargin
                                 rightVisibleMargin: itemData.rightVisibleMargin
@@ -396,7 +398,6 @@ TrackItemsContainer {
                                 navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
                                 navigation.panel: root.navigationPanel
                                 navigation.column: itemData ? Math.floor(itemData.x) : 0
-                                navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
                                     if (navigation.highlight) {
                                         root.context.animatedInsureVisible(itemData.time.startTime)
@@ -668,6 +669,7 @@ TrackItemsContainer {
                 id: spectralSelectionContainer
 
                 visible: root.isSpectrogramViewVisible
+                enabled: !root.splitToolActive
 
                 y: root.headerHeight + (root.isWaveformViewVisible ? prv.viewHeight : 0)
                 height: prv.viewHeight
@@ -695,7 +697,7 @@ TrackItemsContainer {
                 onSelectionHorizontalResize: function (x1, x2, completed) {
                     root.selectionResize(x1, x2, completed)
                     if (completed) {
-                        root.seekToX(x1)
+                        root.seekToX(Math.min(x1, x2))
                     }
                 }
 

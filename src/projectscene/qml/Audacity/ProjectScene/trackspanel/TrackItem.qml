@@ -120,6 +120,26 @@ ListItemBlank {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        onPressed: function (e) {
+            // Pass the event forward to allow
+            // child elements to handle the input
+            e.accepted = false
+
+            let multiSelectionModifier = e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)
+
+            if (!multiSelectionModifier) {
+                root.selectionRequested(true)
+                root.dataSelectionRequested()
+                return
+            }
+
+            root.selectionRequested(false)
+        }
+    }
+
     Item {
         anchors.fill: parent
 
@@ -171,6 +191,7 @@ ListItemBlank {
 
                 Loader {
                     id: headerTrailingControls
+                    visible: root.collapsed && item !== null
                 }
 
                 MenuButton {
@@ -180,6 +201,7 @@ ListItemBlank {
 
                     navigation.panel: root.navigation.panel
                     navigation.order: root.collapsed ? root.headerTrailingControlsNavigationEnd + 1 : title.navigation.order + 1
+                    navigation.accessible.name: qsTrc("projectscene", "Track menu")
 
                     onClicked: {
                         root.selectionRequested(true)
@@ -221,23 +243,6 @@ ListItemBlank {
 
     Item {
         anchors.fill: parent
-        MouseArea {
-            anchors.fill: parent
-            onPressed: function (e) {
-                // Pass the event forward to allow
-                // child elements to handle the input
-                e.accepted = false
-                let toggleModifier = e.modifiers & Qt.ControlModifier
-
-                if (!toggleModifier) {
-                    root.selectionRequested(true)
-                    root.dataSelectionRequested()
-                    return
-                }
-
-                root.selectionRequested(false)
-            }
-        }
 
         HoverHandler {
             id: hoverHandler

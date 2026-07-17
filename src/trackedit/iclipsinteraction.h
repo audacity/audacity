@@ -78,9 +78,6 @@ public:
     //! TODO
     virtual bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const = 0;
     virtual bool userIsOkWithDownmixing() const = 0;
-    virtual muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<ITrackDataPtr>& trackData,
-                                               muse::secs_t begin) = 0;
-    virtual muse::Ret makeRoomForDataOnTrack(const TrackId trackId, muse::secs_t begin, muse::secs_t end) = 0;
     virtual bool singleClipOnTrack(const TrackId trackId) const = 0;
 };
 }

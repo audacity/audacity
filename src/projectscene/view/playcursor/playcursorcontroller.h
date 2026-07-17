@@ -54,8 +54,9 @@ public:
     double positionX() const;
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void seekToX(double x, bool triggerPlay = false);
-    Q_INVOKABLE void setPlaybackRegion(double x1, double x2);
+    Q_INVOKABLE void seekToTime(double secs, bool triggerPlay = false);
+    Q_INVOKABLE void animatedSeekToTime(double secs);
+    Q_INVOKABLE void setPlaybackRegionByTime(double time1, double time2);
 
 signals:
     void timelineContextChanged();
@@ -67,6 +68,7 @@ private slots:
 private:
     context::IPlaybackStatePtr playbackState() const;
 
+    double snapTime(double time) const;
     void updatePositionX(muse::secs_t secs);
     void ensureCursorAtCenter(muse::secs_t secs) const;
 
@@ -79,6 +81,7 @@ private:
 
     QTimer m_scrollSuppressionTimer;
     bool m_viewUpdatesSuppressed = false;
+    bool m_seekAnimated = false;
 
     friend struct SnapTestAccess;
 };

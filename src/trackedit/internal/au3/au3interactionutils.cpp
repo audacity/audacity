@@ -7,11 +7,13 @@
 
 #include "../../trackedittypes.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
 #include "global/containers.h"
+#include "global/realfn.h"
 #include "log.h"
 #include <unordered_set>
 
@@ -94,7 +96,7 @@ size_t au::trackedit::utils::getTrackIndex(const au3::Au3TrackList& tracks, cons
 
 void au::trackedit::utils::exchangeTrack(au3::Au3TrackList& tracks, au3::Au3WaveTrack& oldOne, au3::Au3WaveTrack& newOne)
 {
-    auto tmp = TrackList::Temporary(nullptr, newOne.shared_from_this());
+    auto tmp = au3::Au3TrackList::Temporary(nullptr, newOne.shared_from_this());
     tracks.ReplaceOne(oldOne, std::move(*tmp));
 }
 
@@ -310,4 +312,112 @@ muse::Ret au::trackedit::utils::withProgress(muse::IInteractive& interactive, co
     progress.finish(muse::make_ok());
 
     return result;
+}
+
+void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack,
+                                                   secs_t begin, secs_t end, std::shared_ptr<au3::Au3WaveClip> otherClip)
+{
+    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+        auto clipInfo = au::au3::DomConverter::clip(waveTrack, otherClip.get());
+        waveTrack->RemoveInterval(otherClip);
+        project->notifyAboutClipRemoved(clipInfo);
+        project->notifyAboutTrackChanged(au::au3::DomConverter::track(waveTrack));
+        return;
+    }
+
+    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+        secs_t otherClipStartTime = otherClip->GetPlayStartTime();
+        secs_t otherClipEndTime = otherClip->GetPlayEndTime();
+
+        auto leftClip = waveTrack->CopyClip(*otherClip, true);
+        waveTrack->InsertInterval(std::move(leftClip), false);
+
+        secs_t rightClipOverlap = (end - otherClip->GetPlayStartTime());
+        otherClip->TrimLeft(rightClipOverlap);
+        project->notifyAboutClipChanged(au::au3::DomConverter::clip(waveTrack, otherClip.get()));
+
+        leftClip->SetPlayStartTime(otherClipStartTime);
+        secs_t leftClipOverlap = (otherClipEndTime - begin);
+        leftClip->TrimRight(leftClipOverlap);
+        project->notifyAboutClipAdded(au::au3::DomConverter::clip(waveTrack, leftClip.get()));
+
+        project->notifyAboutTrackChanged(au::au3::DomConverter::track(waveTrack));
+        return;
+    }
+
+    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())
+        && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
+        secs_t overlap = (end - otherClip->GetPlayStartTime());
+        otherClip->TrimLeft(overlap);
+        project->notifyAboutClipChanged(au::au3::DomConverter::clip(waveTrack, otherClip.get()));
+        return;
+    }
+
+    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
+        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+        secs_t overlap = (otherClip->GetPlayEndTime() - begin);
+        otherClip->TrimRight(overlap);
+        project->notifyAboutClipChanged(au::au3::DomConverter::clip(waveTrack, otherClip.get()));
+        return;
+    }
+}
+
+void au::trackedit::utils::remapCopiedClipGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
+                                                 const std::vector<au3::Au3WaveTrack*>& copies)
+{
+    std::map<int64_t, size_t> copiedClipCounts;
+    for (au3::Au3WaveTrack* copy : copies) {
+        for (const auto& clip : copy->Intervals()) {
+            const int64_t groupId = clip->GetGroupId();
+            if (groupId != -1) {
+                ++copiedClipCounts[groupId];
+            }
+        }
+    }
+
+    if (copiedClipCounts.empty()) {
+        return;
+    }
+
+    std::map<int64_t, size_t> projectClipCounts;
+    for (const au3::Au3Track* track : projectTracks) {
+        const auto waveTrack = dynamic_cast<const au3::Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
+        for (const auto& clip : waveTrack->Intervals()) {
+            const int64_t groupId = clip->GetGroupId();
+            if (muse::contains(copiedClipCounts, groupId)) {
+                ++projectClipCounts[groupId];
+            }
+        }
+    }
+
+    std::map<int64_t, int64_t> remappedGroupIds;
+    int64_t searchFrom = 0;
+    for (au3::Au3WaveTrack* copy : copies) {
+        for (const auto& clip : copy->Intervals()) {
+            const int64_t oldGroupId = clip->GetGroupId();
+            if (oldGroupId == -1) {
+                continue;
+            }
+
+            if (copiedClipCounts[oldGroupId] != projectClipCounts[oldGroupId]) {
+                clip->SetGroupId(-1);
+                continue;
+            }
+
+            auto it = remappedGroupIds.find(oldGroupId);
+            if (it == remappedGroupIds.end()) {
+                const int64_t newGroupId = prj.createNewGroupID(searchFrom);
+                searchFrom = newGroupId + 1;
+                it = remappedGroupIds.insert({ oldGroupId, newGroupId }).first;
+            }
+            clip->SetGroupId(it->second);
+        }
+    }
 }

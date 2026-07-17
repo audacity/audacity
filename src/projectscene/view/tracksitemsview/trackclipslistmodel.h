@@ -91,6 +91,6 @@ private:
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
 
-    trackedit::ClipKeyList m_pendingShiftDeselect;
+    trackedit::ClipKeyList m_pendingToggleDeselect;
 };
 }

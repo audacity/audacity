@@ -38,6 +38,7 @@
         <file>slidingstretch/SlidingStretchTempoControls.qml</file>
         <file>slidingstretch/SlidingStretchPitchControls.qml</file>
         <file>reverb/ReverbView.qml</file>
+        <file>basstreble/BassTrebleView.qml</file>
         <file>paulstretch/PaulstretchView.qml</file>
         <file>noisegen/NoiseView.qml</file>
         <file>noisereduction/NoiseReductionSlider.qml</file>

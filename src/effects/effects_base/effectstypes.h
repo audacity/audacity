@@ -6,10 +6,12 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <string>
 
 #include "framework/global/types/string.h"
 #include "framework/global/types/ratio.h"
 #include "framework/actions/actiontypes.h"
+#include "framework/audioplugins/audiopluginstypes.h"
 
 class Effect;
 class EffectInstanceEx;
@@ -241,9 +243,13 @@ struct EffectMeta {
     bool isRealtimeCapable = false;
     bool paramsAreInputAgnostic = true;
     bool isActivated = true;
-    bool isLoadable = true;
+
+    // Carried verbatim so save() round-trips Discovered/Missing/Error.
+    // Undefined marks a default-constructed meta that must not read as loadable.
+    muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Undefined;
 
     bool isValid() const { return !id.empty(); }
+    bool isLoadable() const { return state == muse::audioplugins::AudioPluginState::Validated; }
 };
 
 using EffectMetaList = std::vector<EffectMeta>;

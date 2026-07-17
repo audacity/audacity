@@ -96,8 +96,9 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.title = wxToString(au3clip->GetName());
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();
-    int clipIdx = au3clip->GetColorIndex();
-    clip.colorIndex = (clipIdx != 0) ? clipIdx : TrackColor::Get(waveTrack).GetColorIndex();
+    int clipColorIdx = au3clip->GetColorIndex();
+    clip.isAutoColor = (clipColorIdx == trackedit::CLIP_COLOR_INDEX_NONE);
+    clip.colorIndex = clip.isAutoColor ? TrackColor::Get(waveTrack).GetColorIndex() : clipColorIdx;
     clip.groupId = au3clip->GetGroupId();
     clip.stereo = au3clip->NChannels() > 1;
 

@@ -103,5 +103,5 @@ void NewProjectModel::updatePreferredProjectCreationMode(bool isProjectCreatedFr
 
 bool NewProjectModel::isFilenameAllowed(const QString& filename) const
 {
-    return muse::io::isAllowedFileName(muse::io::path_t(filename));
+    return !filename.trimmed().isEmpty();
 }

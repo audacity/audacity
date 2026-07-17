@@ -32,6 +32,7 @@
 #include "project/iprojectconfiguration.h"
 #include "framework/global/io/ifilesystem.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
+#include "au3cloud/icloudprojectsprovider.h"
 
 namespace au::project {
 class RecentFilesController : public IRecentFilesController, public muse::async::Asyncable
@@ -39,6 +40,7 @@ class RecentFilesController : public IRecentFilesController, public muse::async:
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
 
 public:
     void init();

@@ -1651,8 +1651,8 @@ void WaveTrack::ClearAndPasteAtSameTempo(
 
     if (joinEnds) {
         const auto delta = LongSamplesToTime(1);
-        track.Join(t0 - delta, t0 + delta, {});
-        track.Join(t1 - delta, t1 + delta, {});
+        track.Join(t0 - delta, t0 + delta, {}, false /* evenIfPitchOrSpeedMismatch */);
+        track.Join(t1 - delta, t1 + delta, {}, false /* evenIfPitchOrSpeedMismatch */);
     }
 }
 
@@ -2407,8 +2407,7 @@ void RebuildJoinedEnvelope(
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Join(
-    double t0, double t1, const ProgressReporter& reportProgress)
+void WaveTrack::Join(double t0, double t1, const ProgressReporter& reportProgress, bool evenIfPitchOrSpeedMismatch)
 {
     // Merge all WaveClips overlapping selection into one
     const auto& intervals = Intervals();
@@ -2428,6 +2427,9 @@ void WaveTrack::Join(
                 [first = intervalsToJoin[0]](const auto& interval) {
             return !first->HasEqualPitchAndSpeed(*interval);
         })) {
+            if (!evenIfPitchOrSpeedMismatch) {
+                return;
+            }
             ApplyPitchAndSpeedOnIntervals(intervalsToJoin, reportProgress);
         }
     }
@@ -3621,6 +3623,17 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
         return pA->GetPlayStartTime() < pB->GetPlayStartTime();
     });
     return result;
+}
+
+bool WaveTrack::NoPlayRegionsOverlap() const
+{
+    const auto clips = SortedIntervalArray();
+    for (size_t i = 1; i < clips.size(); ++i) {
+        if (clips[i - 1]->GetPlayEndTime() > clips[i]->GetPlayStartTime()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void WaveTrack::ZipClips(bool mustAlign)

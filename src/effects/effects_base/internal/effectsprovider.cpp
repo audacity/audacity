@@ -61,10 +61,9 @@ void EffectsProvider::forgetPlugins(const EffectFilter& forget)
 }
 
 void EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                                    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                    const EffectFilter& exclude)
+                                    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
-    if (doScanPlugins(ctx, registerAudioPluginsScenario, {}, exclude) == NewPluginsRegistered::No) {
+    if (doScanPlugins(ctx, registerAudioPluginsScenario) == NewPluginsRegistered::No) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
     }
 }
@@ -72,8 +71,7 @@ void EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx, mus
 EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     const muse::modularity::ContextPtr& ctx,
     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-    const std::function<bool()>& doScanThirdPartyPlugins,
-    const EffectFilter& exclude)
+    const std::function<bool()>& doScanThirdPartyPlugins)
 {
     muse::audioplugins::PluginScanResult scanResult;
     {
@@ -109,58 +107,30 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         }
     }
 
-    if (exclude != nullptr) {
-        // Erase plugins matching exclude
-        auto it = thirdPartyPluginPaths.begin();
-        while (it != thirdPartyPluginPaths.end()) {
-            const auto& reader = pathToMetaReader.at(*it);
-            const muse::RetVal<muse::audio::AudioResourceMetaList> ret = reader->readMeta(*it);
-            IF_ASSERT_FAILED(ret.ret) {
-                it = thirdPartyPluginPaths.erase(it);
-                continue;
-            }
+    const auto mid = std::stable_partition(
+        thirdPartyPluginPaths.begin(), thirdPartyPluginPaths.end(),
+        [&](const auto& path) {
+        const auto family = utils::effectFamilyFromCacheType(pathToMetaReader.at(path)->metaType());
+        return !(family == EffectFamily::Nyquist || family == EffectFamily::Builtin);
+    });
 
-            std::vector<EffectMeta> effectMetas;
-            std::transform(ret.val.begin(), ret.val.end(), std::back_inserter(effectMetas), [path = *it](const auto& meta) {
-                return utils::museToAuEffectMeta(path, meta);
-            });
-            // Only skip if all effects of this bundle are excluded - better be safe here.
-            if (std::all_of(effectMetas.begin(), effectMetas.end(), exclude)) {
-                it = thirdPartyPluginPaths.erase(it);
-                continue;
-            }
+    muse::io::paths_t audacityPluginPaths(mid, thirdPartyPluginPaths.end());
+    thirdPartyPluginPaths.erase(mid, thirdPartyPluginPaths.end());
 
-            // All good.
-            ++it;
-        }
-    }
+    knownPluginsRegister()->setPluginsState(scanResult.missingPluginPaths,
+                                            muse::audioplugins::AudioPluginState::Missing);
 
-    // Audacity plugins (built-in effects and nyquist plugins) are safe. Register them in-process,
-    // because out-of-process registration is slow and users may opt out. Remove them from the list of plugins.
-    muse::io::paths_t audacityPluginPaths;
-    auto it = thirdPartyPluginPaths.begin();
-    while (it != thirdPartyPluginPaths.end()) {
-        const auto& reader = pathToMetaReader.at(*it);
-        const auto metaType = reader->metaType();
-
-        using namespace muse::audio;
-        const auto isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::NativeEffect;
-        if (isAudacityPlugin) {
-            audacityPluginPaths.push_back(*it);
-            it = thirdPartyPluginPaths.erase(it);
-        } else {
-            ++it;
-        }
-    }
-
-    registerAudioPluginsScenario.unregisterRemovedPlugins(scanResult.missingPluginIds);
-
+    // built-in and nyquist plugins are trusted, register in-process
     for (const io::path_t& path : audacityPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
     }
 
-    if (!thirdPartyPluginPaths.empty() && (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins())) {
-        registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
+    if (!thirdPartyPluginPaths.empty()) {
+        const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
+        const muse::Ret ret = registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
+        if (!ret) {
+            LOGE() << "Failed to register new plugins: " << ret.toString();
+        }
     }
 
     reloadEffects();
@@ -179,7 +149,7 @@ void EffectsProvider::reloadEffects()
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
     std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
                    [](const muse::audioplugins::AudioPluginInfo& info) {
-        return utils::museToAuEffectMeta(info.path, info.meta, info.enabled);
+        return utils::museToAuEffectMeta(info.path, info.meta, info.state);
     });
 
     m_effectsChanged.notify();
@@ -306,20 +276,20 @@ void EffectsProvider::doSave(EffectFilter removeFromConfig)
         }
 
         muse::audioplugins::AudioPluginInfo info;
-        info.type = muse::audioplugins::AudioPluginType::Fx;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = meta.path;
-        info.enabled = meta.isLoadable;
+        info.state = meta.state;
 
         newPlugins.push_back(std::move(info));
     }
 
+    // registerPlugins() merges into the register; remove the cache and reload
+    // so exactly newPlugins is persisted
     const auto filePath = audioPluginsConfiguration()->knownAudioPluginsFilePath();
     if (fileSystem()->exists(filePath)) {
-        // Remove the file and reload the register.
         fileSystem()->remove(filePath);
-        knownPluginsRegister()->load();
     }
+    knownPluginsRegister()->load();
 
     knownPluginsRegister()->registerPlugins(newPlugins);
 }

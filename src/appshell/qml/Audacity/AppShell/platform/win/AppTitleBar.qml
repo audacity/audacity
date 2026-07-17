@@ -58,15 +58,19 @@ Rectangle {
             id: menu
 
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-            Layout.preferredWidth: width
-            Layout.preferredHeight: height
+            Layout.fillWidth: menu.truncated ? true : false
+            Layout.preferredWidth: implicitWidth
+            Layout.preferredHeight: implicitHeight
+
+            availableWidth: root.width - (content.spacing + titleTextmetrics.width + content.spacing + systemButtons.width)
         }
 
         StyledTextLabel {
             id: titleLabel
 
-            Layout.fillWidth: true
+            Layout.fillWidth: !menu.truncated ? true : false
             Layout.fillHeight: true
+            Layout.minimumWidth: titleTextmetrics.advanceWidth
 
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
@@ -102,6 +106,7 @@ Rectangle {
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
             Layout.preferredWidth: width
             Layout.preferredHeight: height
+            Layout.minimumWidth: width
 
             windowIsMiximized: root.windowVisibility === Window.Maximized
 

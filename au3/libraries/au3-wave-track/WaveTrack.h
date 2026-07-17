@@ -440,8 +440,7 @@ public:
 
     // May assume precondition: t0 <= t1
     void SplitDelete(double t0, double t1) /* not override */;
-    void Join(
-        double t0, double t1, const ProgressReporter& reportProgress) /* not override */;
+    void Join(double t0, double t1, const ProgressReporter& reportProgress, bool evenIfPitchOrSpeedMismatch) /* not override */;
     // May assume precondition: t0 <= t1
     void Disjoin(double t0, double t1) /* not override */;
 
@@ -650,6 +649,15 @@ public:
     IntervalHolders SortedIntervalArray();
     //! Return all WaveClips sorted by clip play start time.
     IntervalConstHolders SortedIntervalArray() const;
+
+    //! Whether no two clips' play regions overlap.
+    /*!
+     Compares `GetPlayStartTime()`/`GetPlayEndTime()` only, tolerant of sub-sample
+     rounding (same tolerance as the clip-edit overlap resolvers). Sequence/hidden
+     (trimmed-away) extents may overlap and are deliberately not considered. Intended
+     as a post-condition check after an editing interaction completes.
+     */
+    bool NoPlayRegionsOverlap() const;
 
     //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
     /*!

@@ -82,6 +82,8 @@ Item {
     Column {
         id: content
 
+        anchors.horizontalCenter: parent.horizontalCenter
+
         spacing: 6
 
         StyledTextLabel {
@@ -95,6 +97,8 @@ Item {
 
         KnobControl {
             id: knob
+
+            navigation.accessible.name: root.parameter["title"]
 
             value: warper.warpedValue
 
@@ -137,6 +141,8 @@ Item {
 
         IncrementalPropertyControl {
             id: textEdit
+
+            navigation.accessible.name: root.parameter["title"] + " " + currentValue
 
             anchors.horizontalCenter: parent.horizontalCenter
 

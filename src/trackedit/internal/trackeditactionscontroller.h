@@ -195,7 +195,6 @@ private:
 
     double zoomLevel() const;
     double calculateStepSize() const;
-    Label focusedLabel() const;
     TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
     TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
 

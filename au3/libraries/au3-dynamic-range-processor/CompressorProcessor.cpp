@@ -51,6 +51,7 @@ CompressorProcessor::CompressorProcessor(
                                   DanielRudrich::LookAheadGainReduction>()}
     , mSettings{settings}
 {
+    ApplySettings(settings, true);
 }
 
 CompressorProcessor::~CompressorProcessor() = default;
@@ -62,8 +63,13 @@ void CompressorProcessor::ApplySettingsIfNeeded(
         return;
     }
 
-    const auto lookaheadNeedsReinit
-        =settings.lookaheadMs != mSettings.lookaheadMs;
+    const auto lookaheadNeedsReinit = settings.lookaheadMs != mSettings.lookaheadMs;
+    ApplySettings(settings, lookaheadNeedsReinit);
+}
+
+void CompressorProcessor::ApplySettings(
+    const DynamicRangeProcessorSettings& settings, bool reinitLookahead)
+{
     mSettings = settings;
 
     mGainReductionComputer->setThreshold(settings.inCompressionThreshDb);
@@ -73,7 +79,7 @@ void CompressorProcessor::ApplySettingsIfNeeded(
     mGainReductionComputer->setRatio(settings.compressionRatio);
     mGainReductionComputer->setMakeUpGain(GetMakeupGainDb(settings));
 
-    if (lookaheadNeedsReinit) {
+    if (reinitLookahead) {
         mLookAheadGainReduction->setDelayTime(settings.lookaheadMs / 1000);
         Reinit();
     }

@@ -5,8 +5,6 @@
 
 #include "framework/actions/actiontypes.h"
 
-#include <QUrl>
-
 using namespace au::project;
 
 namespace {
@@ -14,10 +12,8 @@ constexpr const char* OPEN_PROJECT_ACTION = "cloud-file-open";
 constexpr const char* OPEN_PROJECT_PAGE_ACTION = "audacity://cloud/open-project-page";
 }
 
-CloudProjectContextMenuModel::CloudProjectContextMenuModel(QString projectId, QString localPath, QString displayName,
-                                                           QObject* parent)
-    : AbstractMenuModel(parent), m_projectId(std::move(projectId)),  m_localPath(std::move(localPath)),
-    m_displayName(std::move(displayName))
+CloudProjectContextMenuModel::CloudProjectContextMenuModel(QString projectId, QObject* parent)
+    : AbstractMenuModel(parent), m_projectId(std::move(projectId))
 {
 }
 
@@ -38,9 +34,7 @@ void CloudProjectContextMenuModel::handleMenuItem(const QString& itemId)
             return;
         }
 
-        dispatcher()->dispatch("cloud-file-open",
-                               muse::actions::ActionData::make_arg3<QString, QUrl, QString>(
-                                   m_projectId, QUrl::fromLocalFile(m_localPath), m_displayName));
+        dispatcher()->dispatch("cloud-file-open", muse::actions::ActionData::make_arg1<QString>(m_projectId));
         return;
     }
 

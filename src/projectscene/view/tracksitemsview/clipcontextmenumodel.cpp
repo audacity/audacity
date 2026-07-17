@@ -7,6 +7,7 @@
 #include "trackedit/dom/track.h"
 #include "framework/global/translation.h"
 #include "global/realfn.h"
+#include "ui/view/iconcodes.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
@@ -108,6 +109,12 @@ void ClipContextMenuModel::load()
         prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
             if (clip.key == m_clipKey.key) {
                 load();
+            }
+        }, muse::async::Asyncable::Mode::SetReplace);
+
+        prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+            if (track.id == m_clipKey.trackId()) {
+                updateColorCheckedState();
             }
         }, muse::async::Asyncable::Mode::SetReplace);
     }
@@ -213,14 +220,24 @@ void ClipContextMenuModel::updateColorCheckedState()
         return;
     }
 
+    const auto trackOpt = project->trackeditProject()->track(m_clipKey.trackId());
+    if (trackOpt) {
+        const muse::Color trackColor = projectSceneConfiguration()->clipColor(trackOpt->colorIndex);
+        MenuItem& autoColorItem = findItem(muse::actions::ActionCode("action://trackedit/clip/change-color-auto"));
+        muse::ui::UiAction action = autoColorItem.action();
+        action.iconCode = muse::ui::IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        action.iconColor = QString::fromStdString(trackColor.toString());
+        autoColorItem.setAction(action);
+    }
+
     for (const auto& action : m_colorChangeActionCodeList) {
         MenuItem& item = findItem(ActionCode(action));
         ActionQuery query(action);
 
         bool checked = false;
-        if (clip.colorIndex == trackedit::CLIP_COLOR_INDEX_NONE && action == m_colorChangeActionCodeList.at(0)) {
+        if (clip.isAutoColor && action == m_colorChangeActionCodeList.at(0)) {
             checked = true;
-        } else if (query.contains("colorindex") && query.param("colorindex").toInt() == clip.colorIndex) {
+        } else if (!clip.isAutoColor && query.contains("colorindex") && query.param("colorindex").toInt() == clip.colorIndex) {
             checked = true;
         }
 

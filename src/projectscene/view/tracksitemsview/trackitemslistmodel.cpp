@@ -3,8 +3,6 @@
 */
 #include "trackitemslistmodel.h"
 
-#include <QApplication>
-
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -496,7 +494,7 @@ void TrackItemsListModel::disconnectAutoScroll()
 
 Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
 {
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
     if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
@@ -504,6 +502,21 @@ Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
     }
 
     return modifiers;
+}
+
+au::trackedit::SelectionMode TrackItemsListModel::selectionMode() const
+{
+    const Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        return SelectionMode::Range;
+    }
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        return SelectionMode::Toggle;
+    }
+
+    return SelectionMode::Replace;
 }
 
 int TrackItemsListModel::cacheBufferPx()
@@ -616,7 +629,9 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
         vs->updateItemsBoundaries(true, key.key);
     }
 
-    setFocusedItem(key);
+    if (selectionMode() != SelectionMode::Range) {
+        setFocusedItem(key);
+    }
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)

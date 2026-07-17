@@ -18,9 +18,9 @@ constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
 
 RecentProjectContextMenuModel::RecentProjectContextMenuModel(bool isCloudProject, QString path, QString displayNameOverride,
-                                                             QObject* parent)
+                                                             QString cloudProjectId, QObject* parent)
     : AbstractMenuModel(parent), isCloudProject(isCloudProject), m_path(std::move(path)),
-    m_displayNameOverride(std::move(displayNameOverride))
+    m_displayNameOverride(std::move(displayNameOverride)), m_cloudProjectId(std::move(cloudProjectId))
 {
 }
 
@@ -48,6 +48,12 @@ void RecentProjectContextMenuModel::load()
 void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
 {
     if (itemId == OPEN_PROJECT_ACTION) {
+        if (isCloudProject && !m_cloudProjectId.isEmpty()) {
+            dispatcher()->dispatch("cloud-file-open",
+                                   muse::actions::ActionData::make_arg1<QString>(m_cloudProjectId));
+            return;
+        }
+
         dispatcher()->dispatch("file-open",
                                muse::actions::ActionData::make_arg2<QUrl, QString>(
                                    QUrl::fromLocalFile(m_path), m_displayNameOverride));

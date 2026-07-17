@@ -45,7 +45,7 @@ public:
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
 
-        // The testClipboard.aup3 project contains two groups, 0 and 1
+        // The testClipboard.aup4 project contains two groups, 0 and 1
         m_oldGroupIds.push_back((0));
         m_oldGroupIds.push_back((1));
 
@@ -58,7 +58,7 @@ public:
     void initTestProject()
     {
         m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>(muse::modularity::globalCtx());
-        const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/testClipboard.aup3";
+        const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/testClipboard.aup4";
         constexpr auto discardAutosave = false;
         muse::Ret ret = m_au3ProjectAccessor->load(TEST_PROJECT_PATH, discardAutosave);
 
@@ -119,7 +119,7 @@ public:
         return trackDataList;
     }
 
-    const int m_numberOfTracks = 2; // The number of tracks in testClipboard.aup3
+    const int m_numberOfTracks = 2; // The number of tracks in testClipboard.aup4
 
     std::unique_ptr<Au3TrackeditClipboard> m_au3TrackEditClipboard;
     std::shared_ptr<ClipboardData> m_clipboardData;

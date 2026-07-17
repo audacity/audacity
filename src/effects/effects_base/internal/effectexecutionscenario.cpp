@@ -40,6 +40,11 @@ using namespace au::effects;
 
 static const int UNDEFINED_FREQUENCY = -1;
 
+static bool isNyquistPrompt(const Effect& effect)
+{
+    return effect.GetSymbol().Internal() == NYQUIST_PROMPT_ID;
+}
+
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
     au3::Au3Project& project = projectRef();
@@ -173,8 +178,28 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             isTrackSelection = !selectionController()->selectedTracks().empty();
         }
 
+        if (effect->GetType() == EffectTypeGenerate && !isTimeSelection) {
+            // Generate at the current playhead position.
+            t0 = t1 = playback()->player()->playbackPosition();
+
+            const auto selectedTracks = selectionController()->selectedTracks();
+            const bool hasSelectedWaveTrack = std::any_of(selectedTracks.begin(), selectedTracks.end(),
+                                                          [&](const trackedit::TrackId& id) {
+                return au3::DomAccessor::findWaveTrack(project, ::TrackId(id)) != nullptr;
+            });
+
+            if (!hasSelectedWaveTrack) {
+                const trackedit::TrackId focused = trackNavigationController()->focusedTrack();
+                if (focused != trackedit::INVALID_TRACK && au3::DomAccessor::findWaveTrack(project, ::TrackId(focused))) {
+                    // No selected wave track, use focused track
+                    selectionController()->setSelectedTracks({ focused });
+                }
+            }
+        }
+
         if ((!isTimeSelection || !isTrackSelection) && (effect->GetType() != EffectTypeGenerate
-                                                        && effect->GetType() != EffectTypeTool)) {
+                                                        && effect->GetType() != EffectTypeTool)
+            && !isNyquistPrompt(*effect)) {
             return make_ret(Err::EffectNoAudioSelected);
         }
 
@@ -435,14 +460,17 @@ muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Ef
         const auto clipsAfter = getAllClips(*prj);
         const std::vector<const au::trackedit::Clip*> newClips = trackedit::utils::clipSetDifference(clipsAfter, clipsBefore);
         if (!newClips.empty()) {
-            trackedit::ClipKeyList newClipsKeys;
-            std::transform(newClips.begin(), newClips.end(), std::back_inserter(newClipsKeys),
-                           [](const auto clip) { return clip->key; });
             for (const auto* clip : newClips) {
                 prj->notifyAboutClipAdded(*clip);
             }
-            selectionController()->resetDataSelection();
-            selectionController()->setSelectedClips(newClipsKeys, true);
+
+            if (effect.GetType() == EffectTypeGenerate) {
+                trackedit::ClipKeyList newClipsKeys;
+                std::transform(newClips.begin(), newClips.end(), std::back_inserter(newClipsKeys),
+                               [](const auto clip) { return clip->key; });
+                selectionController()->resetDataSelection();
+                selectionController()->setSelectedClips(newClipsKeys, true);
+            }
         }
     }
 
@@ -600,7 +628,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
     {
         // We don't yet know the effect type for code in the Nyquist Prompt, so
         // assume it requires a track and handle errors when the effect runs.
-        if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
+        if ((effect->GetType() == EffectTypeGenerate || isNyquistPrompt(*effect)) && (effect->mNumTracks == 0)) {
             auto track = effect->mFactory->Create();
             track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
             // The track-added event should be issued synchronously.

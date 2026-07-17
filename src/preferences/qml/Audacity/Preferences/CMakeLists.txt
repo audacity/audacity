@@ -38,6 +38,7 @@ qt_add_qml_module(preferences_qml
         GeneralPreferencesPage.qml
         internal/AccentColorsSection.qml
         internal/AdvancedTopSection.qml
+        internal/AsioSection.qml
         internal/AsymmetricStereoHeightsSection.qml
         internal/AudioApiSection.qml
         internal/AudioEngineSection.qml
@@ -78,7 +79,6 @@ qt_add_qml_module(preferences_qml
         internal/SampleRateSection.qml
         internal/SaveToCloudSection.qml
         internal/ScrollPagesSection.qml
-        internal/SoloButtonSection.qml
         internal/SpectrogramAlgorithmSection.qml
         internal/SpectrogramBaseSection.qml
         internal/SpectrogramColorsSection.qml

@@ -24,6 +24,8 @@ public:
     AudioUnitInstance(const PerTrackEffect& effect, AudioComponent component, Parameters& parameters, const wxString& identifier,
                       unsigned audioIns, unsigned audioOuts, bool useLatency);
 
+    bool Initialize();
+
     void EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue);
 
     // Override the virtual function to allocate an empty message

@@ -240,6 +240,7 @@ void ViewTracksListModel::load()
     viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+    emit totalTracksHeightChanged();
 
     viewState->verticalRulerWidth().ch.onReceive(this, [this](int) {
         emit verticalRulerWidthChanged();
@@ -301,11 +302,10 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
             return false;
         }
 
-        if (trackPlaybackControl()->muted(track.id)) {
-            assert(!trackPlaybackControl()->solo(track.id));
-            return false;
-        } else if (trackPlaybackControl()->solo(track.id)) {
+        if (trackPlaybackControl()->solo(track.id)) {
             return true;
+        } else if (trackPlaybackControl()->muted(track.id)) {
+            return false;
         } else {
             return std::none_of(m_trackList.begin(), m_trackList.end(), [this](const au::trackedit::Track& t) {
                     return trackPlaybackControl()->solo(t.id);

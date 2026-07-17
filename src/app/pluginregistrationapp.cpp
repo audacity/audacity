@@ -5,8 +5,9 @@
 
 #include <QCoreApplication>
 
+#include "backgroundprocess.h"
 #include "modularity/ioc.h"
-#include "audioplugins/iregisteraudiopluginsscenario.h"
+#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "types/ret.h"
 
 #include "log.h"
@@ -17,6 +18,7 @@ using namespace au::app;
 PluginRegistrationApp::PluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options)
     : muse::BaseApplication(options)
 {
+    makeProcessBackground();
 }
 
 void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& ctxId)
@@ -65,14 +67,8 @@ int PluginRegistrationApp::processAudioPluginRegistration(const muse::modularity
         return 1;
     }
 
-    Ret ret = make_ret(Ret::Code::Ok);
-
     const auto& task = options->audioPluginRegistration;
-    if (task.failedPlugin) {
-        ret = scenario->registerFailedPlugin(task.pluginPath, task.failCode);
-    } else {
-        ret = scenario->registerPlugin(task.pluginPath);
-    }
+    Ret ret = scenario->validatePlugin(task.pluginPath, task.outputPath);
 
     if (!ret) {
         LOGE() << ret.toString();

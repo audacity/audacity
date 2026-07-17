@@ -3,6 +3,7 @@
 
 #include <string>
 #include "framework/global/types/string.h"
+#include "framework/global/io/path.h"
 #include "wx/string.h"
 
 #ifndef NO_QT_SUPPORT
@@ -28,6 +29,11 @@ inline wxString wxFromString(const muse::String& s)
 inline wxString wxFromStdString(const std::string& s)
 {
     return wxString::FromUTF8(s);
+}
+
+inline wxString wxFromPath(const muse::io::path_t& path)
+{
+    return wxString::FromUTF8(path.toStdString());
 }
 }
 

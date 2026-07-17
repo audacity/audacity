@@ -11,6 +11,8 @@
 #include "internal/au3/au3effectsutils.h"
 #include "log.h"
 
+#include <exception>
+
 namespace au::effects {
 Au3AudioPluginMetaReader::Au3AudioPluginMetaReader(PluginProvider& provider)
     : m_pluginProvider{provider}
@@ -38,7 +40,7 @@ void Au3AudioPluginMetaReader::deinit()
     m_terminated = true;
 }
 
-muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readMeta(const muse::io::path_t& pluginPath) const
+muse::RetVal<muse::audioplugins::PluginMetaList> Au3AudioPluginMetaReader::readMeta(const muse::io::path_t& pluginPath) const
 {
     IF_ASSERT_FAILED(m_initialized && !m_terminated) {
         return make_ret(muse::Ret::Code::InternalError);
@@ -83,8 +85,27 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
             desc.SetEffectAutomatable(effect->SupportsAutomation());
             desc.SetParamsAreInputAgnostic(effect->ParamsAreInputAgnostic());
 
-            desc.SetEnabled(true);
-            desc.SetValid(true);
+            bool failed = false;
+            std::string reason;
+            try {
+                if (validator) {
+                    validator->Validate(*ident);
+                }
+            } catch (const std::exception& e) {
+                failed = true;
+                reason = e.what();
+            } catch (...) {
+                failed = true;
+                reason = "unknown";
+            }
+
+            desc.SetEnabled(!failed);
+            desc.SetValid(!failed);
+
+            if (failed) {
+                LOGW() << "Plugin failed validation: " << ident->GetPath().ToStdString()
+                       << " reason: " << reason;
+            }
 
             return desc.GetID();
         });
@@ -113,12 +134,12 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
         return effects::make_ret(effects::Err::EffectLoadFailed);
     }
 
-    muse::audio::AudioResourceMetaList metaList;
+    muse::audioplugins::PluginMetaList metaList;
     metaList.reserve(descriptors.size());
     for (const PluginDescriptor& desc : descriptors) {
         metaList.emplace_back(utils::auToMuseEffectMeta(toEffectMeta(desc)));
     }
 
-    return muse::RetVal<muse::audio::AudioResourceMetaList>::make_ok(metaList);
+    return muse::RetVal<muse::audioplugins::PluginMetaList>::make_ok(metaList);
 }
 }

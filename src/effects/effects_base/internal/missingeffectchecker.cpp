@@ -39,16 +39,27 @@ void MissingEffectChecker::warnIfEffectsMissing()
         return;
     }
 
-    // Missing plugins aren't in the scanner registry, so effectsProvider()->meta(id)
-    // returns an empty EffectMeta. Use the id parsers instead, which work for the
-    // missing case. Version isn't part of the id and is therefore unrecoverable here.
+    // prefer cached metadata, fall back to parsing the id (which carries no version)
     muse::ValList missingPluginInfos;
     missingPluginInfos.reserve(missingEffectIds.size());
     for (const auto& id : missingEffectIds) {
+        const EffectMeta cached = effectsProvider()->meta(id);
+        const bool hasRichMeta = cached.isValid() && !cached.title.empty();
+
+        const std::string name = hasRichMeta
+                                 ? cached.title.toStdString()
+                                 : utils::parseEffectName(id);
+        const std::string vendor = hasRichMeta
+                                   ? cached.vendor.toStdString()
+                                   : utils::parseEffectVendor(id);
+        const std::string path = hasRichMeta
+                                 ? cached.path.toStdString()
+                                 : utils::parseEffectPath(id);
+
         missingPluginInfos.push_back(muse::Val { muse::ValMap {
-                                                     { "name", muse::Val(utils::parseEffectName(id)) },
-                                                     { "vendor", muse::Val(utils::parseEffectVendor(id)) },
-                                                     { "path", muse::Val(utils::parseEffectPath(id)) }
+                                                     { "name", muse::Val(name) },
+                                                     { "vendor", muse::Val(vendor) },
+                                                     { "path", muse::Val(path) }
                                                  } });
     }
 

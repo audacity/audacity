@@ -8,6 +8,7 @@
 #include <QAbstractListModel>
 
 #include "framework/global/async/asyncable.h"
+#include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/actions/actionable.h"
@@ -37,6 +38,8 @@ class TrackItemsListModel : public QAbstractListModel, public muse::async::Async
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
 protected:
+    muse::GlobalInject<muse::IApplication> application;
+
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
@@ -127,6 +130,8 @@ protected:
 
     int calculateTrackPositionOffset(const TrackItemKey& key, const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const;
     bool isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes, const trackedit::TrackId& movedTrackId) const;
+
+    trackedit::SelectionMode selectionMode() const;
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 

@@ -24,6 +24,7 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(QColor clipColor READ clipColor WRITE setClipColor NOTIFY clipColorChanged FINAL)
     Q_PROPERTY(QColor clipSelectedColor READ clipSelectedColor WRITE setClipSelectedColor NOTIFY clipSelectedColorChanged FINAL)
     Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor NOTIFY backgroundColorChanged FINAL)
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
     Q_PROPERTY(double startTime READ startTime NOTIFY clipTimeChanged)
@@ -62,6 +63,7 @@ public:
     void setClipSelectedColor(const QColor& newClipSelectedColor);
     bool clipSelected() const;
     void setClipSelected(bool newClipSelected);
+    QColor backgroundColor() const;
     double startTime() const { return m_clipTime.startTime; }
     double endTime()   const { return m_clipTime.endTime; }
     double itemStartTime() const { return m_clipTime.itemStartTime; }
@@ -104,6 +106,7 @@ signals:
     void clipSelectedColorChanged();
     void clipTimeChanged();
     void clipSelectedChanged();
+    void backgroundColorChanged();
     void channelHeightRatioChanged();
     void isNearSampleChanged();
     void isStemPlotChanged();
@@ -115,6 +118,7 @@ private:
 
     void updateView();
     void onWaveZoomChanged();
+    void paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params);
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, const QColor& clipSelectedColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;

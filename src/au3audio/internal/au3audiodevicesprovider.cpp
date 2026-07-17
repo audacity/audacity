@@ -37,6 +37,8 @@ static const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_FORMAT("au3audio", "Samp
 static const muse::Settings::Key RECORDING_SOURCE("au3audio", "AudioIO/RecordingSource");
 static const muse::Settings::Key RECORDING_SOURCE_INDEX("au3audio", "AudioIO/RecordingSourceIndex");
 
+static const muse::Settings::Key ASIO_USE_DEVICE_SAMPLE_RATE("au3audio", "AudioIO/ASIO/UseDeviceSampleRate");
+
 static std::string getPreferredAudioHost(const std::vector<std::string>& hosts)
 {
     if (hosts.empty()) {
@@ -44,7 +46,7 @@ static std::string getPreferredAudioHost(const std::vector<std::string>& hosts)
     }
 
 #if defined(_WIN32)
-    constexpr const char* preferred[] = { "ASIO", "Windows WASAPI", "Windows DirectSound", "MME" };
+    constexpr const char* preferred[] = { "Windows WASAPI", "ASIO", "Windows DirectSound", "MME" };
 #elif defined(__APPLE__)
     constexpr const char* preferred[] = { "Core Audio" };
 #elif defined(__linux__)
@@ -70,6 +72,11 @@ void Au3AudioDevicesProvider::init()
     initHosts();
 
     muse::settings()->setDefaultValue(AUDIO_HOST, muse::Val(getPreferredAudioHost(apis())));
+
+    if (!m_audioApis.empty() && !muse::contains(m_audioApis, currentApi())) {
+        muse::settings()->setLocalValue(AUDIO_HOST, muse::Val(getPreferredAudioHost(m_audioApis)));
+    }
+
     const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
     const auto inputDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
     const auto outputDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
@@ -83,6 +90,7 @@ void Au3AudioDevicesProvider::init()
     muse::settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
     muse::settings()->setDefaultValue(AUTOMATIC_LATENCY_COMPENSATION, muse::Val(false));
     muse::settings()->setDefaultValue(LATENCY_COMPENSATION, muse::Val(-130.0));
+    muse::settings()->setDefaultValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(true));
     muse::settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(AudioIOBase::GetOptimalSupportedSampleRate()));
     muse::settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_FORMAT,
                                       muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
@@ -119,6 +127,10 @@ void Au3AudioDevicesProvider::init()
 
     muse::settings()->valueChanged(LATENCY_COMPENSATION).onReceive(nullptr, [this](const muse::Val& val) {
         m_latencyCompensationChanged.notify();
+    });
+
+    muse::settings()->valueChanged(ASIO_USE_DEVICE_SAMPLE_RATE).onReceive(nullptr, [this](const muse::Val& val) {
+        m_asioUseDeviceSampleRateChanged.notify();
     });
 
     muse::settings()->valueChanged(DEFAULT_PROJECT_SAMPLE_FORMAT).onReceive(nullptr, [this](const muse::Val& val) {
@@ -261,6 +273,40 @@ double Au3AudioDevicesProvider::latencyCompensation() const
 void Au3AudioDevicesProvider::setLatencyCompensation(double newLatencyCompensation)
 {
     muse::settings()->setLocalValue(LATENCY_COMPENSATION, muse::Val(newLatencyCompensation));
+}
+
+bool Au3AudioDevicesProvider::asioUseDeviceSampleRate() const
+{
+    return muse::settings()->value(ASIO_USE_DEVICE_SAMPLE_RATE).toBool();
+}
+
+void Au3AudioDevicesProvider::setAsioUseDeviceSampleRate(bool use)
+{
+    muse::settings()->setLocalValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(use));
+}
+
+muse::async::Notification Au3AudioDevicesProvider::asioUseDeviceSampleRateChanged() const
+{
+    return m_asioUseDeviceSampleRateChanged;
+}
+
+void Au3AudioDevicesProvider::showAsioControlPanel()
+{
+    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(currentApi(), currentOutputDevice());
+    if (paIndex < 0) {
+        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(currentApi(), currentInputDevice());
+    }
+
+    if (paIndex < 0) {
+        return;
+    }
+
+    // the panel cannot open while the device is in use
+    if (audioEngine()) {
+        audioEngine()->stopMonitoring();
+    }
+
+    DeviceManager::ShowAsioControlPanel(paIndex);
 }
 
 std::vector<uint64_t> Au3AudioDevicesProvider::sampleRates() const
@@ -433,6 +479,8 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
         if (device.hostString != host || deviceName != newDevice) {
             continue;
         }
+
+        DeviceManager::Instance()->UpdateAsioDeviceCaps(device.deviceIndex);
 
         muse::settings()->setLocalValue(RECORDING_DEVICE, muse::Val(newDevice));
         muse::settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device.sourceIndex));

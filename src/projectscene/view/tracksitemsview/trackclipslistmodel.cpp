@@ -95,6 +95,12 @@ void TrackClipsListModel::onReload()
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    // When recording ends, the playhead pin disengages: recompute so the clip
+    // edge lands on the real data end together with the playhead's final seek.
+    globalContext()->isRecordingChanged().onNotify(this, [this]() {
+        updateItemsMetrics();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     m_allClipList.onItemChanged(this, [this](const Clip& clip) {
         for (size_t i = 0; i < m_allClipList.size(); ++i) {
             if (m_allClipList.at(i).key != clip.key) {
@@ -116,6 +122,10 @@ void TrackClipsListModel::onReload()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList.onItemAdded(this, [this](const Clip& clip) {
+        IF_ASSERT_FAILED(!muse::contains_if(m_allClipList, [&clip](const Clip& c) { return c.key == clip.key; })) {
+            return;
+        }
+
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         muse::async::NotifyList<au::trackedit::Clip> newList = prj->clipList(m_trackId);
         for (size_t i = 0; i < newList.size(); ++i) {
@@ -243,12 +253,14 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         return;
     }
 
-    // Extend recording clip's visual boundary to the smooth record position
+    // Pin the recording clip's visual boundary to the smooth playhead: data is
+    // committed in chunks, so following the committed end would make the edge
+    // jump. Data ahead of the playhead is revealed as the playhead reaches it.
     if (globalContext()->isRecording()) {
         for (const auto& rk : recordController()->recordingClipKeys()) {
             if (rk == item->key().key) {
                 double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
-                clip.endTime = std::max(clip.endTime, projectedEnd);
+                clip.endTime = std::max(clip.startTime, projectedEnd);
                 break;
             }
         }
@@ -394,7 +406,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
         return false;
     }
 
-    m_pendingShiftDeselect.clear();
+    m_pendingToggleDeselect.clear();
 
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -751,13 +763,28 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
 
 void TrackClipsListModel::selectClip(const ClipKey& key)
 {
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
-
     constexpr auto complete = true;
+
+    const SelectionMode mode = selectionMode();
+
+    if (mode == SelectionMode::Range) {
+        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
+        if (!rangeKeys.empty()) {
+            selectionController()->resetSelectedLabels();
+            selectionController()->setSelectedClips(rangeKeys, complete);
+            return;
+        }
+
+        selectionController()->resetSelectedLabels();
+        selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
+        setFocusedItem(key);
+        return;
+    }
+
     const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
-        if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (mode == SelectionMode::Toggle) {
             const auto groupedClips = trackeditInteraction()->clipsInGroup(clipGroupId);
             const auto selectedClips = selectionController()->selectedClips();
             const bool allGroupClipsSelected = std::all_of(groupedClips.cbegin(), groupedClips.cend(), [&](const auto& groupClipKey) {
@@ -765,7 +792,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             });
 
             if (allGroupClipsSelected) {
-                m_pendingShiftDeselect = groupedClips;
+                m_pendingToggleDeselect = groupedClips;
             } else {
                 for (const auto& groupClipKey : groupedClips) {
                     selectionController()->addSelectedClip(groupClipKey);
@@ -777,9 +804,9 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             trackNavigationController()->setFocusedTrack(key.key.trackId);
         }
     } else {
-        if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (mode == SelectionMode::Toggle) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
-                m_pendingShiftDeselect = { key.key };
+                m_pendingToggleDeselect = { key.key };
             } else {
                 selectionController()->addSelectedClip(key.key);
             }
@@ -796,11 +823,11 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
 
 void TrackClipsListModel::handleClipRelease(const ClipKey& key)
 {
-    if (!m_pendingShiftDeselect.empty() && muse::contains(m_pendingShiftDeselect, key.key)) {
-        for (const auto& clipKey : m_pendingShiftDeselect) {
+    if (!m_pendingToggleDeselect.empty() && muse::contains(m_pendingToggleDeselect, key.key)) {
+        for (const auto& clipKey : m_pendingToggleDeselect) {
             selectionController()->removeClipSelection(clipKey);
         }
-        m_pendingShiftDeselect.clear();
+        m_pendingToggleDeselect.clear();
     }
 }
 
@@ -808,7 +835,7 @@ void TrackClipsListModel::endEditItem(const TrackItemKey& key)
 {
     TrackItemsListModel::endEditItem(key);
 
-    m_pendingShiftDeselect.clear();
+    m_pendingToggleDeselect.clear();
 }
 
 void TrackClipsListModel::resetSelectedClips()

@@ -43,6 +43,7 @@ public:
 private:
     std::string buildOAuthRequestURL(const std::string& provider);
     void syncUsageInfoPrefs();
+    void openBrowserSession();
 
     Observer::Subscription m_authSubscription;
     Observer::Subscription m_urlRegisterSubscription;
@@ -54,5 +55,7 @@ private:
 
     AccountInfo m_accountInfo;
     muse::async::Notification m_accountInfoChanged;
+
+    bool m_silent { true };
 };
 }

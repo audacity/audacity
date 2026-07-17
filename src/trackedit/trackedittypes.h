@@ -100,6 +100,12 @@ enum class HistoryEvent {
     NewState,
 };
 
+enum class SelectionMode {
+    Replace,
+    Toggle,
+    Range,
+};
+
 // 1-based index into theme clip_color_N / clip_selected_color_N slots.
 // 0 means "no custom color" (clip inherits from track).
 using ClipColorIndex = int;

@@ -57,6 +57,9 @@ Rectangle {
                 id: trackEffectsPowerButton
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrderStart
+                navigation.name: "Toggle all track effects"
+                navigation.accessible.name: root.isMasterTrack ? qsTrc("projectscene", "Toggle all master effects") : qsTrc("projectscene", "Toggle all effects")
+                toolTipTitle: root.isMasterTrack ? qsTrc("projectscene", "Toggle all master effects") : qsTrc("projectscene", "Toggle all effects")
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.margins: 8
@@ -123,6 +126,8 @@ Rectangle {
 
             navigation.panel: root.navigationPanel
             navigation.order: root.navigationOrderEnd
+            navigation.name: "Add effect"
+            navigation.accessible.name: root.isMasterTrack ? qsTrc("projectscene", "Add master effect") : qsTrc("projectscene", "Add effect")
 
             text: qsTrc("projectscene", "Add effect")
 

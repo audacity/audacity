@@ -11,7 +11,7 @@ class BuiltinEffectsLoader final : public Au3EffectLoader
 {
 public:
     BuiltinEffectsLoader()
-        : Au3EffectLoader(m_module, muse::audio::AudioResourceType::NativeEffect) {}
+        : Au3EffectLoader(m_module, EffectFamily::Builtin) {}
 
 private:
     ::BuiltinEffectsModule m_module;

@@ -38,6 +38,11 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings& settings,
     return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
+std::string StatefulPerTrackEffect::Instance::GetLastError() const
+{
+    return GetEffect().GetLastError();
+}
+
 StatefulPerTrackEffect::~StatefulPerTrackEffect() = default;
 
 std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const

@@ -415,12 +415,12 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_COPY_CODE);
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_COPY_MULTI_CODE);
         return;
     }
@@ -480,12 +480,12 @@ void TrackeditActionsController::doGlobalCut()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(false));
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, ActionData::make_arg1(false));
         return;
     }
@@ -505,12 +505,12 @@ void TrackeditActionsController::doGlobalCutLeaveGap()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(false));
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, ActionData::make_arg1(false));
         return;
     }
@@ -524,12 +524,12 @@ void TrackeditActionsController::doGlobalCutPerClipRipple()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, moveClips);
         return;
     }
@@ -543,12 +543,12 @@ void TrackeditActionsController::doGlobalCutPerTrackRipple()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, moveClips);
         return;
     }
@@ -647,13 +647,13 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, ActionData::make_arg1(false));
 
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, ActionData::make_arg1(false));
         return;
     }
@@ -687,12 +687,12 @@ void TrackeditActionsController::doGlobalDeleteLeaveGap()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, ActionData::make_arg1(false));
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, ActionData::make_arg1(false));
         return;
     }
@@ -710,12 +710,12 @@ void TrackeditActionsController::doGlobalDeletePerClipRipple()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, moveClips);
         return;
     }
@@ -733,12 +733,12 @@ void TrackeditActionsController::doGlobalDeletePerTrackRipple()
         return;
     }
 
-    if (isFocusedItemClip()) {
+    if (!clipsForInteraction().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
         return;
     }
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, moveClips);
         return;
     }
@@ -2109,15 +2109,10 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
 
 void TrackeditActionsController::moveFocusedItemLeft()
 {
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         trackeditInteraction()->moveLabels(labelsForInteraction(), -stepSize, 0, completed);
     } else {
         static bool itemsMovedToOtherTrack = false;
@@ -2127,15 +2122,10 @@ void TrackeditActionsController::moveFocusedItemLeft()
 
 void TrackeditActionsController::moveFocusedItemRight()
 {
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         trackeditInteraction()->moveLabels(labelsForInteraction(), stepSize, 0, completed);
     } else {
         static bool itemsMovedToOtherTrack = false;
@@ -2145,14 +2135,9 @@ void TrackeditActionsController::moveFocusedItemRight()
 
 void TrackeditActionsController::moveFocusedItemUp()
 {
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, -1, completed);
         if (result.ret) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
@@ -2169,14 +2154,9 @@ void TrackeditActionsController::moveFocusedItemUp()
 
 void TrackeditActionsController::moveFocusedItemDown()
 {
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, 1, completed);
         if (result.ret) {
             trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
@@ -2198,15 +2178,10 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
         return;
     }
 
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
@@ -2221,15 +2196,10 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
         return;
     }
 
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
@@ -2244,15 +2214,10 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
         return;
     }
 
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
@@ -2267,15 +2232,10 @@ void TrackeditActionsController::reduceFocusedItemBoundaryRight()
         return;
     }
 
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    if (isFocusedItemLabel()) {
+    if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
@@ -2305,21 +2265,6 @@ double TrackeditActionsController::calculateStepSize() const
         return 1.0;
     }
     return 10.0 / zoom;
-}
-
-Label TrackeditActionsController::focusedLabel() const
-{
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid() || !isFocusedItemLabel()) {
-        return {};
-    }
-
-    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return {};
-    }
-
-    return prj->label({ focusedItemKey.trackId, focusedItemKey.itemId });
 }
 
 au::trackedit::TrackId TrackeditActionsController::resolvePreviousTrackIdForMove(const TrackId& trackId) const

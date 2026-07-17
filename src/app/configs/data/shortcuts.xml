@@ -81,12 +81,6 @@
       <key>nav-prevrow-control</key>
       <seq>PgUp</seq>
     </SC>
-    <SC>
-      <key>nav-trigger-control</key>
-      <seq>Return</seq>
-      <seq>Enter</seq>
-      <autorepeat>0</autorepeat>
-    </SC>
 <!-- end Keyboard navigation -->
 
 <!-- Global actions -->
@@ -118,6 +112,11 @@
     <SC>
       <key>action://cancel</key>
       <seq>Esc</seq>
+    </SC>
+    <SC>
+      <key>action://enter</key>
+      <seq>Return</seq>
+      <seq>Enter</seq>
     </SC>
     <SC>
       <key>action://trigger</key>
@@ -166,11 +165,10 @@
         <key>track-view-last-track</key>
         <seq>Ctrl+End</seq>
     </SC>
-
     <SC>
         <key>track-view-toggle-selection</key>
-        <seq>Return</seq>
-        <seq>Enter</seq>
+        <seq>Ctrl+Enter</seq>
+        <seq>Ctrl+Return</seq>
     </SC>
     <SC>
         <key>track-view-range-selection</key>

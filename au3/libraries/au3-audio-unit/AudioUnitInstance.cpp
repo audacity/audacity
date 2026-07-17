@@ -129,6 +129,21 @@ size_t AudioUnitInstance::GetTailSize() const
 
 #endif
 
+bool AudioUnitInstance::Initialize()
+{
+    if (mInitialization) {
+        return true;
+    }
+
+    if (AudioUnitInitialize(mUnit.get())) {
+        wxLogError("Couldn't initialize audio unit\n");
+        return false;
+    }
+
+    mInitialization.reset(mUnit.get());
+    return true;
+}
+
 bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                           double sampleRate, ChannelNames chanMap)
 {
@@ -154,17 +169,17 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
     if (!SetRateAndChannels(sampleRate, mIdentifier)) {
         return false;
     }
-    if (AudioUnitInitialize(mUnit.get())) {
-        wxLogError("Couldn't initialize audio unit\n");
+
+    if (!Initialize()) {
         return false;
     }
+
     if (ins != mAudioIns || outs != mAudioOuts) {
         // A change of channels with changing rate?  This is unexpected!
         ins = mAudioIns;
         outs = mAudioOuts;
         return false;
     }
-    mInitialization.reset(mUnit.get());
 
     if (SetProperty(kAudioUnitProperty_SetRenderCallback,
                     AudioUnitUtils::RenderCallback { RenderCallback, this },

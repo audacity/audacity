@@ -49,7 +49,7 @@ private:
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
     bool m_needToSelectTracksData = false;
 
-    trackedit::TrackItemKey m_pendingShiftDeselect;
+    trackedit::TrackItemKey m_pendingToggleDeselect;
 
     double m_editedLabelStartTime = 0.0;
     double m_editedLabelEndTime = 0.0;

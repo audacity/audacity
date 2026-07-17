@@ -129,6 +129,10 @@ void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& pr
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
+    if (uicontextResolver()->currentUiContext() == context::UiCtxDialogOpened) {
+        return;
+    }
+
     if (containsAction(codes, PLAYBACK_PLAY_QUERY.toString()) || containsAction(codes, PLAYBACK_PAUSE_QUERY.toString())
         || containsAction(codes, RECORD_PAUSE_QUERY.toString())) {
         updatePlayState();

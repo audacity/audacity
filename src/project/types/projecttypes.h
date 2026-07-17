@@ -22,6 +22,7 @@
 #ifndef AU_PROJECT_PROJECTTYPES_H
 #define AU_PROJECT_PROJECTTYPES_H
 
+#include <optional>
 #include <variant>
 
 #include <QString>
@@ -34,6 +35,7 @@
 #include "projectmeta.h"
 
 #include "cloud/cloudtypes.h"
+#include "au3cloud/cloudtypes.h"
 
 namespace au::project {
 struct ProjectCreateOptions
@@ -56,6 +58,13 @@ enum class SaveMode
     AutoSave
 };
 
+enum class CloudSaveMode
+{
+    CreateNew,
+    NormalUpdate,
+    ForceOverwrite,
+};
+
 enum class SaveLocationType
 {
     Undefined,
@@ -63,17 +72,11 @@ enum class SaveLocationType
     Cloud
 };
 
+using CloudProjectRecord = au3cloud::CloudProjectRecord;
+
 struct CloudProjectInfo {
-    QUrl sourceUrl;
-    int revisionId = 0;
     QString name;
-
     muse::cloud::Visibility visibility = muse::cloud::Visibility::Private;
-
-    bool isValid() const
-    {
-        return !sourceUrl.isEmpty();
-    }
 };
 
 struct CloudAudioInfo {
@@ -207,6 +210,7 @@ using ProjectFilesList = std::vector<ProjectFile>;
 struct RecentFile {
     muse::io::path_t path;
     QString displayNameOverride = {};
+    std::optional<CloudProjectRecord> cloudRecord;
 
     RecentFile() = default;
 
@@ -239,6 +243,16 @@ struct RecentFile {
 
     bool operator ==(const RecentFile& other) const
     {
+        if (cloudRecord.has_value() != other.cloudRecord.has_value()) {
+            return false;
+        }
+
+        if (cloudRecord.has_value()
+            && (cloudRecord->projectId != other.cloudRecord->projectId
+                || cloudRecord->snapshotId != other.cloudRecord->snapshotId)) {
+            return false;
+        }
+
         return path == other.path
                && displayNameOverride == other.displayNameOverride;
     }

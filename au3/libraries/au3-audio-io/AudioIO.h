@@ -205,7 +205,7 @@ public:
         float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats);
     constSamplePtr ApplyRecordGain(
         constSamplePtr inputBuffer, float gain, size_t numSamples, samplePtr scratch);
-    void DrainInputBuffers(
+    unsigned long DrainInputBuffers(
         constSamplePtr inputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackFlags statusFlags, float* tempFloats);
     void UpdateTimePosition(
         unsigned long framesPerBuffer);
@@ -414,6 +414,11 @@ protected:
     // callback (I've just seen 14 samples per callback, on MacOS with a requested buffer size of 10ms),
     // we get ceil(96000 / 10 / 30) = 360. The rounding to the next power of two should accommodate jitter.
     AudioCallbackInfoQueue mAudioCallbackInfoQueue { 512 };
+
+    //! Captured frames the audio callback must skip before feeding the queue
+    //! above for recording-only streams; mirrors the leading frames that
+    //! DrainInputBuffers discards for latency compensation.
+    unsigned long long mCaptureClockDiscardFrames = 0;
 
 private:
     /*!

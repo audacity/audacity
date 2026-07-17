@@ -41,13 +41,13 @@ StyledPopupView {
             model: [
                 {
                     type: TrackType.MONO,
-                    icon: IconCode.MICROPHONE,
+                    icon: IconCode.CIRCLE,
                     text: qsTrc("projectscene", "Mono"),
                     enabled: true
                 },
                 {
                     type: TrackType.STEREO,
-                    icon: IconCode.MICROPHONE,
+                    icon: IconCode.TWO_CIRCLES,
                     text: qsTrc("projectscene", "Stereo"),
                     enabled: true
                 },

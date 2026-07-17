@@ -323,7 +323,7 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityPr
     result.name = rv.val.toQString();
     result.visibility = defaultVisibility;
 
-    if (!muse::io::isAllowedFileName(muse::io::path_t(result.name))) {
+    if (result.name.trimmed().isEmpty()) {
         return make_ret(Ret::Code::BadData);
     }
 

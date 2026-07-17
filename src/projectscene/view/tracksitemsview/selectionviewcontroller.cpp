@@ -1,7 +1,9 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include <QApplication>
+#include <QGuiApplication>
+
+#include <cmath>
 
 #include "selectionviewcontroller.h"
 
@@ -13,8 +15,8 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-//! NOTE: sync with ItemsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
+constexpr double SELECTION_DRAG_THRESHOLD_PX = 5.0;
 
 SelectionViewController::SelectionViewController(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -23,10 +25,10 @@ SelectionViewController::SelectionViewController(QObject* parent)
 
 void SelectionViewController::load()
 {
-    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+    connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
         if (state != Qt::ApplicationActive) {
             //Application lost focus, end any selection in progress
-            onReleased(m_startPoint.x(), m_startPoint.y());
+            onReleased(m_selectionStartTime, m_startY);
         }
     });
 
@@ -35,7 +37,7 @@ void SelectionViewController::load()
     });
 }
 
-void SelectionViewController::onPressed(double x, double y, spectrogram::SpectrogramHit spectrogramHit)
+void SelectionViewController::onPressed(double time, double y, spectrogram::SpectrogramHit spectrogramHit)
 {
     if (!isProjectOpened()) {
         return;
@@ -46,15 +48,23 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
         return;
     }
 
-    m_lastPoint = QPointF(x, y);
+    m_autoScrollLastX = m_context->timeToPosition(time);
+    m_autoScrollLastY = y;
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     m_selectionStarted = true;
-    //! NOTE: do not update start point when user holds Shift or Ctrl
-    if (!(modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier))) {
-        m_startPoint = QPointF(x, y);
-        selectionController()->setSelectionStartTime(m_context->positionToTime(m_startPoint.x()));
+    {
+        const bool modifierHeld = modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier);
+        m_selectionThresholdCrossed = modifierHeld;
+        //! NOTE: do not update start point when user holds Shift or Ctrl
+        if (!modifierHeld) {
+            m_selectionStartTime = time;
+            m_startY = y;
+            selectionController()->setSelectionStartTime(m_selectionStartTime);
+        } else {
+            m_selectionStartTime = selectionController()->selectionStartTime();
+        }
     }
     emit selectionStarted();
     emit selectionInProgressChanged();
@@ -74,25 +84,27 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
             }
         }
     } else {
-        tracks = vs->tracksInRange(m_startPoint.y(), y);
+        tracks = vs->tracksInRange(m_startY, y);
     }
 
     if (!tracks.empty()) {
         trackNavigationController()->setFocusedTrack(tracks.at(0), false /*highlight*/);
+    } else {
+        trackNavigationController()->setFocusedItem({});
     }
     selectionController()->setSelectedTracks(tracks, true);
 
     if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
-        double x1 = m_startPoint.x();
-        double x2 = x;
-        if (x1 > x2) {
-            std::swap(x1, x2);
+        double time1 = m_selectionStartTime;
+        double time2 = time;
+        if (time1 > time2) {
+            std::swap(time1, time2);
         }
 
         setSelectionActive(true);
 
-        selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), false);
-        selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
+        selectionController()->setDataSelectedStartTime(snapTime(time1), false);
+        selectionController()->setDataSelectedEndTime(snapTime(time2), false);
     }
 
     m_spectrogramHit.reset();
@@ -105,7 +117,7 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
     viewState()->updateItemsBoundaries(false);
 
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
-        doOnPositionChanged(m_lastPoint.x(), m_lastPoint.y());
+        doOnPositionChanged(m_context->positionToTime(m_autoScrollLastX), m_autoScrollLastY);
     });
 }
 
@@ -116,21 +128,21 @@ double clampToSpectrogram(const au::spectrogram::SpectrogramHit& hit, double y)
 }
 }
 
-void SelectionViewController::onPositionChanged(double x, double y)
+void SelectionViewController::onPositionChanged(double time, double y)
 {
     if (m_spectrogramHit && isInExtendedSpectrogram(*m_spectrogramHit, y)) {
         y = clampToSpectrogram(*m_spectrogramHit, y);
     }
-    if (doOnPositionChanged(x, y) && m_spectrogramHit) {
+    if (doOnPositionChanged(time, y) && m_spectrogramHit) {
         if (m_frequencyEdgeHandle == 0) {
-            const auto frequency = spectrogramHitFrequency(*m_spectrogramHit, m_startPoint.y());
+            const auto frequency = spectrogramHitFrequency(*m_spectrogramHit, m_startY);
             m_frequencyEdgeHandle = frequencySelectionController()->beginSelection(m_spectrogramHit->trackId, frequency);
         }
         setFrequencySelectionEdge(y, false, m_frequencyEdgeHandle);
     }
 }
 
-bool SelectionViewController::doOnPositionChanged(double x, double y)
+bool SelectionViewController::doOnPositionChanged(double time, double y)
 {
     if (!isProjectOpened()) {
         return false;
@@ -147,38 +159,42 @@ bool SelectionViewController::doOnPositionChanged(double x, double y)
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
-    x = std::max(x, 0.0);
-    m_lastPoint = QPointF(x, y);
-    m_context->startAutoScroll(m_context->positionToTime(x));
+    time = std::max(time, 0.0);
+    m_autoScrollLastX = m_context->timeToPosition(time);
+    m_autoScrollLastY = y;
+    m_context->startAutoScroll(time);
 
-    //! NOTE: update m_startPoint in case frameTime changed
-    m_startPoint.setX(m_context->timeToPosition(selectionController()->selectionStartTime()));
-
-    // point
-    emit selectionChanged(m_startPoint, QPointF(x, y));
+    if (!m_selectionThresholdCrossed) {
+        const double startXPx = m_context->timeToPosition(m_selectionStartTime);
+        if (std::abs(m_autoScrollLastX - startXPx) < SELECTION_DRAG_THRESHOLD_PX
+            && std::abs(y - m_startY) < SELECTION_DRAG_THRESHOLD_PX) {
+            return false;
+        }
+        m_selectionThresholdCrossed = true;
+    }
 
     // tracks
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = vs->tracksInRange(m_startPoint.y(), y);
+        tracks = vs->tracksInRange(m_startY, y);
     }
     selectionController()->setSelectedTracks(tracks, false);
 
     // time
-    double x1 = m_startPoint.x();
-    double x2 = x;
-    if (x1 > x2) {
-        std::swap(x1, x2);
+    double time1 = m_selectionStartTime;
+    double time2 = time;
+    if (time1 > time2) {
+        std::swap(time1, time2);
     }
 
-    setSelection(x1, x2, false);
+    setSelectionTimes(time1, time2, false);
 
     return true;
 }
 
-void SelectionViewController::onReleased(double x, double y)
+void SelectionViewController::onReleased(double time, double y)
 {
     if (!isProjectOpened()) {
         return;
@@ -201,48 +217,48 @@ void SelectionViewController::onReleased(double x, double y)
 
     m_selectionStarted = false;
 
-    x = std::max(x, 0.0);
-    m_lastPoint = QPointF(x, y);
+    time = std::max(time, 0.0);
+    m_autoScrollLastX = m_context->timeToPosition(time);
+    m_autoScrollLastY = y;
     m_context->stopAutoScroll();
     disconnect(m_autoScrollConnection);
 
-    // point
-    emit selectionEnded(m_startPoint, QPointF(x, y));
     emit selectionInProgressChanged();
 
-    double x1 = m_startPoint.x();
-    double x2 = x;
-    if (x1 > x2) {
-        std::swap(x1, x2);
+    double time1 = m_selectionStartTime;
+    double time2 = time;
+    if (time1 > time2) {
+        std::swap(time1, time2);
     }
 
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = vs->tracksInRange(m_startPoint.y(), y);
+        tracks = vs->tracksInRange(m_startY, y);
     }
 
-    if ((x2 - x1) < MIN_SELECTION_PX) {
-        // Click without drag
+    const double minSelectionTime = m_context->positionToTime(MIN_SELECTION_PX) - m_context->positionToTime(0.0);
+    if (!m_selectionThresholdCrossed || (time2 - time1) < minSelectionTime) {
+        // Click without drag (or a drag that never crossed the threshold)
         if (!tracks.empty()) {
             selectionController()->setSelectedTracks(tracks);
         } else {
             selectionController()->resetSelectedTracks();
         }
-        setSelection(x1, x1, true);
+        setSelectionTimes(time1, time1, true);
         return;
     }
 
     if (tracks.empty()) {
         selectionController()->resetSelectedTracks();
-        setSelection(x1, x2, true);
+        setSelectionTimes(time1, time2, true);
         return;
     }
 
     setSelectionActive(true);
 
-    if (m_startPoint.y() < y) {
+    if (m_startY < y) {
         trackNavigationController()->setFocusedTrack(tracks.back());
     } else {
         trackNavigationController()->setFocusedTrack(tracks.front());
@@ -250,21 +266,41 @@ void SelectionViewController::onReleased(double x, double y)
     selectionController()->setSelectedTracks(tracks, true);
 
     // time
-    setSelection(x1, x2, true);
+    setSelectionTimes(time1, time2, true);
 }
 
-void SelectionViewController::onSelectionHorizontalResize(double x1, double x2, bool completed)
+void SelectionViewController::onSelectionHorizontalResize(double anchorTime, double draggedTime, bool completed)
 {
     if (!isProjectOpened()) {
         return;
     }
 
-    // time
-    if (x1 > x2) {
-        std::swap(x1, x2);
+    anchorTime = std::max(anchorTime, 0.0);
+    draggedTime = std::max(draggedTime, 0.0);
+
+    if (completed) {
+        m_context->stopAutoScroll();
+        disconnect(m_autoScrollConnection);
+    } else {
+        if (m_selectionEditInProgress) {
+            anchorTime = m_horizontalResizeAnchorTime;
+        } else {
+            m_horizontalResizeAnchorTime = anchorTime;
+            m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
+                onSelectionHorizontalResize(m_horizontalResizeAnchorTime, m_context->positionToTime(m_autoScrollLastX), false);
+            });
+        }
+        m_autoScrollLastX = m_context->timeToPosition(draggedTime);
+        m_context->startAutoScroll(draggedTime);
     }
 
-    setSelection(x1, x2, completed);
+    double time1 = anchorTime;
+    double time2 = draggedTime;
+    if (time1 > time2) {
+        std::swap(time1, time2);
+    }
+
+    setSelectionTimes(time1, time2, completed);
     m_selectionEditInProgress = !completed;
     emit selectionEditInProgressChanged();
 }
@@ -295,6 +331,33 @@ void SelectionViewController::updateSelectionVerticalResize(double y, bool compl
     frequencySelectionController()->setHandleFrequency(frequency, completed, m_frequencyEdgeHandle);
 }
 
+void SelectionViewController::cancelSpectrogramEdit()
+{
+    frequencySelectionController()->resetFrequencySelection();
+
+    if (!m_verticalSelectionEditInProgress) {
+        return;
+    }
+
+    m_verticalSelectionEditInProgress = false;
+    m_frequencyEdgeHandle = 0;
+    m_spectrogramHit.reset();
+    emit verticalSelectionEditInProgressChanged();
+    emit pressedSpectrogramChanged();
+}
+
+void SelectionViewController::cancelSelectionGesture()
+{
+    if (!m_selectionStarted) {
+        return;
+    }
+
+    m_selectionStarted = false;
+    m_context->stopAutoScroll();
+    disconnect(m_autoScrollConnection);
+    emit selectionInProgressChanged();
+}
+
 void SelectionViewController::selectTrackAudioData(double y)
 {
     if (!isProjectOpened()) {
@@ -306,10 +369,12 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
-    const std::vector<TrackId> tracks = vs->tracksInRange(m_startPoint.y(), y);
+    const std::vector<TrackId> tracks = vs->tracksInRange(m_startY, y);
     if (tracks.empty()) {
         return;
     }
+
+    cancelSelectionGesture();
 
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
@@ -326,6 +391,8 @@ void SelectionViewController::selectItemData(const TrackItemKey& key)
         LOGW() << "Track not found: " << key.key.trackId;
         return;
     }
+
+    cancelSelectionGesture();
 
     if (track->type == trackedit::TrackType::Label) {
         selectionController()->setSelectedLabels(trackedit::LabelKeyList({ key.key }));
@@ -372,13 +439,13 @@ void SelectionViewController::resetDataSelection()
     frequencySelectionController()->resetFrequencySelection();
 }
 
-bool SelectionViewController::isLeftSelection(double x) const
+bool SelectionViewController::isLeftSelection(double time) const
 {
     if (!isProjectOpened()) {
         return false;
     }
 
-    return m_startPoint.x() > x;
+    return m_selectionStartTime > time;
 }
 
 IProjectViewStatePtr SelectionViewController::viewState() const
@@ -395,7 +462,7 @@ TrackIdList SelectionViewController::trackIdList() const
 
 Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
 {
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
     if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
@@ -477,10 +544,15 @@ void SelectionViewController::setSelectionActive(bool newSelectionActive)
     emit selectionActiveChanged();
 }
 
-void SelectionViewController::setSelection(double x1, double x2, bool complete)
+void SelectionViewController::setSelectionTimes(double time1, double time2, bool complete)
 {
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), complete);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), complete);
+    selectionController()->setDataSelectedStartTime(snapTime(time1), complete);
+    selectionController()->setDataSelectedEndTime(snapTime(time2), complete);
+}
+
+double SelectionViewController::snapTime(double time) const
+{
+    return m_context ? m_context->applyDetectedSnap(time) : time;
 }
 
 double SelectionViewController::spectrogramHitFrequency(const spectrogram::SpectrogramHit& hit, double y) const

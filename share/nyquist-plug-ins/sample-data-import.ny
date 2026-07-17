@@ -1,6 +1,6 @@
 $nyquist plug-in
 $version 5
-$type tool nogroup
+$type tool generate nogroup
 $name (_ "Sample data Import")
 $debugbutton false
 $author (_ "Steve Daulton")
@@ -88,7 +88,7 @@ $control BAD-DATA (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Er
       (throw 'err (format nil (_ "Error.~%Unable to open file"))))
   ; Note: we can't use (arrayp *track*) because
   ; *track* is nil in generate type plug-ins.
-  (cond 
+  (cond
     ((= (get '*track*  'channels) 2)
         (let ((left-snd (get-sound FILENAME 1))
               (right-snd (get-sound FILENAME 2)))

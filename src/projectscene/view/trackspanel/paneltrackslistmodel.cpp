@@ -192,6 +192,17 @@ void PanelTracksListModel::selectAudioData(int row)
     }
 }
 
+void PanelTracksListModel::focusTrack(int row)
+{
+    if (row < 0 || row >= rowCount()) {
+        return;
+    }
+
+    if (TrackItem* item = modelIndexToItem(index(row))) {
+        trackNavigationController()->setFocusedTrack(item->trackId());
+    }
+}
+
 void PanelTracksListModel::clearSelection()
 {
     m_selectionModel->clear();

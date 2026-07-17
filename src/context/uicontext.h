@@ -31,6 +31,8 @@ namespace au::context {
 static constexpr muse::ui::UiContext UiCtxUnknown = muse::ui::UiCtxUnknown;
 static constexpr muse::ui::UiContext UiCtxAny = muse::ui::UiCtxAny;
 
+static constexpr muse::ui::UiContext UiCtxDialogOpened = muse::ui::UiCtxDialogOpened;
+
 // pages
 static constexpr muse::ui::UiContext UiCtxProjectOpened = "UiCtxProjectOpened";
 static constexpr muse::ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";

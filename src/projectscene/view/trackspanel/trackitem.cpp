@@ -19,6 +19,10 @@ static muse::ui::IconCode::Code iconFromTrackType(au::trackedit::TrackType type)
     switch (type) {
     case au::trackedit::TrackType::Label:
         return muse::ui::IconCode::Code::LOOP_IN;
+    case au::trackedit::TrackType::Mono:
+        return muse::ui::IconCode::Code::CIRCLE;
+    case au::trackedit::TrackType::Stereo:
+        return muse::ui::IconCode::Code::TWO_CIRCLES;
     default:
         return muse::ui::IconCode::Code::MICROPHONE;
     }
@@ -48,7 +52,11 @@ void TrackItem::init(const trackedit::Track& track)
         emit titleChanged(m_title);
     }
 
-    m_icon = iconFromTrackType(track.type);
+    const auto icon = iconFromTrackType(track.type);
+    if (m_icon != icon) {
+        m_icon = icon;
+        emit iconChanged();
+    }
 
     m_isFocused = trackNavigationController()->focusedTrack() == m_trackId;
     emit isFocusedChanged();

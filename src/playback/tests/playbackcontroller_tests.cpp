@@ -156,12 +156,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     EXPECT_CALL(*m_player, playbackPosition())
     .WillRepeatedly(Return(currentPosition));
 
-    //! [GIVEN] No item selection
-    EXPECT_CALL(*m_selectionController, leftMostSelectedItemStartTime())
-    .WillOnce(Return(std::nullopt));
-    EXPECT_CALL(*m_selectionController, rightMostSelectedItemEndTime())
-    .WillOnce(Return(std::nullopt));
-
     //! [GIVEN] No time selection
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
     .WillOnce(Return(true));
@@ -247,9 +241,10 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
 }
 
 /**
- * @brief Toggle play when there is clips data selection
- * @details User made a selection by double clicking on waveform and clicked play
- *          Playback should be started from clip's start time
+ * @brief Toggle play when there is a clip selection
+ * @details User selected a clip and clicked play
+ *          Clip selection does not affect playback: it should run
+ *          from the seek position to the end of the project
  */
 TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 {
@@ -262,17 +257,21 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     .WillRepeatedly(Return(secs_t(0.0)));
 
     //! [GIVEN] There is single clip selection from 10 to 20 secs
-    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, leftMostSelectedItemStartTime())
-    .WillOnce(Return(std::optional<secs_t>(selectionRegion.start)));
-    EXPECT_CALL(*m_selectionController, rightMostSelectedItemEndTime())
-    .WillOnce(Return(std::optional<secs_t>(selectionRegion.end)));
+    ON_CALL(*m_selectionController, leftMostSelectedItemStartTime())
+    .WillByDefault(Return(std::optional<secs_t>(secs_t(10.0))));
+    ON_CALL(*m_selectionController, rightMostSelectedItemEndTime())
+    .WillByDefault(Return(std::optional<secs_t>(secs_t(20.0))));
 
-    //! [THEN] Expect that we will take into account the clip's selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
+    //! [GIVEN] No time selection
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillOnce(Return(true));
+
+    //! [THEN] The clip selection is ignored: playback region falls back to
+    //! {lastPlaybackSeekTime, totalPlayTime}
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(0.0), secs_t(100.0) }))
     .Times(1);
 
-    //! [THEN] No explicit seek (will play from clip start via playback region)
+    //! [THEN] No explicit seek (playback runs from the seek position)
     EXPECT_CALL(*m_player, seek(_, _))
     .Times(0);
 
@@ -756,10 +755,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd
     .WillRepeatedly(Return(recordEnd));
 
     //! [GIVEN] No selection
-    EXPECT_CALL(*m_selectionController, leftMostSelectedItemStartTime())
-    .WillOnce(Return(std::nullopt));
-    EXPECT_CALL(*m_selectionController, rightMostSelectedItemEndTime())
-    .WillOnce(Return(std::nullopt));
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
     .WillOnce(Return(true));
 

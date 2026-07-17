@@ -50,15 +50,8 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         if (globalContext()->isRecording() && !m_timer.isActive()) {
             m_currentTarget.reset();
             m_consumedSamplesSoFar = 0;
+            m_startOffset = 0.0;
             m_timer.start();
-        }
-    });
-
-    // While recording, the playcursor position is driven by the recording
-    // unless this is lead-in
-    record()->recordPositionChanged().onReceive(this, [this](const muse::secs_t& pos) {
-        if (recordController()->isRecording() && !recordController()->isLeadInRecording()) {
-            m_playbackPosition.set(std::max(0.0, pos.raw()));
         }
     });
 
@@ -527,14 +520,10 @@ void Au3Player::updateStreamState()
 
 void Au3Player::updatePlaybackState()
 {
-    // Capture drives the cursor via recordPositionChanged — skip here.
-    const bool captureDrivingCursor = recordController()->isRecording()
-                                      && !recordController()->isLeadInRecording();
-    if (!captureDrivingCursor) {
-        const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
-        if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
-            m_playbackPosition.set(time);
-        }
+    const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
+
+    if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
+        m_playbackPosition.set(time);
     }
 
     updateStreamState();
@@ -574,13 +563,13 @@ void Au3Player::updatePlaybackPosition()
     }
 
     const int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
-    if (!m_currentTarget.has_value() || !AudioIO::Get()->IsStreamActive(token)) {
-        // No DAC callbacks available (e.g. recording-only without overdub playback).
-        // GetStreamTime() does not advance here, so we deliberately skip the
-        // position write that updatePlaybackState() would do — the playhead is
-        // driven externally via setPlaybackPosition() in this case. Only the
-        // stream-state / timer cleanup is still needed.
+    if (!AudioIO::Get()->IsStreamActive(token)) {
         updateStreamState();
+        return;
+    }
+
+    if (!m_currentTarget.has_value()) {
+        updatePlaybackState();
         return;
     }
 

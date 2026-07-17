@@ -179,7 +179,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
     }
 
-    wxFileName wxfilename = wxFromString(path.toString());
+    wxFileName wxfilename = wxFromPath(path);
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {
@@ -229,6 +229,13 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
     if (exportedTracks.empty()) {
         //! NOTE: All selected audio is muted
         return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
+    }
+
+    if (exportConfiguration()->trimBlankSpace()) {
+        const double firstClipStart = exportedTracks.min(&Track::GetStartTime);
+        if (firstClipStart > m_t0 && firstClipStart < m_t1) {
+            m_t0 = firstClipStart;
+        }
     }
 
     int inputChannelsCount = 0;

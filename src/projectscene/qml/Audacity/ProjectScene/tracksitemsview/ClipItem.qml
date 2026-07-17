@@ -65,6 +65,7 @@ Rectangle {
     required property real selectionEndFrequency
     required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
+    required property bool splitToolActive
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -155,7 +156,7 @@ Rectangle {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Button
-        accessible.name: root.name
+        accessible.name: qsTrc("projectscene", "Clip: %1").arg(root.title)
 
         onActiveChanged: function (active) {
             // Make sure the focus navigation border is visible on top of other clips
@@ -389,7 +390,7 @@ Rectangle {
         onClicked: function (e) {
             if (root.multiClipsSelected) {
                 prv.ensureMultiMenuLoaded()
-                if (e.modifiers & Qt.ShiftModifier) {
+                if (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
                     if (!root.clipSelected) {
                         root.requestSelectionReset()
                     }
@@ -629,7 +630,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if ((!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier)) && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
+                        if ((!root.multiClipsSelected || (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier))) && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
                             root.requestSelected()
                         }
 
@@ -678,6 +679,8 @@ Rectangle {
                     panel: root.clipNavigationPanel
                     column: 3
 
+                    accessible.role: MUAccessible.EditableText
+                    accessible.name: qsTrc("projectscene", "Clip name: %1").arg(root.title)
                     accessible.enabled: titleEditNavCtrl.enabled
 
                     onTriggered: {
@@ -816,24 +819,29 @@ Rectangle {
                     navigation.name: "ClipMenuBtn"
                     navigation.panel: root.clipNavigationPanel
                     navigation.column: 4
+                    navigation.accessible.name: qsTrc("projectscene", "Clip menu")
 
                     onHandleMenuItem: function (itemId) {
                         Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
 
-                    onClicked: function (mouse) {
+                    //! NOTE: Override doClicked function from FlatButton to run clip selection logic before the base
+                    //! menu button emits clicked
+                    function doClicked(mouse) {
                         if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
                         } else {
                             prv.ensureSingleMenuLoaded()
                         }
 
-                        if (!root.multiClipsSelected || (mouse.modifiers & Qt.ShiftModifier)) {
+                        if (!root.multiClipsSelected || (mouse.modifiers & (Qt.ShiftModifier | Qt.ControlModifier))) {
                             if (!root.clipSelected) {
                                 root.requestSelectionReset()
                             }
                             root.requestSelected()
                         }
+
+                        Qt.callLater(menuBtn.clicked, mouse)
                     }
                 }
             }
@@ -856,7 +864,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                fillColor: root.clipSelected ? root.clipSelectedColor : root.clipColor
+                fillColor: waveView.backgroundColor
 
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
@@ -932,15 +940,29 @@ Rectangle {
                     lineColor: ui.theme.extra["audio_envelope_line"]
                     lineWidth: 2
 
-                    pointRadius: 4.0
-                    pointOutlineColor: ui.theme.extra["audio_envelope_point"]
-                    pointCentreColor: ui.theme.extra["audio_envelope_point"]
-                    pointOutlineWidth: 2.0
-
-                    ghostPointRadius: 3.0
-                    ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
-
                     points: clipGainModel.points
+
+                    standardPointStyle {
+                        centerRadius: 5.0
+                        centerColor: ui.theme.extra["audio_envelope_point"]
+                    }
+
+                    hoveredPointStyle {
+                        centerRadius: 1.0
+                        centerColor: ui.theme.extra["white_color"]
+
+                        middleRingWidth: 2.0
+                        middleRingColor: ui.theme.extra["black_color"]
+
+                        outlineWidth: 3.0
+                        outlineColor: ui.theme.extra["audio_envelope_point"]
+                    }
+
+                    ghostPointStyle {
+                        centerRadius: 4.0
+                        centerColor: ui.theme.extra["audio_envelope_point"]
+                    }
+
                     defaultValue: clipGainModel.defaultValue
 
                     xRangeFrom: waveView.itemStartTime
@@ -984,7 +1006,7 @@ Rectangle {
                     onActivePointChanged: {
                         if (automation.hasActivePoint) {
                             fake.x = automation.activePointX
-                            fake.y = automation.activePointY - (automation.pointRadius + 2)
+                            fake.y = automation.activePointY - (automation.standardPointStyle.centerRadius + 2)
                             tooltip.gain = gainToDb(automation.activePointValue)
                             tooltip.show(true)
                         } else {
@@ -1000,7 +1022,7 @@ Rectangle {
                         width: 1
 
                         x: automation.activePointX
-                        y: automation.activePointY - (automation.pointRadius + 2)
+                        y: automation.activePointY - (automation.standardPointStyle.centerRadius + 2)
 
                         enabled: false // so it doesn't steal mouse events
 
@@ -1049,6 +1071,8 @@ Rectangle {
                     selectionStartFrequency: root.selectionStartFrequency
                     selectionEndFrequency: root.selectionEndFrequency
                     clipSelected: root.clipSelected
+
+                    enabled: !root.splitToolActive
 
                     ChannelSplitter {
                         anchors.fill: parent

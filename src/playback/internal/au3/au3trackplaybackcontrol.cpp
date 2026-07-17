@@ -1,9 +1,7 @@
-#include <QApplication>
-
+#include "framework/global/log.h"
 #include "global/types/translatablestring.h"
 
 #include "au3wrap/internal/domaccessor.h"
-#include "playbacktypes.h"
 
 #include "au3-wave-track/WaveTrack.h"
 
@@ -71,7 +69,7 @@ void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool co
     }
 }
 
-void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
+void Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo which)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -80,40 +78,47 @@ void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
 
     auto& tracks = TrackList::Get(projectRef());
 
-    if (track->GetSolo() == solo) {
+    auto get = [which](auto* t) {
+        return which == MuteOrSolo::Solo ? t->GetSolo() : t->GetMute();
+    };
+    auto set = [which](auto* t, bool v) {
+        which == MuteOrSolo::Solo ? t->SetSolo(v) : t->SetMute(v);
+    };
+
+    const bool exclusiveSet = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+
+    bool changed = false;
+    if (exclusiveSet) {
+        value = true;
+
+        for (auto playable : tracks.Any<PlayableTrack>().Excluding(track)) {
+            if (get(playable)) {
+                set(playable, false);
+                changed = true;
+            }
+        }
+    }
+
+    if (get(track) != value) {
+        set(track, value);
+        changed = true;
+    }
+
+    if (!changed) {
         return;
     }
 
-    TracksBehaviors::SoloBehavior currentSoloBehavior = playbackConfiguration()->currentSoloBehavior();
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
-        if (currentSoloBehavior == TracksBehaviors::SoloBehavior::SoloBehaviorMulti) {
-            currentSoloBehavior = TracksBehaviors::SoloBehavior::SoloBehaviorSimple;
-        } else {
-            currentSoloBehavior = TracksBehaviors::SoloBehavior::SoloBehaviorMulti;
-        }
+    for (auto playable : tracks.Any<PlayableTrack>()) {
+        m_muteOrSoloChanged.send(playable->GetId());
     }
 
-    if (currentSoloBehavior == TracksBehaviors::SoloBehavior::SoloBehaviorMulti) {
-        track->SetSolo(solo);
-    } else {
-        for (auto playable : tracks.Any<PlayableTrack>()) {
-            if (playable->GetId() == trackId) {
-                playable->SetSolo(solo);
-            } else {
-                playable->SetSolo(false);
-            }
-            m_muteOrSoloChanged.send(playable->GetId());
-        }
-    }
-
-    if (solo == track->GetMute()) {
-        track->SetMute(false);
-    }
-
-    m_muteOrSoloChanged.send(trackId);
     projectHistory()->modifyState();
     projectHistory()->markUnsaved();
+}
+
+void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
+{
+    setMuteOrSolo(trackId, solo, MuteOrSolo::Solo);
 }
 
 bool Au3TrackPlaybackControl::solo(long trackId) const
@@ -128,22 +133,7 @@ bool Au3TrackPlaybackControl::solo(long trackId) const
 
 void Au3TrackPlaybackControl::setMuted(long trackId, bool mute)
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
-        return;
-    }
-
-    if (track->GetMute() == mute) {
-        return;
-    }
-    track->SetMute(mute);
-    if (mute && track->GetSolo()) {
-        track->SetSolo(false);
-    }
-
-    m_muteOrSoloChanged.send(trackId);
-    projectHistory()->modifyState();
-    projectHistory()->markUnsaved();
+    setMuteOrSolo(trackId, mute, MuteOrSolo::Mute);
 }
 
 bool Au3TrackPlaybackControl::muted(long trackId) const

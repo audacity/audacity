@@ -9,6 +9,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/inavigationcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
@@ -26,6 +27,7 @@ class TrackNavigationController : public ITrackNavigationController, public muse
     public muse::Contextable
 {
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
@@ -48,6 +50,8 @@ public:
     TrackItemKey focusedItem() const override;
     void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
     muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
+
+    TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
@@ -82,8 +86,9 @@ private:
     TrackItemKey findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const;
     double itemStartTime(const TrackItemKey& key) const;
 
+    void replaceSelection();
     void toggleSelection();
-    void trackRangeSelection();
+    void rangeSelection();
 
     void multiSelectionUp();
     void multiSelectionDown();
@@ -102,6 +107,7 @@ private:
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
+    TrackItemKey m_lastSelectedItem;
 
     std::optional<double> m_savedItemStartTime;
 

@@ -126,6 +126,12 @@ jobs:
           SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_KEY
         fi
 
+        # Skip crash reporting and symbols for WoA
+        if [ "${{ matrix.arch }}" == "aarch64" ]; then
+          DO_UPLOAD_SYMBOLS='false'
+          SENTRY_URL=""
+        fi
+
         echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
         echo "DO_BUILD: $DO_BUILD"
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" >> $GITHUB_ENV
@@ -150,12 +156,24 @@ jobs:
         choco install -y ccache
         bash ./buildscripts/ci/tools/setup_ccache_config.sh
 
+    - name: Install WiX 3 (WoA)
+      if: matrix.runner == 'windows-11-arm' && env.DO_BUILD == 'true'
+      shell: pwsh
+      run: |
+        $url = "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip"
+        $dst = "$env:RUNNER_TEMP\wix3"
+        New-Item -ItemType Directory -Force $dst | Out-Null
+        Invoke-WebRequest -Uri $url -OutFile "$dst\wix.zip"
+        Expand-Archive -Path "$dst\wix.zip" -DestinationPath $dst -Force
+        "WIX=$dst" | Out-File $env:GITHUB_ENV  -Append -Encoding utf8
+        $dst       | Out-File $env:GITHUB_PATH -Append -Encoding utf8
+
     - name: Register msvc problem matcher
       run: echo "::add-matcher::.github/problem_matchers/msvc.json"
 
     - name: Setup x64 Python (WoA)
       if: matrix.runner == 'windows-11-arm'
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
         architecture: x64
@@ -254,7 +272,7 @@ jobs:
     steps:
     - name: Setup x64 Python (WoA)
       if: matrix.runner == 'windows-11-arm'
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
         architecture: x64

@@ -42,6 +42,7 @@ Column {
 
             navigation.panel: root.navigationPanel
             navigation.order: root.navigationOrderStart
+            navigation.accessible.name: root.text
 
             anchors.verticalCenter: parent.verticalCenter
 
@@ -62,6 +63,7 @@ Column {
 
             navigation.panel: root.navigationPanel
             navigation.order: slider.navigation.order + 1
+            navigation.accessible.name: root.text + " " + currentValue + " " + measureUnitsSymbol
 
             width: parent.width * .35
 

@@ -21,6 +21,8 @@
  */
 #include "navigableappmenumodel.h"
 
+#include "framework/ui/navigationcommands.h"
+
 #include <QApplication>
 #include <QWindow>
 #include <QKeyEvent>
@@ -172,7 +174,7 @@ void NavigableAppMenuModel::setOpenedMenuId(QString openedMenuId)
 
     //! NOTE: after opening the menu, position on the first control
     if (navigationStarted && menuOpened) {
-        actionsDispatcher()->dispatch("nav-first-control");
+        commandDispatcher()->dispatch(muse::ui::FIRST_CONTROL_COMMAND);
     }
 
     emit openedMenuIdChanged(m_openedMenuId);

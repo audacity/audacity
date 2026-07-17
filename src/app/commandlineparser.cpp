@@ -75,7 +75,7 @@ void CommandLineParser::init()
     // Audio plugins
     m_parser.addOption(QCommandLineOption("register-audio-plugin",
                                           "Check an audio plugin for compatibility with the application and register it", "path"));
-    m_parser.addOption(QCommandLineOption("register-failed-audio-plugin", "Register an incompatible audio plugin", "path"));
+    m_parser.addOption(QCommandLineOption("register-audio-plugin-out", "File to write the audio plugin validation result to", "path"));
     m_parser.addOption(QCommandLineOption("plugin-registration-self-test",
                                           "Run plugin registration app self-test (verify initialization)"));
 
@@ -165,21 +165,13 @@ void CommandLineParser::parse(int argc, char** argv)
     if (m_parser.isSet("register-audio-plugin")) {
         m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
         m_options->audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-audio-plugin"));
-        m_options->audioPluginRegistration.failedPlugin = false;
+        m_options->audioPluginRegistration.outputPath = fromUserInputPath(m_parser.value("register-audio-plugin-out"));
     }
 
     // Self-test mode for plugin registration
     if (m_parser.isSet("plugin-registration-self-test")) {
         m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
         m_options->audioPluginRegistration.selfTest = true;
-    }
-
-    if (m_parser.isSet("register-failed-audio-plugin")) {
-        QStringList args1 = m_parser.positionalArguments();
-        m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
-        m_options->audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-failed-audio-plugin"));
-        m_options->audioPluginRegistration.failedPlugin = true;
-        m_options->audioPluginRegistration.failCode = !args1.empty() ? args1[0].toInt() : -1;
     }
 
     // Testflow
@@ -207,17 +199,20 @@ void CommandLineParser::parse(int argc, char** argv)
     // Startup
     if (m_options->runMode == IApplication::RunMode::GuiApp) {
         for (const QString& file : projectfiles) {
-            const muse::io::path_t filePath(file);
-            if (project::isAudacityFile(filePath)) {
+            const QUrl url = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+            const bool isCloudUrl = !url.isLocalFile() && url.scheme() == QStringLiteral("audacity");
+            const bool isLocalProject = url.isLocalFile() && project::isAudacityFile(muse::io::path_t(file));
+
+            if (isCloudUrl || isLocalProject) {
                 if (!m_options->startup.projectUrl.has_value()) {
-                    m_options->startup.projectUrl = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+                    m_options->startup.projectUrl = url;
                 }
                 m_options->startup.mediaFiles.clear();
                 continue;
             }
 
             if (!m_options->startup.projectUrl.has_value()) {
-                m_options->startup.mediaFiles.emplace_back(filePath);
+                m_options->startup.mediaFiles.emplace_back(muse::io::path_t(file));
             }
         }
     }

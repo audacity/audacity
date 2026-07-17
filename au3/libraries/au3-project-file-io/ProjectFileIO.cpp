@@ -11,12 +11,23 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 
 #include <atomic>
+#include <mutex>
 #include <sqlite3.h>
 #include <optional>
 #include <cstring>
 
+#if defined(__WXMSW__)
+#include <wx/msw/wrapwin.h>
+#include <io.h>
+#else
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
 #include <wx/crt.h>
+#include <wx/file.h>
 #include <wx/log.h>
+
 #include <wx/filesys.h>
 #include <wx/sstream.h>
 #include <wx/utils.h>
@@ -53,7 +64,7 @@ Paul Licameli split from AudacityProject.cpp
 
 // Identifies the XML format version embedded in the project blob.
 // Update this only when making irrevocable changes to the XML schema.
-// For db schema changes, bump PRAGMA user_version / ProjectFormatVersion instead.
+// For db schema changes, bump PRAGMA user_version / ProjectSchemaVersion instead.
 #define AUDACITY_FILE_FORMAT_VERSION "2.0.0"
 
 #undef NO_SHM
@@ -96,6 +107,9 @@ static const int ProjectFileID = PACK('A', 'U', 'D', 'Y');
 // A search for "BIND SQL" will find all bindings.
 // A search for "SQL sampleblocks" will find all SQL related
 // to sampleblocks.
+
+// How many past project documents project_history keeps
+static constexpr int kProjectHistoryDepth = 10;
 
 static const char* ProjectFileSchema
     =// These are persistent and not connection based
@@ -168,6 +182,17 @@ static const char* ProjectFileSchema
       "  summary256           BLOB,"
       "  summary64k           BLOB,"
       "  samples              BLOB"
+      ");"
+      ""
+      // CREATE SQL project_history
+      // A few documents written to the project table, kept
+      // so a corrupt current document can be rolled back to a previous good one
+      "CREATE TABLE IF NOT EXISTS <schema>.project_history"
+      "("
+      "  generation           INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "  saved_at             INTEGER,"
+      "  dict                 BLOB,"
+      "  doc                  BLOB"
       ");";
 
 class SQLiteBlobStream final
@@ -333,11 +358,15 @@ private:
 
     std::optional<SQLiteBlobStream> mBlobStream;
     size_t mNextBlobIndex { 0 };
+    bool mReadError { false };
 
     sqlite3* mDB;
     const char* mSchema;
     const char* mTable;
     const int64_t mRowID;
+
+public:
+    bool HadReadError() const { return mReadError; }
 
 protected:
     bool HasMoreData() const override
@@ -362,6 +391,7 @@ protected:
             // the next one
             mBlobStream = {};
             mNextBlobIndex = Columns.size();
+            mReadError = true;
 
             return 0;
         } else if (bytesRead == 0) {
@@ -708,6 +738,25 @@ bool ProjectFileIO::GetValue(const char* sql, int64_t& value, bool silent)
     return Query(sql, cb, silent) && success;
 }
 
+static bool UpgradeSchema(sqlite3* db)
+{
+    // Schema revision 1
+    if (sqlite3_exec(
+            db,
+            "CREATE TABLE IF NOT EXISTS main.project_history"
+            "("
+            "  generation           INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "  saved_at             INTEGER,"
+            "  dict                 BLOB,"
+            "  doc                  BLOB"
+            ");",
+            nullptr, nullptr, nullptr) != SQLITE_OK) {
+        return false;
+    }
+
+    return true;
+}
+
 bool ProjectFileIO::CheckVersion()
 {
     auto db = DB();
@@ -756,11 +805,27 @@ bool ProjectFileIO::CheckVersion()
 
     // Project file version is higher than ours. We will refuse to
     // process it since we can't trust anything about it.
-    if (SupportedProjectFormatVersion < version) {
+    if (ProjectSchemaVersion < version) {
         SetError(
             TranslatableString("project-file-io", "This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
             );
         return false;
+    }
+
+    if (version < ProjectSchemaVersion) {
+        if (UpgradeSchema(db)) {
+            const wxString sql = wxString::Format(
+                "PRAGMA user_version = %u;", ProjectSchemaVersion.GetPacked());
+            if (!Query(sql.c_str(), [](auto...) { return 0; })) {
+                return false;
+            }
+        } else {
+            SetError(
+                TranslatableString("project-file-io",
+                                   "Failed to upgrade the project schema.\n\nFile might be corrupted or read only.")
+                );
+            return false;
+        }
     }
 
     return true;
@@ -771,7 +836,7 @@ bool ProjectFileIO::InstallSchema(sqlite3* db, const char* schema /* = "main" */
     int rc;
 
     wxString sql;
-    sql.Printf(ProjectFileSchema, ProjectFileID, BaseProjectFormatVersion.GetPacked());
+    sql.Printf(ProjectFileSchema, ProjectFileID, ProjectSchemaVersion.GetPacked());
     sql.Replace("<schema>", schema);
 
     rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
@@ -1022,7 +1087,11 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
         // Prepare the statement only once
         rc = sqlite3_prepare_v2(db,
                                 "INSERT INTO outbound.sampleblocks"
-                                "  SELECT * FROM main.sampleblocks"
+                                "  (blockid, sampleformat, summin, summax,"
+                                "   sumrms, summary256, summary64k, samples)"
+                                "  SELECT blockid, sampleformat, summin, summax,"
+                                "   sumrms, summary256, summary64k, samples"
+                                "  FROM main.sampleblocks"
                                 "  WHERE blockid = ?;",
                                 -1,
                                 &stmt,
@@ -1102,6 +1171,20 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                 // block above will take care of cleaning up
                 return false;
             }
+        }
+
+        // Copy the project journal. Columns are named for the same reason as
+        // in the sampleblocks copy above.
+        if (sqlite3_exec(db,
+                         "INSERT INTO outbound.project_history"
+                         "  (generation, saved_at, dict, doc)"
+                         "  SELECT generation, saved_at, dict, doc"
+                         "  FROM main.project_history;",
+                         nullptr, nullptr, nullptr) != SQLITE_OK) {
+            SetDBError(
+                TranslatableString("project-file-io", "Failed to copy the project history.")
+                );
+            return false;
         }
 
         // Write the doc.
@@ -1436,6 +1519,27 @@ ProjectFileIO::BackupProject::~BackupProject()
     }
 }
 
+// According to docs, wxFile::Flush is noop on Windows
+// and weak on macos, hence this function
+static bool FlushToDisk(const wxString& path)
+{
+    wxFile file(path, wxFile::read_write);
+    if (!file.IsOpened()) {
+        return false;
+    }
+#if defined(__WXMSW__)
+    return FlushFileBuffers(reinterpret_cast<HANDLE>(_get_osfhandle(file.fd()))) != 0;
+#elif defined(__APPLE__)
+    // on macos fsync is not enough
+    if (fcntl(file.fd(), F_FULLFSYNC) == 0) {
+        return true;
+    }
+    return fsync(file.fd()) == 0;
+#else
+    return fsync(file.fd()) == 0;
+#endif
+}
+
 void ProjectFileIO::Compact(
     const std::vector<const TrackList*>& tracks, bool force)
 {
@@ -1490,8 +1594,11 @@ void ProjectFileIO::Compact(
             // Also, do this after closing the connection so that the -wal file
             // gets cleaned up.
             if (wxFileName::GetSize(tempName) < wxFileName::GetSize(origName)) {
+                if (!FlushToDisk(tempName)) {
+                    wxLogWarning(wxT("Compaction failed to flush %s"), tempName);
+                }
                 // Rename the original to backup
-                if (wxRenameFile(origName, backName)) {
+                else if (wxRenameFile(origName, backName)) {
                     // Rename the temporary to original
                     if (wxRenameFile(tempName, origName)) {
                         // Open the newly compacted original file
@@ -1823,6 +1930,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
                              const char* schema /* = "main" */)
 {
     auto db = DB();
+    std::lock_guard<std::mutex> lock(CurrConn()->TransactionMutex());
 
     TransactionScope transaction(mProject, "UpdateProject");
 
@@ -1960,7 +2068,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
     }
 
     const wxString setVersionSql
-        =wxString::Format("PRAGMA user_version = %u", BaseProjectFormatVersion.GetPacked());
+        =wxString::Format("PRAGMA user_version = %u", ProjectSchemaVersion.GetPacked());
 
     if (!Query(setVersionSql.c_str(), [](auto...) { return 0; })) {
         // DV: Very unlikely case.
@@ -1968,6 +2076,23 @@ bool ProjectFileIO::WriteDoc(const char* table,
         // the generic message for now, so no new strings are needed
         reportError(setVersionSql);
         return false;
+    }
+
+    // Write the project journal
+    if (!strcmp(table, "project") && !strcmp(schema, "main")) {
+        const wxString journalSql = wxString::Format(
+            "INSERT INTO main.project_history(saved_at, dict, doc)"
+            "  SELECT CAST(strftime('%%s','now') AS INTEGER), dict, doc"
+            "  FROM main.project WHERE id = 1;"
+            "DELETE FROM main.project_history WHERE generation NOT IN"
+            "  (SELECT generation FROM main.project_history"
+            "   ORDER BY generation DESC LIMIT %d);",
+            kProjectHistoryDepth);
+
+        if (!Query(journalSql.c_str(), [](auto...) { return 0; })) {
+            reportError(journalSql);
+            return false;
+        }
     }
 
     return transaction.Commit();
@@ -2024,6 +2149,14 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
         return {};
     }
 
+    // Prevent opening file read only
+    if (sqlite3_db_readonly(DB(), "main") == 1) {
+        SetError(
+            TranslatableString("project-file-io", "The project file is read-only"),
+            {}, SQLITE_READONLY);
+        return {};
+    }
+
     int64_t rowId = -1;
 
     bool useAutosave
@@ -2053,23 +2186,11 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
 
         success = ProjectSerializer::Decode(stream, this);
 
-        if (!success) {
+        if (!success || stream.HadReadError()) {
             SetError(
                 TranslatableString("project-file-io", "Unable to parse project information.")
                 );
             return {};
-        }
-
-        // Check for orphans blocks...sets mRecovered if any were deleted
-
-        auto blockids = WaveTrackFactory::Get(mProject)
-                        .GetSampleBlockFactory()
-                        ->GetActiveBlockIDs();
-        if (blockids.size() > 0) {
-            success = DeleteBlocks(blockids, true);
-            if (!success) {
-                return {};
-            }
         }
 
         // Remember if we used autosave or not

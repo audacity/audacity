@@ -3,14 +3,13 @@
 */
 #pragma once
 
+#include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
 
 #include "trackedit/iprojecthistory.h"
 #include "au3wrap/au3types.h"
-
-#include "iplaybackconfiguration.h"
 
 #include "itrackplaybackcontrol.h"
 
@@ -20,7 +19,7 @@ using au::audio::pan_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Contextable
 {
-    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
@@ -43,7 +42,13 @@ public:
     muse::async::Channel<long> muteOrSoloChanged() const override;
 
 private:
+    enum class MuteOrSolo {
+        Mute,
+        Solo
+    };
+
     au3::Au3Project& projectRef() const;
+    void setMuteOrSolo(long trackId, bool value, MuteOrSolo which);
 
     muse::async::Channel<long> m_muteOrSoloChanged;
 };

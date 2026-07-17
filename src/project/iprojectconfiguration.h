@@ -5,7 +5,6 @@
 
 #include "global/io/path.h"
 #include "global/async/channel.h"
-#include "async/notification.h"
 
 #include "iaudacityproject.h"
 
@@ -28,7 +27,6 @@ public:
 
     virtual muse::io::path_t cloudProjectsPath() const = 0;
     virtual void setCloudProjectsPath(const muse::io::path_t& path) = 0;
-    virtual bool isCloudProject(const muse::io::path_t& projectPath) const = 0;
 
     virtual muse::io::path_t lastOpenedProjectsPath() const = 0;
     virtual void setLastOpenedProjectsPath(const muse::io::path_t& path) = 0;

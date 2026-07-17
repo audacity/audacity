@@ -86,39 +86,6 @@ void PlaybackController::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
     });
-
-    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeyList) {
-        if (clipKeyList.empty()) {
-            return;
-        }
-        if (!isPlaying()) {
-            player()->stop();
-            PlaybackRegion selectionRegion = selectionPlaybackRegion();
-            if (selectionRegion.isValid()) {
-                doChangePlaybackRegion(selectionRegion);
-            }
-            doSeek(lastPlaybackSeekTime(), false);
-        }
-    });
-
-    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList& labelKeyList) {
-        if (labelKeyList.empty()) {
-            return;
-        }
-        if (!isPlaying()) {
-            player()->stop();
-            PlaybackRegion selectionRegion = selectionPlaybackRegion();
-            if (selectionRegion.isValid()) {
-                doChangePlaybackRegion(selectionRegion);
-            }
-            auto labelStartTime = selectionController()->selectedLabelStartTime();
-            auto labelEndTime = selectionController()->selectedLabelEndTime();
-            if (labelStartTime.has_value()) {
-                doSeek(labelStartTime.value(), false);
-                m_lastPlaybackRegion = { labelStartTime.value_or(0.0), labelEndTime.value_or(0.0) };
-            }
-        }
-    });
 }
 
 void PlaybackController::deinit()
@@ -169,13 +136,6 @@ bool PlaybackController::isLoopRegionActive() const
 
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
-    // item selection has priority over time selection
-    auto itemStart = selectionController()->leftMostSelectedItemStartTime();
-    auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
-    if (itemStart.has_value() && itemEnd.has_value()) {
-        return { itemStart.value(), itemEnd.value() };
-    }
-
     if (!selectionController()->timeSelectionIsEmpty()) {
         return { selectionController()->dataSelectedStartTime(),
                  selectionController()->dataSelectedEndTime() };

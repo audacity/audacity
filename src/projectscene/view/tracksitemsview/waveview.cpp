@@ -68,6 +68,11 @@ WaveView::WaveView(QQuickItem* parent)
     configuration()->isClippingInWaveformVisibleChanged().onReceive(this, [this](bool) {
         update();
     });
+
+    configuration()->clipStyleChanged().onReceive(this, [this](projectscene::ClipStyles::Style) {
+        emit backgroundColorChanged();
+        update();
+    });
 }
 
 WaveView::~WaveView()
@@ -191,6 +196,45 @@ void WaveView::paint(QPainter* painter)
     setAntialiasing(isStemPlot);
 
     wavePainter()->paint(*painter, m_clipKey.key, params, pType);
+
+    if (globalContext()->isRecording()) {
+        paintRecordingPlaceholder(*painter, params);
+    }
+}
+
+void WaveView::paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Clip clip = prj->clip(m_clipKey.key);
+    if (!clip.isValid() || m_clipTime.itemEndTime <= clip.endTime) {
+        return;
+    }
+
+    const double x0 = std::max(0.0, (clip.endTime - m_clipTime.itemStartTime) * params.zoom);
+    const double x1 = std::min(width(), (m_clipTime.itemEndTime - m_clipTime.itemStartTime) * params.zoom);
+    if (x1 - x0 < 1.0) {
+        return;
+    }
+
+    const double bandsHeight = params.geometry.height;
+    std::vector<std::pair<double, double> > channelBands;
+    if (muse::is_equal(m_channelHeightRatio, 1.0)) {
+        channelBands.emplace_back(0.0, bandsHeight);
+    } else {
+        channelBands.emplace_back(0.0, bandsHeight * m_channelHeightRatio);
+        channelBands.emplace_back(bandsHeight * m_channelHeightRatio, bandsHeight * (1.0 - m_channelHeightRatio));
+    }
+
+    for (const auto& [top, bandHeight] : channelBands) {
+        const double centerY = top + bandHeight / 2.0;
+
+        painter.setPen(params.style.samplePen);
+        painter.drawLine(QPointF(x0, centerY), QPointF(x1, centerY));
+    }
 }
 
 ClipKey WaveView::clipKey() const
@@ -244,6 +288,7 @@ void WaveView::setClipColor(const QColor& newClipColor)
     }
     m_clipColor = newClipColor;
     emit clipColorChanged();
+    emit backgroundColorChanged();
 
     update();
 }
@@ -260,6 +305,7 @@ void WaveView::setClipSelectedColor(const QColor& newClipSelectedColor)
     }
     m_clipSelectedColor = newClipSelectedColor;
     emit clipSelectedColorChanged();
+    emit backgroundColorChanged();
 
     update();
 }
@@ -276,8 +322,20 @@ void WaveView::setClipSelected(bool newClipSelected)
     }
     m_clipSelected = newClipSelected;
     emit clipSelectedChanged();
+    emit backgroundColorChanged();
 
     update();
+}
+
+QColor WaveView::backgroundColor() const
+{
+    const IWavePainter::Params params = getWavePainterParams();
+
+    const bool endWithinSelection = m_clipTime.selectionStartTime < m_clipTime.selectionEndTime
+                                    && m_clipTime.selectionStartTime <= m_clipTime.endTime
+                                    && m_clipTime.selectionEndTime >= m_clipTime.endTime;
+
+    return endWithinSelection ? params.style.selectedBackground : params.style.normalBackground;
 }
 
 ClipTime WaveView::clipTime() const
@@ -292,6 +350,7 @@ void WaveView::setClipTime(const ClipTime& newClipTime)
     }
     m_clipTime = newClipTime;
     emit clipTimeChanged();
+    emit backgroundColorChanged();
 
     update();
 }

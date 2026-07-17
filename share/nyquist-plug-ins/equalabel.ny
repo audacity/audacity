@@ -1,6 +1,6 @@
 $nyquist plug-in
 $version 5
-$type tool nogroup
+$type tool analyze nogroup
 $debugbutton false
 $debugflags trace
 $name (_ "Regular interval labels")
