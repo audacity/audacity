@@ -15,7 +15,8 @@ NumericView {
 
     enum Appearance {
         Themed,
-        Clock
+        Clock,
+        Embedded
     }
 
     property int appearance: Timecode.Appearance.Themed
@@ -31,11 +32,20 @@ NumericView {
     property alias currentFormat: timecodeModel.currentFormat
     property alias currentFormatStr: timecodeModel.currentFormatStr
 
-    backgroundColor: appearance === Timecode.Appearance.Clock ? ui.theme.backgroundQuarternaryColor : ui.theme.backgroundSecondaryColor
-    textColor: appearance === Timecode.Appearance.Clock ? ui.theme.fontSecondaryColor : ui.theme.fontPrimaryColor
+    backgroundColor: {
+        switch (appearance) {
+        case Timecode.Appearance.Clock:
+            return ui.theme.backgroundQuarternaryColor
+        case Timecode.Appearance.Embedded:
+            return "transparent"
+        default:
+            return ui.theme.backgroundSecondaryColor
+        }
+    }
+    textColor: appearance === Timecode.Appearance.Themed ? ui.theme.fontPrimaryColor : ui.theme.fontSecondaryColor
     border: Border {
         color: ui.theme.strokeColor
-        width: 1
+        width: root.appearance === Timecode.Appearance.Embedded ? 0 : 1
     }
     arrowSpacing: -2
 
