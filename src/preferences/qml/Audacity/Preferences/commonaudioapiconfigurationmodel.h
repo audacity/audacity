@@ -39,6 +39,8 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_OBJECT
     QML_ELEMENT
 
+    friend class CommonAudioApiConfigurationModelTests;
+
     Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
 
     Q_PROPERTY(QString currentOutputDeviceId READ currentOutputDeviceId NOTIFY currentOutputDeviceIdChanged)
