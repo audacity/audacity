@@ -486,7 +486,9 @@ bool NyquistBase::Init()
         if (const auto project = FindProject()) {
             if (!mSpectralSelectionEnabled || ((mF0 < 0.0) && (mF1 < 0.0))) {
                 mLastError
-                    = TranslatableString("effects-nyquist", "To use ‘Spectral effects’, enable ‘Spectral Selection’\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.").Translation();
+                    = TranslatableString("effects-nyquist",
+                                         "To use ‘Spectral effects’, enable ‘Spectral Selection’\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.")
+                      .Translation();
                 return false;
             }
         }
@@ -1441,7 +1443,16 @@ bool NyquistBase::ProcessOne(
             if (!isOk) {
                 mLastError = msg.Translation();
             } else {
-                BasicUI::ShowMessageBox(msg);
+                const auto firstLine = msg.Translation().BeforeFirst('\n');
+                BasicUI::Icon icon = BasicUI::Icon::Information;
+                if (firstLine == wxT("Error") || firstLine == wxT("Error.")) {
+                    icon = BasicUI::Icon::Error;
+                } else if (firstLine == wxT("Warning") || firstLine == wxT("Warning.")) {
+                    icon = BasicUI::Icon::Warning;
+                }
+                BasicUI::ShowMessageBox(msg, BasicUI::MessageBoxOptions {}
+                                        .Caption(mName)
+                                        .IconStyle(icon));
             }
         } else if (GetType() == EffectTypeTool) {
             // ;tools may change the project with aud-do commands so
@@ -1460,7 +1471,9 @@ bool NyquistBase::ProcessOne(
         auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_double());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
-            BasicUI::ShowMessageBox(str);
+            BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions {}
+                                    .Caption(mName)
+                                    .IconStyle(BasicUI::Icon::Information));
         } else {
             mLastError = str.Translation();
         }
@@ -1471,7 +1484,9 @@ bool NyquistBase::ProcessOne(
         auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_int());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
-            BasicUI::ShowMessageBox(str);
+            BasicUI::ShowMessageBox(str, BasicUI::MessageBoxOptions {}
+                                    .Caption(mName)
+                                    .IconStyle(BasicUI::Icon::Information));
         } else {
             mLastError = str.Translation();
         }
@@ -1595,7 +1610,8 @@ wxString NyquistBase::NyquistToWxString(const char* nyqString)
     wxString str(nyqString, wxConvUTF8);
     if (nyqString != NULL && nyqString[0] && str.empty()) {
         // invalid UTF-8 string, convert as Latin-1
-        str = wxString::FromUTF8(au3::trc("effects-nyquist", "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]").c_str());
+        str = wxString::FromUTF8(au3::trc("effects-nyquist",
+                                          "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]").c_str());
         // TODO: internationalization of strings from Nyquist effects, at least
         // from those shipped with Audacity
         str += LAT1CTOWX(nyqString);
@@ -2369,9 +2385,10 @@ bool NyquistBase::ParseProgram(wxInputStream& stream)
         using namespace BasicUI;
         /* i1n-hint: SAL and LISP are names for variant syntaxes for the
          Nyquist programming language.  Leave them, and 'return', untranslated. */
-        mLastError = TranslatableString("effects-nyquist", "Your code looks like SAL syntax, but there is no ‘return’ statement.\n\
-            For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
-            or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
+        mLastError = TranslatableString("effects-nyquist",
+                                        "Your code looks like SAL syntax, but there is no ‘return’ statement.\n"
+                                        "For SAL, use a return statement such as:\n\treturn *track* * 0.1\n"
+                                        "or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
         return false;
         // Else just throw it at Nyquist to see what happens
     }

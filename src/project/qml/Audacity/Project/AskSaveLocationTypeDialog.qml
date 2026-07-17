@@ -31,6 +31,8 @@ import "internal/SaveToCloud"
 StyledDialogView {
     id: root
 
+    title: qsTrc("project/save", "Save project")
+
     contentHeight: 600
     contentWidth: 900
 

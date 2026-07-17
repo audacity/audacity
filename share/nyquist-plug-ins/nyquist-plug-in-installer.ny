@@ -197,11 +197,11 @@ $control OVERWRITE (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
   ;; Format results and display in human readable form.
   (cond
     ((isempty install-success)
-      (setf msg (format nil (_ "Error.~%"))))
+      (setf msg (format nil (_ "Error~%"))))
     ((isempty install-fail)
-      (setf msg (format nil (_ "Success.~%Files written to:~%~s~%")
+      (setf msg (format nil (_ "Success~%Files written to:~%~s~%")
                         (get '*system-dir* 'user-plug-in))))
-    (t (setf msg (format nil (_ "Warning.~%Failed to copy some files:~%")))))
+    (t (setf msg (format nil (_ "Warning~%Failed to copy some files:~%")))))
   (setf results (append install-success install-fail))
   (setf results (sort-results results))
   (let ((status -1))
@@ -252,6 +252,6 @@ $control OVERWRITE (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
 
 (let ((file-list (get-file-list FILES)))
   (if (= (length file-list) 0)
-      (format nil (_ "Error.~%No file selected."))
+      (format nil (_ "Error~%No file selected."))
       (dolist (file file-list (print-results))
         (install file))))
