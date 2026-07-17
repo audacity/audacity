@@ -222,13 +222,34 @@ TEST_F(Au3AudioDevicesProviderTests, SetDefaultSampleRate_WhenMonitoring_Restart
     ON_CALL(*m_audioEngine, isMonitoring())
     .WillByDefault(Return(true));
 
+    //! [GIVEN] A rate different from the current one (settings persist across
+    //! test runs via muse::settings(), so this must not assume a fresh value)
+    const uint64_t newRate = m_provider->defaultSampleRate() == 48000 ? 44100 : 48000;
+
     //! [THEN] Monitoring is stopped, then restarted once the value is applied
     InSequence seq;
     EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
     EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
 
     //! [WHEN] The default sample rate is changed
-    m_provider->setDefaultSampleRate(48000);
+    m_provider->setDefaultSampleRate(newRate);
+}
+
+/**
+ * @brief Re-selecting the current sample rate must not disturb monitoring.
+ */
+TEST_F(Au3AudioDevicesProviderTests, SetDefaultSampleRate_SameValueAsCurrent_DoesNotTouchMonitoring)
+{
+    //! [GIVEN] Input monitoring is on
+    ON_CALL(*m_audioEngine, isMonitoring())
+    .WillByDefault(Return(true));
+
+    //! [THEN] The no-op selection leaves the monitoring stream alone
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(0);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(0);
+
+    //! [WHEN] The already-current rate is selected again
+    m_provider->setDefaultSampleRate(m_provider->defaultSampleRate());
 }
 
 /**

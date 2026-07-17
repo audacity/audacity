@@ -377,10 +377,13 @@ uint64_t Au3AudioDevicesProvider::defaultSampleRate() const
 
 void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
 {
-    // The rate is consumed when a stream is opened, so an active
-    // input-monitoring stream must be reopened for the new value to take
-    // effect (playback/recording restarts are handled a level up, by
-    // PlaybackController::withStreamRestart()).
+    if (newRate == defaultSampleRate()) {
+        return;
+    }
+
+    // A playing/recording stream keeps the rate it was opened with (the new
+    // rate takes effect on the next stream), but an idle input-monitoring
+    // stream must be reopened for the meters to follow the new rate.
     withMonitoringRestored([newRate]() {
         settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
     });
@@ -388,6 +391,10 @@ void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
 
 void Au3AudioDevicesProvider::setDefaultSampleFormat(const std::string& format)
 {
+    if (format == defaultSampleFormat()) {
+        return;
+    }
+
     for (const auto& symbol : QualitySettings::SampleFormatSetting.GetSymbols()) {
         if (format == symbol.Msgid().translated().toStdString()) {
             settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_FORMAT, muse::Val(symbol.Internal().ToStdString()));

@@ -270,7 +270,7 @@ void CommonAudioApiConfigurationModel::defaultSampleRateSelected(const QString& 
                            [&rateName](const auto& rate) { return rateName == rate.second; });
     if (it != m_sampleRateMapping.end()) {
         setOtherSampleRate(false);
-        playbackController()->setDefaultSampleRate(it->first);
+        audioDevicesProvider()->setDefaultSampleRate(it->first);
         return;
     }
 
@@ -286,7 +286,7 @@ uint64_t CommonAudioApiConfigurationModel::defaultSampleRateValue() const
 
 void CommonAudioApiConfigurationModel::defaultSampleRateValueSelected(uint64_t rateValue)
 {
-    playbackController()->setDefaultSampleRate(rateValue);
+    audioDevicesProvider()->setDefaultSampleRate(rateValue);
 }
 
 bool CommonAudioApiConfigurationModel::otherSampleRate() const
@@ -321,7 +321,7 @@ QVariantList CommonAudioApiConfigurationModel::defaultSampleFormatList() const
 
 void CommonAudioApiConfigurationModel::defaultSampleFormatSelected(const QString& format)
 {
-    playbackController()->setDefaultSampleFormat(format.toStdString());
+    audioDevicesProvider()->setDefaultSampleFormat(format.toStdString());
 }
 
 double CommonAudioApiConfigurationModel::longestDeviceNameLength() const
