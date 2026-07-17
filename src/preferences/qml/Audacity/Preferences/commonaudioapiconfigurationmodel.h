@@ -21,6 +21,8 @@
  */
 #pragma once
 
+#include <optional>
+
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 
@@ -74,6 +76,11 @@ public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+
+    //! Pushes the pending (edited but not yet applied) values to the audio
+    //! backend. Called when the Preferences dialog is confirmed; closing the
+    //! dialog any other way discards the pending values.
+    Q_INVOKABLE bool apply();
 
     int currentAudioApiIndex() const;
     Q_INVOKABLE QStringList audioApiList() const;
@@ -153,7 +160,32 @@ signals:
     void asioUseDeviceSampleRateChanged();
 
 private:
+    std::string effectiveApi() const;
+    std::string effectiveOutputDevice() const;
+    std::string effectiveInputDevice() const;
+    int effectiveInputChannelsAvailable() const;
+    int effectiveInputChannels() const;
+
+    void setPendingSampleRate(uint64_t rateValue);
+    void clearPendingValues();
+    void notifyDeviceContextChanged();
+
     std::vector<std::pair<uint64_t, QString> > m_sampleRateMapping;
     bool m_otherSampleRate = false;
+
+    // The dialog edits these pending values; the audio backend is only touched
+    // when apply() pushes them on OK. An empty optional means "unchanged, show
+    // the applied value". A pending value set back to the applied one is
+    // cleared, so apply() only pushes real differences.
+    std::optional<std::string> m_pendingApi;
+    std::optional<std::string> m_pendingOutputDevice;
+    std::optional<std::string> m_pendingInputDevice;
+    std::optional<int> m_pendingInputChannels;
+    std::optional<double> m_pendingBufferLength;
+    std::optional<double> m_pendingLatencyCompensation;
+    std::optional<bool> m_pendingAutomaticCompensation;
+    std::optional<uint64_t> m_pendingSampleRate;
+    std::optional<std::string> m_pendingSampleFormat;
+    std::optional<bool> m_pendingAsioUseDeviceSampleRate;
 };
 }

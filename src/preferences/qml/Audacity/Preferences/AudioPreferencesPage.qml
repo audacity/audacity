@@ -37,6 +37,12 @@ PreferencesPage {
         apiModel.load()
     }
 
+    // Audio settings are edited as pending values and only pushed to the audio
+    // backend when the dialog is confirmed; Cancel discards them.
+    function apply() {
+        return apiModel.apply()
+    }
+
     Column {
         width: parent.width
         spacing: root.sectionsSpacing
