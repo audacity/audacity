@@ -2143,7 +2143,7 @@ void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int 
 
     if (!labelsForInteraction().empty()) {
         muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), timePositionOffset,
-                                                                               trackPositionOffset, completed, UndoPushType::NONE);
+                                                                               trackPositionOffset, completed);
         if (!result.ret) {
             return;
         }
@@ -2154,8 +2154,7 @@ void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int 
     } else if (!clipsForInteraction().empty()) {
         bool itemsMovedToOtherTrack = false;
         muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(clipsForInteraction(), timePositionOffset,
-                                                                             trackPositionOffset, completed, itemsMovedToOtherTrack,
-                                                                             UndoPushType::NONE);
+                                                                             trackPositionOffset, completed, itemsMovedToOtherTrack);
         if (!result.ret) {
             return;
         }
@@ -2199,15 +2198,14 @@ void TrackeditActionsController::completeFocusedItemMove()
     constexpr bool completed = true;
 
     if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0.0, 0, completed,
-                                                                               UndoPushType::NONE);
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0.0, 0, completed);
         if (result.ret) {
             selectionController()->setSelectedLabels(result.val, completed);
         }
     } else if (!clipsForInteraction().empty()) {
         bool itemsMovedToOtherTrack = false;
         muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(clipsForInteraction(), 0.0, 0, completed,
-                                                                             itemsMovedToOtherTrack, UndoPushType::NONE);
+                                                                             itemsMovedToOtherTrack);
         if (result.ret) {
             selectionController()->setSelectedClips(result.val, completed);
         }

@@ -148,15 +148,14 @@ bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
 
 muse::RetVal<ClipKeyList> TrackeditInteraction::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
                                                           int trackPositionOffset, bool completed,
-                                                          bool& clipsMovedToOtherTrack, UndoPushType type)
+                                                          bool& clipsMovedToOtherTrack)
 {
     return withPlaybackStopRetVal(&ITrackeditInteraction::moveClips,
                                   clipKeyList,
                                   timePositionOffset,
                                   trackPositionOffset,
                                   completed,
-                                  clipsMovedToOtherTrack,
-                                  type);
+                                  clipsMovedToOtherTrack);
 }
 
 bool TrackeditInteraction::moveRangeSelection(secs_t timePositionOffset, bool completed)
@@ -478,15 +477,15 @@ bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
     return m_interaction->copyLabel(labelKey);
 }
 
-bool TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed, UndoPushType type)
+bool TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed)
 {
-    return m_interaction->moveLabels(labelKeys, timePositionOffset, completed, type);
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, completed);
 }
 
 muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
-                                                            int trackPositionOffset, bool completed, UndoPushType type)
+                                                            int trackPositionOffset, bool completed)
 {
-    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset, completed, type);
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset, completed);
 }
 
 muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)

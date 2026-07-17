@@ -432,8 +432,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
             ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
             muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(selectedClips, moveOffset.timeOffset,
                                                                                  moveOffset.trackOffset,
-                                                                                 completed, clipsMovedToOtherTrack,
-                                                                                 UndoPushType::NONE);
+                                                                                 completed, clipsMovedToOtherTrack);
             if (result.ret) {
                 selectionController()->setSelectedClips(result.val, completed);
             }
