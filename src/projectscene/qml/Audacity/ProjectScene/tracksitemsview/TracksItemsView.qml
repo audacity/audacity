@@ -184,7 +184,7 @@ Rectangle {
         id: splitToolController
         context: timeline.context
 
-        clipHovered: root.itemHovered && !root.itemHeaderHovered
+        clipHovered: root.itemHovered
         hoveredTrack: root.hoveredTrackId
 
         onActiveChanged: {
@@ -559,7 +559,7 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
-                    if (root.itemHeaderHovered) {
+                    if (root.itemHeaderHovered && !splitToolController.active) {
                         tracksItemsView.itemStartEditRequested(hoveredItemKey)
                         root.interactionState = TracksItemsView.State.DraggingItem
                         lastItemClickKey = root.hoveredItemKey

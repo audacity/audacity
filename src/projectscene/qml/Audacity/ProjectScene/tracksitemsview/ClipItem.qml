@@ -613,7 +613,7 @@ Rectangle {
 
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
-                cursorShape: Qt.OpenHandCursor
+                cursorShape: root.splitToolActive ? Qt.ArrowCursor : Qt.OpenHandCursor
 
                 property var lastClickTime: 0
                 property point doubleClickStartPosition
@@ -624,6 +624,12 @@ Rectangle {
                 // hence we need to let simple events pass (e.accepted = false). Unfortunately this breaks
                 // detecting composed events like doubleClick so we need to take care of it manually.
                 onPressed: function (e) {
+                    if (root.splitToolActive) {
+                        //! NOTE Let the press through so the split tool handles it
+                        e.accepted = false
+                        return
+                    }
+
                     var currentTime = Date.now()
                     if (currentTime - lastClickTime < prv.doubleClickInterval) {
                         //! NOTE Handle doubleClick logic
