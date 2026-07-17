@@ -785,36 +785,71 @@ void PlaybackController::rescanAudioDevices()
     });
 }
 
+void PlaybackController::withSingleStreamRestart(const std::function<void()>& changes)
+{
+    ++m_streamRestartDepth;
+    changes();
+    --m_streamRestartDepth;
+
+    if (m_streamRestartDepth == 0 && m_batchResumeState) {
+        const StreamResumeState resumeState = *m_batchResumeState;
+        m_batchResumeState.reset();
+        resumeStreamAfterChange(resumeState);
+    }
+}
+
 void PlaybackController::withStreamRestart(const std::function<void()>& change)
 {
+    if (m_streamRestartDepth > 0) {
+        // Inside a withSingleStreamRestart() scope: the stream is stopped once,
+        // before the first actual change; the scope resumes it once at the end.
+        if (!m_batchResumeState) {
+            m_batchResumeState = stopStreamForChange();
+        }
+        change();
+        return;
+    }
+
+    const StreamResumeState resumeState = stopStreamForChange();
+    change();
+    resumeStreamAfterChange(resumeState);
+}
+
+PlaybackController::StreamResumeState PlaybackController::stopStreamForChange()
+{
+    StreamResumeState state;
+
     const bool isRecording = recordController()->isRecording();
-    const bool wasPlaying = !isRecording && isPlaying();
-    const bool wasPaused = !isRecording && isPaused();
-    const muse::secs_t resumePos = player()->playbackPosition();
+    state.wasPlaying = !isRecording && isPlaying();
+    state.wasPaused = !isRecording && isPaused();
+    state.resumePos = player()->playbackPosition();
 
     if (isRecording) {
         record()->stop();
-    } else if (wasPlaying || wasPaused) {
+    } else if (state.wasPlaying || state.wasPaused) {
         stop();
     }
 
-    change();
+    return state;
+}
 
+void PlaybackController::resumeStreamAfterChange(const StreamResumeState& state)
+{
     // Only resume when the user was actively playing. A paused or recording
     // transport is torn down for the switch and then left stopped.
-    if (wasPlaying) {
+    if (state.wasPlaying) {
         // Restart the stream at the interrupted position. The play region, the
         // seek anchor and the rest of the session state are deliberately
         // untouched: a bounded region still ends where it did, an active loop
         // still wraps within its bounds, and a stop still returns to where
         // playback originally started.
-        player()->play(resumePos);
-    } else if (wasPaused) {
+        player()->play(state.resumePos);
+    } else if (state.wasPaused) {
         // The paused stream can't survive the switch, so we end up stopped.
         // Remember the pause position so the next play resumes from there; the
         // stop anchor (m_lastPlaybackSeekTime) is deliberately left untouched, so
         // a stop still returns to where playback originally started.
-        m_pausedResumePos = resumePos;
+        m_pausedResumePos = state.resumePos;
     }
 }
 

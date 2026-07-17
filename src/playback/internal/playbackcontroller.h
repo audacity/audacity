@@ -79,6 +79,8 @@ public:
     void setBufferLength(double duration) override;
     void setLatencyCompensation(double value) override;
 
+    void withSingleStreamRestart(const std::function<void()>& changes) override;
+
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 
     muse::async::Channel<playback::TrackId> trackAdded() const override;
@@ -158,8 +160,19 @@ private:
                                     const std::vector<std::string>& options, const std::function<void(const std::string&)>& applyValue);
 
     // Stops playback/recording around `change` and, when the user was actively
-    // playing, resumes at the interrupted position afterwards.
+    // playing, resumes at the interrupted position afterwards. Inside a
+    // withSingleStreamRestart() scope the stop happens once, before the first
+    // change, and the resume once, when the scope ends.
     void withStreamRestart(const std::function<void()>& change);
+
+    struct StreamResumeState {
+        bool wasPlaying = false;
+        bool wasPaused = false;
+        muse::secs_t resumePos = 0.0;
+    };
+
+    StreamResumeState stopStreamForChange();
+    void resumeStreamAfterChange(const StreamResumeState& state);
 
     // Applies `apply(newValue)` via withStreamRestart(), but only when the value
     // actually changed — re-selecting the current value must not interrupt the
@@ -204,6 +217,9 @@ private:
     // should resume from. Cleared by any explicit reposition (seek, new region)
     // and on stop.
     std::optional<muse::secs_t> m_pausedResumePos;
+
+    int m_streamRestartDepth = 0;
+    std::optional<StreamResumeState> m_batchResumeState;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;

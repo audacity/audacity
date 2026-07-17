@@ -83,26 +83,29 @@ bool CommonAudioApiConfigurationModel::apply()
 {
     // The API must be applied before the devices (a pending device belongs to
     // the pending API) and the devices before the channel count. Each setter
-    // no-ops when the value did not actually change, so only real differences
-    // interrupt a running stream.
-    if (m_pendingApi) {
-        playbackController()->setAudioApi(*m_pendingApi);
-    }
-    if (m_pendingOutputDevice) {
-        playbackController()->setAudioOutputDevice(*m_pendingOutputDevice);
-    }
-    if (m_pendingInputDevice) {
-        playbackController()->setAudioInputDevice(*m_pendingInputDevice);
-    }
-    if (m_pendingInputChannels) {
-        playbackController()->setInputChannels(*m_pendingInputChannels);
-    }
-    if (m_pendingBufferLength) {
-        playbackController()->setBufferLength(*m_pendingBufferLength);
-    }
-    if (m_pendingLatencyCompensation) {
-        playbackController()->setLatencyCompensation(*m_pendingLatencyCompensation);
-    }
+    // no-ops when the value did not actually change, and the surrounding scope
+    // collapses the individual stream restarts into a single one, so a running
+    // stream is interrupted at most once — and only for real differences.
+    playbackController()->withSingleStreamRestart([this]() {
+        if (m_pendingApi) {
+            playbackController()->setAudioApi(*m_pendingApi);
+        }
+        if (m_pendingOutputDevice) {
+            playbackController()->setAudioOutputDevice(*m_pendingOutputDevice);
+        }
+        if (m_pendingInputDevice) {
+            playbackController()->setAudioInputDevice(*m_pendingInputDevice);
+        }
+        if (m_pendingInputChannels) {
+            playbackController()->setInputChannels(*m_pendingInputChannels);
+        }
+        if (m_pendingBufferLength) {
+            playbackController()->setBufferLength(*m_pendingBufferLength);
+        }
+        if (m_pendingLatencyCompensation) {
+            playbackController()->setLatencyCompensation(*m_pendingLatencyCompensation);
+        }
+    });
     if (m_pendingAutomaticCompensation) {
         audioDevicesProvider()->setAutomaticCompensationEnabled(*m_pendingAutomaticCompensation);
     }

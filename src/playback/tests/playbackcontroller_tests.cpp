@@ -1336,6 +1336,96 @@ TEST_F(PlaybackControllerTests, ChangeBufferLength_WhilePlaying_StopsAppliesResu
 }
 
 /**
+ * @brief A batch of changes interrupts a running stream only once.
+ * @details The Preferences dialog applies all its edits on OK; each setter on
+ *          its own would stop/resume the stream, so the batch scope must
+ *          collapse them into a single stop before the first change and a
+ *          single resume at the end.
+ */
+TEST_F(PlaybackControllerTests, BatchedChanges_WhilePlaying_RestartStreamOnce)
+{
+    //! [GIVEN] Playback is running at 30s; host, device and buffer length all
+    //! differ from the values about to be applied
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(30.0)));
+    ON_CALL(*m_audioDevicesProvider, currentApi())
+    .WillByDefault(Return(std::string("CoreAudio")));
+    ON_CALL(*m_audioDevicesProvider, currentOutputDevice())
+    .WillByDefault(Return(std::string("Built-in Output")));
+    ON_CALL(*m_audioDevicesProvider, bufferLength())
+    .WillByDefault(Return(100.0));
+
+    //! [THEN] One stop, all three changes, one resume at the interrupted position
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_player, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setApi("JACK")).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setOutputDevice("Speakers")).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setBufferLength(50.0)).Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    //! [WHEN] The changes are applied as one batch
+    m_controller->withSingleStreamRestart([this]() {
+        m_controller->setAudioApi("JACK");
+        m_controller->setAudioOutputDevice("Speakers");
+        m_controller->setBufferLength(50.0);
+    });
+}
+
+/**
+ * @brief A batch where every value is re-selected unchanged is a no-op.
+ */
+TEST_F(PlaybackControllerTests, BatchedChanges_NothingActuallyChanges_DoesNotTouchStream)
+{
+    //! [GIVEN] Playback is running; the batch re-selects the current values
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_audioDevicesProvider, currentApi())
+    .WillByDefault(Return(std::string("CoreAudio")));
+    ON_CALL(*m_audioDevicesProvider, bufferLength())
+    .WillByDefault(Return(100.0));
+
+    //! [THEN] The stream is never touched
+    EXPECT_CALL(*m_player, stop()).Times(0);
+    EXPECT_CALL(*m_player, play(_)).Times(0);
+
+    //! [WHEN] The already-current values are applied as a batch
+    m_controller->withSingleStreamRestart([this]() {
+        m_controller->setAudioApi("CoreAudio");
+        m_controller->setBufferLength(100.0);
+    });
+}
+
+/**
+ * @brief A batch of changes stops an active recording only once, no resume.
+ */
+TEST_F(PlaybackControllerTests, BatchedChanges_WhileRecording_StopsRecordingOnce)
+{
+    //! [GIVEN] A recording is in progress; host and device differ from the batch
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+    ON_CALL(*m_audioDevicesProvider, currentApi())
+    .WillByDefault(Return(std::string("CoreAudio")));
+    ON_CALL(*m_audioDevicesProvider, currentOutputDevice())
+    .WillByDefault(Return(std::string("Built-in Output")));
+
+    //! [THEN] The recording is stopped once, before the changes; recording
+    //! being sensitive, nothing is auto-resumed
+    EXPECT_CALL(*m_player, play(_)).Times(0);
+    ::testing::InSequence seq;
+    EXPECT_CALL(*m_record, stop()).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setApi("JACK")).Times(1);
+    EXPECT_CALL(*m_audioDevicesProvider, setOutputDevice("Speakers")).Times(1);
+
+    //! [WHEN] The changes are applied as one batch
+    m_controller->withSingleStreamRestart([this]() {
+        m_controller->setAudioApi("JACK");
+        m_controller->setAudioOutputDevice("Speakers");
+    });
+}
+
+/**
  * @brief Changing latency compensation while recording stops the recording.
  * @details The compensation is baked into the capture stream at start and
  *          consumed within the take's first moments, so the change can never
