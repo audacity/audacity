@@ -28,6 +28,7 @@ public:
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
 
     virtual bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) = 0;
+    virtual bool changeClipsStartTime(const ClipKeyList& clipKeys, secs_t timePositionOffset, bool completed) = 0;
     virtual muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
@@ -62,6 +63,7 @@ public:
     virtual bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
 
     virtual muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) = 0;
+    virtual muse::Ret makeRoomForClips(const ClipKeyList& clipKeys) = 0;
 
     virtual ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) = 0;
 

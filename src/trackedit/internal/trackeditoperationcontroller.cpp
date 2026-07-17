@@ -382,10 +382,7 @@ bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset,
         clampedOffset = -dataSelStart;
     }
 
-    for (const auto& clipKey : clipsInRange) {
-        secs_t currentStart = clipsInteraction()->clipStartTime(clipKey);
-        clipsInteraction()->changeClipStartTime(clipKey, currentStart + clampedOffset, completed);
-    }
+    clipsInteraction()->changeClipsStartTime(clipsInRange, clampedOffset, completed);
 
     if (!labelsInRange.empty()) {
         labelsInteraction()->moveLabels(labelsInRange, clampedOffset, 0);
@@ -963,10 +960,7 @@ bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, sec
             }
         }
 
-        for (const auto& clipKey : selectedClips) {
-            secs_t currentStart = clipsInteraction()->clipStartTime(clipKey);
-            clipsInteraction()->changeClipStartTime(clipKey, currentStart + clampedOffset, completed);
-        }
+        clipsInteraction()->changeClipsStartTime(selectedClips, clampedOffset, completed);
 
         timePositionOffset = clampedOffset;
     }

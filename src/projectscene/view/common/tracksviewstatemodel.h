@@ -22,6 +22,7 @@ class TracksViewStateModel : public QObject, public muse::Contextable, public mu
 
     Q_PROPERTY(bool altPressed READ altPressed NOTIFY altPressedChanged FINAL)
     Q_PROPERTY(bool ctrlPressed READ ctrlPressed NOTIFY ctrlPressedChanged FINAL)
+    Q_PROPERTY(bool keyboardMoveActive READ keyboardMoveActive NOTIFY keyboardMoveActiveChanged FINAL)
 
     Q_PROPERTY(bool snapEnabled READ snapEnabled NOTIFY snapEnabledChanged FINAL)
 
@@ -39,6 +40,7 @@ public:
     int tracksVerticalOffset() const;
     bool altPressed() const;
     bool ctrlPressed() const;
+    bool keyboardMoveActive() const;
 
     Q_INVOKABLE void changeTracksVerticalOffset(int deltaY);
     Q_INVOKABLE void setMouseY(double y);
@@ -59,6 +61,7 @@ signals:
     void tracksVerticalScrollLockedChanged();
     void altPressedChanged();
     void ctrlPressedChanged();
+    void keyboardMoveActiveChanged();
 
     void snapEnabledChanged();
 
@@ -72,6 +75,7 @@ private:
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;
+    muse::ValCh<bool> m_keyboardMoveActive;
 
     bool m_snapEnabled;
 };

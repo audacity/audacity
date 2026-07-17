@@ -59,6 +59,12 @@ void TracksViewStateModel::init()
         m_ctrlPressed.val = v;
         emit ctrlPressedChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    m_keyboardMoveActive = vs->keyboardMoveActive();
+    m_keyboardMoveActive.ch.onReceive(this, [this](bool v) {
+        m_keyboardMoveActive.val = v;
+        emit keyboardMoveActiveChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 bool TracksViewStateModel::snapEnabled() const
@@ -182,4 +188,9 @@ bool TracksViewStateModel::altPressed() const
 bool TracksViewStateModel::ctrlPressed() const
 {
     return m_ctrlPressed.val;
+}
+
+bool TracksViewStateModel::keyboardMoveActive() const
+{
+    return m_keyboardMoveActive.val;
 }

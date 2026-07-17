@@ -372,7 +372,7 @@ TrackItemsContainer {
         target: root.container
 
         function onItemMoveRequested(itemKey, completed) {
-            root.updateMoveActive(completed)
+            root.updateMouseMoveActive(completed)
 
             labelsModel.moveSelectedLabels(itemKey, completed)
 
