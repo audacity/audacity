@@ -51,11 +51,7 @@ Rectangle {
         Timecode {
             id: startTimecode
 
-            appearance: Timecode.Appearance.Clock
-            backgroundColor: "transparent"
-            border: Border {
-                width: 0
-            }
+            appearance: Timecode.Appearance.Embedded
 
             mode: TimecodeModeSelector.TimePoint
             sampleRate: root.sampleRate
@@ -79,11 +75,7 @@ Rectangle {
         Timecode {
             id: endTimecode
 
-            appearance: Timecode.Appearance.Clock
-            backgroundColor: "transparent"
-            border: Border {
-                width: 0
-            }
+            appearance: Timecode.Appearance.Embedded
 
             mode: TimecodeModeSelector.TimePoint
             sampleRate: root.sampleRate
@@ -92,8 +84,6 @@ Rectangle {
             lowerTimeSignature: root.lowerTimeSignature
 
             currentFormat: root.currentFormat
-
-            backgroundLeftRadius: 0
 
             navigation.panel: root.navigationPanel
             navigation.row: startTimecode.navigation.row
