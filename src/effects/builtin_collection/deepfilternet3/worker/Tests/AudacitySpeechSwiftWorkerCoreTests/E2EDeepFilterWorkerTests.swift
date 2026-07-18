@@ -84,16 +84,22 @@ final class E2EDeepFilterWorkerTests: XCTestCase {
       process.standardOutput = standardOutput
       process.standardError = standardError
       try process.run()
+      let outputTask = Task.detached {
+        standardOutput.fileHandleForReading.readDataToEndOfFile()
+      }
+      let errorTask = Task.detached {
+        standardError.fileHandleForReading.readDataToEndOfFile()
+      }
       process.waitUntilExit()
 
       let outputText =
         String(
-          data: standardOutput.fileHandleForReading.readDataToEndOfFile(),
+          data: await outputTask.value,
           encoding: .utf8
         ) ?? ""
       let errorText =
         String(
-          data: standardError.fileHandleForReading.readDataToEndOfFile(),
+          data: await errorTask.value,
           encoding: .utf8
         ) ?? ""
       guard process.terminationStatus == 0 else {
@@ -152,7 +158,8 @@ final class E2EDeepFilterWorkerTests: XCTestCase {
     var sampleCount = 0
     for range in ranges {
       for sample in samples[range] {
-        sumOfSquares += Double(sample * sample)
+        let value = Double(sample)
+        sumOfSquares += value * value
         sampleCount += 1
       }
     }
