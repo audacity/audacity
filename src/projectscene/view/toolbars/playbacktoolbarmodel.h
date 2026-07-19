@@ -15,7 +15,6 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordcontroller.h"
-#include "record/irecordconfiguration.h"
 
 namespace au::project {
 class IAudacityProject;
@@ -30,7 +29,6 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> configuration;
-    muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
 
     muse::ContextInject<muse::ui::IUiState> uiState { this };
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
@@ -44,7 +42,6 @@ public:
 
     enum ItemType
     {
-        UNDEFINED,
         PLAYBACK_LEVEL = muse::uicomponents::ToolBarItemType::USER_TYPE + 1,
         RECORD_LEVEL,
         PLAYBACK_TIME,
@@ -78,7 +75,10 @@ private:
     void updateSplitState();
     void updateGlobalSpectrogramViewState();
 
-    void setupConnections();
+    //! NOTE: for the toggles that only highlight themselves when the view state is on
+    void updateToggleState(const muse::actions::ActionCode& actionCode, bool isOn);
+
+    QColor themeColor(muse::ui::ThemeStyleKey key) const;
 
     void updateActions();
 
