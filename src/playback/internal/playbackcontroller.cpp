@@ -246,61 +246,20 @@ void PlaybackController::onPlaybackPositionChanged()
 
 void PlaybackController::togglePlayPauseAction()
 {
-    if (!isPlayAllowed()) {
-        LOGW() << "playback not allowed";
-        return;
-    }
-
-    if (isPlaying()) {
-        doPause();
-    } else if (isPaused()) {
-        if (isSelectionPlaybackRegionChanged()) {
-            //! NOTE: just stop, without seek
-            player()->stop();
-            doPlay(false);
-        } else {
-            doResume();
-        }
-    } else if (isStopped()) {
-        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
-            doSeek(0.0, false);
-        }
-
-        doPlay(false /* ignoreSelection */);
-    } else {
-        // that shouldn't happen
-    }
+    togglePlay(PlayingBehaviour::Pause, false /* ignoreSelection */);
 }
 
 void PlaybackController::togglePlayStopAction()
 {
-    if (!isPlayAllowed()) {
-        LOGW() << "playback not allowed";
-        return;
-    }
-
-    if (isPlaying()) {
-        stopSeekAndUpdatePlaybackRegion();
-    } else if (isPaused()) {
-        if (isSelectionPlaybackRegionChanged()) {
-            //! NOTE: just stop, without seek
-            player()->stop();
-            doPlay(false);
-        } else {
-            doResume();
-        }
-    } else if (isStopped()) {
-        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
-            doSeek(0.0, false);
-        }
-
-        doPlay(false /* ignoreSelection */);
-    } else {
-        // that shouldn't happen
-    }
+    togglePlay(PlayingBehaviour::Stop, false /* ignoreSelection */);
 }
 
 void PlaybackController::togglePlayUpdateAction()
+{
+    togglePlay(PlayingBehaviour::Pause, true /* ignoreSelection */);
+}
+
+void PlaybackController::togglePlay(PlayingBehaviour playingBehaviour, bool ignoreSelection)
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
@@ -308,25 +267,40 @@ void PlaybackController::togglePlayUpdateAction()
     }
 
     if (isPlaying()) {
-        doPause();
-    } else if (isPaused()) {
+        switch (playingBehaviour) {
+        case PlayingBehaviour::Pause:
+            doPause();
+            break;
+        case PlayingBehaviour::Stop:
+            stopSeekAndUpdatePlaybackRegion();
+            break;
+        }
+
+        return;
+    }
+
+    if (isPaused()) {
         if (isSelectionPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
             doPlay(false);
-        } else {
+        } else if (ignoreSelection) {
             //! NOTE: set the current position as start position
             doSeek(playbackPosition(), false);
             doPlay(true /* ignoreSelection */);
+        } else {
+            doResume();
         }
-    } else if (isStopped()) {
+
+        return;
+    }
+
+    if (isStopped()) {
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             doSeek(0.0, false);
         }
 
-        doPlay(true /* ignoreSelection */);
-    } else {
-        // that shouldn't happen
+        doPlay(ignoreSelection);
     }
 }
 

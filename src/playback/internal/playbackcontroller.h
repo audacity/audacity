@@ -111,6 +111,17 @@ private:
     void seekListSelection();
     void seekRangeSelection();
 
+    //! NOTE: what a toggle-play action does when playback is already running
+    enum class PlayingBehaviour {
+        Pause,
+        Stop
+    };
+
+    //! NOTE: ignoreSelection means "play from the cursor": the time selection is not used
+    //! as the playback region, and when paused we re-anchor to the current position
+    //! instead of resuming
+    void togglePlay(PlayingBehaviour playingBehaviour, bool ignoreSelection);
+
     void togglePlayPauseAction();
     void togglePlayStopAction();
     void togglePlayUpdateAction();
