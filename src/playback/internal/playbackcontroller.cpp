@@ -26,6 +26,9 @@ static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playbac
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
+static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
+static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
+
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
@@ -246,6 +249,14 @@ void PlaybackController::onPlaybackPositionChanged()
 
 void PlaybackController::togglePlayPauseAction()
 {
+    //! NOTE: while recording this pauses the recorder, so that the play/pause button
+    //! stays a single action. During the record lead-in we are still playing back,
+    //! so the regular playback path applies.
+    if (recordController()->isRecording() && !recordController()->isLeadInRecording()) {
+        dispatcher()->dispatch(RECORD_PAUSE_QUERY);
+        return;
+    }
+
     togglePlay(PlayingBehaviour::Pause, false /* ignoreSelection */);
 }
 
@@ -481,6 +492,13 @@ void PlaybackController::doPause()
 
 void PlaybackController::stopAction()
 {
+    //! NOTE: the stop button is a single action; the controller decides whether it
+    //! stops the recorder or the player.
+    if (recordController()->isRecording()) {
+        dispatcher()->dispatch(RECORD_STOP_QUERY);
+        return;
+    }
+
     stopSeekAndUpdatePlaybackRegion();
 }
 
@@ -801,10 +819,12 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    // commenting this one as we should be able to togglePlayPause (pause/resume) while recording
-    // if (code == PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()) {
-    //     return !recordController()->isRecording();
-    // }
+    //! NOTE: togglePlayPause stays available while recording, where it pauses the
+    //! recorder. Starting or restarting playback outright must not be possible.
+    if (code == PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString()
+        || code == PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString()) {
+        return !recordController()->isRecording();
+    }
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
         return !isPlaying() && !recordController()->isRecording();
