@@ -1,5 +1,72 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ko">
 <context>
+    <name>KDDockWidgets::Debug::DebugWindow</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
+        <source>DockWidget unique name</source>
+        <translation>도킹 위젯 고유 이름</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::DockWidgetBase</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
+        <source>Dock</source>
+        <translation>도킹(고정)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
+        <source>Detach</source>
+        <translation>분리</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBar</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Dock window</source>
+        <translation>창 도킹</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Undock window</source>
+        <translation>창 도킹 해제</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBarWidget</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
+        <source>Minimize</source>
+        <translation>최소화</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
+        <source>Close</source>
+        <translation>닫기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
+        <source>Auto-hide</source>
+        <translation>자동 숨김</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
+        <source>Disable auto-hide</source>
+        <translation>자동 숨김 해제</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Restore</source>
+        <translation>이전 크기로 복원</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Maximize</source>
+        <translation>최대화</translation>
+    </message>
+</context>
+<context>
     <name>Playback</name>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
@@ -23,6 +90,14 @@
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Disabled</source>
         <translation>비활성</translation>
+    </message>
+</context>
+<context>
+    <name>accessibility</name>
+    <message>
+        <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
+        <source>%1 panel</source>
+        <translation>%1 패널</translation>
     </message>
 </context>
 <context>
@@ -527,7 +602,7 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
         <source>Open recent</source>
-        <translation type="unfinished">최근 파일 열기</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
@@ -1829,6 +1904,186 @@
         <source>Change track sample rate</source>
         <translation>트랙 샘플레이트 변경</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
+        <source>Save diagnostic files</source>
+        <translation>진단 파일 저장</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
+        <source>Show p&amp;aths…</source>
+        <translation>경로 표시(&amp;A)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
+        <source>Show paths</source>
+        <translation>경로 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
+        <source>Show pr&amp;ofiler…</source>
+        <translation>프로파일러 표시(&amp;O)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>프로파일러 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
+        <source>Show g&amp;raphics info…</source>
+        <translation>그래픽 정보 표시(&amp;R)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
+        <source>Show graphics info</source>
+        <translation>그래픽 정보 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
+        <source>Show &amp;navigation tree…</source>
+        <translation>탐색 트리 표시(&amp;N)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
+        <source>Show navigation tree</source>
+        <translation>탐색 트리 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
+        <source>Show &amp;accessibility tree…</source>
+        <translation>접근성 트리 표시(&amp;A)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
+        <source>Show accessibility tree</source>
+        <translation>접근성 트리 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
+        <source>&amp;Dump accessibility tree to console</source>
+        <translation>콘솔에 접근성 트리 덤프(&amp;D)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>콘솔에 접근성 트리 덤프</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
+        <source>Show engraving &amp;elements</source>
+        <translation>기보 요소 표시(&amp;E)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
+        <source>Show engraving elements</source>
+        <translation>기보 요소 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
+        <source>Show engraving &amp;undo stack</source>
+        <translation>기보 실행 취소 스택 표시(&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
+        <source>Show engraving undo stack</source>
+        <translation>기보 실행 취소 스택 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
+        <source>Show engraving &amp;style options list</source>
+        <translation>기보 스타일 옵션 목록 표시(&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
+        <source>Show engraving style options list</source>
+        <translation>기보 스타일 옵션 목록 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
+        <source>Show &amp;actions list</source>
+        <translation>동작 목록 표시(&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
+        <source>Show actions list</source>
+        <translation>동작 목록 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
+        <source>&amp;Manage plugins…</source>
+        <translation>플러그인 관리(&amp;M)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
+        <source>Manage plugins…</source>
+        <translation>플러그인 관리…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
+        <source>Show API dump</source>
+        <translation>API 덤프 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
+        <source>&amp;Multiinstances</source>
+        <translation>다중 개체(&amp;M)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
+        <source>Check MuseSampler</source>
+        <translation>MuseSampler 확인</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
+        <source>Reload MuseSampler</source>
+        <translation>MuseSampler 다시 로드</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
+        <source>Show &amp;scripts…</source>
+        <translation>스크립트 표시(&amp;S)…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
+        <source>Show scripts</source>
+        <translation>스크립트 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
+        <source>Check for &amp;update</source>
+        <translation>업데이트 확인(&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
+        <source>Use old view</source>
+        <translation>이전 보기 사용</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
+        <source>Use new view</source>
+        <translation>새 보기 사용</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
+        <source>Select workspace</source>
+        <translation>작업공간 선택</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
+        <source>Edit workspaces…</source>
+        <translation>작업공간 편집…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
+        <source>Edit workspaces</source>
+        <translation>작업공간 편집</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
+        <source>Create new workspace</source>
+        <translation>새 작업공간 만들기</translation>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -1928,12 +2183,12 @@
         <translation>수신 측이 지원하는 경우 MIDI 2.0 출력 생성</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="382"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>정말 공장 초기 설정으로 되돌리시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="383"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -1942,27 +2197,27 @@ This action will not delete any of your projects.</source>
 이 작업은 프로젝트를 삭제하지 않습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="395"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
         <source>Revert</source>
         <translation>되돌리기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
         <source>Revert to factory settings</source>
         <translation>공장 초기 설정으로 되돌리기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>지금 Audacity를 재시작하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="410"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>이 변경 사항을 적용하려면 Audacity를 재시작해야 합니다.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="416"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
         <source>Restart</source>
         <translation>재시작</translation>
     </message>
@@ -2064,6 +2319,11 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
+        <source>Accounts</source>
+        <translation>계정</translation>
     </message>
 </context>
 <context>
@@ -2531,6 +2791,27 @@ This action will not delete any of your projects.</source>
     </message>
 </context>
 <context>
+    <name>appshell/dock</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
+        <source>Close</source>
+        <translation>닫기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Dock</source>
+        <translation>도킹(고정)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Undock</source>
+        <translation>분리</translation>
+    </message>
+</context>
+<context>
     <name>appshell/gettingstarted</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
@@ -2580,7 +2861,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")</extracomment>
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
         <translation>업데이트/사용 정보. %1</translation>
     </message>
     <message>
@@ -2591,15 +2872,15 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="183"/>
         <source>%1. %2</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the selection status (e.g. "Currently selected" or "Click to select this style")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this style&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the availability status (e.g. "Currently selected" or "Available option")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available option&quot;)
 ----------
-%1 is the workspace description, %2 is the selection status (e.g. "Currently selected" or "Click to select this workspace")
+%1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
-%1 is the workspace description, %2 is the availability status (e.g. "Currently selected" or "Available workspace")</extracomment>
+%1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
         <translation>%1. %2</translation>
     </message>
     <message>
@@ -2644,8 +2925,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
-        <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href="%1"&gt;비밀번호를 잊으셨나요?&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;비밀번호를 잊으셨나요?&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -2739,13 +3020,13 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>%1 테마</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>%1 테마 선택</translation>
     </message>
     <message>
@@ -2885,7 +3166,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
-        <extracomment>here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"</extracomment>
+        <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
         <translation>가독성을 높이려면 고대비 모드를 사용하십시오. %1</translation>
     </message>
     <message>
@@ -3402,8 +3683,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>업데이트 확인에는 네트워크 접근이 필요합니다. 개인정보 보호를 위해 Audacity는 개인정보를 저장하지 않습니다. 자세한 내용은 &lt;a href="%1"&gt;개인정보 처리방침&lt;/a&gt;에서 확인하십시오.</translation>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation>업데이트 확인에는 네트워크 접근이 필요합니다. 개인정보 보호를 위해 Audacity는 개인정보를 저장하지 않습니다. 자세한 내용은 &lt;a href=&quot;%1&quot;&gt;개인정보 처리방침&lt;/a&gt;에서 확인하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3674,8 +3955,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
-        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>사용자들이 Audacity를 얼마나 자주 사용하는지 파악하기 위해 설치 시마다 무작위 ID(UUID)를 생성합니다. 이 ID에는 어떠한 개인 식별 정보도 포함되지 않습니다. 자세한 내용은 &lt;a href="%1"&gt;개인정보 처리방침&lt;/a&gt;에서 확인하십시오.</translation>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation>사용자들이 Audacity를 얼마나 자주 사용하는지 파악하기 위해 설치 시마다 무작위 ID(UUID)를 생성합니다. 이 ID에는 어떠한 개인 식별 정보도 포함되지 않습니다. 자세한 내용은 &lt;a href=&quot;%1&quot;&gt;개인정보 처리방침&lt;/a&gt;에서 확인하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
@@ -3916,8 +4197,46 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
         <source>Scanning audio plugins</source>
         <translation>오디오 플러그인 검색 중</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
+        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
+        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
+        <source>System default</source>
+        <translation>단 기본값</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
+        <source>Do you want to add SoundFont %1?</source>
+        <translation>사운드폰트(SoundFont) %1을(를) 추가하시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
+        <source>File already exists. Do you want to overwrite it?</source>
+        <translation>파일이 이미 존재합니다. 덮어쓰시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
+        <source>File path: %1</source>
+        <translation>파일 경로: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
+        <source>SoundFont installed</source>
+        <translation>사운드폰트 설치됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
+        <source>You can assign soundfonts to instruments using the mixer panel.</source>
+        <translation>믹서 패널에서 각 악기에 사운드폰트를 할당할 수 있습니다.</translation>
     </message>
 </context>
 <context>
@@ -4234,7 +4553,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
+        <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
         <translation>n/a</translation>
     </message>
     <message>
@@ -4889,7 +5208,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>"infinite impulse response"</extracomment>
+        <extracomment>&quot;infinite impulse response&quot;</extracomment>
         <translation>아날로그 필터를 애뮬레이트하는 IIR 필터링을 실행합니다</translation>
     </message>
     <message>
@@ -5074,11 +5393,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>로그인하지 않음</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>내 프로필</translation>
     </message>
@@ -5086,12 +5408,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>Sign in</source>
         <translation>로그인</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>로그아웃</translation>
     </message>
@@ -5099,6 +5423,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <source>Create account</source>
         <translation>계정 만들기</translation>
     </message>
@@ -5116,6 +5442,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="36"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="69"/>
         <source>You are not signed in</source>
         <translation>로그인 하지 않았습니다</translation>
     </message>
@@ -5222,6 +5549,21 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>Sign in buttons</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
+        <source>My accounts</source>
+        <translation>내 계정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
+        <source>Log in</source>
+        <translation>로그인</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
+        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
+        <translation>로그인 성공! MuseScore Studio로 돌아가셔도 좋습니다.</translation>
+    </message>
 </context>
 <context>
     <name>cloud-audiocom</name>
@@ -5284,6 +5626,24 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
         <translation>audio.com에 저장</translation>
+    </message>
+</context>
+<context>
+    <name>diagnostics</name>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <source>Save diagnostic files?</source>
+        <translation>진단 파일을 저장하시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>이 작업은 개발자의 문제 진단을 돕기 위해 MuseScore Studio 설정 정보가 담긴 .zip 파일을 만들기합니다. 파일을 보내기 전 내용을 직접 확인할 수 있습니다.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <source>Save diagnostic files</source>
+        <translation>진단 파일 저장</translation>
     </message>
 </context>
 <context>
@@ -5822,7 +6182,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished">플러그인 관리</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
@@ -5838,7 +6198,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished">플러그인이 없음</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
@@ -5869,7 +6229,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished">경로</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5899,18 +6259,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">처음 템포(빠르기) 변경 (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">최종 템포 변경 (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">초기 피치 변경</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5922,7 +6282,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">최종 피치 변경</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
@@ -6007,7 +6367,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
+        <extracomment>&quot;Nyquist&quot; is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>나이퀴스트</translation>
     </message>
     <message>
@@ -6250,7 +6610,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished">선택한 오디오가 없습니다</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6391,7 +6751,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
+        <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>나이퀴스트 작업도구</translation>
     </message>
     <message>
@@ -6447,7 +6807,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
+        <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
         <translation>nyx_error가 %1에서 반환되었습니다.
 </translation>
     </message>
@@ -6528,7 +6888,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished">쉘빙 필터</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -6662,7 +7022,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished">스튜디오 페이드 아웃</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -6672,7 +7032,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished">조정 가능한 페이드</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -6826,7 +7186,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished">비트 검색기</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -6836,7 +7196,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished">클리핑 고치기</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -6856,7 +7216,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished">클립 크로스페이드</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -6876,7 +7236,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished">트랙 크로스페이드</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -7161,7 +7521,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished">하이패스 필터</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -7215,7 +7575,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished">사운드 레이블</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -7320,7 +7680,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished">VO Limiter</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -7379,12 +7739,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished">로우패스 필터</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished">노이즈 게이트</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -7476,7 +7836,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished">노치 필터</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -7645,7 +8005,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Rhythm track</source>
-        <translation type="unfinished">리듬 트랙</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -7786,7 +8146,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Risset drum</source>
-        <translation type="unfinished">리싯 드럼</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
@@ -7821,7 +8181,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished">왼쪽(L)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7831,7 +8191,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished">오른쪽(R)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -8117,10 +8477,10 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
         <translation>Steve Daulton이
-&lt;a href="~a"&gt;Audacity&lt;/a&gt;용
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt;용
 &lt;span&gt;샘플 데이터 내보내기&lt;/span&gt;로 만듦</translation>
     </message>
     <message>
@@ -8176,7 +8536,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Sample data Import</source>
-        <translation type="unfinished">샘플 데이터 가져오기</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
@@ -8589,7 +8949,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">슬라이딩 늘이기</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -8858,7 +9218,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished">선형 주파수 눈금</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
@@ -9186,27 +9546,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">슬라이딩 늘이기</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">처음 템포(빠르기) 변경 (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">최종 템포 변경 (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">초기 피치 변경</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">최종 피치 변경</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -9325,7 +9685,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>Abbreviation of "seconds"</extracomment>
+        <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
         <translation>s</translation>
     </message>
     <message>
@@ -9336,7 +9696,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -9353,7 +9713,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>Abbreviation of "hertz"</extracomment>
+        <extracomment>Abbreviation of &quot;hertz&quot;</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
@@ -9364,7 +9724,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>Abbreviation of "kilohertz"</extracomment>
+        <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
         <translation>kHz</translation>
     </message>
     <message>
@@ -9375,7 +9735,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>Abbreviation of "decibels"</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9386,7 +9746,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
-        <extracomment>Symbol of "percent"</extracomment>
+        <extracomment>Symbol of &quot;percent&quot;</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9403,7 +9763,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
-        <extracomment>Abbreviation of "beats per minute"</extracomment>
+        <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
         <translation>bpm</translation>
     </message>
     <message>
@@ -9414,7 +9774,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
-        <extracomment>Symbol of "degrees"</extracomment>
+        <extracomment>Symbol of &quot;degrees&quot;</extracomment>
         <translation>°</translation>
     </message>
     <message>
@@ -9832,6 +10192,160 @@ Master effects will be turned back on after export.</source>
         <source>Reload plugins</source>
         <translation>플러그인 다시 불러오기</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
+        <source>Enabled</source>
+        <translation>활성화됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
+        <source>Disabled</source>
+        <translation>비활성화됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <source>Version:</source>
+        <translation>버전:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <source>Shortcut:</source>
+        <extracomment>Keyboard shortcut</extracomment>
+        <translation>단축키:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <source>Edit shortcut</source>
+        <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
+        <translation>단축키 편집</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Enable</source>
+        <translation>활성화</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Disable</source>
+        <translation>비활성화</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
+        <source>Plugin not found</source>
+        <translation>플러그인을 찾을 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
+        <source>Could not load plugin</source>
+        <translation>플러그인을 불러오지 못함</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
+        <source>Plugin is not in the correct format</source>
+        <translation>올바른 플러그인 형식이 아님</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
+        <source>Manually</source>
+        <translation>수동</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
+        <source>Failed to install extension</source>
+        <translation>확장 프로그램 설치 실패함</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
+        <source>The extension does not contain a valid manifest file.</source>
+        <translation>확장 프로그램에 유효한 매니페스트 파일이 포함되어 있지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
+        <source>The extension is already installed.</source>
+        <translation>확장 프로그램이 이미 설치됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
+        <source>This extension cannot be updated.</source>
+        <translation>이 확장 프로그램은 업데이트할 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
+        <source>The currently installed version cannot be uninstalled.</source>
+        <translation>현재 설치된 버전은 제거할 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
+        <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
+        <translation>확장 프로그램 &quot;%1&quot;의 다른 버전(%2)이 이미 설치되어 있음. %3 버전으로 교체하시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
+        <source>Update extension</source>
+        <translation>확장 프로그램 업데이트</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <source>Error code: %1</source>
+        <translation>오류 코드: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
+        <translation>플러그인 &quot;%1&quot;이(가) 현재 비활성화됨. 지금 활성화하시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
+        <translation>또는 홈 &gt; 플러그인 메뉴에서 언제든지 활성화할 수 있습니다.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <source>Composing/arranging tools</source>
+        <translation>작곡/편곡 도구</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <source>Color notes</source>
+        <translation>음표 색상 지정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Playback</source>
+        <translation>재생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <source>Lyrics</source>
+        <translation>가사</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
+        <source>Run plugin %1</source>
+        <extracomment>%1 is replaced with the name of the plugin</extracomment>
+        <translation>%1 플러그인 실행</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
+        <source>Run plugin %1: %2</source>
+        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
+        <translation>%1 플러그인 실행: %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <source>Not specified</source>
+        <extracomment>No version is specified for this plugin.</extracomment>
+        <translation>(미지정)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <source>Not defined</source>
+        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
+        <translation>(미정의)</translation>
+    </message>
 </context>
 <context>
     <name>fft</name>
@@ -9977,13 +10491,13 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
+        <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>%1 파일</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
-        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
+        <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
@@ -10033,6 +10547,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -10065,9 +10580,12 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
@@ -10077,6 +10595,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
         <translation>적용</translation>
     </message>
@@ -10090,6 +10609,8 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
         <translation>닫기</translation>
     </message>
@@ -10100,6 +10621,10 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
         <source>Clear</source>
         <translation>지우기</translation>
     </message>
@@ -10116,7 +10641,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -10129,7 +10654,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
-        <extracomment>Abbreviation of "points", used to specify a font size</extracomment>
+        <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
         <translation>pt</translation>
     </message>
     <message>
@@ -10142,6 +10667,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
         <translation>결과를 찾을 수 없음</translation>
     </message>
@@ -10155,6 +10681,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="365"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="296"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="63"/>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
@@ -10168,6 +10695,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>인터넷 연결을 확인하거나 나중에 다시 시도하십시오.</translation>
     </message>
@@ -10227,11 +10755,13 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>Save</source>
         <translation>저장</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
         <translation>열기</translation>
     </message>
@@ -10246,6 +10776,1506 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
         <source>Stop</source>
         <translation>정지</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
+        <source>Copy</source>
+        <translation>복사</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
+        <source>Error details have been copied to the clipboard.</source>
+        <translation>오류 세부 정보가 클립보드에 복사됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Hide details</source>
+        <translation>세부 정보 숨김</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Show details</source>
+        <translation>세부 정보 표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <source>Question</source>
+        <translation>질문</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <source>Information</source>
+        <translation>정보</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <source>Warning</source>
+        <translation>경고</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <source>Error</source>
+        <translation>오류</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <source>Don’t show this message again</source>
+        <translation>이 메시지 다시 표시하지 않기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
+        <source>Waiting…</source>
+        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
+        <source>Add</source>
+        <translation>추가</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
+        <source>Clear all</source>
+        <translation>모두 지우기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
+        <source>action</source>
+        <translation>동작</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
+        <source>status</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
+        <source>Delete</source>
+        <translation>삭제</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>On</source>
+        <translation>켜짐</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>Off</source>
+        <translation>꺼짐</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
+        <source>Hours</source>
+        <translation>시간</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
+        <source>Minutes</source>
+        <translation>분</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
+        <source>Seconds</source>
+        <translation>초</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
+        <source>Milliseconds</source>
+        <translation>밀리초</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation>퍼센트</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
+        <source>Collapse</source>
+        <extracomment>Collapse a tree item</extracomment>
+        <translation>축소</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
+        <source>Expand</source>
+        <extracomment>Expand a tree item</extracomment>
+        <translation>확장</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <source>Create</source>
+        <translation>생성</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <source>Select</source>
+        <translation>선택</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
+        <source>Today</source>
+        <translation>오늘</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="49"/>
+        <source>Yesterday</source>
+        <translation>어제</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>%n일 전</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
+        <source>Last week</source>
+        <translation>지난주</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
+        <source>%n week(s) ago</source>
+        <translation><numerusform>%n주 전</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
+        <source>Last month</source>
+        <translation>지난달</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
+        <source>%n month(s) ago</source>
+        <translation><numerusform>%n달 전</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
+        <source>%n year(s) ago</source>
+        <translation><numerusform>%n년 전</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
+        <source>%1 GB</source>
+        <comment>gigabyte</comment>
+        <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
+        <source>%1 MB</source>
+        <comment>megabyte</comment>
+        <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
+        <source>%1 KB</source>
+        <comment>kilobyte</comment>
+        <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 KB</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
+        <source>%Ln byte(s)</source>
+        <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
+        <translation><numerusform>%Ln 바이트</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <source>Save all</source>
+        <translation>모두 저장</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <source>Don’t save</source>
+        <translation>저장하지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <source>Yes</source>
+        <translation>예</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <source>Yes to all</source>
+        <translation>모두 예</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <source>No</source>
+        <translation>아니요</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <source>No to all</source>
+        <translation>모두 아니요</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <source>Abort</source>
+        <translation>중단</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <source>Retry</source>
+        <translation>재시도</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <source>Ignore</source>
+        <translation>무시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <source>Discard</source>
+        <translation>변경사항 폐기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <source>Help</source>
+        <translation>도움말</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <source>Reset</source>
+        <translation>재설정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <source>Continue</source>
+        <translation>계속</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <source>Checking for updates…</source>
+        <translation>업데이트 확인 중…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <source>Downloading %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <source>Unpacking %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
+        <source>Inactive</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>global/noteName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="267"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="282"/>
+        <source>C</source>
+        <translation>C</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="268"/>
+        <source>C♯</source>
+        <translation>C♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="269"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="284"/>
+        <source>D</source>
+        <translation>D</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="270"/>
+        <source>D♯</source>
+        <translation>D♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="271"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="286"/>
+        <source>E</source>
+        <translation>E</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="272"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="287"/>
+        <source>F</source>
+        <translation>F</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="273"/>
+        <source>F♯</source>
+        <translation>F♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="274"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="289"/>
+        <source>G</source>
+        <translation>G</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="275"/>
+        <source>G♯</source>
+        <translation>G♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="276"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="291"/>
+        <source>A</source>
+        <translation>A</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="277"/>
+        <source>A♯</source>
+        <translation>A♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="278"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="293"/>
+        <source>B</source>
+        <translation>B</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="283"/>
+        <source>D♭</source>
+        <translation>D♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="285"/>
+        <source>E♭</source>
+        <translation>E♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="288"/>
+        <source>G♭</source>
+        <translation>G♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="290"/>
+        <source>A♭</source>
+        <translation>A♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="292"/>
+        <source>B♭</source>
+        <translation>B♭</translation>
+    </message>
+</context>
+<context>
+    <name>global/pitchName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="31"/>
+        <source>C-1</source>
+        <translation>C-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="32"/>
+        <source>C♯-1</source>
+        <translation>C♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="33"/>
+        <source>D♭-1</source>
+        <translation>D♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="34"/>
+        <source>D-1</source>
+        <translation>D-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="35"/>
+        <source>D♯-1</source>
+        <translation>D♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="36"/>
+        <source>E♭-1</source>
+        <translation>E♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="37"/>
+        <source>E-1</source>
+        <translation>E-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="38"/>
+        <source>E♯-1</source>
+        <translation>E♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="39"/>
+        <source>F♭-1</source>
+        <translation>F♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="40"/>
+        <source>F-1</source>
+        <translation>F-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="41"/>
+        <source>F♯-1</source>
+        <translation>F♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="42"/>
+        <source>G♭-1</source>
+        <translation>G♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="43"/>
+        <source>G-1</source>
+        <translation>G-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="44"/>
+        <source>G♯-1</source>
+        <translation>G♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="45"/>
+        <source>A♭-1</source>
+        <translation>A♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="46"/>
+        <source>A-1</source>
+        <translation>A-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="47"/>
+        <source>A♯-1</source>
+        <translation>A♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="48"/>
+        <source>B♭-1</source>
+        <translation>B♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="49"/>
+        <source>B-1</source>
+        <translation>B-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="50"/>
+        <source>B♯-1</source>
+        <translation>B♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="52"/>
+        <source>C♭0</source>
+        <translation>C♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="53"/>
+        <source>C0</source>
+        <translation>C0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="54"/>
+        <source>C♯0</source>
+        <translation>C♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="55"/>
+        <source>D♭0</source>
+        <translation>D♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="56"/>
+        <source>D0</source>
+        <translation>D0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="57"/>
+        <source>D♯0</source>
+        <translation>D♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="58"/>
+        <source>E♭0</source>
+        <translation>E♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="59"/>
+        <source>E0</source>
+        <translation>E0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="60"/>
+        <source>E♯0</source>
+        <translation>E♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="61"/>
+        <source>F♭0</source>
+        <translation>F♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="62"/>
+        <source>F0</source>
+        <translation>F0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="63"/>
+        <source>F♯0</source>
+        <translation>F♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="64"/>
+        <source>G♭0</source>
+        <translation>G♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="65"/>
+        <source>G0</source>
+        <translation>G0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="66"/>
+        <source>G♯0</source>
+        <translation>G♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="67"/>
+        <source>A♭0</source>
+        <translation>A♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="68"/>
+        <source>A0</source>
+        <translation>A0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="69"/>
+        <source>A♯0</source>
+        <translation>A♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="70"/>
+        <source>B♭0</source>
+        <translation>B♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="71"/>
+        <source>B0</source>
+        <translation>B0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="72"/>
+        <source>B♯0</source>
+        <translation>B♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="74"/>
+        <source>C♭1</source>
+        <translation>C♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="75"/>
+        <source>C1</source>
+        <translation>C1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="76"/>
+        <source>C♯1</source>
+        <translation>C♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="77"/>
+        <source>D♭1</source>
+        <translation>D♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="78"/>
+        <source>D1</source>
+        <translation>D1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="79"/>
+        <source>D♯1</source>
+        <translation>D♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="80"/>
+        <source>E♭1</source>
+        <translation>E♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="81"/>
+        <source>E1</source>
+        <translation>E1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="82"/>
+        <source>E♯1</source>
+        <translation>E♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="83"/>
+        <source>F♭1</source>
+        <translation>F♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="84"/>
+        <source>F1</source>
+        <translation>F1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="85"/>
+        <source>F♯1</source>
+        <translation>F♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="86"/>
+        <source>G♭1</source>
+        <translation>G♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="87"/>
+        <source>G1</source>
+        <translation>G1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="88"/>
+        <source>G♯1</source>
+        <translation>G♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="89"/>
+        <source>A♭1</source>
+        <translation>A♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="90"/>
+        <source>A1</source>
+        <translation>A1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="91"/>
+        <source>A♯1</source>
+        <translation>A♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="92"/>
+        <source>B♭1</source>
+        <translation>B♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="93"/>
+        <source>B1</source>
+        <translation>B1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="94"/>
+        <source>B♯1</source>
+        <translation>B♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="96"/>
+        <source>C♭2</source>
+        <translation>C♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="97"/>
+        <source>C2</source>
+        <translation>C2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="98"/>
+        <source>C♯2</source>
+        <translation>C♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="99"/>
+        <source>D♭2</source>
+        <translation>D♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="100"/>
+        <source>D2</source>
+        <translation>D2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="101"/>
+        <source>D♯2</source>
+        <translation>D♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="102"/>
+        <source>E♭2</source>
+        <translation>E♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="103"/>
+        <source>E2</source>
+        <translation>E2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="104"/>
+        <source>E♯2</source>
+        <translation>E♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="105"/>
+        <source>F♭2</source>
+        <translation>F♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="106"/>
+        <source>F2</source>
+        <translation>F2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="107"/>
+        <source>F♯2</source>
+        <translation>F♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="108"/>
+        <source>G♭2</source>
+        <translation>G♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="109"/>
+        <source>G2</source>
+        <translation>G2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="110"/>
+        <source>G♯2</source>
+        <translation>G♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="111"/>
+        <source>A♭2</source>
+        <translation>A♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="112"/>
+        <source>A2</source>
+        <translation>A2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="113"/>
+        <source>A♯2</source>
+        <translation>A♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="114"/>
+        <source>B♭2</source>
+        <translation>B♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="115"/>
+        <source>B2</source>
+        <translation>B2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="116"/>
+        <source>B♯2</source>
+        <translation>B♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="118"/>
+        <source>C♭3</source>
+        <translation>C♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="119"/>
+        <source>C3</source>
+        <translation>C3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="120"/>
+        <source>C♯3</source>
+        <translation>C♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="121"/>
+        <source>D♭3</source>
+        <translation>D♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="122"/>
+        <source>D3</source>
+        <translation>D3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="123"/>
+        <source>D♯3</source>
+        <translation>D♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="124"/>
+        <source>E♭3</source>
+        <translation>E♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="125"/>
+        <source>E3</source>
+        <translation>E3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="126"/>
+        <source>E♯3</source>
+        <translation>E♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="127"/>
+        <source>F♭3</source>
+        <translation>F♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="128"/>
+        <source>F3</source>
+        <translation>F3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="129"/>
+        <source>F♯3</source>
+        <translation>F♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="130"/>
+        <source>G♭3</source>
+        <translation>G♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="131"/>
+        <source>G3</source>
+        <translation>G3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="132"/>
+        <source>G♯3</source>
+        <translation>G♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="133"/>
+        <source>A♭3</source>
+        <translation>A♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="134"/>
+        <source>A3</source>
+        <translation>A3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="135"/>
+        <source>A♯3</source>
+        <translation>A♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="136"/>
+        <source>B♭3</source>
+        <translation>B♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="137"/>
+        <source>B3</source>
+        <translation>B3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="138"/>
+        <source>B♯3</source>
+        <translation>B♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="140"/>
+        <source>C♭4</source>
+        <translation>C♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="141"/>
+        <source>C4</source>
+        <translation>C4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="142"/>
+        <source>C♯4</source>
+        <translation>C♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="143"/>
+        <source>D♭4</source>
+        <translation>D♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="144"/>
+        <source>D4</source>
+        <translation>D4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="145"/>
+        <source>D♯4</source>
+        <translation>D♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="146"/>
+        <source>E♭4</source>
+        <translation>E♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="147"/>
+        <source>E4</source>
+        <translation>E4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="148"/>
+        <source>E♯4</source>
+        <translation>E♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="149"/>
+        <source>F♭4</source>
+        <translation>F♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="150"/>
+        <source>F4</source>
+        <translation>F4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="151"/>
+        <source>F♯4</source>
+        <translation>F♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="152"/>
+        <source>G♭4</source>
+        <translation>G♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="153"/>
+        <source>G4</source>
+        <translation>G4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="154"/>
+        <source>G♯4</source>
+        <translation>G♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="155"/>
+        <source>A♭4</source>
+        <translation>A♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="156"/>
+        <source>A4</source>
+        <translation>A4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="157"/>
+        <source>A♯4</source>
+        <translation>A♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="158"/>
+        <source>B♭4</source>
+        <translation>B♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="159"/>
+        <source>B4</source>
+        <translation>B4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="160"/>
+        <source>B♯4</source>
+        <translation>B♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="162"/>
+        <source>C♭5</source>
+        <translation>C♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="163"/>
+        <source>C5</source>
+        <translation>C5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="164"/>
+        <source>C♯5</source>
+        <translation>C♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="165"/>
+        <source>D♭5</source>
+        <translation>D♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="166"/>
+        <source>D5</source>
+        <translation>D5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="167"/>
+        <source>D♯5</source>
+        <translation>D♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="168"/>
+        <source>E♭5</source>
+        <translation>E♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="169"/>
+        <source>E5</source>
+        <translation>E5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="170"/>
+        <source>E♯5</source>
+        <translation>E♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="171"/>
+        <source>F♭5</source>
+        <translation>F♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="172"/>
+        <source>F5</source>
+        <translation>F5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="173"/>
+        <source>F♯5</source>
+        <translation>F♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="174"/>
+        <source>G♭5</source>
+        <translation>G♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="175"/>
+        <source>G5</source>
+        <translation>G5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="176"/>
+        <source>G♯5</source>
+        <translation>G♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="177"/>
+        <source>A♭5</source>
+        <translation>A♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="178"/>
+        <source>A5</source>
+        <translation>A5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="179"/>
+        <source>A♯5</source>
+        <translation>A♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="180"/>
+        <source>B♭5</source>
+        <translation>B♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="181"/>
+        <source>B5</source>
+        <translation>B5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="182"/>
+        <source>B♯5</source>
+        <translation>B♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="184"/>
+        <source>C♭6</source>
+        <translation>C♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="185"/>
+        <source>C6</source>
+        <translation>C6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="186"/>
+        <source>C♯6</source>
+        <translation>C♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="187"/>
+        <source>D♭6</source>
+        <translation>D♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="188"/>
+        <source>D6</source>
+        <translation>D6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="189"/>
+        <source>D♯6</source>
+        <translation>D♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="190"/>
+        <source>E♭6</source>
+        <translation>E♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="191"/>
+        <source>E6</source>
+        <translation>E6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="192"/>
+        <source>E♯6</source>
+        <translation>E♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="193"/>
+        <source>F♭6</source>
+        <translation>F♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="194"/>
+        <source>F6</source>
+        <translation>F6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="195"/>
+        <source>F♯6</source>
+        <translation>F♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="196"/>
+        <source>G♭6</source>
+        <translation>G♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="197"/>
+        <source>G6</source>
+        <translation>G6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="198"/>
+        <source>G♯6</source>
+        <translation>G♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="199"/>
+        <source>A♭6</source>
+        <translation>A♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="200"/>
+        <source>A6</source>
+        <translation>A6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="201"/>
+        <source>A♯6</source>
+        <translation>A♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="202"/>
+        <source>B♭6</source>
+        <translation>B♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="203"/>
+        <source>B6</source>
+        <translation>B6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="204"/>
+        <source>B♯6</source>
+        <translation>B♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="206"/>
+        <source>C♭7</source>
+        <translation>C♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="207"/>
+        <source>C7</source>
+        <translation>C7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="208"/>
+        <source>C♯7</source>
+        <translation>C♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="209"/>
+        <source>D♭7</source>
+        <translation>D♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="210"/>
+        <source>D7</source>
+        <translation>D7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="211"/>
+        <source>D♯7</source>
+        <translation>D♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="212"/>
+        <source>E♭7</source>
+        <translation>E♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="213"/>
+        <source>E7</source>
+        <translation>E7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="214"/>
+        <source>E♯7</source>
+        <translation>E♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="215"/>
+        <source>F♭7</source>
+        <translation>F♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="216"/>
+        <source>F7</source>
+        <translation>F7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="217"/>
+        <source>F♯7</source>
+        <translation>F♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="218"/>
+        <source>G♭7</source>
+        <translation>G♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="219"/>
+        <source>G7</source>
+        <translation>G7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="220"/>
+        <source>G♯7</source>
+        <translation>G♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="221"/>
+        <source>A♭7</source>
+        <translation>A♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="222"/>
+        <source>A7</source>
+        <translation>A7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="223"/>
+        <source>A♯7</source>
+        <translation>A♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="224"/>
+        <source>B♭7</source>
+        <translation>B♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="225"/>
+        <source>B7</source>
+        <translation>B7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="226"/>
+        <source>B♯7</source>
+        <translation>B♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="228"/>
+        <source>C♭8</source>
+        <translation>C♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="229"/>
+        <source>C8</source>
+        <translation>C8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="230"/>
+        <source>C♯8</source>
+        <translation>C♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="231"/>
+        <source>D♭8</source>
+        <translation>D♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="232"/>
+        <source>D8</source>
+        <translation>D8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="233"/>
+        <source>D♯8</source>
+        <translation>D♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="234"/>
+        <source>E♭8</source>
+        <translation>E♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="235"/>
+        <source>E8</source>
+        <translation>E8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="236"/>
+        <source>E♯8</source>
+        <translation>E♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="237"/>
+        <source>F♭8</source>
+        <translation>F♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="238"/>
+        <source>F8</source>
+        <translation>F8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="239"/>
+        <source>F♯8</source>
+        <translation>F♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="240"/>
+        <source>G♭8</source>
+        <translation>G♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="241"/>
+        <source>G8</source>
+        <translation>G8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="242"/>
+        <source>G♯8</source>
+        <translation>G♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="243"/>
+        <source>A♭8</source>
+        <translation>A♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="244"/>
+        <source>A8</source>
+        <translation>A8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="245"/>
+        <source>A♯8</source>
+        <translation>A♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="246"/>
+        <source>B♭8</source>
+        <translation>B♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="247"/>
+        <source>B8</source>
+        <translation>B8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="248"/>
+        <source>B♯8</source>
+        <translation>B♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="250"/>
+        <source>C♭9</source>
+        <translation>C♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="251"/>
+        <source>C9</source>
+        <translation>C9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="252"/>
+        <source>C♯9</source>
+        <translation>C♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="253"/>
+        <source>D♭9</source>
+        <translation>D♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="254"/>
+        <source>D9</source>
+        <translation>D9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="255"/>
+        <source>D♯9</source>
+        <translation>D♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="256"/>
+        <source>E♭9</source>
+        <translation>E♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="257"/>
+        <source>E9</source>
+        <translation>E9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="258"/>
+        <source>E♯9</source>
+        <translation>E♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="259"/>
+        <source>F♭9</source>
+        <translation>F♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="260"/>
+        <source>F9</source>
+        <translation>F9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="261"/>
+        <source>F♯9</source>
+        <translation>F♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="262"/>
+        <source>G♭9</source>
+        <translation>G♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="263"/>
+        <source>G9</source>
+        <translation>G9</translation>
     </message>
 </context>
 <context>
@@ -10361,7 +12391,7 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
-        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
+        <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
         <translation>이 버전의 오데시티는 %1를 지원하도록 컴파일되지 않았습니다.</translation>
     </message>
     <message>
@@ -10502,7 +12532,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
-        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
+        <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -10573,7 +12603,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
-        <extracomment>"Log" is short for "logarithmic"</extracomment>
+        <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
         <translation>로그 검색</translation>
     </message>
     <message>
@@ -10591,7 +12621,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>인덱스[%1] 코덱[%2], 언어[%3], 비트레이트[%4], 채널[%5], 지속시간[%6]</translation>
     </message>
     <message>
@@ -10600,7 +12630,7 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>kbps abbreviates "thousands of bits per second"
+        <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
@@ -10671,7 +12701,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
-        <extracomment>VBR is "variable bit rate"</extracomment>
+        <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
         <translation>Vbr 모드</translation>
     </message>
     <message>
@@ -10700,7 +12730,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
-        <extracomment>VOIP is "voice over IP"</extracomment>
+        <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -10789,7 +12819,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>FFmpeg이 0x%1 오디오 코덱을 찾을 수 없습니다.
 이 코덱의 지원은 제대로 컴파일되지 않은 것 같습니다.</translation>
     </message>
@@ -10808,7 +12838,7 @@ Support for this codec is probably not compiled in.</source>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11326,9 +13356,9 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates "thousands of bits per second"
+        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
-kbit/s abbreviates "kilobits per second"</extracomment>
+kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11677,7 +13707,7 @@ Audacity가 지원하지 않습니다. 내보내기 중단되었습니다.</tran
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
-        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like "system * error"</extracomment>
+        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11733,7 +13763,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>bps abbreviates "bits per sample"</extracomment>
+        <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
         <translation>%1 bps</translation>
     </message>
     <message>
@@ -11755,9 +13785,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform></translation>
     </message>
 </context>
 <context>
@@ -11887,6 +13915,122 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
         <source>One or more saved labels could not be read.</source>
         <translation>하나 이상의 저장된 레이블을 읽을 수 없습니다.</translation>
+    </message>
+</context>
+<context>
+    <name>languages</name>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
+        <source>Up to date</source>
+        <translation>최신 버전</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
+        <source>Error while parsing response from server</source>
+        <translation>서버 응답 분석 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
+        <source>Error while downloading language</source>
+        <translation>언어 다운로드 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
+        <source>Error while writing language files</source>
+        <translation>언어 파일 기록 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
+        <source>Language not found</source>
+        <translation>언어를 찾을 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
+        <source>Error while removing language directory</source>
+        <translation>언어 디렉터리 제거 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
+        <source>Another operation on this language has already been started</source>
+        <translation>이 언어에 대한 다른 작업이 이미 시작됨</translation>
+    </message>
+</context>
+<context>
+    <name>learn</name>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
+        <source>Open %1</source>
+        <translation>%1 열기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <source>Sorry, we are unable to load these videos right now</source>
+        <translation>죄송합니다. 현재 비디오를 불러올 수 없습니다.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="103"/>
+        <source>Learn</source>
+        <translation>학습</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <source>Learn tab bar</source>
+        <translation>학습 탭 막대</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <source>Get started</source>
+        <translation>시작하기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <source>Classes</source>
+        <translation>강의</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
+        <source>The received playlist is empty.</source>
+        <translation>수신된 재생 목록이 비어 있습니다.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <source>Marc Sabatella</source>
+        <translation>Marc Sabatella</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <source>Instructor</source>
+        <translation>강사</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <source>Creator, Mastering MuseScore</source>
+        <translation>Mastering MuseScore 제작자</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
+
+Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
+
+In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
+
+(Note: Mastering MuseScore is available in English only)</source>
+        <translation>세계에서 가장 인기 있는 사보 소프트웨어를 배우기 위한 가장 포괄적인 리소스, Mastering MuseScore에 오신 것을 환영합니다! 제 이름은 Marc Sabatella이며, 10여 년 전 MuseScore가 처음 출시된 이래로 개발, 지원 및 홍보를 돕고 있습니다.
+
+사보 소프트웨어를 처음 시작하는 초보자이든, 고급 인그레이빙 및 재생 기법을 탐구하고자 하는 파워 유저이든 관계없이, 저의 대표 온라인 강좌인 Mastering MuseScore는 MuseScore를 최대한 활용하는 데 필요한 모든 내용을 다룹니다.
+
+또한 Mastering MuseScore는 음악가들을 위한 커뮤니티, 토론 공간, 라이브 스트리밍, 그리고 최고의 음악을 만드는 데 도움이 될 관련 강좌 및 서비스를 제공합니다. MuseScore의 최고 전문가 중 한 명에게 직접 배울 수 있는 이 기회를 놓치지 마세요!
+
+(참고: Mastering MuseScore 강좌는 영어로만 제공됩니다.)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <source>Mastering MuseScore</source>
+        <translation>Mastering MuseScore</translation>
     </message>
 </context>
 <context>
@@ -12216,6 +14360,53 @@ Libsndfile says “%2”</source>
     </message>
 </context>
 <context>
+    <name>midi</name>
+    <message>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
+        <source>No device</source>
+        <translation>장치 없음</translation>
+    </message>
+</context>
+<context>
+    <name>midiremote</name>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
+        <source>MIDI remote control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
+        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
+        <source>MIDI mapping:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
+        <source>MIDI mapping bottom panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
+        <source>Assign MIDI mapping…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
+        <source>MIDI mapping top panel</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -12321,10 +14512,8 @@ It will not be loaded.</source>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of "Enable this plug-in?": "Enable these plug-ins?"</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
+        <translation type="unfinished"><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -12376,6 +14565,52 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>musesampler</name>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
+        <source>MuseSampler library is detected, version %1</source>
+        <translation>MuseSampler 라이브러리가 감지됨 (버전 %1)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
+        <source>Installed MuseSampler library is not supported, version %1</source>
+        <translation>설치된 MuseSampler 라이브러리는 지원되지 않음 (버전 %1)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
+        <source>MuseSampler library is not found</source>
+        <translation>MuseSampler 라이브러리를 찾을 수 없음</translation>
+    </message>
+</context>
+<context>
+    <name>network</name>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
+        <source>The request was aborted</source>
+        <translation>요청이 중단됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
+        <source>The connection to the remote server timed out</source>
+        <translation>원격 서버 연결 시간 초과</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
+        <source>An unknown network-related error occurred</source>
+        <translation>알 수 없는 네트워크 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
+        <source>The I/O device was not opened for reading</source>
+        <translation>읽기용 I/O 장치가 열리지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
+        <source>The I/O device was not opened for writing</source>
+        <translation>쓰기용 I/O 장치가 열리지 않음</translation>
+    </message>
+</context>
+<context>
     <name>network-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="102"/>
@@ -12385,29 +14620,37 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>notation</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
+        <source>Extensions toolbar</source>
+        <translation>확장 기능 도구 모음</translation>
+    </message>
+</context>
+<context>
     <name>numeric-formats</name>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>마디</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>비트</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
         <translation>마디:비트</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
         <translation>마디:비트:틱</translation>
     </message>
     <message>
@@ -13721,7 +15964,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
-        <extracomment>accessibility name for the panel at the bottom of the "Projects" page</extracomment>
+        <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>프로젝트 작업</translation>
     </message>
     <message>
@@ -14676,6 +16919,7 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>컴퓨터에 저장</translation>
@@ -14694,13 +16938,13 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
-        <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>사본</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
-        <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>선택 영역</translation>
     </message>
     <message>
@@ -14710,6 +16954,7 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>게시</translation>
     </message>
@@ -14740,6 +16985,58 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Audio.com에 연결할 수 없습니다.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
+        <source>Public</source>
+        <translation>공개</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="167"/>
+        <source>Unlisted</source>
+        <translation>링크가 있는 모든 사용자</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="173"/>
+        <source>Private</source>
+        <translation>비공개</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
+        <source>Publish to MuseScore.com</source>
+        <translation>MuseScore.com에 게시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
+        <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation>기존 &lt;a href=&quot;%1&quot;&gt;온라인 악보&lt;/a&gt;를 교체합니다</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
+        <source>Publish as new online score</source>
+        <translation>새 온라인 악보로 게시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
+        <source>Share on Audio.com</source>
+        <translation>audio.com에 공유하기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
+        <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation>&lt;a href=&quot;%1&quot;&gt;기존 오디오&lt;/a&gt; 대치</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
+        <source>Upload as new audio file</source>
+        <translation>새 오디오 파일로 업로드</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
+        <source>Share</source>
+        <translation>공유</translation>
     </message>
 </context>
 <context>
@@ -15008,8 +17305,8 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
-        <source>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Watch video&lt;/a&gt;</source>
-        <translation>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;동영상 보기&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;동영상 보기&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
@@ -15399,17 +17696,138 @@ Error code: %1</source>
     </message>
 </context>
 <context>
+    <name>shortcuts</name>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
+        <source>Old shortcut:</source>
+        <translation>기존 단축키:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
+        <source>New shortcut:</source>
+        <translation>새 단축키:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
+        <source>Type to set shortcut</source>
+        <translation>단축키를 지정합니다</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
+        <source>Shortcuts bottom panel</source>
+        <translation>단축키 하단 패널</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
+        <source>Import</source>
+        <translation>가져오기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
+        <source>Export</source>
+        <translation>내보내기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
+        <source>Reset to default</source>
+        <translation>기본값으로 복원</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
+        <source>action</source>
+        <translation>동작</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="34"/>
+        <source>shortcut</source>
+        <translation>단축키</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
+        <source>Shortcuts top panel</source>
+        <translation>단축키 상단 패널</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
+        <source>Define…</source>
+        <translation>단축키 지정...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="98"/>
+        <source>Search shortcut</source>
+        <translation>단축키 검색</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
+        <source>Enter shortcut sequence</source>
+        <translation>단축키 조합 입력</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <source>Define keyboard shortcut</source>
+        <translation>단축키 조합 지정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
+        <source>Note %1</source>
+        <extracomment>A MIDI remote event, namely a note event</extracomment>
+        <translation>노트 %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
+        <source>CC %1</source>
+        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
+        <translation>CC %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
+        <source>None</source>
+        <extracomment>No MIDI remote event</extracomment>
+        <translation>없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
+        <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>이 단축키는 이미 지정되어 있습니다: &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
+        <translation>대신 &lt;b&gt;%1&lt;/b&gt;에 할당하시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <source>Reassign shortcut</source>
+        <translation>단축키 재지정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <source>MuseScore Studio shortcuts file</source>
+        <translation>MuseScore Studio 단축키 파일</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <source>Import shortcuts</source>
+        <translation>단축키 가져오기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <source>Export shortcuts</source>
+        <translation>단축키 내보내기</translation>
+    </message>
+</context>
+<context>
     <name>snapping</name>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>비트</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>마디</translation>
     </message>
     <message>
@@ -15450,7 +17868,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>The music theory "triplet"</extracomment>
+        <extracomment>The music theory &quot;triplet&quot;</extracomment>
         <translation>세잇단</translation>
     </message>
     <message>
@@ -15968,7 +18386,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
         <translation>자르기/복사/붙여넣기</translation>
     </message>
     <message>
@@ -16016,6 +18434,59 @@ Error code: %1</source>
     </message>
 </context>
 <context>
+    <name>system</name>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="54"/>
+        <source>The file does not exist</source>
+        <translation>파일이 존재하지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="55"/>
+        <source>The file already exists</source>
+        <translation>파일이 이미 존재함</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="56"/>
+        <source>The file could not be removed</source>
+        <translation>파일을 제거할 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="57"/>
+        <source>The directory is not empty</source>
+        <translation>디렉터리가 비어 있지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
+        <source>The directory could not be cleared</source>
+        <translation>디렉터리를 비울 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
+        <source>An error occurred when reading from the file</source>
+        <translation>파일 읽기 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="60"/>
+        <source>An error occurred when writing to the file</source>
+        <translation>파일 쓰기 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="61"/>
+        <source>An error occurred when making a path</source>
+        <translation>경로 생성 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="62"/>
+        <source>An error occurred when copying the file</source>
+        <translation>파일 복사 중 오류 발생</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="63"/>
+        <source>An error occurred when moving the file</source>
+        <translation>파일 이동 중 오류 발생</translation>
+    </message>
+</context>
+<context>
     <name>time-frequency-selection</name>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
@@ -16038,25 +18509,37 @@ Error code: %1</source>
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>tours</name>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
+        <source>Watch video</source>
+        <translation>영상 보기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Got it</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Next</source>
+        <translation>다음</translation>
     </message>
 </context>
 <context>
@@ -16342,6 +18825,203 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
+    <name>ui</name>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
+        <source>Browse</source>
+        <translation>불러오기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
+        <source>Current path:</source>
+        <translation>현재 경로:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
+        <source>Choose file</source>
+        <translation>파일 선택</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
+        <source>Choose directory</source>
+        <translation>디렉터리 선택</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
+        <source>Directories actions</source>
+        <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
+        <translation>디렉터리 동작</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
+        <source>Directories</source>
+        <translation>디렉터리</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
+        <source>Add directory</source>
+        <translation>디렉터리 추가</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
+        <source>Path</source>
+        <translation>경로</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
+        <source>Directories list</source>
+        <translation>디렉터리 목록</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>checked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <translation>선택됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>unchecked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <translation>선택 안 됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="82"/>
+        <source>selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is the chosen option in a list of options</extracomment>
+        <translation>선택됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="84"/>
+        <source>not selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is not the chosen option in a list of options</extracomment>
+        <translation>선택되지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="93"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
+        <source>Menu</source>
+        <extracomment>a type of ui item</extracomment>
+        <translation>메뉴</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted ascending</source>
+        <translation>오름차순 정렬됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted descending</source>
+        <translation>내림차순 정렬됨</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
+        <source>not sorted</source>
+        <translation>정렬되지 않음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
+        <source>Search</source>
+        <translation>검색</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation>빨강</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation>초록</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation>파랑</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
+        <source>Key</source>
+        <comment>key/value</comment>
+        <extracomment>As in a &quot;key/value&quot; pair: for example, the &quot;key&quot; could be the name of a setting and the &quot;value&quot; the value of that setting.</extracomment>
+        <translation>키</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
+        <source>Value</source>
+        <translation>값</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation>값 목록 헤더 패널</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <source>Value list panel</source>
+        <extracomment>Accessibility description of the body of a value list (table)</extracomment>
+        <translation>값 목록 패널</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Visible</source>
+        <translation>표시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Hidden</source>
+        <translation>숨김</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
+        <source>Light</source>
+        <extracomment>The name of the light ui theme</extracomment>
+        <translation>라이트</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
+        <source>Dark</source>
+        <extracomment>The name of the dark ui theme</extracomment>
+        <translation>다크</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
+        <source>White</source>
+        <extracomment>The name of the high contrast light ui theme</extracomment>
+        <translation>하양</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
+        <source>Black</source>
+        <extracomment>The name of the high contrast dark ui theme</extracomment>
+        <translation>검정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="149"/>
+        <source>direction is horizontal</source>
+        <translation>수평 방향</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="150"/>
+        <source>direction is vertical</source>
+        <translation>수직 방향</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
+        <source>direction is both</source>
+        <translation>양방향</translation>
+    </message>
+</context>
+<context>
     <name>uicomponents</name>
     <message>
         <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="17"/>
@@ -16457,6 +19137,210 @@ Do you wish to continue?</source>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
         <translation>마디:비트:틱</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
+        <source>No button</source>
+        <translation>버튼 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
+        <source>Save</source>
+        <translation>저장</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
+        <source>Save all</source>
+        <translation>모두 저장</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
+        <source>Don’t save</source>
+        <translation>저장 안 함</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
+        <source>Open</source>
+        <translation>열기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
+        <source>Yes</source>
+        <translation>예</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
+        <source>Yes to all</source>
+        <translation>모두 예</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
+        <source>No</source>
+        <translation>아니요</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
+        <source>No to all</source>
+        <translation>모두 아니요</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
+        <source>Abort</source>
+        <translation>중단</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
+        <source>Retry</source>
+        <translation>재시도</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
+        <source>Ignore</source>
+        <translation>무시</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
+        <source>Close</source>
+        <translation>닫기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
+        <source>Cancel</source>
+        <translation>취소</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
+        <source>Discard</source>
+        <translation>변경사항 폐기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
+        <source>Help</source>
+        <translation>도움말</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
+        <source>Apply</source>
+        <translation>적용</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
+        <source>Reset</source>
+        <translation>재설정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
+        <source>Restore defaults</source>
+        <translation>기본값 복원</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
+        <source>Continue</source>
+        <translation>계속</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
+        <source>Next</source>
+        <translation>다음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
+        <source>Back</source>
+        <translation>이전</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
+        <source>Select</source>
+        <translation>선택</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
+        <source>Clear</source>
+        <translation>지우기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
+        <source>Done</source>
+        <translation>완료</translation>
+    </message>
+</context>
+<context>
+    <name>update</name>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <source>A new version of %1 is available!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <source>Release notes</source>
+        <translation>릴리스 노트</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <source>Skip this version</source>
+        <translation>이 버전 건너뛰기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <source>Remind me later</source>
+        <translation>나중에 다시 알림</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <source>Install update</source>
+        <translation>업데이트 설치</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
+        <source>Read the %1 release notes</source>
+        <translation>%1 릴리스 노트 읽기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <source>You’re up to date!</source>
+        <translation>최신 버전입니다!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <source>Cannot connect to server</source>
+        <translation>서버에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <source>Sorry - please try again later</source>
+        <translation>죄송합니다. 나중에 다시 시도해 주세요.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <source>Close</source>
+        <translation>닫기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating MuseScore Studio</source>
+        <translation>MuseScore Studio 업데이트 중</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading MuseScore Studio %1</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
+        <translation>MuseScore Studio %1 다운로드 중</translation>
     </message>
 </context>
 <context>
@@ -16652,6 +19536,80 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
 </context>
 <context>
+    <name>workspace</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
+        <source>Workspaces</source>
+        <translation>작업공간</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
+        <source>Save layout as new workspace</source>
+        <translation>레이아웃을 새 작업공간으로 저장</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
+        <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
+        <translation>작업공간 기능을 통해 %1 인터페이스의 다양한 구성을 선택할 수 있습니다. 사용자만의 고유한 설정을 새 작업공간으로 저장할 수도 있습니다.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
+        <source>Reset</source>
+        <translation>재설정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <source>Workspace name:</source>
+        <translation>작업공간 이름:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
+        <source>New</source>
+        <translation>새로 만들기</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
+        <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
+        <translation>“%1”이라는 이름의 작업공간이 이미 존재합니다. 다른 이름을 사용해 주세요.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
+        <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
+        <translation>“%1”은 작업공간 이름으로 사용할 수 없습니다. 다른 이름을 사용해 주세요.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
+        <translation>이 작업은 작업공간을 기본 레이아웃으로 재설정하며 실행 취소할 수 없습니다. 계속하시겠습니까?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <source>Resetting workspaces</source>
+        <translation>작업공간 재설정 중</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <source>Reset workspace</source>
+        <translation>작업공간 재설정</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <source>Name cannot be empty</source>
+        <translation>이름은 비워둘 수 없음</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <source>Name already exists</source>
+        <translation>이미 사용 중인 이름</translation>
+    </message>
+</context>
+<context>
     <name>xml</name>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
@@ -16676,14304 +19634,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
         <translation>XML 파싱할 수 없음</translation>
-    </message>
-</context>
-<context>
-    <name>_au3_legacy_vanished</name>
-    <message>
-        <source>Stream is active ... unable to gather information.
-</source>
-        <translation type="vanished">스트림이 활성 상태입니다  ... 정보를 가져올 수 없습니다.
-</translation>
-    </message>
-    <message>
-        <source>No recording device found for '%s'.
-</source>
-        <translation type="vanished">'%1'를 위한 녹음 장치를 찾을 수 없습니다.
-</translation>
-    </message>
-    <message>
-        <source>No playback device found for '%s'.
-</source>
-        <translation type="vanished">'%1'를 위한 재생 장치를 찾을 수 없습니다.
-</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.</source>
-        <translation type="vanished">자동 녹음 레벨 조정 중단. 더 이상 최적화가 불가능합니다.여전히 너무 높습니다.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment decreased the volume to %f.</source>
-        <translation type="vanished">자동 녹음 레벨 조정: 볼륨을 %1로 줄였습니다.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.</source>
-        <translation type="vanished">자동 녹음 레벨 조정 중단. 더 이상 최적화가 불가능합니다.여전히 너무 낮습니다.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment increased the volume to %.2f.</source>
-        <translation type="vanished">자동 녹음 레벨 조정: 음량을 %1 값으로 올렸습니다.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.</source>
-        <translation type="vanished">자동 녹음 레벨 조정 중단됨. 알맞은 볼륨을 찾기위한 최대 분석횟수를 초과했습니다. 여전히 너무 높습니다.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.</source>
-        <translation type="vanished">자동 녹음 레벨 조정 중단됨. 알맞은 볼륨을 찾기위한 최대 분석횟수를 초과했습니다. 여전히 너무 낮습니다.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.</source>
-        <translation type="vanished">자동 녹음 레벨 조정을 멈췄습니다. %1 값이 알맞은 음량으로 판단됩니다.</translation>
-    </message>
-    <message>
-        <source>Failed to encode preset from "%s"</source>
-        <translation type="vanished">"%1"로 부터 프리셋 인코딩에 실패하였습니다.</translation>
-    </message>
-    <message>
-        <source>Couldn't open "%s"</source>
-        <translation type="vanished">"%1" 파일을 열 수 없음</translation>
-    </message>
-    <message>
-        <source>Failed to write XML preset to "%s"</source>
-        <translation type="vanished">XML 프리셋을 "%1"에 저장할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Unable to read the preset from "%s"</source>
-        <translation type="vanished">"%1"로 부터 프리셋 파일을 읽을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Failed to decode "%s" preset</source>
-        <translation type="vanished">프리셋 "%1" 을 디코드 하는데 실패함</translation>
-    </message>
-    <message>
-        <source>Failed to convert "%s" preset to internal format</source>
-        <translation type="vanished">프리셋 "%1"을 내부 포맷으로 변환하는데 실패함</translation>
-    </message>
-    <message>
-        <source>Failed to create property list for "%s" preset</source>
-        <translation type="vanished">프리셋  "%1"의 특성 리스트를 생성하는데 실패함</translation>
-    </message>
-    <message>
-        <source>Failed to set class info for "%s" preset</source>
-        <translation type="vanished">"%1" 프리셋에 클래스 설정 실패</translation>
-    </message>
-    <message>
-        <source>Applying %s...</source>
-        <translation type="vanished">적용 중 %1...</translation>
-    </message>
-    <message>
-        <source>"%s" 
-is a not an audio file. 
-Audacity cannot open this type of file.</source>
-        <translation type="vanished">"%1" 
-는 오디오 파일이 아닙니다. 
-오데시티는 이 형식의 파일을 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Importing %s...</source>
-        <translation type="vanished">가져오는 중 %1...</translation>
-    </message>
-    <message>
-        <source>"%s" is an audio CD track. 
-Audacity cannot open audio CDs directly. 
-Extract (rip) the CD tracks to an audio format that 
-Audacity can import, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 오디오 CD 트랙입니다. 
-오데시티에서 오디오 CD를 직접 열 수는 없습니다. 
-WAV나 AIFF와 같이 오데시티에서 가져올 수
-있는 오디오 형식으로 CD 트랙을 추출하세요.</translation>
-    </message>
-    <message>
-        <source>"%s" is a playlist file. 
-Audacity cannot open this file because it only contains links to other files. 
-You may be able to open it in a text editor and download the actual audio files.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 재생 목록 파일입니다. 
-이 파일에는 다른 파일의 연결 항목만 있기  때문에 오데시티에서 열 수 
-없습니다. 텍스트 편집기로 열어서 실제 오디오 파일을 받으세요.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Windows Media Audio file. 
-Audacity cannot open this type of file due to patent restrictions. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 윈도우 미디어 오디오 파일입니다. 
-이 파일 형식은 특허 제한 때문에 오데시티에서 열 수 없습니다. 
-WAV나 AIFF와 같은 지원 오디오 형식으로 변환할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is an Advanced Audio Coding file.
-Without the optional FFmpeg library, Audacity cannot open this type of file.
-Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 고급 오디오 코딩 파일입니다. FFmpeg 라이브러리가 없으면, 오데시티는 이 형식의 파일을 열 수 없습니다.
-다른 방법으로는 WAV나 AIFF 파일로 변환하여 열기 바랍니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is an encrypted audio file. 
-These typically are from an online music store. 
-Audacity cannot open this type of file due to the encryption. 
-Try recording the file into Audacity, or burn it to audio CD then 
-extract the CD track to a supported audio format such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 암호화된 오디오 파일입니다. 
-보통 이 파일은 온라인 뮤직 스토어에서 나옵니다.
-이 형식의 파일이 암호화되어 있어 오데시티에서 열 수 없습니다. 
-오데시티에서 파일을 녹음해보거나, 오디오 CD에 구운 다음 
-WAV나 AIFF와 같은 지원 오디오 형식으로 CD 트랙을 추출하세요.</translation>
-    </message>
-    <message>
-        <source>"%s" is a RealPlayer media file. 
-Audacity cannot open this proprietary format. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 리얼플레이어 미디어 파일입니다. 
-오데시티에서는 이 독점 형식의 파일을 열 수 없습니다. 
-WAV나 AIFF와 같은 지원 오디오 형식으로 변환할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is a notes-based file, not an audio file. 
-Audacity cannot open this type of file. 
-Try converting it to an audio file such as WAV or AIFF and 
-then import it, or record it into Audacity.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 오디오 파일이 아니고, 노트 기반의 파일입니다. 
-오데시티에서 이 형식의 파일을 열 수 없습니다. 
-WAV나 AIFF와 같은 오디오 파일로 변환한 후
-그것을 가져오거나, 오데시티로 녹음해 보세요.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Musepack audio file. 
-Audacity cannot open this type of file. 
-If you think it might be an mp3 file, rename it to end with ".mp3" 
-and try importing it again. Otherwise you need to convert it to a supported audio 
-format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 Musepack 오디오 파일입니다. 
-오데시티에서 이 형식의 파일을 열 수 없습니다. 
-mp3 파일일 수 있다는 생각이 들면 확장자를 ".mp3"로 바꾸고 
-다시 가져와보세요. 아니면 WAV나 AIFF와 같은 지원 오디오 형식으로
-변환할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Wavpack audio file. 
-Audacity cannot open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 Wavpack 오디오 파일입니다. 
-오데시티에서 이 형식의 파일을 열 수 없습니다. 
-WAV나 AIFF와 같은 지원 오디오 형식으로 변환할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Dolby Digital audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 돌비 디지털 오디오 파일입니다. 
-오데시티에서 현재 이 형식의 파일을 열 수 없습니다. 
-WAV나 AIFF와 같은 지원 오디오 형식으로 변환할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is an Ogg Speex audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 Ogg Speex 오디오 파일입니다. 
-오데시티에서 현재 이 형식의 파일을 열 수 없습니다. 
-WAV나 AIFF와 같은 지원 오디오 형식으로 변환할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>"%s" is a video file. 
-Audacity cannot currently open this type of file. 
-You need to extract the audio to a supported format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"는 비디오 파일입니다. 
-오데시티에서 현재 이 형식의 파일을 열 수 없습니다. 
-WAV나 AIFF와 같은 지원 형식으로 오디오를 추출할 필요가 있습니다.</translation>
-    </message>
-    <message>
-        <source>File "%s" not found.</source>
-        <translation type="vanished">파일 "%1" 을 찾을 수 없음</translation>
-    </message>
-    <message>
-        <source>Audacity did not recognize the type of the file '%s'.
-
-%sFor uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">오데시티는 파일 '%1'의 형식을 인식하지 못했습니다.
-
-%2 무압축 파일의 경우  "파일 &gt; 가져오기 &gt; Raw 데이터" 를 시도해보세요.</translation>
-    </message>
-    <message>
-        <source>Audacity recognized the type of the file '%s'.
-Importers supposedly supporting such files are:
-%s,
-but none of them understood this file format.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">오데시티에서 '%1' 파일의 형식을 인식했습니다.
-가져오기 프로그램이 지원하는 파일은 
-%2
-이지만, 이 파일 형식을 인식하는 프로그램은 없습니다.</translation>
-    </message>
-    <message>
-        <source>LADSPA</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA</translation>
-    </message>
-    <message>
-        <source>LADSPA Effects</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA 이펙트</translation>
-    </message>
-    <message>
-        <source>Provides LADSPA Effects</source>
-        <translation type="vanished">LADSPA 이펙트를 제공합니다</translation>
-    </message>
-    <message>
-        <source>Audacity no longer uses vst-bridge</source>
-        <translation type="vanished">오데시티는 VST 브릿지를 더 이상 사용하지 않습니다</translation>
-    </message>
-    <message>
-        <source>Could not load the library</source>
-        <translation type="vanished">라이브러리를 불러올 수 없습니다</translation>
-    </message>
-    <message>
-        <source>LV2</source>
-        <extracomment>i18n-hint: abbreviates
-"Linux Audio Developer's Simple Plugin API (LADSPA) version 2"</extracomment>
-        <translation type="vanished">LV2</translation>
-    </message>
-    <message>
-        <source>Effect Settings</source>
-        <translation type="vanished">이펙트 설정</translation>
-    </message>
-    <message>
-        <source>LV2 Effects</source>
-        <translation type="vanished">LV2 이펙트</translation>
-    </message>
-    <message>
-        <source>Provides LV2 Effects support to Audacity</source>
-        <translation type="vanished">LV2 이펙트 지원을 오데시티에 제공합니다</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>dither</comment>
-        <translation type="vanished">삼각형</translation>
-    </message>
-    <message>
-        <source>Command</source>
-        <translation type="vanished">명령</translation>
-    </message>
-    <message>
-        <source>Repeat %s</source>
-        <extracomment>i18n-hint: %s will be the name of the effect which will be
-* repeated if this menu item is chosen</extracomment>
-        <translation type="vanished">%1 반복하기</translation>
-    </message>
-    <message>
-        <source>
-* %s, because you have assigned the shortcut %s to %s</source>
-        <translation type="vanished">
-* %1, 왜냐하면  %2 을 단축키 %3 에 이미 지정됨</translation>
-    </message>
-    <message>
-        <source>There was a problem with your last action. If you think
-this is a bug, please tell us exactly where it occurred.</source>
-        <translation type="vanished">마지막 동작에 문제가 있습니다. 버그인 것 같다면
-어떤 위치에서 문제가 발생했는지 알려주세요.</translation>
-    </message>
-    <message>
-        <source>Disallowed</source>
-        <translation type="vanished">허용되지 않음</translation>
-    </message>
-    <message>
-        <source>&amp;Undo %s</source>
-        <translation type="vanished">%1 실행 취소(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Redo %s</source>
-        <translation type="vanished">%1 재실행(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Unable to load the "%s" module.
-
-Error: %s</source>
-        <translation type="vanished">"%1"모듈을 로드할 수 없습니다.
-
-오류: %2</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide a version string.
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" 모듈에 버전 문자열이 없습니다.
-
-이 모듈을 불러오지 않겠습니다.</translation>
-    </message>
-    <message>
-        <source>The module "%s" is matched with Audacity version "%s".
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" 모듈이 "%2" 오데시티 버전과 일치합니다.
-
-이 모듈을 불러오지 않겠습니다.</translation>
-    </message>
-    <message>
-        <source>The module "%s" failed to initialize.
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" 모듈이 초기화에 실패했습니다.
-
-로드가 불가능합니다.</translation>
-    </message>
-    <message>
-        <source>Module "%s" found.</source>
-        <translation type="vanished">"%1" 모듈을 찾았습니다.</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide any of the required functions.
-
-It will not be loaded.</source>
-        <translation type="vanished">"%1" 모듈이 요구되는 함수를 전혀 제공하지 않습니다.
-
-로드가 불가능합니다.</translation>
-    </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <oldsource>Enable these plug-ins?
-</oldsource>
-        <comment>plug-ins</comment>
-        <extracomment>i18n-hint A plug-in is an optional added program for a sound
-effect, or generator, or analyzer</extracomment>
-        <translation type="vanished">
-            <numerusform>이 플러그인을 활성화할까요?
-</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Nyquist Prompt</source>
-        <translation type="vanished">나이키스트 프롬프트</translation>
-    </message>
-    <message>
-        <source>There was an error initializing the midi i/o layer.
-</source>
-        <translation type="vanished">MIDI 입출력 계층을 초기화 하는 중 오류가 발생했습니다.
-</translation>
-    </message>
-    <message>
-        <source>You will not be able to play midi.
-
-</source>
-        <translation type="vanished">MIDI를 재생할 수 없을 것입니다.
-
-</translation>
-    </message>
-    <message>
-        <source>Error Initializing Midi</source>
-        <translation type="vanished">MIDI 초기화 중 오류</translation>
-    </message>
-    <message>
-        <source>Note Track</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this is a Note track.</extracomment>
-        <translation type="vanished">노트 트랙</translation>
-    </message>
-    <message>
-        <source>&amp;Seconds</source>
-        <translation type="vanished">초(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Beats</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation type="vanished">비트(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Supports output: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">지원하는 출력: %1
-</translation>
-    </message>
-    <message>
-        <source>Supports input: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">지원하는 입력: %1
-</translation>
-    </message>
-    <message>
-        <source>Opened: %d
-</source>
-        <translation type="vanished">열림: %1
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI recording device: %d - %s
-</source>
-        <translation type="vanished">선택된 MIDI 녹음 장치: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI recording device found for '%s'.
-</source>
-        <translation type="vanished">'%1'를 위한 MIDI 녹음 장치를 찾을 수 없습니다.
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI playback device: %d - %s
-</source>
-        <translation type="vanished">선택된 MIDI 녹음 장치: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI playback device found for '%s'.
-</source>
-        <translation type="vanished">'%1'를 위한 MIDI 재생 장치를 찾을 수 없습니다.
-</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <extracomment>i18n-hint: refers to optional plug-in software libraries</extracomment>
-        <translation type="vanished">라이브러리</translation>
-    </message>
-    <message>
-        <source>Preferences for Library</source>
-        <translation type="vanished">라이브러리 환경설정</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="vanished">라이브러리</translation>
-    </message>
-    <message>
-        <source>Failed to open the project's database</source>
-        <translation type="vanished">프로젝트 데이터베이스를 여는데 실패</translation>
-    </message>
-    <message>
-        <source>Unable to add 'inset' function (can't verify blockids)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate inset or blockids.</extracomment>
-        <translation type="vanished">인셋(inset) 기능을 추가할 수 없음 (블록키드를 확인할 수 없음)</translation>
-    </message>
-    <message>
-        <source>[Project %02i] Audacity "%s"</source>
-        <extracomment>i18n-hint: The %02i is the project number, the %s is the project name.</extracomment>
-        <translation type="vanished">[프로젝트 %1] 오데시티 "%2"</translation>
-    </message>
-    <message>
-        <source>Can't open project file</source>
-        <translation type="vanished">프로젝트 파일을 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>The project's database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="vanished">이 프로젝트의 데이터베이스를 다시 여는데 실패하였습니다. 저장 공간이 부족한 것이 원인일 수 있습니다. </translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="vanished">닫기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished">도움말</translation>
-    </message>
-    <message>
-        <source>&amp;Preview</source>
-        <translation type="vanished">미리보기(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Dry Previe&amp;w</source>
-        <translation type="vanished">드라이 미리듣기(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="vanished">설정(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Debu&amp;g</source>
-        <translation type="vanished">디버그(&amp;G)</translation>
-    </message>
-    <message>
-        <source>High Contrast</source>
-        <extracomment>i18n-hint: greater difference between foreground and
-background colors</extracomment>
-        <translation type="vanished">고대비</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/%s.</source>
-        <extracomment>i18n-hint: A theme is a consistent visual style across an application's
-graphical user interface, including choices of colors, and similarity of images
-such as those on button controls.  Audacity can load and save alternative
-themes.</extracomment>
-        <translation type="vanished">테마 저장됨:
-  %1/*/%2.</translation>
-    </message>
-    <message>
-        <source>Audacity could not write file:
-  %s.</source>
-        <translation type="vanished">오데시티에서 파일을 쓸 수 없습니다:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not open file:
-  %s
-for writing.</source>
-        <translation type="vanished">오데시티에서 쓰기 위해
-%1
-파일을 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Audacity could not write images to file:
-  %s.</source>
-        <translation type="vanished">오데시티가 이미지를 다음 파일로 저장할 수 없습니다:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find file:
-  %s.
-Theme not loaded.</source>
-        <translation type="vanished">오데시티에서 파일을 찾을 수 없습니다:
- %1
-테마를 불러오지 않았습니다.</translation>
-    </message>
-    <message>
-        <source>Audacity could not load file:
-  %s.
-Bad png format perhaps?</source>
-        <extracomment>i18n-hint: Do not translate png.  It is the name of a file format.</extracomment>
-        <translation type="vanished">오데시티에서 파일을 불러올 수 없습니다:
- %1
-잘못된 png 형식이 아닐까요?</translation>
-    </message>
-    <message>
-        <source>Audacity could not read its default theme.
-Please report the problem.</source>
-        <translation type="vanished">오데시티에서 기본 테마를 읽어올 수 없습니다.
-문제를 리포트해 주세요.</translation>
-    </message>
-    <message>
-        <source>Couldn't read from file: %s</source>
-        <translation type="vanished">파일로 부터 읽을 수 없음: %1</translation>
-    </message>
-    <message>
-        <source>None of the expected theme component files
- were found in:
-  %s.</source>
-        <translation type="vanished">다음에서 기대하던 테마 구성 파일을
-찾지 못했습니다:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/Components/.</source>
-        <translation type="vanished">테마가 저장됨:
-  %1/*/콤포넌트/.</translation>
-    </message>
-    <message>
-        <source>Could not create directory:
-  %s</source>
-        <translation type="vanished">폴더를 만들 수 없습니다:
- %1</translation>
-    </message>
-    <message>
-        <source>Some required files in:
-  %s
-were already present. Overwrite?</source>
-        <translation type="vanished">%1 에 필요한 파일이 이미
-있습니다. 덮어 쓸까요?</translation>
-    </message>
-    <message>
-        <source>Audacity could not save file:
-  %s</source>
-        <translation type="vanished">오데시티에서 파일을 저장할 수 없습니다:
- %1</translation>
-    </message>
-    <message>
-        <source>Couldn't write to file: %s</source>
-        <translation type="vanished">파일에 쓸 수 없습니다: %1</translation>
-    </message>
-    <message>
-        <source>Themes as Cee code written to:
-  %s/*%s.</source>
-        <extracomment>i18n-hint "Cee" means the C computer programming language</extracomment>
-        <translation type="vanished">Cee 코드로 테마 저장:
- %1/*%2.</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <extracomment>i18n-hint: user defined</extracomment>
-        <translation type="vanished">사용자 정의</translation>
-    </message>
-    <message>
-        <source>Database error.  Sorry, but we don't have more details.</source>
-        <translation type="vanished">데이터베이스 오류. 죄송합니다만, 상세 정보가 없습니다.</translation>
-    </message>
-    <message>
-        <source>Audio In: %d, Audio Out: %d</source>
-        <translation type="vanished">오디오 입력: %1, 오디오 출력: %2</translation>
-    </message>
-    <message>
-        <source>VST</source>
-        <extracomment>i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-developed by Steinberg GmbH</extracomment>
-        <translation type="vanished">VST</translation>
-    </message>
-    <message>
-        <source>VST Effects</source>
-        <translation type="vanished">VST 이펙트</translation>
-    </message>
-    <message>
-        <source>Adds the ability to use VST effects in Audacity.</source>
-        <translation type="vanished">오데시티에서 VST 이펙트를 사용할 수 있게 합니다.</translation>
-    </message>
-    <message>
-        <source>Unable to allocate memory when loading presets file.</source>
-        <translation type="vanished">프리셋 파일을 불러올 때 메모리를 할당할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Error Loading VST Presets</source>
-        <translation type="vanished">VST 프리셋 불러오는 중 오류</translation>
-    </message>
-    <message>
-        <source>Unable to read presets file.</source>
-        <translation type="vanished">프리셋 파일을 읽을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Could not open file: "%s"</source>
-        <translation type="vanished">파일을 열 수 없습니다: "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving VST Presets</source>
-        <translation type="vanished">VST 프리셋 저장 중 오류</translation>
-    </message>
-    <message>
-        <source>Error writing to file: "%s"</source>
-        <translation type="vanished">파일에 쓰기 오류: "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving Effect Presets</source>
-        <translation type="vanished">이펙트 프리셋 저장 중 오류</translation>
-    </message>
-    <message>
-        <source>This parameter file was saved from %s. Continue?</source>
-        <translation type="vanished">이 파라메터 파일은 %1 에서 저장된 것입니다. 계속?</translation>
-    </message>
-    <message>
-        <source>%s.%i</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Template for clip name generation on copy-paste
-i18n-hint Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>There is not enough room available to paste the selection</source>
-        <translation type="vanished">선택 내용을 붙여넣는데 필요한 공간이 부족합니다</translation>
-    </message>
-    <message>
-        <source>Show &amp;Log...</source>
-        <translation type="vanished">로그 보기(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>More information about this error may be available %s.</source>
-        <translation type="vanished">이 오류에 대해 상세한 정보를 보려면 %1.</translation>
-    </message>
-    <message>
-        <source>here</source>
-        <translation type="vanished">여기</translation>
-    </message>
-    <message>
-        <source>Would you like to send a report to help us fix this issue?</source>
-        <translation type="vanished">이 문제를 해결하기 위해 저희에게 리포트를 보내 주시겠습니까?</translation>
-    </message>
-    <message>
-        <source>All reports are anonymous. See %s for more info.</source>
-        <translation type="vanished">모든 리포트는 익명으로 처리됩니다. 상세정보는 %1를 참조하십시오.</translation>
-    </message>
-    <message>
-        <source>our Privacy Policy</source>
-        <extracomment>i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".</extracomment>
-        <translation type="vanished">개인정보 보호정책</translation>
-    </message>
-    <message>
-        <source>Problem details</source>
-        <translation type="vanished">문제 상세정보</translation>
-    </message>
-    <message>
-        <source>&amp;Don't send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">전송하지 않음 (&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">전송 (&amp;S)</translation>
-    </message>
-    <message>
-        <source>Backwards</source>
-        <translation type="vanished">뒤로</translation>
-    </message>
-    <message>
-        <source>&lt;</source>
-        <extracomment>i18n-hint arrowhead meaning backward movement</extracomment>
-        <translation type="vanished">&lt;</translation>
-    </message>
-    <message>
-        <source>Forwards</source>
-        <translation type="vanished">앞으로</translation>
-    </message>
-    <message>
-        <source>&gt;</source>
-        <extracomment>i18n-hint arrowhead meaning forward movement</extracomment>
-        <translation type="vanished">&gt;</translation>
-    </message>
-    <message>
-        <source>Help on the Internet</source>
-        <translation type="vanished">인터넷 도움말</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">로컬에서</translation>
-    </message>
-    <message>
-        <source>From Internet</source>
-        <translation type="vanished">인터넷에서</translation>
-    </message>
-    <message>
-        <source>Welcome!</source>
-        <translation type="vanished">환영합니다!</translation>
-    </message>
-    <message>
-        <source>Playing Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">오디오 재생</translation>
-    </message>
-    <message>
-        <source>Recording Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">오디오 녹음</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Device</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">녹음 - 녹음 장치 선택</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Source</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">녹음 - 녹음 소스 선택</translation>
-    </message>
-    <message>
-        <source>Recording - Setting the Recording Level</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">녹음 - 녹음 레벨 설정</translation>
-    </message>
-    <message>
-        <source>Editing and greyed out Menus</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">메뉴 편집하고 비활성화하기</translation>
-    </message>
-    <message>
-        <source>Exporting an Audio File</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">오디오 파일 내보내는 중</translation>
-    </message>
-    <message>
-        <source>Saving an Audacity Project</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">오데시티 프로젝트 저장 중</translation>
-    </message>
-    <message>
-        <source>Support for Other Formats</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">다른 형식 지원</translation>
-    </message>
-    <message>
-        <source>Burn to CD</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">CD로 굽기</translation>
-    </message>
-    <message>
-        <source>No Local Help</source>
-        <translation type="vanished">설치된 도움말이 없습니다</translation>
-    </message>
-    <message>
-        <source>Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer.</source>
-        <translation type="vanished">오데시티는 비보호된 파일을 다른 여러 형식으로 가져올 수 있습니다. (M4A와 WMA, 휴대용 레코더와 비디오 파일의 오디오에서 압축된 WAV 파일 등).이를 위해서는 [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] 를 다운로드 받아 설치해야 합니다.</translation>
-    </message>
-    <message>
-        <source>You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]].</source>
-        <translation type="vanished">가져오기는 [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]]  에서, 트랙은 [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]] 에서 도움말을 읽을 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].&lt;br&gt;&lt;br&gt;To always view the Manual online, change "Location of Manual" in Interface Preferences to "From Internet".</source>
-        <translation type="vanished">매뉴얼이 설치되어 있지 않은 것 같습니다. [[*URL*|매뉴얼을 온라인으로 보거나]][[https://manual.audacityteam.org/man/unzipping_the_manual.html|매뉴얼을 다운로드]]하세요.&lt;br&gt;&lt;br&gt;매뉴얼을 항상 온라인으로 보려면,인터페이스 환경 설정에서 "매뉴얼 위치"를 "인터넷에서"로 바꾸세요.</translation>
-    </message>
-    <message>
-        <source>Audacity Log</source>
-        <translation type="vanished">오데시티 로그</translation>
-    </message>
-    <message>
-        <source>&amp;Save...</source>
-        <translation type="vanished">저장(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>Cl&amp;ear</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">지우기(&amp;E)</translation>
-    </message>
-    <message>
-        <source>log.txt</source>
-        <translation type="vanished">log.txt</translation>
-    </message>
-    <message>
-        <source>Save log to:</source>
-        <translation type="vanished">로그 저장:</translation>
-    </message>
-    <message>
-        <source>Couldn't save log to file: %s</source>
-        <translation type="vanished">로그를 파일에 저장할 수 없습니다: %1</translation>
-    </message>
-    <message>
-        <source>Show Log for Details</source>
-        <translation type="vanished">로그 세부사항 보이기</translation>
-    </message>
-    <message>
-        <source>Elapsed Time:</source>
-        <translation type="vanished">경과 시간:</translation>
-    </message>
-    <message>
-        <source>Remaining Time:</source>
-        <translation type="vanished">남은 시간:</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to cancel?</source>
-        <translation type="vanished">정말 취소할까요?</translation>
-    </message>
-    <message>
-        <source>Confirm Cancel</source>
-        <translation type="vanished">취소 확인</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to stop?</source>
-        <translation type="vanished">정말 멈출까요?</translation>
-    </message>
-    <message>
-        <source>Confirm Stop</source>
-        <translation type="vanished">정지 확인</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close?</source>
-        <translation type="vanished">정말 닫을까요?</translation>
-    </message>
-    <message>
-        <source>Confirm Close</source>
-        <translation type="vanished">닫기 확인</translation>
-    </message>
-    <message>
-        <source>The specified filename could not be converted due to Unicode character use.</source>
-        <translation type="vanished">지정된 파일 이름이 유니코드 문자를 사용하기 때문에 변환할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Specify New Filename:</source>
-        <translation type="vanished">새 파일 이름 지정:</translation>
-    </message>
-    <message>
-        <source>Don't ask me again</source>
-        <translation type="vanished">다시 묻지 않음</translation>
-    </message>
-    <message>
-        <source>File '%s' already exists, do you really want to overwrite it?</source>
-        <translation type="vanished">'%1' 파일이 이미 존재합니다. 정말로 덮어쓸까요?</translation>
-    </message>
-    <message>
-        <source>Please choose an existing file.</source>
-        <translation type="vanished">기존의 파일을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>File type:</source>
-        <translation type="vanished">파일 형식:</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="vanished">폴더를 선택하세요</translation>
-    </message>
-    <message>
-        <source>Panel</source>
-        <translation type="vanished">패널</translation>
-    </message>
-    <message>
-        <source>Dialog</source>
-        <translation type="vanished">대화상자</translation>
-    </message>
-    <message>
-        <source>Directory Dialog</source>
-        <translation type="vanished">폴더 대화상자</translation>
-    </message>
-    <message>
-        <source>File Dialog</source>
-        <translation type="vanished">파일 대화상자</translation>
-    </message>
-    <message>
-        <source>Could not load file: "%s"</source>
-        <translation type="vanished">파일을 불러올 수 없음: "%1"</translation>
-    </message>
-    <message>
-        <source>1st Experimental Command...</source>
-        <translation type="vanished">첫번째 실험적 명령...</translation>
-    </message>
-    <message>
-        <source>2nd Experimental Command</source>
-        <translation type="vanished">두번째 실험적 명령</translation>
-    </message>
-    <message>
-        <source>AUP project files (*.aup)</source>
-        <translation type="vanished">AUP 프로젝트 파일 (*.aup)</translation>
-    </message>
-    <message>
-        <source>Couldn't import the project:
-
-%s</source>
-        <translation type="vanished">프로젝트를 가져올 수 없습니다.:
-
-%1</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to import an AUP project.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">1%1
-이 기능은 오데시티 버전 3.3.3 이후에서는 지원하지 않습니다. 
-이 스테레오 트랙은 2개의 모노트랙으로 분리됩니다. 
-저장하기 전에 의도한대로 작동했는지 확인 바랍니다.</translation>
-    </message>
-    <message>
-        <source>This project was saved by Audacity version 1.0 or earlier. The format has
-changed and this version of Audacity is unable to import the project.
-
-Use a version of Audacity prior to v3.0.0 to upgrade the project and then
-you may import it with this version of Audacity.</source>
-        <translation type="vanished">이 프로젝트는 오데시티 1.0 이전 버전에서 저장되었습니다.
-이후 버전에서 포맷이 바뀌어 이 프로젝트는 가져올수 없습니다.
-
-오데시티 v3.0.0 이전 버전을 사용하여 프로젝트를 업그레이드 한 후
-로딩하면 이 버전에서 사용할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Internal error in importer...tag not recognized</source>
-        <translation type="vanished">가져오기 내부 오류... 태그가 인식되지 않음</translation>
-    </message>
-    <message>
-        <source>Invalid project 'vpos' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'vpos' 속성.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'h' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'h' 속성.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'zoom' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'zoom' 속성.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel0' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'sel0' 속성.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel1' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'sel1' 속성.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selLow' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'selLow' 속성.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selHigh' attribute.</source>
-        <translation type="vanished">프로젝트가 사용 불가능 'selHigh' 속성.</translation>
-    </message>
-    <message>
-        <source>Couldn't find the project data folder: "%s"</source>
-        <translation type="vanished">프로젝트 데이터 경로를 찾을 수 없음: "%1"</translation>
-    </message>
-    <message>
-        <source>MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track.</source>
-        <translation type="vanished">MIDI 트랙이 프로젝트 파일에 있으나, 이 오데시티 빌드는MIDI 지원을 하지 않음, 트랙 무시.</translation>
-    </message>
-    <message>
-        <source>The active project already has a time track and one was encountered in the project being imported, bypassing imported time track.</source>
-        <translation type="vanished">활성화된 프로젝트가 이미 시간 트랙을 갖고 있고, 프로젝트가 가져오기 중에 있어, 타임 트랙은 무시됨</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'maxsamples' attribute.</source>
-        <translation type="vanished">'maxsamples' 속성의 잘못된 시퀀스</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'sampleformat' attribute.</source>
-        <translation type="vanished">'sampleformat' 속성의 잘못된 시퀀스</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'numsamples' attribute.</source>
-        <translation type="vanished">'numsamples' 속성의 잘못된 시퀀스</translation>
-    </message>
-    <message>
-        <source>Unable to parse the waveblock 'start' attribute</source>
-        <translation type="vanished">waveblock 'start'속성을 파싱할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Missing project file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">프로젝트 파일 %1이 없습니다.
-
-무음을 대신 삽입.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid simpleblockfile 'len' attribute.</source>
-        <translation type="vanished">없거나 잘못된 simpleblockfile 'len' 속성.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid silentblockfile 'len' attribute.</source>
-        <translation type="vanished">없거나 잘못된 silentblockfile 'len' 속성.</translation>
-    </message>
-    <message>
-        <source>Missing alias file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">alias 파일 %1가 없음
-
-무음을 대신 삽입.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliasstart' attribute.</source>
-        <translation type="vanished">없거나 잘못된 pcmaliasblockfile 'aliastart' 속성.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliaslen' attribute.</source>
-        <translation type="vanished">없거나 잘못된 pcmaliasblockfile 'aliaslen' 속성.</translation>
-    </message>
-    <message>
-        <source>Error while processing %s
-
-Inserting silence.</source>
-        <translation type="vanished">처리중 오류 %1
-
-무음을 삽입.</translation>
-    </message>
-    <message>
-        <source>Failed to open %s</source>
-        <translation type="vanished">%1 파일을 여는데 실패</translation>
-    </message>
-    <message>
-        <source>Failed to seek to position %lld in %s</source>
-        <translation type="vanished">위치 %1 를 %2 에서 찾을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Unable to read %lld samples from %s</source>
-        <translation type="vanished">%1 샘플을 %2에서 읽을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Command:</source>
-        <translation type="vanished">명령:</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="vanished">찾아보기...</translation>
-    </message>
-    <message>
-        <source>Show output</source>
-        <extracomment>i18n-hint: show output on a graph</extracomment>
-        <translation type="vanished">출력 표시</translation>
-    </message>
-    <message>
-        <source>Data will be piped to standard in. "%f" uses the file name in the export window.</source>
-        <extracomment>i18n-hint: Some programmer-oriented terminology here:
-"Data" refers to the sound to be exported, "piped" means sent,
-and "standard in" means the default input stream that the external program,
-named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
-in the program as a format string.  Keep %f unchanged.</extracomment>
-        <translation type="vanished">데이터는 표준입력(stdin)으로 파이핑이 됩니다. "%1"은 내보내기 창의 파일명을 사용합니다.</translation>
-    </message>
-    <message>
-        <source>Program name appears to be missing.</source>
-        <translation type="vanished">프로그램 이름이 없음으로 표시됨.</translation>
-    </message>
-    <message>
-        <source>"%s" couldn't be found.</source>
-        <translation type="vanished">"%1" 찾을 수 없음.</translation>
-    </message>
-    <message>
-        <source>Unable to locate "%s" in your path.</source>
-        <translation type="vanished">경로에서 "%1" 를 찾을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Executables</source>
-        <extracomment>i18n-hint files that can be run as programs</extracomment>
-        <translation type="vanished">실행가능</translation>
-    </message>
-    <message>
-        <source>Find path to command</source>
-        <translation type="vanished">명령 경로 찾기</translation>
-    </message>
-    <message>
-        <source>(external program)</source>
-        <translation type="vanished">(외부 프로그램)</translation>
-    </message>
-    <message>
-        <source>Exporting the selected audio using command-line encoder</source>
-        <translation type="vanished">명령행 인코더를 사용하여 선택한 오디오를 내보내는 중</translation>
-    </message>
-    <message>
-        <source>Exporting the audio using command-line encoder</source>
-        <translation type="vanished">명령행 인코더를 사용하여 오디오를 내보내는 중</translation>
-    </message>
-    <message>
-        <source>Command Output</source>
-        <translation type="vanished">명령 출력</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="vanished">확인(&amp;O)</translation>
-    </message>
-    <message>
-        <source>%.2f kbps</source>
-        <translation type="vanished">%1 kbps</translation>
-    </message>
-    <message>
-        <source>Current Format:</source>
-        <translation type="vanished">현재 포맷:</translation>
-    </message>
-    <message>
-        <source>Current Codec:</source>
-        <translation type="vanished">현재 코덱:</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't determine format description for file "%s".</source>
-        <translation type="vanished">FFmpeg : 오류 - 파일 "%1"의 포멧 디스크립션을 결정할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate output format context.</source>
-        <translation type="vanished">FFmpeg : 오류 - 출력 형식 컨텍스트를 할당할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't add audio stream to output file "%s".</source>
-        <translation type="vanished">FFmpeg : 오류 - 오디오 스트림을 출력 파일 "%1"에 추가할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't open output file "%s" to write. Error code is %d.</source>
-        <translation type="vanished">FFmpeg : 오류 - "%1" 출력 파일을 쓰기 위해 열 수 없습니다. 오류 코드는 %2입니다.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't write headers to output file "%s". Error code is %d.</source>
-        <translation type="vanished">FFmpeg : 오류 - 출력 파일 "%1"에 헤더를 기록할 수 없습니다.오류 코드는 %2입니다.</translation>
-    </message>
-    <message>
-        <source>Can't open audio codec "%s" (0x%x)
-
-%s</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">오디오 코덱 "%1" (0x%2) 열 수 없음
-
-%3</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.</source>
-        <translation type="vanished">FFmpeg : 오류 - 오디오 FIFO에서 읽어들일 버퍼를 할당할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Couldn't write audio frame to output file.</source>
-        <translation type="vanished">FFmpeg : 오류 - 출력 파일에 오디오 프레임을 쓸 수 없습니다. </translation>
-    </message>
-    <message>
-        <source>Properly configured FFmpeg is required to proceed.
-You can configure it at Preferences &gt; Libraries.</source>
-        <translation type="vanished">진행하려면 제대로 구성된 FFmpeg가 필요합니다.
-환경 설정 &gt; 라이브러리에서 설정할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Configure custom FFmpeg options</source>
-        <translation type="vanished">사용자 FFmpeg 옵션 설정</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation type="vanished">프리셋:</translation>
-    </message>
-    <message>
-        <source>Load Preset</source>
-        <translation type="vanished">프리셋 불러오기</translation>
-    </message>
-    <message>
-        <source>Save Preset</source>
-        <translation type="vanished">프리셋 저장</translation>
-    </message>
-    <message>
-        <source>Delete Preset</source>
-        <translation type="vanished">프리셋 삭제</translation>
-    </message>
-    <message>
-        <source>Import Presets</source>
-        <translation type="vanished">프리셋 가져오기</translation>
-    </message>
-    <message>
-        <source>Export Presets</source>
-        <translation type="vanished">프리셋 내보내기</translation>
-    </message>
-    <message>
-        <source>Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs.</source>
-        <translation type="vanished">모든 형식과 코덱이 호환되는 것은 아닙니다. 또한 모든 옵션의 조합이모든 코덱에 호환되는 것도 아닙니다.</translation>
-    </message>
-    <message>
-        <source>Show All Formats</source>
-        <translation type="vanished">모든 형식 보이기</translation>
-    </message>
-    <message>
-        <source>Show All Codecs</source>
-        <translation type="vanished">모든 코덱 보이기</translation>
-    </message>
-    <message>
-        <source>General Options</source>
-        <translation type="vanished">일반 옵션</translation>
-    </message>
-    <message>
-        <source>ISO 639 3-letter language code
-Optional
-empty - automatic</source>
-        <translation type="vanished">ISO 639 3-문자 언어 코드
-선택적
-비어 있음 - 자동</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation type="vanished">언어:</translation>
-    </message>
-    <message>
-        <source>Bit Reservoir</source>
-        <translation type="vanished">비트 저장소</translation>
-    </message>
-    <message>
-        <source>Codec tag (FOURCC)
-Optional
-empty - automatic</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">코덱 태그 (FOURCC)
-선택적
-비어 있음 - 자동</translation>
-    </message>
-    <message>
-        <source>Tag:</source>
-        <translation type="vanished">태그:</translation>
-    </message>
-    <message>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</source>
-        <translation type="vanished">비트레이트 (초당 비트) - 파일 크기와 품질에 영향을 줍니다
-어떤 코덱은 특정한 값(128k, 192k, 256k 등)만 받아들일 수 있습니다
-0 - 자동
-추천 - 192000</translation>
-    </message>
-    <message>
-        <source>Bit Rate:</source>
-        <translation type="vanished">비트레이트:</translation>
-    </message>
-    <message>
-        <source>Overall quality, used differently by different codecs
-Required for vorbis
-0 - automatic
--1 - off (use bitrate instead)</source>
-        <translation type="vanished">전체적인 품질, 각각의 코덱마다 다르게 사용됨
-vorbis에 필요함
-0 - 자동
--1 - 끄기 (대신 비트레이트 이용)</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="vanished">품질:</translation>
-    </message>
-    <message>
-        <source>Sample rate (Hz)
-0 - don't change sample rate</source>
-        <translation type="vanished">샘플링 주파수(Hz)
-0 - 샘플링 주파수를 바꾸지 않음</translation>
-    </message>
-    <message>
-        <source>Sample Rate:</source>
-        <translation type="vanished">샘플링 주파수:</translation>
-    </message>
-    <message>
-        <source>Audio cutoff bandwidth (Hz)
-Optional
-0 - automatic</source>
-        <translation type="vanished">오디오 차단 대역폭 (Hz)
-선택적
-0 - 자동</translation>
-    </message>
-    <message>
-        <source>Cutoff:</source>
-        <translation type="vanished">컷오프:</translation>
-    </message>
-    <message>
-        <source>AAC Profile
-Low Complexity - default
-Most players won't play anything other than LC</source>
-        <translation type="vanished">AAC 프로파일
-낮은 복잡도 - 기본값
-대부분의 재생기는 LC 외에는 재생할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Profile:</source>
-        <translation type="vanished">프로파일:</translation>
-    </message>
-    <message>
-        <source>Compression level
-Required for FLAC
--1 - automatic
-min - 0 (fast encoding, large output file)
-max - 10 (slow encoding, small output file)</source>
-        <translation type="vanished">컴프레션 레벨
-FLAC에서 필요합니다
--1 - 자동
-최소값 - 0 (빠른 인코딩, 큰 출력 파일)
-최대값 - 10 (느린 인코딩, 작은 출력 파일)</translation>
-    </message>
-    <message>
-        <source>Compression:</source>
-        <translation type="vanished">컴프레션:</translation>
-    </message>
-    <message>
-        <source>Frame size
-Optional
-0 - default
-min - 16
-max - 65535</source>
-        <translation type="vanished">프레임 크기
-선택 사항
-0 - 기본값
-최소값 - 16
-최대값 - 65535</translation>
-    </message>
-    <message>
-        <source>Frame:</source>
-        <translation type="vanished">프레임:</translation>
-    </message>
-    <message>
-        <source>LPC coefficients precision
-Optional
-0 - default
-min - 1
-max - 15</source>
-        <translation type="vanished">LPC 계수 정밀도
-선택 사항
-0 - 기본값
-최소값 - 1
-최대값 - 15</translation>
-    </message>
-    <message>
-        <source>Prediction Order Method
-Estimate - fastest, lower compression
-Log search - slowest, best compression
-Full search - default</source>
-        <translation type="vanished">예측 순서 방식
-추정 - 가장 빠르고, 낮은 압축율
-로그 검색 - 가장 느리고, 좋은 압축율
-전체 검색 - 기본값</translation>
-    </message>
-    <message>
-        <source>PdO Method:</source>
-        <translation type="vanished">예측 순서 방식:</translation>
-    </message>
-    <message>
-        <source>Minimal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">최소 예측 순서
-선택 사항
--1 - 기본값
-최소값 - 0
-최대값 - 32 (LPC 포함) 또는 4 (LPC 제외)</translation>
-    </message>
-    <message>
-        <source>Maximal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">최대 예측 순서
-선택 사항
--1 - 기본값
-최소값 - 0
-최대값 - 32 (LPC 포함) 또는 4 (LPC 제외)</translation>
-    </message>
-    <message>
-        <source>Minimal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">최소 분할 순서
-선택 사항
--1 - 기본값
-최소값 - 0
-최대값 - 8</translation>
-    </message>
-    <message>
-        <source>Maximal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">최대 분할 순서
-선택 사항
--1 - 기본값
-최소값 - 0
-최대값 - 8</translation>
-    </message>
-    <message>
-        <source>Maximum bit rate of the multiplexed stream
-Optional
-0 - default</source>
-        <translation type="vanished">다중 스트림의 최대 비트 레이트
-선택 사항
-0 - 기본값</translation>
-    </message>
-    <message>
-        <source>Mux Rate:</source>
-        <extracomment>i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
-it has a hard to predict effect on the degree of compression</extracomment>
-        <translation type="vanished">멀티플렉서 비율:</translation>
-    </message>
-    <message>
-        <source>Packet size
-Optional
-0 - default</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">패킷 크기
-선택 사항
-0 - 기본값</translation>
-    </message>
-    <message>
-        <source>Packet Size:</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">패킷 크기:</translation>
-    </message>
-    <message>
-        <source>You can't delete a preset without name</source>
-        <translation type="vanished">이름 없는 프리셋은 삭제할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Delete preset '%s'?</source>
-        <translation type="vanished">'%1' 프리셋을 삭제할까요?</translation>
-    </message>
-    <message>
-        <source>Confirm Deletion</source>
-        <translation type="vanished">삭제 확인</translation>
-    </message>
-    <message>
-        <source>You can't save a preset without a name</source>
-        <translation type="vanished">프리셋을 이름없이 저장할 수 없음</translation>
-    </message>
-    <message>
-        <source>Select xml file with presets to import</source>
-        <translation type="vanished">가져올 프리셋이 있는 xml 파일 선택</translation>
-    </message>
-    <message>
-        <source>No presets to export</source>
-        <translation type="vanished">내보낼 프리셋이 없음</translation>
-    </message>
-    <message>
-        <source>Select xml file to export presets into</source>
-        <translation type="vanished">프리셋을 내보낼 xml 파일 선택</translation>
-    </message>
-    <message>
-        <source>Format %s is not compatible with codec %s.</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">%1 포맷은 %2 포맷과 호환되지 않음.</translation>
-    </message>
-    <message>
-        <source>Incompatible format and codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">파일 형식과 코덱이 호환되지 않음</translation>
-    </message>
-    <message>
-        <source>Failed to guess format</source>
-        <translation type="vanished">형식 추정에 실패했습니다</translation>
-    </message>
-    <message>
-        <source>Failed to find the codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">코덱을 찾지 못했습니다</translation>
-    </message>
-    <message>
-        <source>FFmpeg was configured in Preferences and successfully loaded before, 
-but this time Audacity failed to load it at startup. 
-
-You may want to go back to Preferences &gt; Libraries and re-configure it.</source>
-        <translation type="vanished">환경설정에서 FFmpeg를 설정했고 이전에 성공적으로 불러왔지만, 
-이번에 오데시티 시작시 FFmpeg을 불러오는데 실패했습니다.
-
-환경설정 &gt; 라이브러리  에서 다시 설정해 보세요.</translation>
-    </message>
-    <message>
-        <source>FFmpeg startup failed</source>
-        <translation type="vanished">FFmpeg 시작에 실패했습니다</translation>
-    </message>
-    <message>
-        <source>Locate FFmpeg</source>
-        <translation type="vanished">FFmpeg 찾기</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file '%s' to import and export audio via FFmpeg.</source>
-        <translation type="vanished">오데시티에서 FFmpeg을 통해 오디오를 가져오고 내보내는데 '%1' 파일이 필요합니다.</translation>
-    </message>
-    <message>
-        <source>Location of '%s':</source>
-        <translation type="vanished">'%1' 위치:</translation>
-    </message>
-    <message>
-        <source>To find '%s', click here --&gt;</source>
-        <translation type="vanished">'%1'을 찾으려면, 여기를 누르세요 --&gt;</translation>
-    </message>
-    <message>
-        <source>To get a free copy of FFmpeg, click here --&gt;</source>
-        <translation type="vanished">FFmpeg의 무료 사본을 얻으려면, 여기를 누르세요 --&gt;</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">다운로드</translation>
-    </message>
-    <message>
-        <source>Only avformat.dll</source>
-        <translation type="vanished">오직 avformat.dll</translation>
-    </message>
-    <message>
-        <source>Only libavformat.dylib</source>
-        <translation type="vanished">오직 libavformat.dylib</translation>
-    </message>
-    <message>
-        <source>Only libavformat.so</source>
-        <translation type="vanished">오직 libavformat.so</translation>
-    </message>
-    <message>
-        <source>Where is '%s'?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-example, "Where is lame_enc.dll?" - you could translate
-"Where would I find the file '%s'?" instead if you want.</extracomment>
-        <translation type="vanished">'%1' 위치는 어디입니까?</translation>
-    </message>
-    <message>
-        <source>FFmpeg not found</source>
-        <translation type="vanished">FFmpeg을 찾지 못했습니다</translation>
-    </message>
-    <message>
-        <source>Audacity attempted to use FFmpeg to import an audio file,
-but the libraries were not found.
-
-To use FFmpeg import, go to Edit &gt; Preferences &gt; Libraries
-to download or locate the FFmpeg libraries.</source>
-        <translation type="vanished">오데시티가 FFmpeg을 사용해 오디오 파일을 가져오려고
-했지만,  라이브러리를 찾지 못했습니다.
-
-FFmpeg 가져오기를 사용하려면,  환경 설정 &gt; 라이브러리 에서
-FFmpeg 라이브러리를 다운로드하거나 그 위치를 지정하세요.</translation>
-    </message>
-    <message>
-        <source>Do not show this warning again</source>
-        <translation type="vanished">이 경고를 다시 보이지 않음</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export Library</source>
-        <translation type="vanished">FFmpeg 가져오기/내보내기 라이브러리</translation>
-    </message>
-    <message>
-        <source>No compatible FFmpeg library was found</source>
-        <translation type="vanished">호환되는 FFmpeg 라이브러리를 찾지 못했습니다</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library Version:</source>
-        <translation type="vanished">FFmpeg 라이브러리 버전:</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library:</source>
-        <translation type="vanished">FFmpeg 라이브러리:</translation>
-    </message>
-    <message>
-        <source>Loca&amp;te...</source>
-        <translation type="vanished">위치 찾기(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>Dow&amp;nload</source>
-        <translation type="vanished">다운로드(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Audacity has automatically detected valid FFmpeg libraries.
-Do you still want to locate them manually?</source>
-        <translation type="vanished">오데시티가 유효한 FFmpeg 라이브러리를 자동으로 찾았습니다.
-그래도 FFmpeg의 위치를 직접 찾을까요?</translation>
-    </message>
-    <message>
-        <source>Error Saving FFmpeg Presets</source>
-        <translation type="vanished">FFmpeg 프리셋 저장 중 오류</translation>
-    </message>
-    <message>
-        <source>Overwrite preset '%s'?</source>
-        <translation type="vanished">'%1' 프리셋을 덮어쓸까요?</translation>
-    </message>
-    <message>
-        <source>Confirm Overwrite</source>
-        <translation type="vanished">덮어쓰기 확인</translation>
-    </message>
-    <message>
-        <source>Please select format before saving a profile</source>
-        <translation type="vanished">프로파일 저장 전에 형식을 선택하세요</translation>
-    </message>
-    <message>
-        <source>Please select codec before saving a profile</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">프로파일 저장 전에 코덱을 선택하세요</translation>
-    </message>
-    <message>
-        <source>Preset '%s' does not exist.</source>
-        <translation type="vanished">'%1' 프리셋이 존재하지 않습니다.</translation>
-    </message>
-    <message>
-        <source>Replace preset '%s'?</source>
-        <translation type="vanished">'%1' 프리셋을 바꿀까요?</translation>
-    </message>
-    <message>
-        <source>FLAC export couldn't open %s</source>
-        <translation type="vanished">FLAC 내보내기는 %1을 열 수 없습니다</translation>
-    </message>
-    <message>
-        <source>List of Files in basic text format</source>
-        <translation type="vanished">기본 텍스트 형식의 파일 목록</translation>
-    </message>
-    <message>
-        <source>Invalid window offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF 파일에 무효한 윈도우 오프셋이 있습니다.</translation>
-    </message>
-    <message>
-        <source>Invalid duration in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF 파일에 무효한 전체시간이 있습니다.</translation>
-    </message>
-    <message>
-        <source>MIDI tracks cannot be offset individually, only audio files can be.</source>
-        <translation type="vanished">MIDI 트랙은 개별적으로 오프셋을 지정할 수 없고, 오디오 파일에서만 가능합니다.</translation>
-    </message>
-    <message>
-        <source>Invalid track offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF 파일에 무효한 트랙 오프셋이 있습니다.</translation>
-    </message>
-    <message>
-        <source>Insane, 320 kbps</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">미친품질, 320 kbps</translation>
-    </message>
-    <message>
-        <source>Insane</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">미친</translation>
-    </message>
-    <message>
-        <source>Locate LAME</source>
-        <extracomment>i18n-hint: LAME is the name of an MP3 converter and should not be translated</extracomment>
-        <translation type="vanished">LAME 찾기</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file %s to create MP3s.</source>
-        <translation type="vanished">오데시티에서 MP3를 만들려면 %1 파일이 필요합니다.</translation>
-    </message>
-    <message>
-        <source>Location of %s:</source>
-        <translation type="vanished">%1의 위치:</translation>
-    </message>
-    <message>
-        <source>To find %s, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">%1 검색은 여기를 누르세요 --&gt;</translation>
-    </message>
-    <message>
-        <source>To get a free copy of LAME, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">LAME 무료 사본을 구하려면 여기를 누르세요 --&gt;</translation>
-    </message>
-    <message>
-        <source>Where is %s?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-* example, "Where is lame_enc.dll?" - you could translate
-* "Where would I find the file %s" instead if you want.</extracomment>
-        <translation type="vanished">%1은 어디에 있습니까?</translation>
-    </message>
-    <message>
-        <source>You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.
-Please download the latest version of 'LAME for Audacity'.</source>
-        <translation type="vanished">현재 링크하고 있는 파일은 lame_enc.dll v%1.%2임. 이버전은 오데시티 버전 %3.%4.%5 과 호환되지 않음.
-최신 버전의 'LAME for Audacity' 를 다운로드 하기 바랍니다. </translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) is not supported by the MP3
-file format. </source>
-        <translation type="vanished">프로젝트 샘플링 주파수 (%1) 는 MP3 파일 포맷에서
-지원되지 않습니다.</translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) and bit rate (%d kbps) combination is not
-supported by the MP3 file format. </source>
-        <translation type="vanished">프로젝트 샘플링 주파수 (%1) 와 비트 레이트 (%2) 조합을 MP3 파일 포맷에서
-지원되지 않습니다.</translation>
-    </message>
-    <message>
-        <source>LAME MP3 Export Library</source>
-        <translation type="vanished">LAME MP3 내보내기 라이브러리</translation>
-    </message>
-    <message>
-        <source>MP3 Library Version:</source>
-        <translation type="vanished">MP3 라이브러리 버전:</translation>
-    </message>
-    <message>
-        <source>Error while writing %s file (disk full?).
-Libsndfile says "%s"</source>
-        <extracomment>i18n-hint: %s will be the error message from libsndfile, which
-* is usually something unhelpful (and untranslated) like "system
-* error"</extracomment>
-        <translation type="vanished">%1 파일 기록 중 오류 (디스크 꽉 참?).
-Libsndfile 메시지 "%2"</translation>
-    </message>
-    <message>
-        <source>AU (Sun/NeXT)</source>
-        <translation type="vanished">AU (Sun/NeXT)</translation>
-    </message>
-    <message>
-        <source>AVR (Audio Visual Research)</source>
-        <translation type="vanished">AVR (Audio Visual Research)</translation>
-    </message>
-    <message>
-        <source>CAF (Apple Core Audio File)</source>
-        <translation type="vanished">CAF (Apple Core Audio File)</translation>
-    </message>
-    <message>
-        <source>FLAC (FLAC Lossless Audio Codec)</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">FLAC (FLAC Lossless Audio Codec)</translation>
-    </message>
-    <message>
-        <source>HTK (HMM Tool Kit)</source>
-        <translation type="vanished">HTK (HMM Tool Kit)</translation>
-    </message>
-    <message>
-        <source>IFF (Amiga IFF/SVX8/SV16)</source>
-        <translation type="vanished">IFF (Amiga IFF/SVX8/SV16)</translation>
-    </message>
-    <message>
-        <source>MAT4 (GNU Octave 2.0 / Matlab 4.2)</source>
-        <translation type="vanished">MAT4 (GNU Octave 2.0 / Matlab 4.2)</translation>
-    </message>
-    <message>
-        <source>MAT5 (GNU Octave 2.1 / Matlab 5.0)</source>
-        <translation type="vanished">MAT5 (GNU Octave 2.1 / Matlab 5.0)</translation>
-    </message>
-    <message>
-        <source>MPC (Akai MPC 2k)</source>
-        <translation type="vanished">MPC (Akai MPC 2k)</translation>
-    </message>
-    <message>
-        <source>OGG (OGG Container format)</source>
-        <translation type="vanished">OGG (OGG Container format)</translation>
-    </message>
-    <message>
-        <source>PAF (Ensoniq PARIS)</source>
-        <translation type="vanished">PAF (Ensoniq PARIS)</translation>
-    </message>
-    <message>
-        <source>PVF (Portable Voice Format)</source>
-        <translation type="vanished">PVF (Portable Voice Format)</translation>
-    </message>
-    <message>
-        <source>RAW (header-less)</source>
-        <translation type="vanished">RAW (header-less)</translation>
-    </message>
-    <message>
-        <source>RF64 (RIFF 64)</source>
-        <translation type="vanished">RF64 (RIFF 64)</translation>
-    </message>
-    <message>
-        <source>SD2 (Sound Designer II)</source>
-        <translation type="vanished">SD2 (Sound Designer II)</translation>
-    </message>
-    <message>
-        <source>SDS (Midi Sample Dump Standard)</source>
-        <translation type="vanished">SDS (Midi Sample Dump Standard)</translation>
-    </message>
-    <message>
-        <source>SF (Berkeley/IRCAM/CARL)</source>
-        <translation type="vanished">SF (Berkeley/IRCAM/CARL)</translation>
-    </message>
-    <message>
-        <source>VOC (Creative Labs)</source>
-        <translation type="vanished">VOC (Creative Labs)</translation>
-    </message>
-    <message>
-        <source>W64 (SoundFoundry WAVE 64)</source>
-        <translation type="vanished">W64 (SoundFoundry WAVE 64)</translation>
-    </message>
-    <message>
-        <source>WAV (NIST Sphere)</source>
-        <translation type="vanished">WAV (NIST Sphere)</translation>
-    </message>
-    <message>
-        <source>WAVEX (Microsoft)</source>
-        <translation type="vanished">WAVEX (Microsoft)</translation>
-    </message>
-    <message>
-        <source>WVE (Psion Series 3)</source>
-        <translation type="vanished">WVE (Psion Series 3)</translation>
-    </message>
-    <message>
-        <source>XI (FastTracker 2)</source>
-        <translation type="vanished">XI (FastTracker 2)</translation>
-    </message>
-    <message>
-        <source>Signed 8 bit PCM</source>
-        <translation type="vanished">Signed 8 bit PCM</translation>
-    </message>
-    <message>
-        <source>Signed 16 bit PCM</source>
-        <translation type="vanished">Signed 16 bit PCM</translation>
-    </message>
-    <message>
-        <source>Signed 24 bit PCM</source>
-        <translation type="vanished">Signed 24 bit PCM</translation>
-    </message>
-    <message>
-        <source>Signed 32 bit PCM</source>
-        <translation type="vanished">Signed 32 bit PCM</translation>
-    </message>
-    <message>
-        <source>Unsigned 8 bit PCM</source>
-        <translation type="vanished">Unsigned 8 bit PCM</translation>
-    </message>
-    <message>
-        <source>64 bit float</source>
-        <translation type="vanished">64 bit float</translation>
-    </message>
-    <message>
-        <source>U-Law</source>
-        <translation type="vanished">U-Law</translation>
-    </message>
-    <message>
-        <source>A-Law</source>
-        <translation type="vanished">A-Law</translation>
-    </message>
-    <message>
-        <source>IMA ADPCM</source>
-        <translation type="vanished">IMA ADPCM</translation>
-    </message>
-    <message>
-        <source>Microsoft ADPCM</source>
-        <translation type="vanished">Microsoft ADPCM</translation>
-    </message>
-    <message>
-        <source>GSM 6.10</source>
-        <translation type="vanished">GSM 6.10</translation>
-    </message>
-    <message>
-        <source>32kbs G721 ADPCM</source>
-        <translation type="vanished">32kbs G721 ADPCM</translation>
-    </message>
-    <message>
-        <source>24kbs G723 ADPCM</source>
-        <translation type="vanished">24kbs G723 ADPCM</translation>
-    </message>
-    <message>
-        <source>12 bit DWVW</source>
-        <translation type="vanished">12 bit DWVW</translation>
-    </message>
-    <message>
-        <source>16 bit DWVW</source>
-        <translation type="vanished">16 bit DWVW</translation>
-    </message>
-    <message>
-        <source>24 bit DWVW</source>
-        <translation type="vanished">24 bit DWVW</translation>
-    </message>
-    <message>
-        <source>VOX ADPCM</source>
-        <translation type="vanished">VOX ADPCM</translation>
-    </message>
-    <message>
-        <source>16 bit DPCM</source>
-        <translation type="vanished">16 bit DPCM</translation>
-    </message>
-    <message>
-        <source>8 bit DPCM</source>
-        <translation type="vanished">8 bit DPCM</translation>
-    </message>
-    <message>
-        <source>Vorbis</source>
-        <translation type="vanished">Vorbis</translation>
-    </message>
-    <message>
-        <source>&amp;Nyquist Workbench...</source>
-        <translation type="vanished">나이키스트 워크벤치(&amp;N)...</translation>
-    </message>
-    <message>
-        <source>&amp;Undo	Ctrl+Z</source>
-        <translation type="vanished">실행 취소(&amp;U)	Ctrl+Z</translation>
-    </message>
-    <message>
-        <source>&amp;Redo	Ctrl+Y</source>
-        <translation type="vanished">재실행(&amp;R)	Ctrl+Y</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t	Ctrl+X</source>
-        <translation type="vanished">잘라내기(&amp;T)	Ctrl+X</translation>
-    </message>
-    <message>
-        <source>&amp;Copy	Ctrl+C</source>
-        <translation type="vanished">복사(&amp;C)	Ctrl+C</translation>
-    </message>
-    <message>
-        <source>&amp;Paste	Ctrl+V</source>
-        <translation type="vanished">붙여넣기(&amp;P)	Ctrl+V</translation>
-    </message>
-    <message>
-        <source>Cle&amp;ar	Ctrl+L</source>
-        <translation type="vanished">지우기(&amp;A)	Ctrl+L</translation>
-    </message>
-    <message>
-        <source>Select A&amp;ll	Ctrl+A</source>
-        <translation type="vanished">전체 선택(&amp;L)	Ctrl+A</translation>
-    </message>
-    <message>
-        <source>&amp;Find...	Ctrl+F</source>
-        <translation type="vanished">찾기(&amp;F)...	Ctrl+F</translation>
-    </message>
-    <message>
-        <source>&amp;Matching Paren	F8</source>
-        <translation type="vanished">일치하는 괄호(&amp;M)	F8</translation>
-    </message>
-    <message>
-        <source>&amp;Top S-expr	F9</source>
-        <translation type="vanished">최상위 S-표현식(&amp;T)	F9</translation>
-    </message>
-    <message>
-        <source>&amp;Higher S-expr	F10</source>
-        <translation type="vanished">상위 S-표현식(&amp;H)	F10</translation>
-    </message>
-    <message>
-        <source>&amp;Previous S-expr	F11</source>
-        <translation type="vanished">이전 S-표현식(&amp;P)	F11</translation>
-    </message>
-    <message>
-        <source>&amp;Next S-expr	F12</source>
-        <translation type="vanished">다음 S-표현식(&amp;N)	F12</translation>
-    </message>
-    <message>
-        <source>&amp;Go to</source>
-        <translation type="vanished">이동(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Select &amp;Font...</source>
-        <translation type="vanished">글꼴 선택(&amp;F)...</translation>
-    </message>
-    <message>
-        <source>Split &amp;Vertically</source>
-        <translation type="vanished">수직 분할(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Split &amp;Horizontally</source>
-        <translation type="vanished">수평 분할(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Show S&amp;cript</source>
-        <translation type="vanished">스크립트 보기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show &amp;Output</source>
-        <translation type="vanished">출력 보기(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Large Icons</source>
-        <translation type="vanished">큰 아이콘(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Small Icons</source>
-        <translation type="vanished">작은 아이콘(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Toolbar</source>
-        <translation type="vanished">도구모음</translation>
-    </message>
-    <message>
-        <source>&amp;Go	F5</source>
-        <translation type="vanished">시작(&amp;G)	F5</translation>
-    </message>
-    <message>
-        <source>&amp;Stop	F6</source>
-        <translation type="vanished">정지(&amp;S)	F6</translation>
-    </message>
-    <message>
-        <source>&amp;About</source>
-        <translation type="vanished">정보(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Script</source>
-        <translation type="vanished">스크립트</translation>
-    </message>
-    <message>
-        <source>Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*</source>
-        <translation type="vanished">나이키스트 스크립트 (*.ny)|*.ny|Lisp 스크립트 (*.lsp)|*.lsp|모든 파일|*</translation>
-    </message>
-    <message>
-        <source>Script was not saved.</source>
-        <translation type="vanished">스크립트가 저장되지 않음.</translation>
-    </message>
-    <message>
-        <source>Find dialog</source>
-        <translation type="vanished">대화 찾기</translation>
-    </message>
-    <message>
-        <source>Harvey Lubin (logo)</source>
-        <translation type="vanished">Harvey Lubin (로고)</translation>
-    </message>
-    <message>
-        <source>Tango Icon Gallery (toolbar icons)</source>
-        <translation type="vanished">탱고 아이콘 갤러리 (도구 모음 아이콘)</translation>
-    </message>
-    <message>
-        <source>Leland Lucius</source>
-        <translation type="vanished">Leland Lucius</translation>
-    </message>
-    <message>
-        <source>(C) 2009 by Leland Lucius</source>
-        <translation type="vanished">(C) 2009 리랜드 루시우스</translation>
-    </message>
-    <message>
-        <source>External Audacity module which provides a simple IDE for writing effects.</source>
-        <translation type="vanished">이펙트를 작성하기 위한 간단한 IDE를 제공하는 외부 오데시티 모듈.</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench</source>
-        <translation type="vanished">나이키스트 이펙트 작업 도구</translation>
-    </message>
-    <message>
-        <source>No matches found</source>
-        <translation type="vanished">일치하는 내용이 없습니다</translation>
-    </message>
-    <message>
-        <source>Code has been modified. Are you sure?</source>
-        <translation type="vanished">코드가 바뀌었습니다. 이대로 진행하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench - </source>
-        <translation type="vanished">나이키스트 이펙트 작업 도구 - </translation>
-    </message>
-    <message>
-        <source>New script</source>
-        <translation type="vanished">새 스크립트</translation>
-    </message>
-    <message>
-        <source>Open script</source>
-        <translation type="vanished">스크립트 열기</translation>
-    </message>
-    <message>
-        <source>Save script</source>
-        <translation type="vanished">스크립트 저장</translation>
-    </message>
-    <message>
-        <source>Save As</source>
-        <translation type="vanished">다른 이름으로 저장</translation>
-    </message>
-    <message>
-        <source>Save script as...</source>
-        <translation type="vanished">스크립트 저장...</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">클립보드에 복사</translation>
-    </message>
-    <message>
-        <source>Cut to clipboard</source>
-        <translation type="vanished">클립보드로 잘라내기</translation>
-    </message>
-    <message>
-        <source>Paste from clipboard</source>
-        <translation type="vanished">클립보드에서 붙여넣기</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation type="vanished">전체 선택</translation>
-    </message>
-    <message>
-        <source>Select all text</source>
-        <translation type="vanished">전체 텍스트 선택</translation>
-    </message>
-    <message>
-        <source>Undo last change</source>
-        <translation type="vanished">마지막 변경사항 실행 취소</translation>
-    </message>
-    <message>
-        <source>Redo previous change</source>
-        <translation type="vanished">이전 변경사항 재실행</translation>
-    </message>
-    <message>
-        <source>Find</source>
-        <translation type="vanished">찾기</translation>
-    </message>
-    <message>
-        <source>Find text</source>
-        <translation type="vanished">텍스트 찾기</translation>
-    </message>
-    <message>
-        <source>Match</source>
-        <translation type="vanished">일치</translation>
-    </message>
-    <message>
-        <source>Go to matching paren</source>
-        <translation type="vanished">일치하는 괄호로 이동</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">최상위</translation>
-    </message>
-    <message>
-        <source>Go to top S-expr</source>
-        <translation type="vanished">최상위 S-표현식으로 이동</translation>
-    </message>
-    <message>
-        <source>Go to higher S-expr</source>
-        <translation type="vanished">더 높은 S-표현식으로 이동</translation>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation type="vanished">이전</translation>
-    </message>
-    <message>
-        <source>Go to previous S-expr</source>
-        <translation type="vanished">이전 S-표현식으로 이동</translation>
-    </message>
-    <message>
-        <source>Go to next S-expr</source>
-        <translation type="vanished">다음 S-표현식으로 이동</translation>
-    </message>
-    <message>
-        <source>Start</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">시작</translation>
-    </message>
-    <message>
-        <source>Start script</source>
-        <translation type="vanished">스크립트 시작</translation>
-    </message>
-    <message>
-        <source>Stop script</source>
-        <translation type="vanished">스크립트 정지</translation>
-    </message>
-    <message>
-        <source>Waiting for audio.com</source>
-        <translation type="vanished">audio.com을 기다림</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. You can cancel this operation.</source>
-        <translation type="vanished">계속하려면 audio.com에서 작업이 필요합니다. 이 작업을 취소할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Generating audio preview...</source>
-        <translation type="vanished">오디오 미리 듣기 만드는 중...</translation>
-    </message>
-    <message>
-        <source>Open trace audio.com</source>
-        <translation type="vanished">audio.com에서 트레이스 열기</translation>
-    </message>
-    <message>
-        <source>Synchronizing project</source>
-        <translation type="vanished">프로젝트 동기화 중</translation>
-    </message>
-    <message>
-        <source>Previews can be updated only for Cloud projects</source>
-        <translation type="vanished">미리듣기는 클라우드 프로젝트만 업데이트 됩니다</translation>
-    </message>
-    <message>
-        <source>Save &amp;To Cloud...</source>
-        <translation type="vanished">클라우드에 저장 (&amp;T)...</translation>
-    </message>
-    <message>
-        <source>&amp;Update Cloud Audio Preview</source>
-        <translation type="vanished">클라우드 오디오 프리뷰를 업데이트 (&amp;U)</translation>
-    </message>
-    <message>
-        <source>Open Fro&amp;m Cloud...</source>
-        <translation type="vanished">클라우드로 부터 열기...(&amp;M)</translation>
-    </message>
-    <message>
-        <source>S&amp;hare Audio...</source>
-        <translation type="vanished">오디오 공유...(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">계정</translation>
-    </message>
-    <message>
-        <source>Export behavior</source>
-        <translation type="vanished">내보내기 동작</translation>
-    </message>
-    <message>
-        <source>S&amp;how 'How would you like to export?' dialog</source>
-        <translation type="vanished">'어떤 방식으로 오디오를 내보내기 하겠습니까?'  대화 보기(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Save behavior</source>
-        <translation type="vanished">동작 저장</translation>
-    </message>
-    <message>
-        <source>Always &amp;ask</source>
-        <translation type="vanished">항상 묻기(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Always &amp;save to cloud</source>
-        <translation type="vanished">항상 클라우드에 저장(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Always save to the co&amp;mputer</source>
-        <translation type="vanished">항상 컴퓨터에 저장(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Temporary Cloud files directory</source>
-        <translation type="vanished">임시 클라우드 파일 디렉토리</translation>
-    </message>
-    <message>
-        <source>&amp;Location:</source>
-        <translation type="vanished">위치(&amp;L):</translation>
-    </message>
-    <message>
-        <source>&amp;Browse...</source>
-        <translation type="vanished">검색(&amp;B)</translation>
-    </message>
-    <message>
-        <source>days</source>
-        <translation type="vanished">일</translation>
-    </message>
-    <message>
-        <source>&amp;Remove temporary files after:</source>
-        <translation type="vanished">다음 기간 후 임시 파일 제거(&amp;R):</translation>
-    </message>
-    <message>
-        <source>Preferences for Cloud</source>
-        <translation type="vanished">클라우드에 대한 사전설정</translation>
-    </message>
-    <message>
-        <source>Choose a location to place the temporary directory</source>
-        <translation type="vanished">임시 폴더로 사용할 위치를 선택하세요</translation>
-    </message>
-    <message>
-        <source>Temporary files directory cannot be on a FAT drive.</source>
-        <translation type="vanished">임시 파일 폴더에 FAT 드라이브를 사용할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot set the preference.</source>
-        <translation type="vanished">선택사항을 설정할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Failed.</source>
-        <translation type="vanished">실패.</translation>
-    </message>
-    <message>
-        <source>Syncing to audio.com... (%d%%)</source>
-        <translation type="vanished">audio.com에 동기화... (%1%%)</translation>
-    </message>
-    <message>
-        <source>Waiting for space to free up</source>
-        <translation type="vanished">저장공간이 여유가 생길때까지 대기중</translation>
-    </message>
-    <message>
-        <source>Once you have made storage space available on audio.com, click Retry.</source>
-        <translation type="vanished">audio.com에 저장 공간을 확보한 후, 재시도를 클릭 하세요.</translation>
-    </message>
-    <message>
-        <source>Share Audio</source>
-        <extracomment>i18n-hint: Share audio button text, keep as short as possible</extracomment>
-        <translation type="vanished">오디오 공유</translation>
-    </message>
-    <message>
-        <source>&amp;Share Audio Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that opens Share Audio dialog</extracomment>
-        <translation type="vanished">오디오 공유 툴바 (&amp;S)</translation>
-    </message>
-    <message>
-        <source>Account not linked</source>
-        <translation type="vanished">계정이 연결되지 않음</translation>
-    </message>
-    <message>
-        <source>&amp;Link Account</source>
-        <translation type="vanished">계정 연결 (&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Unlink Account</source>
-        <translation type="vanished">계정 연결 해제 (&amp;U)</translation>
-    </message>
-    <message>
-        <source>Open from audio.com</source>
-        <translation type="vanished">audio.com에서 열기</translation>
-    </message>
-    <message>
-        <source>Don't show this again</source>
-        <translation type="vanished">다시 보이지 않음</translation>
-    </message>
-    <message>
-        <source>Save to the Cloud (free)</source>
-        <translation type="vanished">클라우드에 저장 (무료)</translation>
-    </message>
-    <message>
-        <source>&amp;Save to Cloud</source>
-        <translation type="vanished">클라우드에 저장(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Files are saved on your device.
-Note: To export MP3 and WAV files, use File &gt; Export Audio instead.</source>
-        <translation type="vanished">당신의 장치에 파일이 저장되었습니다.
-주의: MP3 나 WAV 파일로 내보내기 하려면, 파일 &gt; 오디오 내보내기 메뉴를 사용하세요.</translation>
-    </message>
-    <message>
-        <source>Save to &amp;computer</source>
-        <translation type="vanished">컴퓨터에 저장(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Remember my choice and don't show again</source>
-        <translation type="vanished">선택한 사항으로 설정하고 다시 묻지 않음(&amp;R)</translation>
-    </message>
-    <message>
-        <source>How would you like to export?</source>
-        <extracomment>i18n-hint: A title that is shown on export that allows the user to select
-Cloud or local export.</extracomment>
-        <translation type="vanished">어떤 방식으로 내보내기 하겠습니까?</translation>
-    </message>
-    <message>
-        <source>Share to audio.com</source>
-        <translation type="vanished">audio.com에 공유</translation>
-    </message>
-    <message>
-        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation type="vanished">압축되지 않은 오디오 파일을 업로드하고 공유 가능한 링크를 생성합니다. 이 링크를 통해 다른 사람들이 .wav 또는 .mp3 형식으로 파일을 다운로드할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Share to audio.com</source>
-        <translation type="vanished">audio.com에 공유(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation type="vanished">MP3, WAVs, FLAC, 등의 포맷으로 컴퓨터에 내보내기.</translation>
-    </message>
-    <message>
-        <source>Export to &amp;computer</source>
-        <translation type="vanished">컴퓨터로 내보내기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Don't show again</source>
-        <translation type="vanished">다시 보이지 않음(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Project Name</source>
-        <translation type="vanished">프로젝트 명</translation>
-    </message>
-    <message>
-        <source>Cloud saving requires a free audio.com account linked to Audacity. Press "Link account" above to proceed.</source>
-        <translation type="vanished">클라우드 저장을 위해서는 무료 audio.com 계정에 오데시티를 연결하여야 합니다. 위 "계정 연결"을 누르세요.</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="vanished">비공개</translation>
-    </message>
-    <message>
-        <source>Unlisted</source>
-        <translation type="vanished">열거되지 않음</translation>
-    </message>
-    <message>
-        <source>Public</source>
-        <translation type="vanished">공용</translation>
-    </message>
-    <message>
-        <source>Save to computer...</source>
-        <translation type="vanished">컴퓨터에 저장...</translation>
-    </message>
-    <message>
-        <source>We encountered an issue syncing your file</source>
-        <translation type="vanished">파일을 동기화하는 과정에 이슈가 발생하였습니다</translation>
-    </message>
-    <message>
-        <source>Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.</source>
-        <translation type="vanished">걱정하지 마세요. 변경 사항은 임시 위치에 저장되며 인터넷 연결이 다시 시작되면 클라우드 복사본과 동기화됩니다.</translation>
-    </message>
-    <message>
-        <source>Log in to audio.com to proceed.</source>
-        <translation type="vanished">계속하려면 audio.com에 로그인.</translation>
-    </message>
-    <message>
-        <source>We were unable to link your account. Please try again.</source>
-        <translation type="vanished">계정과 연결할 수 없습니다. 다시 시도해 보세요.</translation>
-    </message>
-    <message>
-        <source>&amp;Try again</source>
-        <translation type="vanished">다시 시도(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Account linked successfully!</source>
-        <translation type="vanished">계정 연결이 성공하였습니다!</translation>
-    </message>
-    <message>
-        <source>Enter token to link your account</source>
-        <translation type="vanished">계정을 연결하기 위한 토큰을 입력하세요</translation>
-    </message>
-    <message>
-        <source>Token</source>
-        <translation type="vanished">토큰</translation>
-    </message>
-    <message>
-        <source>C&amp;ontinue</source>
-        <translation type="vanished">계속(&amp;O)</translation>
-    </message>
-    <message>
-        <source>L&amp;ink audio.com account...</source>
-        <translation type="vanished">audio.com 계정 연결(&amp;L)</translation>
-    </message>
-    <message>
-        <source>This project is no longer saved to the Cloud</source>
-        <translation type="vanished">이 프로젝트는 더 이상 클라우드에 저장되지 않음</translation>
-    </message>
-    <message>
-        <source>This project was removed from audio.com and therefore cannot be saved at this time. </source>
-        <translation type="vanished">이 프로젝트는 audio.com에서 삭제되었으므로 지금은 저장할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>You can either save it to the Cloud as a new project, or save it to your computer.</source>
-        <translation type="vanished">클라우드에 새 프로젝트로 저장하거나 컴퓨터에 저장할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Save to Cloud</source>
-        <translation type="vanished">클라우드에 저장</translation>
-    </message>
-    <message>
-        <source>Your project storage limit has been reached.</source>
-        <translation type="vanished">당신의 프로젝트 저장공간의 한도에 도달했습니다.</translation>
-    </message>
-    <message>
-        <source>You may need to remove older projects to make space available. For more options, visit audio.com</source>
-        <translation type="vanished">저장 공간을 확보하려면 이전 프로젝트를 제거해야 할 수도 있습니다. 더 많은 옵션을 보려면 audio.com을 방문하세요.</translation>
-    </message>
-    <message>
-        <source>You can also save this project locally to avoid losing changes.</source>
-        <translation type="vanished">변경 사항을 잃지 않으려면 이 프로젝트를 로컬에 저장해야 합니다.</translation>
-    </message>
-    <message>
-        <source>Project version conflict detected</source>
-        <translation type="vanished">프로젝트 버전 충돌이 발생했습니다</translation>
-    </message>
-    <message>
-        <source>There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead.</source>
-        <translation type="vanished">audio.com에는 이 Audacity 프로젝트의 최신 버전이 있습니다. 대신 이 프로젝트를 저장하면 최신 버전으로 대체됩니다.</translation>
-    </message>
-    <message>
-        <source>Save this project</source>
-        <translation type="vanished">이 프로젝트 저장</translation>
-    </message>
-    <message>
-        <source>Discard and open latest version</source>
-        <translation type="vanished">이전 버전을 버리고 최신 버전으로 열기</translation>
-    </message>
-    <message>
-        <source>Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead.</source>
-        <translation type="vanished">프로젝트에 저장되지 않은 변경사항이 있습니다. Audio.com에는 이 Audacity 프로젝트의 최신 버전이 있습니다. 변경사항을 취소하면 대신 최신 버전이 열립니다.</translation>
-    </message>
-    <message>
-        <source>Open local project</source>
-        <translation type="vanished">로컬 프로젝트 열기</translation>
-    </message>
-    <message>
-        <source>Cloud project conflict</source>
-        <translation type="vanished">클라우드 프로젝트 충돌</translation>
-    </message>
-    <message>
-        <source>You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open.</source>
-        <translation type="vanished">이미 프로젝트가 열려 있는 프로젝트의 새 활성 버전을 열려고 합니다. 열려 있는 상태를 유지하려는 버전을 선택하십시오.</translation>
-    </message>
-    <message>
-        <source>Keep currently open version</source>
-        <translation type="vanished">현재 열려 있는 버전 유지</translation>
-    </message>
-    <message>
-        <source>Open new version</source>
-        <translation type="vanished">새 버전 열기</translation>
-    </message>
-    <message>
-        <source>Open from Cloud</source>
-        <translation type="vanished">클라우드로 부터 열기</translation>
-    </message>
-    <message>
-        <source>less than 1 minute</source>
-        <translation type="vanished">1분 미만</translation>
-    </message>
-    <message numerus="yes">
-        <source>one minutes ago</source>
-        <oldsource>%d minutes ago</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 분 전</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>one hour ago</source>
-        <oldsource>%d hours ago</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 시간 전</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Failed to authorize account</source>
-        <translation type="vanished">계정을 인증하는데 실패</translation>
-    </message>
-    <message>
-        <source>Loading projects list...</source>
-        <translation type="vanished">프로젝트 리스트 로딩...</translation>
-    </message>
-    <message>
-        <source>Failed to get projects list</source>
-        <translation type="vanished">프로젝트 리스트 가져오기 실패</translation>
-    </message>
-    <message>
-        <source>Cloud saved projects</source>
-        <translation type="vanished">클라우드가 프로젝트를 저장함</translation>
-    </message>
-    <message>
-        <source>Search:</source>
-        <translation type="vanished">검색:</translation>
-    </message>
-    <message>
-        <source>Prev</source>
-        <translation type="vanished">이전</translation>
-    </message>
-    <message>
-        <source>View in audio.com</source>
-        <translation type="vanished">audio.com에서 보기</translation>
-    </message>
-    <message>
-        <source>Page %d of %d</source>
-        <translation type="vanished">페이지 %1 / %2</translation>
-    </message>
-    <message>
-        <source>Anyone will be able to listen to this audio.</source>
-        <translation type="vanished">누구든지 이 오디오를 들을 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Only you and people you share a link with will be able to listen to this audio.</source>
-        <translation type="vanished">당신과 링크를 공유한 사용자만이 이 오디오를 들을 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to cancel?</source>
-        <translation type="vanished">정말로 취소하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Cancel upload to Audio.com</source>
-        <translation type="vanished">Audio.com에 업로드 취소</translation>
-    </message>
-    <message>
-        <source>Uploading audio...</source>
-        <translation type="vanished">오디오 업로딩중...</translation>
-    </message>
-    <message>
-        <source>We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.</source>
-        <translation type="vanished">이 파일을 업로드 할 수 없습니다. audio.com 계정과 연결이 되었는지 확인한 후 다시 시도해 보십시오.</translation>
-    </message>
-    <message>
-        <source>Upload error</source>
-        <translation type="vanished">업로드 오류</translation>
-    </message>
-    <message>
-        <source>We are unable to prepare this file for uploading.</source>
-        <translation type="vanished">이 파일을 업로딩하기 위한 준비를 할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Finalizing upload...</source>
-        <translation type="vanished">업로드 완료중...</translation>
-    </message>
-    <message>
-        <source>Track Title</source>
-        <translation type="vanished">트랙 제목</translation>
-    </message>
-    <message>
-        <source>Sharing audio requires a free %s account linked to Audacity. %%Press "Link account" above to proceed.</source>
-        <extracomment>i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.</extracomment>
-        <translation type="vanished"> 오디오 공유를 위해서는 무료 %1  계정이 필요하며 오데시티와 계정을 연결를 해야 합니다. 위의 "계정 연결" 을 %%누르세요.</translation>
-    </message>
-    <message>
-        <source>audio.com</source>
-        <translation type="vanished">audio.com</translation>
-    </message>
-    <message>
-        <source>Press "Continue" to upload to audio.com</source>
-        <translation type="vanished">audio.com에 업로드 하려면 "계속"을 누르세요</translation>
-    </message>
-    <message>
-        <source>Preparing audio...</source>
-        <translation type="vanished">오디오 준비중...</translation>
-    </message>
-    <message>
-        <source>You are not authorized to access this project.</source>
-        <translation type="vanished">이 프로젝트에 접근 권한이 없습니다.</translation>
-    </message>
-    <message>
-        <source>You tried to access a project that has expired.</source>
-        <translation type="vanished">현재 접근하려는 프로젝트는 이미 만료되었습니다.</translation>
-    </message>
-    <message>
-        <source>Audacity had trouble connecting to the server.</source>
-        <translation type="vanished">서버와 오데시티 연결에 문제가 있습니다.</translation>
-    </message>
-    <message>
-        <source>The project is too large to upload. Please save it to your computer instead.</source>
-        <translation type="vanished">이 프로젝트는 너무 커서 업로드 할 수 없습니다. 컴퓨터에 저장하기 바랍니다.</translation>
-    </message>
-    <message>
-        <source>You don't have access to this project.</source>
-        <translation type="vanished">이 프로젝트에 접근 권한이 없습니다.</translation>
-    </message>
-    <message>
-        <source>The project could not be found.</source>
-        <translation type="vanished">이 프로젝트를 찾을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>The server responded with something Audacity could not understand.</source>
-        <translation type="vanished">서버의 응답에 오데시티가 이해할 수 없는 정보가 있습니다.</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an internal error.</source>
-        <translation type="vanished">내부 오류가 발생하였습니다.</translation>
-    </message>
-    <message>
-        <source>Audio.com encountered an internal error.</source>
-        <translation type="vanished">Audio.com에 내부 오류가 발생하였습니다.</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an unknown error.</source>
-        <translation type="vanished">오데시티에 알수 없는 오류가 발생함.</translation>
-    </message>
-    <message>
-        <source>Sync failed</source>
-        <translation type="vanished">동기화 실패</translation>
-    </message>
-    <message>
-        <source>Error details:
-%s</source>
-        <translation type="vanished">에러 상세정보:
-%1</translation>
-    </message>
-    <message>
-        <source>Syncing your project</source>
-        <translation type="vanished">프로젝트 동기화</translation>
-    </message>
-    <message>
-        <source>The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time</source>
-        <translation type="vanished">작업하는 동안 프로젝트가 백그라운드에서 동기화됩니다. 언제든지 Audacity 오른쪽 하단에서 동기화 상태를 확인할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com</source>
-        <translation type="vanished">이제 저장된 모든 변경 사항이 클라우드에 업데이트됩니다. audio.com에 업로드된 프로젝트 페이지에서 이 파일을 관리할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Cloud project incomplete</source>
-        <translation type="vanished">클라우 프로젝트가 불완전합니다.</translation>
-    </message>
-    <message>
-        <source>The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.</source>
-        <translation type="vanished">이 프로젝트의 최신 버전이 audio.com에 완전히 업로드되지 않았습니다. 대신 마지막으로 완전한 버전을 로드할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>No version of this project has been fully uploaded to audio.com. It cannot be loaded.</source>
-        <translation type="vanished">이 프로젝트의 어떤 버전도 audio.com에 완전히 업로드되지 않았습니다. 로드할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>You have canceled this upload to audio.com</source>
-        <translation type="vanished">audio.com에 업로드를 취소하였습니다</translation>
-    </message>
-    <message>
-        <source>Retry</source>
-        <translation type="vanished">재시도</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. Once you are done with it, click Retry</source>
-        <translation type="vanished">계속하려면 audio.com에서 조치를 취해야 합니다. 작업을 완료하고, 다시 시도를 클릭하세요.</translation>
-    </message>
-    <message>
-        <source>Exported Allegro (.gro) files save time as:</source>
-        <translation type="vanished">내보낸 알레그로(.gro) 파일 시간 저장 방법:</translation>
-    </message>
-    <message>
-        <source>Please select only one Note Track at a time.</source>
-        <translation type="vanished">한번에 하나의 노트 트랙만 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Please select a Note Track.</source>
-        <translation type="vanished">노트 트랙을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Export MIDI As:</source>
-        <translation type="vanished">다른 이름으로 MIDI 내보내기:</translation>
-    </message>
-    <message>
-        <source>MIDI file</source>
-        <translation type="vanished">MIDI 파일</translation>
-    </message>
-    <message>
-        <source>Allegro file</source>
-        <translation type="vanished">Allegro 파일</translation>
-    </message>
-    <message>
-        <source>You have selected a filename with an unrecognized file extension.
-Do you want to continue?</source>
-        <translation type="vanished">알 수 없는 파일 확장자의 파일 이름을 선택했습니다.
-계속할까요?</translation>
-    </message>
-    <message>
-        <source>Export MI&amp;DI...</source>
-        <translation type="vanished">미디 내보내기(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>Imported MIDI from '%s'</source>
-        <translation type="vanished">'%1'에서 MIDI를 가져왔습니다</translation>
-    </message>
-    <message>
-        <source>Import MIDI</source>
-        <translation type="vanished">MIDI 가져오기</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Filename too short.</source>
-        <translation type="vanished">%1 파일을 열 수 없음: 파일명이 너무 짧습니다.</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Incorrect filetype.</source>
-        <translation type="vanished">%1 파일을 열 수 없음: 잘못된 파일 유형입니다.</translation>
-    </message>
-    <message>
-        <source>Could not open file %s.</source>
-        <translation type="vanished">%1 파일을 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Select a MIDI file</source>
-        <translation type="vanished">MIDI 파일 선택</translation>
-    </message>
-    <message>
-        <source>MIDI and Allegro files</source>
-        <translation type="vanished">MIDI 와 Allegro 파일들</translation>
-    </message>
-    <message>
-        <source>MIDI files</source>
-        <translation type="vanished">MIDI 파일들</translation>
-    </message>
-    <message>
-        <source>Allegro files</source>
-        <translation type="vanished">Allegro 파일들</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI...</source>
-        <translation type="vanished">MIDI(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>No revision identifier was provided</source>
-        <translation type="vanished">수정본 ID가 없습니다.</translation>
-    </message>
-    <message>
-        <source>%s, system administration</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 시스템 관리</translation>
-    </message>
-    <message>
-        <source>%s, co-founder and developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 공동 설립자와 개발자</translation>
-    </message>
-    <message>
-        <source>%s, designer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 디자이너</translation>
-    </message>
-    <message>
-        <source>%s, developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 개발자</translation>
-    </message>
-    <message>
-        <source>%s, developer and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 개발자 및 지원</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 문서화 및 지원</translation>
-    </message>
-    <message>
-        <source>%s, QA tester, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, QA 테스팅, 문서화 및 지원</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support, French</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 문서화 및 지원, 프랑스어</translation>
-    </message>
-    <message>
-        <source>%s, quality assurance</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 품질 보증</translation>
-    </message>
-    <message>
-        <source>%s, accessibility advisor</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 접근성 자문</translation>
-    </message>
-    <message>
-        <source>%s, graphic artist</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 그래픽 아티스트</translation>
-    </message>
-    <message>
-        <source>%s, composer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 작곡가</translation>
-    </message>
-    <message>
-        <source>%s, tester</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 테스터</translation>
-    </message>
-    <message>
-        <source>%s, Nyquist plug-ins</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 나이키시트 플러그인</translation>
-    </message>
-    <message>
-        <source>%s, web developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 웹 개발자</translation>
-    </message>
-    <message>
-        <source>%s, graphics</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 그래픽</translation>
-    </message>
-    <message>
-        <source>%s, effects presets</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, 이펙트 프리셋</translation>
-    </message>
-    <message>
-        <source>%s (incorporating %s, %s, %s, %s and %s)</source>
-        <translation type="vanished">%1 (%2, %3, %4, %5, 그리고 %6를 통합중)</translation>
-    </message>
-    <message>
-        <source>About %s</source>
-        <extracomment>i18n-hint: information about the program</extracomment>
-        <translation type="vanished">%1 정보</translation>
-    </message>
-    <message>
-        <source>&lt;h3&gt;</source>
-        <translation type="vanished">&lt;h3&gt;</translation>
-    </message>
-    <message>
-        <source>%s the free, open source, cross-platform software for recording and editing sounds.</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 는 소리 녹화와 편집을 위한 무료, 오픈소스,크로스 플랫폼 소프트웨어 입니다.</translation>
-    </message>
-    <message>
-        <source>%s Team Members</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 팀 구성원</translation>
-    </message>
-    <message>
-        <source>Emeritus:</source>
-        <translation type="vanished">명예:</translation>
-    </message>
-    <message>
-        <source>Distinguished %s Team members, not currently active</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">현재는 활동하지 않는,  뛰어난 %1 팀 멤버</translation>
-    </message>
-    <message>
-        <source>Contributors</source>
-        <translation type="vanished">기여한 분들</translation>
-    </message>
-    <message>
-        <source>Website and Graphics</source>
-        <translation type="vanished">웹사이트와 그래픽스</translation>
-    </message>
-    <message>
-        <source>Translators</source>
-        <translation type="vanished">번역자</translation>
-    </message>
-    <message>
-        <source>%s includes code from the following projects:</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 는 다음 프로젝트들의 코드를 포함합니다:</translation>
-    </message>
-    <message>
-        <source>Special thanks:</source>
-        <translation type="vanished">특별히 감사할 분들:</translation>
-    </message>
-    <message>
-        <source>%s website: </source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 웹사이트: </translation>
-    </message>
-    <message>
-        <source>%s software is copyright %s 1999-2024 %s Team.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for first and third %s,
-and a "copyright" symbol for the second</extracomment>
-        <translation type="vanished">%1 소프트웨어의 저작권 %2 1999-2024 %3 팀.</translation>
-    </message>
-    <message>
-        <source>The name %s is a registered trademark.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 는 등록 상표입니다.</translation>
-    </message>
-    <message>
-        <source>Build Information</source>
-        <translation type="vanished">빌드 정보</translation>
-    </message>
-    <message>
-        <source>The Build</source>
-        <extracomment>i18n-hint: Information about when audacity was compiled follows</extracomment>
-        <translation type="vanished">빌드</translation>
-    </message>
-    <message>
-        <source>Program build date:</source>
-        <translation type="vanished">프로그램 빌드 날짜:</translation>
-    </message>
-    <message>
-        <source>Commit Id:</source>
-        <translation type="vanished">제출 ID:</translation>
-    </message>
-    <message>
-        <source>Debug build (debug level %d)</source>
-        <translation type="vanished">디버그 빌드 (디버그 레벨 %1) </translation>
-    </message>
-    <message>
-        <source>Release build (debug level %d)</source>
-        <translation type="vanished">배포 빌드(디버그 레벨 %1)</translation>
-    </message>
-    <message>
-        <source>%s, 64 bits</source>
-        <translation type="vanished">%1, 64비트</translation>
-    </message>
-    <message>
-        <source>%s, 32 bits</source>
-        <translation type="vanished">%1, 32비트</translation>
-    </message>
-    <message>
-        <source>Build type:</source>
-        <translation type="vanished">빌드 형식:</translation>
-    </message>
-    <message>
-        <source>Compiler:</source>
-        <translation type="vanished">컴파일러:</translation>
-    </message>
-    <message>
-        <source>Installation Prefix:</source>
-        <extracomment>i18n-hint: The directory audacity is installed into (on *nix systems)</extracomment>
-        <translation type="vanished">설치 접두사:</translation>
-    </message>
-    <message>
-        <source>Cache folder:</source>
-        <translation type="vanished">캐시 폴더:</translation>
-    </message>
-    <message>
-        <source>Settings folder:</source>
-        <translation type="vanished">설정 폴더:</translation>
-    </message>
-    <message>
-        <source>Data folder:</source>
-        <translation type="vanished">데이터 폴더:</translation>
-    </message>
-    <message>
-        <source>State folder:</source>
-        <translation type="vanished">상태 폴더:</translation>
-    </message>
-    <message>
-        <source>Core Libraries</source>
-        <extracomment>i18n-hint: Libraries that are essential to audacity</extracomment>
-        <translation type="vanished">핵심 라이브러리</translation>
-    </message>
-    <message>
-        <source>Cross-platform GUI library</source>
-        <translation type="vanished">크로스 플랫폼 GUI 라이브러리</translation>
-    </message>
-    <message>
-        <source>Audio playback and recording</source>
-        <translation type="vanished">오디오 재생 및 녹음</translation>
-    </message>
-    <message>
-        <source>Sample rate conversion</source>
-        <translation type="vanished">샘플링 주파수 변환</translation>
-    </message>
-    <message>
-        <source>File Format Support</source>
-        <translation type="vanished">지원 파일 형식</translation>
-    </message>
-    <message>
-        <source>MP3 Import</source>
-        <translation type="vanished">MP3 가져오기</translation>
-    </message>
-    <message>
-        <source>MP3 Export</source>
-        <extracomment>i18n-hint: LAME is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">MP3 내보내기</translation>
-    </message>
-    <message>
-        <source>Opus Import and Export</source>
-        <extracomment>i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">Opus 가져오기와 내보내기</translation>
-    </message>
-    <message>
-        <source>Ogg Vorbis Import and Export</source>
-        <extracomment>i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-* Both are proper nouns and shouldn't be translated</extracomment>
-        <translation type="vanished">Ogg Vorbis 가져오기/내보내기</translation>
-    </message>
-    <message>
-        <source>ID3 tag support</source>
-        <translation type="vanished">ID3 태그 지원</translation>
-    </message>
-    <message>
-        <source>FLAC import and export</source>
-        <extracomment>i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-* a proper noun and so shouldn't be translated</extracomment>
-        <translation type="vanished">FLAC 가져오기/내보내기</translation>
-    </message>
-    <message>
-        <source>MP2 export</source>
-        <translation type="vanished">MP2 내보내기</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export</source>
-        <translation type="vanished">FFmpeg 가져오기/내보내기</translation>
-    </message>
-    <message>
-        <source>Features</source>
-        <translation type="vanished">특징</translation>
-    </message>
-    <message>
-        <source>Plug-in support</source>
-        <translation type="vanished">플러그인 지원</translation>
-    </message>
-    <message>
-        <source>Sound card mixer support</source>
-        <translation type="vanished">사운드 카드 믹서 지원</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo Change support</source>
-        <translation type="vanished">피치 및 템포 변경 지원</translation>
-    </message>
-    <message>
-        <source>Extreme Pitch and Tempo Change support</source>
-        <translation type="vanished">극한의 피치와 템포 변경 지원</translation>
-    </message>
-    <message>
-        <source>Legal</source>
-        <comment>about dialog</comment>
-        <translation type="vanished">법률정보</translation>
-    </message>
-    <message>
-        <source>GPL License</source>
-        <translation type="vanished">GPL 라이선스</translation>
-    </message>
-    <message>
-        <source>PRIVACY POLICY</source>
-        <comment>about dialog</comment>
-        <extracomment>i18n-hint: For "About Audacity...": Title for Privacy Policy section</extracomment>
-        <translation type="vanished">개인정보 보호정책</translation>
-    </message>
-    <message>
-        <source>App update checking and error reporting require network access. These features are optional.</source>
-        <translation type="vanished">앱 업데이트 확인 및 오류 보고에는 네트워크 연결이 필요합니다. 이 기능은 선택 사항입니다.</translation>
-    </message>
-    <message>
-        <source>See %s for more info.</source>
-        <extracomment>i18n-hint: %s will be replaced with "our Privacy Policy"</extracomment>
-        <translation type="vanished">상세한 정보는 %1 를 참조하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to define a looping region.</source>
-        <translation type="vanished">클릭 후 드래그하여 반복 구간을 정의</translation>
-    </message>
-    <message>
-        <source>Timeline actions disabled during recording</source>
-        <translation type="vanished">녹음 중에는 시간 표시줄 동작을 사용할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust, double-click to reset</source>
-        <translation type="vanished">클릭과 드래그로 조정하고, 더블클릭으로 리셋하세요</translation>
-    </message>
-    <message>
-        <source>Record/Playhead</source>
-        <extracomment>i18n-hint: This text is a tooltip on the icon (of a pin) representing
-the temporal position in the audio.</extracomment>
-        <translation type="vanished">녹음/재생 첫머리</translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation type="vanished">시간 표시줄</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">탐색 시작은 누르거나 드래그하세요</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">스크러빙을 시작하려면 클릭 또는 드래그</translation>
-    </message>
-    <message>
-        <source>Click &amp; move to Scrub. Click &amp; drag to Seek.</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">스크러빙은 클릭하여 이동, 탐색은 클릭하여 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Move to Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">탐색하려면 이동하세요</translation>
-    </message>
-    <message>
-        <source>Move to Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">스크러빙하려면 이동하세요</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release to stop seeking.</source>
-        <translation type="vanished">찾기는 드래그. 멈추면 해제.</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release and move to Scrub.</source>
-        <translation type="vanished">드래그하여 찾고 마우스 놓고 이동하여 스크러빙</translation>
-    </message>
-    <message>
-        <source>Move to Scrub. Drag to Seek.</source>
-        <translation type="vanished">스크러빙으로 이동, 탐색은 드래그</translation>
-    </message>
-    <message>
-        <source>Quick-Play disabled</source>
-        <translation type="vanished">빠른 재생 비활성화됨</translation>
-    </message>
-    <message>
-        <source>Quick-Play enabled</source>
-        <translation type="vanished">빠른 재생 활성화됨</translation>
-    </message>
-    <message>
-        <source>Timeline Options</source>
-        <translation type="vanished">시간 표시줄 옵션</translation>
-    </message>
-    <message>
-        <source>Minutes and Seconds</source>
-        <translation type="vanished">분과 초</translation>
-    </message>
-    <message>
-        <source>Beats and Measures</source>
-        <translation type="vanished">비트와 박자</translation>
-    </message>
-    <message>
-        <source>Setting a loop region also makes an audio selection</source>
-        <translation type="vanished">루프 영역을 설정하면 오디오 선택이 됩니다.</translation>
-    </message>
-    <message>
-        <source>Clear Loop</source>
-        <extracomment>i18n-hint Clear is a verb</extracomment>
-        <translation type="vanished">반복 지우기</translation>
-    </message>
-    <message>
-        <source>Set Loop To Selection</source>
-        <translation type="vanished">선택영역을 반복 구간으로</translation>
-    </message>
-    <message>
-        <source>Scroll view to playhead</source>
-        <translation type="vanished">재생 첫머리로 가려면 뷰를 스크롤</translation>
-    </message>
-    <message>
-        <source>Continuous scrolling</source>
-        <translation type="vanished">연속 스크롤</translation>
-    </message>
-    <message>
-        <source>Failed to remove %s</source>
-        <translation type="vanished">%1 제거에 실패했습니다</translation>
-    </message>
-    <message>
-        <source>Failed!</source>
-        <translation type="vanished">실패했습니다!</translation>
-    </message>
-    <message>
-        <source>%s could not be found.
-
-It has been removed from the list of recent files.</source>
-        <translation type="vanished">%1을 찾을 수 없습니다.
-
-최근 파일 목록에서 제거되었습니다.</translation>
-    </message>
-    <message>
-        <source>SQLite library failed to initialize.  Audacity cannot continue.</source>
-        <translation type="vanished">SQLite 라이브러리 초기화 실패. 오데시티 실행을 계속할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Block size must be within 256 to 100000000
-</source>
-        <translation type="vanished">블럭 크기는 256에서 100000000 사이에 있어야 합니다.
-</translation>
-    </message>
-    <message>
-        <source>Audacity is starting up...</source>
-        <translation type="vanished">오데시티 시작 중...</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <extracomment>i18n-hint: "New" is an action (verb) to create a NEW project</extracomment>
-        <translation type="vanished">새 창(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">열기(&amp;O)...</translation>
-    </message>
-    <message>
-        <source>Open &amp;Recent...</source>
-        <translation type="vanished">최근 열기(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity...</source>
-        <translation type="vanished">오데시티 정보(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>&amp;Preferences...</source>
-        <translation type="vanished">환경 설정(&amp;P)...</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a safe place to store temporary files.
-Audacity needs a place where automatic cleanup programs won't delete the temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">오데시티는 임시 파일을 저장할 안전한 장소를 찾지 못했습니다.
-자동 정리 프로그램이 임시 파일을 삭제하지 않을 장소가 필요합니다.
-환경 설정 대화상자에서 적절한 폴더를 입력해 주세요.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a place to store temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">오데시티는 임시 파일을 저장할 장소를 찾을 수 없습니다.
-환경 설정 대화상자에서 적당한 폴더를 입력하세요.</translation>
-    </message>
-    <message>
-        <source>Audacity is now going to exit. Please launch Audacity again to use the new temporary directory.</source>
-        <translation type="vanished">오데시티를 지금 종료할 것입니다.새 임시 디렉토리를 사용하도록 오데시티를 다시 실행하세요.</translation>
-    </message>
-    <message>
-        <source>Running two copies of Audacity simultaneously may cause
-data loss or cause your system to crash.
-
-</source>
-        <translation type="vanished">오데시티의 두 사본을 중복 실행하면 데이터를 잃거나
-시스템 크래쉬가 발생할 수도 있습니다.
-</translation>
-    </message>
-    <message>
-        <source>Audacity was not able to lock the temporary files directory.
-This folder may be in use by another copy of Audacity.
-</source>
-        <translation type="vanished">오데시티는 임시 파일 디렉토리를 잠글 수 없습니다.
-오데시티의 다른 사본에서 이 폴더를 사용 중인 것 같습니다.
-</translation>
-    </message>
-    <message>
-        <source>Do you still want to start Audacity?</source>
-        <translation type="vanished">그래도 오데시티를 시작할까요?</translation>
-    </message>
-    <message>
-        <source>Error Locking Temporary Folder</source>
-        <translation type="vanished">임시 폴더를 잠그는 중 오류</translation>
-    </message>
-    <message>
-        <source>The system has detected that another copy of Audacity is running.
-</source>
-        <translation type="vanished">이 시스템은 오데시티의 다른 사본이 실행 중인 것을 감지했습니다.
-</translation>
-    </message>
-    <message>
-        <source>Use the New or Open commands in the currently running Audacity
-process to open multiple projects simultaneously.
-</source>
-        <translation type="vanished">현재 실행중인 오데시티 프로세스에서 여러 프로젝트를 동시에
-열려면 '새로 만들기'나 '열기' 명령을 사용하세요.
-</translation>
-    </message>
-    <message>
-        <source>Audacity is already running</source>
-        <translation type="vanished">오데시티가 이미 실행 중입니다</translation>
-    </message>
-    <message>
-        <source>Unable to create shared memory segment.
-
-error code=%d : "%s".</source>
-        <translation type="vanished">공유 메모리 세그먼트를 생성할 수 없습니다.
-
-오류 코드=%1 : "%2".</translation>
-    </message>
-    <message>
-        <source>Audacity Startup Failure</source>
-        <translation type="vanished">오데시티 시작 실패</translation>
-    </message>
-    <message>
-        <source>Unable to acquire semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">세마포를 획득하지 못했습니다.
-
-자원이 부족해서 발생한 것으로 보입니다.
-리부트를 하면 해결될 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Unable to create semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">세마포를생성하지 못했습니다.
-
-자원이 부족해서 발생한 것으로 보입니다.
-리부트를 하면 해결될 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Unable to acquire lock semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">잠금 세마포를 획득하지 못했습니다.
-
-자원이 부족해서 발생한 것으로 보입니다.
-리부트를 하면 해결될 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Unable to acquire server semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">서버 세마포를 획득하지 못했습니다.
-
-자원이 부족해서 발생한 것으로 보입니다.
-리부트를 하면 해결될 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>The Audacity IPC server failed to initialize.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">오데시티 IPC 서버의 초기화에 실패하였습니다.
-
-자원이 부족하여 발생한 경우일 수 있습니다. 
-리부트를 하면 해결될 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>An unrecoverable error has occurred during startup</source>
-        <translation type="vanished">시동 중 복구할 수 없는 오류가 발생하였습니다</translation>
-    </message>
-    <message>
-        <source>set max disk block size in bytes</source>
-        <extracomment>i18n-hint: This controls the number of bytes that Audacity will
-*           use when writing files to the disk</extracomment>
-        <translation type="vanished">최대 디스크 블럭 크기 설정 (바이트)</translation>
-    </message>
-    <message>
-        <source>replay a journal file</source>
-        <extracomment>i18n-hint: brief help message for Audacity's command-line options
-A journal contains a sequence of user interface interactions to be repeated
-"log," "trail," "trace" have somewhat similar meanings</extracomment>
-        <translation type="vanished">저널 파일 다시재생</translation>
-    </message>
-    <message>
-        <source>this help message</source>
-        <extracomment>i18n-hint: This displays a list of available options</extracomment>
-        <translation type="vanished">이 도움말 메시지</translation>
-    </message>
-    <message>
-        <source>run self diagnostics</source>
-        <extracomment>i18n-hint: This runs a set of automatic tests on Audacity itself</extracomment>
-        <translation type="vanished">자체 진단 실행</translation>
-    </message>
-    <message>
-        <source>display Audacity version</source>
-        <extracomment>i18n-hint: This displays the Audacity version</extracomment>
-        <translation type="vanished">오데시티 버전 표시</translation>
-    </message>
-    <message>
-        <source>audio or project file name</source>
-        <extracomment>i18n-hint: This is a list of one or more files that Audacity
-*           should open upon startup</extracomment>
-        <translation type="vanished">오디오나 프로젝트 파일 이름</translation>
-    </message>
-    <message>
-        <source>Handle 'audacity://' url</source>
-        <extracomment>i18n-hint: This option is used to handle custom URLs in Audacity</extracomment>
-        <translation type="vanished">핸들 'audacity://' url</translation>
-    </message>
-    <message>
-        <source>Audacity project (.aup3) files are not currently 
-associated with Audacity. 
-
-Associate them, so they open on double-click?</source>
-        <translation type="vanished">오데시티 프로젝트(.aup3) 파일이 현재 
-오데시티와 연결되지 않습니다. 
-
-연결해서 더블 클릭시 그 파일을 열까요?</translation>
-    </message>
-    <message>
-        <source>Audacity Project Files</source>
-        <translation type="vanished">오데시티 프로젝트 파일</translation>
-    </message>
-    <message>
-        <source>Audacity Configuration Error</source>
-        <translation type="vanished">오데시티 설정 오류</translation>
-    </message>
-    <message>
-        <source>The following configuration file could not be accessed:
-
-	%s
-
-This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. 
-
-You can attempt to correct the issue and then click "Retry" to continue.
-
-If you choose to "Quit Audacity", your project may be left in an unsaved state which will be recovered the next time you open it.</source>
-        <translation type="vanished">다음 설정 파일에 접근할 수 없습니다:
-
-	%1
-
-다른 원인이 있을 수 있지만, 대부분 디스크가 꽉 차 있는 경우이거나 쓰기 권한이 없기 때문입니다. 
-
-문제를 해결하고, "재시도" 버튼을 눌러 다시 시도해 보기 바랍니다. 
-
-만일 "오데시티 종료" 버튼을 선택하면, 현재의 프로젝트는 저장되지 않은 상태로 남고, 다시 열때 복구를 시도할 것입니다. </translation>
-    </message>
-    <message>
-        <source>&amp;Quit Audacity</source>
-        <translation type="vanished">오데시티 끝내기(&amp;Q)</translation>
-    </message>
-    <message>
-        <source>&amp;Retry</source>
-        <translation type="vanished">재시도(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Configure Project from Music File</source>
-        <translation type="vanished">음악 파일로 부터 프로젝트 설정</translation>
-    </message>
-    <message>
-        <source>Automatic Music Configuration</source>
-        <translation type="vanished">자동 음악 설정</translation>
-    </message>
-    <message>
-        <source>Audacity detected this file to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity에서는 이 파일이 %1 bpm인 것을 감지했습니다.
-음악 보기를 활성화하고 프로젝트 템포를 %2로 설정하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Audacity detected one or more files to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity에서는 하나 이상의 파일이 %1 bpm 인 것을 감지했습니다.
-음악 보기를 활성화하고 프로젝트 템포를 %2로 설정하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Music Import</source>
-        <translation type="vanished">음악 가져오기</translation>
-    </message>
-    <message>
-        <source>Smart clip.
-The entire source clip will be pasted into your project, allowing you to access
-trimmed audio data anytime.</source>
-        <translation type="vanished">스마트 클립.
-전체 소스 클립이 프로젝트로 붙여 넣기 됩니다. 잘려나간 오디오 데이터를 
-언제든지 이용할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Selected audio only.
-Only the selected portion of the source clip will be pasted.</source>
-        <translation type="vanished">선택된 오디오만.
-선택된 부분의 오디오만 붙여넣기 됩니다.</translation>
-    </message>
-    <message>
-        <source>Paste audio</source>
-        <translation type="vanished">오디오 붙여넣기</translation>
-    </message>
-    <message>
-        <source>How would you like to paste your audio?</source>
-        <translation type="vanished">어떤 방식으로 오디오를 붙여널기 하겠습니까?</translation>
-    </message>
-    <message>
-        <source>The full smart clip is %s. Larger sizes will take longer to paste.</source>
-        <extracomment>i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.</extracomment>
-        <translation type="vanished">전체 스마트 클립은 %1 입니다. 큰 크기는 붙여넣기 시간을 길게 만듭니다. </translation>
-    </message>
-    <message>
-        <source>Remember my choice and don't ask again</source>
-        <translation type="vanished">선택한 사항을 다시 묻지 않음</translation>
-    </message>
-    <message>
-        <source>Automatic Crash Recovery</source>
-        <translation type="vanished">자동 크래시 복구</translation>
-    </message>
-    <message>
-        <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
-
-After recovery, save the projects to ensure changes are written to disk.</source>
-        <translation type="vanished">다음 프로젝트는 이전 오데시티 실행시 제대로 저장되지 않았습니다. 자동 복구를 실행할 수 있습니다.
-복구 훠에는 프로젝트를 저장하여 디스크에 잘 저장되었는지 확인하기 바랍니다.</translation>
-    </message>
-    <message>
-        <source>Recoverable &amp;projects</source>
-        <translation type="vanished">복구 가능한 프로젝트(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Discard Selected</source>
-        <translation type="vanished">선택된 파일 폐기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Recover Selected</source>
-        <translation type="vanished">선택된 파일 복구(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <translation type="vanished">건너뛰기(&amp;S)</translation>
-    </message>
-    <message>
-        <source>No projects selected</source>
-        <translation type="vanished">선택된 프로젝트가 없음</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to discard the selected projects?
-
-Choosing "Yes" permanently deletes the selected projects immediately.</source>
-        <translation type="vanished">복구 가능한 모든 프로젝트를 정말로 폐기할까요?
-
-"예"를 선택하면 프로젝트를 영구히 삭제합니다.</translation>
-    </message>
-    <message>
-        <source>Select Command</source>
-        <translation type="vanished">명령 선택</translation>
-    </message>
-    <message>
-        <source>&amp;Command</source>
-        <translation type="vanished">명령(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Parameters</source>
-        <translation type="vanished">매개 변수 편집(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preset</source>
-        <translation type="vanished">프리셋 사용(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Parameters</source>
-        <translation type="vanished">매개 변수(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Details</source>
-        <translation type="vanished">세부 사항(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Choose command</source>
-        <translation type="vanished">명령 선택</translation>
-    </message>
-    <message>
-        <source>MP3 Conversion</source>
-        <translation type="vanished">MP3 변환</translation>
-    </message>
-    <message>
-        <source>Fade Ends</source>
-        <translation type="vanished">끝에 페이드 넣기</translation>
-    </message>
-    <message>
-        <source>Import Macro</source>
-        <translation type="vanished">매크로 가져오기</translation>
-    </message>
-    <message>
-        <source>Macro %s already exists. Would you like to replace it?</source>
-        <translation type="vanished">매크로 %1가 이미 존재합니다. 바꾸겠습니까?</translation>
-    </message>
-    <message>
-        <source>Export Macro</source>
-        <translation type="vanished">매크로 내보내기</translation>
-    </message>
-    <message>
-        <source>Effect</source>
-        <translation type="vanished">이펙트</translation>
-    </message>
-    <message>
-        <source>Menu Command (With Parameters)</source>
-        <translation type="vanished">메뉴 명령 (매개 변수 있음)</translation>
-    </message>
-    <message>
-        <source>Menu Command (No Parameters)</source>
-        <translation type="vanished">메뉴 명령 (매개 변수 없음)</translation>
-    </message>
-    <message>
-        <source>"%s" requires one or more tracks to be selected.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".</extracomment>
-        <translation type="vanished">"%1"은 하나 이상의 트랙을 선택해야 합니다.</translation>
-    </message>
-    <message>
-        <source>Your batch command of %s was not recognized.</source>
-        <translation type="vanished">%1 배치처리 명령을 인식하지 못했습니다.</translation>
-    </message>
-    <message>
-        <source>Applied Macro</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">매크로 적용됨</translation>
-    </message>
-    <message>
-        <source>Apply Macro</source>
-        <translation type="vanished">매크로 적용</translation>
-    </message>
-    <message>
-        <source>Applied Macro '%s'</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">매크로 '%1' 적용됨</translation>
-    </message>
-    <message>
-        <source>Apply '%s'</source>
-        <translation type="vanished">'%1' 적용</translation>
-    </message>
-    <message>
-        <source>Apply %s with parameter(s)
-
-%s</source>
-        <translation type="vanished">%1을 다음 매개 변수로 적용합니다
-
-%2</translation>
-    </message>
-    <message>
-        <source>Test Mode</source>
-        <translation type="vanished">테스트 모드</translation>
-    </message>
-    <message>
-        <source>Apply %s</source>
-        <translation type="vanished">%1 적용</translation>
-    </message>
-    <message>
-        <source>Macros Palette</source>
-        <translation type="vanished">매크로 팔레트</translation>
-    </message>
-    <message>
-        <source>Manage Macros</source>
-        <translation type="vanished">매크로 관리</translation>
-    </message>
-    <message>
-        <source>Select Macro</source>
-        <extracomment>i18n-hint: A macro is a sequence of commands that can be applied
-* to one or more audio files.</extracomment>
-        <translation type="vanished">매크로 선택</translation>
-    </message>
-    <message>
-        <source>Macro</source>
-        <extracomment>i18n-hint: This is the heading for a column in the edit macros dialog</extracomment>
-        <translation type="vanished">매크로</translation>
-    </message>
-    <message>
-        <source>Apply Macro to:</source>
-        <translation type="vanished">매크로 적용 대상:</translation>
-    </message>
-    <message>
-        <source>Apply macro to project</source>
-        <translation type="vanished">매크로를 프로젝트에 적용하기</translation>
-    </message>
-    <message>
-        <source>&amp;Project</source>
-        <translation type="vanished">프로젝트(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Apply macro to files...</source>
-        <translation type="vanished">파일에 매크로 적용...</translation>
-    </message>
-    <message>
-        <source>&amp;Files...</source>
-        <translation type="vanished">파일들(&amp;F)...</translation>
-    </message>
-    <message>
-        <source>&amp;Expand</source>
-        <extracomment>i18n-hint: The Expand button makes the dialog bigger, with more in it</extracomment>
-        <translation type="vanished">확장(&amp;E)</translation>
-    </message>
-    <message>
-        <source>No macro selected</source>
-        <translation type="vanished">선택한 매크로가 없습니다</translation>
-    </message>
-    <message>
-        <source>Applying '%s' to current project</source>
-        <translation type="vanished">'%1'을 현재 프로젝트에 적용 중</translation>
-    </message>
-    <message>
-        <source>Please save and close the current project first.</source>
-        <translation type="vanished">먼저 현재 프로젝트를 닫고 저장하세요.</translation>
-    </message>
-    <message>
-        <source>Select file(s) for batch processing...</source>
-        <translation type="vanished">일괄 처리용 파일을 선택하세요...</translation>
-    </message>
-    <message>
-        <source>Applying...</source>
-        <translation type="vanished">적용 중...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve</source>
-        <translation type="vanished">제거(&amp;V)</translation>
-    </message>
-    <message>
-        <source>&amp;Rename...</source>
-        <translation type="vanished">이름 변경(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Re&amp;store</source>
-        <translation type="vanished">복원(&amp;S)</translation>
-    </message>
-    <message>
-        <source>I&amp;mport...</source>
-        <translation type="vanished">가져오기(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>E&amp;xport...</source>
-        <translation type="vanished">내보내기(&amp;X)...</translation>
-    </message>
-    <message>
-        <source>Edit Steps</source>
-        <translation type="vanished">단계 편집</translation>
-    </message>
-    <message>
-        <source>Num</source>
-        <extracomment>i18n-hint: This is the number of the command in the list</extracomment>
-        <translation type="vanished">번호</translation>
-    </message>
-    <message>
-        <source>Command  </source>
-        <translation type="vanished">명령  </translation>
-    </message>
-    <message>
-        <source>Parameters</source>
-        <translation type="vanished">매개 변수</translation>
-    </message>
-    <message>
-        <source>&amp;Insert</source>
-        <translation type="vanished">삽입(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Edit...</source>
-        <translation type="vanished">편집(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Move &amp;Up</source>
-        <translation type="vanished">위로 이동(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move &amp;Down</source>
-        <translation type="vanished">아래로 이동(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Shrin&amp;k</source>
-        <extracomment>i18n-hint: The Shrink button makes the dialog smaller, with less in it</extracomment>
-        <translation type="vanished">축소(&amp;K)</translation>
-    </message>
-    <message>
-        <source>- END -</source>
-        <extracomment>i18n-hint: This is the last item in a list.</extracomment>
-        <translation type="vanished">- 끝 -</translation>
-    </message>
-    <message>
-        <source>%s changed</source>
-        <translation type="vanished">%1을 바꾸었습니다</translation>
-    </message>
-    <message>
-        <source>Do you want to save the changes?</source>
-        <translation type="vanished">바뀐 내용을 저장할까요?</translation>
-    </message>
-    <message>
-        <source>Enter name of new macro</source>
-        <translation type="vanished">새 매크로 이름을 입력하세요</translation>
-    </message>
-    <message>
-        <source>Name of new macro</source>
-        <translation type="vanished">새 매크로 이름</translation>
-    </message>
-    <message>
-        <source>Name must not be blank</source>
-        <translation type="vanished">이름은 비워둘 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Names may not contain '%c' and '%c'</source>
-        <extracomment>i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.</extracomment>
-        <translation type="vanished">이름은 '%1'와 '%2'를 포함하지 않을지 모릅니다</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s?</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of a file.</extracomment>
-        <translation type="vanished">%1을 정말로 삭제할까요?</translation>
-    </message>
-    <message>
-        <source>&amp;Repeat %s</source>
-        <translation type="vanished">%1 반복(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Repeat Last Tool</source>
-        <translation type="vanished">최근 도구 반복</translation>
-    </message>
-    <message>
-        <source>&amp;Macro Manager</source>
-        <translation type="vanished">매크로 관리(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Apply Macro</source>
-        <translation type="vanished">매크로 적용(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Palette...</source>
-        <translation type="vanished">팔레트...</translation>
-    </message>
-    <message>
-        <source>Script&amp;ables I</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">스크립터블 I(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Scripta&amp;bles II</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">스크립터블 II(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Disk Block Size (KB):</source>
-        <translation type="vanished">디스크 블럭 크기 (KB):</translation>
-    </message>
-    <message>
-        <source>Number of Edits:</source>
-        <translation type="vanished">편집 횟수:</translation>
-    </message>
-    <message>
-        <source>Test Data Size (MB):</source>
-        <translation type="vanished">시험 데이터 크기 (MB):</translation>
-    </message>
-    <message>
-        <source>Random Seed:</source>
-        <extracomment>i18n-hint: A "seed" is a number that initializes a
-pseudorandom number generating algorithm</extracomment>
-        <translation type="vanished">무작위 시드:</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each block file</source>
-        <translation type="vanished">각 블럭 파일의 상세 정보 보기</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each editing operation</source>
-        <translation type="vanished">각 편집 동작의 상세 정보 보기</translation>
-    </message>
-    <message>
-        <source>Run</source>
-        <translation type="vanished">실행</translation>
-    </message>
-    <message>
-        <source>benchmark.txt</source>
-        <extracomment>i18n-hint: Benchmark means a software speed test;
-leave untranslated file extension .txt</extracomment>
-        <translation type="vanished">benchmark.txt</translation>
-    </message>
-    <message>
-        <source>Export Benchmark Data as:</source>
-        <translation type="vanished">벤치마크 데이터 내보내기:</translation>
-    </message>
-    <message>
-        <source>Block size should be in the range 1 - 1024 KB.</source>
-        <translation type="vanished">블럭 크기는 1 ~ 1024 KB 범위 내여야 합니다.</translation>
-    </message>
-    <message>
-        <source>Number of edits should be in the range 1 - 10000.</source>
-        <translation type="vanished">편집 횟수는 1 ~ 10000 범위 내여야 합니다.</translation>
-    </message>
-    <message>
-        <source>Test data size should be in the range 1 - 2000 MB.</source>
-        <translation type="vanished">시험 데이터 크기는 1 ~ 2000 MB 범위 내여야 합니다.</translation>
-    </message>
-    <message>
-        <source>Using %lld chunks of %lld samples each, for a total of %.1f MB.
-</source>
-        <translation type="vanished">%1 청크 (각 %2 샘플의) 사용, 총 %3 MB.
-</translation>
-    </message>
-    <message>
-        <source>Preparing...
-</source>
-        <translation type="vanished">준비 중...
-</translation>
-    </message>
-    <message>
-        <source>Expected len %lld, track len %lld.
-</source>
-        <translation type="vanished">요구하는 길이 %1, 트랙 길이 %2.
-</translation>
-    </message>
-    <message>
-        <source>Performing %d edits...
-</source>
-        <translation type="vanished">%1 편집 항목 수행 중...
-</translation>
-    </message>
-    <message>
-        <source>Cut: %lld - %lld 
-</source>
-        <translation type="vanished">자르기: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-</source>
-        <translation type="vanished">시험 %1
-</translation>
-    </message>
-    <message>
-        <source>Cut (%lld, %lld) failed.
-</source>
-        <translation type="vanished">자르기(%1, %2) 실패.
-</translation>
-    </message>
-    <message>
-        <source>Paste: %lld
-</source>
-        <translation type="vanished">붙이기: %1
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-Failed on Paste.
-</source>
-        <translation type="vanished">시험 %1
-붙여넣기 실패.
-</translation>
-    </message>
-    <message>
-        <source>Time to perform %d edits: %ld ms
-</source>
-        <translation type="vanished">%1 편집 항목 수행 시간: %2 ms
-</translation>
-    </message>
-    <message>
-        <source>Checking file pointer leaks:
-</source>
-        <translation type="vanished">파일 포인터 누수 검사:
-</translation>
-    </message>
-    <message>
-        <source>Track # blocks: %ld
-</source>
-        <translation type="vanished">트랙 # 블럭: %1
-</translation>
-    </message>
-    <message>
-        <source>Disk # blocks: 
-</source>
-        <translation type="vanished">디스크 # 블럭: 
-</translation>
-    </message>
-    <message>
-        <source>Doing correctness check...
-</source>
-        <translation type="vanished">정확도 검사 중...
-</translation>
-    </message>
-    <message>
-        <source>Bad: chunk %lld sample %lld
-</source>
-        <translation type="vanished">나쁨: 청크 %1 샘플 %2
-</translation>
-    </message>
-    <message>
-        <source>Passed correctness check!
-</source>
-        <translation type="vanished">정확도 검사 통과!
-</translation>
-    </message>
-    <message>
-        <source>Errors in %d/%lld chunks
-</source>
-        <translation type="vanished">%1/%2 청크에 오류가 있습니다
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data: %ld ms
-</source>
-        <translation type="vanished">전체 데이터 검사 시간: %1 ms
-</translation>
-    </message>
-    <message>
-        <source>Reading data again...
-</source>
-        <translation type="vanished">데이터 다시 읽는 중...
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data (2): %ld ms
-</source>
-        <translation type="vanished">전체 데이터 검사 시간 (2): %1 ms
-</translation>
-    </message>
-    <message>
-        <source>At 44100 Hz, %d bytes per sample, the estimated number of
- simultaneous tracks that could be played at once: %.1f
-</source>
-        <translation type="vanished">44100 Hz, 샘플당 %1 바이트에서, 한 번에 재생할 수 있는
-동시 트랙의 예상 개수: %2
-</translation>
-    </message>
-    <message>
-        <source>TEST FAILED!!!
-</source>
-        <translation type="vanished">시험 실패!!!
-</translation>
-    </message>
-    <message>
-        <source>Benchmark completed successfully.
-</source>
-        <translation type="vanished">벤치마크를 성공적으로 마쳤습니다.
-</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Cmd + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">%1가 사용할 오디오를 선택(예:  전체 선택은 Cmd + A)하고다시 해보세요.</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">%1가 사용할 오디오를 선택(예:  전체 선택은 Ctrl + A)하고다시 해보세요.</translation>
-    </message>
-    <message>
-        <source>No Audio Selected</source>
-        <translation type="vanished">선택한 오디오가 없습니다</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use.
-
-1. Select audio that represents noise and use %s to get your 'noise profile'.
-
-2. When you have got your noise profile, select the audio you want to change
-and use %s to change that audio.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.</extracomment>
-        <translation type="vanished">%1를 사용하기 위해 오디오를 선택하세요.
-
-1. 소음에 해당하는 오디오를 선택하고 %2를 사용하여 '소음 샘플'을 추출하세요.
-
-2. 소음 샘플을 추출한 뒤, 편집할 오디오를 선택하고
-%3를 사용하여 편집하세요.</translation>
-    </message>
-    <message>
-        <source>You can only do this when playing and recording are
-stopped. (Pausing is not sufficient.)</source>
-        <translation type="vanished">재생이나 녹음이 멈춘 상태에서만 이것을 할 수 있습니다.
-(일시 정지로는 불충분합니다.)</translation>
-    </message>
-    <message>
-        <source>You must first select some stereo audio to perform this
-action. (You cannot use this with mono.)</source>
-        <translation type="vanished">이 동작을 수행하려면 일부 스테레오 오디오를 우선 선택해야
-합니다. (모노에서는 이것을 사용할 수 없습니다.)</translation>
-    </message>
-    <message>
-        <source>You must first select some audio to perform this action.
-(Selecting other kinds of track won't work.)</source>
-        <translation type="vanished">이 동작을 수행하려면 일부 오디오를 우선 선택해야 합니다.
-(다른 종류의 트랙을 선택하면 동작하지 않을 것입니다.)</translation>
-    </message>
-    <message>
-        <source>Audacity Support Data</source>
-        <translation type="vanished">오데시티 지원 데이터</translation>
-    </message>
-    <message>
-        <source>Report generated to:</source>
-        <translation type="vanished">보고서 생성:</translation>
-    </message>
-    <message>
-        <source>Removing Dependencies</source>
-        <translation type="vanished">의존성 제거</translation>
-    </message>
-    <message>
-        <source>Copying audio data into project...</source>
-        <translation type="vanished">오디오 데이터를 프로젝트에 복사 중...</translation>
-    </message>
-    <message>
-        <source>Project Depends on Other Audio Files</source>
-        <translation type="vanished">다른 오디오 파일에 의존하는 프로젝트</translation>
-    </message>
-    <message>
-        <source>Copying these files into your project will remove this dependency.
-This is safer, but needs more disk space.</source>
-        <translation type="vanished">이 파일을 여러분의 프로젝트의 복사하면 이 의존성을 제거할 것입니다.
-이것은 더 안전하지만, 디스크 공간이 더 필요합니다.</translation>
-    </message>
-    <message>
-        <source>
-
-Files shown as MISSING have been moved or deleted and cannot be copied.
-Restore them to their original location to be able to copy into project.</source>
-        <translation type="vanished">
-
-'없음'으로 나타나는 파일은 옮겨지거나 삭제되어서 복사할 수 없습니다.
-프로젝트에 복사할 수 있게 본래 그 원래 위치로 복구하세요.</translation>
-    </message>
-    <message>
-        <source>Project Dependencies</source>
-        <translation type="vanished">프로젝트 의존성</translation>
-    </message>
-    <message>
-        <source>Audio File</source>
-        <translation type="vanished">오디오 파일</translation>
-    </message>
-    <message>
-        <source>Disk Space</source>
-        <translation type="vanished">디스크 공간</translation>
-    </message>
-    <message>
-        <source>Copy Selected Files</source>
-        <translation type="vanished">선택한 파일 복사</translation>
-    </message>
-    <message>
-        <source>Cancel Save</source>
-        <translation type="vanished">저장 취소</translation>
-    </message>
-    <message>
-        <source>Save Without Copying</source>
-        <translation type="vanished">복사하지 않고 저장</translation>
-    </message>
-    <message>
-        <source>Do Not Copy</source>
-        <translation type="vanished">복사하지 않음</translation>
-    </message>
-    <message>
-        <source>Copy All Files (Safer)</source>
-        <translation type="vanished">모든 파일 복사 (더 안전함)</translation>
-    </message>
-    <message>
-        <source>Whenever a project depends on other files:</source>
-        <translation type="vanished">프로젝트가 다른 파일에 의존할 때마다:</translation>
-    </message>
-    <message>
-        <source>Ask me</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">확인하기</translation>
-    </message>
-    <message>
-        <source>Always copy all files (safest)</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">항상 모든 파일 복사(가장 안전함)</translation>
-    </message>
-    <message>
-        <source>Never copy any files</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">어떤 파일도 복사하지 않음</translation>
-    </message>
-    <message>
-        <source>MISSING %s</source>
-        <translation type="vanished">없음 %1</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Names to Clipboard</source>
-        <translation type="vanished">클립보드에 이름 복사</translation>
-    </message>
-    <message>
-        <source>"%s", "%s", "%s"
-</source>
-        <translation type="vanished">"%1", "%2", "%3"
-</translation>
-    </message>
-    <message>
-        <source>Missing</source>
-        <translation type="vanished">없움</translation>
-    </message>
-    <message>
-        <source>If you proceed, your project will not be saved to disk. Is this what you want?</source>
-        <translation type="vanished">계속 진행하면, 프로젝트를 디스크에 저장하지 않을 것입니다.계속 진행할까요?</translation>
-    </message>
-    <message>
-        <source>Your project is self-contained; it does not depend on any external audio files. 
-
-Some older Audacity projects may not be self-contained, and care 
-is needed to keep their external dependencies in the right place.
-New projects will be self-contained and are less risky.</source>
-        <translation type="vanished">프로젝트는 현재 독립적으로 되어 있습니다. 즉 어떤 외부 오디오 파일에도 의존하지 않습니다. 
-
-일부 이전 오데시티 버전 프로젝트는 독립적이지 않은 경우가 있습니다.
-주의해서, 외부에 의존된 파일들이 정확한 위치에 있도록 해야 합니다.
-새 프로젝트는 독립적으로 만들어지므로 위험성이 적습니다.</translation>
-    </message>
-    <message>
-        <source>Dependency Check</source>
-        <translation type="vanished">의존성 확인</translation>
-    </message>
-    <message>
-        <source>Dropouts</source>
-        <extracomment>i18n-hint:  A name given to a track, appearing as its menu button.
-The translation should be short or else it will not display well.
-At most, about 11 Latin characters.
-Dropout is a loss of a short sequence of audio sample data from the
-recording</extracomment>
-        <translation type="vanished">드롭아웃</translation>
-    </message>
-    <message>
-        <source>Recorded audio was lost at the labeled locations. Possible causes:
-
-Other applications are competing with Audacity for processor time
-
-You are saving directly to a slow external storage device
-</source>
-        <translation type="vanished">녹음된 오디오가 레이블이 달린 위치에서 손실되었습니다. 가능한 이유:
-
-다른 응용 프로그램이 오데시티와 CPU 처리 시간을 놓고 경쟁 중입니다
-
-느린 외부 저장 장치에 직접 저장하는 중입니다
-</translation>
-    </message>
-    <message>
-        <source>Turn off dropout detection</source>
-        <translation type="vanished">드롭아웃 감지 끄기</translation>
-    </message>
-    <message>
-        <source>Frequency Analysis</source>
-        <translation type="vanished">주파수 분석</translation>
-    </message>
-    <message>
-        <source>Spectrum</source>
-        <translation type="vanished">스펙트럼</translation>
-    </message>
-    <message>
-        <source>Standard Autocorrelation</source>
-        <translation type="vanished">표준 자기상관</translation>
-    </message>
-    <message>
-        <source>Cuberoot Autocorrelation</source>
-        <translation type="vanished">큐브루트 자기상관</translation>
-    </message>
-    <message>
-        <source>Enhanced Autocorrelation</source>
-        <translation type="vanished">향상된 자기상관</translation>
-    </message>
-    <message>
-        <source>Cepstrum</source>
-        <extracomment>i18n-hint: This is a technical term, derived from the word
-* "spectrum".  Do not translate it unless you are sure you
-* know the correct technical word in your language.</extracomment>
-        <translation type="vanished">켑스트럼</translation>
-    </message>
-    <message>
-        <source>%s window</source>
-        <extracomment>i18n-hint: This refers to a "window function",
-* such as Hann or Rectangular, used in the
-* Frequency analyze dialog box.</extracomment>
-        <translation type="vanished">%1 창</translation>
-    </message>
-    <message>
-        <source>Linear frequency</source>
-        <translation type="vanished">선형 주파수</translation>
-    </message>
-    <message>
-        <source>Log frequency</source>
-        <translation type="vanished">로그 주파수</translation>
-    </message>
-    <message>
-        <source>Scroll</source>
-        <translation type="vanished">스크롤</translation>
-    </message>
-    <message>
-        <source>Cursor:</source>
-        <translation type="vanished">커서:</translation>
-    </message>
-    <message>
-        <source>Peak:</source>
-        <translation type="vanished">피크:</translation>
-    </message>
-    <message>
-        <source>&amp;Grids</source>
-        <translation type="vanished">격자(&amp;G)</translation>
-    </message>
-    <message>
-        <source>&amp;Algorithm:</source>
-        <translation type="vanished">알고리즘(&amp;A):</translation>
-    </message>
-    <message>
-        <source>&amp;Size:</source>
-        <translation type="vanished">크기(&amp;S):</translation>
-    </message>
-    <message>
-        <source>&amp;Export...</source>
-        <translation type="vanished">내보내기(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>&amp;Function:</source>
-        <translation type="vanished">함수(&amp;F):</translation>
-    </message>
-    <message>
-        <source>&amp;Axis:</source>
-        <translation type="vanished">축(&amp;A):</translation>
-    </message>
-    <message>
-        <source>&amp;Replot...</source>
-        <translation type="vanished">재구성(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Not enough data selected.</source>
-        <translation type="vanished">충분한 데이터를 선택하지 않았습니다.</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %d dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %.1f dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 초 (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %.3f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 초 (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>spectrum.txt</source>
-        <translation type="vanished">spectrum.txt</translation>
-    </message>
-    <message>
-        <source>Export Spectral Data As:</source>
-        <translation type="vanished">다른 이름으로 스펙트럼 데이터 내보내기:</translation>
-    </message>
-    <message>
-        <source>Frequency (Hz)	Level (dB)</source>
-        <translation type="vanished">주파수 (Hz)	레벨 (dB)</translation>
-    </message>
-    <message>
-        <source>Lag (seconds)	Frequency (Hz)	Level</source>
-        <translation type="vanished">지연 (초)	주파수 (Hz)	레벨</translation>
-    </message>
-    <message>
-        <source>Plot Spectrum...</source>
-        <translation type="vanished">스팩트럼 도식화 ...</translation>
-    </message>
-    <message>
-        <source>Save %s</source>
-        <translation type="vanished">저장 %1</translation>
-    </message>
-    <message>
-        <source>Unable to save %s</source>
-        <translation type="vanished">저장할 수 없음 %1</translation>
-    </message>
-    <message>
-        <source>&amp;Manage History</source>
-        <translation type="vanished">히스토리 관리(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Used Space</source>
-        <translation type="vanished">사용된 공간</translation>
-    </message>
-    <message>
-        <source>&amp;Total space used</source>
-        <translation type="vanished">전체 사용한 공간(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Undo levels available</source>
-        <translation type="vanished">실행 취소 수준(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Levels to discard</source>
-        <translation type="vanished">버릴 레벨(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Discard</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">버리기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Clip&amp;board space used</source>
-        <translation type="vanished">클립보드 사용 공간(&amp;B)</translation>
-    </message>
-    <message>
-        <source>D&amp;iscard</source>
-        <translation type="vanished">버리기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Compact</source>
-        <translation type="vanished">압축(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Compacting actually freed %s of disk space.</source>
-        <translation type="vanished">압축을 하면 %1 저장 공간이 확보됨.</translation>
-    </message>
-    <message>
-        <source>&amp;History</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the various editing steps
-that have been taken.</extracomment>
-        <translation type="vanished">작업내역(&amp;H)</translation>
-    </message>
-    <message>
-        <source>New Plugins</source>
-        <translation type="vanished">새 플러그인</translation>
-    </message>
-    <message>
-        <source>Incompatible plugin(s) found</source>
-        <translation type="vanished">호환되지 않는 플러그인 발견</translation>
-    </message>
-    <message>
-        <source>&amp;Manage Plugins</source>
-        <translation type="vanished">플러그인 관리(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using "Manage Plugins". Otherwise, select "Continue".</source>
-        <translation type="vanished">오데시티가 %1 개의 비호환 플러그인을 발견하여 로딩에 실패하였습니다. 해당 플러그인은 문제를 발생시키지 않도록 비활성화 되었습니다. 이 플러그인 활성화를 시도하려면 "플러그인 관리"에서 다시 시도 해 보기 바랍니다. 다음으로 넘어가려면 "계속"을 선택하십시오. </translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes.</source>
-        <translation type="vanished">오데시티가 %1 개의 호환되지 않는 플러그인을 발경하였습니다. 이 플러그인은 로딩될 수 없습니다. 비정상적인 동작을 예방하기 위해 이 플러그인들은 비활성화 하였습니다. </translation>
-    </message>
-    <message>
-        <source>Journal recording failed</source>
-        <translation type="vanished">저널 기록 실패</translation>
-    </message>
-    <message>
-        <source>Edit Labels</source>
-        <translation type="vanished">레이블 편집</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">시작 시간</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">끝 시간</translation>
-    </message>
-    <message>
-        <source>Low Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">저주파</translation>
-    </message>
-    <message>
-        <source>High Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">고주파</translation>
-    </message>
-    <message>
-        <source>New...</source>
-        <translation type="vanished">새 파일...</translation>
-    </message>
-    <message>
-        <source>Press F2 or double click to edit cell contents.</source>
-        <translation type="vanished">셀 내용을 편집하려면 F2를 누르거나 더블 클릭하세요.</translation>
-    </message>
-    <message>
-        <source>Select a text file containing labels</source>
-        <translation type="vanished">레이블을 포함한 텍스트 파일 선택</translation>
-    </message>
-    <message>
-        <source>No labels to export.</source>
-        <translation type="vanished">내보낼 레이블이 없습니다.</translation>
-    </message>
-    <message>
-        <source>Export Labels As:</source>
-        <translation type="vanished">다른 이름으로 레이블 내보내기:</translation>
-    </message>
-    <message>
-        <source>New Label Track</source>
-        <translation type="vanished">새 레이블 트랙</translation>
-    </message>
-    <message>
-        <source>Enter track name</source>
-        <translation type="vanished">트랙 이름을 입력하세요</translation>
-    </message>
-    <message>
-        <source>Exported Label Style:</source>
-        <translation type="vanished">레이블 스타일 내보내기:</translation>
-    </message>
-    <message>
-        <source>Audacity First Run</source>
-        <extracomment>i18n-hint: Title on a dialog indicating that this is the first
-* time Audacity has been run.</extracomment>
-        <translation type="vanished">오데시티 처음 실행</translation>
-    </message>
-    <message>
-        <source>Choose Language for Audacity to use:</source>
-        <translation type="vanished">오데시티에서 사용할 언어 선택:</translation>
-    </message>
-    <message>
-        <source>The language you have chosen, %s (%s), is not the same as the system language, %s (%s).</source>
-        <extracomment>i18n-hint: The %s's are replaced by translated and untranslated
-* versions of language names.</extracomment>
-        <translation type="vanished">선택한 언어 %1 (%2)가 시스템 언어 %3 (%4)와 같지 않습니다.</translation>
-    </message>
-    <message>
-        <source>Error Converting Legacy Project File</source>
-        <translation type="vanished">레거시 프로젝트 파일 변환 중 오류</translation>
-    </message>
-    <message>
-        <source>Converted a 1.0 project file to the new format.
-The old file has been saved as '%s'</source>
-        <translation type="vanished">1.0 프로젝트 파일을 새 형식으로 변환했습니다.
-이전 파일은 '%1' 이름으로 저장했습니다</translation>
-    </message>
-    <message>
-        <source>Opening Audacity Project</source>
-        <translation type="vanished">오데시티 프로젝트 열기</translation>
-    </message>
-    <message>
-        <source>The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command.</source>
-        <translation type="vanished">다음 명령에 대한 단축키는 삭제되었습니다. 그 이유는 단축키의 기본값이 새롭게 정의되거나 변경되었고같은 단축키에 다른 명령을 지정하였기 때문입니다. </translation>
-    </message>
-    <message>
-        <source>Shortcuts have been removed</source>
-        <translation type="vanished">바로가기가 제거되었습니다</translation>
-    </message>
-    <message>
-        <source>Audacity Mixer%s</source>
-        <translation type="vanished">오데시티 믹서 %1</translation>
-    </message>
-    <message>
-        <source>Velocity</source>
-        <extracomment>i18n-hint: title of the MIDI Velocity slider
-i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks</extracomment>
-        <translation type="vanished">속도</translation>
-    </message>
-    <message>
-        <source>Musical Instrument</source>
-        <translation type="vanished">악기</translation>
-    </message>
-    <message>
-        <source>Mute</source>
-        <extracomment>i18n-hint: This is on a button that will silence this track.</extracomment>
-        <translation type="vanished">음소거</translation>
-    </message>
-    <message>
-        <source>Solo</source>
-        <extracomment>i18n-hint: This is on a button that will silence all the other tracks.</extracomment>
-        <translation type="vanished">독주</translation>
-    </message>
-    <message>
-        <source>Signal Level Meter</source>
-        <translation type="vanished">신호 레벨 미터</translation>
-    </message>
-    <message>
-        <source>Moved gain slider</source>
-        <translation type="vanished">게인 슬라이더를 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Moved velocity slider</source>
-        <translation type="vanished">속도 슬라이더를 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Moved pan slider</source>
-        <translation type="vanished">팬 슬라이더를 이동했습니다</translation>
-    </message>
-    <message>
-        <source>&amp;Mixer</source>
-        <translation type="vanished">믹서(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Effect or Command at %s failed to register:
-%s</source>
-        <translation type="vanished">%1의 이펙트 또는 명령 등록에 실패했습니다:
-%2</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="vanished">비활성화</translation>
-    </message>
-    <message>
-        <source>Enable</source>
-        <translation type="vanished">활성화</translation>
-    </message>
-    <message>
-        <source>Generator</source>
-        <translation type="vanished">생성기</translation>
-    </message>
-    <message>
-        <source>Analyzer</source>
-        <translation type="vanished">분석기</translation>
-    </message>
-    <message>
-        <source>Tool</source>
-        <translation type="vanished">도구</translation>
-    </message>
-    <message>
-        <source>Manage Plugins</source>
-        <translation type="vanished">플러그인 관리</translation>
-    </message>
-    <message>
-        <source>Native Audacity</source>
-        <translation type="vanished">네이티브 오데시티</translation>
-    </message>
-    <message>
-        <source>&amp;Show:</source>
-        <translation type="vanished">표시(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="vanished">유형(&amp;T)</translation>
-    </message>
-    <message>
-        <source>C&amp;ategory:</source>
-        <translation type="vanished">카테고리(&amp;A):</translation>
-    </message>
-    <message>
-        <source>Searc&amp;h:</source>
-        <translation type="vanished">검색(&amp;H):</translation>
-    </message>
-    <message>
-        <source>Plugin</source>
-        <translation type="vanished">플러그인</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan</source>
-        <translation type="vanished">다시 스캔(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Get more effects...</source>
-        <translation type="vanished">다른 이펙트 가져오기...(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Searching for plugins</source>
-        <translation type="vanished">플러그인 검색중</translation>
-    </message>
-    <message>
-        <source>Actual Rate: %d</source>
-        <translation type="vanished">실제 속도: %1</translation>
-    </message>
-    <message>
-        <source>Error opening sound device.
-Try changing the audio host, playback device and the project sample rate.</source>
-        <translation type="vanished">사운드 장치를 여는 중 오류가 발생했습니다.
-오디오 호스트, 재생 장치와 프로젝트 샘플링 주파수를 바꾸어 시도해 보세요.</translation>
-    </message>
-    <message>
-        <source>Mismatched Sampling Rates</source>
-        <translation type="vanished">샘플링 주파수 불일치</translation>
-    </message>
-    <message>
-        <source>Too few tracks are selected for recording at this sample rate.
-(Audacity requires two channels at the same sample rate for
-each stereo track)</source>
-        <translation type="vanished">이 샘플링 주파수에서 녹음을 위한 트랙이 너무 적게 선택되었습니다. 
-(오데시티에서는 스테레오 트랙을 위해서는 같은 샘플링 주파수의
-두개의 트랙이 필요합니다)</translation>
-    </message>
-    <message>
-        <source>Too Few Compatible Tracks Selected</source>
-        <translation type="vanished">선택된 트랙의 수가 너무 적음</translation>
-    </message>
-    <message>
-        <source>%s.%d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>Recorded Audio</source>
-        <translation type="vanished">녹음된 오디오</translation>
-    </message>
-    <message>
-        <source>Project check read faulty Sequence tags.</source>
-        <extracomment>i18n-hint: The audacity project file is XML and has 'tags' in it,
-rather like html tags &lt;something&gt;some stuff&lt;/something&gt;.
-This error message is about the tags that hold the sequence information.
-The error message is confusing to users in English, and could just say
-"Found problems with &lt;sequence&gt; when checking project file."</extracomment>
-        <translation type="vanished">프로젝트 확인시에 잘못된 시퀀스 태그를 읽었습니다.</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no changes</source>
-        <translation type="vanished">내용 변경 없이 프로젝트 즉시 닫기</translation>
-    </message>
-    <message>
-        <source>Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you "Close project immediately" on further error alerts.</source>
-        <translation type="vanished">로그에 기록된 복구 내용으로 계속하시고, 추가 오류를 확인하세요.추가 오류 경고시에 "프로젝트 즉시 닫기"를 하기 않는 한현재 상태로 프로젝트를 저장할 것입니다.</translation>
-    </message>
-    <message>
-        <source>Warning - Problems Reading Sequence Tags</source>
-        <translation type="vanished">경고 - 시퀀스 태그를 읽는 과정에서 문제</translation>
-    </message>
-    <message>
-        <source>Inspecting project file data</source>
-        <translation type="vanished">프로젝트 파일 데이터 검사</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing external audio file(s) 
-('aliased files'). There is no way for Audacity 
-to recover these files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence. 
-
-If you choose the third option, this will save the 
-project in its current state, unless you "Close 
-project immediately" on further error alerts.</source>
-        <translation type="vanished">"%1" 폴더의 프로젝트 검사에서
-%2 없어진 외부 오디오 파일('aliased file')을
-감지했습니다. 오데시티에서 이런 없어진 오디오
-파일을 자동으로 복구할 수 있는 방법은 없습니다.
-
-아래의 첫 번째나 두 번째 옵션을 선택하면, 없어진
-파일을 찾아서 그 이전 위치에 복구를 시도해 볼 수
-있을 것입니다.
-
-두 번째 옵션에 대해서, 파형은 무음을 보여주지 않을 수
-있음에 유의하세요.
-
-세 번째 옵션을 선택하면, 추가 오류 경고시
-"프로젝트 즉시 닫기"를 하지 않는 한 이 옵션은
-프로젝트를 그 현재 상태로 저장할 것입니다.</translation>
-    </message>
-    <message>
-        <source>Treat missing audio as silence (this session only)</source>
-        <translation type="vanished">없어진 오디오를 무음으로 처리 (이 세션에서만)</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately).</source>
-        <translation type="vanished">없어진 오디오를 무음으로 대체합니다 (즉시 영구적).</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Aliased File(s)</source>
-        <translation type="vanished">경고 - 애일리어스 파일 없음</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing alias (.auf) blockfile(s). 
-Audacity can fully regenerate these files 
-from the current audio in the project.</source>
-        <translation type="vanished">"%1" 폴더의 프로젝트 검사에서
-%2 없어진 에일리어스(.auf) 블럭파일을 감지했습니다.
-오데시티는 이 파일을 프로젝트의 현재 오디오에서
-완전히 되살릴 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Regenerate alias summary files (safe and recommended)</source>
-        <translation type="vanished">에일리어스 요약 파일을 다시 만들기 (안전, 추천함)</translation>
-    </message>
-    <message>
-        <source>Fill in silence for missing display data (this session only)</source>
-        <translation type="vanished">없어진 표시 데이터는 무음으로 채우기 (이 세션에서만)</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no further changes</source>
-        <translation type="vanished">추가 변경 사항 없이 프로젝트 즉시 닫기</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Alias Summary File(s)</source>
-        <translation type="vanished">경고 - 에일리어스 요약 파일이 없음</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing audio data (.au) blockfile(s), 
-probably due to a bug, system crash, or accidental 
-deletion. There is no way for Audacity to recover 
-these missing files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence.</source>
-        <translation type="vanished">"%1" 폴더의 프로젝트 검사에서
-아마도 버그나, 시스템 크래시 또는 우연한 삭제로 인한
-%2 없어진 오디오 데이터(.au) 블럭파일을 감지했습니다.
-오데시티에서 이러한 없어진 파일을 자동으로 복구할 수
-있는 방법이 없습니다.
-
-아래의 첫 번째나 두 번째 옵션을 선택하면, 누락된 파일을
-찾아서 그 이전 위치에 복구를 시도해 볼 수 있습니다.
-
-두 번째 옵션에 대해서, 파형은 무음을 보여주지 않을 수
-있음에 유의하세요.</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately)</source>
-        <translation type="vanished">없어진 오디오를 무음으로 대체하기 (즉시 영구적)</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Audio Data Block File(s)</source>
-        <translation type="vanished">경고 - 오디오 데이터 블록 파일이 없습니다</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-found %d orphan block file(s). These files are 
-unused by this project, but might belong to other projects. 
-They are doing no harm and are small.</source>
-        <translation type="vanished">"%1" 폴더에 대한 프로젝트 검사에서 
-%2개의 부모가 없는 블록 파일을 찾았습니다. 이 파일들은 
-이 프로젝트에서 사용하지 않지만, 다른 프로젝트에서 보유하고 
-있는 것인지도 모릅니다. 해가 되지 않으며 미미한 존재입니다.</translation>
-    </message>
-    <message>
-        <source>Continue without deleting; ignore the extra files this session</source>
-        <translation type="vanished">삭제 없이 계속하세요; 이 세션의 추가 파일은 무시합니다</translation>
-    </message>
-    <message>
-        <source>Delete orphan files (permanent immediately)</source>
-        <translation type="vanished">부모 없는 파일 삭제 (즉시 영구적)</translation>
-    </message>
-    <message>
-        <source>Warning - Orphan Block File(s)</source>
-        <translation type="vanished">경고 - 부모 없는 블럭 파일입니다</translation>
-    </message>
-    <message>
-        <source>Cleaning up unused directories in project data</source>
-        <translation type="vanished">프로젝트 데이터의 미사용 폴더 정리 중</translation>
-    </message>
-    <message>
-        <source>Project check found file inconsistencies during automatic recovery.
-
-Select 'Help &gt; Diagnostics &gt; Show Log...' to see details.</source>
-        <translation type="vanished">자동 복구 중 프로젝트 점검을 통해 파일 불일치를 발견함.
-
-도움말 &gt; 진단 &gt; 로그 보기... 를 선택하세요. </translation>
-    </message>
-    <message>
-        <source>Warning: Problems in Automatic Recovery</source>
-        <translation type="vanished">경고: 자동 복구에 문제가 있습니다</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-As a result, some realtime effects may be missing.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to open a project created by Audacity version prior to 3.4.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">1%1
-이 기능은 오데시티 버전 3.3.3 이후에서는 지원하지 않습니다. 
-이 스테레오 트랙은 2개의 모노트랙으로 분리됩니다. 
-결과적으로 일부 실시간 이펙트가 없어질 수 있습니다.
-저장하기 전에 의도한대로 작동했는지 확인 바랍니다.</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot.</source>
-        <translation type="vanished">이 프로젝트는 이전에 오데시트를 수행하는 과정에서 바르게 저장되지 않았습니다.
-
-이전 스냅샷으로 복구되었습니다.</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot, but you must save it
-to preserve its contents.</source>
-        <translation type="vanished">이 프로젝트는 이전에 오데시트를 수행하는 과정에서 바르게 저장되지 않았습니다.
-
-이전 스냅샷으로 복구되었습니다. 내용을 보존하려면
-반드시 저장해야 합니다.</translation>
-    </message>
-    <message>
-        <source>Project Recovered</source>
-        <translation type="vanished">프로젝트 복구됨</translation>
-    </message>
-    <message>
-        <source>Projects cannot be saved to FAT drives.</source>
-        <translation type="vanished">프로젝트는 FAT 형식의 드라이브에 저장할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Insufficient Disk Space</source>
-        <translation type="vanished">디스크 공간이 부족</translation>
-    </message>
-    <message>
-        <source>The project size exceeds the available free space on the target disk.
-
-Please select a different disk with more free space.</source>
-        <translation type="vanished">프로젝트 크기가 현재 디스크의 사용가능한 저장공간 보다 커졌습니다. 
-
-여유 공간이 있는 다른 디스크를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem.</source>
-        <translation type="vanished">프로젝트 크기가 FAT32에서 허용하는 4GB보다 큽니다. </translation>
-    </message>
-    <message>
-        <source>Saved %s</source>
-        <translation type="vanished">%1 저장완료</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the file name provided would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">파일명이 다른 프로젝트를 덮어쓰기 때문에 이 프로젝트를 저장하지 않았습니다.
-재시도 해보고, 새로운 이름을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>%sSave Project "%s" As...</source>
-        <translation type="vanished">%1 프로젝트 다른 이름으로 저장 "%2"...</translation>
-    </message>
-    <message>
-        <source>   Do you want to overwrite the project:
-"%s"?
-
-   If you select "Yes" the project
-"%s"
-   will be irreversibly overwritten.</source>
-        <extracomment>i18n-hint: In each case, %s is the name
-of the file being overwritten.</extracomment>
-        <translation type="vanished">이 프로젝트를 덮어쓸까요:
-"%1"?
-
-  "예"를 선택하면 프로젝트
-"%2"는
-  완전히 덮어 써지게 됩니다.</translation>
-    </message>
-    <message>
-        <source>Overwrite Project Warning</source>
-        <extracomment>i18n-hint: Heading: A warning that a project is about to be overwritten.</extracomment>
-        <translation type="vanished">프로젝트 덮어쓰기 경고</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the selected project is open in another window.
-Please try again and select an original name.</source>
-        <translation type="vanished">이 프로젝트는 다른 윈도우에 열려 있어 저장되지 않았습니다.
-다시 새로운 이름으로 시도하십시오.</translation>
-    </message>
-    <message>
-        <source>%sSave Copy of Project "%s" As...</source>
-        <translation type="vanished">%1 프로젝트 다른 이름으로 저장 "%2"...</translation>
-    </message>
-    <message>
-        <source>Saving a copy must not overwrite an existing saved project.
-Please try again and select an original name.</source>
-        <translation type="vanished">사본의 저장은 이미 저장된 파일에 덮어 쓰기 할 수 없습니다. 
-새로운 이름을 선택하여 다시 저장하세요.</translation>
-    </message>
-    <message>
-        <source>Error Saving Copy of Project</source>
-        <translation type="vanished">프로젝트 저장 중 오류</translation>
-    </message>
-    <message>
-        <source>Select one or more files</source>
-        <translation type="vanished">하나 이상의 파일 선택</translation>
-    </message>
-    <message>
-        <source>%s is already open in another window.</source>
-        <translation type="vanished">%1는 이미 다른 창에서 열려 있습니다.</translation>
-    </message>
-    <message>
-        <source>Error Opening Project</source>
-        <translation type="vanished">프로젝트 열기 오류</translation>
-    </message>
-    <message>
-        <source>You are trying to open an automatically created backup file.
-Doing this may result in severe data loss.
-
-Please open the actual Audacity project file instead.</source>
-        <translation type="vanished">자동으로 생성된 백업 파일을 열려고 하는 중입니다.
-이것을 열면 심각한 데이터 손실이 발생할 수 있습니다.
-
-실제의 오데시티 프로젝트 파일을 대신 열어주세요.</translation>
-    </message>
-    <message>
-        <source>Warning - Backup File Detected</source>
-        <translation type="vanished">경고 - 백업 파일을 감지했습니다</translation>
-    </message>
-    <message>
-        <source>Error Opening File</source>
-        <translation type="vanished">파일을 여는 중 오류</translation>
-    </message>
-    <message>
-        <source>File may be invalid or corrupted: 
-%s</source>
-        <translation type="vanished">파일이 무효하거나 깨졌을 수 있습니다:
-%1</translation>
-    </message>
-    <message>
-        <source>Error Opening File or Project</source>
-        <translation type="vanished">파일이나 프로젝트를 여는 중 오류</translation>
-    </message>
-    <message>
-        <source>Project resides on FAT formatted drive.
-Copy it to another drive to open it.</source>
-        <translation type="vanished">프로젝트가 FAT로 포맷된 디스크에 있습니다. 
-열기위해서는 다른 디스크에 복사해야 합니다.</translation>
-    </message>
-    <message>
-        <source>A channel of a stereo track was missing.</source>
-        <translation type="vanished">스테레오 트랙의 한 채널이 없음.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample rates per channel.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">이 프로젝트는 채널 마다 다른 샘플링 주파수를 갖고 있는 스테레오 트랙이 있습니다.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample formats in channels.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">이 프로젝트는 서로 다른 샘플 포맷을 갖고 있는 채널로 된 스테레로 트랙이 있습니다.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with non-aligned content.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">이 프로젝트는 정렬되지 않은 내용의 스테레오 트랙을 갖고 있습니다.</translation>
-    </message>
-    <message>
-        <source>Project was recovered</source>
-        <translation type="vanished">프로젝트를 복구했습니다</translation>
-    </message>
-    <message>
-        <source>Recover</source>
-        <translation type="vanished">복구</translation>
-    </message>
-    <message>
-        <source>%s %d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Name default name assigned to a clip on track import</extracomment>
-        <translation type="vanished">%1 %2</translation>
-    </message>
-    <message>
-        <source>Imported '%s'</source>
-        <translation type="vanished">'%1'을 가져왔습니다</translation>
-    </message>
-    <message>
-        <source>Select stream(s) to import</source>
-        <translation type="vanished">가져오기 스트림 선택</translation>
-    </message>
-    <message>
-        <source>Music Information Retrieval</source>
-        <translation type="vanished">음악 정보 가져오기</translation>
-    </message>
-    <message>
-        <source>Analyzing imported audio</source>
-        <translation type="vanished">가져온 오디오 분석중</translation>
-    </message>
-    <message>
-        <source>Failed to import project</source>
-        <translation type="vanished">프로젝트 가져오기 실패</translation>
-    </message>
-    <message>
-        <source>Error Importing</source>
-        <translation type="vanished">가져오기 오류</translation>
-    </message>
-    <message>
-        <source>Cannot import AUP3 format.  Use File &gt; Open instead</source>
-        <translation type="vanished">AUP3 포맷을 가져올 수 없습니다.  파일 &gt; 열기 사용하십시오</translation>
-    </message>
-    <message>
-        <source>Compact Project</source>
-        <translation type="vanished">프로젝트 압축</translation>
-    </message>
-    <message>
-        <source>Compacting this project will free up disk space by removing unused bytes within the file.
-
-There is %s of free disk space and this project is currently using %s.
-
-If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.
-
-Do you want to continue?</source>
-        <translation type="vanished">이 프로젝트 압축을 하면 파일 내에 사용하지 않는 데이터를 삭제하여 저장공간을 늘립니다.
-
-현재 %1 의 저장공간이 남아 있고, 이 프로젝트는 %2를 사용중 입니다.
-
-계속 진행하면, 현재의 취소/재실행 기록과 클립보드는 지워지게 되고, 약 %3의 저장공간을 확보할 수 있습니다.
-계속 할까요?</translation>
-    </message>
-    <message>
-        <source>Compacted project file</source>
-        <translation type="vanished">압축 프로젝트 파일</translation>
-    </message>
-    <message>
-        <source>Compact</source>
-        <translation type="vanished">압축</translation>
-    </message>
-    <message>
-        <source>[Project %02i] </source>
-        <translation type="vanished">[프로젝트 %1] </translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity version %s</source>
-        <translation type="vanished">오데시티 %1 버전 사용을 환영합니다</translation>
-    </message>
-    <message>
-        <source>%sSave changes to %s?</source>
-        <extracomment>i18n-hint: The first %s numbers the project, the second %s is the project name.</extracomment>
-        <translation type="vanished">%1변경사항을 %2에 저장할까요?</translation>
-    </message>
-    <message>
-        <source>Save project before closing?</source>
-        <translation type="vanished">끝내기 전에 프로젝트를 저장할까요?</translation>
-    </message>
-    <message>
-        <source>Disk space remaining for recording: %s</source>
-        <translation type="vanished">녹음용으로 남은 디스크 공간: %1</translation>
-    </message>
-    <message>
-        <source>Less than 1 minute</source>
-        <translation type="vanished">1분 이내</translation>
-    </message>
-    <message numerus="yes">
-        <source>%d hour</source>
-        <oldsource>%d hours</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 시간</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%d minute</source>
-        <oldsource>%d minutes</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 분</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%s and %s.</source>
-        <extracomment>i18n-hint: A time in hours and minutes. Only translate the "and".</extracomment>
-        <translation type="vanished">%1 및 %2.</translation>
-    </message>
-    <message>
-        <source>Horizontal Scrollbar</source>
-        <translation type="vanished">수평 스크롤바</translation>
-    </message>
-    <message>
-        <source>Vertical Scrollbar</source>
-        <translation type="vanished">수직 스크롤바</translation>
-    </message>
-    <message>
-        <source>No Effect</source>
-        <translation type="vanished">이펙트 없음</translation>
-    </message>
-    <message>
-        <source>Get more effects...</source>
-        <translation type="vanished">더 많은 이펙트...</translation>
-    </message>
-    <message>
-        <source>Analyze</source>
-        <translation type="vanished">분석</translation>
-    </message>
-    <message>
-        <source>%s (missing)</source>
-        <translation type="vanished">%1 (없음)</translation>
-    </message>
-    <message>
-        <source>Effect %d</source>
-        <extracomment>i18n-hint: argument - position of the effect in the effect stack</extracomment>
-        <translation type="vanished">이펙트 %1</translation>
-    </message>
-    <message>
-        <source>Power</source>
-        <translation type="vanished">파워</translation>
-    </message>
-    <message>
-        <source>Replace effect</source>
-        <translation type="vanished">이펙트 대체</translation>
-    </message>
-    <message>
-        <source>Removed %s from %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1가 제거됨 %2 중</translation>
-    </message>
-    <message>
-        <source>Remove %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">%1 제거</translation>
-    </message>
-    <message>
-        <source>Replaced %s with %s</source>
-        <extracomment>i18n-hint: undo history,
-first and second parameters - realtime effect names</extracomment>
-        <translation type="vanished">%1 를  %2로 대체</translation>
-    </message>
-    <message>
-        <source>Replace %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">%1 대체</translation>
-    </message>
-    <message>
-        <source>Moved %s up in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1 위로 이동 %2에서</translation>
-    </message>
-    <message>
-        <source>Moved %s down in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1 아래로 %2 에서</translation>
-    </message>
-    <message>
-        <source>Change effect order</source>
-        <translation type="vanished">이펙트 순서 변경</translation>
-    </message>
-    <message>
-        <source>This plugin could not be loaded.
-It may have been deleted.</source>
-        <translation type="vanished">이 플러그인이 로딩되지 않습니다.
-삭제되었을 수 있습니다. </translation>
-    </message>
-    <message>
-        <source>Plugin Error</source>
-        <translation type="vanished">플러그인 오류</translation>
-    </message>
-    <message>
-        <source>Added %s to %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1 를 %2에 추가</translation>
-    </message>
-    <message>
-        <source>Add %s</source>
-        <extracomment>i18n-hint: undo history record</extracomment>
-        <translation type="vanished">%1 추가</translation>
-    </message>
-    <message>
-        <source>Realtime effects for %s</source>
-        <extracomment>i18n-hint: argument - track name</extracomment>
-        <translation type="vanished">%1를 위한 실시간 이펙트</translation>
-    </message>
-    <message>
-        <source>Realtime Effects</source>
-        <translation type="vanished">실시간 이펙트</translation>
-    </message>
-    <message>
-        <source>Master Effects</source>
-        <translation type="vanished">Master Effects</translation>
-    </message>
-    <message>
-        <source>Applies to all tracks</source>
-        <translation type="vanished">모든 트랙에 적용하기</translation>
-    </message>
-    <message>
-        <source>Sound Activated Record</source>
-        <translation type="vanished">사운드 활성화 녹음</translation>
-    </message>
-    <message>
-        <source>Activation level (dB):</source>
-        <translation type="vanished">활성화 레벨 (dB):</translation>
-    </message>
-    <message>
-        <source>Spectral Data Control Panel</source>
-        <translation type="vanished">스펙트럼 데이터 제어 패널</translation>
-    </message>
-    <message>
-        <source>Brush Tool</source>
-        <translation type="vanished">브러쉬 도구</translation>
-    </message>
-    <message>
-        <source>Spectral Brush</source>
-        <translation type="vanished">스펙트럼 브러시</translation>
-    </message>
-    <message>
-        <source>Brush radius</source>
-        <translation type="vanished">브러쉬 크기</translation>
-    </message>
-    <message>
-        <source>Custom brush size</source>
-        <translation type="vanished">사용자 지정 브러시 크기</translation>
-    </message>
-    <message>
-        <source>Auto-select overtones (beta)</source>
-        <translation type="vanished">오버톤 자동 선택 (beta)</translation>
-    </message>
-    <message>
-        <source>Enable smart selection</source>
-        <translation type="vanished">스마트 선택 활성화</translation>
-    </message>
-    <message>
-        <source>Select the fundamental frequency
-and release the mouse</source>
-        <translation type="vanished">기본 주파수를 선택 하고
-마우스 버튼을 놓으세요</translation>
-    </message>
-    <message>
-        <source>Spectra&amp;l Selection Panel</source>
-        <translation type="vanished">스펙트럼 선택 패널</translation>
-    </message>
-    <message>
-        <source>Applied effect to selection</source>
-        <translation type="vanished">선택 영역에 이펙트 적용</translation>
-    </message>
-    <message>
-        <source>Artist Name</source>
-        <translation type="vanished">아티스트 이름</translation>
-    </message>
-    <message>
-        <source>Album Title</source>
-        <translation type="vanished">음반 제목</translation>
-    </message>
-    <message>
-        <source>Track Number</source>
-        <translation type="vanished">트랙 번호</translation>
-    </message>
-    <message>
-        <source>Genre</source>
-        <translation type="vanished">장르</translation>
-    </message>
-    <message>
-        <source>Use arrow keys (or ENTER key after editing) to navigate fields.</source>
-        <translation type="vanished">필드 이동에 화살표 키를 사용하세요 (편집 후 엔터).</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation type="vanished">추가(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation type="vanished">제거(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Genres</source>
-        <translation type="vanished">장르</translation>
-    </message>
-    <message>
-        <source>E&amp;dit...</source>
-        <translation type="vanished">편집(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>Rese&amp;t...</source>
-        <translation type="vanished">초기화(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>Template</source>
-        <translation type="vanished">템플릿</translation>
-    </message>
-    <message>
-        <source>&amp;Load...</source>
-        <translation type="vanished">열기(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>Set De&amp;fault</source>
-        <translation type="vanished">기본값으로 설정(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Edit Genres</source>
-        <translation type="vanished">장르 편집</translation>
-    </message>
-    <message>
-        <source>Unable to save genre file.</source>
-        <translation type="vanished">장르 파일을 저장할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Reset Genres</source>
-        <translation type="vanished">장르 초기화</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to reset the genre list to defaults?</source>
-        <translation type="vanished">장르 목록을 기본값으로 정말 초기화할까요?</translation>
-    </message>
-    <message>
-        <source>Unable to open genre file.</source>
-        <translation type="vanished">장르 파일을 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Load Metadata As:</source>
-        <translation type="vanished">다른 이름으로 메타데이터 불러오기:</translation>
-    </message>
-    <message>
-        <source>Error Loading Metadata</source>
-        <translation type="vanished">메타데이터를 불러오는 중 오류</translation>
-    </message>
-    <message>
-        <source>Save Metadata As:</source>
-        <translation type="vanished">다른 이름으로 메타데이터 저장:</translation>
-    </message>
-    <message>
-        <source>Error Saving Tags File</source>
-        <translation type="vanished">태그 파일을 저장하는 중 오류</translation>
-    </message>
-    <message>
-        <source>Edit Metadata Tags</source>
-        <translation type="vanished">메타데이터 태그 편집</translation>
-    </message>
-    <message>
-        <source>Metadata Tags</source>
-        <translation type="vanished">메타데이터 태그</translation>
-    </message>
-    <message>
-        <source>&amp;Metadata Editor</source>
-        <translation type="vanished">메타데이터 편집(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record</source>
-        <translation type="vanished">오데시티 타이머 기록</translation>
-    </message>
-    <message>
-        <source>Save Timer Recording As</source>
-        <translation type="vanished">다른 이름으로 타이머 기록 저장</translation>
-    </message>
-    <message>
-        <source>The selected file name could not be used
-for Timer Recording because it would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">선택된 파일명은 다른 프로젝트를 덮어쓰기
-때문에 타이머 녹음에 사용할 수 없습니다.
-다시 시도하시고 원본 이름을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Error Saving Timer Recording Project</source>
-        <translation type="vanished">타이머 기록 프로젝트 저장 중 오류</translation>
-    </message>
-    <message>
-        <source>Duration is zero. Nothing will be recorded.</source>
-        <translation type="vanished">지속 시간이 0입니다. 아무것도 녹음되지 않을 것입니다.</translation>
-    </message>
-    <message>
-        <source>Error in Duration</source>
-        <translation type="vanished">지속 시간에서 오류</translation>
-    </message>
-    <message>
-        <source>Automatic Save path is invalid.</source>
-        <translation type="vanished">자동 저장 경로가 무효합니다.</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Save</source>
-        <translation type="vanished">자동 저장에서 오류</translation>
-    </message>
-    <message>
-        <source>Automatic Export path is invalid.</source>
-        <translation type="vanished">자동 내보내기 경로가 무효합니다.</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Export</source>
-        <translation type="vanished">자동 내보내기에서 오류</translation>
-    </message>
-    <message>
-        <source>You may not have enough free disk space to complete this Timer Recording, based on your current settings.
-
-Do you wish to continue?
-
-Planned recording duration:   %s
-Recording time remaining on disk:   %s</source>
-        <translation type="vanished">귀하의 현재 설정을 기반으로, 이 타이머 녹음을 완료하는데 필요한 디스크 공간이 부족할 수 있습니다.
-
-그래도 계속할까요?
-
-예정대로의 녹음 소요 시간:   %1
-디크스상에 남은 녹음 시간:   %2</translation>
-    </message>
-    <message>
-        <source>Timer Recording Disk Space Warning</source>
-        <translation type="vanished">타이머 기록 디스크 공간 경고</translation>
-    </message>
-    <message>
-        <source>Current Project</source>
-        <translation type="vanished">현재 프로젝트</translation>
-    </message>
-    <message>
-        <source>Recording start:</source>
-        <translation type="vanished">녹음 시작:</translation>
-    </message>
-    <message>
-        <source>Recording end:</source>
-        <translation type="vanished">녹음 끝:</translation>
-    </message>
-    <message>
-        <source>Automatic Save enabled:</source>
-        <translation type="vanished">자동 저장 활성화됨:</translation>
-    </message>
-    <message>
-        <source>Automatic Export enabled:</source>
-        <translation type="vanished">자동 내보내기 활성화됨:</translation>
-    </message>
-    <message>
-        <source>Action after Timer Recording:</source>
-        <translation type="vanished">타이머 기록 후 동작:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record Progress</source>
-        <translation type="vanished">오데시티 타이머 기록 진행</translation>
-    </message>
-    <message>
-        <source>All audio is muted.</source>
-        <translation type="vanished">모든 오디오를 음소거했습니다.</translation>
-    </message>
-    <message>
-        <source>Timer Recording stopped.</source>
-        <translation type="vanished">타이머 기록을 중단했습니다.</translation>
-    </message>
-    <message>
-        <source>Timer Recording completed.</source>
-        <translation type="vanished">타이머 기록을 완료했습니다.</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording saved: %s</source>
-        <translation type="vanished">%1
-
-녹음 저장 완료: %2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error saving recording.</source>
-        <translation type="vanished">%1
-
-녹음 저장 중 오류.</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording exported: %s</source>
-        <translation type="vanished">%1
-
-녹음 내보내기 완료: %2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error exporting recording.</source>
-        <translation type="vanished">%1
-
-녹음 내보내는 중 오류.</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled due to the error(s) noted above.</source>
-        <translation type="vanished">%1
-
-위에 언급한 오류 때문에 '%2'은 취소되었습니다.</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled as the recording was stopped.</source>
-        <translation type="vanished">%1
-
-녹음이 중단되어서 '%2'은 취소되었습니다.</translation>
-    </message>
-    <message>
-        <source>Timer Recording</source>
-        <translation type="vanished">타이머 기록</translation>
-    </message>
-    <message>
-        <source>099 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099시 060분 060초</translation>
-    </message>
-    <message>
-        <source>099 days 024 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for days, hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099일 024시 060분 060초</translation>
-    </message>
-    <message>
-        <source>Start Date and Time</source>
-        <extracomment>i18n-hint: This string is used to configure the controls for times when the recording is
-* started and stopped. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-* displayed is minutes, and the 's' indicates that the third number displayed is seconds.</extracomment>
-        <translation type="vanished">시작 날짜 및 시간</translation>
-    </message>
-    <message>
-        <source>Start Date</source>
-        <translation type="vanished">시작 날짜</translation>
-    </message>
-    <message>
-        <source>End Date and Time</source>
-        <translation type="vanished">끝 날짜 및 시간</translation>
-    </message>
-    <message>
-        <source>End Date</source>
-        <translation type="vanished">끝 날짜</translation>
-    </message>
-    <message>
-        <source>Automatic Save</source>
-        <translation type="vanished">자동 저장</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Automatic Save?</source>
-        <translation type="vanished">자동 저장을 사용할까요?(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Save Project As:</source>
-        <translation type="vanished">다른 이름으로 프로젝트 저장하기:</translation>
-    </message>
-    <message>
-        <source>Select...</source>
-        <translation type="vanished">선택...</translation>
-    </message>
-    <message>
-        <source>Automatic Export</source>
-        <translation type="vanished">자동 내보내기</translation>
-    </message>
-    <message>
-        <source>Enable Automatic &amp;Export?</source>
-        <translation type="vanished">자동 내보내기를 사용할까요?(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Export Project As:</source>
-        <translation type="vanished">다른 이름으로 프로젝트 내보내기:</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="vanished">옵션</translation>
-    </message>
-    <message>
-        <source>After Recording completes:</source>
-        <translation type="vanished">녹음 완료 후:</translation>
-    </message>
-    <message>
-        <source>Exit Audacity</source>
-        <translation type="vanished">오데시티 종료</translation>
-    </message>
-    <message>
-        <source>Restart system</source>
-        <translation type="vanished">시스템 재시작</translation>
-    </message>
-    <message>
-        <source>Shutdown system</source>
-        <translation type="vanished">시스템 종료</translation>
-    </message>
-    <message>
-        <source>Waiting to start recording at:</source>
-        <translation type="vanished">녹음 시작 시간:</translation>
-    </message>
-    <message>
-        <source>Recording duration:</source>
-        <translation type="vanished">녹음 지속 시간:</translation>
-    </message>
-    <message>
-        <source>Scheduled to stop at:</source>
-        <translation type="vanished">중단 예정 시간:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting for Start</source>
-        <translation type="vanished">오데시티 타이머 기록 - 시작 대기 중</translation>
-    </message>
-    <message>
-        <source>Recording will commence in:</source>
-        <extracomment>i18n-hint: "in" means after a duration of time,
-which is shown below this string</extracomment>
-        <translation type="vanished">녹음이 시작될 것입니다:</translation>
-    </message>
-    <message>
-        <source>%s in:</source>
-        <extracomment>i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
-or "Shutdown system", and
-"in" means after a duration of time, shown below this string</extracomment>
-        <translation type="vanished"> %1 in:</translation>
-    </message>
-    <message>
-        <source>Recording Saved:</source>
-        <translation type="vanished">녹음 저장 완료:</translation>
-    </message>
-    <message>
-        <source>Recording Exported:</source>
-        <translation type="vanished">녹음 내보내기 완료:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting</source>
-        <translation type="vanished">오데시티 타이머 기록 - 대기 중</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used with more than one open project.
-
-Please close any additional projects and try again.</source>
-        <translation type="vanished">타이머 기록은 한 개 이상의 프로젝트와 사용할 수 없습니다.
-
-추가적인 프로젝트를 닫고 다시 시도해 보세요.</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used while you have unsaved changes.
-
-Please save or close this project and try again.</source>
-        <translation type="vanished">타이머 기록은 변경사항을 저장하지 않으면 사용할 수 없습니다.
-
-이 프로젝트를 저장하거나 닫고 다시 시도해 보세요.</translation>
-    </message>
-    <message>
-        <source>&amp;Timer Record...</source>
-        <translation type="vanished">타이머 기록(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>Export Audio</source>
-        <translation type="vanished">오디오 내보내기</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Metadata...</source>
-        <translation type="vanished">메타데이터 편집(&amp;M)</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="vanished">OK(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Exported Tags</source>
-        <translation type="vanished">태그를 내보냈습니다</translation>
-    </message>
-    <message>
-        <source>Track Panel</source>
-        <translation type="vanished">트랙 패널</translation>
-    </message>
-    <message>
-        <source>(Esc to cancel)</source>
-        <extracomment>i18n-hint Esc is a key on the keyboard</extracomment>
-        <translation type="vanished">(취소는 ESC)</translation>
-    </message>
-    <message>
-        <source>TrackView</source>
-        <translation type="vanished">트랙 보기</translation>
-    </message>
-    <message>
-        <source> Muted</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is muted. (The mute button is on.)</extracomment>
-        <translation type="vanished"> 음소거</translation>
-    </message>
-    <message>
-        <source> Soloed</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is soloed. (The Solo button is on.)</extracomment>
-        <translation type="vanished"> 솔로</translation>
-    </message>
-    <message>
-        <source> Selected</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is selected.</extracomment>
-        <translation type="vanished"> 선택됨</translation>
-    </message>
-    <message>
-        <source> Sync Locked</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is shown with a sync-locked icon.
-The absence of a dash between Sync and Locked is deliberate -
-if present, Jaws reads it as "dash".</extracomment>
-        <translation type="vanished"> 동기화 잠김</translation>
-    </message>
-    <message>
-        <source>Track %d</source>
-        <extracomment>i18n-hint: The %d is replaced by the number of the track.</extracomment>
-        <translation type="vanished">트랙 %1</translation>
-    </message>
-    <message>
-        <source> Mute On</source>
-        <translation type="vanished"> 음소거 On</translation>
-    </message>
-    <message>
-        <source> Solo On</source>
-        <translation type="vanished"> 독주 On</translation>
-    </message>
-    <message>
-        <source> Select On</source>
-        <translation type="vanished"> 선택 On</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust relative size of stereo tracks, double-click to make heights equal</source>
-        <translation type="vanished">스테레오 트랙에 대한 상대적인 위치를 조정하려면 클릭 후 드래그 하고, 높이를 같도록 만드려면 더블 클릭</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize the track.</source>
-        <translation type="vanished">트랙 크기조절은 클릭 후 드래그.</translation>
-    </message>
-    <message>
-        <source>Removed audio track(s)</source>
-        <translation type="vanished">오디오 트랙을 제거했습니다</translation>
-    </message>
-    <message>
-        <source>Remove Track</source>
-        <translation type="vanished">트랙 제거</translation>
-    </message>
-    <message>
-        <source>Removed track '%s'.</source>
-        <translation type="vanished">다음 트랙 삭제됨 '1%1'.</translation>
-    </message>
-    <message>
-        <source>Track Remove</source>
-        <translation type="vanished">트랙 제거</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Top</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1'을 맨 위로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Move Track to Top</source>
-        <translation type="vanished">트랙을 맨 위로</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Bottom</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1'을 맨 아래로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Move Track to Bottom</source>
-        <translation type="vanished">트랙을 맨 아래로</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1'을 위로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Down</source>
-        <translation type="vanished">'%1'을 아래로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Move Track Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">트랙을 위로</translation>
-    </message>
-    <message>
-        <source>Move Track Down</source>
-        <translation type="vanished">트랙을 아래로</translation>
-    </message>
-    <message>
-        <source>Playing</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">재생 중</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">녹음</translation>
-    </message>
-    <message>
-        <source>Selection is too small to use voice key.</source>
-        <extracomment>i18n-hint: Voice key is an experimental/incomplete feature that
-is used to navigate in vocal recordings, to move forwards and
-backwards by words.  So 'key' is being used in the sense of an index.
-This error message means that you've selected too short
-a region of audio to be able to use this feature.</extracomment>
-        <translation type="vanished">선택이 너무 작아서 음성 키를 사용할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Calibration Results
-</source>
-        <translation type="vanished">캘리브레이션 결과
-</translation>
-    </message>
-    <message>
-        <source>Energy                  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <extracomment>i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'</extracomment>
-        <translation type="vanished">에너지                  -- 평균: %1.4f 표준편차: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Sign Changes        -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">사인파 변경        -- 평균: %1.4f 표준편차: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Direction Changes  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">방향 바뀜             -- 평균: %1.4f 표준편차: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Calibration Complete</source>
-        <translation type="vanished">캘리브레이션 완료</translation>
-    </message>
-    <message>
-        <source>What's new in Audacity %s</source>
-        <translation type="vanished">오데시티 %1 에서 변경된 사항</translation>
-    </message>
-    <message>
-        <source>Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!&lt;/p&gt;</source>
-        <translation type="vanished">[[%1|배포된 동영상]] 또는  [[https://support.audacityteam.org/additional-resources/changelog|changelog]] 문서를 통해 상세 정보를 알아보세요!&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Get free plugins &amp; sounds</source>
-        <translation type="vanished">무료 플러그인과 사운드 가져오기</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;우릐의 [[%1|Muse Hub app]]을 방문하면 오데시티 사용자를 위한 다양한 오디오 플러그인이 있습니다.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity!</source>
-        <translation type="vanished">오데시티 사용을 환영합니다!</translation>
-    </message>
-    <message>
-        <source>View tutorials</source>
-        <translation type="vanished">튜토리얼 보기</translation>
-    </message>
-    <message>
-        <source>Visit our forum</source>
-        <translation type="vanished">포럼 방문하기</translation>
-    </message>
-    <message>
-        <source>Don't show this again at start up</source>
-        <translation type="vanished">시작시 다시 보여주지 않음</translation>
-    </message>
-    <message>
-        <source>%s: %s</source>
-        <extracomment>i18n-hint: An item name followed by a value, with appropriate separating punctuation</extracomment>
-        <translation type="vanished">%1: %2</translation>
-    </message>
-    <message>
-        <source>FAIL</source>
-        <translation type="vanished">실패</translation>
-    </message>
-    <message>
-        <source>Batch Command</source>
-        <translation type="vanished">배치 명령</translation>
-    </message>
-    <message>
-        <source>%s is not a parameter accepted by %s</source>
-        <translation type="vanished">%1 는 %2에서 파라메터로 사용할 수 없음</translation>
-    </message>
-    <message>
-        <source>Invalid value for parameter '%s': should be %s</source>
-        <translation type="vanished">파라메터 '%1' 에 대해 잘못된 값이 입력됨: %2 이어야 함</translation>
-    </message>
-    <message>
-        <source>Compare Audio</source>
-        <translation type="vanished">오디오 비교</translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="vanished">임계값:</translation>
-    </message>
-    <message>
-        <source>Compare Audio...</source>
-        <translation type="vanished">오디오 비교...</translation>
-    </message>
-    <message>
-        <source>Compares a range on two tracks.</source>
-        <translation type="vanished">두 트랙의 범위를 비교합니다.</translation>
-    </message>
-    <message>
-        <source>Demo</source>
-        <translation type="vanished">데모</translation>
-    </message>
-    <message>
-        <source>Delay time (seconds):</source>
-        <translation type="vanished">지연 시간 (초):</translation>
-    </message>
-    <message>
-        <source>Decay factor:</source>
-        <translation type="vanished">감쇠 인수:</translation>
-    </message>
-    <message>
-        <source>Does the demo action.</source>
-        <translation type="vanished">데모 동작을 수행합니다.</translation>
-    </message>
-    <message>
-        <source>Drag</source>
-        <translation type="vanished">드래그</translation>
-    </message>
-    <message>
-        <source>Track 0</source>
-        <translation type="vanished">트랙 0</translation>
-    </message>
-    <message>
-        <source>Track 1</source>
-        <translation type="vanished">트랙 1</translation>
-    </message>
-    <message>
-        <source>Id:</source>
-        <extracomment>i18n-hint abbreviates "Identity" or "Identifier"</extracomment>
-        <translation type="vanished">아이디:</translation>
-    </message>
-    <message>
-        <source>Window Name:</source>
-        <translation type="vanished">윈도우 이름:</translation>
-    </message>
-    <message>
-        <source>From X:</source>
-        <translation type="vanished">X 시작값:</translation>
-    </message>
-    <message>
-        <source>From Y:</source>
-        <translation type="vanished">Y 시작값:</translation>
-    </message>
-    <message>
-        <source>To X:</source>
-        <translation type="vanished">X 종료값:</translation>
-    </message>
-    <message>
-        <source>To Y:</source>
-        <translation type="vanished">Y 종료값:</translation>
-    </message>
-    <message>
-        <source>Relative To:</source>
-        <translation type="vanished">상대위치:</translation>
-    </message>
-    <message>
-        <source>Move Mouse...</source>
-        <translation type="vanished">마우스 이동...</translation>
-    </message>
-    <message>
-        <source>Drags mouse from one place to another.</source>
-        <translation type="vanished">한 곳에서 다른 곳으로 마우스를 드래그합니다.</translation>
-    </message>
-    <message>
-        <source>Get Info</source>
-        <translation type="vanished">정보 가져오기</translation>
-    </message>
-    <message>
-        <source>Commands</source>
-        <translation type="vanished">명령</translation>
-    </message>
-    <message>
-        <source>Menus</source>
-        <translation type="vanished">메뉴</translation>
-    </message>
-    <message>
-        <source>Clips</source>
-        <translation type="vanished">클립</translation>
-    </message>
-    <message>
-        <source>Envelopes</source>
-        <translation type="vanished">포락선</translation>
-    </message>
-    <message>
-        <source>Boxes</source>
-        <translation type="vanished">상자</translation>
-    </message>
-    <message>
-        <source>JSON</source>
-        <extracomment>i18n-hint JavaScript Object Notation</extracomment>
-        <translation type="vanished">JSON</translation>
-    </message>
-    <message>
-        <source>LISP</source>
-        <extracomment>i18n-hint name of a computer programming language</extracomment>
-        <translation type="vanished">LISP</translation>
-    </message>
-    <message>
-        <source>Brief</source>
-        <translation type="vanished">간단히</translation>
-    </message>
-    <message>
-        <source>Get Info...</source>
-        <translation type="vanished">정보 가져오기...</translation>
-    </message>
-    <message>
-        <source>Gets information in JSON format.</source>
-        <translation type="vanished">JSON 형식의 정보를 가져옵니다.</translation>
-    </message>
-    <message>
-        <source>Get Track Info</source>
-        <translation type="vanished">트랙 정보 가져오기</translation>
-    </message>
-    <message>
-        <source>Types:</source>
-        <translation type="vanished">형식:</translation>
-    </message>
-    <message>
-        <source>Gets track values as JSON.</source>
-        <translation type="vanished">트랙 값을 JSON으로 가져옵니다.</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation type="vanished">코멘트</translation>
-    </message>
-    <message>
-        <source>_</source>
-        <translation type="vanished">_</translation>
-    </message>
-    <message>
-        <source>Help...</source>
-        <translation type="vanished">도움말...</translation>
-    </message>
-    <message>
-        <source>Gives help on a command.</source>
-        <translation type="vanished">명령의 도움말을 줍니다.</translation>
-    </message>
-    <message>
-        <source>For comments in a macro.</source>
-        <translation type="vanished">매크로 내의 주석을 이용.</translation>
-    </message>
-    <message>
-        <source>Import2</source>
-        <translation type="vanished">가져오기2</translation>
-    </message>
-    <message>
-        <source>File Name:</source>
-        <translation type="vanished">파일명:</translation>
-    </message>
-    <message>
-        <source>Export2</source>
-        <translation type="vanished">내보내기2</translation>
-    </message>
-    <message>
-        <source>Number of Channels:</source>
-        <translation type="vanished">채널수:</translation>
-    </message>
-    <message>
-        <source>Import...</source>
-        <translation type="vanished">가져오기...</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="vanished">내보내기...</translation>
-    </message>
-    <message>
-        <source>Imports from a file.</source>
-        <translation type="vanished">파일에서 가져옵니다.</translation>
-    </message>
-    <message>
-        <source>Exports to a file.</source>
-        <translation type="vanished">파일을 내보냅니다.</translation>
-    </message>
-    <message>
-        <source>Builtin Commands</source>
-        <translation type="vanished">빌트인 명령</translation>
-    </message>
-    <message>
-        <source>Provides builtin commands to Audacity</source>
-        <translation type="vanished">오데시티에 빌트인 명령을 제공합니다</translation>
-    </message>
-    <message>
-        <source>Unknown built-in command name</source>
-        <translation type="vanished">알 수 없는 빌트인 명령 이름</translation>
-    </message>
-    <message>
-        <source>Text:</source>
-        <translation type="vanished">텍스트:</translation>
-    </message>
-    <message>
-        <source>Message...</source>
-        <translation type="vanished">메시지...</translation>
-    </message>
-    <message>
-        <source>Echos a message.</source>
-        <translation type="vanished">메시지를 울립니다.</translation>
-    </message>
-    <message>
-        <source>Open Project2</source>
-        <translation type="vanished">프로젝트2 열기</translation>
-    </message>
-    <message>
-        <source>Add to History</source>
-        <translation type="vanished">히스토리에 추가</translation>
-    </message>
-    <message>
-        <source>Save Project2</source>
-        <translation type="vanished">프로젝트2 저장</translation>
-    </message>
-    <message>
-        <source>Save Copy</source>
-        <translation type="vanished">복사본 저장</translation>
-    </message>
-    <message>
-        <source>Save Log</source>
-        <translation type="vanished">로그 저장</translation>
-    </message>
-    <message>
-        <source>Clear Log</source>
-        <translation type="vanished">로크 지우기</translation>
-    </message>
-    <message>
-        <source>Open Project...</source>
-        <translation type="vanished">프로젝트 열기...</translation>
-    </message>
-    <message>
-        <source>Save Project...</source>
-        <translation type="vanished">프로젝트 저장...</translation>
-    </message>
-    <message>
-        <source>Opens a project.</source>
-        <translation type="vanished">프로젝트 열기.</translation>
-    </message>
-    <message>
-        <source>Saves a project.</source>
-        <translation type="vanished">프로젝트 저장.</translation>
-    </message>
-    <message>
-        <source>Saves a copy of current project.</source>
-        <translation type="vanished">현재 ㅍ로젝트의 사본을 저장.</translation>
-    </message>
-    <message>
-        <source>Saves the log contents.</source>
-        <translation type="vanished">로그 내용을 저장.</translation>
-    </message>
-    <message>
-        <source>Clears the log contents.</source>
-        <translation type="vanished">로그 내용을 지우기.</translation>
-    </message>
-    <message>
-        <source>Get Preference</source>
-        <translation type="vanished">환경 설정 가져오기</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation type="vanished">이름:</translation>
-    </message>
-    <message>
-        <source>Set Preference</source>
-        <translation type="vanished">환경 설정</translation>
-    </message>
-    <message>
-        <source>Value:</source>
-        <translation type="vanished">값:</translation>
-    </message>
-    <message>
-        <source>Reload</source>
-        <translation type="vanished">다시 읽기</translation>
-    </message>
-    <message>
-        <source>Get Preference...</source>
-        <translation type="vanished">환경 설정 가져오기...</translation>
-    </message>
-    <message>
-        <source>Set Preference...</source>
-        <translation type="vanished">환경 설정...</translation>
-    </message>
-    <message>
-        <source>Gets the value of a single preference.</source>
-        <translation type="vanished">환경설정 값 하나를 가져옵니다.</translation>
-    </message>
-    <message>
-        <source>Sets the value of a single preference.</source>
-        <translation type="vanished">환경 설정 값 하나를 설정합니다.</translation>
-    </message>
-    <message>
-        <source>Select Time</source>
-        <translation type="vanished">시간 선택</translation>
-    </message>
-    <message>
-        <source>Project Start</source>
-        <translation type="vanished">프로젝트 시작</translation>
-    </message>
-    <message>
-        <source>Project End</source>
-        <translation type="vanished">프로젝트 끝</translation>
-    </message>
-    <message>
-        <source>Selection Start</source>
-        <translation type="vanished">선택 시작</translation>
-    </message>
-    <message>
-        <source>Selection End</source>
-        <translation type="vanished">선택 끝</translation>
-    </message>
-    <message>
-        <source>Start Time:</source>
-        <translation type="vanished">시작 시간:</translation>
-    </message>
-    <message>
-        <source>End Time:</source>
-        <translation type="vanished">끝 시간:</translation>
-    </message>
-    <message>
-        <source>Select Frequencies</source>
-        <translation type="vanished">주파수 선택</translation>
-    </message>
-    <message>
-        <source>High:</source>
-        <translation type="vanished">높음:</translation>
-    </message>
-    <message>
-        <source>Low:</source>
-        <translation type="vanished">낮음:</translation>
-    </message>
-    <message>
-        <source>Select Tracks</source>
-        <translation type="vanished">트랙 선택</translation>
-    </message>
-    <message>
-        <source>Set</source>
-        <extracomment>i18n-hint verb, imperative</extracomment>
-        <translation type="vanished">설정</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="vanished">추가</translation>
-    </message>
-    <message>
-        <source>First Track:</source>
-        <translation type="vanished">첫 번째 트랙:</translation>
-    </message>
-    <message>
-        <source>Track Count:</source>
-        <translation type="vanished">트랙 개수:</translation>
-    </message>
-    <message>
-        <source>Mode:</source>
-        <translation type="vanished">모드:</translation>
-    </message>
-    <message>
-        <source>Select Time...</source>
-        <translation type="vanished">시간 선택...</translation>
-    </message>
-    <message>
-        <source>Select Frequencies...</source>
-        <translation type="vanished">주파수 선택...</translation>
-    </message>
-    <message>
-        <source>Select Tracks...</source>
-        <translation type="vanished">트랙 선택...</translation>
-    </message>
-    <message>
-        <source>Selects a time range.</source>
-        <translation type="vanished">시간 범위를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Selects a frequency range.</source>
-        <translation type="vanished">주파수 범위를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Selects a range of tracks.</source>
-        <translation type="vanished">트랙 범위를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Selects Audio.</source>
-        <translation type="vanished">오디오를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Set Clip</source>
-        <translation type="vanished">클립 설정</translation>
-    </message>
-    <message>
-        <source>Color 0</source>
-        <translation type="vanished">색상 0</translation>
-    </message>
-    <message>
-        <source>Color 1</source>
-        <translation type="vanished">색상 1</translation>
-    </message>
-    <message>
-        <source>Color 2</source>
-        <translation type="vanished">색상 2</translation>
-    </message>
-    <message>
-        <source>Color 3</source>
-        <translation type="vanished">색상 3</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation type="vanished">위치:</translation>
-    </message>
-    <message>
-        <source>Start:</source>
-        <translation type="vanished">시작:</translation>
-    </message>
-    <message>
-        <source>Set Clip...</source>
-        <translation type="vanished">클립 설정...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a clip.</source>
-        <translation type="vanished">클립에 대해 다양한 값을 설정합니다.</translation>
-    </message>
-    <message>
-        <source>Set Envelope</source>
-        <translation type="vanished">포락선 설정</translation>
-    </message>
-    <message>
-        <source>Time:</source>
-        <translation type="vanished">시간:</translation>
-    </message>
-    <message>
-        <source>Edited Envelope</source>
-        <translation type="vanished">편집된 포락선</translation>
-    </message>
-    <message>
-        <source>Envelope</source>
-        <extracomment>i18n-hint: The envelope is a curve that controls the audio loudness.</extracomment>
-        <translation type="vanished">엔벌로프</translation>
-    </message>
-    <message>
-        <source>Set Envelope...</source>
-        <translation type="vanished">포락선 설정...</translation>
-    </message>
-    <message>
-        <source>Sets an envelope point position.</source>
-        <translation type="vanished">포락선 점 위치를 설정합니다.</translation>
-    </message>
-    <message>
-        <source>Set Label</source>
-        <translation type="vanished">레이블 설정</translation>
-    </message>
-    <message>
-        <source>Label Index</source>
-        <translation type="vanished">레이블 인덱스</translation>
-    </message>
-    <message>
-        <source>End:</source>
-        <translation type="vanished">끝:</translation>
-    </message>
-    <message>
-        <source>Selected</source>
-        <translation type="vanished">선택됨</translation>
-    </message>
-    <message>
-        <source>Edited Label</source>
-        <translation type="vanished">편집된 레이블</translation>
-    </message>
-    <message>
-        <source>Set Label...</source>
-        <translation type="vanished">레이블 설정...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a label.</source>
-        <translation type="vanished">레이블에 대해 다양한 값을 설정합니다.</translation>
-    </message>
-    <message>
-        <source>Set Project</source>
-        <translation type="vanished">프로젝트 설정</translation>
-    </message>
-    <message>
-        <source>Rate:</source>
-        <translation type="vanished">비율:</translation>
-    </message>
-    <message>
-        <source>Resize:</source>
-        <translation type="vanished">크기조절:</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation type="vanished">X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation type="vanished">Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation type="vanished">너비:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation type="vanished">높이:</translation>
-    </message>
-    <message>
-        <source>Set Project...</source>
-        <translation type="vanished">프로젝트 설정...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a project.</source>
-        <translation type="vanished">프로젝트에 대해 다양한 값을 설정합니다.</translation>
-    </message>
-    <message>
-        <source>Set Track Status</source>
-        <translation type="vanished">트랙 상태 설정</translation>
-    </message>
-    <message>
-        <source>Unnamed</source>
-        <translation type="vanished">무제</translation>
-    </message>
-    <message>
-        <source>Focused</source>
-        <translation type="vanished">포커스됨</translation>
-    </message>
-    <message>
-        <source>Set Track Audio</source>
-        <translation type="vanished">트랙 오디오 설정</translation>
-    </message>
-    <message>
-        <source>Gain:</source>
-        <translation type="vanished">게인:</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals</source>
-        <translation type="vanished">트랙 가시화 설정</translation>
-    </message>
-    <message>
-        <source>Times 2</source>
-        <translation type="vanished">2 배</translation>
-    </message>
-    <message>
-        <source>HalfWave</source>
-        <translation type="vanished">반파장</translation>
-    </message>
-    <message>
-        <source>Display:</source>
-        <translation type="vanished">표시:</translation>
-    </message>
-    <message>
-        <source>Scale:</source>
-        <translation type="vanished">스케일:</translation>
-    </message>
-    <message>
-        <source>VZoom:</source>
-        <translation type="vanished">세로배율:</translation>
-    </message>
-    <message>
-        <source>VZoom Top:</source>
-        <translation type="vanished">VZoom Top:</translation>
-    </message>
-    <message>
-        <source>VZoom Bottom:</source>
-        <translation type="vanished">VZoom Bottom:</translation>
-    </message>
-    <message>
-        <source>Use Spectral Prefs</source>
-        <translation type="vanished">스펙트럼 설정 사용</translation>
-    </message>
-    <message>
-        <source>Spectral Select</source>
-        <translation type="vanished">스펙트럼 선택</translation>
-    </message>
-    <message>
-        <source>Sche&amp;me:</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint Scheme refers to a color scheme for spectrogram colors</extracomment>
-        <translation type="vanished">스킴(&amp;M):</translation>
-    </message>
-    <message>
-        <source>Set Track</source>
-        <translation type="vanished">트랙 설정</translation>
-    </message>
-    <message>
-        <source>Set Track Status...</source>
-        <translation type="vanished">트랙 상태 설정...</translation>
-    </message>
-    <message>
-        <source>Set Track Audio...</source>
-        <translation type="vanished">트랙 오디오 설정...</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals...</source>
-        <translation type="vanished">트랙 보기 설정...</translation>
-    </message>
-    <message>
-        <source>Set Track...</source>
-        <translation type="vanished">트랙 설정...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a track.</source>
-        <translation type="vanished">트랙에 대해 다양한 값을 설정합니다.</translation>
-    </message>
-    <message>
-        <source>Long Message</source>
-        <translation type="vanished">긴 메시지</translation>
-    </message>
-    <message>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation type="vanished">선택한 오디오의 음량을 올리거나 내리세요</translation>
-    </message>
-    <message>
-        <source>&amp;Amplification (dB):</source>
-        <translation type="vanished">증폭 (dB):</translation>
-    </message>
-    <message>
-        <source>Amplification dB</source>
-        <translation type="vanished">증폭 dB</translation>
-    </message>
-    <message>
-        <source>&amp;New Peak Amplitude (dB):</source>
-        <translation type="vanished">새로운 피크 진폭 (dB):</translation>
-    </message>
-    <message>
-        <source>Allo&amp;w clipping</source>
-        <translation type="vanished">클리핑 허용</translation>
-    </message>
-    <message>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified "control" track reaches a particular level</source>
-        <translation type="vanished">지정한 "제어" 트랙의 음량이 특정 레벨에 도달할 때마다 한 개 이상 트랙의 (ducks) 음량을 줄입니다 </translation>
-    </message>
-    <message>
-        <source>db</source>
-        <translation type="vanished">db</translation>
-    </message>
-    <message>
-        <source>Duck &amp;amount:</source>
-        <translation type="vanished">더킹 양(&amp;A) :</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ximum pause:</source>
-        <translation type="vanished">최대 일시 정지 시간:</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;down length:</source>
-        <translation type="vanished">외부 페이드 다운 길이:</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;up length:</source>
-        <translation type="vanished">외부 페이드 업 길이:</translation>
-    </message>
-    <message>
-        <source>Inner fade d&amp;own length:</source>
-        <translation type="vanished">내부 페이드 내림 길이:(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Inner &amp;fade up length:</source>
-        <translation type="vanished">내부 페이드 올림 길이:(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold:</source>
-        <translation type="vanished">임계값(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Preview not available</source>
-        <translation type="vanished">미리보기를 사용할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Export Effect Parameters</source>
-        <translation type="vanished">이펙트 매개 변수 내보내기</translation>
-    </message>
-    <message>
-        <source>Import Effect Parameters</source>
-        <translation type="vanished">이펙트 매개 변수 가져오기</translation>
-    </message>
-    <message>
-        <source>%s: is not a valid presets file.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1: 는 유효한 프리셋 파일이 아닙니다.
-</translation>
-    </message>
-    <message>
-        <source>%s: is for a different Effect, Generator or Analyzer.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1: 는 다른 이펙트에 사용됩니다, 생성기 또는 분석기.
-</translation>
-    </message>
-    <message>
-        <source>Tone controls</source>
-        <translation type="vanished">톤 제어</translation>
-    </message>
-    <message>
-        <source>Bass (dB):</source>
-        <translation type="vanished">저음 (dB):</translation>
-    </message>
-    <message>
-        <source>Ba&amp;ss (dB):</source>
-        <translation type="vanished">저음 (dB)(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Bass</source>
-        <translation type="vanished">저음</translation>
-    </message>
-    <message>
-        <source>&amp;Treble (dB):</source>
-        <translation type="vanished">고음 (dB)(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Treble</source>
-        <translation type="vanished">고음</translation>
-    </message>
-    <message>
-        <source>&amp;Volume (dB):</source>
-        <translation type="vanished">음량 (dB)(&amp;V):</translation>
-    </message>
-    <message>
-        <source>&amp;Link Volume control to Tone controls</source>
-        <translation type="vanished">음량 조절을 톤 조절에 연결(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Change Pitch</source>
-        <translation type="vanished">피치 변경</translation>
-    </message>
-    <message>
-        <source>Estimated Start Pitch: %s%d (%.3f Hz)</source>
-        <translation type="vanished">추정 시작 피치: %1 %2 (%3 Hz)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">from</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">from(&amp;F)</translation>
-    </message>
-    <message>
-        <source>from Octave</source>
-        <translation type="vanished">시작 옥타브</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">to</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">to(&amp;T)</translation>
-    </message>
-    <message>
-        <source>to Octave</source>
-        <translation type="vanished">끝 옥타브</translation>
-    </message>
-    <message>
-        <source>Semitones (half-steps)</source>
-        <translation type="vanished">반음 (반음정)</translation>
-    </message>
-    <message>
-        <source>&amp;Semitones (half-steps):</source>
-        <translation type="vanished">반음 (반음정):</translation>
-    </message>
-    <message>
-        <source>from (Hz)</source>
-        <translation type="vanished">시작 (Hz)</translation>
-    </message>
-    <message>
-        <source>f&amp;rom</source>
-        <translation type="vanished">from(&amp;R)</translation>
-    </message>
-    <message>
-        <source>to (Hz)</source>
-        <translation type="vanished">to (Hz)</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <translation type="vanished">to(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Percent C&amp;hange:</source>
-        <translation type="vanished">퍼센트 변경(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Percent Change</source>
-        <translation type="vanished">퍼센트 변경</translation>
-    </message>
-    <message>
-        <source>&amp;Use high quality stretching (slow)</source>
-        <translation type="vanished">고품질 늘이기 사용하기 (느림)</translation>
-    </message>
-    <message>
-        <source>33⅓</source>
-        <translation type="vanished">33⅓</translation>
-    </message>
-    <message>
-        <source>45</source>
-        <translation type="vanished">45</translation>
-    </message>
-    <message>
-        <source>78</source>
-        <translation type="vanished">78</translation>
-    </message>
-    <message>
-        <source>&amp;Speed Multiplier:</source>
-        <translation type="vanished">속도 곱셈기:</translation>
-    </message>
-    <message>
-        <source>Standard Vinyl rpm:</source>
-        <extracomment>i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
-"vinyl" refers to old-fashioned phonograph records</extracomment>
-        <translation type="vanished">표준 Vinyl rpm:</translation>
-    </message>
-    <message>
-        <source>From rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">시작 rpm</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">from(&amp;F)</translation>
-    </message>
-    <message>
-        <source>To rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">To rpm</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">to(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Selection Length</source>
-        <translation type="vanished">선택 길이</translation>
-    </message>
-    <message>
-        <source>C&amp;urrent Length:</source>
-        <translation type="vanished">현재 길이:</translation>
-    </message>
-    <message>
-        <source>Current length of selection.</source>
-        <translation type="vanished">현재 선택 길이.</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">from</translation>
-    </message>
-    <message>
-        <source>&amp;New Length:</source>
-        <translation type="vanished">새로운 길이:</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">to</translation>
-    </message>
-    <message>
-        <source>Beats per minute</source>
-        <translation type="vanished">분당 박자</translation>
-    </message>
-    <message>
-        <source>Beats per minute, from</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">분당 박자, 시작값</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">from(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Beats per minute, to</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">분당 박자, 끝</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">to(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Length (seconds)</source>
-        <translation type="vanished">길이 (초)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">from</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">to(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Length in seconds from %s, to</source>
-        <translation type="vanished">길이(초) : from %1 to</translation>
-    </message>
-    <message>
-        <source>Click Removal</source>
-        <translation type="vanished">클릭 제거</translation>
-    </message>
-    <message>
-        <source>Click Removal is designed to remove clicks on audio tracks</source>
-        <translation type="vanished">클릭 제거는 오디오 트랙의 딸깍음을 제거하기 위해 만들었습니다</translation>
-    </message>
-    <message>
-        <source>Selection must be larger than %d samples.</source>
-        <translation type="vanished">선택은 %1 개의 샘플보다 더 커야 합니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (lower is more sensitive):</source>
-        <translation type="vanished">임계값 (낮은 값일수록 더욱 예민함)(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Max &amp;Spike Width (higher is more sensitive):</source>
-        <translation type="vanished">최대 스파이크 폭 (클수록 더 예민함):</translation>
-    </message>
-    <message>
-        <source>Max Spike Width</source>
-        <translation type="vanished">최대 스파이크 폭</translation>
-    </message>
-    <message>
-        <source>Reduces "dynamic range", or differences between loud and quiet parts.</source>
-        <translation type="vanished">"dynamic range"를 줄이거나, 소르기 큰 곳과 작은 곳을 분리하세요.</translation>
-    </message>
-    <message>
-        <source>Contrast Analyzer, for measuring RMS volume differences between two selections of audio.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">콘트라스트 분석기, 오디오의 두 선택영역 사이의 RMS 음량 차이를 측정함.</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">끝</translation>
-    </message>
-    <message>
-        <source>Volume    </source>
-        <translation type="vanished">음량      </translation>
-    </message>
-    <message>
-        <source>&amp;Foreground:</source>
-        <translation type="vanished">전경음(&amp;F):</translation>
-    </message>
-    <message>
-        <source>Foreground start time</source>
-        <translation type="vanished">전경음 시작 시간</translation>
-    </message>
-    <message>
-        <source>Foreground end time</source>
-        <translation type="vanished">전경음 끝 시간</translation>
-    </message>
-    <message>
-        <source>&amp;Measure selection</source>
-        <translation type="vanished">선택 영역 측정(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Background:</source>
-        <translation type="vanished">배경음(&amp;B):</translation>
-    </message>
-    <message>
-        <source>Background start time</source>
-        <translation type="vanished">배경음 시작 시간</translation>
-    </message>
-    <message>
-        <source>Background end time</source>
-        <translation type="vanished">배경음 끝 시간</translation>
-    </message>
-    <message>
-        <source>Mea&amp;sure selection</source>
-        <translation type="vanished">선택 영역 측정(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Result</source>
-        <translation type="vanished">결과</translation>
-    </message>
-    <message>
-        <source>Co&amp;ntrast Result:</source>
-        <translation type="vanished">대조 결과(&amp;N):</translation>
-    </message>
-    <message>
-        <source>R&amp;eset</source>
-        <translation type="vanished">초기화(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Difference:</source>
-        <translation type="vanished">차이(&amp;D):</translation>
-    </message>
-    <message>
-        <source>RMS = %s.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">RMS = %1.</translation>
-    </message>
-    <message>
-        <source>%s dB</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>zero</source>
-        <translation type="vanished">영</translation>
-    </message>
-    <message>
-        <source>indeterminate</source>
-        <translation type="vanished">알 수 없음</translation>
-    </message>
-    <message>
-        <source>%.2f dB RMS</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-* RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">%1 dB RMS</translation>
-    </message>
-    <message>
-        <source>Infinite dB difference</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">무한한 dB 차이</translation>
-    </message>
-    <message>
-        <source>Difference is indeterminate.</source>
-        <translation type="vanished">차이를 알 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Difference = %.2f RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">차이 = %1 RMS dB.</translation>
-    </message>
-    <message>
-        <source>Difference = infinite RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">차이 = 무한 RMS dB.</translation>
-    </message>
-    <message>
-        <source>Foreground level too high</source>
-        <translation type="vanished">전경음 레벨이 너무 높습니다</translation>
-    </message>
-    <message>
-        <source>Background level too high</source>
-        <translation type="vanished">배경음 레벨이 너무 높습니다</translation>
-    </message>
-    <message>
-        <source>Background higher than foreground</source>
-        <translation type="vanished">배경음이 전경음보다 더 높습니다</translation>
-    </message>
-    <message>
-        <source>WCAG2 Pass</source>
-        <extracomment>i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/</extracomment>
-        <translation type="vanished">WCAG2 통과</translation>
-    </message>
-    <message>
-        <source>WCAG2 Fail</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG2 실패</translation>
-    </message>
-    <message>
-        <source>Current difference</source>
-        <extracomment>i18n-hint: i.e. difference in loudness at the moment.</extracomment>
-        <translation type="vanished">현재 차이</translation>
-    </message>
-    <message>
-        <source>Measured foreground level</source>
-        <translation type="vanished">측정한 전경음 레벨</translation>
-    </message>
-    <message>
-        <source>%.2f dB</source>
-        <extracomment>i18n-hint: short form of 'decibels'</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>No foreground measured</source>
-        <translation type="vanished">측정한 전경음이 없습니다</translation>
-    </message>
-    <message>
-        <source>Foreground not yet measured</source>
-        <translation type="vanished">전경음을 아직 측정하지 않았습니다</translation>
-    </message>
-    <message>
-        <source>Measured background level</source>
-        <translation type="vanished">측정한 배경음 레벨</translation>
-    </message>
-    <message>
-        <source>No background measured</source>
-        <translation type="vanished">측정한 배경음이 없습니다</translation>
-    </message>
-    <message>
-        <source>Background not yet measured</source>
-        <translation type="vanished">배경음을 아직 측정하지 않았습니다</translation>
-    </message>
-    <message>
-        <source>Export Contrast Result As:</source>
-        <translation type="vanished">다른 이름으로 대조 결과 내보내기:</translation>
-    </message>
-    <message>
-        <source>WCAG 2.0 Success Criteria 1.4.7 Contrast Results</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG 2.0 성공 기준 1.4.7 대조 결과</translation>
-    </message>
-    <message>
-        <source>Filename = %s.</source>
-        <translation type="vanished">파일 이름 = %1.</translation>
-    </message>
-    <message>
-        <source>Foreground</source>
-        <translation type="vanished">전경음</translation>
-    </message>
-    <message>
-        <source>Time started = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">시작 시간 = %1 시간, %2분, %3초.</translation>
-    </message>
-    <message>
-        <source>Time ended = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">종료 시간 = %1 시, %2 분, %3 초.</translation>
-    </message>
-    <message>
-        <source>Background</source>
-        <translation type="vanished">배경음</translation>
-    </message>
-    <message>
-        <source>Results</source>
-        <translation type="vanished">결과</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Pass</source>
-        <translation type="vanished">WCAG 2.0의 성공 기준 1.4.7: 통과</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Fail</source>
-        <translation type="vanished">WCAG 2.0의 성공 기준 1.4.7: 실패</translation>
-    </message>
-    <message>
-        <source>Data gathered</source>
-        <translation type="vanished">수집한 데이터</translation>
-    </message>
-    <message>
-        <source>%d %s %02d %02dh %02dm %02ds</source>
-        <extracomment>i18n-hint: day of month, month, year, hour, minute, second</extracomment>
-        <translation type="vanished">%1 %2 %3 %4h %5m %6s</translation>
-    </message>
-    <message>
-        <source>Contrast Analysis (WCAG 2 compliance)</source>
-        <translation type="vanished">대조 분석 (WCAG 2 준수)</translation>
-    </message>
-    <message>
-        <source>Contrast...</source>
-        <translation type="vanished">대조...</translation>
-    </message>
-    <message>
-        <source>Upper Threshold</source>
-        <translation type="vanished">상위 임계값</translation>
-    </message>
-    <message>
-        <source>Noise Floor</source>
-        <translation type="vanished">노이즈 플로어</translation>
-    </message>
-    <message>
-        <source>Parameter 1</source>
-        <translation type="vanished">매개 변수 1</translation>
-    </message>
-    <message>
-        <source>Parameter 2</source>
-        <translation type="vanished">매개 변수 2</translation>
-    </message>
-    <message>
-        <source>Number of repeats</source>
-        <translation type="vanished">반복 횟수</translation>
-    </message>
-    <message>
-        <source>Distortion type:</source>
-        <translation type="vanished">디스토션 형태:</translation>
-    </message>
-    <message>
-        <source>DC blocking filter</source>
-        <translation type="vanished">DC 블럭킹 필터</translation>
-    </message>
-    <message>
-        <source>Threshold controls</source>
-        <translation type="vanished">임계값 제어</translation>
-    </message>
-    <message>
-        <source>Parameter controls</source>
-        <translation type="vanished">매개 변수 제어</translation>
-    </message>
-    <message>
-        <source>Clipping level</source>
-        <translation type="vanished">클리핑 레벨</translation>
-    </message>
-    <message>
-        <source>Drive</source>
-        <translation type="vanished">드라이브</translation>
-    </message>
-    <message>
-        <source>Make-up Gain</source>
-        <translation type="vanished">메이크업 게인</translation>
-    </message>
-    <message>
-        <source>Clipping threshold</source>
-        <translation type="vanished">클리핑 임계값</translation>
-    </message>
-    <message>
-        <source>Hardness</source>
-        <translation type="vanished">단단함</translation>
-    </message>
-    <message>
-        <source>Distortion amount</source>
-        <translation type="vanished">디스토션 양</translation>
-    </message>
-    <message>
-        <source>Output level</source>
-        <translation type="vanished">출력 레벨</translation>
-    </message>
-    <message>
-        <source>Repeat processing</source>
-        <translation type="vanished">반복 처리</translation>
-    </message>
-    <message>
-        <source>Harmonic brightness</source>
-        <translation type="vanished">배음의 밝기</translation>
-    </message>
-    <message>
-        <source>Levelling fine adjustment</source>
-        <translation type="vanished">레벨링 미세 조정</translation>
-    </message>
-    <message>
-        <source>Degree of Levelling</source>
-        <translation type="vanished">레벨링의 정도</translation>
-    </message>
-    <message>
-        <source>dB Limit</source>
-        <translation type="vanished">dB 한계</translation>
-    </message>
-    <message>
-        <source>Wet level</source>
-        <translation type="vanished">Wet 레벨</translation>
-    </message>
-    <message>
-        <source>Residual level</source>
-        <translation type="vanished">잔여 레벨</translation>
-    </message>
-    <message>
-        <source>(Not Used):</source>
-        <translation type="vanished">(사용되지 않음):</translation>
-    </message>
-    <message>
-        <source>(-100 to 0 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(-100 ~ 0 dB):</translation>
-    </message>
-    <message>
-        <source>(-80 to -20 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(-80 ~ -20 dB):</translation>
-    </message>
-    <message>
-        <source>(0 to 100):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(0 ~ 100):</translation>
-    </message>
-    <message>
-        <source>(0 to 5):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(0 ~ 5):</translation>
-    </message>
-    <message>
-        <source>DTMF sequence empty.
-Check ALL settings for this effect.</source>
-        <translation type="vanished">DTMF 시퀀스가 비어있음.
-이 이펙트에 대한 모든 설정을 점검할것.</translation>
-    </message>
-    <message>
-        <source>DTMF &amp;sequence:</source>
-        <translation type="vanished">DTMF 시퀀스(&amp;S):</translation>
-    </message>
-    <message>
-        <source>&amp;Amplitude (0-1):</source>
-        <translation type="vanished">진폭 (0-1):</translation>
-    </message>
-    <message>
-        <source>&amp;Duration:</source>
-        <translation type="vanished">지속 시간(&amp;D):</translation>
-    </message>
-    <message>
-        <source>&amp;Tone/silence ratio:</source>
-        <translation type="vanished">톤/무음 비율:</translation>
-    </message>
-    <message>
-        <source>Duty cycle:</source>
-        <translation type="vanished">듀티 사이클:</translation>
-    </message>
-    <message>
-        <source>%.1f %%</source>
-        <translation type="vanished">%1 %%</translation>
-    </message>
-    <message>
-        <source>Tone duration:</source>
-        <translation type="vanished">톤 지속 시간:</translation>
-    </message>
-    <message>
-        <source>Silence duration:</source>
-        <translation type="vanished">무음 지속 시간:</translation>
-    </message>
-    <message>
-        <source>%0.f ms</source>
-        <extracomment>i18n-hint milliseconds</extracomment>
-        <translation type="vanished">%0.f ms</translation>
-    </message>
-    <message>
-        <source>I&amp;nput</source>
-        <translation type="vanished">입력 (&amp;N)</translation>
-    </message>
-    <message>
-        <source>Show input</source>
-        <extracomment>i18n-hint: show input on a graph</extracomment>
-        <translation type="vanished">입력 표시</translation>
-    </message>
-    <message>
-        <source>O&amp;utput</source>
-        <translation type="vanished">출력(&amp;U)</translation>
-    </message>
-    <message>
-        <source>A&amp;ctual compression</source>
-        <translation type="vanished">실제 컴프레션 (&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show actual compression</source>
-        <extracomment>i18n-hint: show actual compression on a graph</extracomment>
-        <translation type="vanished">실제 컴프레션 보기</translation>
-    </message>
-    <message>
-        <source>Tar&amp;get compression</source>
-        <translation type="vanished">타겟 컴프레션 (&amp;G)</translation>
-    </message>
-    <message>
-        <source>Show target compression</source>
-        <extracomment>i18n-hint: show target compression on a graph</extracomment>
-        <translation type="vanished">타겟 컴프레션 보기</translation>
-    </message>
-    <message>
-        <source>Compression curve</source>
-        <translation type="vanished">컴프레션 커브</translation>
-    </message>
-    <message>
-        <source>Smoothing</source>
-        <translation type="vanished">스무딩</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (dB)</source>
-        <translation type="vanished">임계값 (dB)(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up gain (dB)</source>
-        <translation type="vanished">메이크업 게인 (dB)(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up target (dB)</source>
-        <translation type="vanished">메이크업 타겟 (dB)(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Knee &amp;width (dB)</source>
-        <translation type="vanished">Knee 폭 (dB)(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Rati&amp;o:</source>
-        <translation type="vanished">비율(&amp;O):</translation>
-    </message>
-    <message>
-        <source>&amp;Lookahead (ms)</source>
-        <translation type="vanished">Lookahead (ms)(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k (ms)</source>
-        <translation type="vanished">어택 (ms)(&amp;K)</translation>
-    </message>
-    <message>
-        <source>&amp;Release (ms)</source>
-        <translation type="vanished">릴리즈 (ms)(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Actual Compression</source>
-        <translation type="vanished">실제 컴프레션</translation>
-    </message>
-    <message>
-        <source>Target Compression</source>
-        <translation type="vanished">타겟 컴프레션</translation>
-    </message>
-    <message>
-        <source>awaiting playback</source>
-        <translation type="vanished">재생 기다림</translation>
-    </message>
-    <message>
-        <source>&amp;Delay time (seconds):</source>
-        <translation type="vanished">지연 시간 (초):</translation>
-    </message>
-    <message>
-        <source>D&amp;ecay factor:</source>
-        <translation type="vanished">감쇠 인수:</translation>
-    </message>
-    <message>
-        <source>Applied command: %s</source>
-        <translation type="vanished">적용된 명령: %1</translation>
-    </message>
-    <message>
-        <source>Select Preset</source>
-        <translation type="vanished">프리셋 선택</translation>
-    </message>
-    <message>
-        <source>&amp;Preset:</source>
-        <translation type="vanished">프리셋(&amp;P):</translation>
-    </message>
-    <message>
-        <source>User Presets</source>
-        <translation type="vanished">사용자 프리셋</translation>
-    </message>
-    <message>
-        <source>Factory Presets</source>
-        <translation type="vanished">공장도 프리셋</translation>
-    </message>
-    <message>
-        <source>Current Settings</source>
-        <translation type="vanished">현재 설정</translation>
-    </message>
-    <message>
-        <source>Factory Defaults</source>
-        <translation type="vanished">공장도 기본값</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following effect failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">다음 이펙트를 초기화하는데 실패함: 
-
-%1
-
-상세한 정보를 보려면 '도움말 &gt; 진단 &gt; 로그 보기'</translation>
-    </message>
-    <message>
-        <source>Effect failed to initialize</source>
-        <translation type="vanished">이펙트 초기화에 실패했습니다</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following command failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">다음 명령을 초기화 하는데 실패함:
-
-%1
-
-상세한 정보는 '도움말 &gt; 진단 &gt; 로그 보기' 를 이용</translation>
-    </message>
-    <message>
-        <source>Command failed to initialize</source>
-        <translation type="vanished">명령 초기화에 실패했습니다</translation>
-    </message>
-    <message>
-        <source>Previewing</source>
-        <translation type="vanished">미리보기 처리 중</translation>
-    </message>
-    <message>
-        <source>Manage presets and options</source>
-        <translation type="vanished">프리셋과 옵션 관리</translation>
-    </message>
-    <message>
-        <source>Presets &amp;&amp; settings</source>
-        <translation type="vanished">프리셋 &amp;&amp; 설정</translation>
-    </message>
-    <message>
-        <source>Preview effect</source>
-        <translation type="vanished">이펙트 미리보기</translation>
-    </message>
-    <message>
-        <source>&amp;Apply</source>
-        <translation type="vanished">적용(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Save Preset...</source>
-        <translation type="vanished">프리셋 저장...</translation>
-    </message>
-    <message>
-        <source>Defaults</source>
-        <translation type="vanished">기본값</translation>
-    </message>
-    <message>
-        <source>Options...</source>
-        <translation type="vanished">옵션...</translation>
-    </message>
-    <message>
-        <source>Type: %s</source>
-        <translation type="vanished">형식: %1</translation>
-    </message>
-    <message>
-        <source>Name: %s</source>
-        <translation type="vanished">이름: %1</translation>
-    </message>
-    <message>
-        <source>Version: %s</source>
-        <translation type="vanished">버전: %1</translation>
-    </message>
-    <message>
-        <source>Vendor: %s</source>
-        <translation type="vanished">벤더: %1</translation>
-    </message>
-    <message>
-        <source>Description: %s</source>
-        <translation type="vanished">설명: %1</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="vanished">정보</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete "%s"?</source>
-        <translation type="vanished">"%1"을 정말로 삭제할까요?</translation>
-    </message>
-    <message>
-        <source>Preset name:</source>
-        <translation type="vanished">프리셋 이름:</translation>
-    </message>
-    <message>
-        <source>You must specify a name</source>
-        <translation type="vanished">이름을 지정해야 합니다</translation>
-    </message>
-    <message>
-        <source>Preset already exists.
-
-Replace?</source>
-        <translation type="vanished">프리셋이 이미 있습니다. 교체할까요?</translation>
-    </message>
-    <message>
-        <source>Effect Unavailable</source>
-        <translation type="vanished">이펙트 사용 불가</translation>
-    </message>
-    <message>
-        <source>Benchmark times:
-Original: %s
-Default Segmented: %s
-Default Threaded: %s
-SSE: %s
-SSE Threaded: %s
-</source>
-        <translation type="vanished">벤치마크 시간:
-원본: %1
-기본 세그먼트: %2
-기본 쓰레드: %3
-SSE: %4
-SSE 쓰레드: %5
-</translation>
-    </message>
-    <message>
-        <source>%d Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>%g kHz</source>
-        <translation type="vanished">%1 kHz</translation>
-    </message>
-    <message>
-        <source>%gk</source>
-        <extracomment>i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.</extracomment>
-        <translation type="vanished">%1 k</translation>
-    </message>
-    <message>
-        <source>%d dB</source>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>Error Loading EQ Curves</source>
-        <translation type="vanished">EQ 곡선 불러오는 중 오류</translation>
-    </message>
-    <message>
-        <source>Manage Curves List</source>
-        <translation type="vanished">곡선 목록 관리</translation>
-    </message>
-    <message>
-        <source>Manage Curves</source>
-        <translation type="vanished">곡선 관리</translation>
-    </message>
-    <message>
-        <source>&amp;Curves</source>
-        <translation type="vanished">곡선(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Curve Name</source>
-        <translation type="vanished">곡선 이름</translation>
-    </message>
-    <message>
-        <source>D&amp;elete...</source>
-        <translation type="vanished">삭제하기(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>&amp;Get More...</source>
-        <translation type="vanished">더 보기(&amp;G)...</translation>
-    </message>
-    <message>
-        <source>De&amp;faults</source>
-        <translation type="vanished">기본값(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Rename 'unnamed' to save a new entry.
-'OK' saves all changes, 'Cancel' doesn't.</source>
-        <translation type="vanished">새 항목을 저장하려면 '무제'의 이름을 바꾸세요.
-'확인'은 모든 변경 사항 저장, '취소'는 저장하지 않습니다.</translation>
-    </message>
-    <message>
-        <source>'unnamed' always stays at the bottom of the list</source>
-        <translation type="vanished">''은 항상 목록의 맨 아래에 있습니다</translation>
-    </message>
-    <message>
-        <source>'unnamed' is special</source>
-        <translation type="vanished">''은 특별합니다</translation>
-    </message>
-    <message>
-        <source>Rename '%s' to...</source>
-        <translation type="vanished">'%1' 이름 변경...</translation>
-    </message>
-    <message>
-        <source>Rename...</source>
-        <translation type="vanished">이름 변경...</translation>
-    </message>
-    <message>
-        <source>Rename '%s'</source>
-        <translation type="vanished">'%1' 이름 변경</translation>
-    </message>
-    <message>
-        <source>Name is the same as the original one</source>
-        <translation type="vanished">이름이 원본과 동일합니다</translation>
-    </message>
-    <message>
-        <source>Same name</source>
-        <translation type="vanished">같은 이름</translation>
-    </message>
-    <message>
-        <source>Overwrite existing curve '%s'?</source>
-        <translation type="vanished">기존 곡선 '%1'를 덮어쓸까요?</translation>
-    </message>
-    <message>
-        <source>Curve exists</source>
-        <translation type="vanished">곡선이 존재합니다</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve.</source>
-        <translation type="vanished">'무제' 곡선은 지울 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Can't delete 'unnamed'</source>
-        <translation type="vanished">'무제'를 삭제할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Delete '%s'?</source>
-        <translation type="vanished">'%1'를 삭제?</translation>
-    </message>
-    <message>
-        <source>Delete %d items?</source>
-        <translation type="vanished">%1 아이템을 삭제?</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve, it is special.</source>
-        <translation type="vanished">'무제' 곡선은 삭제할 수 없습니다. 특별한 경우입니다.</translation>
-    </message>
-    <message>
-        <source>Choose an EQ curve file</source>
-        <translation type="vanished">EQ 곡선 파일을 선택하세요</translation>
-    </message>
-    <message>
-        <source>Export EQ curves as...</source>
-        <translation type="vanished">다른 이름으로 EQ 곡선 내보내기...</translation>
-    </message>
-    <message>
-        <source>You cannot export 'unnamed' curve, it is special.</source>
-        <translation type="vanished">'무제' 곡선은 내보낼 수 없습니다,  특별한 경우입니다.</translation>
-    </message>
-    <message>
-        <source>Cannot Export 'unnamed'</source>
-        <translation type="vanished">'무제'를 내보낼 수 없습니다</translation>
-    </message>
-    <message>
-        <source>%d curves exported to %s</source>
-        <translation type="vanished">%1 개의 곡선을 %2)로 내보냈습니다</translation>
-    </message>
-    <message>
-        <source>Curves exported</source>
-        <translation type="vanished">곡선을 가져왔습니다</translation>
-    </message>
-    <message>
-        <source>No curves exported</source>
-        <translation type="vanished">가져온 곡선이 없습니다</translation>
-    </message>
-    <message>
-        <source>To use this filter curve in a macro, please choose a new name for it.
-Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one.</source>
-        <translation type="vanished">매크로에서 이 필터곡선을 사용하려면, 새로운 이름을 선택하세요.
-'곡선 저장/관리...'  버튼을 선택하고 '무제' 곡선의 이름을 바꾼 후 그것을 사용하세요.</translation>
-    </message>
-    <message>
-        <source>Filter Curve EQ needs a different name</source>
-        <translation type="vanished">필터 곡선 EQ는 다른 이름이 필요합니다</translation>
-    </message>
-    <message>
-        <source>+ dB</source>
-        <translation type="vanished">+ dB</translation>
-    </message>
-    <message>
-        <source>Max dB</source>
-        <translation type="vanished">최대 dB</translation>
-    </message>
-    <message>
-        <source>Min dB</source>
-        <translation type="vanished">최소 dB</translation>
-    </message>
-    <message>
-        <source>- dB</source>
-        <translation type="vanished">- dB</translation>
-    </message>
-    <message>
-        <source>&amp;EQ Type:</source>
-        <translation type="vanished">EQ 형식(&amp;E):</translation>
-    </message>
-    <message>
-        <source>Draw Curves</source>
-        <translation type="vanished">곡선 그리기</translation>
-    </message>
-    <message>
-        <source>&amp;Draw</source>
-        <translation type="vanished">그리기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Graphic</source>
-        <translation type="vanished">그래픽(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Interpolation type</source>
-        <translation type="vanished">보간 형식</translation>
-    </message>
-    <message>
-        <source>Linear Frequency Scale</source>
-        <translation type="vanished">선형 주파수 눈금</translation>
-    </message>
-    <message>
-        <source>Li&amp;near Frequency Scale</source>
-        <translation type="vanished">선형 주파수 눈금(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Length of &amp;Filter:</source>
-        <translation type="vanished">필터 길이(&amp;F):</translation>
-    </message>
-    <message>
-        <source>Length of Filter</source>
-        <translation type="vanished">필터 길이</translation>
-    </message>
-    <message>
-        <source>&amp;Select Curve:</source>
-        <translation type="vanished">곡선 선택(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Select Curve</source>
-        <translation type="vanished">곡선 선택</translation>
-    </message>
-    <message>
-        <source>S&amp;ave/Manage Curves...</source>
-        <translation type="vanished">곡선 저장/관리(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>Fla&amp;tten</source>
-        <translation type="vanished">평탄화(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Invert</source>
-        <translation type="vanished">뒤집기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Show grid lines</source>
-        <translation type="vanished">격자선 보기</translation>
-    </message>
-    <message>
-        <source>Show g&amp;rid lines</source>
-        <translation type="vanished">격자선 보기(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Requested curve not found, using 'unnamed'</source>
-        <translation type="vanished">'무제'을 사용하는 요청한 곡선을 찾지 못했습니다</translation>
-    </message>
-    <message>
-        <source>Curve not found</source>
-        <translation type="vanished">곡선을 찾지 못했습니다</translation>
-    </message>
-    <message>
-        <source>%lld of %lld</source>
-        <comment>find clipping</comment>
-        <extracomment>i18n-hint: Two numbers are substituted; the second is the
-size of a set, the first is the size of a subset, and not
-understood as an ordinal (i.e., not meaning "first", or
-"second", etc.)</extracomment>
-        <translation type="vanished">%1 of %2</translation>
-    </message>
-    <message>
-        <source>&amp;Start threshold (samples):</source>
-        <translation type="vanished">시작 임계값 (샘플)(&amp;S):</translation>
-    </message>
-    <message>
-        <source>St&amp;op threshold (samples):</source>
-        <translation type="vanished">종료 임계값 (샘플)(&amp;O):</translation>
-    </message>
-    <message>
-        <source>%3d dB</source>
-        <extracomment>i18n-hint: usually leave this as is as dB doesn't get translated</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.2f secs</source>
-        <translation type="vanished">%1 초</translation>
-    </message>
-    <message>
-        <source>%.1f secs</source>
-        <translation type="vanished">%1 초</translation>
-    </message>
-    <message>
-        <source>%.0f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1:1</translation>
-    </message>
-    <message>
-        <source>%.1f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1:1</translation>
-    </message>
-    <message>
-        <source>Ratio %.0f to 1</source>
-        <translation type="vanished">비율 %1 대 1</translation>
-    </message>
-    <message>
-        <source>Ratio %.1f to 1</source>
-        <translation type="vanished">비율 %1 대 1</translation>
-    </message>
-    <message>
-        <source>&amp;Noise Floor:</source>
-        <translation type="vanished">노이즈 플로어 (&amp;N):</translation>
-    </message>
-    <message>
-        <source>&amp;Ratio:</source>
-        <translation type="vanished">비율 (&amp;R):</translation>
-    </message>
-    <message>
-        <source>&amp;Attack Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">어택 시간 (&amp;A):</translation>
-    </message>
-    <message>
-        <source>Attack Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">어택 시간</translation>
-    </message>
-    <message>
-        <source>R&amp;elease Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">릴리즈 시간 (&amp;R):</translation>
-    </message>
-    <message>
-        <source>Release Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">릴리즈 시간</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke-up gain for 0 dB after compressing</source>
-        <extracomment>i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.</extracomment>
-        <translation type="vanished">컴프레싱 후 피크 레벨 0 dB까지 메이크업 게인 적용 (&amp;K)</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress based on Peaks</source>
-        <extracomment>i18n-hint: "Compress" here means reduce variations of sound volume,
-NOT related to file-size compression; Peaks means extremes in volume</extracomment>
-        <translation type="vanished">피크 값 기반 컴프레싱(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Threshold %d dB</source>
-        <translation type="vanished">임계값 %1 dB</translation>
-    </message>
-    <message>
-        <source>Noise Floor %d dB</source>
-        <translation type="vanished">노이즈 플로어 %1 dB</translation>
-    </message>
-    <message>
-        <source>Attack Time %.2f secs</source>
-        <translation type="vanished">어택 시간 %1 초</translation>
-    </message>
-    <message>
-        <source>Release Time %.1f secs</source>
-        <translation type="vanished">릴리즈 시간 %1 초</translation>
-    </message>
-    <message>
-        <source>perceived loudness</source>
-        <translation type="vanished">인식된 음량</translation>
-    </message>
-    <message>
-        <source>Normalizing Loudness...
-</source>
-        <translation type="vanished">음량 정규화 중...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize</source>
-        <translation type="vanished">정규화(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Loudness LUFS</source>
-        <extracomment>i18n-hint: LUFS is a particular method for measuring loudnesss</extracomment>
-        <translation type="vanished">Loudness LUFS</translation>
-    </message>
-    <message>
-        <source>LUFS</source>
-        <translation type="vanished">LUFS</translation>
-    </message>
-    <message>
-        <source>RMS dB</source>
-        <translation type="vanished">RMS dB</translation>
-    </message>
-    <message>
-        <source>Normalize &amp;stereo channels independently</source>
-        <translation type="vanished">스테레오 채널을 독립적으로 정규화하기</translation>
-    </message>
-    <message>
-        <source>&amp;Treat mono as dual-mono (recommended)</source>
-        <translation type="vanished">모노를 듀얼 모노로 취급하기 (권장됨)</translation>
-    </message>
-    <message>
-        <source>(Maximum 0dB)</source>
-        <translation type="vanished">(최대 0dB)</translation>
-    </message>
-    <message>
-        <source>White</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "white noise" having a uniform spectrum</extracomment>
-        <translation type="vanished">화이트</translation>
-    </message>
-    <message>
-        <source>Pink</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "pink noise" having a spectrum with more power
-in low frequencies</extracomment>
-        <translation type="vanished">핑크</translation>
-    </message>
-    <message>
-        <source>Brownian</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: a kind of noise spectrum also known as "red" or "brown"</extracomment>
-        <translation type="vanished">브라운</translation>
-    </message>
-    <message>
-        <source>&amp;Noise type:</source>
-        <translation type="vanished">노이즈 형식:</translation>
-    </message>
-    <message>
-        <source>Old</source>
-        <translation type="vanished">오래된</translation>
-    </message>
-    <message>
-        <source>Noise Reduction</source>
-        <translation type="vanished">노이즈 리덕션 (잡음 감쇄)</translation>
-    </message>
-    <message>
-        <source>Steps per block are too few for the window types.</source>
-        <translation type="vanished">블럭당 스텝이 윈도우 형식에 대해 너무 적습니다.</translation>
-    </message>
-    <message>
-        <source>Steps per block cannot exceed the window size.</source>
-        <translation type="vanished">블럭당 스텝은 윈도우 크기를 초과할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Median method is not implemented for more than four steps per window.</source>
-        <translation type="vanished">중간값 방법은 윈도우당 4스텝 이상용으로 구현되지 않았습니다.</translation>
-    </message>
-    <message>
-        <source>Warning: window types are not the same as for profiling.</source>
-        <translation type="vanished">경고: 윈도우 형식이 프로파일과 같지 않습니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Noise reduction (dB):</source>
-        <translation type="vanished">노이즈 리덕션 (dB)(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Sensitivity:</source>
-        <translation type="vanished">민감도(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k time (secs):</source>
-        <translation type="vanished">어택 시간 (초)(&amp;K):</translation>
-    </message>
-    <message>
-        <source>Attack time</source>
-        <translation type="vanished">어택 시간</translation>
-    </message>
-    <message>
-        <source>R&amp;elease time (secs):</source>
-        <translation type="vanished">놓기 시간 (초)(&amp;E):</translation>
-    </message>
-    <message>
-        <source>Release time</source>
-        <translation type="vanished">릴리즈 시간</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency smoothing (bands):</source>
-        <translation type="vanished">주파수 평활화 (밴드)(&amp;F):</translation>
-    </message>
-    <message>
-        <source>Sensiti&amp;vity (dB):</source>
-        <translation type="vanished">민감도 (dB)(&amp;V):</translation>
-    </message>
-    <message>
-        <source>Old Sensitivity</source>
-        <translation type="vanished">이전 민감도</translation>
-    </message>
-    <message>
-        <source>Select a few seconds of just noise so Audacity knows what to filter out,
-then click Get Noise Profile:</source>
-        <translation type="vanished">오데시티가 필터할 내용을 알 수 있도록 단지 노이즈만 몇 초를 선택한 다음,
-노이즈 프로파일 구하기를 누르세요:</translation>
-    </message>
-    <message>
-        <source>&amp;Get Noise Profile</source>
-        <translation type="vanished">노이즈 프로파일 구하기(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Select all of the audio you want filtered, choose how much noise you want
-filtered out, and then click 'OK' to reduce noise.
-</source>
-        <translation type="vanished">필터링하려는 모든 오디오를 선택하고, 필터링할 노이즈의 양을 선택한 다음
-노이즈를 감소시키려면 '확인'을 누르세요.
-</translation>
-    </message>
-    <message>
-        <source>Noise:</source>
-        <translation type="vanished">노이즈:</translation>
-    </message>
-    <message>
-        <source>Re&amp;duce</source>
-        <extracomment>i18n-hint: Translate differently from "Residue" !</extracomment>
-        <translation type="vanished">감소시키기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Isolate</source>
-        <translation type="vanished">분리(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Resid&amp;ue</source>
-        <extracomment>i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !</extracomment>
-        <translation type="vanished">잔여(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Advanced Settings</source>
-        <translation type="vanished">고급 설정</translation>
-    </message>
-    <message>
-        <source>&amp;Window types:</source>
-        <translation type="vanished">윈도우 형식(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Window si&amp;ze:</source>
-        <translation type="vanished">윈도우 크기(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="vanished">8</translation>
-    </message>
-    <message>
-        <source>16</source>
-        <translation type="vanished">16</translation>
-    </message>
-    <message>
-        <source>32</source>
-        <translation type="vanished">32</translation>
-    </message>
-    <message>
-        <source>64</source>
-        <translation type="vanished">64</translation>
-    </message>
-    <message>
-        <source>128</source>
-        <translation type="vanished">128</translation>
-    </message>
-    <message>
-        <source>256</source>
-        <translation type="vanished">256</translation>
-    </message>
-    <message>
-        <source>512</source>
-        <translation type="vanished">512</translation>
-    </message>
-    <message>
-        <source>1024</source>
-        <translation type="vanished">1024</translation>
-    </message>
-    <message>
-        <source>2048 (default)</source>
-        <translation type="vanished">2048 (기본값)</translation>
-    </message>
-    <message>
-        <source>4096</source>
-        <translation type="vanished">4096</translation>
-    </message>
-    <message>
-        <source>8192</source>
-        <translation type="vanished">8192</translation>
-    </message>
-    <message>
-        <source>16384</source>
-        <translation type="vanished">16384</translation>
-    </message>
-    <message>
-        <source>S&amp;teps per window:</source>
-        <translation type="vanished">윈도우당 스텝(&amp;T)</translation>
-    </message>
-    <message>
-        <source>4 (default)</source>
-        <translation type="vanished">4 (기본값)</translation>
-    </message>
-    <message>
-        <source>Discrimination &amp;method:</source>
-        <translation type="vanished">구별 방법(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Removing DC offset and Normalizing...
-</source>
-        <translation type="vanished">DC 오프셋 제거 후 노멀라이즈하는 중...
-</translation>
-    </message>
-    <message>
-        <source>Removing DC offset...
-</source>
-        <translation type="vanished">DC 오프셋 제거 중...
-</translation>
-    </message>
-    <message>
-        <source>Normalizing without removing DC offset...
-</source>
-        <translation type="vanished">DC 오프셋 제거 없이 노멀라이즈하는 중...
-</translation>
-    </message>
-    <message>
-        <source>Not doing anything...
-</source>
-        <translation type="vanished">아무 것도 하지 않음...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="vanished">DC 오프셋 제거 (파형을 0.0 진폭 레벨에서 중심에 놓기)</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize peak amplitude to   </source>
-        <translation type="vanished">정규화할 피크 진폭 값(&amp;N)  </translation>
-    </message>
-    <message>
-        <source>Peak amplitude dB</source>
-        <translation type="vanished">피크 진폭 dB</translation>
-    </message>
-    <message>
-        <source>N&amp;ormalize stereo channels independently</source>
-        <translation type="vanished">스테레오 채널을 독립적으로 정규화하기</translation>
-    </message>
-    <message>
-        <source>Paulstretch is only for an extreme time-stretch or "stasis" effect</source>
-        <translation type="vanished">극한의 시간-늘이기나 "stasis (정체)" 이펙트에만 폴스트레치를 사용하세요</translation>
-    </message>
-    <message>
-        <source>&amp;Stretch Factor:</source>
-        <extracomment>i18n-hint: This is how many times longer the sound will be, e.g. applying
-* the effect to a 1-second sample, with the default Stretch Factor of 10.0
-* will give an (approximately) 10 second sound</extracomment>
-        <translation type="vanished">스트레치 비율:</translation>
-    </message>
-    <message>
-        <source>&amp;Time Resolution (seconds):</source>
-        <translation type="vanished">시간 해상도 (초):</translation>
-    </message>
-    <message>
-        <source>Audio selection too short to preview.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">오디오 선택이 미리보기에는 너무 짧습니다.
-
-오디오 선택을 적어도 %1초만큼 증가시키 보거나,
-'시간 해상도'를  %2초 이내로 감소시켜 보세요.</translation>
-    </message>
-    <message>
-        <source>Unable to Preview.
-
-For the current audio selection, the maximum
-'Time Resolution' is %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">미리보기를 할 수 없습니다.
-
-현재 오디오 선택에 대해, 최대
-'시간 해상도'는 %1 초입니다.</translation>
-    </message>
-    <message>
-        <source>The 'Time Resolution' is too long for the selection.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">그 선택에 대해  '시간 해상도'가 너무 깁니다.
-
-오디오 선택을 적어도 %1 초만큼 증가시켜 보거나,
-'시간 해상도'를 %2 초 이하로 감소시켜 보세요.</translation>
-    </message>
-    <message>
-        <source>&amp;Stages:</source>
-        <translation type="vanished">스테이지(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Stages</source>
-        <translation type="vanished">스테이지</translation>
-    </message>
-    <message>
-        <source>&amp;Dry/Wet:</source>
-        <translation type="vanished">Dry/Wet(&amp;D):</translation>
-    </message>
-    <message>
-        <source>Dry Wet</source>
-        <translation type="vanished">마르고 젖은</translation>
-    </message>
-    <message>
-        <source>LFO Freq&amp;uency (Hz):</source>
-        <translation type="vanished">LFO 주파수 (Hz)(&amp;U):</translation>
-    </message>
-    <message>
-        <source>LFO frequency in hertz</source>
-        <translation type="vanished">LFO 주파수, 헤르츠 단위</translation>
-    </message>
-    <message>
-        <source>LFO Sta&amp;rt Phase (deg.):</source>
-        <translation type="vanished">LFO 시작 위상 (도)(&amp;R):</translation>
-    </message>
-    <message>
-        <source>LFO start phase in degrees</source>
-        <translation type="vanished">LFO 시작 위상, 도 단위</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h:</source>
-        <translation type="vanished">깊이(&amp;H):</translation>
-    </message>
-    <message>
-        <source>Depth in percent</source>
-        <translation type="vanished">깊이, 퍼센트 단위</translation>
-    </message>
-    <message>
-        <source>Feedbac&amp;k (%):</source>
-        <translation type="vanished">피드백 (%)(&amp;K):</translation>
-    </message>
-    <message>
-        <source>Feedback in percent</source>
-        <translation type="vanished">피드백, 퍼센트 단위</translation>
-    </message>
-    <message>
-        <source>&amp;Output gain (dB):</source>
-        <translation type="vanished">출력 게인 (dB)(&amp;O):</translation>
-    </message>
-    <message>
-        <source>Output gain (dB)</source>
-        <translation type="vanished">출력 게인 (dB)</translation>
-    </message>
-    <message>
-        <source>%s - %s</source>
-        <extracomment>i18n-hint: First %s is an effect name, second is a track name</extracomment>
-        <translation type="vanished">%1 - %2</translation>
-    </message>
-    <message>
-        <source>Repair works by using audio data outside the selection region.
-
-Please select a region that has audio touching at least one side of it.
-
-The more surrounding audio, the better it performs.</source>
-        <translation type="vanished">수리는 선택 영역 이외의 오디오 데이터를 사용하여 동작합니다.
-
-적어도 그 한쪽 측면에 닿는 오디오가 있는 영역을 선택하세요.
-
-주변에 오디오가 많을수록, 더 잘 동작합니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Number of repeats to add:</source>
-        <translation type="vanished">추가할 반복 횟수:</translation>
-    </message>
-    <message>
-        <source>Current selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">현재의 선택 길이: dd:hh:mm:ss</translation>
-    </message>
-    <message>
-        <source>New selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">새로운 선택영역 길이: dd:hh:mm:ss</translation>
-    </message>
-    <message>
-        <source>Current selection length: %s</source>
-        <translation type="vanished">현재의 선택 길이:  %1</translation>
-    </message>
-    <message>
-        <source>New selection length: %s</source>
-        <translation type="vanished">새로운 선택 길이: %1</translation>
-    </message>
-    <message>
-        <source>Warning: No repeats.</source>
-        <translation type="vanished">경고: 반복이 없습니다.</translation>
-    </message>
-    <message>
-        <source>Adds ambience or a "hall effect"</source>
-        <translation type="vanished">앰비언스나 "홀 이펙트" 추가합니다</translation>
-    </message>
-    <message>
-        <source>&amp;Room Size (%):</source>
-        <translation type="vanished">방 크기(&amp;R) (%):</translation>
-    </message>
-    <message>
-        <source>&amp;Pre-delay (ms):</source>
-        <translation type="vanished">전-지연 (ms)(&amp;P):</translation>
-    </message>
-    <message>
-        <source>Rever&amp;berance (%):</source>
-        <translation type="vanished">잔향 (%)(&amp;B):</translation>
-    </message>
-    <message>
-        <source>Da&amp;mping (%):</source>
-        <translation type="vanished">댐핑 (%)(&amp;M):</translation>
-    </message>
-    <message>
-        <source>Tone &amp;Low (%):</source>
-        <translation type="vanished">저음 톤 (%)(&amp;L):</translation>
-    </message>
-    <message>
-        <source>Tone &amp;High (%):</source>
-        <translation type="vanished">고음 톤 (%)(&amp;H):</translation>
-    </message>
-    <message>
-        <source>Wet &amp;Gain (dB):</source>
-        <translation type="vanished">Wet 게인 (dB)(&amp;G):</translation>
-    </message>
-    <message>
-        <source>Dr&amp;y Gain (dB):</source>
-        <translation type="vanished">Dry 게인 (DB)(&amp;Y):</translation>
-    </message>
-    <message>
-        <source>Stereo Wid&amp;th (%):</source>
-        <translation type="vanished">스테레오 너비 (%)(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Wet O&amp;nly</source>
-        <translation type="vanished">Wet 만(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Filter Type:</source>
-        <translation type="vanished">필터 형식(&amp;F):</translation>
-    </message>
-    <message>
-        <source>O&amp;rder:</source>
-        <extracomment>i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.</extracomment>
-        <translation type="vanished">순서(&amp;R):</translation>
-    </message>
-    <message>
-        <source>&amp;Passband Ripple:</source>
-        <translation type="vanished">통과대역 리플(&amp;P):</translation>
-    </message>
-    <message>
-        <source>Passband Ripple (dB)</source>
-        <translation type="vanished">통과대역 리플 (dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Subtype:</source>
-        <translation type="vanished">하위형식(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Cutoff (Hz)</source>
-        <translation type="vanished">컷오프 (Hz)</translation>
-    </message>
-    <message>
-        <source>C&amp;utoff:</source>
-        <translation type="vanished">컷오프(&amp;U):</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation:</source>
-        <translation type="vanished">최소 저지대역 감쇠(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation (dB)</source>
-        <translation type="vanished">최소 저지대역 감쇠 (dB)(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Align MIDI to Audio</source>
-        <translation type="vanished">MIDI를 오디오에 맞추기</translation>
-    </message>
-    <message>
-        <source>Frame Period:</source>
-        <translation type="vanished">프레임 주기:</translation>
-    </message>
-    <message>
-        <source>Frame Period</source>
-        <translation type="vanished">프레임 주기</translation>
-    </message>
-    <message>
-        <source>Window Size:</source>
-        <translation type="vanished">윈도우 크기:</translation>
-    </message>
-    <message>
-        <source>Window Size</source>
-        <translation type="vanished">윈도우 크기</translation>
-    </message>
-    <message>
-        <source>Force Final Alignment</source>
-        <translation type="vanished">강제로 최종 맞추기</translation>
-    </message>
-    <message>
-        <source>Ignore Silence at Beginnings and Endings</source>
-        <translation type="vanished">시작과 끝부분에서 무음을 무시합니다</translation>
-    </message>
-    <message>
-        <source>Silence Threshold:</source>
-        <translation type="vanished">무음 임계값:</translation>
-    </message>
-    <message>
-        <source>Silence Threshold</source>
-        <translation type="vanished">무음 임계값</translation>
-    </message>
-    <message>
-        <source>Presmooth Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">사전 평활화 시간:</translation>
-    </message>
-    <message>
-        <source>Presmooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">사전 평활화 시간</translation>
-    </message>
-    <message>
-        <source>Line Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">라인 시간:</translation>
-    </message>
-    <message>
-        <source>Line Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">라인 시간</translation>
-    </message>
-    <message>
-        <source>Smooth Time:</source>
-        <translation type="vanished">평활화 시간:</translation>
-    </message>
-    <message>
-        <source>Smooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">평활화 시간</translation>
-    </message>
-    <message>
-        <source>Use Defaults</source>
-        <translation type="vanished">기본값 사용</translation>
-    </message>
-    <message>
-        <source>Restore Defaults</source>
-        <translation type="vanished">기본값 복원</translation>
-    </message>
-    <message>
-        <source>%.3f</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>generator</comment>
-        <extracomment>i18n-hint: noun</extracomment>
-        <translation type="vanished">무음</translation>
-    </message>
-    <message>
-        <source>Stereo To Mono</source>
-        <translation type="vanished">스테레오를 모노로</translation>
-    </message>
-    <message>
-        <source>Converts stereo tracks to mono</source>
-        <translation type="vanished">스테레오 트랙을 모노로 변환합니다</translation>
-    </message>
-    <message>
-        <source>Mixing down to mono</source>
-        <translation type="vanished">모노로 믹싱</translation>
-    </message>
-    <message>
-        <source>Sliding Stretch</source>
-        <translation type="vanished">슬라이딩 늘이기</translation>
-    </message>
-    <message>
-        <source>Initial Tempo Change (%)</source>
-        <translation type="vanished">처음 템포(빠르기) 변경 (%)</translation>
-    </message>
-    <message>
-        <source>Final Tempo Change (%)</source>
-        <translation type="vanished">최종 템포 변경 (%)</translation>
-    </message>
-    <message>
-        <source>Initial Pitch Shift</source>
-        <translation type="vanished">초기 피치 변경</translation>
-    </message>
-    <message>
-        <source>(&amp;semitones) [-12 to 12]:</source>
-        <translation type="vanished">(반음) [-12에서 12까지]:</translation>
-    </message>
-    <message>
-        <source>(%) [-50 to 100]:</source>
-        <translation type="vanished">(%) [-50에서 100까지]:</translation>
-    </message>
-    <message>
-        <source>Final Pitch Shift</source>
-        <translation type="vanished">최종 피치 변경</translation>
-    </message>
-    <message>
-        <source>(s&amp;emitones) [-12 to 12]:</source>
-        <translation type="vanished">(반음) [-12에서 12까지]:</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>waveform</comment>
-        <translation type="vanished">삼각형</translation>
-    </message>
-    <message>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation type="vanished">네 형식 중 하나의 상승 또는 하강 톤을 만듭니다</translation>
-    </message>
-    <message>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation type="vanished">네 형식 중 하나의 지속적인 주파수 톤을 만듭니다</translation>
-    </message>
-    <message>
-        <source>&amp;Waveform:</source>
-        <translation type="vanished">파형:</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency (Hz):</source>
-        <translation type="vanished">주파수(Hz)(&amp;F):</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz Start</source>
-        <translation type="vanished">주파수 헤르츠 시작</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz End</source>
-        <translation type="vanished">주파수 헤르츠 끝</translation>
-    </message>
-    <message>
-        <source>Amplitude Start</source>
-        <translation type="vanished">진폭 시작</translation>
-    </message>
-    <message>
-        <source>Amplitude End</source>
-        <translation type="vanished">진폭 끝</translation>
-    </message>
-    <message>
-        <source>I&amp;nterpolation:</source>
-        <translation type="vanished">보간:</translation>
-    </message>
-    <message>
-        <source>Truncate Silence</source>
-        <translation type="vanished">무음 잘라내기</translation>
-    </message>
-    <message>
-        <source>When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group.</source>
-        <translation type="vanished">독립적으로 잘라낼 때, 각 동기화-잠긴 트랙 그룹에한 개의 선택된 오디오 트랙만 있을 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Detect Silence</source>
-        <translation type="vanished">무음 감지</translation>
-    </message>
-    <message>
-        <source>Tr&amp;uncate to:</source>
-        <translation type="vanished">잘라내기:</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress to:</source>
-        <translation type="vanished">다음으로 컴프레션(&amp;O) :</translation>
-    </message>
-    <message>
-        <source>Trunc&amp;ate tracks independently</source>
-        <translation type="vanished">트랙을 독립적으로 잘라내기</translation>
-    </message>
-    <message>
-        <source>Save VST Preset As:</source>
-        <translation type="vanished">VST 프리셋을 다른 이름으로 저장하기:</translation>
-    </message>
-    <message>
-        <source>Standard VST bank file</source>
-        <translation type="vanished">표준 VST 뱅크 파일</translation>
-    </message>
-    <message>
-        <source>Standard VST program file</source>
-        <translation type="vanished">표준 VST 프로그램 파일</translation>
-    </message>
-    <message>
-        <source>Audacity VST preset file</source>
-        <translation type="vanished">오데시티 VST 프리셋 파일</translation>
-    </message>
-    <message>
-        <source>Unrecognized file extension.</source>
-        <translation type="vanished">미인식 파일 확장자.</translation>
-    </message>
-    <message>
-        <source>Load VST Preset:</source>
-        <translation type="vanished">VST 프리셋 불러오기:</translation>
-    </message>
-    <message>
-        <source>VST preset files</source>
-        <translation type="vanished">VST 프리셋 파일</translation>
-    </message>
-    <message>
-        <source>Unable to load presets file.</source>
-        <translation type="vanished">프리셋 파일을 불러올 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>VST Effect Options</source>
-        <translation type="vanished">VST 이펙트 옵션</translation>
-    </message>
-    <message>
-        <source>Buffer Size</source>
-        <translation type="vanished">버퍼 크기</translation>
-    </message>
-    <message>
-        <source>The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time.</source>
-        <translation type="vanished">버퍼 크기는 각각의 반복에서 이펙트에 보내질 샘플의 수를 결정합니다. 값을 작게 설정할 경우 처리 속도가 늦고, 어떤 이펙트의 경우 최소 8192 이하를 요구합니다. 하지만, 대부분의 이펙트는 큰 버퍼 크기를 허용하며, 이 경우 처리 속도가 빨라집니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to 1048576 samples):</source>
-        <translation type="vanished">버퍼 크기 (8~1048576 샘플)(&amp;B):</translation>
-    </message>
-    <message>
-        <source>Latency Compensation</source>
-        <translation type="vanished">지연 보상</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects.</source>
-        <translation type="vanished">처리의 일부 과정으로서, 어떤 VST 이펙트는 오데시티에 지연된 반환을 하게 됩니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 VST 이펙트에서 작동하는 것은 아닙니다.</translation>
-    </message>
-    <message>
-        <source>Enable &amp;compensation</source>
-        <translation type="vanished">보상을 활성화(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Graphical Mode</source>
-        <translation type="vanished">그래픽 모드</translation>
-    </message>
-    <message>
-        <source>Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">대부분의 VST 이펙트들은 그래픽 인터페이스로 파라메터 값을  설정할 수 있습니다. 기본적인 텍스트 인터페이스도로 사용할 수 있습니다. 이펙트를 다시 열면 설정이 작동합니다.</translation>
-    </message>
-    <message>
-        <source>Enable &amp;graphical interface</source>
-        <translation type="vanished">그래픽 인터페이스 활성화(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Save VST3 Preset As:</source>
-        <translation type="vanished">VST3 프리셋을 다음에 저장:</translation>
-    </message>
-    <message>
-        <source>VST3 preset file</source>
-        <translation type="vanished">VST3 프리셋 파일</translation>
-    </message>
-    <message>
-        <source>Load VST3 preset:</source>
-        <translation type="vanished">VST3 프리셋 로딩:</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects.</source>
-        <translation type="vanished">처리과정의 일부로서, 일부 VST3 이펙트는 오데시티에서 돌아오는 지연이 있어야 합니다. 이 지연을 보상하지 않으면, 잠시 동안 묵음이 오디오에 추가되는 것을 알 수 있습니다. 이 옵션을 활성화하면 보상을 제공하게 됩니다. 하지만 모든 VST3 이펙트에서 지원하는 것은 아닙니다. </translation>
-    </message>
-    <message>
-        <source>Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">대부분의 VST 이펙트는 그래픽 인터페이스를 통해 패러매터 값을 설정할 수 있습니다. 기본 텍스트만 보여주는 인터페이스를 사용할 수 있습니다. 이것을 활성화 하려면 이펙트를 다시 열기 바랍니다. </translation>
-    </message>
-    <message>
-        <source>Rapid tone quality variations, like that guitar sound so popular in the 1970's</source>
-        <translation type="vanished">톤 품질 변경 - 70년대 유행한 기타 소리와 같이 변경</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h (%):</source>
-        <translation type="vanished">깊이 (%)(&amp;H):</translation>
-    </message>
-    <message>
-        <source>Reso&amp;nance:</source>
-        <translation type="vanished">공진(&amp;N):</translation>
-    </message>
-    <message>
-        <source>Resonance</source>
-        <translation type="vanished">공진</translation>
-    </message>
-    <message>
-        <source>Wah Frequency Offse&amp;t (%):</source>
-        <translation type="vanished">와 주파수 오프셋 (%)(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Wah frequency offset in percent</source>
-        <translation type="vanished">와 주파수 오프셋, 퍼센트 단위</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Preset As %s:</source>
-        <translation type="vanished">내보내기 - 오디오 유니트 프리셋 %1:</translation>
-    </message>
-    <message>
-        <source>Standard Audio Unit preset file</source>
-        <translation type="vanished">표준 오디오 유니트 프리셋 파일</translation>
-    </message>
-    <message>
-        <source>Could not export "%s" preset
-
-%s</source>
-        <translation type="vanished">프리셋 "%1" 을 내보낼 수 없음
-
-%2</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Presets</source>
-        <translation type="vanished">오디오 유니트 프리셋 내보내기</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Preset As %s:</source>
-        <translation type="vanished">오디오 유니트 프리셋을  %1 로 가져오기:</translation>
-    </message>
-    <message>
-        <source>Could not import "%s" preset
-
-%s</source>
-        <translation type="vanished">"%1" 프리셋 값을 가져올 수 없음
-
-%2</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Presets</source>
-        <translation type="vanished">오디오 유니트 프리셋 가져오기</translation>
-    </message>
-    <message>
-        <source>Audio Unit Effect Options</source>
-        <translation type="vanished">오디오 유니트 이펙트 옵션</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects.</source>
-        <translation type="vanished">처리의 일부 과정으로서, 어떤 오디오 이펙트는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음들이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 오디오 이펙트에서 작동하는 것은 아닙니다. </translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="vanished">사용자 인터페이스</translation>
-    </message>
-    <message>
-        <source>Select "Full" to use the graphical interface if supplied by the Audio Unit. Select "Generic" to use the system supplied generic interface. Select "Basic" for a basic text-only interface. Reopen the effect for this to take effect.</source>
-        <translation type="vanished">"전체"를 선택하면 오디오 유니트가 지원하는 그래피 인터페이스를 사용할 수 있습니다"일반"을 선택하면 시스템이 지원하는 "일반"인터페이스를 사용하며,"기본"을 선택하면 텍스트로만 된 인터페이스를 사용합니다.적용하려면 이펙트를 다시 열기 바랍니다.</translation>
-    </message>
-    <message>
-        <source>Select &amp;interface</source>
-        <translation type="vanished">인터페이스 선택(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="vanished">전체</translation>
-    </message>
-    <message>
-        <source>Generic</source>
-        <translation type="vanished">일반</translation>
-    </message>
-    <message>
-        <source>Basic</source>
-        <translation type="vanished">기본</translation>
-    </message>
-    <message>
-        <source>%s:</source>
-        <extracomment>i18n-hint: An item name introducing a value, which is not part of the string but
-appears in a following text box window; translate with appropriate punctuation</extracomment>
-        <translation type="vanished">%1:</translation>
-    </message>
-    <message>
-        <source>Effect Output</source>
-        <translation type="vanished">이펙트 출력</translation>
-    </message>
-    <message>
-        <source>LADSPA Effect Options</source>
-        <translation type="vanished">LADSPA 이펙트 옵션</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects.</source>
-        <translation type="vanished">처리의 일부 과정으로서, 일부 LADSPA 이펙트는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 LADSPA 이펙트에서 작동하는 것은 아닙니다. </translation>
-    </message>
-    <message>
-        <source>Couldn't instantiate effect</source>
-        <translation type="vanished">이펙트를 인스턴스화할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>LV2 Effect Settings</source>
-        <translation type="vanished">LV2 이펙트 설정</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to %d) samples:</source>
-        <translation type="vanished">버퍼 크기 (8 ~ %1) 샘플(&amp;B):</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects.</source>
-        <translation type="vanished">처리의 일부 과정으로서, 일부 LV2 이펙트는 오데시티에 지연된 반환을 해야만 합니다.이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다.이 옵션을 활성화하면 보상이 되나, 모든 LV2 이펙트에서 작동하는 것은 아닙니다.</translation>
-    </message>
-    <message>
-        <source>LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">LV2 이펙트들은 그래픽 인터페이스로 파라메터 값을 설정할 수 있습니다. 기본적인 텍스트 인터페이스도로 사용할 수 있습니다. 설정을 적용하려면 이펙트를 다시 열기 바랍니다.</translation>
-    </message>
-    <message>
-        <source>Applying Nyquist Effect...</source>
-        <translation type="vanished">나이키스트 이펙트 적용 중...</translation>
-    </message>
-    <message>
-        <source>Enable track spectrogram view before
-applying 'Spectral' effects.</source>
-        <translation type="vanished">'스펙트럼' 이펙트를 적용하기 위해서는
-스펙트로그램 보기를 먼저 활성화하세요. </translation>
-    </message>
-    <message>
-        <source>To use 'Spectral effects', enable 'Spectral Selection'
-in the track Spectrogram settings and select the
-frequency range for the effect to act on.</source>
-        <translation type="vanished">'스펙트럼 이펙트'를 사용하려면, 트랙 스펙트로그램
-설정의 '스펙트럼 선택'을 활성화하고
-동작할 이펙트의 주파수 범위를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>error: File "%s" specified in header but not found in plug-in path.
-</source>
-        <translation type="vanished">오류: 헤더에서 지정된 "%1" 파일이나 플러그인 경로에서 찾지 못함.
-</translation>
-    </message>
-    <message>
-        <source>Nyquist Error</source>
-        <translation type="vanished">나이키스트 오류</translation>
-    </message>
-    <message>
-        <source>Debug Output: </source>
-        <translation type="vanished">디버그 출력:</translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return audio from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">';타입 툴' 이펙트가 나이키스트로 부터 오디오를 반환할 수 없습니다.
-</translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return labels from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">';type tool' 이펙트는 나이퀴스트로 부터 레이블을 반환하지 않음
-</translation>
-    </message>
-    <message>
-        <source>Nyquist returned the value: %d</source>
-        <translation type="vanished">나이퀴스트가 값을 반환 : %1</translation>
-    </message>
-    <message>
-        <source>Your code looks like SAL syntax, but there is no 'return' statement.
-For SAL, use a return statement such as:
-	return *track* * 0.1
-or for LISP, begin with an open parenthesis such as:
-	(mult *track* 0.1)
- .</source>
-        <translation type="vanished">당신의 코드는 SAL 같지만, 'return' 문이 없습니다.
-SAL에서는 다음처럼 리턴 선언을 사용하세요:
-	return *track* * 0.1
-LISP에서는, 다음처럼 여는 괄호로 시작하세요:
-	(mult *track* 0.1)
- .</translation>
-    </message>
-    <message>
-        <source>Error in Nyquist code</source>
-        <translation type="vanished">나이키스트 코드에서 오류</translation>
-    </message>
-    <message>
-        <source>Could not determine language</source>
-        <extracomment>i18n-hint: refers to programming "languages"</extracomment>
-        <translation type="vanished">언어를 알아낼 수 없습니다</translation>
-    </message>
-    <message>
-        <source>"%s" is not a valid file path.</source>
-        <translation type="vanished">"%1"는 바른 파일 경로가 아닙니다.</translation>
-    </message>
-    <message>
-        <source>Mismatched quotes in
-%s</source>
-        <extracomment>i18n-hint: Warning that there is one quotation mark rather than a pair.</extracomment>
-        <translation type="vanished">인용부호가 일치하지 않음
-%1</translation>
-    </message>
-    <message>
-        <source>Enter Nyquist Command: </source>
-        <translation type="vanished">나이키스트 명령 입력: </translation>
-    </message>
-    <message>
-        <source>&amp;Load</source>
-        <translation type="vanished">가져오기(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Current program has been modified.
-Discard changes?</source>
-        <translation type="vanished">현재 프로그램이 변경되었습니다.
-변경사항을 버릴까요?</translation>
-    </message>
-    <message>
-        <source>File could not be loaded</source>
-        <translation type="vanished">파일을 불러올 수 없습니다</translation>
-    </message>
-    <message>
-        <source>File could not be saved</source>
-        <translation type="vanished">파일을 저장할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Value range:
-%s to %s</source>
-        <translation type="vanished">값 범위:
-%1 에서 %2</translation>
-    </message>
-    <message>
-        <source>Value Error</source>
-        <translation type="vanished">값 오류</translation>
-    </message>
-    <message>
-        <source>Save file as</source>
-        <translation type="vanished">다른 이름으로 저장</translation>
-    </message>
-    <message>
-        <source>Vamp Effects</source>
-        <translation type="vanished">뱀프 이펙트</translation>
-    </message>
-    <message>
-        <source>Provides Vamp Effects support to Audacity</source>
-        <translation type="vanished">뱀프 이펙트를 오데시티에 제공합니다</translation>
-    </message>
-    <message>
-        <source>Sorry, failed to load Vamp Plug-in.</source>
-        <translation type="vanished">죄송합니다. Vamp 플러그인을 불러오지 못했습니다.</translation>
-    </message>
-    <message>
-        <source>Sorry, Vamp Plug-in failed to initialize.</source>
-        <translation type="vanished">죄송합니다. Vamp 플러그인을 초기화하지 못했습니다.</translation>
-    </message>
-    <message>
-        <source>Plugin Settings</source>
-        <translation type="vanished">플러그인 설정</translation>
-    </message>
-    <message>
-        <source>Program</source>
-        <translation type="vanished">프로그램</translation>
-    </message>
-    <message>
-        <source>Vamp</source>
-        <extracomment>i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-It is not an abbreviation for anything.  See http://vamp-plugins.org</extracomment>
-        <translation type="vanished">Vamp</translation>
-    </message>
-    <message>
-        <source>Entire &amp;Project</source>
-        <translation type="vanished">전체 프로젝트(&amp;P)</translation>
-    </message>
-    <message>
-        <source>M&amp;ultiple Files</source>
-        <translation type="vanished">여러개의 파일(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Curren&amp;t Selection</source>
-        <translation type="vanished">현재 선택(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Using Label/Track Name</source>
-        <translation type="vanished">레이블/트랙 이름 사용하기</translation>
-    </message>
-    <message>
-        <source>Numbering before Label/Track Name</source>
-        <translation type="vanished">레이블/트랙 이름 앞에 번호 매기기</translation>
-    </message>
-    <message>
-        <source>Numbering after File name prefix</source>
-        <translation type="vanished">파일 이름 접두사 뒤에 번호 매기기</translation>
-    </message>
-    <message>
-        <source>Export Range:</source>
-        <translation type="vanished">내보내기 범위:</translation>
-    </message>
-    <message>
-        <source>Export entire project</source>
-        <translation type="vanished">전체 프로젝트 내보내기</translation>
-    </message>
-    <message>
-        <source>Export multiple files</source>
-        <translation type="vanished">여러 파일 내보내기</translation>
-    </message>
-    <message>
-        <source>Export current selection</source>
-        <translation type="vanished">현재 선택 내보내기</translation>
-    </message>
-    <message>
-        <source>Split files based on:</source>
-        <translation type="vanished">다음에 기반하여 파일을 나눕니다:</translation>
-    </message>
-    <message>
-        <source>Include audio before first label</source>
-        <translation type="vanished">첫째 레이블 앞의 오디오 포함</translation>
-    </message>
-    <message>
-        <source>Name files:</source>
-        <translation type="vanished">파일 이름:</translation>
-    </message>
-    <message>
-        <source>File name prefix:</source>
-        <translation type="vanished">파일 이름 접두사:</translation>
-    </message>
-    <message>
-        <source>Overwrite existing files</source>
-        <translation type="vanished">기존 파일 덮어쓰기</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="vanished">내보내기(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Successfully exported the following %lld file(s).</source>
-        <translation type="vanished">다음 %1 파일을 성공적으로 내보냈습니다.</translation>
-    </message>
-    <message>
-        <source>Something went wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">다음 %1 파일을 내보낸 후 뭔가가 잘못되었습니다.</translation>
-    </message>
-    <message>
-        <source>Export canceled after exporting the following %lld file(s).</source>
-        <translation type="vanished">다음 %1 파일을 내보낸 후에 내보내기를 취소했습니다.</translation>
-    </message>
-    <message>
-        <source>Export stopped after exporting the following %lld file(s).</source>
-        <translation type="vanished">다음 %1 파일을 내보낸 후에 내보내기가 멈췄습니다.</translation>
-    </message>
-    <message>
-        <source>Something went really wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">다음 %1 파일을 내보낸 후 뭔가가 정말 잘못되었습니다.</translation>
-    </message>
-    <message>
-        <source>A file named "%s" already exists. Replace?</source>
-        <translation type="vanished">"%1" 이름의 파일이 이미 있습니다. 그래도 바꿀까요?</translation>
-    </message>
-    <message>
-        <source>All selected audio is muted.</source>
-        <translation type="vanished">선택한 모든 오디오를 음소거했습니다.</translation>
-    </message>
-    <message>
-        <source>Continue to export remaining files?</source>
-        <translation type="vanished">나머지 파일들의 내보내기를 계속할까요?</translation>
-    </message>
-    <message>
-        <source>Custom Sample Rate</source>
-        <translation type="vanished">사용자 정의 샘플링 주파수</translation>
-    </message>
-    <message>
-        <source>File &amp;Name:</source>
-        <translation type="vanished">파일 이름(&amp;N):</translation>
-    </message>
-    <message>
-        <source>Fo&amp;lder:</source>
-        <translation type="vanished">폴더(&amp;L):</translation>
-    </message>
-    <message>
-        <source>&amp;Format:</source>
-        <translation type="vanished">포맷(&amp;F)</translation>
-    </message>
-    <message>
-        <source>M&amp;ono</source>
-        <translation type="vanished">모노(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation type="vanished">스테레오(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Custom mappin&amp;g</source>
-        <extracomment>i18n-hint refers to custom channel mapping configuration</extracomment>
-        <translation type="vanished">사용자 지정 메핑(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Configure custom mapping</source>
-        <extracomment>i18n-hint accessibility hint, refers to export channel configuration</extracomment>
-        <translation type="vanished">사용자 매팅 구성</translation>
-    </message>
-    <message>
-        <source>Configure</source>
-        <translation type="vanished">구성</translation>
-    </message>
-    <message>
-        <source>Sample &amp;Rate</source>
-        <translation type="vanished">샘플링 주파수(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Choose a location to save the exported files</source>
-        <translation type="vanished">내보낸 파일을 저장할 위치 선택</translation>
-    </message>
-    <message>
-        <source>Advanced Mixing Options</source>
-        <translation type="vanished">고급 믹싱 옵션</translation>
-    </message>
-    <message>
-        <source>%d Hz (custom)</source>
-        <translation type="vanished">%1 Hz (커스텀)</translation>
-    </message>
-    <message>
-        <source>Other...</source>
-        <translation type="vanished">기타...</translation>
-    </message>
-    <message>
-        <source>%s - L</source>
-        <extracomment>i18n-hint: track name and L abbreviating Left channel</extracomment>
-        <translation type="vanished">%1 - 좌</translation>
-    </message>
-    <message>
-        <source>%s - R</source>
-        <extracomment>i18n-hint: track name and R abbreviating Right channel</extracomment>
-        <translation type="vanished">%1 - 우</translation>
-    </message>
-    <message>
-        <source>Output Channels: %2d</source>
-        <translation type="vanished">출력 채널: %1</translation>
-    </message>
-    <message>
-        <source>Mixer Panel</source>
-        <translation type="vanished">믹서 패널</translation>
-    </message>
-    <message>
-        <source>Channel: %2d</source>
-        <translation type="vanished">채널: %1</translation>
-    </message>
-    <message>
-        <source>No format specific options</source>
-        <translation type="vanished">형식 특정 옵션이 없습니다</translation>
-    </message>
-    <message>
-        <source>Import Raw</source>
-        <extracomment>i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.</extracomment>
-        <translation type="vanished">원시 데이터 가져오기</translation>
-    </message>
-    <message>
-        <source>Import Raw Data</source>
-        <translation type="vanished">원시 데이터 가져오기</translation>
-    </message>
-    <message>
-        <source>No endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">엔디언 없음</translation>
-    </message>
-    <message>
-        <source>Little-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">리틀 엔디언</translation>
-    </message>
-    <message>
-        <source>Big-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">빅 엔디언</translation>
-    </message>
-    <message>
-        <source>Default endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">기본 엔디언</translation>
-    </message>
-    <message>
-        <source>1 Channel (Mono)</source>
-        <translation type="vanished">1 채널 (모노)</translation>
-    </message>
-    <message>
-        <source>2 Channels (Stereo)</source>
-        <translation type="vanished">2 채널 (스테레오)</translation>
-    </message>
-    <message>
-        <source>%d Channels</source>
-        <translation type="vanished">%1 채널</translation>
-    </message>
-    <message>
-        <source>Encoding:</source>
-        <translation type="vanished">인코딩:</translation>
-    </message>
-    <message>
-        <source>Byte order:</source>
-        <translation type="vanished">바이트 순서:</translation>
-    </message>
-    <message>
-        <source>Channels:</source>
-        <translation type="vanished">채널:</translation>
-    </message>
-    <message>
-        <source>Start offset:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">시작 오프셋:</translation>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="vanished">바이트</translation>
-    </message>
-    <message>
-        <source>Amount to import:</source>
-        <translation type="vanished">가져올 분량:</translation>
-    </message>
-    <message>
-        <source>Sample rate:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">샘플링 주파수:</translation>
-    </message>
-    <message>
-        <source>Detect</source>
-        <extracomment>i18n-hint: Guess format of raw file</extracomment>
-        <translation type="vanished">검출</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="vanished">가져오기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Bad data size. Could not import audio</source>
-        <translation type="vanished">잘못된 데이터 크기. 오디오 가져오기할 수 없음</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s, %d of %d clip %s</source>
-        <oldsource>%s %s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First %s is replaced with the noun "start" or "end"
-identifying one end of a clip,
-second string is the name of that clip,
-first number gives the position of that clip in a sequence
-of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2, %3 / %4 클립 %5</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>start</source>
-        <translation type="vanished">시작</translation>
-    </message>
-    <message>
-        <source>end</source>
-        <translation type="vanished">끝</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s and %s %s, %d and %d of %d clip %s</source>
-        <oldsource>%s %s and %s %s, %d and %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First and third %s are each replaced with the noun "start"
-or with "end", identifying and end of a clip,
-second and fourth strings are the names of those clips,
-first and second numbers give the position of those clips in
-a sequence of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2 과 %3 %4, %5 과 %6 / %7 클립 %8</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip %s</source>
-        <oldsource>%s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-first string is the name of a clip,
-first number gives the position of that clip
-in a sequence of clips,
-last number counts all clips,
-last string names a track</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 / %3 클립 %4</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Moved clips to the right</source>
-        <translation type="vanished">클립을 오른쪽으로 이동</translation>
-    </message>
-    <message>
-        <source>Moved clips to the left</source>
-        <translation type="vanished">클립을 왼쪽으로 이동</translation>
-    </message>
-    <message>
-        <source>Move audio clips</source>
-        <translation type="vanished">오디오 클립 이동</translation>
-    </message>
-    <message>
-        <source>clip not moved</source>
-        <translation type="vanished">이동한 클립이 없습니다</translation>
-    </message>
-    <message>
-        <source>Audi&amp;o Clips</source>
-        <translation type="vanished">오디오 클립(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary to Cursor</source>
-        <translation type="vanished">이전 클립 경계에서 커서로(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Cursor to Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">커서에서 다음 클립 경계로(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Previo&amp;us Clip</source>
-        <translation type="vanished">이전 클립(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Select Previous Clip</source>
-        <translation type="vanished">이전 클립 선택</translation>
-    </message>
-    <message>
-        <source>N&amp;ext Clip</source>
-        <translation type="vanished">다음 클립(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Select Next Clip</source>
-        <translation type="vanished">다음 클립 선택</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary</source>
-        <translation type="vanished">이전 클립 경계(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Cursor to Prev Clip Boundary</source>
-        <translation type="vanished">이전 클립 경계로 커서 이동</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">다음 클립 경계(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Cursor to Next Clip Boundary</source>
-        <translation type="vanished">다음 클립의 경계로 커서 이동</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Left</source>
-        <translation type="vanished">시간 이동 왼쪽(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Right</source>
-        <translation type="vanished">시간 이동 오른쪽(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Pasted text from the clipboard</source>
-        <translation type="vanished">클립보드에서 텍스트를 붙여넣었습니다</translation>
-    </message>
-    <message>
-        <source>Pasted from the clipboard</source>
-        <translation type="vanished">클립보드에서 붙여넣었습니다</translation>
-    </message>
-    <message>
-        <source>Nothing to undo</source>
-        <translation type="vanished">실행 취소할 작업이 없습니다</translation>
-    </message>
-    <message>
-        <source>Nothing to redo</source>
-        <translation type="vanished">재실행할 작업이 없습니다</translation>
-    </message>
-    <message>
-        <source>Cut to the clipboard</source>
-        <translation type="vanished">클립보드로 잘라내기</translation>
-    </message>
-    <message>
-        <source>Deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">%1초를 삭제 (t=%2)</translation>
-    </message>
-    <message>
-        <source>Paste clip</source>
-        <translation type="vanished">클립 붙여넣기</translation>
-    </message>
-    <message>
-        <source>Pasting clip contents, please wait</source>
-        <translation type="vanished">클립을 붙여넣고 있습니다. 기다리세요.</translation>
-    </message>
-    <message>
-        <source>The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again.</source>
-        <translation type="vanished">붙여 넣으려는 콘텐츠가 현재 사용할 수 있는 트랙보다 더 많은 트랙에 걸쳐 있습니다. 트랙을 추가한 후 다시 시도해 보십시오.</translation>
-    </message>
-    <message>
-        <source>There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again.</source>
-        <translation type="vanished">복사한 콘텐츠를 담을 수 있을 만큼 선택된 트랙이 충분하지 않습니다. 트랙을 추가 선택하고 다시 시도하세요.</translation>
-    </message>
-    <message>
-        <source>Duplicated</source>
-        <translation type="vanished">복제했습니다</translation>
-    </message>
-    <message>
-        <source>Split-cut to the clipboard</source>
-        <translation type="vanished">클립보드로 분할 잘라내기</translation>
-    </message>
-    <message>
-        <source>Split Cut</source>
-        <translation type="vanished">분할 잘라내기</translation>
-    </message>
-    <message>
-        <source>Split-deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">%1초를 분할 삭제 (t=%2)</translation>
-    </message>
-    <message>
-        <source>Split Delete</source>
-        <translation type="vanished">분할 삭제하기</translation>
-    </message>
-    <message>
-        <source>Silenced selected tracks for %.2f seconds at %.2f</source>
-        <translation type="vanished">%1에서 %2초 동안의 선택한 트랙을 무음 처리했습니다</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>command</comment>
-        <extracomment>i18n-hint: verb</extracomment>
-        <translation type="vanished">무음</translation>
-    </message>
-    <message>
-        <source>Trim selected audio tracks from %.2f seconds to %.2f seconds</source>
-        <translation type="vanished">%1초부터 %2초까지 선택한 오디오 트랙을 도려 냅니다</translation>
-    </message>
-    <message>
-        <source>Trim Audio</source>
-        <translation type="vanished">오디오 트리밍</translation>
-    </message>
-    <message>
-        <source>Split to new track</source>
-        <translation type="vanished">새 트랙에 분할하기</translation>
-    </message>
-    <message>
-        <source>Split New</source>
-        <translation type="vanished">새로 분할하기</translation>
-    </message>
-    <message>
-        <source>Joined %.2f seconds at t=%.2f</source>
-        <translation type="vanished">%1초를 연결 (t=%2)</translation>
-    </message>
-    <message>
-        <source>Join</source>
-        <translation type="vanished">연결하기</translation>
-    </message>
-    <message>
-        <source>Detached %.2f seconds at t=%.2f</source>
-        <translation type="vanished">%1초를 분리 (t=%2)</translation>
-    </message>
-    <message>
-        <source>Detach</source>
-        <translation type="vanished">분리하기</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">잘라내기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="vanished">삭제(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">복사(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Duplic&amp;ate</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">복제(&amp;A)</translation>
-    </message>
-    <message>
-        <source>R&amp;emove Special</source>
-        <translation type="vanished">특수 제거(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Cut</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut</extracomment>
-        <translation type="vanished">분할 잘라내기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Split D&amp;elete</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE</extracomment>
-        <translation type="vanished">분할 삭제(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Silence Audi&amp;o</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">오디오 무음 처리(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Tri&amp;m Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">오디오 도려내기(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit</source>
-        <extracomment>i18n-hint: (verb) It's an item on a menu.</extracomment>
-        <translation type="vanished">분할하기(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Split Ne&amp;w</source>
-        <translation type="vanished">새로 분할하기&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Join</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">연결하기(&amp;J)</translation>
-    </message>
-    <message>
-        <source>Detac&amp;h at Silences</source>
-        <translation type="vanished">무음에서 분리하기(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Pre&amp;ferences</source>
-        <translation type="vanished">사전설정(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Key</source>
-        <translation type="vanished">키 삭제(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Delete Key&amp;2</source>
-        <translation type="vanished">키 삭제&amp;2</translation>
-    </message>
-    <message>
-        <source>Ext&amp;ra</source>
-        <translation type="vanished">익스트라(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Full Screen</source>
-        <translation type="vanished">전체 화면(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Cannot proceed to export.</source>
-        <translation type="vanished">내보내기를 계속할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot create directory '%s'. 
-File already exists that is not a directory</source>
-        <translation type="vanished">디렉터리를 만들 수 없음 '%1'. 
-디렉터리가 아닌 파일이 이미 있습니다</translation>
-    </message>
-    <message>
-        <source>labels.txt</source>
-        <extracomment>i18n-hint: filename containing exported text from label tracks</extracomment>
-        <translation type="vanished">labels.txt</translation>
-    </message>
-    <message>
-        <source>There are no label tracks to export.</source>
-        <translation type="vanished">내보낼 레이블 트랙이 없습니다.</translation>
-    </message>
-    <message>
-        <source>Imported labels from '%s'</source>
-        <translation type="vanished">'%1'에서 가져온 레이블</translation>
-    </message>
-    <message>
-        <source>Import Labels</source>
-        <translation type="vanished">레이블 가져오기</translation>
-    </message>
-    <message>
-        <source>&amp;Dangerous Reset...</source>
-        <translation type="vanished">위험한 리셋...(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Open Recent</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Mac OS X only</extracomment>
-        <translation type="vanished">최근 파일 열기</translation>
-    </message>
-    <message>
-        <source>Recent &amp;Files</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Windows and Linux</extracomment>
-        <translation type="vanished">최근 파일(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Save Project</source>
-        <translation type="vanished">프로젝트 저장(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Save Project &amp;As...</source>
-        <translation type="vanished">다른 이름으로 프로젝트 저장(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Project...</source>
-        <translation type="vanished">프로젝트 백업(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Export Audio...</source>
-        <translation type="vanished">오디오 내보내기(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Other</source>
-        <translation type="vanished">다른 사항 내보내기(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Export &amp;Labels...</source>
-        <translation type="vanished">레이블 내보내기(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>&amp;Audio...</source>
-        <translation type="vanished">오디오(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>&amp;Labels...</source>
-        <translation type="vanished">레이블(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>&amp;Raw Data...</source>
-        <translation type="vanished">윈시 데이터(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <extracomment>i18n-hint: (verb) It's item on a menu.</extracomment>
-        <translation type="vanished">종료(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Export as MP&amp;3</source>
-        <translation type="vanished">MP3로 내보내기(&amp;3)</translation>
-    </message>
-    <message>
-        <source>Export as &amp;WAV</source>
-        <translation type="vanished">WAV로 내보내기(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Export as &amp;OGG</source>
-        <translation type="vanished">OGG로 내보내기(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Export as FLAC</source>
-        <translation type="vanished">FLAC으로 내보내기</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Selected Audio...</source>
-        <translation type="vanished">선택된 오디오 내보내기...(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Do you have these problems?</source>
-        <translation type="vanished">이런 문제점을 갖고 있습니까?</translation>
-    </message>
-    <message>
-        <source>Fix</source>
-        <translation type="vanished">수정</translation>
-    </message>
-    <message>
-        <source>Quick Fixes</source>
-        <translation type="vanished">빠른 수정</translation>
-    </message>
-    <message>
-        <source>Nothing to do</source>
-        <translation type="vanished">처리할 수 없음</translation>
-    </message>
-    <message>
-        <source>No quick, easily fixed problems were found</source>
-        <translation type="vanished">간단히 해결할 수 있는 문제는 발견되지 않음</translation>
-    </message>
-    <message>
-        <source>Clocks on the Tracks</source>
-        <translation type="vanished">트랙 위의 시계</translation>
-    </message>
-    <message>
-        <source>Can't select precisely</source>
-        <translation type="vanished">정밀하게 선택하는 것이 불가능</translation>
-    </message>
-    <message>
-        <source>Recording stops and starts</source>
-        <translation type="vanished">녹음을 정지하고 시작</translation>
-    </message>
-    <message>
-        <source>Fixed</source>
-        <translation type="vanished">수정됨</translation>
-    </message>
-    <message>
-        <source>Audio Device Info</source>
-        <translation type="vanished">오디오 장치 정보</translation>
-    </message>
-    <message>
-        <source>&amp;Quick Help...</source>
-        <translation type="vanished">빠른 도움말(&amp;Q)...</translation>
-    </message>
-    <message>
-        <source>&amp;Manual...</source>
-        <translation type="vanished">매뉴얼(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>Au&amp;dio Device Info...</source>
-        <translation type="vanished">오디오 장치 정보(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>&amp;Generate Support Data...</source>
-        <translation type="vanished">지원 요청 자료 만들기(&amp;G)...</translation>
-    </message>
-    <message>
-        <source>&amp;Check for Updates...</source>
-        <translation type="vanished">업데이트 확인(&amp;C)...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity</source>
-        <translation type="vanished">오데시티 정보(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Added label</source>
-        <translation type="vanished">추가된 레이블</translation>
-    </message>
-    <message>
-        <source>Paste Text to New Label</source>
-        <translation type="vanished">새 레이블에 텍스트 붙여넣기</translation>
-    </message>
-    <message>
-        <source>Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
-regions.</extracomment>
-        <translation type="vanished">레이블이 달린 오디오 영역을 클립보드로 잘라냅니다</translation>
-    </message>
-    <message>
-        <source>Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 잘라내기</translation>
-    </message>
-    <message>
-        <source>Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just deleted the labeled audio regions</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 영역을 삭제했습니다</translation>
-    </message>
-    <message>
-        <source>Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 삭제</translation>
-    </message>
-    <message>
-        <source>Split Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) Audacity has just split cut the labeled audio
-regions</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 영역을 클립보드로 분할 잘라내기 했습니다</translation>
-    </message>
-    <message>
-        <source>Split Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut on the labels</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 분할 잘라내기</translation>
-    </message>
-    <message>
-        <source>Split Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just done a special kind of DELETE on
-the labeled audio regions</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 영역을 분할 삭제 했습니다</translation>
-    </message>
-    <message>
-        <source>Split Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE on labeled audio
-regions</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 분할 삭제</translation>
-    </message>
-    <message>
-        <source>Silenced labeled audio regions</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 영역을 무음 처리했습니다</translation>
-    </message>
-    <message>
-        <source>Silence Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블 붙은 오디오 무음 처리</translation>
-    </message>
-    <message>
-        <source>Copied labeled audio regions to clipboard</source>
-        <translation type="vanished">레이블이 붙은 오디오 영역을 클립보드로 복사했습니다</translation>
-    </message>
-    <message>
-        <source>Copy Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 복사</translation>
-    </message>
-    <message>
-        <source>Split labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just split the labeled
-audio (a point or a region)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오(점이나 영역)를 분할했습니다</translation>
-    </message>
-    <message>
-        <source>Split Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 분할하기</translation>
-    </message>
-    <message>
-        <source>Joined labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) Audacity has just joined the labeled audio (points or
-regions)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오(점이나 영역)를 연결했습니다</translation>
-    </message>
-    <message>
-        <source>Join Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 연결하기</translation>
-    </message>
-    <message>
-        <source>Detached labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-This message appears in history and tells you about something
-Audacity has done.</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 영역을 분리했습니다</translation>
-    </message>
-    <message>
-        <source>Detach Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">레이블이 붙은 오디오 분리하기</translation>
-    </message>
-    <message>
-        <source>Created new label track</source>
-        <translation type="vanished">새 레이블 트랙을 만들었습니다</translation>
-    </message>
-    <message>
-        <source>New Track</source>
-        <translation type="vanished">새 트랙</translation>
-    </message>
-    <message>
-        <source>&amp;Labels</source>
-        <translation type="vanished">레이블(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Label &amp;Editor</source>
-        <translation type="vanished">레이블 편집(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Selection</source>
-        <translation type="vanished">선택에 레이블 추가(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Playback Position</source>
-        <translation type="vanished">녹음 재생 위치에 레이블 추가(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Paste Te&amp;xt to New Label</source>
-        <translation type="vanished">새 레이블에 텍스트 붙여넣기(&amp;X)</translation>
-    </message>
-    <message>
-        <source>&amp;Typing Creates New Labels</source>
-        <translation type="vanished">타이핑 하여 새로운 레이블을 생성(&amp;T)</translation>
-    </message>
-    <message>
-        <source>La&amp;beled Audio</source>
-        <translation type="vanished">레이블이 붙은 오디오(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Cut</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">잘라내기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Label Cut</source>
-        <translation type="vanished">레이블 자르기</translation>
-    </message>
-    <message>
-        <source>Label Delete</source>
-        <translation type="vanished">레이블 삭제</translation>
-    </message>
-    <message>
-        <source>&amp;Split Cut</source>
-        <extracomment>i18n-hint: (verb) A special way to cut out a piece of audio</extracomment>
-        <translation type="vanished">분할 잘라내기(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Label Split Cut</source>
-        <translation type="vanished">레이블 분할 자르기</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit Delete</source>
-        <translation type="vanished">분할 삭제(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Label Split Delete</source>
-        <translation type="vanished">레이블 분할 삭제</translation>
-    </message>
-    <message>
-        <source>Silence &amp;Audio</source>
-        <translation type="vanished">오디오 무음 처리(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Label Silence</source>
-        <translation type="vanished">레이블 무음</translation>
-    </message>
-    <message>
-        <source>Co&amp;py</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">복사(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Label Copy</source>
-        <translation type="vanished">레이블 복사</translation>
-    </message>
-    <message>
-        <source>Spli&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">분할하기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Label Split</source>
-        <translation type="vanished">레이블 분할</translation>
-    </message>
-    <message>
-        <source>Label Join</source>
-        <translation type="vanished">레이블 결합</translation>
-    </message>
-    <message>
-        <source>&amp;Label Track</source>
-        <translation type="vanished">레이블 트랙(&amp;L)</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="vanished">...</translation>
-    </message>
-    <message>
-        <source>Uncategorized</source>
-        <translation type="vanished">미분류</translation>
-    </message>
-    <message>
-        <source>Move Backward Through Active Windows</source>
-        <translation type="vanished">활성 창 뒤로 이동하기</translation>
-    </message>
-    <message>
-        <source>Move Forward Through Active Windows</source>
-        <translation type="vanished">활성 창 앞으로 이동하기</translation>
-    </message>
-    <message>
-        <source>Foc&amp;us</source>
-        <translation type="vanished">포커스(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move &amp;Backward from Toolbars to Tracks</source>
-        <translation type="vanished">도구 모음에서 트랙을 뒤로 이동(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Move F&amp;orward from Toolbars to Tracks</source>
-        <translation type="vanished">도구 모음에서 트랙을 앞으로 이동(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Previous Track</source>
-        <translation type="vanished">포커스 이동: 이전 트랙으로(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Next Track</source>
-        <translation type="vanished">포커스 이동: 다음 트랙으로(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;First Track</source>
-        <translation type="vanished">포커스 이동: 첫 트랙으로(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Last Track</source>
-        <translation type="vanished">포커스 이동: 마지막 트랙으로(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Move Focus to P&amp;revious and Select</source>
-        <translation type="vanished">포커스 이동: 이전 트랙/선택으로(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Move Focus to N&amp;ext and Select</source>
-        <translation type="vanished">포커스 이동: 다음 트랙/선택으로(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Toggle Focused Track</source>
-        <translation type="vanished">포커스된 트랙 토글하기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Toggle Focuse&amp;d Track</source>
-        <translation type="vanished">포커스된 트랙 토글하기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>A journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">오데시티가 다시 시작되면 이 저널이 기록될 것입니다.</translation>
-    </message>
-    <message>
-        <source>No journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">오데시티가 다시 시작되면 어떤 저널도 기록되지 않습니다.</translation>
-    </message>
-    <message>
-        <source>Plugin Manager</source>
-        <translation type="vanished">플러그인 관리</translation>
-    </message>
-    <message>
-        <source>Repeat Last Generator</source>
-        <translation type="vanished">최근 생성작업 반복</translation>
-    </message>
-    <message>
-        <source>Effe&amp;ct</source>
-        <translation type="vanished">이펙트(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Add Realtime Effects</source>
-        <translation type="vanished">실시간 이펙트 추가</translation>
-    </message>
-    <message>
-        <source>Get AI effects...</source>
-        <translation type="vanished">AI 이펙트 가져오기...</translation>
-    </message>
-    <message>
-        <source>Repeat Last Effect</source>
-        <translation type="vanished">마지막 이펙트 반복</translation>
-    </message>
-    <message>
-        <source>Repeat Last Analyzer</source>
-        <translation type="vanished">최근 분석작업 반복</translation>
-    </message>
-    <message>
-        <source>T&amp;ools</source>
-        <translation type="vanished">도구(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Reset &amp;Configuration</source>
-        <translation type="vanished">설정 초기화(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Run Benchmark...</source>
-        <translation type="vanished">벤치마크 실행(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Simulate Recording Errors</source>
-        <translation type="vanished">녹음 오류 시뮬레이션</translation>
-    </message>
-    <message>
-        <source>Detect Upstream Dropouts</source>
-        <translation type="vanished">업스트림 드롭아웃 감지</translation>
-    </message>
-    <message>
-        <source>Write Journal</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">저널 쓰기</translation>
-    </message>
-    <message>
-        <source>Set Left Selection Boundary</source>
-        <translation type="vanished">왼쪽 선택 경계 설정하기</translation>
-    </message>
-    <message>
-        <source>Set Right Selection Boundary</source>
-        <translation type="vanished">오른쪽 선택 경계 설정하기</translation>
-    </message>
-    <message>
-        <source>Zero-crossing search regions intersect stretched clip(s).</source>
-        <translation type="vanished">제로 크로싱 검색 영역이 늘인 클립과 겹칩니다.</translation>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation type="vanished">전체(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;None</source>
-        <translation type="vanished">없음(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Select None</source>
-        <translation type="vanished">선택 없음</translation>
-    </message>
-    <message>
-        <source>In All &amp;Tracks</source>
-        <translation type="vanished">전체 트랙에서(&amp;T)</translation>
-    </message>
-    <message>
-        <source>In All &amp;Sync-Locked Tracks</source>
-        <translation type="vanished">전체 동기화-잠긴 트랙에서(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Select Sync-Locked</source>
-        <translation type="vanished">동기화 잠금 선택</translation>
-    </message>
-    <message>
-        <source>R&amp;egion</source>
-        <translation type="vanished">영역(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Left at Playback Position</source>
-        <translation type="vanished">좌경계 설정: 재생 위치 ~ 커서(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Set Selection Left at Play Position</source>
-        <translation type="vanished">재생 위치의 왼쪽으로 선택</translation>
-    </message>
-    <message>
-        <source>&amp;Right at Playback Position</source>
-        <translation type="vanished">우경계 설정: 커서 ~ 재생 위치(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Set Selection Right at Play Position</source>
-        <translation type="vanished">재생 위치의 오른쪽으로 선택</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start to Cursor</source>
-        <translation type="vanished">트랙 시작 ~ 커서(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Select Track Start to Cursor</source>
-        <translation type="vanished">커서 위치로 트랙 시작 선택</translation>
-    </message>
-    <message>
-        <source>Cursor to Track &amp;End</source>
-        <translation type="vanished">커서 ~ 트랙 끝(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Track End</source>
-        <translation type="vanished">커서 위치로 트랙 끝 선택</translation>
-    </message>
-    <message>
-        <source>Track Start to En&amp;d</source>
-        <translation type="vanished">트랙의 시작과 끝(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Select Track Start to End</source>
-        <translation type="vanished">트랙의 시작과 끝 선택</translation>
-    </message>
-    <message>
-        <source>S&amp;tore Selection</source>
-        <translation type="vanished">선택 저장(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Retrieve Selectio&amp;n</source>
-        <translation type="vanished">선택 되찾기(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Cursor to Stored &amp;Cursor Position</source>
-        <translation type="vanished">커서 ~ 저장된 커서 위치(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Stored</source>
-        <translation type="vanished">저장할 커서 선택</translation>
-    </message>
-    <message>
-        <source>Store Cursor Pos&amp;ition</source>
-        <translation type="vanished">커서 위치 저장(&amp;I)</translation>
-    </message>
-    <message>
-        <source>At &amp;Zero Crossings</source>
-        <translation type="vanished">제로 크로싱에서(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Select Zero Crossing</source>
-        <translation type="vanished">제로 크로싱 선택</translation>
-    </message>
-    <message>
-        <source>&amp;Selection</source>
-        <translation type="vanished">선택(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Off</source>
-        <translation type="vanished">스냅: 끄기(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Nearest</source>
-        <translation type="vanished">스냅: 가장 가까운 곳으로(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Prior</source>
-        <translation type="vanished">스냅: 이전으로(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Selection to &amp;Start</source>
-        <translation type="vanished">선택에서 시작까지(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Selection to En&amp;d</source>
-        <translation type="vanished">선택에서 끝까지(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Left</source>
-        <translation type="vanished">선택 영역 확대: 왼쪽으로(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Right</source>
-        <translation type="vanished">선택 영역 확대: 오른쪽으로(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Le&amp;ft Selection</source>
-        <translation type="vanished">선택 영역 설정(확대): 왼쪽으로(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Rig&amp;ht Selection</source>
-        <translation type="vanished">선택 영역 설정(확대): 오른쪽으로(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Selection Contract L&amp;eft</source>
-        <translation type="vanished">선택 영역 축소: 왼쪽으로(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Selection Contract R&amp;ight</source>
-        <translation type="vanished">선택 영역 축소: 오른쪽으로(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor to</source>
-        <translation type="vanished">커서 이동(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Selection Star&amp;t</source>
-        <translation type="vanished">선택 시작(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection Start</source>
-        <translation type="vanished">커서를 선택 영역 처음으로</translation>
-    </message>
-    <message>
-        <source>Selection En&amp;d</source>
-        <translation type="vanished">선택 끝(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection End</source>
-        <translation type="vanished">커서를 선택영역의 끝으로</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start</source>
-        <translation type="vanished">트랙 시작(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Cursor to Track Start</source>
-        <translation type="vanished">커서를 트랙 시작으로</translation>
-    </message>
-    <message>
-        <source>Track &amp;End</source>
-        <translation type="vanished">트랙 끝(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Cursor to Track End</source>
-        <translation type="vanished">커서를 트랙 끝으로</translation>
-    </message>
-    <message>
-        <source>&amp;Project Start</source>
-        <translation type="vanished">프로젝트 시작(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Cursor to Project Start</source>
-        <translation type="vanished">커서를 프로젝트 시작으로</translation>
-    </message>
-    <message>
-        <source>Project E&amp;nd</source>
-        <translation type="vanished">프로젝트 끝(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Cursor to Project End</source>
-        <translation type="vanished">커서를 프로젝트 끝으로</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor</source>
-        <translation type="vanished">커서(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Left</source>
-        <translation type="vanished">커서 왼쪽으로(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Right</source>
-        <translation type="vanished">커서 오른쪽으로(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Cursor Sh&amp;ort Jump Left</source>
-        <translation type="vanished">커서 짧게 왼쪽으로(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Cursor Shor&amp;t Jump Right</source>
-        <translation type="vanished">커서 짧게 오른쪽으로(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Cursor Long J&amp;ump Left</source>
-        <translation type="vanished">커서 길게 왼쪽으로(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Cursor Long Ju&amp;mp Right</source>
-        <translation type="vanished">커서 길게 오른쪽으로(&amp;M)</translation>
-    </message>
-    <message>
-        <source>See&amp;k</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">탐색(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Left During Playback</source>
-        <translation type="vanished">재생 중 탐색: 짧게 왼쪽으로(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Right During Playback</source>
-        <translation type="vanished">재생 중 탐색: 짧게 오른쪽으로(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Long Seek Le&amp;ft During Playback</source>
-        <translation type="vanished">재생 중 탐색: 길게 왼쪽으로(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Long Seek Rig&amp;ht During Playback</source>
-        <translation type="vanished">재생 중 탐색: 길게 오른쪽으로(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Tim&amp;eline</source>
-        <translation type="vanished">타임라인(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Toolbars</source>
-        <translation type="vanished">도구 모음(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Reset Toolb&amp;ars</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">도구바 초기화(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Mix</source>
-        <translation type="vanished">믹싱하기</translation>
-    </message>
-    <message>
-        <source>Rendered all audio in track '%s'</source>
-        <translation type="vanished">'%1' 트랙의 모든 오디오를 렌더링했습니다</translation>
-    </message>
-    <message>
-        <source>Render</source>
-        <extracomment>i18n-hint: Convert the audio into a more usable form, so apply
-* panning and amplification and write to some external file.</extracomment>
-        <translation type="vanished">렌더링하기</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new stereo track</source>
-        <translation type="vanished">%1 트랙을 하나의 새 스테레오 트랙으로 믹싱/렌더링했습니다</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new mono track</source>
-        <translation type="vanished">%1 트랙을 하나의 새 모노 트랙에 믹싱/렌더링했습니다</translation>
-    </message>
-    <message>
-        <source>Panned audio track(s)</source>
-        <extracomment>i18n-hint: One or more audio tracks have been panned</extracomment>
-        <translation type="vanished">오디오 트랙을 패닝했습니다</translation>
-    </message>
-    <message>
-        <source>Pan Track</source>
-        <translation type="vanished">트랙 패닝</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Zero</source>
-        <translation type="vanished">시작을 0에 맞추기(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Cursor/Selection Start</source>
-        <translation type="vanished">시작을 커서/선택 시작에 맞추기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Start to Selection &amp;End</source>
-        <translation type="vanished">시작을 선택 끝에 맞추기(&amp;E)</translation>
-    </message>
-    <message>
-        <source>End to Cu&amp;rsor/Selection Start</source>
-        <translation type="vanished">끝을 커서/선택 시작에 맞추기</translation>
-    </message>
-    <message>
-        <source>End to Selection En&amp;d</source>
-        <translation type="vanished">끝을 선택영역 끝에 맞추기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to zero</source>
-        <extracomment>i18n-hint: In this and similar messages describing editing actions,
-the starting or ending points of tracks are re-"aligned" to other
-times, and the time selection may be "moved" too.  The first
-noun -- "start" in this example -- is the object of a verb (not of
-an implied preposition "from").</extracomment>
-        <translation type="vanished">시작 위치를 0에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned start to zero</source>
-        <translation type="vanished">시작 위치를 0에 맞췄습니다</translation>
-    </message>
-    <message>
-        <source>Align/Move Start</source>
-        <extracomment>i18n-hint: This and similar messages give shorter descriptions of
-the aligning and moving editing actions</extracomment>
-        <translation type="vanished">시작 위치 맞추기/이동</translation>
-    </message>
-    <message>
-        <source>Align Start</source>
-        <translation type="vanished">시작 위치 맞추기</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to cursor/selection start</source>
-        <translation type="vanished">시작 위치를 커서/선택 시작 부분에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned start to cursor/selection start</source>
-        <translation type="vanished">시작 위치를 커서/선택 시작 부분에 맞췄습니다</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to selection end</source>
-        <translation type="vanished">시작 위치를 선택 끝 부분에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned start to selection end</source>
-        <translation type="vanished">시작 위치를 선택 끝 부분에 맞췄습니다</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to cursor/selection start</source>
-        <translation type="vanished">끝 위치를 커서/선택 시작 부분에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned end to cursor/selection start</source>
-        <translation type="vanished">끝 위치를 커서/선택 시작 부분에 맞췄습니다</translation>
-    </message>
-    <message>
-        <source>Align/Move End</source>
-        <translation type="vanished">끝 위치 맞추기/이동</translation>
-    </message>
-    <message>
-        <source>Align End</source>
-        <translation type="vanished">끝 위치 맞추기</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to selection end</source>
-        <translation type="vanished">끝 위치를 선택 끝 부분에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned end to selection end</source>
-        <translation type="vanished">끝 위치를 선택 끝 부분에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to end</source>
-        <translation type="vanished">끝 위치를 끝 부분에 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned end to end</source>
-        <translation type="vanished">끝 위치를 끝 부분에 맞췄습니다</translation>
-    </message>
-    <message>
-        <source>Align/Move End to End</source>
-        <translation type="vanished">끝 위치를 끝 부분에 맞추기/이동</translation>
-    </message>
-    <message>
-        <source>Align End to End</source>
-        <translation type="vanished">끝 위치를 끝 부분에 맞추기</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved together</source>
-        <translation type="vanished">모두 맞추거나 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Aligned together</source>
-        <translation type="vanished">모두 맞췄습니다</translation>
-    </message>
-    <message>
-        <source>Align/Move Together</source>
-        <translation type="vanished">모두 맞추기/이동</translation>
-    </message>
-    <message>
-        <source>Align Together</source>
-        <translation type="vanished">모두 맞추기</translation>
-    </message>
-    <message>
-        <source>Synchronize MIDI with Audio</source>
-        <translation type="vanished">MIDI와 오디오 동기화하기</translation>
-    </message>
-    <message>
-        <source>Synchronizing MIDI and Audio Tracks</source>
-        <translation type="vanished">MIDI 및 오디오 트랙 동기화</translation>
-    </message>
-    <message>
-        <source>Adjusted gain</source>
-        <translation type="vanished">게인을 조정했습니다</translation>
-    </message>
-    <message>
-        <source>Adjusted Pan</source>
-        <translation type="vanished">팬을 조정했습니다</translation>
-    </message>
-    <message>
-        <source>The entered value is invalid</source>
-        <translation type="vanished">입력한 값이 무효합니다</translation>
-    </message>
-    <message>
-        <source>Resampling track %d</source>
-        <translation type="vanished">%1 트랙 리샘플링 중</translation>
-    </message>
-    <message>
-        <source>Resampled audio track(s)</source>
-        <translation type="vanished">오디오 트랙을 리샘플링했습니다</translation>
-    </message>
-    <message>
-        <source>Resample Track</source>
-        <translation type="vanished">트랙 리샘플링</translation>
-    </message>
-    <message>
-        <source>Please select at least one audio track and one MIDI track.</source>
-        <translation type="vanished">최소한 하나 이상의 오디오 트랙과 하나의 MIDI 트랙을 선택하세요</translation>
-    </message>
-    <message>
-        <source>Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">정렬 완료: %1초부터 %2초까지의 MIDI,%3초부터 %4초까지의 오디오.</translation>
-    </message>
-    <message>
-        <source>Sync MIDI with Audio</source>
-        <translation type="vanished">MIDI와 오디오 동기화</translation>
-    </message>
-    <message>
-        <source>Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">정렬 오류: 입력값이 너무 짧음: %1초부터 %2초까지의 MIDI ,%3초부터 %4초까지의 오디오.</translation>
-    </message>
-    <message>
-        <source>Internal error reported by alignment process.</source>
-        <translation type="vanished">정렬 프로세스가 내부 오류를 보고했습니다.</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by time</source>
-        <translation type="vanished">트랙을 시간순으로 정렬했습니다</translation>
-    </message>
-    <message>
-        <source>Sort by Time</source>
-        <translation type="vanished">시간순 정렬</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by name</source>
-        <translation type="vanished">트랙을 이름순으로 정렬했습니다</translation>
-    </message>
-    <message>
-        <source>Sort by Name</source>
-        <translation type="vanished">이름순 정렬</translation>
-    </message>
-    <message>
-        <source>Can't delete track with active audio</source>
-        <translation type="vanished">활성 오디오 트랙은 삭제할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Add &amp;New</source>
-        <translation type="vanished">새로 추가(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x</source>
-        <translation type="vanished">믹스(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Mix Stereo Down to &amp;Mono</source>
-        <translation type="vanished">스테레오를 모노로 다운믹스(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x and Render</source>
-        <translation type="vanished">믹싱/렌더링(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Mix and Render to Ne&amp;w Track</source>
-        <translation type="vanished">새 트랙으로 믹싱/렌더링(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Resample...</source>
-        <translation type="vanished">리샘플링(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve Tracks</source>
-        <translation type="vanished">트랙 제거(&amp;V)</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute</source>
-        <translation type="vanished">음소거/해제(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Mute All Tracks</source>
-        <translation type="vanished">모든 트랙 음소거(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Unmute All Tracks</source>
-        <translation type="vanished">모든 트랙 음소거 해제(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Mut&amp;e Tracks</source>
-        <translation type="vanished">트랙 음소거(&amp;E)</translation>
-    </message>
-    <message>
-        <source>U&amp;nmute Tracks</source>
-        <translation type="vanished">트랙 음소거 해제(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Pan</source>
-        <translation type="vanished">팬(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Left</source>
-        <translation type="vanished">왼쪽(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Pan Left</source>
-        <translation type="vanished">패닝 왼쪽</translation>
-    </message>
-    <message>
-        <source>&amp;Right</source>
-        <translation type="vanished">오른쪽(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Pan Right</source>
-        <translation type="vanished">패닝 오른쪽</translation>
-    </message>
-    <message>
-        <source>&amp;Center</source>
-        <translation type="vanished">가운데(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Pan Center</source>
-        <translation type="vanished">패닝 중앙</translation>
-    </message>
-    <message>
-        <source>&amp;Align Tracks</source>
-        <translation type="vanished">트랙 맞춤(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Align End to End</source>
-        <translation type="vanished">말단에 맞추기(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Align &amp;Together</source>
-        <translation type="vanished">모두 함께 맞추기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Move Selection with Tracks</source>
-        <translation type="vanished">트랙과 함께 선택 이동(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Move Sele&amp;ction and Tracks</source>
-        <translation type="vanished">선택과 트랙 이동(&amp;C)</translation>
-    </message>
-    <message>
-        <source>S&amp;ort Tracks</source>
-        <translation type="vanished">트랙 정렬(&amp;O)</translation>
-    </message>
-    <message>
-        <source>By &amp;Start Time</source>
-        <translation type="vanished">시작 시간까지(&amp;S)</translation>
-    </message>
-    <message>
-        <source>By &amp;Name</source>
-        <translation type="vanished">이름순(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Keep tracks synchronized (Sync-&amp;Lock)</source>
-        <translation type="vanished">트랙 동기화 유지 (Sync-Lock)(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Track</source>
-        <translation type="vanished">트랙(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Change P&amp;an on Focused Track...</source>
-        <translation type="vanished">포커스된 트랙: 패닝 값 변경(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Left on Focused Track</source>
-        <translation type="vanished">포커스된 트랙: 왼쪽으로 패닝(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Right on Focused Track</source>
-        <translation type="vanished">포커스된 트랙: 오른쪽으로 패닝(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Change Gai&amp;n on Focused Track...</source>
-        <translation type="vanished">포커스된 트랙: 게인 값 변경&amp;N)...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Gain on Focused Track</source>
-        <translation type="vanished">포커스된 트랙: 게인 증가(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Gain on Focused Track</source>
-        <translation type="vanished">포커스된 트랙: 게인 감소(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Op&amp;en Menu on Focused Track...</source>
-        <translation type="vanished">포커스된 트랙: 메뉴 열기(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute Focused Track</source>
-        <translation type="vanished">포커스된 트랙: 음소거/해제(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Solo/Unsolo Focused Track</source>
-        <translation type="vanished">포커스된 트랙: 독주/해제(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Delete Fo&amp;cused Track</source>
-        <translation type="vanished">포커스된 트랙 삭제(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track U&amp;p</source>
-        <translation type="vanished">포커스된 트랙: 위로 이동(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track Do&amp;wn</source>
-        <translation type="vanished">포커스된 트랙: 아래로 이동(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to T&amp;op</source>
-        <translation type="vanished">포커스된 트랙: 맨 위로 이동(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to &amp;Bottom</source>
-        <translation type="vanished">포커스된 트랙: 맨 아래로 이동(&amp;B)</translation>
-    </message>
-    <message>
-        <source>no label track</source>
-        <translation type="vanished">레이블 트랙이 없습니다</translation>
-    </message>
-    <message>
-        <source>no label track at or below focused track</source>
-        <translation type="vanished">포커스된 트랙이나 그 아래에 레이블 트랙이 없습니다</translation>
-    </message>
-    <message>
-        <source>%s %d of %d</source>
-        <extracomment>i18n-hint:
-String is replaced by the name of a label,
-first number gives the position of that label in a sequence
-of labels,
-and the last number is the total number of labels in the sequence.</extracomment>
-        <translation type="vanished">%1 %2 / %3</translation>
-    </message>
-    <message>
-        <source>no labels in label track</source>
-        <translation type="vanished">레이블 트랙에 레이블이 없습니다</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;In</source>
-        <extracomment>i18n-hint Sets a starting point for looping play</extracomment>
-        <translation type="vanished">반복 구간 시작점(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;Out</source>
-        <extracomment>i18n-hint Sets an ending point for looping play</extracomment>
-        <translation type="vanished">반복 구간 끝점(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Please select in a mono track.</source>
-        <translation type="vanished">모노 트랙을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Please select in a stereo track or two mono tracks.</source>
-        <translation type="vanished">스테레오 트랙이나 두개의 모노트랙을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Please select at least %d channels.</source>
-        <translation type="vanished">최소한 %1개 채널을 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Tra&amp;nsport</source>
-        <extracomment>i18n-hint: 'Transport' is the name given to the set of controls that
-play, record, pause etc.</extracomment>
-        <translation type="vanished">트랜스포트(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Pl&amp;aying</source>
-        <translation type="vanished">재생(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay/Stop</source>
-        <extracomment>i18n-hint: (verb) Start or Stop audio playback</extracomment>
-        <translation type="vanished">재생/정지(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Play/Stop and &amp;Set Cursor</source>
-        <translation type="vanished">재생/정지 후 커서 설정(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Play &amp;Once/Stop</source>
-        <translation type="vanished">한번 재생/정지(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation type="vanished">일시 정지(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Recording</source>
-        <translation type="vanished">녹음(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Append Record</source>
-        <translation type="vanished">녹음 덧붙이기(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Record &amp;New Track</source>
-        <translation type="vanished">새 트랙 녹음(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Punch and Rol&amp;l Record</source>
-        <translation type="vanished">펀치 엔 롤 녹음(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Looping</source>
-        <translation type="vanished">반복(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Clear Loop</source>
-        <translation type="vanished">반복 구간 지우기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Set Loop to Selection</source>
-        <translation type="vanished">선택 영역을 반복 구간으로 설정(&amp;S)</translation>
-    </message>
-    <message>
-        <source>R&amp;escan Audio Devices</source>
-        <translation type="vanished">오디오 장치 다시 검색(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Transport &amp;Options</source>
-        <translation type="vanished">전송 옵션(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Set sound activation le&amp;vel...</source>
-        <translation type="vanished">사운드 활성화 레벨 설정(&amp;V)...</translation>
-    </message>
-    <message>
-        <source>Enable sound a&amp;ctivated recording</source>
-        <translation type="vanished">사운드 활성화된 레코딩 켜기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks during recording</source>
-        <translation type="vanished">녹음중에 다른 트랙 듣기(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Enable audible input &amp;monitoring</source>
-        <translation type="vanished">오디오 입력 모니터링 활성화(&amp;M)</translation>
-    </message>
-    <message>
-        <source>A&amp;utomated Recording Level Adjustment (on/off)</source>
-        <translation type="vanished">자동 녹음 레벨 조정 (켬/끔)(&amp;U)</translation>
-    </message>
-    <message>
-        <source>T&amp;ransport</source>
-        <translation type="vanished">전송(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay Once</source>
-        <extracomment>i18n-hint: (verb) Start playing audio</extracomment>
-        <translation type="vanished">한번 재생(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Sto&amp;p</source>
-        <extracomment>i18n-hint: (verb) Stop playing audio</extracomment>
-        <translation type="vanished">정지(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Play &amp;One Second</source>
-        <translation type="vanished">재생: 1초(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Play to &amp;Selection</source>
-        <translation type="vanished">재생: 선택까지(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Play &amp;Before Selection Start</source>
-        <translation type="vanished">짧게 재생: 선택 시작 전(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Play Af&amp;ter Selection Start</source>
-        <translation type="vanished">짧게 재생: 선택 시작 후(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Play Be&amp;fore Selection End</source>
-        <translation type="vanished">짧게 재생: 선택 끝 전(F)</translation>
-    </message>
-    <message>
-        <source>Play Aft&amp;er Selection End</source>
-        <translation type="vanished">짧게 재생: 선택 끝 후(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Play Before a&amp;nd After Selection Start</source>
-        <translation type="vanished">짧게 재생: 선택 시작 전후(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Play Before an&amp;d After Selection End</source>
-        <translation type="vanished">짧게 재생: 선택 끝 전후(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview</source>
-        <translation type="vanished">선택 영역 잘라내고 미리보기(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move to Pre&amp;vious Label</source>
-        <translation type="vanished">이전 레이블로 이동(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Move to Ne&amp;xt Label</source>
-        <translation type="vanished">다음 레이블로 이동(&amp;X)</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom</source>
-        <translation type="vanished">확대/축소(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;In</source>
-        <translation type="vanished">확대(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Normal</source>
-        <translation type="vanished">표준 크기(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Out</source>
-        <translation type="vanished">축소(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom to Selection</source>
-        <translation type="vanished">선택 영역 확대(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Toggle</source>
-        <translation type="vanished">줌 토글(&amp;T)</translation>
-    </message>
-    <message>
-        <source>T&amp;rack Size</source>
-        <translation type="vanished">트랙 크기(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Fit to Width</source>
-        <translation type="vanished">너비에 맞추기(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Fit to &amp;Height</source>
-        <translation type="vanished">높이에 맞추기(&amp;H)</translation>
-    </message>
-    <message>
-        <source>&amp;Collapse All Tracks</source>
-        <translation type="vanished">모든 트랙 축소(&amp;C)</translation>
-    </message>
-    <message>
-        <source>E&amp;xpand Collapsed Tracks</source>
-        <translation type="vanished">축소한 트랙 펼치기(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Sk&amp;ip to</source>
-        <translation type="vanished">건너뛰기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Selection Sta&amp;rt</source>
-        <translation type="vanished">선택 시작(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Skip to Selection Start</source>
-        <translation type="vanished">시작 선택 생략</translation>
-    </message>
-    <message>
-        <source>Skip to Selection End</source>
-        <translation type="vanished">끝 선택 생략</translation>
-    </message>
-    <message>
-        <source>Enable E&amp;xtra Menus</source>
-        <translation type="vanished">추가 메뉴 활성화(&amp;X)</translation>
-    </message>
-    <message>
-        <source>&amp;Show Clipping in Waveform</source>
-        <translation type="vanished">웨이브폼에서 클리핑 보기(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show &amp;RMS in Waveform</source>
-        <translation type="vanished">웨이브폼에서 RMS 보기(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Preferences for Application</source>
-        <translation type="vanished">응용프로그램 환경설정</translation>
-    </message>
-    <message>
-        <source>Update notifications</source>
-        <extracomment>i18n-hint: Title for the update notifications panel in the preferences dialog.</extracomment>
-        <translation type="vanished">업데이트 알림</translation>
-    </message>
-    <message>
-        <source>&amp;Check for updates</source>
-        <comment>application preferences</comment>
-        <extracomment>i18n-hint: Check-box title that configures periodic updates checking.</extracomment>
-        <translation type="vanished">업데이트 확인(&amp;C)</translation>
-    </message>
-    <message>
-        <source>App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.</source>
-        <translation type="vanished">앱 업데이트를 확인하기 위해서는 네트워크에 접속해 있어야 합니다. 개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 저장하지 않습니다.</translation>
-    </message>
-    <message>
-        <source>Batch</source>
-        <translation type="vanished">일괄처리</translation>
-    </message>
-    <message>
-        <source>Preferences for Batch</source>
-        <translation type="vanished">배치 환경 설정</translation>
-    </message>
-    <message>
-        <source>Behaviors</source>
-        <translation type="vanished">동작</translation>
-    </message>
-    <message>
-        <source>&amp;Don't apply effects in batch mode</source>
-        <translation type="vanished">일괄처리 모드에서 이펙트 적용하지 않기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Audio Settings</source>
-        <translation type="vanished">오디오 설정</translation>
-    </message>
-    <message>
-        <source>%i Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>device</comment>
-        <extracomment>i18n-hint Software interface to audio devices</extracomment>
-        <translation type="vanished">인터페이스</translation>
-    </message>
-    <message>
-        <source>&amp;Host:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">호스트(&amp;H):</translation>
-    </message>
-    <message>
-        <source>Using:</source>
-        <translation type="vanished">사용 중:</translation>
-    </message>
-    <message>
-        <source>&amp;Device:</source>
-        <translation type="vanished">장치(&amp;D):</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <comment>preference</comment>
-        <extracomment>i18n-hint: modifier as in "Recording preferences", not progressive verb</extracomment>
-        <translation type="vanished">녹음</translation>
-    </message>
-    <message>
-        <source>De&amp;vice:</source>
-        <translation type="vanished">장치(&amp;V):</translation>
-    </message>
-    <message>
-        <source>Cha&amp;nnels:</source>
-        <translation type="vanished">채널(&amp;N):</translation>
-    </message>
-    <message>
-        <source>&amp;Project Sample Rate:</source>
-        <translation type="vanished">프로젝트 샘플링 주파수(&amp;P):</translation>
-    </message>
-    <message>
-        <source>Sample Rate used when recording new tracks, mixing down tracks and for playback in this project.</source>
-        <translation type="vanished">프로젝트의 샘플링 주파수를 새 트랙 레코딩에 사용하고, 재생에는 이 프로젝트로 낮추어 내보냅니다.</translation>
-    </message>
-    <message>
-        <source>D&amp;efault Sample Rate:</source>
-        <translation type="vanished">기본 샘플링 주파수(&amp;E):</translation>
-    </message>
-    <message>
-        <source>Default Sample &amp;Format:</source>
-        <translation type="vanished">기본 샘플 형식(&amp;F):</translation>
-    </message>
-    <message>
-        <source>Latency</source>
-        <translation type="vanished">지연 시간</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer length:</source>
-        <translation type="vanished">버퍼 길이(&amp;B):</translation>
-    </message>
-    <message>
-        <source>&amp;Latency compensation:</source>
-        <translation type="vanished">지연 보상(&amp;L) :</translation>
-    </message>
-    <message>
-        <source>No audio interfaces</source>
-        <translation type="vanished">오디오 인터페이스 없음</translation>
-    </message>
-    <message>
-        <source>No devices found</source>
-        <translation type="vanished">오디오 장치 없음</translation>
-    </message>
-    <message>
-        <source>1 (Mono)</source>
-        <translation type="vanished">1 (모노)</translation>
-    </message>
-    <message>
-        <source>2 (Stereo)</source>
-        <translation type="vanished">2 (스테레오)</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <extracomment>i18n-hint:  Directories, also called directories, in computer file systems</extracomment>
-        <translation type="vanished">폴더</translation>
-    </message>
-    <message>
-        <source>Preferences for Directories</source>
-        <translation type="vanished">디렉토리 환경설정</translation>
-    </message>
-    <message>
-        <source>Default directories</source>
-        <translation type="vanished">기본 디렉토리</translation>
-    </message>
-    <message>
-        <source>Leave a field empty to go to the last directory used for that operation.
-Fill in a field to always go to that directory for that operation.</source>
-        <translation type="vanished">이전 작업에 사용되었던 디렉토리를 사용하려면 필드를 비워두십시오. 
-필드를 채우면 작업에 항상 그 디렉토리가 사용됩니다.</translation>
-    </message>
-    <message>
-        <source>O&amp;pen:</source>
-        <translation type="vanished">열기(&amp;O)</translation>
-    </message>
-    <message>
-        <source>S&amp;ave:</source>
-        <translation type="vanished">저장(&amp;A)</translation>
-    </message>
-    <message>
-        <source>B&amp;rowse...</source>
-        <translation type="vanished">검색(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Import:</source>
-        <translation type="vanished">가져오기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Br&amp;owse...</source>
-        <translation type="vanished">검색(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Export:</source>
-        <translation type="vanished">내보내기(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Bro&amp;wse...</source>
-        <translation type="vanished">검색(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Macro output:</source>
-        <translation type="vanished">매크로 출력(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Temporary files directory</source>
-        <translation type="vanished">임시 파일 디렉토리</translation>
-    </message>
-    <message>
-        <source>Brow&amp;se...</source>
-        <translation type="vanished">검색(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Free Space:</source>
-        <translation type="vanished">남은 공간(&amp;F)</translation>
-    </message>
-    <message>
-        <source>unavailable - above location doesn't exist</source>
-        <translation type="vanished">사용할 수 없음 - 상위 위치가 존재하지 않음</translation>
-    </message>
-    <message>
-        <source>Choose a location</source>
-        <translation type="vanished">위치를 선택하세요</translation>
-    </message>
-    <message>
-        <source>
-Directory %s does not exist. Create it?</source>
-        <translation type="vanished">
-%1 디렉토리가 없습니다. 생성할까요?</translation>
-    </message>
-    <message>
-        <source>Directory creation failed.</source>
-        <translation type="vanished">디렉토리 생성을 실패했습니다.</translation>
-    </message>
-    <message>
-        <source>
-%s</source>
-        <translation type="vanished">
-%1</translation>
-    </message>
-    <message>
-        <source>Directory %s is not suitable (at risk of being cleaned out)</source>
-        <translation type="vanished">%1 디렉토리는 적당하지 않습니다 (정리될 위험이 있음)</translation>
-    </message>
-    <message>
-        <source>'Temporary Directory' cannot be set.</source>
-        <translation type="vanished">'임시 디렉터리'를 설정할 수 없음.</translation>
-    </message>
-    <message>
-        <source>'Temporary files' directory cannot be set.</source>
-        <translation type="vanished">'임시 파일' 디렉터리를 설정할 수 없음.</translation>
-    </message>
-    <message>
-        <source>Directory %s is not writable</source>
-        <translation type="vanished">%1 디렉토리는 쓸 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Temp Directory Update</source>
-        <translation type="vanished">임시 디렉토리 업데이트</translation>
-    </message>
-    <message>
-        <source>'Open' directory cannot be set.</source>
-        <translation type="vanished">'열기' 디렉토리를 설정할 수 없음.</translation>
-    </message>
-    <message>
-        <source>'Save' directory cannot be set.</source>
-        <translation type="vanished">'저장' 디렉토리를 설정할 수 없음.</translation>
-    </message>
-    <message>
-        <source>'Import' directory cannot be set.</source>
-        <translation type="vanished">'가져오기' 디렉토리는 설정할 수 없음.</translation>
-    </message>
-    <message>
-        <source>'Export' directory cannot be set.</source>
-        <translation type="vanished">'내보내기' 디렉토리를 설정할 수 없음.</translation>
-    </message>
-    <message>
-        <source>'Macro Output' directory cannot be set.</source>
-        <translation type="vanished">'매크로 출력' 디렉토리가 설정되지 않음.</translation>
-    </message>
-    <message>
-        <source>Preferences for Effects</source>
-        <translation type="vanished">이펙트 환경설정</translation>
-    </message>
-    <message>
-        <source>Sort by effect name</source>
-        <translation type="vanished">이펙트 이름에 따라 정렬</translation>
-    </message>
-    <message>
-        <source>Sort by publisher and effect name</source>
-        <translation type="vanished">제작자와 이펙트 이름에 따라 정렬</translation>
-    </message>
-    <message>
-        <source>Sort by type and effect name</source>
-        <translation type="vanished">유형과 이펙트 이름에 따라 정렬</translation>
-    </message>
-    <message>
-        <source>Group by publisher</source>
-        <translation type="vanished">제작자에 따라 그룹</translation>
-    </message>
-    <message>
-        <source>Group by type</source>
-        <translation type="vanished">유형에 따라 그룹</translation>
-    </message>
-    <message>
-        <source>Group by category</source>
-        <translation type="vanished">카테고리에 따라 그룹</translation>
-    </message>
-    <message>
-        <source>Group by type and publisher</source>
-        <translation type="vanished">유형과 제작자에 따라 그룹</translation>
-    </message>
-    <message>
-        <source>Effect Options</source>
-        <translation type="vanished">이펙트 옵션</translation>
-    </message>
-    <message>
-        <source>Effect menu &amp;organization:</source>
-        <translation type="vanished">이펙트 메뉴 구성(&amp;O):</translation>
-    </message>
-    <message>
-        <source>Realtime effect o&amp;rganization:</source>
-        <translation type="vanished">실시간 이펙트 구성(&amp;R):</translation>
-    </message>
-    <message>
-        <source>Instruction Set</source>
-        <translation type="vanished">명령어 세트</translation>
-    </message>
-    <message>
-        <source>&amp;Use SSE/SSE2/.../AVX</source>
-        <translation type="vanished">SSE/SSE2/.../AVX 사용(&amp;U)</translation>
-    </message>
-    <message>
-        <source>%s plugin locations</source>
-        <extracomment>i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-* First argument is replaced with plugin type (e.g. "LV2 plugin locations")</extracomment>
-        <translation type="vanished">%1 플러그인 위치</translation>
-    </message>
-    <message>
-        <source>&amp;Skip effects scanning at startup</source>
-        <translation type="vanished">시작할때 이펙트 스캐닝 생략(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Open Plugin &amp;Manager</source>
-        <translation type="vanished">플러그인 관리자 열기(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Extended Import</source>
-        <extracomment>i18n-hint:  Title of dialog governing "Extended", or "advanced,"
-* audio file import options</extracomment>
-        <translation type="vanished">확장된 가져오기</translation>
-    </message>
-    <message>
-        <source>Preferences for ExtImport</source>
-        <translation type="vanished">ExtImport 기본 설정</translation>
-    </message>
-    <message>
-        <source>A&amp;ttempt to use filter in OpenFile dialog first</source>
-        <translation type="vanished">파일 열기 대화상자에서 필터 사용을 먼저 시도하기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Rules to choose import filters</source>
-        <translation type="vanished">가져오기 필터 선택 규칙</translation>
-    </message>
-    <message>
-        <source>File extensions</source>
-        <translation type="vanished">파일 확장자</translation>
-    </message>
-    <message>
-        <source>Mime-types</source>
-        <translation type="vanished">MIME 형식</translation>
-    </message>
-    <message>
-        <source>Importer order</source>
-        <translation type="vanished">가져오기에 사용할 필터 순서</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;up</source>
-        <translation type="vanished">규칙 위로 이동(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;down</source>
-        <translation type="vanished">규칙 아래로 이동(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Move f&amp;ilter up</source>
-        <translation type="vanished">필터 위로 이동(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Move &amp;filter down</source>
-        <translation type="vanished">필터 아래로 이동(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Add new rule</source>
-        <translation type="vanished">새 규칙 추가(&amp;A)</translation>
-    </message>
-    <message>
-        <source>De&amp;lete selected rule</source>
-        <translation type="vanished">선택 규칙 삭제(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Unused filters:</source>
-        <translation type="vanished">미사용 필터:</translation>
-    </message>
-    <message>
-        <source>There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?</source>
-        <translation type="vanished">항목 중 하나에 공백 문자(공백, 개행, 탭, 라인피드)들이 있습니다. 패턴 매칭을 깰 것 같습니다.무엇을 하는 것인지 잘 모르겠으면, 공백 문자 잘라내기를 추천합니다.오데시티에서 공백 문자를 잘라내도록 할까요?</translation>
-    </message>
-    <message>
-        <source>Spaces detected</source>
-        <translation type="vanished">감지한 공백들</translation>
-    </message>
-    <message>
-        <source>Do you really want to delete selected rule?</source>
-        <translation type="vanished">선택한 규칙을 정말 삭제할까요?</translation>
-    </message>
-    <message>
-        <source>Rule deletion confirmation</source>
-        <translation type="vanished">규칙 삭제 확인</translation>
-    </message>
-    <message>
-        <source>Ext Import</source>
-        <translation type="vanished">Ext 가져오기</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>GUI</comment>
-        <extracomment>i18n-hint: refers to Audacity's user interface settings</extracomment>
-        <translation type="vanished">인터페이스</translation>
-    </message>
-    <message>
-        <source>Preferences for GUI</source>
-        <translation type="vanished">GUI 환경설정</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation type="vanished">표시</translation>
-    </message>
-    <message>
-        <source>&amp;Language:</source>
-        <translation type="vanished">언어(&amp;L):</translation>
-    </message>
-    <message>
-        <source>Th&amp;eme:</source>
-        <translation type="vanished">테마(&amp;E):</translation>
-    </message>
-    <message>
-        <source>Meter dB &amp;range:</source>
-        <translation type="vanished">미터 dB 범위(&amp;R):</translation>
-    </message>
-    <message>
-        <source>Show 'How to Get &amp;Help' at launch</source>
-        <translation type="vanished">시작시 '도움 받기 방법' 보이기(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Show e&amp;xtra menus</source>
-        <translation type="vanished">추가 메뉴 표시(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Show alternative &amp;styling (Mac vs PC)</source>
-        <translation type="vanished">대체 스타일 보기 (MAC vs PC)(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Beep on completion of longer activities</source>
-        <translation type="vanished">더 긴 동작 완료시 경고음 내기(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Re&amp;tain labels if selection snaps to a label</source>
-        <translation type="vanished">선택 영역이 레이블에 스냅시 레이블 유지하기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Use mostly Left-to-Right layouts in RTL languages</source>
-        <extracomment>i18n-hint: RTL stands for 'Right to Left'</extracomment>
-        <translation type="vanished">RTL 언어에서는 대부분 왼쪽에서 오른쪽 방향 레이아웃을 사용함</translation>
-    </message>
-    <message>
-        <source>Never use comma as decimal point</source>
-        <translation type="vanished">소수점을 표현하는데 쉼표를 사용하지 마십시오</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="vanished">GUI</translation>
-    </message>
-    <message>
-        <source>Language "%s" is unknown</source>
-        <translation type="vanished">"%1" 언어를 알 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Import / Export</source>
-        <translation type="vanished">가져오기/내보내기</translation>
-    </message>
-    <message>
-        <source>Preferences for ImportExport</source>
-        <translation type="vanished">가져오기 내보내기 환경설정</translation>
-    </message>
-    <message>
-        <source>S&amp;witch view to Beats and Measures and align with musical grid</source>
-        <translation type="vanished">보기를 비드와 박자로 전환하고 음악 격자에 맞춰 정렬(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Ask me each time</source>
-        <translation type="vanished">매번 묻기(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Do &amp;nothing</source>
-        <translation type="vanished">아무 작업도 하지 않음(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Music Imports</source>
-        <translation type="vanished">음악 가져오기</translation>
-    </message>
-    <message>
-        <source>When Audacity detects music in file imported on empty project</source>
-        <translation type="vanished">빈 프로젝트에 가져온 파일에서 오데시티가 음악을 감지한 경우</translation>
-    </message>
-    <message>
-        <source>IMPORT EXPORT</source>
-        <translation type="vanished">가져오기 내보내기</translation>
-    </message>
-    <message>
-        <source>Preferences for KeyConfig</source>
-        <translation type="vanished">KeyConfig 환경설정</translation>
-    </message>
-    <message>
-        <source>Keyboard preferences currently unavailable.</source>
-        <translation type="vanished">키보드 환경 설정은 현재 사용할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Open a new project to modify keyboard shortcuts.</source>
-        <translation type="vanished">키보드 단축키를 변경하려면 새 프로젝트를 여세요.</translation>
-    </message>
-    <message>
-        <source>&amp;Hotkey:</source>
-        <translation type="vanished">단축키(&amp;H):</translation>
-    </message>
-    <message>
-        <source>&amp;Tree</source>
-        <translation type="vanished">트리(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Name</source>
-        <translation type="vanished">이름(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Key</source>
-        <translation type="vanished">키(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Key Bindings</source>
-        <translation type="vanished">단축키 설정</translation>
-    </message>
-    <message>
-        <source>View by:</source>
-        <translation type="vanished">보기 순서:</translation>
-    </message>
-    <message>
-        <source>View by tree</source>
-        <translation type="vanished">트리로 보기</translation>
-    </message>
-    <message>
-        <source>View by name</source>
-        <translation type="vanished">이름순으로 보기</translation>
-    </message>
-    <message>
-        <source>View by key</source>
-        <translation type="vanished">키순으로 보기</translation>
-    </message>
-    <message>
-        <source>Bindings</source>
-        <translation type="vanished">바인딩</translation>
-    </message>
-    <message>
-        <source>Short cut</source>
-        <translation type="vanished">단축키</translation>
-    </message>
-    <message>
-        <source>&amp;Set</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">설정(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Note: Pressing Cmd+Q will quit. All other keys are valid.</source>
-        <translation type="vanished">참고: Cmd+Q를 누르면 프로그램을 끝냅니다. 다른 모든 키는 유효합니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Import...</source>
-        <translation type="vanished">가져오기(&amp;I)...</translation>
-    </message>
-    <message>
-        <source>&amp;Defaults</source>
-        <translation type="vanished">기본값(&amp;D)</translation>
-    </message>
-    <message>
-        <source>
-   *   "%s"  (because the shortcut '%s' is used by "%s")
-</source>
-        <translation type="vanished">
-   *   "%1"  (단축키 '%2' 는 "%3" 로 사용중)
-
-</translation>
-    </message>
-    <message>
-        <source>Select an XML file containing Audacity keyboard shortcuts...</source>
-        <translation type="vanished">오데시티 키보드 단축키를 포함한 XML 파일 선택...</translation>
-    </message>
-    <message>
-        <source>Error Importing Keyboard Shortcuts</source>
-        <translation type="vanished">키보드 단축키 가져오기 중 오류</translation>
-    </message>
-    <message>
-        <source>The file with the shortcuts contains illegal shortcut duplicates for "%s" and "%s".
-Nothing is imported.</source>
-        <translation type="vanished">이 파일의 단축기는 다음과 중복됨 "%1" 과 "%2".
-가져오지 않음.</translation>
-    </message>
-    <message>
-        <source>Loaded %d keyboard shortcuts
-</source>
-        <translation type="vanished">%1개의 키보드 단축키를 불러왔습니다
-</translation>
-    </message>
-    <message>
-        <source>
-The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:
-</source>
-        <translation type="vanished">
-다음 명령들은 가져운 파일에 들어있지 않지만, 다른 새로운 단축키와 충돌하기 때문에 단축키는 삭제됨:
-</translation>
-    </message>
-    <message>
-        <source>Loading Keyboard Shortcuts</source>
-        <translation type="vanished">키보드 단축키 불러오는 중</translation>
-    </message>
-    <message>
-        <source>Export Keyboard Shortcuts As:</source>
-        <translation type="vanished">다른 이름으로 키보드 단축키 내보내기:</translation>
-    </message>
-    <message>
-        <source>Error Exporting Keyboard Shortcuts</source>
-        <translation type="vanished">키보드 단축키 내보내기 중 오류</translation>
-    </message>
-    <message>
-        <source>You may not assign a key to this entry</source>
-        <translation type="vanished">이 항목에 키를 할당하지 않을 수 있습니다</translation>
-    </message>
-    <message>
-        <source>You must select a binding before assigning a shortcut</source>
-        <translation type="vanished">단축키를 할당하기 전에 바인딩을 선택해야 합니다</translation>
-    </message>
-    <message>
-        <source>
-
-	 and
-
-	</source>
-        <translation type="vanished">
-
-	 그리고
-
-	</translation>
-    </message>
-    <message>
-        <source>The keyboard shortcut '%s' is already assigned to:
-
-	%s
-
-
-Click OK to assign the shortcut to
-
-	%s
-
-instead. Otherwise, click Cancel.</source>
-        <translation type="vanished">키보드 단축키 '%1' 는 다음 기능에 이미 지정되어 있음 : 
-
-	%2
-
-
-'확인'를 누르면 다름 단축키로 지정 
-
-	%3
-
-아니면 '취소' 클릭.</translation>
-    </message>
-    <message>
-        <source>Key Config</source>
-        <translation type="vanished">키 설정</translation>
-    </message>
-    <message>
-        <source>MIDI Devices</source>
-        <extracomment>i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"</extracomment>
-        <translation type="vanished">MIDI 장치</translation>
-    </message>
-    <message>
-        <source>Preferences for MidiIO</source>
-        <translation type="vanished">midiIO 환경설정</translation>
-    </message>
-    <message>
-        <source>No MIDI interfaces</source>
-        <translation type="vanished">MIDI 인터페이스가 없습니다</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>MIDI</comment>
-        <extracomment>i18n-hint Software interface to MIDI</extracomment>
-        <translation type="vanished">인터페이스</translation>
-    </message>
-    <message>
-        <source>Using: PortMidi</source>
-        <translation type="vanished">사용 중: PortMidi</translation>
-    </message>
-    <message>
-        <source>MIDI Synth L&amp;atency (ms):</source>
-        <translation type="vanished">MIDI 신디 레이턴시 (ms)(&amp;A):</translation>
-    </message>
-    <message>
-        <source>The MIDI Synthesizer Latency must be an integer</source>
-        <translation type="vanished">MIDI 신디사이저 레이턴시는 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>Midi IO</source>
-        <translation type="vanished">Midi IO</translation>
-    </message>
-    <message>
-        <source>Modules</source>
-        <extracomment>i18n-hint: Modules are optional extensions to Audacity that add NEW features.</extracomment>
-        <translation type="vanished">모듈</translation>
-    </message>
-    <message>
-        <source>Preferences for Module</source>
-        <translation type="vanished">Module 환경 설정</translation>
-    </message>
-    <message>
-        <source>Modules are optional components of Audacity that enable some functionality, such as importing and exporting. 
-It is generally not necessary to change these settings.</source>
-        <translation type="vanished">모듈은 가져오기 및 내보내기와 같은 일부 기능을 활성화하는 Audacity의 옵션입니다.
-일반적으로 이러한 설정을 변경할 필요는 없습니다.</translation>
-    </message>
-    <message>
-        <source>Changes to these settings only take effect when restarting Audacity.
-</source>
-        <translation type="vanished">변경한 설정은 오데시티를 재시작해야 효과가 발생합니다.
-</translation>
-    </message>
-    <message>
-        <source>Always ask</source>
-        <translation type="vanished">항상 묻기</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="vanished">실패</translation>
-    </message>
-    <message>
-        <source>No choice made</source>
-        <translation type="vanished">선택된것이 없습니다</translation>
-    </message>
-    <message>
-        <source>Error: No modules were found. This may indicate a faulty installation.</source>
-        <translation type="vanished">오류: 모듈을 찾지 못했습니다. 설치가 잘못되었을 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Module</source>
-        <translation type="vanished">모듈</translation>
-    </message>
-    <message>
-        <source>Preferences for Playback</source>
-        <translation type="vanished">재생 환경설정</translation>
-    </message>
-    <message>
-        <source>Effects Preview</source>
-        <translation type="vanished">이펙트 미리보기</translation>
-    </message>
-    <message>
-        <source>&amp;Length:</source>
-        <translation type="vanished">길이(&amp;L):</translation>
-    </message>
-    <message>
-        <source>Cut Preview</source>
-        <extracomment>i18n-hint: (noun) this is a preview of the cut</extracomment>
-        <translation type="vanished">잘라내기 미리보기</translation>
-    </message>
-    <message>
-        <source>&amp;Before cut region:</source>
-        <translation type="vanished">잘라내기 영역 이전(&amp;B):</translation>
-    </message>
-    <message>
-        <source>&amp;After cut region:</source>
-        <translation type="vanished">잘라내기 영역 이후(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Seek Time when playing</source>
-        <translation type="vanished">재생할 때 시간 탐색</translation>
-    </message>
-    <message>
-        <source>&amp;Short period:</source>
-        <translation type="vanished">짧은 시간(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Lo&amp;ng period:</source>
-        <translation type="vanished">긴 시간(&amp;N):</translation>
-    </message>
-    <message>
-        <source>&amp;Micro-fades</source>
-        <translation type="vanished">마이크로 페이드(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Always scrub un&amp;pinned</source>
-        <translation type="vanished">스크러빙 표시 고정하지 않음(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Audacity Preferences</source>
-        <translation type="vanished">오데시티 환경설정</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="vanished">카테고리</translation>
-    </message>
-    <message>
-        <source>Preferences:</source>
-        <translation type="vanished">환경설정:</translation>
-    </message>
-    <message>
-        <source>Preferences for Quality</source>
-        <translation type="vanished">품질 환경설정</translation>
-    </message>
-    <message>
-        <source>Real-time Conversion</source>
-        <translation type="vanished">실시간 변환</translation>
-    </message>
-    <message>
-        <source>Sample Rate Con&amp;verter:</source>
-        <translation type="vanished">샘플링 주파수 변환(&amp;V):</translation>
-    </message>
-    <message>
-        <source>&amp;Dither:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">디더(&amp;D):</translation>
-    </message>
-    <message>
-        <source>High-quality Conversion</source>
-        <translation type="vanished">고품질 변환</translation>
-    </message>
-    <message>
-        <source>Sample Rate Conver&amp;ter:</source>
-        <translation type="vanished">샘플링 주파수 변환(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Dit&amp;her:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">디더(&amp;H):</translation>
-    </message>
-    <message>
-        <source>Preferences for Recording</source>
-        <translation type="vanished">레코딩 환경설정</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks while recording (overdub)</source>
-        <translation type="vanished">녹음 중 다른 트랙 재생 (오버덥)(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Use &amp;hardware to play other tracks</source>
-        <translation type="vanished">다른 트랙 재생에 하드웨어 사용(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Audible input &amp;monitoring</source>
-        <translation type="vanished">오디오 입력 모니터링(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Record on a new track</source>
-        <translation type="vanished">새 트랙에 녹음</translation>
-    </message>
-    <message>
-        <source>Detect dropouts</source>
-        <extracomment>i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording</extracomment>
-        <translation type="vanished">드롭아웃 감지</translation>
-    </message>
-    <message>
-        <source>Sound Activated Recording</source>
-        <translation type="vanished">사운드 활성화 녹음</translation>
-    </message>
-    <message>
-        <source>&amp;Enable</source>
-        <translation type="vanished">활성화(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Le&amp;vel (dB):</source>
-        <translation type="vanished">레벨 (dB)(&amp;V):</translation>
-    </message>
-    <message>
-        <source>Name newly recorded tracks</source>
-        <extracomment>i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">새로 녹음된 트랙의 이름 지정</translation>
-    </message>
-    <message>
-        <source>With:</source>
-        <extracomment>i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">With:</translation>
-    </message>
-    <message>
-        <source>Custom Track &amp;Name</source>
-        <translation type="vanished">사용자 정의 트랙 이름으로(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Custom name text</source>
-        <translation type="vanished">사용자 정의 이름 텍스트</translation>
-    </message>
-    <message>
-        <source>Recorded_Audio</source>
-        <translation type="vanished">녹음한_오디오</translation>
-    </message>
-    <message>
-        <source>&amp;Track Number</source>
-        <translation type="vanished">트랙 번호로(&amp;T)</translation>
-    </message>
-    <message>
-        <source>System &amp;Date</source>
-        <translation type="vanished">시스템 날짜로(&amp;D)</translation>
-    </message>
-    <message>
-        <source>System T&amp;ime</source>
-        <translation type="vanished">시스템 시간으로(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment</source>
-        <translation type="vanished">자동 녹음 레벨 조정</translation>
-    </message>
-    <message>
-        <source>Enable Automated Recording Level Adjustment.</source>
-        <translation type="vanished">자동 녹음 레벨 조정을 활성화합니다.</translation>
-    </message>
-    <message>
-        <source>Target Peak:</source>
-        <extracomment>i18n-hint: Desired maximum (peak) volume for sound</extracomment>
-        <translation type="vanished">대상 피크:</translation>
-    </message>
-    <message>
-        <source>Within:</source>
-        <translation type="vanished">범위 내:</translation>
-    </message>
-    <message>
-        <source>Analysis Time:</source>
-        <translation type="vanished">분석 시간:</translation>
-    </message>
-    <message>
-        <source>milliseconds (time of one analysis)</source>
-        <translation type="vanished">밀리초 (분석 단위 시간)</translation>
-    </message>
-    <message>
-        <source>Number of consecutive analysis:</source>
-        <translation type="vanished">연속 분석 수:</translation>
-    </message>
-    <message>
-        <source>0 means endless</source>
-        <translation type="vanished">0은 무한을 의미함</translation>
-    </message>
-    <message>
-        <source>Punch and Roll Recording</source>
-        <translation type="vanished">펀치 엔 롤 녹음</translation>
-    </message>
-    <message>
-        <source>Pre-ro&amp;ll:</source>
-        <translation type="vanished">프리롤(&amp;L):</translation>
-    </message>
-    <message>
-        <source>Cross&amp;fade:</source>
-        <translation type="vanished">크로스 페이드(&amp;F) :</translation>
-    </message>
-    <message>
-        <source>Color (Roseus)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme</extracomment>
-        <translation type="vanished">색상 (장미)</translation>
-    </message>
-    <message>
-        <source>Color (classic)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Classic color scheme(from theme) for spectrograms</extracomment>
-        <translation type="vanished">컬러 (클래식)</translation>
-    </message>
-    <message>
-        <source>Grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">회색조</translation>
-    </message>
-    <message>
-        <source>Inverse grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Inverse grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">반전된 회색조</translation>
-    </message>
-    <message>
-        <source>Pitch (EAC)</source>
-        <extracomment>i18n-hint: EAC abbreviates "Enhanced Autocorrelation"</extracomment>
-        <translation type="vanished">피치 (EAC)</translation>
-    </message>
-    <message>
-        <source>Maximum frequency must be 100 Hz or above</source>
-        <translation type="vanished">최대 주파수는 100 Hz 이상이어야 합니다</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be at least 0 Hz</source>
-        <translation type="vanished">최소 주파수는 최소한 0 Hz여야 합니다</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be less than maximum frequency</source>
-        <translation type="vanished">최소 주파수는 최대 주파수 미만이어야 합니다</translation>
-    </message>
-    <message>
-        <source>The range must be at least 1 dB</source>
-        <translation type="vanished">범위는 최소한 1 dB여야 합니다</translation>
-    </message>
-    <message>
-        <source>The frequency gain cannot be negative</source>
-        <translation type="vanished">주파수 게인은 음수가 될 수 없습니다</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be no more than 60 dB/dec</source>
-        <translation type="vanished">주파수 게인은 60 dB/dec 보다 크면 안됩니다</translation>
-    </message>
-    <message>
-        <source>Spectrogram Settings</source>
-        <translation type="vanished">스펙트로그램 설정</translation>
-    </message>
-    <message>
-        <source>Spectrograms</source>
-        <translation type="vanished">스펙트로그램</translation>
-    </message>
-    <message>
-        <source>Preferences for Spectrum</source>
-        <translation type="vanished">스펙트럼 환경설정</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preferences</source>
-        <extracomment>i18n-hint: use is a verb</extracomment>
-        <translation type="vanished">환경설정 적용(&amp;U)</translation>
-    </message>
-    <message>
-        <source>S&amp;cale:</source>
-        <translation type="vanished">스케일(&amp;C):</translation>
-    </message>
-    <message>
-        <source>Mi&amp;n Frequency (Hz):</source>
-        <translation type="vanished">최소 주파수 (Hz)(&amp;N):</translation>
-    </message>
-    <message>
-        <source>Ma&amp;x Frequency (Hz):</source>
-        <translation type="vanished">최대 주파수 (Hz)(&amp;X):</translation>
-    </message>
-    <message>
-        <source>&amp;Gain (dB):</source>
-        <translation type="vanished">게인 (dB)(&amp;G):</translation>
-    </message>
-    <message>
-        <source>&amp;Range (dB):</source>
-        <translation type="vanished">범위 (dB)(&amp;R):</translation>
-    </message>
-    <message>
-        <source>High &amp;boost (dB/dec):</source>
-        <translation type="vanished">고음 부스트 (dB/dec)(&amp;B):</translation>
-    </message>
-    <message>
-        <source>A&amp;lgorithm:</source>
-        <translation type="vanished">알고리듬(&amp;L) :</translation>
-    </message>
-    <message>
-        <source>Window &amp;size:</source>
-        <translation type="vanished">윈도우 크기(&amp;S):</translation>
-    </message>
-    <message>
-        <source>2048</source>
-        <translation type="vanished">2048</translation>
-    </message>
-    <message>
-        <source>Window &amp;type:</source>
-        <translation type="vanished">윈도우 형식(&amp;T):</translation>
-    </message>
-    <message>
-        <source>&amp;Zero padding factor:</source>
-        <translation type="vanished">0 채우기 팩터(&amp;Z):</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble Spectral Selection</source>
-        <translation type="vanished">스펙트럼 선택 사용하기(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Show a grid along the &amp;Y-axis</source>
-        <translation type="vanished">Y-축을 따라 격자 보이기(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>FFT Find Notes</source>
-        <extracomment>i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated</extracomment>
-        <translation type="vanished">FFT 노트 찾기</translation>
-    </message>
-    <message>
-        <source>Minimum Amplitude (dB):</source>
-        <translation type="vanished">최소 진폭 (dB):</translation>
-    </message>
-    <message>
-        <source>Max. Number of Notes (1..128):</source>
-        <translation type="vanished">최대 노트 개수 (1..128):</translation>
-    </message>
-    <message>
-        <source>&amp;Find Notes</source>
-        <translation type="vanished">노트 찾기(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Quantize Notes</source>
-        <translation type="vanished">노트 양자화하기(&amp;Q)</translation>
-    </message>
-    <message>
-        <source>Global settings</source>
-        <translation type="vanished">전역 설정</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble spectral selection</source>
-        <translation type="vanished">스펙트럼 선택 사용하기(&amp;B)</translation>
-    </message>
-    <message>
-        <source>The maximum frequency must be an integer</source>
-        <translation type="vanished">최대 주파수는 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The minimum frequency must be an integer</source>
-        <translation type="vanished">최소 주파수는 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The gain must be an integer</source>
-        <translation type="vanished">게인은 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The range must be a positive integer</source>
-        <translation type="vanished">범위는 양의 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be an integer</source>
-        <translation type="vanished">주파수 게인은 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The minimum amplitude (dB) must be an integer</source>
-        <translation type="vanished">최소 진폭(dB)은 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be an integer</source>
-        <translation type="vanished">최대 노트 개수는 정수여야 합니다</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be in the range 1..128</source>
-        <translation type="vanished">최대 노트 개수는 1부터 128사이의 범위 내에 있어야 합니다</translation>
-    </message>
-    <message>
-        <source>Preferences for Theme</source>
-        <translation type="vanished">테마 환경설정</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="vanished">정보</translation>
-    </message>
-    <message>
-        <source>Themability is an experimental feature.
-
-To try it out, click "Save Theme Cache" then find and modify the images and colors in
-ImageCacheVxx.png using an image editor such as the Gimp.
-
-Click "Load Theme Cache" to load the changed images and colors back into Audacity.</source>
-        <translation type="vanished">테마 기능은 실험적인 기능입니다.
-
-사용해 보려면, "테마 캐시 저장"을 클릭하고, ImageCacheVxx.png 파일 내의 
-이미지와 컬러를 이미지 도구를 사용하여 수정합니다.
-
-"테마 캐시 로딩"을 클릭하여 변경된 이미지와 컬러를 오데시티에 가져옵니다.</translation>
-    </message>
-    <message>
-        <source>Saving and loading individual theme files uses a separate file for each image, but is
-otherwise the same idea.</source>
-        <translation type="vanished">개개의 테마 파일을 저장하고 불러올 때 각각의 이미지에 대해 개별적인 파일을 
-사용하지만, 다른 경우에도 같은 방식입니다.</translation>
-    </message>
-    <message>
-        <source>Theme Cache - Images &amp;&amp; Color</source>
-        <extracomment>i18n-hint: &amp;&amp; in here is an escape character to get a single &amp; on screen,
-* so keep it as is</extracomment>
-        <translation type="vanished">테마 캐쉬 - 이미지 &amp;&amp; 색상</translation>
-    </message>
-    <message>
-        <source>Save Theme Cache</source>
-        <translation type="vanished">테마 캐쉬 저장</translation>
-    </message>
-    <message>
-        <source>Load Theme Cache</source>
-        <translation type="vanished">테마 캐쉬 불러오기</translation>
-    </message>
-    <message>
-        <source>Individual Theme Files</source>
-        <translation type="vanished">개별 테마 파일</translation>
-    </message>
-    <message>
-        <source>Save Files</source>
-        <translation type="vanished">파일 저장</translation>
-    </message>
-    <message>
-        <source>Load Files</source>
-        <translation type="vanished">파일 불러오기</translation>
-    </message>
-    <message>
-        <source>Tracks Behaviors</source>
-        <extracomment>i18n-hint: i.e. the behaviors of tracks</extracomment>
-        <translation type="vanished">트랙 동작</translation>
-    </message>
-    <message>
-        <source>Preferences for TracksBehaviors</source>
-        <translation type="vanished">트랙 작동 환경설정</translation>
-    </message>
-    <message>
-        <source>Ask me each time.
-Show dialog each time audio is pasted.</source>
-        <translation type="vanished">매번 다시 물음.
-오디오 붙여넣기 할 때마다 물어봄,</translation>
-    </message>
-    <message>
-        <source>&amp;Select all audio, if selection required</source>
-        <translation type="vanished">선택이 필요한 경우, 모든 오디오 선택(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Enable cut &amp;lines</source>
-        <extracomment>i18n-hint: Cut-lines are lines that can expand to show the cut audio.</extracomment>
-        <translation type="vanished">잘라내기 선 사용하기(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Editing a clip can &amp;move other clips</source>
-        <translation type="vanished">클립 편집시 다른 클립을 이동 가능하게 하기(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Always paste audio as new clips</source>
-        <translation type="vanished">항상 새로운 클립으로 오디오 붙여 넣기(&amp;A)</translation>
-    </message>
-    <message>
-        <source>"Move track focus" c&amp;ycles repeatedly through tracks</source>
-        <translation type="vanished">위/아래 화살표키로 마지막 &lt;-&gt; 처음 트랙 이동하기(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>&amp;Type to create a label</source>
-        <translation type="vanished">입력해서 레이블 만들기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Use dialog for the &amp;name of a new label</source>
-        <translation type="vanished">새 레이블의 이름을 위한 대화창 사용(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Solo &amp;Button:</source>
-        <translation type="vanished">독주 버튼(&amp;B):</translation>
-    </message>
-    <message>
-        <source>Pasted audio</source>
-        <translation type="vanished">오디오 붙여넣기</translation>
-    </message>
-    <message>
-        <source>Paste audio from other Audacity project as</source>
-        <translation type="vanished">다른 오데시티 프로젝트에서 오디오 붙여넣기 </translation>
-    </message>
-    <message>
-        <source>Connect dots</source>
-        <translation type="vanished">점 연결</translation>
-    </message>
-    <message>
-        <source>Stem plot</source>
-        <translation type="vanished">줄기 그림</translation>
-    </message>
-    <message>
-        <source>Preferences for Tracks</source>
-        <translation type="vanished">트랙 환경설정</translation>
-    </message>
-    <message>
-        <source>Auto-&amp;fit track height</source>
-        <translation type="vanished">트랙 높이 자동 맞추기(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Use &amp;half-wave display when collapsed</source>
-        <translation type="vanished">닫았을때 반파 보기를 사용(&amp;H)</translation>
-    </message>
-    <message>
-        <source>&amp;Pinned Recording/Playback head</source>
-        <translation type="vanished">트랙 중앙에 녹음/재생 꼭지 고정하기(&amp;P)</translation>
-    </message>
-    <message>
-        <source>A&amp;uto-scroll if head unpinned</source>
-        <translation type="vanished">꼭지 고정 해제시 자동 스크롤하기(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Pinned &amp;head position</source>
-        <translation type="vanished">헤드 포지션 고정(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Default &amp;view mode:</source>
-        <translation type="vanished">기본 보기 모드(&amp;V):</translation>
-    </message>
-    <message>
-        <source>Default Waveform scale:</source>
-        <translation type="vanished">기본 파형 크기:</translation>
-    </message>
-    <message>
-        <source>Display &amp;samples:</source>
-        <translation type="vanished">샘플 표시(&amp;S):</translation>
-    </message>
-    <message>
-        <source>Default audio track &amp;name:</source>
-        <translation type="vanished">기본 오디오 트랙 이름(&amp;N):</translation>
-    </message>
-    <message>
-        <source>Zoom Toggle</source>
-        <translation type="vanished">줌 토글하기</translation>
-    </message>
-    <message>
-        <source>Preset 1:</source>
-        <translation type="vanished">프리셋 1:</translation>
-    </message>
-    <message>
-        <source>Preset 2:</source>
-        <translation type="vanished">프리셋 2:</translation>
-    </message>
-    <message>
-        <source>Waveforms</source>
-        <extracomment>i18n-hint: A waveform is a visual representation of vibration</extracomment>
-        <translation type="vanished">파형</translation>
-    </message>
-    <message>
-        <source>Preferences for Waveforms</source>
-        <translation type="vanished">파형 환경설정</translation>
-    </message>
-    <message>
-        <source>Waveform dB &amp;range:</source>
-        <translation type="vanished">파형 dB 범위(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Audio Setup</source>
-        <extracomment>i18n-hint: Audio setup button text, keep as short as possible</extracomment>
-        <translation type="vanished">오디오 설정</translation>
-    </message>
-    <message>
-        <source>&amp;Host</source>
-        <extracomment>i18n-hint: Audio setup menu</extracomment>
-        <translation type="vanished">호스트(&amp;H)</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Device</source>
-        <translation type="vanished">재생 장치 ( &amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Device</source>
-        <translation type="vanished">레코딩 장치(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Recording &amp;Channels</source>
-        <translation type="vanished">레코딩 채널(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Settings...</source>
-        <translation type="vanished">오디오 설정...(&amp;A)</translation>
-    </message>
-    <message>
-        <source>1 (Mono) Recording Channel</source>
-        <translation type="vanished">1 (모노) 녹음 채널</translation>
-    </message>
-    <message>
-        <source>2 (Stereo) Recording Channels</source>
-        <translation type="vanished">2 (스테레오) 녹음 채널</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Setup Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages the audio devices</extracomment>
-        <translation type="vanished">오디오 설정 툴바(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Stopped</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">멈춤</translation>
-    </message>
-    <message>
-        <source>Transport</source>
-        <translation type="vanished">전송</translation>
-    </message>
-    <message>
-        <source>Skip to Start</source>
-        <translation type="vanished">처음으로 이동하기</translation>
-    </message>
-    <message>
-        <source>Skip to End</source>
-        <translation type="vanished">끝으로 이동하기</translation>
-    </message>
-    <message>
-        <source>Play Once</source>
-        <translation type="vanished">한번 재생</translation>
-    </message>
-    <message>
-        <source>Record New Track</source>
-        <translation type="vanished">새 트랙 녹음</translation>
-    </message>
-    <message>
-        <source>Append Record</source>
-        <translation type="vanished">녹음 덧붙이기</translation>
-    </message>
-    <message>
-        <source>Select to End</source>
-        <translation type="vanished">끝까지 선택</translation>
-    </message>
-    <message>
-        <source>Select to Start</source>
-        <translation type="vanished">시작까지 선택</translation>
-    </message>
-    <message>
-        <source>%s Paused.</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused.</extracomment>
-        <translation type="vanished">%1 일시정지됨.</translation>
-    </message>
-    <message>
-        <source>%s.</source>
-        <translation type="vanished">%1.</translation>
-    </message>
-    <message>
-        <source>&amp;Transport Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-with the big buttons on it (play record etc)</extracomment>
-        <translation type="vanished">전송 도구모음(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Playback Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for playback.</extracomment>
-        <translation type="vanished">재생 장치</translation>
-    </message>
-    <message>
-        <source>Recording Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for recording.</extracomment>
-        <translation type="vanished">녹음 장치</translation>
-    </message>
-    <message>
-        <source>Audio Host</source>
-        <translation type="vanished">오디오 호스트</translation>
-    </message>
-    <message>
-        <source>Recording Channels</source>
-        <translation type="vanished">녹음 채널</translation>
-    </message>
-    <message>
-        <source>Select Recording Device</source>
-        <translation type="vanished">녹음 장치 선택</translation>
-    </message>
-    <message>
-        <source>Select Playback Device</source>
-        <translation type="vanished">재생 장치 선택</translation>
-    </message>
-    <message>
-        <source>Select Audio Host</source>
-        <translation type="vanished">오디오 호스트 선택</translation>
-    </message>
-    <message>
-        <source>Select Recording Channels</source>
-        <translation type="vanished">녹음 채널 선택</translation>
-    </message>
-    <message>
-        <source>Device information is not available.</source>
-        <translation type="vanished">장치 정보를 사용할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Device Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages devices</extracomment>
-        <translation type="vanished">장치 도구 모음(&amp;D)</translation>
-    </message>
-    <message>
-        <source>De&amp;vice</source>
-        <translation type="vanished">장치(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Change &amp;Recording Device...</source>
-        <translation type="vanished">녹음 장치 바꾸기(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Change &amp;Playback Device...</source>
-        <translation type="vanished">재생 장치 바꾸기(&amp;P)...</translation>
-    </message>
-    <message>
-        <source>Change Audio &amp;Host...</source>
-        <translation type="vanished">오디오 호스트 바꾸기(&amp;H)...</translation>
-    </message>
-    <message>
-        <source>Change Recording Cha&amp;nnels...</source>
-        <translation type="vanished">녹음 채널 바꾸기(&amp;N)...</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation type="vanished">확대</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation type="vanished">축소</translation>
-    </message>
-    <message>
-        <source>Fit selection to width</source>
-        <translation type="vanished">너비에 선택 영역 맞추기</translation>
-    </message>
-    <message>
-        <source>Fit project to width</source>
-        <translation type="vanished">너비에 프로젝트 맞추기</translation>
-    </message>
-    <message>
-        <source>Trim audio outside selection</source>
-        <translation type="vanished">선택 영역 바깥 오디오를 잘라서 버립니다</translation>
-    </message>
-    <message>
-        <source>Silence audio selection</source>
-        <translation type="vanished">선택 오디오 무음 처리</translation>
-    </message>
-    <message>
-        <source>Sync-Lock Tracks</source>
-        <translation type="vanished">트랙 동기화-잠금</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar for editing</extracomment>
-        <translation type="vanished">편집 도구모음(&amp;E)</translation>
-    </message>
-    <message>
-        <source> Monitoring </source>
-        <translation type="vanished"> 모니터링 </translation>
-    </message>
-    <message>
-        <source> Active </source>
-        <translation type="vanished">활성화</translation>
-    </message>
-    <message>
-        <source> Peak %2.f dB</source>
-        <translation type="vanished"> 피크 %2.f dB</translation>
-    </message>
-    <message>
-        <source> Peak %.2f </source>
-        <translation type="vanished"> 피크 %1 </translation>
-    </message>
-    <message>
-        <source> Clipped </source>
-        <translation type="vanished"> 잘림 </translation>
-    </message>
-    <message>
-        <source>Record Meter</source>
-        <translation type="vanished">녹음 미터</translation>
-    </message>
-    <message>
-        <source>Recording Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.</extracomment>
-        <translation type="vanished">녹음 레벨</translation>
-    </message>
-    <message>
-        <source>Meter-Record</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">미터-녹음</translation>
-    </message>
-    <message>
-        <source>Playback Meter</source>
-        <translation type="vanished">재생 레벨 미터</translation>
-    </message>
-    <message>
-        <source>Playback Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.</extracomment>
-        <translation type="vanished">재생 레벨</translation>
-    </message>
-    <message>
-        <source>Meter-Play</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">미터-재생</translation>
-    </message>
-    <message>
-        <source>Recording Meter</source>
-        <translation type="vanished">녹음 레벨 미터</translation>
-    </message>
-    <message>
-        <source>Combined Meter</source>
-        <translation type="vanished">복합 레벨 미터</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Meter Toolbar</source>
-        <translation type="vanished">녹음 레벨 미터 도구모음(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Meter Toolbar</source>
-        <translation type="vanished">재생 레벨 미터 도구모음(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Mi&amp;xer</source>
-        <translation type="vanished">믹서(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Volume...</source>
-        <translation type="vanished">재생 음량 조절하기(&amp;J)...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Volume</source>
-        <translation type="vanished">재생 음량 올리기(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Volume</source>
-        <translation type="vanished">재생 음량 내리기(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Adj&amp;ust Recording Volume...</source>
-        <translation type="vanished">녹음 음량 조절하기(&amp;U)...</translation>
-    </message>
-    <message>
-        <source>I&amp;ncrease Recording Volume</source>
-        <translation type="vanished">녹음 음량 올리기(&amp;N)</translation>
-    </message>
-    <message>
-        <source>D&amp;ecrease Recording Volume</source>
-        <translation type="vanished">녹음 음량 내리기(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">길이</translation>
-    </message>
-    <message>
-        <source>Center</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">가운데</translation>
-    </message>
-    <message>
-        <source>Selection Toolbar Setup</source>
-        <translation type="vanished">선택 툴바 설정</translation>
-    </message>
-    <message>
-        <source>Start and End of Selection</source>
-        <translation type="vanished">선택영역의 시작과 끝</translation>
-    </message>
-    <message>
-        <source>Start and Length of Selection</source>
-        <translation type="vanished">선택영역의 시작과 길이</translation>
-    </message>
-    <message>
-        <source>Length and End of Selection</source>
-        <translation type="vanished">선택영역의 길이와 끝</translation>
-    </message>
-    <message>
-        <source>Length and Center of Selection</source>
-        <translation type="vanished">선택영역의 길이와 가운데</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">선택 도구모음(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Snap to combo box</source>
-        <extracomment>i18n-hint: combo box is the type of the control/widget</extracomment>
-        <translation type="vanished">콤보 박스에 스냅</translation>
-    </message>
-    <message>
-        <source>&amp;Snapping Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">스내핑 툴바(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Spectral Selection</source>
-        <translation type="vanished">스펙트럼 선택</translation>
-    </message>
-    <message>
-        <source>Center frequency and Width</source>
-        <translation type="vanished">중심 주파수와 폭</translation>
-    </message>
-    <message>
-        <source>Low and High Frequencies</source>
-        <translation type="vanished">저주파와 고주파</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="vanished">보이기</translation>
-    </message>
-    <message>
-        <source>Center Frequency</source>
-        <translation type="vanished">중심 주파수</translation>
-    </message>
-    <message>
-        <source>Bandwidth</source>
-        <translation type="vanished">대역폭</translation>
-    </message>
-    <message>
-        <source>Spe&amp;ctral Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a frequency range of audio</extracomment>
-        <translation type="vanished">스펙트럼 선택 도구모음(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Time Signature</source>
-        <translation type="vanished">박자표</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature</source>
-        <translation type="vanished">박자표 윗부분</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature</source>
-        <translation type="vanished">박자표 아랫부분</translation>
-    </message>
-    <message>
-        <source>Tempo Changed</source>
-        <translation type="vanished">템포 변경됨</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature Changed</source>
-        <translation type="vanished">박자표 윗부분 변경됨</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature Changed</source>
-        <translation type="vanished">박자표 아랫부분 변경됨</translation>
-    </message>
-    <message>
-        <source>Time Signature Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">타임 서명 도구</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation type="vanished">시간</translation>
-    </message>
-    <message>
-        <source>Audio Position</source>
-        <translation type="vanished">오디오 위치</translation>
-    </message>
-    <message>
-        <source>&amp;Time Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for viewing actual time of the cursor</extracomment>
-        <translation type="vanished">시간 도구모음(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Audacity %s Toolbar</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of the kind of toolbar.</extracomment>
-        <translation type="vanished">오데시티 %1 도구모음</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize toolbar</source>
-        <translation type="vanished">도구모음 크기 조절은 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>ToolDock</source>
-        <translation type="vanished">도구 도크</translation>
-    </message>
-    <message>
-        <source>Selection Tool</source>
-        <translation type="vanished">선택 도구</translation>
-    </message>
-    <message>
-        <source>Envelope Tool</source>
-        <translation type="vanished">포락선 도구</translation>
-    </message>
-    <message>
-        <source>Draw Tool</source>
-        <translation type="vanished">그리기 도구</translation>
-    </message>
-    <message>
-        <source>Multi-Tool</source>
-        <translation type="vanished">다중 툴</translation>
-    </message>
-    <message>
-        <source>T&amp;ools Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows a toolbar
-that has some tools in it</extracomment>
-        <translation type="vanished">도구 도구모음(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Tool</source>
-        <translation type="vanished">선택 도구(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Envelope Tool</source>
-        <translation type="vanished">포락선 도구(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Draw Tool</source>
-        <translation type="vanished">그리기 도구(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Multi Tool</source>
-        <translation type="vanished">다중 도구(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Previous Tool</source>
-        <translation type="vanished">이전 도구(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Next Tool</source>
-        <translation type="vanished">다음 도구(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed</source>
-        <translation type="vanished">재생 속도</translation>
-    </message>
-    <message>
-        <source>Play at selected speed</source>
-        <translation type="vanished">선택한 속도로 재생</translation>
-    </message>
-    <message>
-        <source>Playback Speed</source>
-        <translation type="vanished">재생 속도</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed Once</source>
-        <translation type="vanished">지정 속도로 한번 재생</translation>
-    </message>
-    <message>
-        <source>Pla&amp;y-at-Speed Toolbar</source>
-        <translation type="vanished">재생속도 도구모음(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>&amp;Play-at-Speed</source>
-        <extracomment>i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.</extracomment>
-        <translation type="vanished">재생 속도(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed &amp;Once</source>
-        <translation type="vanished">지정 속도로 한번 재생(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview-at-Speed</source>
-        <translation type="vanished">잘라내고 미리보기 재생 속도(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Speed...</source>
-        <translation type="vanished">재생 속도 조절하기(&amp;J)...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Speed</source>
-        <translation type="vanished">재생 속도 증가(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Speed</source>
-        <translation type="vanished">재생 속도 감소(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Drag label. Hold shift and drag to move all labels on the same track.</source>
-        <translation type="vanished">레이블을 끌어다 놓습니다. Shift 키를 누른 채로 끌면 모든 레이블을 동일한 트랙으로 옮깁니다.</translation>
-    </message>
-    <message>
-        <source>Drag one or more label boundaries.</source>
-        <translation type="vanished">한 개 이상의 레이블 경계를 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Drag label boundary.</source>
-        <translation type="vanished">레이블 경계를 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Modified Label</source>
-        <translation type="vanished">수정된 레이블</translation>
-    </message>
-    <message>
-        <source>Label Edit</source>
-        <translation type="vanished">레이블 편집</translation>
-    </message>
-    <message>
-        <source>Click to edit label text</source>
-        <translation type="vanished">레이블 텍스트를 편집하려면 누르세요</translation>
-    </message>
-    <message>
-        <source>&amp;Font...</source>
-        <translation type="vanished">글꼴(&amp;F)...</translation>
-    </message>
-    <message>
-        <source>Label Track Font</source>
-        <extracomment>i18n-hint: (noun) This is the font for the label track.</extracomment>
-        <translation type="vanished">레이블 트랙 글꼴</translation>
-    </message>
-    <message>
-        <source>Face name</source>
-        <extracomment>i18n-hint: (noun) The name of the typeface</extracomment>
-        <translation type="vanished">글꼴 이름</translation>
-    </message>
-    <message>
-        <source>Face size</source>
-        <extracomment>i18n-hint: (noun) The size of the typeface</extracomment>
-        <translation type="vanished">글꼴 크기</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t Label text</source>
-        <translation type="vanished">레이블 텍스트 자르기(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Label text</source>
-        <translation type="vanished">레이블 텍스트 복사(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Label</source>
-        <translation type="vanished">레이블 삭제(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Label...</source>
-        <translation type="vanished">레이블 편집(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Deleted Label</source>
-        <translation type="vanished">삭제된 레이블</translation>
-    </message>
-    <message>
-        <source>Edited labels</source>
-        <translation type="vanished">레이블을 편집했습니다</translation>
-    </message>
-    <message>
-        <source>New label</source>
-        <translation type="vanished">새 레이블</translation>
-    </message>
-    <message>
-        <source>Up &amp;Octave</source>
-        <translation type="vanished">옥타브 올리기(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Down Octa&amp;ve</source>
-        <translation type="vanished">옥타브 내리기(&amp;V)</translation>
-    </message>
-    <message>
-        <source>MIDI Device Info</source>
-        <translation type="vanished">MIDI 장치 정보</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI Device Info...</source>
-        <translation type="vanished">MIDI 장치 정보(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.</source>
-        <translation type="vanished">수직 확대는 클릭, 축소는 Shift-클릭, 확대/축소 영역 지정은 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Zoom Reset</source>
-        <translation type="vanished">줌 초기화</translation>
-    </message>
-    <message>
-        <source>Shift-Right-Click</source>
-        <translation type="vanished">Shift-오른쪽 버튼 클릭</translation>
-    </message>
-    <message>
-        <source>Left-Click/Left-Drag</source>
-        <translation type="vanished">왼쪽 클릭/왼쪽 드래그</translation>
-    </message>
-    <message>
-        <source>Shift-Left-Click</source>
-        <translation type="vanished">Shift-왼쪽 클릭</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch selected region.</source>
-        <translation type="vanished">선택 영역을 늘이려면 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Stretch Note Track</source>
-        <extracomment>i18n-hint: (noun) The track that is used for MIDI notes which can be
-dragged to change their duration.</extracomment>
-        <translation type="vanished">노트 트랙 늘이기</translation>
-    </message>
-    <message>
-        <source>Stretch</source>
-        <extracomment>i18n-hint: In the history list, indicates a MIDI note has
-been dragged to change its duration (stretch it). Using either past
-or present tense is fine here.  If unsure, go for whichever is
-shorter.</extracomment>
-        <translation type="vanished">늘이기</translation>
-    </message>
-    <message>
-        <source>Click to open clip context menu.</source>
-        <translation type="vanished">클립 컨텍스트 메뉴를 열려면 클릭 하세요.</translation>
-    </message>
-    <message>
-        <source>Reset Clip Pitch</source>
-        <translation type="vanished">클립 피치 리셋</translation>
-    </message>
-    <message>
-        <source>Not enough space</source>
-        <translation type="vanished">저장공간 부족</translation>
-    </message>
-    <message>
-        <source>There is not enough space to expand the clip to its original speed.</source>
-        <translation type="vanished">클립을 원래의 속도로 늘리기 위해 충분한 저장공간이 없습니다.</translation>
-    </message>
-    <message>
-        <source>Reset Clip Speed</source>
-        <translation type="vanished">클립 속도 리셋</translation>
-    </message>
-    <message>
-        <source>Click to reset clip pitch.</source>
-        <translation type="vanished">클립 피치를 리셋하려면 클릭하세요.</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Cmd + click to reset.</source>
-        <translation type="vanished">클립 피치를 변경하려면 클릭, 리셋하려면 Cmd + click</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Ctrl + click to reset.</source>
-        <translation type="vanished">클립 피치를 변경하려면 클릭, 리셋하려면 Ctrl + click</translation>
-    </message>
-    <message>
-        <source>Click to reset clip speed.</source>
-        <translation type="vanished">클립 속도를 리셋하려면 클릭하세요.</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Cmd + click to reset.</source>
-        <translation type="vanished">클립 속도를 변경하려면 클릭, 리셋하려면 Cmd + click</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Ctrl + click to reset.</source>
-        <translation type="vanished">클립 속도를 변경하려면 클릭, 리셋하려면 Ctrl + click</translation>
-    </message>
-    <message>
-        <source>Left-Click to expand, Right-Click to remove</source>
-        <translation type="vanished">확장은 왼쪽 클릭, 제거는 오른쪽 클릭</translation>
-    </message>
-    <message>
-        <source>Expanded Cut Line</source>
-        <translation type="vanished">잘라내기 선을 확장했습니다</translation>
-    </message>
-    <message>
-        <source>Expand</source>
-        <translation type="vanished">확장</translation>
-    </message>
-    <message>
-        <source>Removed Cut Line</source>
-        <translation type="vanished">잘라내기 선을 제거했습니다</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed</source>
-        <translation type="vanished">피치와 속도</translation>
-    </message>
-    <message>
-        <source>Clip Pitch</source>
-        <translation type="vanished">클립 피치</translation>
-    </message>
-    <message>
-        <source>se&amp;mitones:</source>
-        <translation type="vanished">반음(&amp;M):</translation>
-    </message>
-    <message>
-        <source>&amp;cents:</source>
-        <translation type="vanished">센트(&amp;C):</translation>
-    </message>
-    <message>
-        <source>Clip Speed</source>
-        <translation type="vanished">클립 속도</translation>
-    </message>
-    <message>
-        <source>&amp;speed %: </source>
-        <translation type="vanished">속도(&amp;S) %: </translation>
-    </message>
-    <message>
-        <source>&amp;Optimize for Voice</source>
-        <translation type="vanished">목소리에 최적화(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Changed Speed</source>
-        <translation type="vanished">속도 변경</translation>
-    </message>
-    <message>
-        <source>Changed Pitch</source>
-        <translation type="vanished">변경된 피치</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the samples</source>
-        <translation type="vanished">샘플 편집은 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>To use Draw, zoom in further until you can see the individual samples.</source>
-        <translation type="vanished">그리기를 사용하려면, 각각의 샘플을 볼 수 있을 때까지 더 확대하세요.</translation>
-    </message>
-    <message>
-        <source>Moved Samples</source>
-        <translation type="vanished">샘플을 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Sample Edit</source>
-        <translation type="vanished">샘플 편집</translation>
-    </message>
-    <message>
-        <source>Zoom to Fit</source>
-        <translation type="vanished">맞춤 확대</translation>
-    </message>
-    <message>
-        <source>Reset Zoom</source>
-        <translation type="vanished">줌 초기화</translation>
-    </message>
-    <message>
-        <source>&amp;Spectrogram</source>
-        <translation type="vanished">스펙트로그램(&amp;S)</translation>
-    </message>
-    <message>
-        <source>To change Spectrogram Settings, stop any
- playing or recording first.</source>
-        <translation type="vanished">스펙토그램 설정을 변겨하려면, 먼저
-재생이나 녹음을 중단하세요.</translation>
-    </message>
-    <message>
-        <source>Stop the Audio First</source>
-        <translation type="vanished">오디오 먼저 중단</translation>
-    </message>
-    <message>
-        <source>S&amp;pectrogram Settings...</source>
-        <translation type="vanished">스펙트로그램 설정(&amp;P)...</translation>
-    </message>
-    <message>
-        <source>S&amp;pectral</source>
-        <translation type="vanished">스펙트럼(&amp;P)</translation>
-    </message>
-    <message>
-        <source>To&amp;ggle Spectral Selection</source>
-        <translation type="vanished">스펙트럼 선택 토글(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Next &amp;Higher Peak Frequency</source>
-        <translation type="vanished">다음단계 높은 피크 주파수(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Next &amp;Lower Peak Frequency</source>
-        <translation type="vanished">다음단계 낮은 피크 주파수(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">확대 영역을 지정하려면 드래그 하세요. 메뉴를 보려면 오른쪽 버튼. Ctrl+휠로 확대.</translation>
-    </message>
-    <message>
-        <source>Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">메뉴는 우클릭. 확대는 Ctrl+휠</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust sizes of sub-views, double-click to split evenly</source>
-        <translation type="vanished">하위 보기의 크기를 변경하려면, 클릭하고 드래그 하고, 같은 크기로 나누려면 더블 클릭 하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to rearrange sub-views</source>
-        <translation type="vanished">하위 보기를 재조정하려면 클릭하여 드래그 하세요.</translation>
-    </message>
-    <message>
-        <source>Rearrange sub-views</source>
-        <translation type="vanished">하위 보기 재조정</translation>
-    </message>
-    <message>
-        <source>Close sub-view</source>
-        <translation type="vanished">하위 보기 닫기</translation>
-    </message>
-    <message>
-        <source>Mute/Unmute Track</source>
-        <translation type="vanished">트랙 음소거/해제</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip</source>
-        <oldsource>%s, %d of %d clips</oldsource>
-        <extracomment>i18n-hint:
-string is the name of a clip
-first number is the position of that clip in a sequence of clips,
-second number counts the clips</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 /%3 클립</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Adjust left trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished"> %1 초 왼쪽 트리밍 조정</translation>
-    </message>
-    <message>
-        <source>Trim by %.02fs</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown</extracomment>
-        <translation type="vanished"> %1초 트리밍</translation>
-    </message>
-    <message>
-        <source>Adjust right trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished"> %1 초 오른쪽 트리밍 조정</translation>
-    </message>
-    <message>
-        <source>Click and drag to move clip boundary in time</source>
-        <translation type="vanished">클립 선택영역을 변경하려면 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch clip</source>
-        <translation type="vanished">클립을 늘이려면 클릭하여 드래그 하세요</translation>
-    </message>
-    <message>
-        <source>Split Clip</source>
-        <translation type="vanished">클립 분할</translation>
-    </message>
-    <message>
-        <source>Join Clips</source>
-        <translation type="vanished">클립 합치기</translation>
-    </message>
-    <message>
-        <source>Rename Clip...</source>
-        <translation type="vanished">클립 이름변경...</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed...</source>
-        <translation type="vanished">피치와 속도...</translation>
-    </message>
-    <message>
-        <source>Render Pitch and Speed</source>
-        <translation type="vanished">피치와 속도 렌더링</translation>
-    </message>
-    <message>
-        <source>Changed Clip Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">클리 속도를 %1%%로 변경</translation>
-    </message>
-    <message>
-        <source>Changed Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished"> 속도를 %1%%로 변경</translation>
-    </message>
-    <message>
-        <source>Set Wave Clip Name</source>
-        <translation type="vanished">Wave 클립 이름 설정</translation>
-    </message>
-    <message>
-        <source>Click and drag to select text</source>
-        <translation type="vanished">텍스트 선택은 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>Modified Clip Name</source>
-        <translation type="vanished">변경된 클립 이름</translation>
-    </message>
-    <message>
-        <source>Clip Name Edit</source>
-        <translation type="vanished">클립 이름 편집</translation>
-    </message>
-    <message>
-        <source>Rendered time-stretched audio</source>
-        <translation type="vanished">시간 늘임 오디오 렌더링</translation>
-    </message>
-    <message>
-        <source>Pitch Shift</source>
-        <translation type="vanished">피치 이동</translation>
-    </message>
-    <message>
-        <source>Changed Pitch Shift</source>
-        <translation type="vanished">변경된 피치 이동</translation>
-    </message>
-    <message>
-        <source>&amp;Rename Clip...</source>
-        <translation type="vanished">클립 이름변경...(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Pitch and Speed...</source>
-        <translation type="vanished">피치와 속도...(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Render Pitch and &amp;Speed</source>
-        <translation type="vanished">피치와 속도 렌더링(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Up</source>
-        <translation type="vanished">피치 올림(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Down</source>
-        <translation type="vanished">피치 내림(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Format</source>
-        <translation type="vanished">형식(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Changing sample format</source>
-        <translation type="vanished">샘플 포맷 변경</translation>
-    </message>
-    <message>
-        <source>Processing...   0%%</source>
-        <translation type="vanished">처리중...	0%%</translation>
-    </message>
-    <message>
-        <source>Processing...   %i%%</source>
-        <translation type="vanished">처리중...	%1%%</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s</source>
-        <extracomment>i18n-hint: The strings name a track and a format</extracomment>
-        <translation type="vanished">'%1'을 %2로 변경했습니다</translation>
-    </message>
-    <message>
-        <source>Format Change</source>
-        <translation type="vanished">형식 변경</translation>
-    </message>
-    <message>
-        <source>Rat&amp;e</source>
-        <translation type="vanished">속도(&amp;E)</translation>
-    </message>
-    <message>
-        <source>8000 Hz</source>
-        <translation type="vanished">8000 Hz</translation>
-    </message>
-    <message>
-        <source>11025 Hz</source>
-        <translation type="vanished">11025 Hz</translation>
-    </message>
-    <message>
-        <source>16000 Hz</source>
-        <translation type="vanished">16000 Hz</translation>
-    </message>
-    <message>
-        <source>22050 Hz</source>
-        <translation type="vanished">22050 Hz</translation>
-    </message>
-    <message>
-        <source>44100 Hz</source>
-        <translation type="vanished">44100 Hz</translation>
-    </message>
-    <message>
-        <source>48000 Hz</source>
-        <translation type="vanished">48000 Hz</translation>
-    </message>
-    <message>
-        <source>88200 Hz</source>
-        <translation type="vanished">88200 Hz</translation>
-    </message>
-    <message>
-        <source>96000 Hz</source>
-        <translation type="vanished">96000 Hz</translation>
-    </message>
-    <message>
-        <source>176400 Hz</source>
-        <translation type="vanished">176400 Hz</translation>
-    </message>
-    <message>
-        <source>192000 Hz</source>
-        <translation type="vanished">192000 Hz</translation>
-    </message>
-    <message>
-        <source>352800 Hz</source>
-        <translation type="vanished">352800 Hz</translation>
-    </message>
-    <message>
-        <source>384000 Hz</source>
-        <translation type="vanished">384000 Hz</translation>
-    </message>
-    <message>
-        <source>&amp;Other...</source>
-        <translation type="vanished">기타(&amp;O)...</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s Hz</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1'을 %2 Hz로 변경했습니다</translation>
-    </message>
-    <message>
-        <source>Rate Change</source>
-        <translation type="vanished">속도 변경</translation>
-    </message>
-    <message>
-        <source>Set Rate</source>
-        <translation type="vanished">속도 설정</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke Stereo Track</source>
-        <translation type="vanished">스테레오 트랙 만들기(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Swap Stereo &amp;Channels</source>
-        <translation type="vanished">스테레오 채널 스웝(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Stereo Track</source>
-        <translation type="vanished">스테레오 트랙 분할(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mo&amp;no</source>
-        <translation type="vanished">스테레오를 모노로 분할(&amp;N)</translation>
-    </message>
-    <message>
-        <source>The tracks you are attempting to merge to stereo contain clips at
-different positions, or otherwise mismatching clips. Merging them
-will render the tracks.
-
-This causes any realtime effects to be applied to the waveform and
-hidden data to be removed. Additionally, the entire track will
-become one large clip.
-
-Do you wish to continue?</source>
-        <translation type="vanished">지금 스테레오로 통합하력는 트랙에는 
-서로 다른 위치의 클립 혹은 매칭되지 않는 클립이 있습니다. 
-이를 통합하면 트랙을 렌더링 하게 됩니다. 
-
-이로 인해 실시간 이펙트가 파형에 적용되지 않거나
-숨겨진 데이터가 삭제될 수 있습니다. 특히, 
-전체 트랙이 하나의 큰 트랙으로 합쳐집니다.
-
-계속하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Combine mono to stereo</source>
-        <translation type="vanished">모노 오디오를 스테레오로 결합</translation>
-    </message>
-    <message>
-        <source>Made '%s' a stereo track</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1'을 스테레오 트랙으로 만들었습니다</translation>
-    </message>
-    <message>
-        <source>Make Stereo</source>
-        <translation type="vanished">스테레오 만들기</translation>
-    </message>
-    <message>
-        <source>Swapped Channels in '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1'의 채널을 스웝했습니다</translation>
-    </message>
-    <message>
-        <source>Swap Channels</source>
-        <translation type="vanished">채널 스웝</translation>
-    </message>
-    <message>
-        <source>Split stereo track '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' 스테레오 트랙을 분할했습니다</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mono '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">스테레오를 '%1' 모노로 분할했습니다</translation>
-    </message>
-    <message>
-        <source>Split to Mono</source>
-        <translation type="vanished">모노로 분할</translation>
-    </message>
-    <message>
-        <source>Created new audio track</source>
-        <translation type="vanished">새 오디오 트랙을 만들었습니다</translation>
-    </message>
-    <message>
-        <source>Created new stereo audio track</source>
-        <translation type="vanished">새 스테레오 오디오 트랙을 만들었습니다</translation>
-    </message>
-    <message>
-        <source>&amp;Mono Track</source>
-        <translation type="vanished">모노 트랙(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo Track</source>
-        <translation type="vanished">스테레오 트랙(&amp;S)</translation>
-    </message>
-    <message>
-        <source>%+.1f dB</source>
-        <extracomment>i18n-hint dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.0f%% Left</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% 왼쪽</translation>
-    </message>
-    <message>
-        <source>%.0f%% Right</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% 오른쪽</translation>
-    </message>
-    <message>
-        <source>Half Wave</source>
-        <translation type="vanished">반파장</translation>
-    </message>
-    <message>
-        <source>Wa&amp;veform</source>
-        <translation type="vanished">파형(&amp;V)</translation>
-    </message>
-    <message>
-        <source>&amp;Wave Color</source>
-        <translation type="vanished">파형 색상(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Instrument %i</source>
-        <translation type="vanished">악기 %1</translation>
-    </message>
-    <message>
-        <source>WaveColor Change</source>
-        <translation type="vanished">파형색상 변경</translation>
-    </message>
-    <message>
-        <source>Change Speed Limits</source>
-        <translation type="vanished">속도 변경</translation>
-    </message>
-    <message>
-        <source>Change speed limit (%) to:</source>
-        <translation type="vanished">최저 속도 한계 변경 (%):</translation>
-    </message>
-    <message>
-        <source>Lower Speed Limit</source>
-        <translation type="vanished">최저 속도 한계</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit</source>
-        <translation type="vanished">최대 속도 한계</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit must be greater than the Lower Speed Limit</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid Limits</source>
-        <translation type="vanished">잘못된 리미트</translation>
-    </message>
-    <message>
-        <source>Set range to '%ld' - '%ld'</source>
-        <translation type="vanished">범위 설정: '%1' - '%2'</translation>
-    </message>
-    <message>
-        <source>Set Range</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">범위 설정</translation>
-    </message>
-    <message>
-        <source>Set time track display to linear</source>
-        <translation type="vanished">시간 트랙 표시를 선형으로 설정합니다</translation>
-    </message>
-    <message>
-        <source>Set Display</source>
-        <translation type="vanished">표시 설정</translation>
-    </message>
-    <message>
-        <source>Set time track display to logarithmic</source>
-        <translation type="vanished">시간 트랙 표시를 로그로 설정합니다</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to linear</source>
-        <translation type="vanished">시간 트랙 보간을 선형으로 설정합니다</translation>
-    </message>
-    <message>
-        <source>Set Interpolation</source>
-        <translation type="vanished">보간 설정</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to logarithmic</source>
-        <translation type="vanished">시간 트랙 보간을 로그로 설정합니다</translation>
-    </message>
-    <message>
-        <source>&amp;Linear scale</source>
-        <translation type="vanished">선형 눈금(&amp;L)</translation>
-    </message>
-    <message>
-        <source>L&amp;ogarithmic scale</source>
-        <translation type="vanished">로그 눈금(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Range...</source>
-        <translation type="vanished">범위(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Logarithmic &amp;Interpolation</source>
-        <translation type="vanished">로그 보간(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Created new time track</source>
-        <translation type="vanished">새로운 시간 트랙을 만들었습니다</translation>
-    </message>
-    <message>
-        <source>&amp;Time Track</source>
-        <translation type="vanished">시간 트랙(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Right-click for menu.</source>
-        <translation type="vanished">메뉴는 우클릭</translation>
-    </message>
-    <message>
-        <source>Drag clips to reposition them. Hold Shift and drag to move all clips on the same track.</source>
-        <extracomment>i18n-hint Appears on hovering mouse over clip affordance</extracomment>
-        <translation type="vanished">클립의 위치를 변경하려면 드래그. Shift를 누르고 드래그 하면 같은 트랙의 모든 클립을 이동.</translation>
-    </message>
-    <message>
-        <source>Add Mono Track</source>
-        <translation type="vanished">모노 트랙 추가</translation>
-    </message>
-    <message>
-        <source>Add Stereo Track</source>
-        <translation type="vanished">스테레오 트랙 추가</translation>
-    </message>
-    <message>
-        <source>Add Label Track</source>
-        <translation type="vanished">레이블 트랙 추가</translation>
-    </message>
-    <message>
-        <source>Export Audio...</source>
-        <translation type="vanished">오디오 내보내기...</translation>
-    </message>
-    <message>
-        <source>Erased selected area</source>
-        <translation type="vanished">선택된 영역 삭제</translation>
-    </message>
-    <message>
-        <source>Selected area using Brush Tool</source>
-        <translation type="vanished">브러시 도구를 사용하여 선택된 영역</translation>
-    </message>
-    <message>
-        <source>Brush tool selection</source>
-        <translation type="vanished">브러쉬 도구 선택</translation>
-    </message>
-    <message>
-        <source>Re&amp;name Track...</source>
-        <translation type="vanished">트랙 이름 바꾸기(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Up</source>
-        <translation type="vanished">트랙을 위로(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Down</source>
-        <translation type="vanished">트랙을 아래로(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Top</source>
-        <translation type="vanished">트랙을 맨 위로(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Bottom</source>
-        <translation type="vanished">트랙을 맨 아래로(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Set Track Name</source>
-        <translation type="vanished">트랙 이름 설정</translation>
-    </message>
-    <message>
-        <source>Renamed '%s' to '%s'</source>
-        <translation type="vanished">'%1'을 '%2'로 이름을 변경했습니다</translation>
-    </message>
-    <message>
-        <source>Name Change</source>
-        <translation type="vanished">이름 변경</translation>
-    </message>
-    <message>
-        <source>Click and drag to warp playback time</source>
-        <translation type="vanished">재생 시간을 조정(warp)하려면 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the amplitude envelope</source>
-        <translation type="vanished">진폭 포락선 편집은 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>Adjusted envelope.</source>
-        <extracomment>i18n-hint: (verb) Audacity has just adjusted the envelope .</extracomment>
-        <translation type="vanished">포락선을 조정했습니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">스크러빙(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="vanished">탐색하기</translation>
-    </message>
-    <message>
-        <source>Scrub &amp;Ruler</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">스크러빙 눈금자(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Playing at Speed</source>
-        <translation type="vanished">재생 속도</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Seek</source>
-        <translation type="vanished">탐색은 마우스 포인터를 이동하세요</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Scrub</source>
-        <translation type="vanished">마우스 포인터를 이동하여 스크러빙</translation>
-    </message>
-    <message>
-        <source>Scru&amp;bbing</source>
-        <translation type="vanished">스크러빙(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Scrub Bac&amp;kwards</source>
-        <translation type="vanished">뒤쪽으로 스크러빙(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Scrub For&amp;wards</source>
-        <translation type="vanished">앞쪽으로 스크러빙(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Click and drag to move left selection boundary.</source>
-        <translation type="vanished">왼쪽 선택 경계 이동은 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move right selection boundary.</source>
-        <translation type="vanished">오른쪽 선택 경계 이동은 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move bottom selection frequency.</source>
-        <translation type="vanished">최하단 선택 주파수 이동은 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move top selection frequency.</source>
-        <translation type="vanished">최상단 선택 주파수 이동은 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency to a spectral peak.</source>
-        <translation type="vanished">가운데 선택 주파수를 스펙트럼의 피크까지 이동하려면 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency.</source>
-        <translation type="vanished">가운데 선택 주파수 이동은 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust frequency bandwidth.</source>
-        <translation type="vanished">주파수 대역폭을 조절하려면 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Edit, Preferences...</source>
-        <extracomment>i18n-hint: These are the names of a menu and a command in that menu</extracomment>
-        <translation type="vanished">편집, 환경설정...</translation>
-    </message>
-    <message>
-        <source>Multi-Tool Mode: %s for Mouse and Keyboard Preferences.</source>
-        <extracomment>i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac</extracomment>
-        <translation type="vanished">다중 도구 모드:  %1 마우스와 키보드 환경설정.</translation>
-    </message>
-    <message>
-        <source>Click and drag to set frequency bandwidth.</source>
-        <translation type="vanished">주파수 대역폭 설정은 클릭 후 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>Click and drag to select audio</source>
-        <translation type="vanished">오디오 선택은 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>(snapping)</source>
-        <extracomment>i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries</extracomment>
-        <translation type="vanished">(스내핑)</translation>
-    </message>
-    <message>
-        <source>Click and drag to move a track in time</source>
-        <translation type="vanished">트랙을 제시간으로 이동하려면 클릭 후 드래그하세요</translation>
-    </message>
-    <message>
-        <source>Could not shift between tracks</source>
-        <translation type="vanished">트랙간에는 이동할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Moved clips to another track</source>
-        <translation type="vanished">클립을 다른 트랙으로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips right %.02f seconds</source>
-        <translation type="vanished">트랙/클립을 오른쪽으로 %1초 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips left %.02f seconds</source>
-        <translation type="vanished">트랙/클립을 왼쪽으로 %1초 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Move Clip</source>
-        <translation type="vanished">클립 이동</translation>
-    </message>
-    <message>
-        <source>Collapse</source>
-        <translation type="vanished">축소</translation>
-    </message>
-    <message>
-        <source>Delete Track</source>
-        <translation type="vanished">트랙 삭제</translation>
-    </message>
-    <message>
-        <source>Open menu...</source>
-        <translation type="vanished">메뉴 열기...</translation>
-    </message>
-    <message>
-        <source>Command+Click</source>
-        <extracomment>i18n-hint: Command names a modifier key on Macintosh keyboards</extracomment>
-        <translation type="vanished">Command+클릭</translation>
-    </message>
-    <message>
-        <source>Ctrl+Click</source>
-        <extracomment>i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards</extracomment>
-        <translation type="vanished">Ctrl+클릭</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track. Drag up or down to change track order.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">트랙 선택/선택 해제는 %1. 트랙 순서 변경은 위아래로 드래그하세요.</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">트랙 선택/선택 해제는 %1.</translation>
-    </message>
-    <message>
-        <source>Moved '%s' up</source>
-        <extracomment>i18n-hint: will substitute name of track for %s</extracomment>
-        <translation type="vanished">'%1'을 위로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Moved '%s' down</source>
-        <translation type="vanished">'%1'을 아래로 이동했습니다</translation>
-    </message>
-    <message>
-        <source>Move Track</source>
-        <translation type="vanished">트랙 이동</translation>
-    </message>
-    <message>
-        <source>Click to Zoom In, Shift-Click to Zoom Out</source>
-        <translation type="vanished">확대는 클릭, 축소는 Shift-클릭하세요</translation>
-    </message>
-    <message>
-        <source>Drag to Zoom Into Region, Right-Click to Zoom Out</source>
-        <translation type="vanished">영역 확대는 드래그, 축소는 우클릭하세요</translation>
-    </message>
-    <message>
-        <source>Left=Zoom In, Right=Zoom Out, Middle=Normal</source>
-        <translation type="vanished">왼쪽=확대, 오른쪽=축소, 가운데=정상</translation>
-    </message>
-    <message>
-        <source>No Updates Available</source>
-        <extracomment>i18n-hint: Title of the dialog no updates available.</extracomment>
-        <translation type="vanished">적용할 업데이트가 없음</translation>
-    </message>
-    <message>
-        <source>Check for Updates</source>
-        <translation type="vanished">업데이트 확인</translation>
-    </message>
-    <message>
-        <source>If you want to change your preference for automatic updates checking, you can find it in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Application'.</extracomment>
-        <translation type="vanished">자동 업데이트 검사 환경설정을 바꾸려면 %1에서 찾아볼 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Application</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
-i18n-hint: a page in the Preferences dialog; use same name</extracomment>
-        <translation type="vanished">환경설정 &gt; 프로그램</translation>
-    </message>
-    <message>
-        <source>Error checking for update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">업데이트를 위한 오류 점검</translation>
-    </message>
-    <message>
-        <source>Unable to connect to Audacity update server.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">오데시티 업데이트 서버에 접속할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Update data was corrupted.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">업데이트 데이터가 손실되었습니다.</translation>
-    </message>
-    <message>
-        <source>Error downloading update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">업데이트 다운로드 실패</translation>
-    </message>
-    <message>
-        <source>Can't open the Audacity download link.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">오데시티 다운로드 링크를 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Audacity update</source>
-        <translation type="vanished">오데시티 업데이트</translation>
-    </message>
-    <message>
-        <source>Downloading %s</source>
-        <translation type="vanished">%1 다운로드 중</translation>
-    </message>
-    <message>
-        <source>App update checking</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">앱 업데이트 확인</translation>
-    </message>
-    <message>
-        <source>To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.</source>
-        <extracomment>i18n-hint: The first paragraph of app update notice dialog.</extracomment>
-        <translation type="vanished">앱을 최신상태로 유지하기 위해서, 다운로드 할 수있는 새로운 버전이 있을 경우, 앱으로부터 알림을 받게 됩니다.</translation>
-    </message>
-    <message>
-        <source>In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.</source>
-        <extracomment>i18n-hint: The second paragraph of app update notice dialog</extracomment>
-        <translation type="vanished">개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 수집하지 않습니다. 하지만 앱 업데이트 확인을 위해서는 네트워크에 접속해 있어야 합니다. </translation>
-    </message>
-    <message>
-        <source>You can turn off app update checking at any time in %s.</source>
-        <extracomment>i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences &gt; Application" link</extracomment>
-        <translation type="vanished">%1 앱 업데이트 확인기능을 언제든 끌 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>App updates</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">앱 업데이트</translation>
-    </message>
-    <message>
-        <source>Update Audacity</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">오데시티 업데이트</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">건너뛰기(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Install update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">업데이트 설치(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Audacity %s is available!</source>
-        <comment>update dialog</comment>
-        <extracomment>i18n-hint Substitution of version number for %s.</extracomment>
-        <translation type="vanished">오데시티 %1 를 사용할 수 있습니다!</translation>
-    </message>
-    <message>
-        <source>Changelog</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">변경 사항</translation>
-    </message>
-    <message>
-        <source>Read more on GitHub</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">GitHub의 상세정보를 참조</translation>
-    </message>
-    <message>
-        <source>(disabled)</source>
-        <translation type="vanished">(비활성)</translation>
-    </message>
-    <message>
-        <source>Press</source>
-        <translation type="vanished">누르기</translation>
-    </message>
-    <message>
-        <source>Button</source>
-        <translation type="vanished">버튼</translation>
-    </message>
-    <message>
-        <source>pressed</source>
-        <extracomment>i18n-hint: whether a button is pressed or not pressed</extracomment>
-        <translation type="vanished">누름</translation>
-    </message>
-    <message>
-        <source>not pressed</source>
-        <translation type="vanished">누르지 않음</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Left, in the Pan slider
-i18n-hint: One-letter abbreviation for Left, in VU Meter</extracomment>
-        <translation type="vanished">L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Right, in the Pan slider
-i18n-hint: One-letter abbreviation for Right, in VU Meter</extracomment>
-        <translation type="vanished">R</translation>
-    </message>
-    <message>
-        <source>%.3fx</source>
-        <extracomment>i18n-hint: "x" suggests a multiplicative factor</extracomment>
-        <translation type="vanished">%1x</translation>
-    </message>
-    <message>
-        <source>&amp;Clear</source>
-        <translation type="vanished">지우기(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Grabber</source>
-        <extracomment>i18n-hint: A 'Grabber' is a region you can click and drag on
-It's used to drag a track around (when in multi-tool mode) rather
-than requiring that you use the drag tool.  It's shown as a series
-of horizontal bumps</extracomment>
-        <translation type="vanished">그래버</translation>
-    </message>
-    <message>
-        <source>Empty</source>
-        <translation type="vanished">비어 있음</translation>
-    </message>
-    <message>
-        <source>Menu</source>
-        <translation type="vanished">메뉴</translation>
-    </message>
-    <message>
-        <source>Meter</source>
-        <extracomment>i18n-hint: Noun (the meter is used for playback or record level monitoring)</extracomment>
-        <translation type="vanished">미터</translation>
-    </message>
-    <message>
-        <source>Disable Silent Monitoring</source>
-        <translation type="vanished">묵음 모니터링 비활성화</translation>
-    </message>
-    <message>
-        <source>Enable Silent Monitoring</source>
-        <translation type="vanished">묵음 모니터링 활성화</translation>
-    </message>
-    <message>
-        <source>Recording Meter Options</source>
-        <translation type="vanished">녹음 레벨 미터 옵션</translation>
-    </message>
-    <message>
-        <source>Playback Meter Options</source>
-        <translation type="vanished">재생 레벨 미터 옵션</translation>
-    </message>
-    <message>
-        <source>Refresh Rate</source>
-        <translation type="vanished">리프레쉬 속도</translation>
-    </message>
-    <message>
-        <source>Higher refresh rates make the meter show more frequent
-changes. A rate of 30 per second or less should prevent
-the meter affecting audio quality on slower machines.</source>
-        <translation type="vanished">더 높은 리프레시 속도는 미터 변경사항을 더 자주 보여줍니다
-초당 30 이하의 속도는 느린 컴퓨터에서 레벨 미터가
-오디오 품질에 미치는 영향을 막아 줍니다.</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]</source>
-        <translation type="vanished">초당 레벨 미터 갱신속도 [1-100]</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]: </source>
-        <translation type="vanished">초당 레벨 미터 갱신속도 [1-100]: </translation>
-    </message>
-    <message>
-        <source>Meter Style</source>
-        <translation type="vanished">레벨 미터 스타일</translation>
-    </message>
-    <message>
-        <source>Meter Type</source>
-        <translation type="vanished">레벨 미터 형식</translation>
-    </message>
-    <message>
-        <source>Orientation</source>
-        <translation type="vanished">방향</translation>
-    </message>
-    <message>
-        <source>Missing Plugins</source>
-        <translation type="vanished">플러그인이 없음</translation>
-    </message>
-    <message>
-        <source>This project contains some realtime effect plugins that cannot be found on this system.</source>
-        <translation type="vanished">이 프로젝트는 실시간 이펙트 플러그인을 포함하고 있으나, 이 시스템에 없습니다.</translation>
-    </message>
-    <message>
-        <source>The project may sound different than intended. %s</source>
-        <extracomment>i18n-hint: %s will be replaced with "Learn more"</extracomment>
-        <translation type="vanished">이 프로젝트는 의도한 바와 다른 소리가 날 수 있습니다. %1</translation>
-    </message>
-    <message>
-        <source>Learn more</source>
-        <translation type="vanished">좀더 상세한 정보</translation>
-    </message>
-    <message>
-        <source>(Use context menu to change format.)</source>
-        <translation type="vanished">(우클릭 메뉴에서 형식을 바꿀 수 있습니다)</translation>
-    </message>
-    <message>
-        <source>%s (%s)</source>
-        <translation type="vanished">%1 (%2)</translation>
-    </message>
-    <message>
-        <source>Unable to write files to directory: %s.</source>
-        <extracomment>i18n-hint: %s is replaced with a directory path.</extracomment>
-        <translation type="vanished">%1 디렉토리에 파일을 쓸 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Please check that the directory exists, has the necessary permissions, and the drive isn't full.</source>
-        <extracomment>i18n-hint: This message describes the error in the Error dialog.</extracomment>
-        <translation type="vanished">디렉토리가 실제로 있는지, 권한, 혹은 용량이 충분한지 확인하기 바랍니다.</translation>
-    </message>
-    <message>
-        <source>You can change the directory in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Directories'.</extracomment>
-        <translation type="vanished">%1 디렉토리 위치를 변경할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Directories</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.</extracomment>
-        <translation type="vanished">환경설정 &gt; 디렉토리</translation>
-    </message>
-    <message>
-        <source>Don't show this warning again</source>
-        <translation type="vanished">이 경고를 다시 보이지 않음</translation>
-    </message>
-    <message>
-        <source>NaN</source>
-        <translation type="vanished">NaN</translation>
-    </message>
-    <message>
-        <source>Infinity</source>
-        <translation type="vanished">무한</translation>
-    </message>
-    <message>
-        <source>-Infinity</source>
-        <translation type="vanished">-무한대</translation>
-    </message>
-    <message>
-        <source>Validation error</source>
-        <translation type="vanished">확인 오류</translation>
-    </message>
-    <message>
-        <source>Empty value</source>
-        <translation type="vanished">빈 값</translation>
-    </message>
-    <message>
-        <source>Malformed number</source>
-        <translation type="vanished">잘못된 숫자</translation>
-    </message>
-    <message>
-        <source>Not in range %d to %d</source>
-        <translation type="vanished">%1에서 %2의 범위에 없습니다</translation>
-    </message>
-    <message>
-        <source>Value overflow</source>
-        <translation type="vanished">값 오버플로우</translation>
-    </message>
-    <message>
-        <source>Too many decimal digits</source>
-        <translation type="vanished">너무 많은 십진수</translation>
-    </message>
-    <message>
-        <source>Value not in range: %s to %s</source>
-        <translation type="vanished">범위 안에 없는 값: %1에서 %2까지</translation>
-    </message>
-    <message>
-        <source>Value must not be less than %s</source>
-        <translation type="vanished">값은 %1보다 더 작으면 안됩니다</translation>
-    </message>
-    <message>
-        <source>Value must not be greater than %s</source>
-        <translation type="vanished">값은 %1 이하 이어야 함</translation>
-    </message>
-    <message>
-        <source>Shelf Filter</source>
-        <translation type="vanished">쉘빙 필터</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Multi Tool</source>
-        <translation type="vanished">스펙트럼 편집 멀티 툴</translation>
-    </message>
-    <message>
-        <source>~aNotch filter parameters cannot be applied.~%~
-                      Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'.</source>
-        <translation type="vanished">~a노치 필터 매개 변수를 적용할 수 없습니다.~%~
-                      낮은 주파수 범위를 높이거나~%~
-                      필터 '너비'를 줄이세요.</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Parametric EQ</source>
-        <translation type="vanished">스펙트럼 편집 파라매트릭 EQ</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Shelves</source>
-        <translation type="vanished">스펙트럼 편집 도구모음</translation>
-    </message>
-    <message>
-        <source>Studio Fade Out</source>
-        <translation type="vanished">스튜디오 페이드 아웃</translation>
-    </message>
-    <message>
-        <source>Adjustable Fade</source>
-        <translation type="vanished">조정 가능한 페이드</translation>
-    </message>
-    <message>
-        <source>Beat Finder</source>
-        <translation type="vanished">비트 검색기</translation>
-    </message>
-    <message>
-        <source>Clip Fix</source>
-        <translation type="vanished">클리핑 고치기</translation>
-    </message>
-    <message>
-        <source>Crossfade Clips</source>
-        <translation type="vanished">클립 크로스페이드</translation>
-    </message>
-    <message>
-        <source>Crossfade Tracks</source>
-        <translation type="vanished">트랙 크로스페이드</translation>
-    </message>
-    <message>
-        <source>Regular Interval Labels</source>
-        <translation type="vanished">일반 인터벌 레이블</translation>
-    </message>
-    <message>
-        <source>Error: There is insufficient space to create labels.~%</source>
-        <translation type="vanished">오류: 레이블을 생성할 공간이 부족합니다. ~%</translation>
-    </message>
-    <message>
-        <source>High-Pass Filter</source>
-        <translation type="vanished">하이패스 필터</translation>
-    </message>
-    <message>
-        <source>Label Sounds</source>
-        <extracomment>i18n-hint: Name of effect that labels sounds</extracomment>
-        <translation type="vanished">사운드 레이블</translation>
-    </message>
-    <message>
-        <source>No sounds found.~%~
-                 Try lowering 'Threshold level (dB)'.</source>
-        <translation type="vanished">아무런 소리도 찾지 못했습니다.~%~
-              '임계값(dB)'을 낮추어 다시 시도해 보세요.</translation>
-    </message>
-    <message>
-        <source>Legacy Limiter</source>
-        <translation type="vanished">VO Limiter</translation>
-    </message>
-    <message>
-        <source>Low-Pass Filter</source>
-        <translation type="vanished">로우패스 필터</translation>
-    </message>
-    <message>
-        <source>Noise Gate</source>
-        <translation type="vanished">노이즈 게이트</translation>
-    </message>
-    <message>
-        <source>Don't Link Stereo</source>
-        <translation type="vanished">스테레오 트랙 링크 풀기</translation>
-    </message>
-    <message>
-        <source>Notch Filter</source>
-        <translation type="vanished">노치 필터</translation>
-    </message>
-    <message>
-        <source>Nyquist Plugin Installer</source>
-        <translation type="vanished">나이키스트 플러그인 설치도구</translation>
-    </message>
-    <message>
-        <source>Files already installed ('Allow Overwriting' disabled):</source>
-        <translation type="vanished">파일이 이미 설치되어 있음 ('덮어 쓰기 허용' 이 비활성화 됨):</translation>
-    </message>
-    <message>
-        <source>Rhythm Track</source>
-        <translation type="vanished">리듬 트랙</translation>
-    </message>
-    <message>
-        <source>Set 'Number of bars' to zero to enable the 'Rhythm track duration'.</source>
-        <translation type="vanished">'리듬 트랙 길이'를 활성화 하려면 '마디의 개수'를 0으로 설정하세요.</translation>
-    </message>
-    <message>
-        <source>Used if 'Number of bars' = 0</source>
-        <translation type="vanished">'마디의 수' = 0 인 경우 사용</translation>
-    </message>
-    <message>
-        <source>Set either 'Number of bars' or~%~
-                    'Rhythm track duration' to greater than zero.</source>
-        <translation type="vanished">'마디의 개수' 또는 '리듬 트랙 길이'를 ~%~
-                    0 보다 큰 값을 입력하세요.</translation>
-    </message>
-    <message>
-        <source>Risset Drum</source>
-        <translation type="vanished">리싯 드럼</translation>
-    </message>
-    <message>
-        <source>Error.~%"~a" cannot be written.</source>
-        <translation type="vanished">오류.~%"~a"에 쓸 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Sample Data Import</source>
-        <translation type="vanished">샘플 데이터 가져오기</translation>
-    </message>
-    <message>
-        <source>Error~%~
-                        '~a' could not be opened.~%~
-                        Check that file exists.</source>
-        <translation type="vanished">오류~%~
-                     '~a' 는 열 수 없음.~%~
-                     파일이 있는지 확인이 필요.</translation>
-    </message>
-    <message>
-        <source>Error:~%~
-              The file must contain only plain ASCII text.~%~
-              (Invalid byte '~a' at byte number: ~a)</source>
-        <translation type="vanished">오류:~%~
-              파일에는 ASCII 일반 문자만 들어있어야 함.~%~
-               (허용하지 않는 값 '~a' 이 바이트 주소 ~a 에 있음)</translation>
-    </message>
-    <message>
-        <source>Error~%~
-              Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value.</source>
-        <translation type="vanished">오류~%~
-              데이터가 ASCII 일반 문자에 해당하는 값이어야 함.~%~
-               '~a' 는 수치 값이 아님.</translation>
-    </message>
-    <message>
-        <source>Spectral Delete</source>
-        <translation type="vanished">스펙트럼 삭제</translation>
-    </message>
-    <message>
-        <source>Volume and Compression</source>
-        <extracomment>Effects menu group name; audio dynamics compression, not data compression</extracomment>
-        <translation type="vanished">음량과 컴프레션</translation>
-    </message>
-    <message>
-        <source>Fading</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">페이딩</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo</source>
-        <translation type="vanished">피치와 템포</translation>
-    </message>
-    <message>
-        <source>EQ and Filters</source>
-        <translation type="vanished">EQ 와 필터</translation>
-    </message>
-    <message>
-        <source>Noise Removal and Repair</source>
-        <translation type="vanished">노이즈 제거 및 복구</translation>
-    </message>
-    <message>
-        <source>Delay and Reverb</source>
-        <translation type="vanished">지연 및 리버브</translation>
-    </message>
-    <message>
-        <source>Distortion and Modulation</source>
-        <translation type="vanished">디스토션과 모듈레이션</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">특수</translation>
-    </message>
-    <message>
-        <source>Vocal Reduction and Isolation</source>
-        <translation type="vanished">보컬 줄이기 및 분리</translation>
-    </message>
-    <message>
-        <source>Vocal Remover</source>
-        <translation type="vanished">음성 삭제</translation>
-    </message>
-    <message>
-        <source>Spectral Tools</source>
-        <translation type="vanished">특수 도구</translation>
-    </message>
-    <message>
-        <source>Legacy</source>
-        <translation type="vanished">레거시</translation>
     </message>
 </context>
 </TS>
