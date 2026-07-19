@@ -95,9 +95,9 @@ public:
     }
 
     //! NOTE: Shift+Spacebar — play from cursor, ignoring selection (pause while playing)
-    void togglePlayUpdate()
+    void togglePlayFromCursor()
     {
-        m_controller->togglePlayUpdateAction();
+        m_controller->togglePlayFromCursorAction();
     }
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
@@ -317,7 +317,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     .Times(1);
 
     //! [WHEN] Play from cursor (Shift+Spacebar)
-    togglePlayUpdate();
+    togglePlayFromCursor();
 }
 
 /**
@@ -413,7 +413,7 @@ TEST_F(PlaybackControllerTests, PlayUpdate_WhenPlaying_Pauses)
     .Times(0);
 
     //! [WHEN] Play from cursor (Shift+Spacebar)
-    togglePlayUpdate();
+    togglePlayFromCursor();
 }
 
 /**
@@ -462,7 +462,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     .Times(1);
 
     //! [WHEN] Play from cursor (Shift+Spacebar)
-    togglePlayUpdate();
+    togglePlayFromCursor();
 }
 
 /**

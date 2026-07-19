@@ -881,7 +881,7 @@
         <seq>Space</seq>
     </SC>
     <SC>
-        <key>action://playback/togglePlayUpdate</key>
+        <key>action://playback/togglePlayFromCursor</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>

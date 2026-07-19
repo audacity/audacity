@@ -124,7 +124,7 @@ private:
 
     void togglePlayPauseAction();
     void togglePlayStopAction();
-    void togglePlayUpdateAction();
+    void togglePlayFromCursorAction();
     void doPlay(bool ignoreSelection);
     void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
