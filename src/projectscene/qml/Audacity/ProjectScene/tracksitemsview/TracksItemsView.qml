@@ -569,11 +569,9 @@ Rectangle {
                         const pressBelongsToSplitTool = splitToolController.active && splitToolController.trackSplittable(tracksViewState.trackAtPosition(e.x, e.y))
 
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || pressBelongsToSplitTool)) {
-                            let time = timeline.context.positionToTime(e.x)
-                            if (playbackState.isPlaying) {
-                                playbackState.setLastPlaybackSeekTime(time)
-                            }
-                            playCursorController.seekToTime(time)
+                            // Don't move the playhead yet: the seek is deferred to the release
+                            // and dropped if this press turns into a drag
+                            playCursorController.beginSeekGesture(timeline.context.positionToTime(e.x), e.x, e.y)
                         }
 
                         if (!pressBelongsToSplitTool) {
@@ -602,6 +600,7 @@ Rectangle {
             onPositionChanged: function (e) {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
+                playCursorController.updateSeekGesture(e.x, e.y)
 
                 if (root.interactionState === TracksItemsView.State.DraggingItem && !itemWasMoved) {
                     var dx = Math.abs(e.x - pressStartPosition.x)
@@ -644,15 +643,19 @@ Rectangle {
 
                     if (selectionViewController.selectionInProgress) {
                         let releaseTime = timeline.context.positionToTime(e.x)
-                        if (selectionViewController.isLeftSelection(releaseTime)) {
-                            playCursorController.seekToTime(releaseTime)
-                        }
                         selectionViewController.onReleased(releaseTime, e.y)
+
+                        // Deferred from the press: moves the playhead only if this was a plain
+                        // click — dragging a selection must not move the playhead
+                        playCursorController.endSeekGesture()
+
                         if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                             playCursorController.seekToTime(timeline.context.selectionStartTime)
                         }
 
                         playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
+                    } else {
+                        playCursorController.cancelSeekGesture()
                     }
 
                     itemsSelection.visible = false
@@ -662,6 +665,7 @@ Rectangle {
 
             onCanceled: e => {
                 root.interactionState = TracksItemsView.State.Idle
+                playCursorController.cancelSeekGesture()
                 prv.cancelItemDragEdit()
             }
 
