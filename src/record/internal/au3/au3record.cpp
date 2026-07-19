@@ -473,8 +473,9 @@ muse::Ret Au3Record::leadInRecording()
 {
     Au3Project& project = projectRef();
 
-    // Get cursor position
-    double t1 = std::max(0.0, selectionController()->selectionStartTime().to_double());
+    // Recording always starts from the current playhead position, regardless
+    // of the playback state or where the last selection was made
+    double t1 = std::max(0.0, playbackState()->playbackPosition().to_double());
 
     // Lead-in recording at t=0 makes no sense — there's no audio to play as lead-in
     if (t1 == 0.0) {
@@ -662,6 +663,10 @@ Ret Au3Record::doRecord(Au3Project& project,
         LOGE() << "Audio IO is busy";
         return make_ret(Ret::Code::InternalError);
     }
+
+    // The engine's pause flag survives stream restarts; clear it so that a
+    // recording initiated from a paused playback state starts immediately
+    audioEngine()->pauseStream(false);
 
     // TODO: what is the meaning of the next line, do we need it?
     // projectAudioManager.SetAppending(!altAppearance);
