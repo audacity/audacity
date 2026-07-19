@@ -23,9 +23,6 @@ using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
-static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
-static const QString STOP_ITEM_ID("stop-id");
-
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/togglePlayPause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
@@ -133,7 +130,6 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
     }
 
     if (containsAction(codes, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString())
-        // || containsAction(codes, PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString()) // do we need play/stop here?
         || containsAction(codes, RECORD_PAUSE_QUERY.toString())) {
         updatePlayState();
     }
@@ -146,7 +142,7 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
         updateRecordState();
     }
 
-    if (containsAction(codes, "toggle-loop-region")) {
+    if (containsAction(codes, LOOP_ACTION_CODE)) {
         updateLoopState();
     }
 
@@ -166,7 +162,7 @@ void PlaybackToolBarModel::updateStates()
 
 void PlaybackToolBarModel::updatePlayState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAY_PAUSE_ITEM_ID));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()));
 
     if (item == nullptr) {
         return;
@@ -176,16 +172,13 @@ void PlaybackToolBarModel::updatePlayState()
     bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
 
-    ActionCode code = PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString();
-    if (isRecording && !isLeadIn) {
-        code = RECORD_PAUSE_QUERY.toString();
-    }
-
-    UiAction action = uiActionsRegister()->action(code);
+    //! NOTE: the action never changes; PlaybackController decides whether it pauses
+    //! the player or the recorder. Only the icon reflects the current state.
+    UiAction action = uiActionsRegister()->action(PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString());
 
     // During lead-in, show as playing (green background) since audio is playing back
     bool showAsPlaying = isPlaying || isLeadIn;
-    if (showAsPlaying) {
+    if (showAsPlaying || (isRecording && !isLeadIn)) {
         action.iconCode = IconCode::Code::PAUSE_FILL;
     }
     item->setAction(action);
@@ -206,15 +199,15 @@ void PlaybackToolBarModel::updatePlayState()
 
 void PlaybackToolBarModel::updateStopState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(STOP_ITEM_ID));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_STOP_QUERY.toString()));
 
     if (item == nullptr) {
         return;
     }
 
-    const bool isRecording = recordController()->isRecording();
-    const ActionCode code = isRecording ? RECORD_STOP_QUERY.toString() : PLAYBACK_STOP_QUERY.toString();
-    const UiAction action = uiActionsRegister()->action(code);
+    //! NOTE: the action never changes; PlaybackController decides whether it stops
+    //! the player or the recorder.
+    const UiAction action = uiActionsRegister()->action(PLAYBACK_STOP_QUERY.toString());
     item->setAction(action);
     const QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     item->setIconColor(iconColor);
@@ -371,14 +364,6 @@ void PlaybackToolBarModel::updateActions()
         ToolBarItem* item = makeLocalItem(citem.action);
         if (!item) {
             continue;
-        }
-
-        if (citem.action == PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()) {
-            item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
-        }
-
-        if (citem.action == PLAYBACK_STOP_QUERY.toString()) {
-            item->setId(STOP_ITEM_ID); // for quick finding
         }
 
         item->setIsTransparent(false);
