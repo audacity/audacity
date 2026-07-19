@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
+#include "playback/iplaybackcontroller.h"
 #include "actions/iactionsdispatcher.h"
 
 #include "projectscene/view/timeline/timelinecontext.h"
@@ -30,10 +31,14 @@ struct SnapTestAccess {
 
     static void wireCursor(PlayCursorController* cursor,
                            const std::shared_ptr<context::IGlobalContext>& globalContext,
-                           const std::shared_ptr<muse::actions::IActionsDispatcher>& dispatcher)
+                           const std::shared_ptr<muse::actions::IActionsDispatcher>& dispatcher,
+                           const std::shared_ptr<playback::IPlaybackController>& playbackController = nullptr)
     {
         cursor->globalContext.set(globalContext);
         cursor->dispatcher.set(dispatcher);
+        if (playbackController) {
+            cursor->playbackController.set(playbackController);
+        }
     }
 };
 }
