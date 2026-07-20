@@ -697,7 +697,8 @@ Rectangle {
             }
         }
 
-        // Drives the snap guideline while hovering empty project space below the last track.
+        // Keeps the timeline cursor following the mouse anywhere over the view,
+        // and drives the snap guideline while hovering empty project space below the last track.
         HoverHandler {
             id: emptyAreaGuidelineHandler
 
@@ -709,12 +710,13 @@ Rectangle {
                 }
 
                 let pos = point.position
+                timeline.updateCursorPosition(pos.x, pos.y)
+
                 if (tracksViewState.trackAtPosition(pos.x, pos.y) !== -1) {
                     // Over a track: let the track container own the guideline.
                     return
                 }
 
-                timeline.updateCursorPosition(pos.x, pos.y)
                 root.snapGuidelineToPosition(pos.x)
             }
 
