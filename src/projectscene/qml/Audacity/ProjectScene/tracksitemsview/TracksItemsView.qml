@@ -643,7 +643,7 @@ Rectangle {
 
                     if (selectionViewController.selectionInProgress) {
                         let releaseTime = timeline.context.positionToTime(e.x)
-                        selectionViewController.onReleased(releaseTime, e.y)
+                        selectionViewController.onReleased(releaseTime, e.y);
 
                         // Deferred from the press: moves the playhead only if this was a plain
                         // click — dragging a selection must not move the playhead
