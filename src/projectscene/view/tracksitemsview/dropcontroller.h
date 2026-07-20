@@ -24,8 +24,8 @@ public:
     Q_INVOKABLE void probeAudioFiles(const QStringList& fileUrls);
     Q_INVOKABLE QVariantList lastProbedDurations() const;
     Q_INVOKABLE QVariantList lastProbedFileNames() const;
-    Q_INVOKABLE void startImportDrag();
-    Q_INVOKABLE void endImportDrag();
+    Q_INVOKABLE void startImportSession();
+    Q_INVOKABLE void endImportSession();
     Q_INVOKABLE int requiredTracksCount() const;
     Q_INVOKABLE void prepareConditionalTracks(int currentTrackId, int draggedFileCount);
     Q_INVOKABLE QVariantList draggedTracksIds(int currentTrackId, int draggedFilesCount);
@@ -35,6 +35,6 @@ public:
 private:
     std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;
     QStringList m_lastDraggedUrls;
-    int m_tracksCountWhenDragStarted = -1;
+    int m_trackCountBeforeImport = -1;
 };
 }

@@ -75,9 +75,9 @@ QVariantList DropController::lastProbedFileNames() const
     return out;
 }
 
-void DropController::startImportDrag()
+void DropController::startImportSession()
 {
-    if (m_tracksCountWhenDragStarted != -1) {
+    if (m_trackCountBeforeImport != -1) {
         return;
     }
 
@@ -86,14 +86,14 @@ void DropController::startImportDrag()
         return;
     }
 
-    m_tracksCountWhenDragStarted = prj->trackList().size();
+    m_trackCountBeforeImport = prj->trackList().size();
 }
 
-void DropController::endImportDrag()
+void DropController::endImportSession()
 {
-    tracksInteraction()->removeDragAddedTracks(m_tracksCountWhenDragStarted, true /* emptyOnly */);
+    tracksInteraction()->removeDragAddedTracks(m_trackCountBeforeImport, true /* emptyOnly */);
 
-    m_tracksCountWhenDragStarted = -1;
+    m_trackCountBeforeImport = -1;
     m_lastDraggedFilesInfo.clear();
     m_lastDraggedUrls.clear();
 }
@@ -124,8 +124,8 @@ void DropController::prepareConditionalTracks(int currentTrackId, int draggedFil
     const int totalTracks = static_cast<int>(trackList.size());
 
     const int tracksCreated
-        =(m_tracksCountWhenDragStarted >= 0)
-          ? std::max(0, totalTracks - m_tracksCountWhenDragStarted)
+        =(m_trackCountBeforeImport >= 0)
+          ? std::max(0, totalTracks - m_trackCountBeforeImport)
           : 0;
 
     if (tracksCreated >= draggedFilesCount) {
@@ -211,7 +211,7 @@ QVariantList DropController::draggedTracksIds(int currentTrackId, int draggedFil
         thresholdRow = currentRow;
     } else {
         // cursor is below tracks, start from newly created track
-        thresholdRow = std::max(0, m_tracksCountWhenDragStarted);
+        thresholdRow = std::max(0, m_trackCountBeforeImport);
     }
 
     int startAudioPos = 0;
@@ -245,7 +245,7 @@ QVariantList DropController::draggedTracksIds(int currentTrackId, int draggedFil
 
 void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesCount)
 {
-    if (draggedFilesCount <= 0 || m_tracksCountWhenDragStarted < 0) {
+    if (draggedFilesCount <= 0 || m_trackCountBeforeImport < 0) {
         return;
     }
 
@@ -257,7 +257,7 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
     std::vector<trackedit::Track> trackList = prj->trackList();
 
     const int total = static_cast<int>(trackList.size());
-    if (total <= m_tracksCountWhenDragStarted) {
+    if (total <= m_trackCountBeforeImport) {
         return;
     }
 
@@ -273,17 +273,17 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
     if (currentIndex >= 0) {
         // cursor is over some existing track (label or audio)
         startIndex = currentIndex;
-    } else if (m_tracksCountWhenDragStarted >= 0
-               && m_tracksCountWhenDragStarted < total) {
+    } else if (m_trackCountBeforeImport >= 0
+               && m_trackCountBeforeImport < total) {
         // cursor is below the last track
-        startIndex = m_tracksCountWhenDragStarted;
+        startIndex = m_trackCountBeforeImport;
     } else {
         // fallback
         startIndex = 0;
     }
 
     int remaining = draggedFilesCount;
-    int highestUsedIndex = m_tracksCountWhenDragStarted - 1;
+    int highestUsedIndex = m_trackCountBeforeImport - 1;
 
     // detect where dragged files will land: walk from startIndex downwards,
     // counting only audio tracks.
@@ -296,7 +296,7 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
         --remaining;
     }
 
-    int neededTracksCount = m_tracksCountWhenDragStarted;
+    int neededTracksCount = m_trackCountBeforeImport;
     if (highestUsedIndex >= 0) {
         neededTracksCount = std::max(neededTracksCount, highestUsedIndex + 1);
     }

@@ -173,11 +173,12 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
     auto modifiedState = false;
     muse::Ret ret;
     const auto paths = clipboard()->systemClipboardFilePaths();
+    const bool pastingFromSystemClipboard = !paths.empty();
 
     bool recreateRangeSelection = false;
     secs_t pastedDataEndTime = 0.0;
 
-    if (!paths.empty()) {
+    if (pastingFromSystemClipboard) {
         ret = importer()->importFromSystemClipboard(paths, begin);
         dispatcher()->dispatch("center-view-on-playhead", muse::actions::ActionData::make_arg1<bool>(
                                    true /* center only if playhead is not visible */));
@@ -193,7 +194,10 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
     }
 
     if (ret) {
-        projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
+        //! NOTE Importing files pushes its own "Import" history state
+        if (!pastingFromSystemClipboard) {
+            projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
+        }
 
         if (recreateRangeSelection) {
             selectionController()->setDataSelectedStartTime(begin, true);

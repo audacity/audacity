@@ -49,7 +49,7 @@ DropArea {
         onTriggered: {
             tracksItemsView.clearPreviewImportClip([])
             prv.lastProbedUrls = null
-            dropController.endImportDrag()
+            dropController.endImportSession()
             root.setGuidelineRequested(-1, false)
         }
     }
@@ -76,7 +76,7 @@ DropArea {
         clearPreviewClipsTimer.stop()
 
         let urls = drop.urls
-        dropController.startImportDrag()
+        dropController.startImportSession()
         if (!prv.lastProbedUrls) {
             // NOTE: working with urls list from DropArea
             // is expensive so avoid it otherwise the preview clip
@@ -121,7 +121,7 @@ DropArea {
         // by this time, url list is already inside dropController
         dropController.handleDroppedFiles(tracksIds, timeline.context.positionToTime(dropX))
 
-        dropController.endImportDrag()
+        dropController.endImportSession()
         drop.acceptProposedAction()
 
         root.setGuidelineRequested(-1, false)
