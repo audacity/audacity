@@ -37,6 +37,7 @@ static const muse::Uri EXTENSIONS_DIALOG_URI("muse://extensions/viewer");
 //! but we don't have that yet, so binding it to
 //! area that's being focused when opening a project
 static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
+static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
 
 UiContextResolver::UiContextResolver(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
@@ -92,25 +93,12 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
 
         INavigationSection* activeSection = navigationController()->activeSection();
         if (activeSection) {
-            //! Popups, menus, and dialogs create NavigationSections of type Exclusive.
-            //! When one is active, it owns keyboard navigation focus and the
-            //! project view is not the focus target.
-            if (activeSection->type() == INavigationSection::Type::Exclusive) {
-                return context::UiCtxProjectOpened;
+            if (activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
+                return context::UiCtxProjectFocused;
             }
-
-            //! Any Regular section (TrackViewSection, TopTool, PlaybackSection,
-            //! TrackEffectsSection, side panels, ...) is part of the project workspace.
-            //! Treat any of them as project-focused so global shortcuts (like Ctrl+C/V) work
-            //! regardless of which workspace panel currently owns keyboard navigation.
-            return context::UiCtxProjectFocused;
         }
 
-        //! No navigation section holds explicit focus. This happens when a popup,
-        //! menu, or dialog closes without restoring focus to the previously-active
-        //! section. Treat this as implicit focus on the project view — otherwise
-        //! global shortcuts (Ctrl+C/V) get silently omitted.
-        return context::UiCtxProjectFocused;
+        return context::UiCtxProjectOpened;
     }
 
     if (interactive()->isCurrentUriDialog().val) {
