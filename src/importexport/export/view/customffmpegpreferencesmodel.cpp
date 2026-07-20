@@ -179,9 +179,13 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
         initialPath = globalConfiguration()->userDataPath();
     }
 
-    std::string libFileName = avformatString().toStdString();
-    const std::string filter
-        =libFileName.replace(libFileName.find('.'), 0, "*");
+    const std::string libFileName = avformatString().toStdString();
+    std::string filter = libFileName;
+    filter.insert(filter.find_last_of('.'), "*");
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MACOS)
+    // linux and other *nix systems use versioned libraries: libavformat.so.62
+    filter += "*";
+#endif
     muse::io::path_t directory = interactive()->selectOpeningFileSync(muse::qtrc("preferences",
                                                                                  "Locate %1").arg(
                                                                           libFileName).toStdString(), initialPath, { filter });
@@ -198,9 +202,9 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
 
 QString CustomFFmpegPreferencesModel::avformatString() const
 {
-#if defined(__WXMSW__)
+#if defined(Q_OS_WIN)
     return "avformat.dll";
-#elif defined(__WXMAC__)
+#elif defined(Q_OS_MACOS)
     return "libavformat.dylib";
 #else
     return "libavformat.so";
