@@ -89,11 +89,15 @@ public:
 
     void TearDown() override
     {
-        PendingTracks::Get(projectRef()).ClearPendingTracks();
-        Au3TrackList::Get(projectRef()).Clear();
+        // Guard against a fatal failure during setup leaving the project
+        // uninitialized; projectRef() would otherwise dereference a null pointer
+        if (m_au3ProjectAccessor && m_au3ProjectAccessor->au3ProjectPtr()) {
+            PendingTracks::Get(projectRef()).ClearPendingTracks();
+            Au3TrackList::Get(projectRef()).Clear();
 
-        m_au3ProjectAccessor->clearSavedState();
-        m_au3ProjectAccessor->close();
+            m_au3ProjectAccessor->clearSavedState();
+            m_au3ProjectAccessor->close();
+        }
 
         testtools::removeProjectIfExists(m_workingProjectPath);
     }
