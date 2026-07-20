@@ -1054,7 +1054,6 @@
     </SC>
     <SC>
         <key>envelope-tool</key>
-        <seq>F2</seq>
     </SC>
     <SC>
         <key>draw-tool</key>
@@ -1108,7 +1107,7 @@
     </SC>
     <SC>
         <key>rename-item</key>
-        <seq>Ctrl+F2</seq>
+        <seq>F2</seq>
     </SC>
     <SC>
         <key>clip-pitch-speed-open</key>

@@ -21,6 +21,7 @@
  */
 #include "appmenumodel.h"
 
+#include "global/containers.h"
 #include "types/translatablestring.h"
 
 #include "muse_framework_config.h"
@@ -46,6 +47,10 @@ static QString makeId(const ActionCode& actionCode, int itemIndex)
 {
     return QString::fromStdString(actionCode) + QString::number(itemIndex);
 }
+
+static const ActionCode RENAME_ITEM_CODE("rename-item");
+static const QString RENAME_CLIP_ITEM_ID("rename-clip-item");
+static const QString RENAME_LABEL_ITEM_ID("rename-label-item");
 
 AppMenuModel::AppMenuModel(QObject* parent)
     : AbstractMenuModel(parent)
@@ -148,6 +153,19 @@ void AppMenuModel::setupConnections()
     configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
         setItemIsChecked("toggle-effects", configuration()->isEffectsPanelVisible());
     });
+
+    updateRenameItemsState();
+}
+
+void AppMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+{
+    AbstractMenuModel::onActionsStateChanges(codes);
+
+    //! NOTE "rename-item" drives both the "Rename clip" and "Rename label" items; split its
+    //! state between them depending on whether a clip or a label is selected
+    if (muse::contains(codes, RENAME_ITEM_CODE)) {
+        updateRenameItemsState();
+    }
 }
 
 void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
@@ -171,6 +189,25 @@ void AppMenuModel::updateUndoRedoItems()
     redoItem.setTitle(redoActionName.isEmpty()
                       ? TranslatableString("action", "Redo")
                       : TranslatableString("action", "Redo ‘%1’").arg(redoActionName));
+}
+
+void AppMenuModel::updateRenameItemsState()
+{
+    const UiActionState actionState = uiActionsRegister()->actionState(RENAME_ITEM_CODE);
+
+    MenuItem& renameClipItem = findItem(RENAME_CLIP_ITEM_ID);
+    if (renameClipItem.isValid()) {
+        UiActionState state = actionState;
+        state.enabled = state.enabled && selectionController()->selectedClips().size() == 1;
+        renameClipItem.setState(state);
+    }
+
+    MenuItem& renameLabelItem = findItem(RENAME_LABEL_ITEM_ID);
+    if (renameLabelItem.isValid()) {
+        UiActionState state = actionState;
+        state.enabled = state.enabled && selectionController()->selectedLabels().size() == 1;
+        renameLabelItem.setState(state);
+    }
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
@@ -531,8 +568,11 @@ MenuItemList AppMenuModel::makeExportItems()
 
 MenuItemList AppMenuModel::makeClipItems()
 {
+    MenuItem* renameClipItem = makeMenuItem(RENAME_ITEM_CODE, TranslatableString("appshell-menu-clip", "Rename clip"));
+    renameClipItem->setId(RENAME_CLIP_ITEM_ID);
+
     MenuItemList items {
-        makeMenuItem("rename-item", TranslatableString("appshell-menu-clip", "Rename clip")),
+        renameClipItem,
         makeMenuItem("trim-clip"),
         makeSeparator(),
         makeMenuItem("split"),
@@ -549,8 +589,12 @@ MenuItemList AppMenuModel::makeClipItems()
 
 MenuItemList AppMenuModel::makeLabelItems()
 {
+    MenuItem* renameLabelItem = makeMenuItem(RENAME_ITEM_CODE, TranslatableString("appshell-menu-label", "Rename label"));
+    renameLabelItem->setId(RENAME_LABEL_ITEM_ID);
+
     MenuItemList items {
         makeMenuItem("label-add"),
+        renameLabelItem,
         makeMenuItem("paste-new-label"),
         makeSeparator(),
         makeMenuItem("open-label-editor", TranslatableString("action", "Manage labels")),
