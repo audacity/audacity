@@ -57,7 +57,7 @@ private:
                 return;
             }
 
-            const auto path = ToWXString(project.LocalPath);
+            const auto path = ToWXString(project.LocalPath.Get());
 
             if (!wxFileExists(path)) {
                 cloudProjectsDatabase.DeleteProject(project.ProjectId);

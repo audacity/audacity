@@ -14,7 +14,7 @@
 #include "framework/global/log.h"
 #include "framework/global/runtime.h"
 #include "framework/global/types/ret.h"
-#include "framework/global/io/dir.h"
+#include "framework/global/io/path.h"
 #include "framework/global/progress.h"
 
 #include "au3-cloud-audiocom/sync/ProjectUploadOperation.h"
@@ -566,7 +566,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std:
             return;
         }
 
-        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.AudioPath))));
+        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.AudioPath.Get()))));
     }).detach();
 
     return muse::RetVal<muse::ProgressPtr>::make_ok(progress);
@@ -626,10 +626,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
         //! no explicit snapshot is requested; otherwise fall through to OpenFromCloud.
         auto cancelCheck = [progress](double) -> bool { return !progress->isCanceled(); };
         if (!forceOverwrite && snapshotId.empty() && dbProjectData.has_value()) {
-            const auto normalizedLocalPath = muse::io::Dir::fromNativeSeparators(muse::io::path_t(dbProjectData->LocalPath));
-            if (self->filesystem()->exists(normalizedLocalPath)
+            const auto localPath = muse::io::path_t { dbProjectData->LocalPath.Get() };
+            if (self->filesystem()->exists(localPath)
                 && self->isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
-                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(normalizedLocalPath)));
+                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
                 return;
             }
         }
@@ -646,8 +646,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
         }
 
         if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
-            const auto normalizedLocalPath = muse::io::Dir::fromNativeSeparators(result.ProjectPath);
-            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(normalizedLocalPath))));
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.ProjectPath.Get()))));
         } else {
             const auto err = syncResultCodeToErr(result.Result.Code);
             progress->finish(make_ret(err));
