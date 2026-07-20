@@ -18,6 +18,12 @@ namespace {
 constexpr const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/track/change-format?format=%1";
 constexpr const char16_t* TRACK_RATE_CHANGE_ACTION = u"action://trackedit/track/change-rate?rate=%1";
 UiActionList STATIC_ACTIONS = {
+    UiAction("rename-item",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Rename item"),
+             TranslatableString("action", "Rename item")
+             ),
     UiAction("action://trackedit/copy",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
