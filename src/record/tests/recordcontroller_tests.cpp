@@ -120,4 +120,20 @@ TEST_F(RecordControllerTests, RecordFromPausedPlaybackStopsPlaybackFirst)
     //! [WHEN] Recording is initiated
     toggleRecord();
 }
+
+TEST_F(RecordControllerTests, RecordFromStoppedPlaybackDoesNotStopPlayback)
+{
+    //! [GIVEN] Playback is already stopped
+    ON_CALL(*m_playbackController, isPaused())
+    .WillByDefault(Return(false));
+
+    //! [THEN] Playback is not stopped before recording starts
+    EXPECT_CALL(*m_playbackController, stop())
+    .Times(0);
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+
+    //! [WHEN] Recording is initiated
+    toggleRecord();
+}
 }
