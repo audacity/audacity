@@ -150,6 +150,17 @@ TrackItemsContainer {
                                 Qt.callLater(labelsContainerMouseArea.clearGuidelineIfPointerLeft)
                             }
                         }
+
+                        Connections {
+                            target: root.context
+
+                            function onFrameTimeChanged() {
+                                if (labelsContainerMouseArea.containsMouse && !root.moveActive && !root.selectionInProgress) {
+                                    let time = root.context.findGuideline(root.context.positionToTime(labelsContainerMouseArea.mouseX, true))
+                                    root.updateItemGuideline(time)
+                                }
+                            }
+                        }
                     }
 
                     Repeater {

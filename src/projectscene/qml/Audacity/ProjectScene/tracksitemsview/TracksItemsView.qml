@@ -698,18 +698,13 @@ Rectangle {
             }
         }
 
-        // Keeps the timeline cursor following the mouse anywhere over the view,
-        // and drives the snap guideline while hovering empty project space below the last track.
+        // Drives the snap guideline while hovering empty project space below the last track.
         HoverHandler {
             id: emptyAreaGuidelineHandler
 
             enabled: root.interactionState !== TracksItemsView.State.DraggingItem
 
-            onPointChanged: {
-                if (!hovered) {
-                    return
-                }
-
+            function processHover() {
                 let pos = point.position
                 timeline.updateCursorPosition(pos.x, pos.y)
 
@@ -721,9 +716,25 @@ Rectangle {
                 root.snapGuidelineToPosition(pos.x)
             }
 
+            onPointChanged: {
+                if (hovered) {
+                    processHover()
+                }
+            }
+
             onHoveredChanged: {
                 if (!hovered) {
                     root.hideGuideline()
+                }
+            }
+        }
+
+        Connections {
+            target: timeline.context
+
+            function onFrameTimeChanged() {
+                if (emptyAreaGuidelineHandler.hovered && !mainMouseArea.pressed && root.interactionState === TracksItemsView.State.Idle) {
+                    emptyAreaGuidelineHandler.processHover()
                 }
             }
         }
