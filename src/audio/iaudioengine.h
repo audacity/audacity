@@ -55,9 +55,9 @@ public:
     virtual void updateTimePosition(unsigned long newlyConsumedSamples) = 0;
     virtual std::optional<AudioCallbackInfo> consumeNextCallbackInfo() = 0;
 
-    virtual muse::async::Notification updateRequested() const = 0;
-    virtual muse::async::Notification commitRequested() const = 0;
-    virtual muse::async::Notification finished() const = 0;
+    virtual muse::async::Notification recordingUpdateRequested() const = 0;
+    virtual muse::async::Notification recordingCommitRequested() const = 0;
+    virtual muse::async::Notification recordingFinished() const = 0;
     virtual muse::async::Notification streamStopped() const = 0;
     virtual muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const = 0;
 };

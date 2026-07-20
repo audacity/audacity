@@ -194,19 +194,19 @@ std::optional<au::audio::AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackI
     return std::nullopt;
 }
 
-muse::async::Notification Au3AudioEngine::updateRequested() const
+muse::async::Notification Au3AudioEngine::recordingUpdateRequested() const
 {
-    return s_audioIOListener->updateRequested();
+    return s_audioIOListener->recordingUpdateRequested();
 }
 
-muse::async::Notification Au3AudioEngine::commitRequested() const
+muse::async::Notification Au3AudioEngine::recordingCommitRequested() const
 {
-    return s_audioIOListener->commitRequested();
+    return s_audioIOListener->recordingCommitRequested();
 }
 
-muse::async::Notification Au3AudioEngine::finished() const
+muse::async::Notification Au3AudioEngine::recordingFinished() const
 {
-    return s_audioIOListener->finished();
+    return s_audioIOListener->recordingFinished();
 }
 
 muse::async::Notification Au3AudioEngine::streamStopped() const
