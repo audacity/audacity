@@ -601,12 +601,17 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         return make_ret(Ret::Code::UnknownError, std::string { "Cloud projects path is not set" });
     }
 
-    io::path_t projectFilePath = cloudProjectsProvider()->makeSafeFilePath(cloudProjectsPath, cloudInfo.name.toStdString(),
-                                                                           au::project::AUP4);
-
     IAudacityProjectPtr project = currentProject();
     if (!project) {
         return make_ret(Ret::Code::UnknownError, std::string { "No project opened" });
+    }
+
+    io::path_t projectFilePath;
+    if (cloudSaveMode != CloudSaveMode::CreateNew && project->isCloudProject()) {
+        projectFilePath = project->path();
+    } else {
+        projectFilePath = cloudProjectsProvider()->makeSafeFilePath(cloudProjectsPath, cloudInfo.name.toStdString(),
+                                                                    au::project::AUP4);
     }
 
     auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
