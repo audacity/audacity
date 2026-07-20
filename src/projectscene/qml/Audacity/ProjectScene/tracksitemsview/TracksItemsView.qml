@@ -670,7 +670,7 @@ Rectangle {
                     return
                 }
 
-                if (!root.itemHovered) {
+                if (!root.itemHovered && !itemWasMoved) {
                     selectionViewController.resetSelectedItems()
                 }
             }
