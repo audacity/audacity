@@ -962,6 +962,8 @@ void EffectExecutionScenario::stopPreview()
         effect->mTracks = originCtx.tracks;
         effect->mProgress = originCtx.preparingPreviewProgress;
         effect->mIsPreview = originCtx.isPreview;
+
+        effect->CountWaveTracks();
     }
 
     player->setLoopRegionActive(m_effectPreviewState->loopWasActive);
