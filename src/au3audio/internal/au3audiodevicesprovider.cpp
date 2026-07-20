@@ -150,7 +150,7 @@ void Au3AudioDevicesProvider::init()
     });
 
     if (audioEngine()) {
-        audioEngine()->finished().onNotify(this, [this]() {
+        audioEngine()->streamStopped().onNotify(this, [this]() {
             if (m_pendingSystemDevicesChange) {
                 m_pendingSystemDevicesChange = false;
                 onSystemDevicesChanged();
@@ -236,7 +236,7 @@ muse::async::Channel<std::string> Au3AudioDevicesProvider::usedInputDeviceChange
 void Au3AudioDevicesProvider::onSystemDevicesChanged()
 {
     // rescanning restarts PortAudio, which is not possible while a stream
-    // is running; retried when the engine reports the stream finished
+    // is running; retried when the engine reports the stream stopped
     if (audioEngine() && audioEngine()->isBusy()) {
         m_pendingSystemDevicesChange = true;
         return;
