@@ -35,7 +35,7 @@ protected:
         muse::modularity::globalIoc()->registerExport<IAu3DeviceManager>("utests", m_deviceManager);
 
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
-        ON_CALL(*m_audioEngine, finished()).WillByDefault(::testing::Return(m_engineFinished));
+        ON_CALL(*m_audioEngine, streamStopped()).WillByDefault(::testing::Return(m_engineStreamStopped));
         muse::modularity::globalIoc()->registerExport<audio::IAudioEngine>("utests", m_audioEngine);
 
         m_devicesListener = std::make_shared<StubSystemAudioDevicesListener>();
@@ -67,7 +67,7 @@ protected:
     std::shared_ptr<Au3DeviceManagerFake> m_deviceManager;
     std::shared_ptr<NiceMock<audio::AudioEngineMock> > m_audioEngine;
     std::shared_ptr<StubSystemAudioDevicesListener> m_devicesListener;
-    muse::async::Notification m_engineFinished;
+    muse::async::Notification m_engineStreamStopped;
     std::shared_ptr<Au3AudioDevicesProvider> m_provider;
 };
 
@@ -293,7 +293,7 @@ TEST_F(Au3AudioDevicesProviderTests, SystemDevicesChanged_WhileStreamActive_Defe
     EXPECT_EQ(m_deviceManager->rescanCount, 0);
 
     ON_CALL(*m_audioEngine, isBusy()).WillByDefault(::testing::Return(false));
-    m_engineFinished.notify();
+    m_engineStreamStopped.notify();
 
     EXPECT_EQ(m_deviceManager->rescanCount, 1);
 }
