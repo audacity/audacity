@@ -58,6 +58,7 @@ public:
     virtual muse::async::Notification updateRequested() const = 0;
     virtual muse::async::Notification commitRequested() const = 0;
     virtual muse::async::Notification finished() const = 0;
+    virtual muse::async::Notification streamStopped() const = 0;
     virtual muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const = 0;
 };
 }

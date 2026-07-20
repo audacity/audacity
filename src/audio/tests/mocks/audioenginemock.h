@@ -44,6 +44,7 @@ public:
     MOCK_METHOD(muse::async::Notification, updateRequested, (), (const, override));
     MOCK_METHOD(muse::async::Notification, commitRequested, (), (const, override));
     MOCK_METHOD(muse::async::Notification, finished, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, streamStopped, (), (const, override));
     MOCK_METHOD((muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId>), recordingClipChanged, (), (const, override));
 };
 }

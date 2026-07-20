@@ -7,6 +7,8 @@
 #include "audio/iaudioengine.h"
 #include "record/irecordconfiguration.h"
 
+#include "au3-utility/Observer.h"
+
 namespace au::au3audio {
 class Au3AudioEngine final : public au::audio::IAudioEngine
 {
@@ -48,6 +50,11 @@ public:
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;
     muse::async::Notification finished() const override;
+    muse::async::Notification streamStopped() const override;
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const override;
+
+private:
+    Observer::Subscription m_streamStatusSubscription;
+    muse::async::Notification m_streamStopped;
 };
 }

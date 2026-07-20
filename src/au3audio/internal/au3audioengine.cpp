@@ -48,10 +48,17 @@ void Au3AudioEngine::init()
 {
     s_audioIOListener = std::make_shared<Au3AudioIOListener>();
     AudioIO::Init();
+
+    m_streamStatusSubscription = AudioIO::Get()->Subscribe([this](const AudioIOEvent& event) {
+        if (!event.on && event.type != AudioIOEvent::PAUSE) {
+            m_streamStopped.notify();
+        }
+    });
 }
 
 void Au3AudioEngine::deinit()
 {
+    m_streamStatusSubscription.Reset();
     AudioIO::Deinit();
 }
 
@@ -200,6 +207,11 @@ muse::async::Notification Au3AudioEngine::commitRequested() const
 muse::async::Notification Au3AudioEngine::finished() const
 {
     return s_audioIOListener->finished();
+}
+
+muse::async::Notification Au3AudioEngine::streamStopped() const
+{
+    return m_streamStopped;
 }
 
 muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> Au3AudioEngine::recordingClipChanged() const
