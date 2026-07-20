@@ -473,7 +473,7 @@ void Au3Player::setLoopRegionActive(const bool active)
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
-    if (playRegion.IsLastActiveRegionClear()) {
+    if (active && playRegion.IsLastActiveRegionClear()) {
         double start = 0;
         double end = 0;
 
