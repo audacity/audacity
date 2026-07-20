@@ -597,8 +597,8 @@ bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyLi
     }
 
     if (completed) {
-        std::string msg = hasLabels ? "Stretch items left" : "Stretch clip left";
-        projectHistory()->pushHistoryState("Stretch", msg, type);
+        auto [longDesc, msg] = stretchHistoryDescriptions(clipKeyList, hasLabels, true);
+        projectHistory()->pushHistoryState(longDesc, msg, type);
     }
 
     return success;
@@ -622,11 +622,28 @@ bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyL
     }
 
     if (completed) {
-        std::string msg = hasLabels ? "Stretch items right" : "Stretch clips right";
-        projectHistory()->pushHistoryState("Stretch", msg, type);
+        auto [longDesc, msg] = stretchHistoryDescriptions(clipKeyList, hasLabels, false);
+        projectHistory()->pushHistoryState(longDesc, msg, type);
     }
 
     return success;
+}
+
+std::pair<std::string, std::string> TrackeditOperationController::stretchHistoryDescriptions(
+    const ClipKeyList& clipKeyList, bool hasLabels, bool isLeft) const
+{
+    if (!hasLabels && clipKeyList.size() == 1) {
+        const double speed = globalContext()->currentTrackeditProject()->clip(clipKeyList[0]).speed;
+        const int speedPct = static_cast<int>(100.0 / speed + 0.5);
+        return { muse::trc("trackedit", "Changed Speed"),
+                 muse::qtrc("trackedit", "Changed speed to: %1%").arg(speedPct).toStdString() };
+    }
+    if (isLeft) {
+        return { muse::trc("trackedit", "Stretch Left"),
+                 hasLabels ? muse::trc("trackedit", "Stretch items left") : muse::trc("trackedit", "Stretch clips left") };
+    }
+    return { muse::trc("trackedit", "Stretch Right"),
+             hasLabels ? muse::trc("trackedit", "Stretch items right") : muse::trc("trackedit", "Stretch clips right") };
 }
 
 secs_t TrackeditOperationController::clipDuration(const ClipKey& clipKey) const

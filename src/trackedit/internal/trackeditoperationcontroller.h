@@ -177,6 +177,8 @@ private:
     bool isLabelsSelected() const;
     LabelKeyList selectedLabels() const;
 
+    std::pair<std::string, std::string> stretchHistoryDescriptions(const ClipKeyList& clipKeyList, bool hasLabels, bool isLeft) const;
+
     const std::unique_ptr<IUndoManager> m_undoManager;
     muse::async::Notification m_cancelDragEditRequested;
 };
