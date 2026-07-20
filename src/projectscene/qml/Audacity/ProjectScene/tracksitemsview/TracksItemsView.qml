@@ -351,7 +351,8 @@ Rectangle {
             property double displayedPlayCursorX: playCursorController.positionX
 
             function updateCursorPosition(x, y) {
-                lineCursor.x = x
+                const snappedTime = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
+                lineCursor.x = timeline.context.timeToPosition(snappedTime)
                 timeline.context.updateMousePositionTime(x)
                 tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
             }
