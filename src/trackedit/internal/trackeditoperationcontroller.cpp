@@ -620,9 +620,8 @@ std::pair<std::string, std::string> TrackeditOperationController::stretchHistory
     if (!hasLabels && clipKeyList.size() == 1) {
         const double speed = globalContext()->currentTrackeditProject()->clip(clipKeyList[0]).speed;
         const int speedPct = static_cast<int>(100.0 / speed + 0.5);
-        char buf[64];
-        snprintf(buf, sizeof(buf), muse::trc("trackedit", "Changed speed to %d%%").c_str(), speedPct);
-        return { muse::trc("trackedit", "Changed Speed"), buf };
+        return { muse::trc("trackedit", "Changed Speed"),
+                 muse::qtrc("trackedit", "Changed speed to: %1%").arg(speedPct).toStdString() };
     }
     if (isLeft) {
         return { muse::trc("trackedit", "Stretch Left"),
