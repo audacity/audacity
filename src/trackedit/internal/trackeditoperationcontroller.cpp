@@ -620,12 +620,14 @@ std::pair<std::string, std::string> TrackeditOperationController::stretchHistory
     if (!hasLabels && clipKeyList.size() == 1) {
         const double speed = globalContext()->currentTrackeditProject()->clip(clipKeyList[0]).speed;
         const int speedPct = static_cast<int>(100.0 / speed + 0.5);
-        return { "Changed Speed", "Changed speed to " + std::to_string(speedPct) + "%" };
+        char buf[32];
+        snprintf(buf, sizeof(buf), "Changed speed to %d%%", speedPct);
+        return { "Changed Speed", buf };
     }
-    const std::string dir = isLeft ? "left" : "right";
-    const std::string longDesc = std::string("Stretch ") + (isLeft ? "Left" : "Right");
-    const std::string msg = (hasLabels ? "Stretch items " : "Stretch clips ") + dir;
-    return { longDesc, msg };
+    if (isLeft) {
+        return { "Stretch Left", hasLabels ? "Stretch items left" : "Stretch clips left" };
+    }
+    return { "Stretch Right", hasLabels ? "Stretch items right" : "Stretch clips right" };
 }
 
 secs_t TrackeditOperationController::clipDuration(const ClipKey& clipKey) const
