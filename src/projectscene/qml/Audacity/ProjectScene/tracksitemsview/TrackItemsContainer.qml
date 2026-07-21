@@ -54,7 +54,6 @@ Item {
 
     signal updateMouseMoveActive(bool completed)
 
-    signal seekToX(var x)
     signal insureVerticallyVisible
 
     signal handleTimeGuideline(real x, bool completed)

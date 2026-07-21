@@ -645,15 +645,12 @@ Rectangle {
                         let releaseTime = timeline.context.positionToTime(e.x)
                         selectionViewController.onReleased(releaseTime, e.y);
 
-                        // Deferred from the press: moves the playhead only if this was a plain
-                        // click — dragging a selection must not move the playhead
-                        playCursorController.endSeekGesture()
-
-                        if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
-                            playCursorController.seekToTime(timeline.context.selectionStartTime)
+                        // Deferred from the press. Only a plain click repositions the playhead
+                        // and the next playback start; a drag selection leaves both alone —
+                        // playback derives its region from the selection when it starts.
+                        if (playCursorController.endSeekGesture()) {
+                            playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                         }
-
-                        playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                     } else {
                         playCursorController.cancelSeekGesture()
                     }
@@ -994,10 +991,6 @@ Rectangle {
                                 selectionViewController.onSelectionHorizontalResize(timeline.context.positionToTime(x1), timeline.context.positionToTime(x2), completed)
                             }
 
-                            onSeekToX: function (x) {
-                                playCursorController.seekToTime(timeline.context.positionToTime(x))
-                            }
-
                             onInsureVerticallyVisible: function () {
                                 tracksItemsView.insureVerticallyVisible(this)
                             }
@@ -1162,10 +1155,6 @@ Rectangle {
                                 root.hoveredItemKey = null
                                 root.itemHeaderHovered = false
                                 tracksItemsView.mouseMoveActive = false
-                            }
-
-                            onSeekToX: function (x) {
-                                playCursorController.seekToTime(timeline.context.positionToTime(x))
                             }
 
                             onSelectionResize: function (x1, x2, completed) {
