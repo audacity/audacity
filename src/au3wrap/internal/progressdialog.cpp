@@ -56,6 +56,10 @@ void ProgressDialog::start()
 
 ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const ::TranslatableString& message)
 {
+    if (m_cancelled) {
+        return ProgressResult::Cancelled;
+    }
+
     start();
 
     if (!message.empty()) {
@@ -74,6 +78,10 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
     if (now - m_lastEventPump >= pumpInterval) {
         m_lastEventPump = now;
         QCoreApplication::processEvents(QEventLoop::AllEvents);
+    }
+
+    if (m_cancelled) {
+        return ProgressResult::Cancelled;
     }
 
     return ProgressResult::Success;
