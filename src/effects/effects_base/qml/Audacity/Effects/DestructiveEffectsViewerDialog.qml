@@ -188,6 +188,7 @@ EffectStyledDialogView {
             id: topPanelContainer
 
             width: parent.width
+            height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
 
             visible: prv.showTopPanel
 
@@ -195,7 +196,7 @@ EffectStyledDialogView {
                 id: topPanel
 
                 width: topPanelContainer.width
-                height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
+                height: topPanelContainer.height
 
                 color: ui.theme.backgroundPrimaryColor
 
@@ -252,12 +253,13 @@ EffectStyledDialogView {
             id: bottomPanelContainer
 
             width: parent.width
+            height: prv.panelMargins * 2 + bbox.height
 
             window: Window {
                 id: bottomPanel
 
                 width: bottomPanelContainer.width
-                height: prv.panelMargins * 2 + bbox.height
+                height: bottomPanelContainer.height
 
                 color: ui.theme.backgroundPrimaryColor
 

@@ -145,13 +145,18 @@ EffectStyledDialogView {
         anchors.fill: parent
 
         WindowContainer {
+            id: topPanelContainer
+
+            width: root.contentWidth
+            height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
+
             visible: prv.showTopPanel
 
             window: Window {
                 id: topPanel
 
-                width: root.contentWidth
-                height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
+                width: topPanelContainer.width
+                height: topPanelContainer.height
 
                 color: ui.theme.backgroundPrimaryColor
 
