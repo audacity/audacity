@@ -95,6 +95,11 @@ public:
         m_controller->togglePlayAction();
     }
 
+    void playSelection()
+    {
+        m_controller->playSelectionAction();
+    }
+
     void changePlaybackRegion(const secs_t start, const secs_t end)
     {
         muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
@@ -856,5 +861,96 @@ TEST_F(PlaybackControllerTests, PlaybackPosition_OnLoopRegionEnd_DoesNotStop)
 
     //! [WHEN] Playback position changed
     m_playbackPositionChanged.send(secs_t(20.0));
+}
+
+/**
+ * @brief Play selection plays exactly the selected time range
+ * @details User triggered the "play-selection" action with a selection of 10-20 secs
+ *          Playback region should be the selection, so playback starts at 10s
+ *          and stops at 20s (via the end-of-region check)
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WithSelection)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionRegion.start));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionRegion.end));
+
+    //! [THEN] The playback region is the selection
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
+    .Times(1);
+
+    //! [THEN] Player should start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Play selection
+    playSelection();
+
+    //! [THEN] The playback cursor is at the selection start
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), selectionRegion.start);
+}
+
+/**
+ * @brief Play selection does nothing without a time selection
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] No time selection
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Nothing happens
+    EXPECT_CALL(*m_player, setPlaybackRegion(_))
+    .Times(0);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
+ * @brief Play selection while playing restarts playback from the selection
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
+{
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(secs_t(10.0)));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] Player is stopped, then restarted
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Play selection
+    playSelection();
+
+    //! [THEN] The playback cursor is at the selection start
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
 }
 }

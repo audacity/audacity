@@ -12,6 +12,7 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_PLAY_SELECTION_QUERY("action://playback/play-selection");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
@@ -32,6 +33,7 @@ static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_PLAY_SELECTION_QUERY, this, &PlaybackController::playSelectionAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
@@ -296,6 +298,32 @@ void PlaybackController::doPlay(bool ignoreSelection)
         doChangePlaybackRegion({});
         doSeek(lastPlaybackSeekTime(), false);
     }
+
+    if (!isPlaybackStartPositionValid()) {
+        return;
+    }
+
+    player()->play();
+}
+
+void PlaybackController::playSelectionAction()
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return;
+    }
+
+    const PlaybackRegion selection = selectionPlaybackRegion();
+    if (!selection.isValid()) {
+        return;
+    }
+
+    if (!isStopped()) {
+        //! NOTE: just stop, without seek
+        player()->stop();
+    }
+
+    doChangePlaybackRegion(selection);
 
     if (!isPlaybackStartPositionValid()) {
         return;
@@ -767,7 +795,7 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAYBACK_PLAY_QUERY.toString()) {
+    if (code == PLAYBACK_PLAY_QUERY.toString() || code == PLAYBACK_PLAY_SELECTION_QUERY.toString()) {
         return !recordController()->isRecording();
     }
 
