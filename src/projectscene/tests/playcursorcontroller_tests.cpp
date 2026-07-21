@@ -199,6 +199,11 @@ TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
 //! Seek gesture: pressing in the track area must never move the playhead by
 //! itself — the seek is deferred to the release, and dropped entirely when the
 //! press turned into a drag of something other than the play cursor.
+//!
+//! endSeekGesture()'s return value is the contract the view branches on: true
+//! means "this was a plain click, playback position state may be updated",
+//! false means "this was a drag — leave both the playhead and the next
+//! playback start position alone".
 //! Default zoom (1.0) / frame start (0.0) make position and time 1:1.
 
 TEST_F(PlayCursorControllerTests, SeekGesture_Press_DoesNotDispatchSeek)
@@ -261,11 +266,15 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickAppliesSnap)
 
 TEST_F(PlayCursorControllerTests, SeekGesture_HorizontalDrag_DoesNotSeek)
 {
-    //! CASE Dragging (e.g. a time selection) suppresses the seek: no dispatch
-    //! during the drag and none on release.
+    //! CASE Dragging a time selection updates neither the playhead nor the next
+    //! playback start position: no dispatch during the drag, none on release,
+    //! and no seek-time bookkeeping. The false return tells the view to skip
+    //! the playback-region update too.
     useGridSnapOff({});
 
     EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    .Times(0);
+    EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(_))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
