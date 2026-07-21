@@ -219,6 +219,18 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Contract selection from right"),
              TranslatableString("action", "Contract selection from right")
              ),
+    UiAction("curs-sel-start",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Move play cursor to selection start"),
+             TranslatableString("action", "Move play cursor to selection start")
+             ),
+    UiAction("curs-sel-end",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Move play cursor to selection end"),
+             TranslatableString("action", "Move play cursor to selection end")
+             ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

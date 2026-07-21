@@ -11,9 +11,12 @@
 #include "playback/iplaybackcontroller.h"
 #include "actions/iactionsdispatcher.h"
 
+#include "trackedit/iselectioncontroller.h"
+
 #include "projectscene/view/timeline/timelinecontext.h"
 #include "projectscene/view/timeline/snaptimeformatter.h"
 #include "projectscene/view/playcursor/playcursorcontroller.h"
+#include "projectscene/view/playcursor/playpositionactioncontroller.h"
 
 namespace au::projectscene {
 //! Test-only helper that reaches the private injects of TimelineContext and
@@ -39,6 +42,16 @@ struct SnapTestAccess {
         if (playbackController) {
             cursor->playbackController.set(playbackController);
         }
+    }
+
+    static void wirePlayPosition(PlayPositionActionController* controller,
+                                 const std::shared_ptr<context::IGlobalContext>& globalContext,
+                                 const std::shared_ptr<muse::actions::IActionsDispatcher>& dispatcher,
+                                 const std::shared_ptr<trackedit::ISelectionController>& selectionController)
+    {
+        controller->globalContext.set(globalContext);
+        controller->dispatcher.set(dispatcher);
+        controller->selectionController.set(selectionController);
     }
 };
 }
