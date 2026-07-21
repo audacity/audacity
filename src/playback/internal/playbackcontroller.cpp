@@ -282,20 +282,15 @@ void PlaybackController::doPlay(bool ignoreSelection)
     }
 
     if (!ignoreSelection) {
-        PlaybackRegion selectionRegion = selectionPlaybackRegion();
-        if (selectionRegion.isValid()) {
-            doChangePlaybackRegion(selectionRegion);
+        //! NOTE: a time selection must not constrain playback;
+        //! play from the cursor (lastPlaybackSeekTime) to the project end
+        const muse::secs_t end = totalPlayTime();
+        const muse::secs_t start = lastPlaybackSeekTime();
+        if (end > start) {
+            doChangePlaybackRegion({ start, end });
         } else {
-            //! NOTE: no selection — fall back to the user's cursor (lastPlaybackSeekTime)
-            //! and the project end.
-            const muse::secs_t end = totalPlayTime();
-            const muse::secs_t start = lastPlaybackSeekTime();
-            if (end > start) {
-                doChangePlaybackRegion({ start, end });
-            } else {
-                LOGW() << "playback region is not valid";
-                updatePlaybackRegion();
-            }
+            LOGW() << "playback region is not valid";
+            updatePlaybackRegion();
         }
     } else {
         doChangePlaybackRegion({});
