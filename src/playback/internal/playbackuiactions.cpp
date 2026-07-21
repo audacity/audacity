@@ -15,6 +15,7 @@ using namespace muse::ui;
 using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_PLAY_SELECTION_QUERY("action://playback/play-selection");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
@@ -34,6 +35,13 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
+             IconCode::Code::PLAY_FILL
+             ),
+    UiAction(PLAYBACK_PLAY_SELECTION_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Play selection"),
+             TranslatableString("action", "Play the selected time range"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PAUSE_QUERY.toString(),
