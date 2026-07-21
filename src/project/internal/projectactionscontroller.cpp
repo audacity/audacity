@@ -941,7 +941,12 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         return make_ret(Ret::Code::Ok);
     }
 
-    //! Step 5. Open project in the current window
+    //! Step 5. Check, if the project is a known cloud project, then open it through the cloud flow
+    if (const auto record = cloudProjectsProvider()->projectRecordForPath(actualPath)) {
+        return openCloudProject(actualPath, muse::String::fromStdString(record->projectId));
+    }
+
+    //! Step 6. Open project in the current window
     return doOpenProject(actualPath);
 }
 
