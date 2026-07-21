@@ -63,6 +63,7 @@ private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
     bool isFocusedItemClip() const;
+    bool focusedItemBoundaryEditAllowed() const;
     ClipKeyList clipsForInteraction() const;
 
     bool isFocusedItemLabel() const;

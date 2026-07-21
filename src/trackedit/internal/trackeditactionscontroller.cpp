@@ -379,6 +379,13 @@ bool TrackeditActionsController::isFocusedItemClip() const
     return prj ? prj->track(focusedItemKey.trackId)->type != TrackType::Label : false;
 }
 
+bool TrackeditActionsController::focusedItemBoundaryEditAllowed() const
+{
+    return navigationController()->isHighlight()
+           || !selectionController()->selectedClips().empty()
+           || !selectionController()->selectedLabels().empty();
+}
+
 ClipKeyList TrackeditActionsController::clipsForInteraction() const
 {
     ClipKeyList result = selectionController()->selectedClips();
@@ -2224,7 +2231,7 @@ void TrackeditActionsController::completeFocusedItemMove()
 
 void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 {
-    if (!navigationController()->isHighlight()) {
+    if (!focusedItemBoundaryEditAllowed()) {
         dispatcher()->dispatch("sel-ext-left");
         return;
     }
@@ -2242,7 +2249,7 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 
 void TrackeditActionsController::extendFocusedItemBoundaryRight()
 {
-    if (!navigationController()->isHighlight()) {
+    if (!focusedItemBoundaryEditAllowed()) {
         dispatcher()->dispatch("sel-ext-right");
         return;
     }
@@ -2260,7 +2267,7 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
 
 void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 {
-    if (!navigationController()->isHighlight()) {
+    if (!focusedItemBoundaryEditAllowed()) {
         dispatcher()->dispatch("sel-cntr-right");
         return;
     }
@@ -2278,7 +2285,7 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 
 void TrackeditActionsController::reduceFocusedItemBoundaryRight()
 {
-    if (!navigationController()->isHighlight()) {
+    if (!focusedItemBoundaryEditAllowed()) {
         dispatcher()->dispatch("sel-cntr-left");
         return;
     }
