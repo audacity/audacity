@@ -44,11 +44,19 @@ BaseSection {
     }
 
     Row {
+        id: sampleRateFormatRow
         spacing: root.spacing
 
+        // Ensures the two dropdowns below stay aligned even if only one of
+        // the titles wraps onto a second line (e.g. in longer translations).
+        property real sharedTitleHeight: Math.max(sampleRateCombo.titleImplicitHeight, sampleFormatCombo.titleImplicitHeight)
+
         ComboBoxWithTitle {
+            id: sampleRateCombo
+
             title: qsTrc("preferences", "Default sample rate")
             columnWidth: root.columnWidth
+            titleHeight: sampleRateFormatRow.sharedTitleHeight
 
             enabled: !playbackState.isPlaying
 
@@ -66,8 +74,11 @@ BaseSection {
         }
 
         ComboBoxWithTitle {
+            id: sampleFormatCombo
+
             title: qsTrc("preferences", "Default sample format")
             columnWidth: root.columnWidth
+            titleHeight: sampleRateFormatRow.sharedTitleHeight
 
             enabled: !playbackState.isPlaying
 

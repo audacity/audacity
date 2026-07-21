@@ -32,6 +32,12 @@ Column {
 
     property real columnWidth: 208
 
+    // Lets a parent Row force this title to the same height as its siblings'
+    // titles, so that the controls below stay aligned even when only some
+    // of the titles wrap onto an extra line. -1 means "size to content".
+    property real titleHeight: -1
+    readonly property alias titleImplicitHeight: titleLabel.implicitHeight
+
     property alias currentIndex: comboBox.currentIndex
     property alias currentValue: comboBox.currentValue
     property alias textRole: comboBox.textRole
@@ -53,8 +59,10 @@ Column {
         id: titleLabel
 
         width: root.columnWidth
+        height: root.titleHeight >= 0 ? root.titleHeight : implicitHeight
 
         horizontalAlignment: Qt.AlignLeft
+        verticalAlignment: Text.AlignTop
         wrapMode: Text.WordWrap
         maximumLineCount: 2
     }
