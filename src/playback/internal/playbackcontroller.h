@@ -113,6 +113,7 @@ private:
     void seekRangeSelection();
 
     void togglePlayAction();
+    void playSelectionAction();
     void doPlay(bool ignoreSelection);
     void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
