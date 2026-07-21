@@ -471,7 +471,7 @@ void TrackItemsListModel::handleAutoScroll(bool ok, bool completed, const std::f
     }
 
     // handle auto-scroll over the edge
-    if (!ok) {
+    if (!ok || completed) {
         m_context->stopAutoScroll();
     } else {
         m_context->startAutoScroll(m_context->mousePositionTime());
