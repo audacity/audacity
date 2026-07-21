@@ -59,6 +59,9 @@ public:
     void selectionContractLeft();
     void selectionContractRight();
 
+    void cursorToSelectionStart();
+    void cursorToSelectionEnd();
+
 signals:
     void timelineContextChanged();
 
@@ -67,11 +70,14 @@ private:
 
     void snapCurrentPosition();
     void applySingleStep(Direction direction);
+    void movePlayPositionTo(muse::secs_t secs);
 
     muse::secs_t stepFromTime(muse::secs_t from, Direction direction) const;
 
     context::IPlaybackStatePtr playbackState() const;
 
     TimelineContext* m_context = nullptr;
+
+    friend struct SnapTestAccess;
 };
 }

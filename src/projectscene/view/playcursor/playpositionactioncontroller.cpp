@@ -33,6 +33,8 @@ static const ActionCode SEL_EXT_LEFT("sel-ext-left");
 static const ActionCode SEL_EXT_RIGHT("sel-ext-right");
 static const ActionCode SEL_CNTR_LEFT("sel-cntr-left");
 static const ActionCode SEL_CNTR_RIGHT("sel-cntr-right");
+static const ActionCode CURS_SEL_START("curs-sel-start");
+static const ActionCode CURS_SEL_END("curs-sel-end");
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
@@ -48,6 +50,8 @@ void PlayPositionActionController::init()
     dispatcher()->reg(this, SEL_EXT_RIGHT, this, &PlayPositionActionController::selectionExtendRight);
     dispatcher()->reg(this, SEL_CNTR_LEFT, this, &PlayPositionActionController::selectionContractLeft);
     dispatcher()->reg(this, SEL_CNTR_RIGHT, this, &PlayPositionActionController::selectionContractRight);
+    dispatcher()->reg(this, CURS_SEL_START, this, &PlayPositionActionController::cursorToSelectionStart);
+    dispatcher()->reg(this, CURS_SEL_END, this, &PlayPositionActionController::cursorToSelectionEnd);
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         onProjectChanged();
@@ -100,17 +104,48 @@ void PlayPositionActionController::applySingleStep(Direction direction)
     const muse::secs_t secs = stepFromTime(currentPlaybackPosition, direction);
 
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(secs));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        movePlayPositionTo(secs);
 
         if (!playbackState()->isPlaying()) {
             selectionController()->setDataSelectedStartTime(secs, true);
             selectionController()->setDataSelectedEndTime(secs, true);
         }
+    }
+}
 
-        m_context->animatedInsureVisible(secs);
+void PlayPositionActionController::movePlayPositionTo(muse::secs_t secs)
+{
+    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+    q.addParam("seekTime", muse::Val(secs));
+    q.addParam("triggerPlay", muse::Val(false));
+    dispatcher()->dispatch(q);
+
+    m_context->animatedInsureVisible(secs);
+}
+
+void PlayPositionActionController::cursorToSelectionStart()
+{
+    //! NOTE: unlike stepping the cursor, this keeps the selection intact —
+    //! it only moves the play position to one of its edges
+    if (selectionController()->timeSelectionIsEmpty()) {
+        return;
+    }
+
+    const muse::secs_t secs = selectionController()->dataSelectedStartTime();
+    if (muse::RealIsEqualOrMore(secs, 0.0)) {
+        movePlayPositionTo(secs);
+    }
+}
+
+void PlayPositionActionController::cursorToSelectionEnd()
+{
+    if (selectionController()->timeSelectionIsEmpty()) {
+        return;
+    }
+
+    const muse::secs_t secs = selectionController()->dataSelectedEndTime();
+    if (muse::RealIsEqualOrMore(secs, 0.0)) {
+        movePlayPositionTo(secs);
     }
 }
 
