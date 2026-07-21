@@ -121,8 +121,10 @@ bool PlayCursorController::endSeekGesture()
 
     if (playbackState()->isPlaying()) {
         //! NOTE: while playing the playhead is not moved, but the click position
-        //! is remembered so that stopping returns there
-        playbackController()->setLastPlaybackSeekTime(std::max(0.0, m_seekGestureTime));
+        //! is remembered so that stopping returns there. Snap it here: seekToTime
+        //! bails out before snapping while playing, so it would be stored raw and
+        //! stopping would land off the boundary a normal click snaps to.
+        playbackController()->setLastPlaybackSeekTime(std::max(0.0, snapTime(m_seekGestureTime)));
     }
     seekToTime(m_seekGestureTime);
 

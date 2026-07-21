@@ -353,6 +353,33 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSeekTime_
     EXPECT_TRUE(m_controller->endSeekGesture());
 }
 
+TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSnappedSeekTime)
+{
+    //! CASE The remembered position is snapped exactly like the playhead would
+    //! be by a click when not playing, so that stopping lands on the boundary.
+    useGridSnapOff({ 10.0 });
+    ON_CALL(*m_playbackState, isPlaying())
+    .WillByDefault(Return(true));
+
+    EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(10.0)));
+
+    m_controller->beginSeekGesture(10.5, 10.5, 50.0); // within the clip-snap tolerance
+    EXPECT_TRUE(m_controller->endSeekGesture());
+}
+
+TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsGridSnappedSeekTime)
+{
+    //! CASE Same, with grid snap on.
+    useGridSnapOn(SnapType::Seconds);
+    ON_CALL(*m_playbackState, isPlaying())
+    .WillByDefault(Return(true));
+
+    EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(7.0)));
+
+    m_controller->beginSeekGesture(7.4, 7.4, 50.0);
+    EXPECT_TRUE(m_controller->endSeekGesture());
+}
+
 TEST_F(PlayCursorControllerTests, SeekGesture_DragWhilePlaying_DoesNotTouchPlayback)
 {
     //! CASE Dragging during playback leaves playback completely alone —
