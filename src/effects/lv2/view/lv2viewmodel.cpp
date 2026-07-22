@@ -142,16 +142,11 @@ void Lv2ViewModel::doInit()
         return;
     }
 
-    const auto fancy
-        = buildFancy() ? std::make_optional(true)
-          : buildPlain() ? std::make_optional(false)
-          : std::nullopt;
-    if (!fancy.has_value()) {
-        // Do not assert before we've implemented buildPlain()
+    if (!buildFancy()) {
         return;
     }
 
-    startUiTimer(*fancy);
+    startUiTimer(true);
     if (isRealtimeInstance()) {
         startSettingsTimer();
     }
@@ -258,7 +253,7 @@ bool Lv2ViewModel::buildFancy()
     m_isX11Window = strcmp(uiTypeUri, LV2_UI__X11UI) == 0;
 
     if (isGtkUI) {
-        m_unsupportedUiReason = "GTK UIs not supported, will fall back to plain UI when it's there :)";
+        m_unsupportedUiReason = "GTK UIs are not supported";
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -315,11 +310,6 @@ bool Lv2ViewModel::buildFancy()
     }
 
     return true;
-}
-
-bool Lv2ViewModel::buildPlain()
-{
-    return false;
 }
 
 void Lv2ViewModel::startUiTimer(bool fancy)

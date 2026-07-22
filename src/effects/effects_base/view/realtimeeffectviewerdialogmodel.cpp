@@ -213,7 +213,7 @@ ViewerComponentType RealtimeEffectViewerDialogModel::viewerComponentType() const
     }
 
     // For external plugins (VST3, LV2), check if we should use generated UI
-    const bool shouldUseVendorUI = useVendorUI();
+    const bool shouldUseVendorUI = useVendorUI() && vendorUiSupported();
     if (!shouldUseVendorUI) {
         return ViewerComponentType::Generated;
     }
@@ -229,5 +229,16 @@ ViewerComponentType RealtimeEffectViewerDialogModel::viewerComponentType() const
     default:
         return ViewerComponentType::Unknown;
     }
+}
+
+bool RealtimeEffectViewerDialogModel::vendorUiSupported() const
+{
+    if (!m_effectState) {
+        return true;
+    }
+
+    const EffectId effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(prop_effectFamily());
+    return launcher ? launcher->vendorUiSupported(effectId) : true;
 }
 }

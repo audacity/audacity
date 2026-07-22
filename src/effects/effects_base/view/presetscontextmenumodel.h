@@ -9,6 +9,7 @@
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/ieffectviewlaunchregister.h"
 
 namespace au::effects {
 class PresetsContextMenuModel : public muse::uicomponents::AbstractMenuModel
@@ -20,6 +21,7 @@ class PresetsContextMenuModel : public muse::uicomponents::AbstractMenuModel
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+    muse::ContextInject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
 
 public:
     explicit PresetsContextMenuModel(QObject* parent = nullptr);
