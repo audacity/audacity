@@ -73,9 +73,11 @@ void PresetsContextMenuModel::reload()
     }
 
     const EffectMeta effectMeta = effectsProvider()->meta(effectId);
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectMeta.family);
     const bool hasVendorUI = effectMeta.family != EffectFamily::Builtin
                              && effectMeta.family != EffectFamily::Nyquist
-                             && effectMeta.family != EffectFamily::Unknown;
+                             && effectMeta.family != EffectFamily::Unknown
+                             && (!launcher || launcher->vendorUiSupported(effectId));
     if (hasVendorUI) {
         items << makeSeparator();
 

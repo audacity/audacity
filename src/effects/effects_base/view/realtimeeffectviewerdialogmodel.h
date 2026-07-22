@@ -7,6 +7,7 @@
 #include "ieffectinstancesregister.h"
 #include "ieffectsconfiguration.h"
 #include "ieffectsprovider.h"
+#include "ieffectviewlaunchregister.h"
 #include "effectstypes.h"
 #include "effectsviewtypes.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
@@ -43,6 +44,7 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Contextable
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
+    muse::ContextInject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
 
 public:
     Q_INVOKABLE void load();
@@ -86,6 +88,7 @@ signals:
 private:
     void subscribe();
     void unregisterState();
+    bool vendorUiSupported() const;
 
     RealtimeEffectStatePtr m_effectState;
     muse::uicomponents::DialogView* m_dialogView = nullptr;
