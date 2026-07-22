@@ -23,7 +23,7 @@ using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
-static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/togglePlayPause");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
 static const ActionQuery RECORD_START_QUERY("action://record/start");

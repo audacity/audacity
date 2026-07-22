@@ -838,9 +838,9 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopBu
     setRecording(true);
 
     //! [THEN] Space and Shift+Space are blocked, the toolbar button is not
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/togglePlayStop"));
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/togglePlayFromCursor"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/togglePlayPause"));
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 
 TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogglePlayActions)
@@ -849,8 +849,8 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogg
     setRecording(false);
 
     //! [THEN] All toggle-play actions are available
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/togglePlayStop"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/togglePlayFromCursor"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/togglePlayPause"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 }
