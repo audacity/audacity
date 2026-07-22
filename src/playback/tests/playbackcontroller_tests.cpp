@@ -925,6 +925,37 @@ TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)
 }
 
 /**
+ * @brief Play selection does nothing while recording
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhileRecording_DoesNothing)
+{
+    //! [GIVEN] Recording is in progress
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(secs_t(10.0)));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] The action is not available and nothing happens
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/play-selection"));
+
+    EXPECT_CALL(*m_player, setPlaybackRegion(_))
+    .Times(0);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
  * @brief Play selection while playing restarts playback from the selection
  */
 TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
