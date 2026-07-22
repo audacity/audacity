@@ -32,9 +32,6 @@ Column {
 
     property real columnWidth: 208
 
-    // Lets a parent Row force this title to the same height as its siblings'
-    // titles, so that the controls below stay aligned even when only some
-    // of the titles wrap onto an extra line. -1 means "size to content".
     property real titleHeight: -1
     readonly property alias titleImplicitHeight: titleLabel.implicitHeight
 
