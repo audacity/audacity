@@ -351,7 +351,8 @@ Rectangle {
             property double displayedPlayCursorX: playCursorController.positionX
 
             function updateCursorPosition(x, y) {
-                lineCursor.x = x
+                const snappedTime = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
+                lineCursor.x = timeline.context.timeToPosition(snappedTime)
                 timeline.context.updateMousePositionTime(x)
                 tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
             }
@@ -703,24 +704,37 @@ Rectangle {
 
             enabled: root.interactionState !== TracksItemsView.State.DraggingItem
 
-            onPointChanged: {
-                if (!hovered) {
-                    return
-                }
-
+            function processHover() {
                 let pos = point.position
+                timeline.updateCursorPosition(pos.x, pos.y)
+
                 if (tracksViewState.trackAtPosition(pos.x, pos.y) !== -1) {
                     // Over a track: let the track container own the guideline.
                     return
                 }
 
-                timeline.updateCursorPosition(pos.x, pos.y)
                 root.snapGuidelineToPosition(pos.x)
+            }
+
+            onPointChanged: {
+                if (hovered) {
+                    processHover()
+                }
             }
 
             onHoveredChanged: {
                 if (!hovered) {
                     root.hideGuideline()
+                }
+            }
+        }
+
+        Connections {
+            target: timeline.context
+
+            function onFrameTimeChanged() {
+                if (emptyAreaGuidelineHandler.hovered && !mainMouseArea.pressed && root.interactionState === TracksItemsView.State.Idle) {
+                    emptyAreaGuidelineHandler.processHover()
                 }
             }
         }

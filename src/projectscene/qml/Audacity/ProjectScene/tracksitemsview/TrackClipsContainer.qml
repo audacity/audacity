@@ -266,6 +266,17 @@ TrackItemsContainer {
                         root.updateItemGuideline(time)
                     }
 
+                    Connections {
+                        target: root.context
+
+                        function onFrameTimeChanged() {
+                            if (clipsContainerMouseArea.containsMouse && !root.moveActive && !root.selectionInProgress) {
+                                let time = root.context.findGuideline(root.context.positionToTime(clipsContainerMouseArea.mouseX, true))
+                                root.updateItemGuideline(time)
+                            }
+                        }
+                    }
+
                     onContainsMouseChanged: function () {
                         if (root.isNearSample || root.isBrush) {
                             clipsContainer.mapToAllClips({

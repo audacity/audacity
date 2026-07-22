@@ -96,6 +96,15 @@ TrackItemsContainer {
                             }
                         }
 
+                        function clearGuidelineIfPointerLeft() {
+                            const overAnyLabel = labelsContainer.checkIfAnyLabel(function (labelItem) {
+                                return labelItem && labelItem.hover
+                            })
+                            if (!labelsContainerMouseArea.containsMouse && !overAnyLabel) {
+                                root.clearItemGuideline()
+                            }
+                        }
+
                         Component.onCompleted: updateCustomCursor()
                         Connections {
                             target: root
@@ -124,6 +133,9 @@ TrackItemsContainer {
                             labelsContainer.mapToAllLabels(e, function (labelItem, mouseEvent) {
                                 labelItem.labelItemMousePositionChanged(mouseEvent.x, mouseEvent.y)
                             })
+
+                            let time = root.context.findGuideline(root.context.positionToTime(e.x, true))
+                            root.updateItemGuideline(time)
                         }
 
                         onContainsMouseChanged: function () {
@@ -133,6 +145,21 @@ TrackItemsContainer {
                             }, function (labelItem, mouseEvent) {
                                 labelItem.setContainsMouse(containsMouse)
                             })
+
+                            if (!containsMouse) {
+                                Qt.callLater(labelsContainerMouseArea.clearGuidelineIfPointerLeft)
+                            }
+                        }
+
+                        Connections {
+                            target: root.context
+
+                            function onFrameTimeChanged() {
+                                if (labelsContainerMouseArea.containsMouse && !root.moveActive && !root.selectionInProgress) {
+                                    let time = root.context.findGuideline(root.context.positionToTime(labelsContainerMouseArea.mouseX, true))
+                                    root.updateItemGuideline(time)
+                                }
+                            }
                         }
                     }
 
