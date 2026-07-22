@@ -47,8 +47,6 @@ BaseSection {
         id: sampleRateFormatRow
         spacing: root.spacing
 
-        // Ensures the two dropdowns below stay aligned even if only one of
-        // the titles wraps onto a second line (e.g. in longer translations).
         property real sharedTitleHeight: Math.max(sampleRateCombo.titleImplicitHeight, sampleFormatCombo.titleImplicitHeight)
 
         ComboBoxWithTitle {
