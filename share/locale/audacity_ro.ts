@@ -1,5 +1,72 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ro">
 <context>
+    <name>KDDockWidgets::Debug::DebugWindow</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
+        <source>DockWidget unique name</source>
+        <translation>Nume unic DockWidget</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::DockWidgetBase</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
+        <source>Dock</source>
+        <translation>Atașează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
+        <source>Detach</source>
+        <translation>Detașare</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBar</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Dock window</source>
+        <translation>Andochează fereastra</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Undock window</source>
+        <translation>Desprinde fereastra</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBarWidget</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
+        <source>Minimize</source>
+        <translation>Minimizează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
+        <source>Close</source>
+        <translation>Închide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
+        <source>Auto-hide</source>
+        <translation>Ascunde automat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
+        <source>Disable auto-hide</source>
+        <translation>Dezactivează ascunderea automată</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Restore</source>
+        <translation>Restaurează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Maximize</source>
+        <translation>Maximizează</translation>
+    </message>
+</context>
+<context>
     <name>Playback</name>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
@@ -23,6 +90,14 @@
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Disabled</source>
         <translation>Dezactivat</translation>
+    </message>
+</context>
+<context>
+    <name>accessibility</name>
+    <message>
+        <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
+        <source>%1 panel</source>
+        <translation>Panou %1</translation>
     </message>
 </context>
 <context>
@@ -527,12 +602,12 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
         <source>Open recent</source>
-        <translation type="unfinished">Deschide fișiere recente</translation>
+        <translation>Deschide recent</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
         <source>Open recent project</source>
-        <translation type="unfinished"/>
+        <translation>Deschide proiect recent</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="55"/>
@@ -920,19 +995,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"/>
+        <translation>Arată în Finder</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="40"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"/>
+        <translation>Arată în Explorer</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="43"/>
         <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>Arată în File Manager</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
@@ -958,7 +1033,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="259"/>
         <source>Show effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Arată panoul de efecte</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
@@ -970,7 +1045,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="399"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Add track effects</source>
-        <translation type="unfinished"/>
+        <translation>Adaugă efecte pistă</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
@@ -1326,7 +1401,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
         <source>Half-wave</source>
-        <translation>Jumătate de undă</translation>
+        <translation>Monoalternanță</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
@@ -1653,7 +1728,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="327"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
         <source>Reset pitch and speed</source>
-        <translation type="unfinished"/>
+        <translation>Resetează înălțimea și viteza</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="333"/>
@@ -1829,6 +1904,186 @@
         <source>Change track sample rate</source>
         <translation>Schimbă rata de eșantionare a pistei</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
+        <source>Save diagnostic files</source>
+        <translation>Salvează fișiere diagnostic</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
+        <source>Show p&amp;aths…</source>
+        <translation>Ar&amp;ată căi...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
+        <source>Show paths</source>
+        <translation>Arată căile</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
+        <source>Show pr&amp;ofiler…</source>
+        <translation>Arată pr&amp;ofiler...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>Arată profiler</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
+        <source>Show g&amp;raphics info…</source>
+        <translation>Arată informații despre g&amp;rafică...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
+        <source>Show graphics info</source>
+        <translation>Arată informații grafice</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
+        <source>Show &amp;navigation tree…</source>
+        <translation>Arată arbore &amp;navigație...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
+        <source>Show navigation tree</source>
+        <translation>Arată arborele de navigație</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
+        <source>Show &amp;accessibility tree…</source>
+        <translation>Arată arborele de &amp;accesibilitate...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
+        <source>Show accessibility tree</source>
+        <translation>Arată arborele de accesibilitate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
+        <source>&amp;Dump accessibility tree to console</source>
+        <translation>Scrie arborele de accesibilitate la consolă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>Scrie arborele de accesibilitate la consolă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
+        <source>Show engraving &amp;elements</source>
+        <translation>Arată &amp;elementele de gravură</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
+        <source>Show engraving elements</source>
+        <translation>Arată elementele de gravare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
+        <source>Show engraving &amp;undo stack</source>
+        <translation>Arată stiva de oprații an&amp;ulabile de gravare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
+        <source>Show engraving undo stack</source>
+        <translation>Arată stiva de oprații anulabile de gravare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
+        <source>Show engraving &amp;style options list</source>
+        <translation>Arată lista de opțiuni de &amp;stil de gravare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
+        <source>Show engraving style options list</source>
+        <translation>Arată lista de opțiuni de stil de gravare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
+        <source>Show &amp;actions list</source>
+        <translation>Arată lista de &amp;acțiuni</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
+        <source>Show actions list</source>
+        <translation>Arată lista de acțiuni</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
+        <source>&amp;Manage plugins…</source>
+        <translation>Ad&amp;ministrează plugin-uri...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
+        <source>Manage plugins…</source>
+        <translation>Administrează plugin-uri...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
+        <source>Show API dump</source>
+        <translation>Afișează ieșire API</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
+        <source>&amp;Multiinstances</source>
+        <translation>Instanțe &amp;multiple</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
+        <source>Check MuseSampler</source>
+        <translation>Verifică MuseSampler</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
+        <source>Reload MuseSampler</source>
+        <translation>Reîncarcă MuseSampler</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
+        <source>Show &amp;scripts…</source>
+        <translation>Arată &amp;scripturi...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
+        <source>Show scripts</source>
+        <translation>Arată scripturile</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
+        <source>Check for &amp;update</source>
+        <translation>Caută act&amp;ualizări</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
+        <source>Use old view</source>
+        <translation>Folosește vederea veche</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
+        <source>Use new view</source>
+        <translation>Folosește vederea nouă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
+        <source>Select workspace</source>
+        <translation>Selectează spațiu de lucru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
+        <source>Edit workspaces…</source>
+        <translation>Editează spațiile de lucru...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
+        <source>Edit workspaces</source>
+        <translation>Editează spațiile de lucru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
+        <source>Create new workspace</source>
+        <translation>Creează un nou spațiu de lucru</translation>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -1928,39 +2183,39 @@
         <translation>Generează ieșire MIDI 2.0 dacă este suportat de receptor</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="382"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Ești sigur că dorești să revii la setările din fabrică?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="383"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
         <translation>Această acțiune va reseta toate preferințele aplicației și configurațiile personalizate ale interfeței. De asemenea va șterge spațiile de lucru și scurtăturile. Va trebui apoi să scanezi din nou toate plugin-urile terțe.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="395"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
         <source>Revert</source>
         <translation>Revino</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
         <source>Revert to factory settings</source>
         <translation>Restaurează setările din fabrică</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Dorești să repornești Audacity acum?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="410"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Audacity trebuie să fie repornit pentru ca schimbările să fie aplicate.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="416"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
         <source>Restart</source>
         <translation>Repornește</translation>
     </message>
@@ -1992,12 +2247,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="28"/>
         <source>Validate audio plugins</source>
-        <translation type="unfinished"/>
+        <translation>Validează plugin-urile audio</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation type="unfinished"/>
+        <translation>Audacity a găsit plugin-uri care trebuie să fie validate înainte de a fi utilizate. Dorești să le validezi acum, sau să le omiți?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="34"/>
@@ -2007,12 +2262,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="37"/>
         <source>Validate</source>
-        <translation type="unfinished"/>
+        <translation>Validează</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Audio plugin validation</source>
-        <translation type="unfinished"/>
+        <translation>Validare plugin audio</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
@@ -2056,12 +2311,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 - %3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
-        <translation type="unfinished"/>
+        <translation>*</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
+        <source>Accounts</source>
+        <translation>Conturi</translation>
     </message>
 </context>
 <context>
@@ -2470,7 +2730,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="339"/>
         <source>translator_credits</source>
-        <translation>&lt;b&gt;Traducere în limba română&lt;/b&gt;&lt;br&gt;&lt;a href="mailto:gale@audacityteam.org"&gt;Gale&lt;/a&gt; (20??-2012)&lt;br&gt;&lt;a href="mailto:cristi@secarica.ro"&gt;Cristian Secară&lt;/a&gt; (2014-2015) &lt;br/&gt; SilverGreen93</translation>
+        <translation>&lt;b&gt;Traducere în limba română&lt;/b&gt;&lt;br&gt;&lt;a href=&quot;mailto:gale@audacityteam.org&quot;&gt;Gale&lt;/a&gt; (20??-2012)&lt;br&gt;&lt;a href=&quot;mailto:cristi@secarica.ro&quot;&gt;Cristian Secară&lt;/a&gt; (2014-2015) &lt;br/&gt; SilverGreen93</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -2529,6 +2789,27 @@ This action will not delete any of your projects.</source>
     </message>
 </context>
 <context>
+    <name>appshell/dock</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
+        <source>Close</source>
+        <translation>Închide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Dock</source>
+        <translation>Atașează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Undock</source>
+        <translation>Desprinde</translation>
+    </message>
+</context>
+<context>
     <name>appshell/gettingstarted</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
@@ -2578,7 +2859,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")</extracomment>
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
         <translation>UtilizareActualizare. %1</translation>
     </message>
     <message>
@@ -2589,15 +2870,15 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="183"/>
         <source>%1. %2</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the selection status (e.g. "Currently selected" or "Click to select this style")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this style&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the availability status (e.g. "Currently selected" or "Available option")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available option&quot;)
 ----------
-%1 is the workspace description, %2 is the selection status (e.g. "Currently selected" or "Click to select this workspace")
+%1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
-%1 is the workspace description, %2 is the availability status (e.g. "Currently selected" or "Available workspace")</extracomment>
+%1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
         <translation>%1. %2</translation>
     </message>
     <message>
@@ -2642,8 +2923,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
-        <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href="%1"&gt;Ți-ai uitat parola?&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;Ți-ai uitat parola?&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -2721,7 +3002,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="32"/>
         <source>Behind this dialog is the ‘Learn’ section, where you’ll find tutorials to get you started
 (Video tutorials require an internet connection)</source>
-        <translation type="unfinished"/>
+        <translation>În spatele acestui dialog este secțiunea de învățare, unde vei găsi tutoriale pentru a te ajuta să începi
+(Tutorialele video necesită o conexiune la internet)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="12"/>
@@ -2731,18 +3013,18 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="13"/>
         <source>Many features are currently unavailable, but our team is actively developing and implementing them for future releases.</source>
-        <translation type="unfinished"/>
+        <translation>Multe funcționalități sunt momentan indisponibile, dar echipa noastră lucrează activ la dezvoltarea și implementarea lor pentru release-uri viitoare.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>Temă %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>Selectează tema %1</translation>
     </message>
     <message>
@@ -2882,7 +3164,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
-        <extracomment>here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"</extracomment>
+        <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
         <translation>Activează contrast ridicat pentru o vizibilitate mai bună. %1</translation>
     </message>
     <message>
@@ -2967,12 +3249,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="129"/>
         <source>Choose your preferred workspace layout for the Audacity interface</source>
-        <translation type="unfinished"/>
+        <translation>Alege-ți spațiul de lucru preferat pentru aspectul interfeței Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="134"/>
         <source>Select a workspace layout that suits your workflow. You can change this later.</source>
-        <translation type="unfinished"/>
+        <translation>Alege un spațiu de lucru cu un aspect care se potrivește modului tău de lucru. Poți schimba acest lucru mai târziu.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="144"/>
@@ -2987,7 +3269,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="154"/>
         <source>You can change between these layouts at any time using our new ‘workspaces’ feature.</source>
-        <translation type="unfinished"/>
+        <translation>Poți comuta între aceste aspecte în orice moment folosind noua noastră funcție „spații de lucru”.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="159"/>
@@ -3002,7 +3284,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="169"/>
         <source>Preview of the selected workspace layout showing the arrangement of interface elements</source>
-        <translation type="unfinished"/>
+        <translation>Previzualizare a spațiului de lucru selectat afișând amplasamentul elementelor interfeței</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="46"/>
@@ -3399,8 +3681,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation>Verificarea pentru actualizări necesită acces la internet. Pentru a-ți proteja confidențialitatea, Audacity nu stochează nicio informație personală. Vezi &lt;a href=&quot;%1&quot;&gt;politica noastră de confidențialitate&lt;/a&gt; pentru mai multe informații.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3415,12 +3697,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
         <source>Character set used when importing binary files</source>
-        <translation type="unfinished"/>
+        <translation>Setul de caractere folosit la importarea fișierelor binare</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="39"/>
         <source>Overture import character set:</source>
-        <translation type="unfinished"/>
+        <translation>Set de caractere la importare Overture:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="64"/>
@@ -3507,7 +3789,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="41"/>
         <source>Proximity for selecting elements:</source>
-        <translation type="unfinished"/>
+        <translation>Proximitate la selecția elementelor:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
@@ -3517,7 +3799,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="45"/>
         <source>Toggle track mute by showing/hiding instruments in the Instruments panel</source>
-        <translation type="unfinished"/>
+        <translation>Comutare pistă pe mut la afișarea/ascunderea instrumentelor în panoul de instrumente</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="31"/>
@@ -3532,7 +3814,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="60"/>
         <source>Import system and page breaks</source>
-        <translation type="unfinished"/>
+        <translation>Importarea sistemelor și întreruperilor de pagină</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="75"/>
@@ -3582,32 +3864,32 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="93"/>
         <source>Delay between notes in automatic real time mode:</source>
-        <translation type="unfinished"/>
+        <translation>Întârziere între note în modul automat de timp real:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PreferencesButtonsPanel.qml" line="50"/>
         <source>Reset preferences</source>
-        <translation type="unfinished"/>
+        <translation>Resetează preferințele</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="32"/>
         <source>Program start</source>
-        <translation type="unfinished"/>
+        <translation>Început program</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="81"/>
         <source>Choose starting project</source>
-        <translation type="unfinished"/>
+        <translation>Alege proiect de pornire</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="33"/>
         <source>OSC remote control</source>
-        <translation type="unfinished"/>
+        <translation>Telecomandă OSC</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="52"/>
         <source>Port number:</source>
-        <translation type="unfinished"/>
+        <translation>Număr port:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="33"/>
@@ -3617,12 +3899,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="43"/>
         <source>Generate MP3 audio for private cloud projects</source>
-        <translation type="unfinished"/>
+        <translation>Generează audio MP3 pentru proiectele private din Cloud</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="32"/>
         <source>Scroll pages</source>
-        <translation type="unfinished"/>
+        <translation>Derulează paginile</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="50"/>
@@ -3637,7 +3919,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="82"/>
         <source>Limit scroll area to page borders</source>
-        <translation type="unfinished"/>
+        <translation>Limitează aria de derulare la marginile paginii</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="32"/>
@@ -3647,12 +3929,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
         <source>Default zoom:</source>
-        <translation type="unfinished"/>
+        <translation>Mărire implicită:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
         <source>Mouse zoom precision:</source>
-        <translation type="unfinished"/>
+        <translation>Precizie mărire maus:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
@@ -3667,22 +3949,22 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="25"/>
         <source>Send anonymous usage info</source>
-        <translation type="unfinished"/>
+        <translation>Trimite date de utilizare anonime</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
-        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
-        <translation type="unfinished"/>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation>Pentru a ne ajuta să înțelegem cât de des folosesc oamenii Audacity, generăm un identificator aleator anonim (UUID) pentru fiecare instalare. Acest ID nu conține nicio informație personală. Vrei să știi mai multe? Vezi &lt;a href=&quot;%1&quot;&gt;politica noastră de confidențialitate&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation type="unfinished"/>
+        <translation>Comutare mărire (lupă)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
         <source>A special tool in the top bar that toggles between two different zoom states.</source>
-        <translation type="unfinished"/>
+        <translation>O unealtă specială în bara de sus care comută între doi factori de mărire diferiți.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
@@ -3838,7 +4120,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="58"/>
         <source>This integration allows you to save and access your Audacity projects on any device</source>
-        <translation type="unfinished"/>
+        <translation>Această integrare îți permite să salvezi și să îți accesezi proiectele Audacity de pe orice dispozitiv</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="60"/>
@@ -3853,7 +4135,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="71"/>
         <source>There are tons of powerful plugins available that you can install for free on MuseHub</source>
-        <translation type="unfinished"/>
+        <translation>Sunt disponibile o sumedenie de plugin-uri capabile pe care le poți instala gratuit de pe MuseHub</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="73"/>
@@ -3863,12 +4145,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="79"/>
         <source>Get 25th anniversary merchandise!</source>
-        <translation type="unfinished"/>
+        <translation>Obține materiale promoționale pentru a 25-a aniversare!</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="81"/>
         <source>A collection of merchandise that commemorates Audacity’s original appearance and branding</source>
-        <translation type="unfinished"/>
+        <translation>O colecție de materiale promoționale care comemorează aspectul și brandingul original al Audacity.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="83"/>
@@ -3896,7 +4178,7 @@ This action will not delete any of your projects.</source>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 №%2</translation>
     </message>
 </context>
 <context>
@@ -3904,17 +4186,55 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>Audio plugins scan completed</source>
-        <translation type="unfinished"/>
+        <translation>Scanarea plugin-urilor audio s-a terminat</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>All audio plugins are up to date.</source>
-        <translation type="unfinished"/>
+        <translation>Toate plugin-urile audio sunt la zi</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
         <source>Scanning audio plugins</source>
         <translation>Se scanează plugin-urile audio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
+        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
+        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
+        <source>System default</source>
+        <translation>Implicit sistem</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
+        <source>Do you want to add SoundFont %1?</source>
+        <translation>Dorești să adaugi fontul de sunet %1?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
+        <source>File already exists. Do you want to overwrite it?</source>
+        <translation>Fișierul există deja. Dorești să îl suprascrii?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
+        <source>File path: %1</source>
+        <translation>Cale fișier: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
+        <source>SoundFont installed</source>
+        <translation>SoundFont instalat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
+        <source>You can assign soundfonts to instruments using the mixer panel.</source>
+        <translation>Poți asigna fonturi de sunet la instrumente folosind panoul Mixer.</translation>
     </message>
 </context>
 <context>
@@ -3946,19 +4266,22 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="804"/>
         <source>Stream is active … unable to gather information.
 </source>
-        <translation type="unfinished"/>
+        <translation>Fluxul este activ ... nu s-au putut culege informații.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="817"/>
         <source>Default recording device number: %1
 </source>
-        <translation type="unfinished">Selectați dispozitivul de înregistrare</translation>
+        <translation>Număr dispozitiv de înregistrare implicit: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="818"/>
         <source>Default playback device number: %1
 </source>
-        <translation type="unfinished"/>
+        <translation>Număr dispozitiv de redare implicit: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="826"/>
@@ -3972,61 +4295,71 @@ This action will not delete any of your projects.</source>
         <source>Device info unavailable for: %1
 </source>
         <extracomment>%1 is the device index number</extracomment>
-        <translation type="unfinished">Informațiile despre dispozitiv nu sunt disponibile</translation>
+        <translation>Informații dispozitiv indisponibile pentru: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="843"/>
         <source>Device ID: %1
 </source>
-        <translation type="unfinished">Dispozitiv:</translation>
+        <translation>ID dispozitiv: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="844"/>
         <source>Device name: %1
 </source>
-        <translation type="unfinished">Dispozitive</translation>
+        <translation>Nume dispozitiv: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="845"/>
         <source>Host name: %1
 </source>
-        <translation type="unfinished"/>
+        <translation>Nume gazdă: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
         <source>Recording channels: %1
 </source>
-        <translation type="unfinished">Canale de înregistrare</translation>
+        <translation>Canale înregistrare: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
         <source>Playback channels: %1
 </source>
-        <translation type="unfinished">Volum de redare</translation>
+        <translation>Canale redare: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="848"/>
         <source>Low Recording Latency: %1
 </source>
-        <translation type="unfinished">Înregistrare</translation>
+        <translation>Latență înregistrare scăzută: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="849"/>
         <source>Low Playback Latency: %1
 </source>
-        <translation type="unfinished"/>
+        <translation>Latență redare scăzută: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="850"/>
         <source>High Recording Latency: %1
 </source>
-        <translation type="unfinished">Înregistrare</translation>
+        <translation>Latență înregistrare crescută: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
         <source>High Playback Latency: %1
 </source>
-        <translation type="unfinished"/>
+        <translation>Latență redare crescută: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="857"/>
@@ -4049,26 +4382,30 @@ This action will not delete any of your projects.</source>
         <source>Selected recording device: %1 - %2
 </source>
         <extracomment>%1 is the recording device number, %2 is the device name</extracomment>
-        <translation type="unfinished">Selectați dispozitivul de înregistrare</translation>
+        <translation>Dispozitivul de înregistrare selectat: %1 - %2
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="899"/>
         <source>No recording device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>Niciun dispozitiv de înregistrare găsit pentru „%1”.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="904"/>
         <source>Selected playback device: %1 - %2
 </source>
         <extracomment>%1 is the playback device number, %2 is the device name</extracomment>
-        <translation type="unfinished">Selectați dispozitivul de redare</translation>
+        <translation>Dispozitivul de redare selectat: %1 - %2
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="906"/>
         <source>No playback device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>Niciun dispozitiv de redare găsit pentru „%1”.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="914"/>
@@ -4089,7 +4426,8 @@ This action will not delete any of your projects.</source>
         <source>Received %1 while opening devices
 </source>
         <extracomment>%1 is a PortAudio error code returned while opening the devices</extracomment>
-        <translation type="unfinished"/>
+        <translation>S-a primit codul %1 la deschiderea dispozitivelor
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="984"/>
@@ -4116,7 +4454,8 @@ This action will not delete any of your projects.</source>
 %1 is the recording source index number, %2 is the source name
 ----------
 %1 is the playback volume index number, %2 is the volume control name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 - %2
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1001"/>
@@ -4168,7 +4507,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="273"/>
         <source>Error: %1</source>
-        <translation type="unfinished">Eroare:</translation>
+        <translation>Eroare: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="281"/>
@@ -4184,7 +4523,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="875"/>
         <source>Error opening recording device.
 Error code: %1</source>
-        <translation type="unfinished"/>
+        <translation>Eroare la deschiderea dispozitivului de înregistrare.
+Cod eroare: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="878"/>
@@ -4204,7 +4544,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="56"/>
         <source>Failed to encode preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>A eșuat codificarea unei presetări din „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
@@ -4214,7 +4554,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
+        <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
         <translation>n/e</translation>
     </message>
     <message>
@@ -4222,19 +4562,19 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="496"/>
         <source>Couldn’t open “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut deschide „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="482"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>A eșuat scrierea presetării XML în „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="504"/>
         <source>Unable to read the preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut citi presetarea din „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
@@ -4262,22 +4602,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
         <source>Audio Unit Generators</source>
-        <translation type="unfinished"/>
+        <translation>Generatoare Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="196"/>
         <source>Audio Unit Mixers</source>
-        <translation type="unfinished"/>
+        <translation>Mixere Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="197"/>
         <source>Audio Unit Music Effects</source>
-        <translation type="unfinished"/>
+        <translation>Efecte muzicale Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="198"/>
         <source>Audio Unit Panners</source>
-        <translation type="unfinished"/>
+        <translation>Panoramări Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
@@ -4292,22 +4632,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="292"/>
         <source>Failed to decode “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat decodarea presetării „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="301"/>
         <source>Failed to convert “%1” preset to internal format</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat conversia presetării „%1” la formatul intern</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="313"/>
         <source>Failed to create property list for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat crearea listei de proprietăți pentru presetarea „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="319"/>
         <source>Failed to set class info for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat setarea informațiilor de clasă pentru presetarea „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="420"/>
@@ -4356,7 +4696,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation type="unfinished"/>
+        <translation>Ducking reduce volumul unei sau mai multor piste atunci când volumul unei piste de control specificate atinge un anumit nivel</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
@@ -4588,7 +4928,7 @@ Selectează o secțiune dintr-o pistă.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="77"/>
         <source>Half-wave Rectifier</source>
-        <translation>Punte redresoare jumătate de undă</translation>
+        <translation>Punte redresoare monoalternanță</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="78"/>
@@ -4694,7 +5034,7 @@ Selectează o secțiune dintr-o pistă.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="280"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
-        <translation type="unfinished"/>
+        <translation>Pentru a aplica egalizarea, selectează una sau mai multe piste audio.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="291"/>
@@ -4719,7 +5059,10 @@ Selectează o secțiune dintr-o pistă.</translation>
 Error message says:
 %2</source>
         <extracomment>EQ stands for 'Equalization'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eroare la încărcarea curbelor de egalizare din fișier:
+%1
+Mesajul de eroare:
+%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="301"/>
@@ -4729,7 +5072,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
         <source>Requested curve not found, using ‘unnamed’</source>
-        <translation type="unfinished"/>
+        <translation>Curba cerută nu a fost găsită. Se va folosi „fără nume”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
@@ -4814,7 +5157,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="110"/>
         <source>Too much audio was selected. Only the first %1 seconds of audio will be analyzed.</source>
-        <translation type="unfinished">A fost selectat prea mult audio. Numai primele %1 secunde de audio vor fi analizate.</translation>
+        <translation>A fost selectat prea mult audio. Doar primele %1 secunde de audio vor fi analizate.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/RepeatBase.cpp" line="14"/>
@@ -4867,7 +5210,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>"infinite impulse response"</extracomment>
+        <extracomment>&quot;infinite impulse response&quot;</extracomment>
         <translation>Execută un filtru IIR care emulează filtrele analogice</translation>
     </message>
     <message>
@@ -4950,7 +5293,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
         <source>Rapid tone quality variations, like that guitar sound so popular in the 1970’s</source>
-        <translation type="unfinished"/>
+        <translation>Variații rapide de calitate a tonului, ca acel sunet de chitară popular din anii 1970</translation>
     </message>
 </context>
 <context>
@@ -5052,11 +5395,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>Neautentificat</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>Profilul meu</translation>
     </message>
@@ -5064,12 +5410,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>Sign in</source>
         <translation>Conectare</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>Deconectare</translation>
     </message>
@@ -5077,6 +5425,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <source>Create account</source>
         <translation>Creează cont</translation>
     </message>
@@ -5094,6 +5444,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="36"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="69"/>
         <source>You are not signed in</source>
         <translation>Nu ești conectat</translation>
     </message>
@@ -5113,27 +5464,27 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
         <source>Invalid audio ID</source>
-        <translation type="unfinished"/>
+        <translation>ID audio invalid</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="562"/>
         <source>Project not found in cloud database</source>
-        <translation type="unfinished"/>
+        <translation>Proiectul nu a fost găsit în baza de date din Cloud</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="650"/>
         <source>No valid current project</source>
-        <translation type="unfinished"/>
+        <translation>Niciun proiect curent valid</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="713"/>
         <source>Upload succeeded but payload is missing</source>
-        <translation type="unfinished"/>
+        <translation>Încărcarea a fost cu succes, dar conținutul lipsește</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="155"/>
         <source>Sign in successful! You’re good to go back to Audacity.</source>
-        <translation type="unfinished"/>
+        <translation>Autentificarea a fost cu succes! Ești gata să te întorci la Audacity.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="585"/>
@@ -5187,7 +5538,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Create an account on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Creează un cont pe audio.com</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
@@ -5198,7 +5549,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
         <source>Sign in buttons</source>
-        <translation type="unfinished"/>
+        <translation>Butoane autentificare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
+        <source>My accounts</source>
+        <translation>Conturile mele</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
+        <source>Log in</source>
+        <translation>Autentificare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
+        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
+        <translation>Autentificare cu succes! Ești gata să te întorci la aplicația MuseScore Studio.</translation>
     </message>
 </context>
 <context>
@@ -5217,7 +5583,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="432"/>
         <source>Invalid Response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Răspuns invalid: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="178"/>
@@ -5262,6 +5628,24 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
         <translation>Salvează pe audio.com</translation>
+    </message>
+</context>
+<context>
+    <name>diagnostics</name>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <source>Save diagnostic files?</source>
+        <translation>Salvezi fișiere diagnostic?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Acest lucru va crea o arhivă .zip cu informații despre configurația ta MuseScore Studio pentru a ajuta dezvoltatorii să diagnosticheze orice problemă ai putea avea. Poți să inspectezi conținutul acestui fișier înainte de a-l trimite oricui.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <source>Save diagnostic files</source>
+        <translation>Salvează fișiere diagnostic</translation>
     </message>
 </context>
 <context>
@@ -5510,7 +5894,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="24"/>
         <source>Preset name cannot contain %1 or %2</source>
         <extracomment>%1 is a forward slash, %2 is a backslash; neither character is allowed in a preset name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Numele presetării nu poate conține %1 sau %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
@@ -5800,28 +6184,28 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished">Nu s-a putut determina</translation>
+        <translation>Administrează plugin-urile</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
         <source>Rescan plugins</source>
-        <translation type="unfinished"/>
+        <translation>Rescanează plugin-urile</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="106"/>
         <source>Include plugins with errors</source>
-        <translation type="unfinished"/>
+        <translation>Include plugin-urile cu erori</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished">Nu s-a putut determina</translation>
+        <translation>Plugin-uri lipsă</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation type="unfinished"/>
+        <translation>Unele plugin-uri folosite în acest proiect nu au fost găsite. Fă dublu-clic pe o intrare pentru a-i vedea locația.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
@@ -5832,12 +6216,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation type="unfinished"/>
+        <translation>Detalii plugin</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
         <source>Vendor:</source>
-        <translation type="unfinished"/>
+        <translation>Furnizor:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
@@ -5847,7 +6231,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>Cale:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5877,18 +6261,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Modificare inițială tempo</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Modificare finală tempo</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Modificare inițială înălțime</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5900,7 +6284,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Modificare finală înălțime</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
@@ -5924,7 +6308,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="250"/>
         <source>“%1” (broken)</source>
         <extracomment>%1 is the name of the plugin that failed to load</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” (stricat)</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
@@ -5935,7 +6319,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="217"/>
         <source>Vendor</source>
-        <translation type="unfinished"/>
+        <translation>Furnizor</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
@@ -5950,17 +6334,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <source>%1 (broken)</source>
-        <translation type="unfinished"/>
+        <translation>%1 (stricat)</translation>
     </message>
     <message>
         <source>Missing - %1</source>
-        <translation type="unfinished"/>
+        <translation>Lipsă - %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lipsă - „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="55"/>
@@ -5978,12 +6362,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 
 %2</source>
         <extracomment>%1 is the effect name, %2 is the preset name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1: Nu se pot încărca setările de mai jos. Vor fi folosite setările implicite.
+
+%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
+        <extracomment>&quot;Nyquist&quot; is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>Nyquist</translation>
     </message>
     <message>
@@ -6048,7 +6434,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished"/>
+        <translation>Eliminarea clicurilor este proiectată să elimine clicurile din pistele audio</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -6058,7 +6444,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation type="unfinished"/>
+        <translation>Selecția trebuie să fie mai mare de 4096 de eșantioane.</translation>
     </message>
 </context>
 <context>
@@ -6084,7 +6470,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
         <source>Reduces “dynamic range”, or differences between loud and quiet parts.</source>
-        <translation type="unfinished"/>
+        <translation>Reduce „intervalul dinamic” sau diferențele dintre părțile tari și încete.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitereffect.cpp" line="13"/>
@@ -6173,19 +6559,20 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
         <source>Normalizing Loudness…
 </source>
-        <translation type="unfinished"/>
+        <translation>Se normalizează volumul...
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se analizează: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="181"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se procesează: %1</translation>
     </message>
 </context>
 <context>
@@ -6226,7 +6613,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished">Nu sunt selectate suficiente date.</translation>
+        <translation>Niciun audio selectat.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6265,64 +6652,68 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="96"/>
         <source>Removing DC offset and Normalizing…
 </source>
-        <translation type="unfinished"/>
+        <translation>Se elimină decalajul CC și se normalizează...
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="98"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>Se elimină decalajul CC...
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="100"/>
         <source>Normalizing without removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>Se normalizează fără să se elimine decalajul CC...
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="102"/>
         <source>Not doing anything…
 </source>
-        <translation type="unfinished"/>
+        <translation>Nu se face nimic...
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="128"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se analizează: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="132"/>
         <source>Analyzing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se analizează prima pistă a perechii stereo: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="159"/>
         <source>Analyzing second track of stereo pair: %1</source>
-        <translation type="unfinished"/>
+        <translation>Se analizează a doua pistă a perechii stereo: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="168"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se procesează: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="175"/>
         <source>Processing stereo channels independently: %1</source>
-        <translation type="unfinished"/>
+        <translation>Se procesează canalele stereo independent: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="182"/>
         <source>Processing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se procesează prima pistă a perechii stereo: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="205"/>
         <source>Processing second track of stereo pair: %1</source>
-        <translation type="unfinished"/>
+        <translation>Se procesează a doua pistă a perechii stereo: %1</translation>
     </message>
 </context>
 <context>
@@ -6355,7 +6746,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
         <source>Applying Nyquist Effect…</source>
-        <translation type="unfinished"/>
+        <translation>Se aplică efectul Nyquist...</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="67"/>
@@ -6367,7 +6758,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
+        <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>Lucrător Nyquist</translation>
     </message>
     <message>
@@ -6386,13 +6777,16 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
-        <translation type="unfinished"/>
+        <translation>Pentru a utiliza efefctele spectrale, activează selecția spectrală
+din setările de spectrogramă ale pistei și selectează intervalul
+de frecvență pe care acest efect se va aplica.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="655"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation type="unfinished"/>
+        <translation>eroare: Fișierul „%1” este specificat în antet dar nu a fost găsit în calea plugin-ului.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="821"/>
@@ -6410,21 +6804,24 @@ frequency range for the effect to act on.</source>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Efectele &apos;;type tool&apos; nu pot returna audio din Nyquist.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1398"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Efectele &apos;;type tool&apos; nu pot returna etichete din Nyquist.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
+        <translation>nyx_error a fost returnat din %1.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1409"/>
@@ -6440,7 +6837,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1460"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
         <source>Nyquist returned the value: %1</source>
-        <translation type="unfinished"/>
+        <translation>Nyquist a returnat valoarea: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1519"/>
@@ -6478,7 +6875,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2035"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
-        <translation type="unfinished">Aceasră versiune Audacity nu a fost compilată cu suport pentru %1.</translation>
+        <translation>Această versiune de Audacity nu suportă plugin-ul Nyquist versiunea %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2290"/>
@@ -6493,7 +6890,12 @@ frequency range for the effect to act on.</source>
             or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>Codul tău arată ca sintaxa SAL, dar lipsește instrucțiunea „return”.
+            Pentru SAL, folosește o instrucțiune return cum ar fi:
+	return *track* * 0.1
+            sau pentru LISP, începe cu o paranteză deschisă cum ar fi:
+	(mult *track* 0.1)
+.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2599"/>
@@ -6503,7 +6905,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished">Se aplică efectul Nyquist...</translation>
+        <translation>Filtru treaptă</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -6548,7 +6950,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
         <source>Delete selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>Șterge frecvența centrală a selecției</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
@@ -6574,7 +6976,9 @@ frequency range for the effect to act on.</source>
         <source>~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
                       or reduce the filter ‘Width’.</source>
-        <translation type="unfinished"/>
+        <translation>~aParametrii filtrului oprește-bandă nu pot fi aplicați.~%~
+                      Încearcă să crești limita frecvenței inferioare~%~
+                      sau să reduci lățimea filtrului.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="22"/>
@@ -6584,7 +6988,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="23"/>
         <source>Amplify selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>Amplifică frecvența centrală a selecției</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
@@ -6627,7 +7031,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="30"/>
         <source>Amplify selection</source>
-        <translation type="unfinished"/>
+        <translation>Amplifică selecția</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
@@ -6637,7 +7041,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished"/>
+        <translation>Fade out studio</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -6647,7 +7051,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished"/>
+        <translation>Fader ajustabil</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -6801,7 +7205,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished">Repetă</translation>
+        <translation>Detector bătaie</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -6811,7 +7215,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished"/>
+        <translation>Reparație clip</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -6831,7 +7235,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished">&amp;Restrânge toate pistele</translation>
+        <translation>Aplică crossfade pe clipuri</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -6851,7 +7255,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished">&amp;Restrânge toate pistele</translation>
+        <translation>Aplică crossfade pe piste</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -7136,7 +7540,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished">Încarcă fișiere</translation>
+        <translation>Filtru trece-sus</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -7190,7 +7594,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished">Editare etichetă</translation>
+        <translation>Etichetează sunetele</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -7281,7 +7685,8 @@ frequency range for the effect to act on.</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun sunet găsit.~%~
+                 Încearcă să reduci ‘Nivel prag (dB)’.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -7295,7 +7700,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished">Arată li&amp;mitarea</translation>
+        <translation>Limitator învechit</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -7354,12 +7759,12 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished">Încarcă fișiere</translation>
+        <translation>Filtru trece-jos</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished">Zgomot:</translation>
+        <translation>Poarta de zgomot</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -7389,7 +7794,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="180"/>
         <source>Don’t Link Stereo</source>
-        <translation type="unfinished"/>
+        <translation>Nu lega stereo</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
@@ -7451,7 +7856,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished">Se aplică efectul Nyquist...</translation>
+        <translation>Filtru oprește-bandă</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -7485,7 +7890,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
         <source>Browse…</source>
-        <translation type="unfinished"/>
+        <translation>Răsfoiește...</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
@@ -7570,7 +7975,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation type="unfinished"/>
+        <translation>Fișiere deja instalate („Permite suprascrierea” dezactivată):</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
@@ -7620,7 +8025,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Rhythm track</source>
-        <translation type="unfinished">Elimină pista</translation>
+        <translation>Pistă ritm</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -7660,7 +8065,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation type="unfinished"/>
+        <translation>Setează „Număr de măsuri” la zero pentru a activa „Durată pistă ritm”.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
@@ -7680,7 +8085,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
         <source>Used if ‘Number of bars’ = 0</source>
-        <translation type="unfinished"/>
+        <translation>Folosit dacă „Număr de măsuri” = 0</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
@@ -7756,12 +8161,13 @@ Canalul drept</translation>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
-        <translation type="unfinished"/>
+        <translation>Setează ori „Număr de măsuri”, ori~%~
+                    „Durată pistă ritm” la ceva mai mare ca zero.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Risset drum</source>
-        <translation type="unfinished"/>
+        <translation>Tobă Risset</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
@@ -7796,7 +8202,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished">Stânga</translation>
+        <translation>Stânga</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7806,7 +8212,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished">Dreapta</translation>
+        <translation>Dreapta</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -8092,10 +8498,10 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
         <translation>Produs cu &lt;span&gt;Export date mostră&lt;/span&gt; pentru
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; de Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; de Steve
 Daulton</translation>
     </message>
     <message>
@@ -8146,12 +8552,12 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="326"/>
         <source>Error.~%“~a” cannot be written.</source>
-        <translation type="unfinished"/>
+        <translation>Eroare.~%&quot;~a&quot; nu poate fi scris.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Sample data Import</source>
-        <translation type="unfinished">Con&amp;vertor al ratei de eșantionare:</translation>
+        <translation>Importare date eșantion</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
@@ -8178,21 +8584,27 @@ Daulton</translation>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation type="unfinished"/>
+        <translation>Eroare~%~
+                        &apos;~a&apos; nu a putut fi deschis.~%~
+                        Verifică dacă fișierul există.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation type="unfinished"/>
+        <translation>Eroare:~%~
+              Fișierul trebuie să conțină numai text ASCII simplu.~%~
+              (octet invalid &apos;~a&apos; la octetul numărul: ~a)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
         <source>Error~%~
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
-        <translation type="unfinished"/>
+        <translation>Eroare~%~
+              Datele trebuie să fie numere în text ASCII simplu.~%~
+              &apos;~a&apos; nu este o valoare numerică.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
@@ -8202,7 +8614,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
         <source>Delete selection</source>
-        <translation type="unfinished"/>
+        <translation>Șterge selecția</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
@@ -8325,7 +8737,7 @@ Daulton</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation type="unfinished"/>
+        <translation>Paulstretch este doar pentru un efect de întindere în timp sau „stază” extrem</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -8339,7 +8751,10 @@ Daulton</translation>
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Selecția audio este prea scurtă pentru a fi previzualizată.
+
+Încearcă să mărești selecția audio la cel puțin %1 secunde
+sau să reduci rezoluția de timp la mai puțin de %2 secunde.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
@@ -8348,7 +8763,10 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu se poate previzualiza.
+
+Pentru selecția audio curentă, rezoluția maximă
+de timp este de %1 secunde.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
@@ -8357,7 +8775,10 @@ For the current audio selection, the maximum
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rezoluția de timp este prea lungă pentru selecție.
+
+Încearcă să mărești selecția audio la cel puțin %1 secunde
+sau să reduci rezoluția de timp la mai puțin de %2 secunde.</translation>
     </message>
 </context>
 <context>
@@ -8365,30 +8786,31 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="30"/>
         <source>Remove DC offset</source>
-        <translation type="unfinished"/>
+        <translation>Elimină decalajul CC</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="49"/>
         <source>Removes DC offset (centers audio on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>Elimină decalajul CC (centrează audio vertical pe 0,0)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="67"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>Se elimină decalajul CC...
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se analizează: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="100"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se procesează: %1</translation>
     </message>
 </context>
 <context>
@@ -8422,7 +8844,9 @@ Mărește și selectează o mică parte dintr-o secundă pentru a o repara.</tra
         <source>The Repair effect needs some data to go on.
 
 Please select an area to repair with some audio on at least one side (the more the better).</source>
-        <translation type="unfinished"/>
+        <translation>Efectul de reparare necesită niște date pentru a putea continua.
+
+Selectează o arie de reparat cu audio pe cel puțin o parte (cu cât mai mult, cu atât mai bine).</translation>
     </message>
 </context>
 <context>
@@ -8543,7 +8967,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
         <source>Adds ambience or a “hall effect”</source>
-        <translation type="unfinished"/>
+        <translation>Adaugă ambianță sau un „efect de hol”</translation>
     </message>
 </context>
 <context>
@@ -8564,7 +8988,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">Liniște în locul audio</translation>
+        <translation>Întindere glisantă</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -8779,7 +9203,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="97"/>
         <source>For each tone you wish to generate, enter numbers from 0 to 9, lower case letters from a to z, and the * and # characters.</source>
-        <translation type="unfinished"/>
+        <translation>Pentru fiecare ton pe care dorești să-l generezi, introdu numere de la 0 la 9, litere mici de la a la z și caracterele * și #.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="106"/>
@@ -8794,33 +9218,33 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
         <source>Tone/silence ratio</source>
-        <translation type="unfinished"/>
+        <translation>Raport ton/liniște</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
         <source>Duty cycle</source>
-        <translation type="unfinished"/>
+        <translation>Factor de umplere</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
         <source>%1%</source>
-        <translation type="unfinished"/>
+        <translation>%1%</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
         <source>Tone duration</source>
-        <translation type="unfinished"/>
+        <translation>Durată ton</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
         <source>%1 ms</source>
-        <translation type="unfinished"/>
+        <translation>%1 ms</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
-        <translation type="unfinished"/>
+        <translation>Durată liniște</translation>
     </message>
 </context>
 <context>
@@ -8833,12 +9257,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished"/>
+        <translation>Scară frecvență liniară</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
         <source>Grid lines</source>
-        <translation type="unfinished"/>
+        <translation>Linii grilă</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="113"/>
@@ -8892,7 +9316,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="27"/>
         <source>Normalize loudness</source>
-        <translation type="unfinished"/>
+        <translation>Normalizează volumul</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="33"/>
@@ -8902,7 +9326,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="34"/>
         <source>Perceived loudness</source>
-        <translation type="unfinished"/>
+        <translation>Volum perceput</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="53"/>
@@ -8917,12 +9341,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation>Normalizează canalele stereo independent</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
         <source>Treat mono as dual mono (recommended)</source>
-        <translation type="unfinished"/>
+        <translation>Tratează mono ca dual mono (recomandat)</translation>
     </message>
 </context>
 <context>
@@ -8971,12 +9395,13 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="78"/>
         <source>Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.</source>
-        <translation type="unfinished"/>
+        <translation>Selectează câteva secunde de zgomot izolat pentru ca Audacity să știe
+ce să filtreze, apoi apasă pe Obține profil zgomot.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished">Obține profilul de zgomot</translation>
+        <translation>Obține profilul de zgomot</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -8986,7 +9411,8 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
         <source>Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.</source>
-        <translation type="unfinished"/>
+        <translation>Selectează intervalul audio pe care îl vrei filtrat, alege cât de mult zgomot
+dorești să fie filtrat și apoi apasă pe „Aplică” pentru a reduce zgomotul.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
@@ -9045,17 +9471,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>Elimină decalajul CC (centrează vertical pe 0,0)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
         <source>Normalize peak amplitude to</source>
-        <translation type="unfinished"/>
+        <translation>Normalizează vârful de amplitudine la</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation>Normalizează canalele stereo independent</translation>
     </message>
 </context>
 <context>
@@ -9151,7 +9577,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="29"/>
         <source>Semitones (%1 → %2)</source>
-        <translation type="unfinished"/>
+        <translation>Semitonuri (%1 → %2)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="61"/>
@@ -9161,27 +9587,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">Liniște în locul audio</translation>
+        <translation>Întindere glisantă</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Modificare inițială tempo</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Modificare finală tempo</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Modificare inițială înălțime</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Modificare finală înălțime</translation>
     </message>
 </context>
 <context>
@@ -9300,7 +9726,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>Abbreviation of "seconds"</extracomment>
+        <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
         <translation>s</translation>
     </message>
     <message>
@@ -9311,7 +9737,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -9328,7 +9754,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>Abbreviation of "hertz"</extracomment>
+        <extracomment>Abbreviation of &quot;hertz&quot;</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
@@ -9339,7 +9765,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>Abbreviation of "kilohertz"</extracomment>
+        <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
         <translation>kHz</translation>
     </message>
     <message>
@@ -9350,7 +9776,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>Abbreviation of "decibels"</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9361,7 +9787,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
-        <extracomment>Symbol of "percent"</extracomment>
+        <extracomment>Symbol of &quot;percent&quot;</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9378,7 +9804,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
-        <extracomment>Abbreviation of "beats per minute"</extracomment>
+        <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
         <translation>bpm</translation>
     </message>
     <message>
@@ -9389,7 +9815,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
-        <extracomment>Symbol of "degrees"</extracomment>
+        <extracomment>Symbol of &quot;degrees&quot;</extracomment>
         <translation>°</translation>
     </message>
     <message>
@@ -9410,14 +9836,16 @@ Please select an area to repair with some audio on at least one side (the more t
         <source>Internal error in %1 at %2 line %3.
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <extracomment>%1 is the function name, %2 is the source file path, %3 is the line number in that file</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eroare internă în %1 la %2 linia %3.
+Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="35"/>
         <source>Internal error at %1 line %2.
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <extracomment>%1 is the source file path, %2 is the line number in that file</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eroare internă la %1 linia %2.
+Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.h" line="27"/>
@@ -9642,7 +10070,10 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
 192000 - recommended</source>
-        <translation type="unfinished"/>
+        <translation>Rata de biți (biți/secundă) - influențează dimensiunea fișierului rezultat și calitatea
+Unele codec-uri pot accepta doar anumite valori (128k, 192k, 256k etc.)
+0 - automat
+Recomandat - 192000</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
@@ -9763,7 +10194,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="194"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
-        <translation type="unfinished"/>
+        <translation>Exportarea audioului selectat necesită o selecție de date audio din proiect. Întoarce-te la proiect, fă o selecție și încearcă din nou.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
@@ -9790,7 +10221,9 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
-        <translation type="unfinished"/>
+        <translation>Pentru a exporta cu o asociere de canale personalizată, efectele principale trebuie să fie oprite temporar.
+
+Efectele principale vor fi pornite imediat după export.</translation>
     </message>
 </context>
 <context>
@@ -9799,6 +10232,160 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="162"/>
         <source>Reload plugins</source>
         <translation>Reîncarcă plugin-urile</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
+        <source>Enabled</source>
+        <translation>Activate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
+        <source>Disabled</source>
+        <translation>Dezactivate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <source>Version:</source>
+        <translation>Versiune: </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <source>Shortcut:</source>
+        <extracomment>Keyboard shortcut</extracomment>
+        <translation>Scurtătură:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <source>Edit shortcut</source>
+        <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
+        <translation>Editează scurtăturile</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Enable</source>
+        <translation>Activează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Disable</source>
+        <translation>Dezactivează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
+        <source>Plugin not found</source>
+        <translation>Plugin-ul nu s-a găsit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
+        <source>Could not load plugin</source>
+        <translation>Nu s-a putut încărca plugin-ul</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
+        <source>Plugin is not in the correct format</source>
+        <translation>Plugin-ul nu are formatul corect</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
+        <source>Manually</source>
+        <translation>Manual</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
+        <source>Failed to install extension</source>
+        <translation>A eșuat instalarea extensiei</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
+        <source>The extension does not contain a valid manifest file.</source>
+        <translation>Extensia nu conține un fișier manifest valid.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
+        <source>The extension is already installed.</source>
+        <translation>Extensia este deja instalată.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
+        <source>This extension cannot be updated.</source>
+        <translation>Extensia nu poate fi actualizată.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
+        <source>The currently installed version cannot be uninstalled.</source>
+        <translation>Versiunea curentă instalată nu poate fi dezinstalată.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
+        <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
+        <translation>O altă versiune a extensiei „%1” este deja instalată (versiunea %2). Dorești să o înlocuiești cu versiunea %3?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
+        <source>Update extension</source>
+        <translation>Actualizează extensia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <source>Error code: %1</source>
+        <translation>Cod de eroare: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
+        <translation>Plugin-ul „%1” este momentan dezactivat. Dorești să-l activezi acum?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
+        <translation>Alternativ, îl poți activa oricând din Acasă &gt; Plugin-uri.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <source>Composing/arranging tools</source>
+        <translation>Unelte compoziție/aranjare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <source>Color notes</source>
+        <translation>Note colorate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Playback</source>
+        <translation>Redare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <source>Lyrics</source>
+        <translation>Versuri</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
+        <source>Run plugin %1</source>
+        <extracomment>%1 is replaced with the name of the plugin</extracomment>
+        <translation>Rulează plugin %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
+        <source>Run plugin %1: %2</source>
+        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
+        <translation>Rulează plugin %1: %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <source>Not specified</source>
+        <extracomment>No version is specified for this plugin.</extracomment>
+        <translation>Nespecificată</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <source>Not defined</source>
+        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
+        <translation>Nedefinită</translation>
     </message>
 </context>
 <context>
@@ -9878,26 +10465,27 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="25"/>
         <source>Audacity failed to open a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity a eșuat la deschiderea unui fișier din %1.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="29"/>
         <source>Audacity failed to read from a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished">Audacity se bazează pe codul din următoarele proiecte:</translation>
+        <translation>Audacity a eșuat la citirea dintr-un fișier din %1.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="36"/>
         <source>Audacity successfully wrote a file in %1 but failed to rename it as %2.</source>
         <extracomment>%1 is the original file path, %2 is the file name it was being renamed to</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity a scris cu succes un fișier în %1, dar a eșuat să-l redenumească în %2.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="66"/>
         <source>Audacity failed to write to a file.
 Perhaps %1 is not writable or the disk is full.</source>
         <extracomment>%1 is a path where the project is about to be saved</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity a eșuat să scrie într-un fișier.
+Poate %1 nu are drepturi de scriere sau discul este plin.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.h" line="31"/>
@@ -9944,21 +10532,22 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
-        <translation type="unfinished">Toate Fișierele|*</translation>
+        <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
+        <translation>Fișiere %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
-        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
+        <translation>(%1)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
         <source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
-        <translation type="unfinished">Directorul %1 nu există. Doriți să fie creat ?</translation>
+        <translation>
+%1 nu are permisiuni de scriere.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
@@ -9986,7 +10575,9 @@ Se resetează la locația implicită.</translation>
 
 For tips on suitable drives, click the help button.</source>
         <extracomment>%1 is a message describing why the drive is unsuitable</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1
+
+Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajutor.</translation>
     </message>
 </context>
 <context>
@@ -9997,6 +10588,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -10029,9 +10621,12 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <translation>Renunță</translation>
     </message>
@@ -10041,6 +10636,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
         <translation>Aplică</translation>
     </message>
@@ -10054,6 +10650,8 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
@@ -10064,6 +10662,10 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
         <source>Clear</source>
         <translation>Golește</translation>
     </message>
@@ -10080,7 +10682,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -10093,7 +10695,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
-        <extracomment>Abbreviation of "points", used to specify a font size</extracomment>
+        <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
         <translation>pt</translation>
     </message>
     <message>
@@ -10106,6 +10708,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
         <translation>Niciun rezultat găsit</translation>
     </message>
@@ -10119,6 +10722,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="365"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="296"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="63"/>
         <source>Unknown</source>
         <translation>Necunoscut</translation>
     </message>
@@ -10132,6 +10736,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Verifică conexiunea la internet sau încearcă din nou mai târziu</translation>
     </message>
@@ -10191,11 +10796,13 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
@@ -10211,6 +10818,1506 @@ For tips on suitable drives, click the help button.</source>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
+        <source>Copy</source>
+        <translation>Copiază</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
+        <source>Error details have been copied to the clipboard.</source>
+        <translation>Detaliile erorii au fost copiate în clipboard.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Hide details</source>
+        <translation>Ascunde detalii</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Show details</source>
+        <translation>Arată detalii</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <source>Question</source>
+        <translation>Întrebare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <source>Information</source>
+        <translation>Informație</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <source>Warning</source>
+        <translation>Avertizare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <source>Error</source>
+        <translation>Eroare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <source>Don’t show this message again</source>
+        <translation>Nu mai afișa acest mesaj</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
+        <source>Waiting…</source>
+        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
+        <translation>Se așteaptă...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
+        <source>Add</source>
+        <translation>Adăugă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
+        <source>Clear all</source>
+        <translation>Șterge tot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
+        <source>action</source>
+        <translation>acțiune</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
+        <source>status</source>
+        <translation>stare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
+        <source>Delete</source>
+        <translation>Șterge</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>On</source>
+        <translation>Aplicat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>Off</source>
+        <translation>Oprit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
+        <source>Hours</source>
+        <translation>ore</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
+        <source>Minutes</source>
+        <translation>minute</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
+        <source>Seconds</source>
+        <translation>secunde</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
+        <source>Milliseconds</source>
+        <translation>milisecunde</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation>procent</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
+        <source>Collapse</source>
+        <extracomment>Collapse a tree item</extracomment>
+        <translation>Restrânge</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
+        <source>Expand</source>
+        <extracomment>Expand a tree item</extracomment>
+        <translation>Extinde</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <source>Create</source>
+        <translation>Crează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <source>Select</source>
+        <translation>Selectare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
+        <source>Today</source>
+        <translation>Azi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="49"/>
+        <source>Yesterday</source>
+        <translation>Ieri</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>acum %n zi</numerusform><numerusform>acum %n zile</numerusform><numerusform>acum %n de zile</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
+        <source>Last week</source>
+        <translation>Săptămâna trecută</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
+        <source>%n week(s) ago</source>
+        <translation><numerusform>acum %n săptămână</numerusform><numerusform>acum %n săptămâni</numerusform><numerusform>acum %n de săptămâni</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
+        <source>Last month</source>
+        <translation>În ultima lună</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
+        <source>%n month(s) ago</source>
+        <translation><numerusform>acum %n lună</numerusform><numerusform>acum %n luni</numerusform><numerusform>acum %n de luni</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
+        <source>%n year(s) ago</source>
+        <translation><numerusform>acum %n an</numerusform><numerusform>acum %n ani</numerusform><numerusform>acum %n de ani</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
+        <source>%1 GB</source>
+        <comment>gigabyte</comment>
+        <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 GO</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
+        <source>%1 MB</source>
+        <comment>megabyte</comment>
+        <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 MO</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
+        <source>%1 KB</source>
+        <comment>kilobyte</comment>
+        <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 KB</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
+        <source>%Ln byte(s)</source>
+        <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
+        <translation><numerusform>%Ln de octet</numerusform><numerusform>%Ln octeți</numerusform><numerusform>%Ln de octeți</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <source>Save all</source>
+        <translation>Salvează tot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <source>Don’t save</source>
+        <translation>Nu salva</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <source>Yes to all</source>
+        <translation>Da pentru toate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <source>No</source>
+        <translation>Nu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <source>No to all</source>
+        <translation>Nu pentru toate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <source>Abort</source>
+        <translation>Anulează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <source>Retry</source>
+        <translation>Reîncercați</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <source>Ignore</source>
+        <translation>Ignoră</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <source>Discard</source>
+        <translation>Revenire</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <source>Help</source>
+        <translation>Ajutor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <source>Reset</source>
+        <translation>Resetează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <source>Continue</source>
+        <translation>Continuă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <source>Checking for updates…</source>
+        <translation>Se caută actualizări...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <source>Downloading %1…</source>
+        <translation>Se descarcă %1...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <source>Unpacking %1…</source>
+        <translation>Se despachetează %1...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
+        <source>Inactive</source>
+        <translation>Inactiv</translation>
+    </message>
+</context>
+<context>
+    <name>global/noteName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="267"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="282"/>
+        <source>C</source>
+        <translation>do</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="268"/>
+        <source>C♯</source>
+        <translation>do♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="269"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="284"/>
+        <source>D</source>
+        <translation>re</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="270"/>
+        <source>D♯</source>
+        <translation>re♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="271"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="286"/>
+        <source>E</source>
+        <translation>mi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="272"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="287"/>
+        <source>F</source>
+        <translation>fa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="273"/>
+        <source>F♯</source>
+        <translation>fa♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="274"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="289"/>
+        <source>G</source>
+        <translation>sol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="275"/>
+        <source>G♯</source>
+        <translation>sol♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="276"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="291"/>
+        <source>A</source>
+        <translation>la</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="277"/>
+        <source>A♯</source>
+        <translation>la♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="278"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="293"/>
+        <source>B</source>
+        <translation>si</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="283"/>
+        <source>D♭</source>
+        <translation>re♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="285"/>
+        <source>E♭</source>
+        <translation>mi♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="288"/>
+        <source>G♭</source>
+        <translation>sol♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="290"/>
+        <source>A♭</source>
+        <translation>la♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="292"/>
+        <source>B♭</source>
+        <translation>si♭</translation>
+    </message>
+</context>
+<context>
+    <name>global/pitchName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="31"/>
+        <source>C-1</source>
+        <translation>Do3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="32"/>
+        <source>C♯-1</source>
+        <translation>Do♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="33"/>
+        <source>D♭-1</source>
+        <translation>Re♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="34"/>
+        <source>D-1</source>
+        <translation>Re3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="35"/>
+        <source>D♯-1</source>
+        <translation>Re♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="36"/>
+        <source>E♭-1</source>
+        <translation>Mi♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="37"/>
+        <source>E-1</source>
+        <translation>Mi3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="38"/>
+        <source>E♯-1</source>
+        <translation>Mi♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="39"/>
+        <source>F♭-1</source>
+        <translation>Fa♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="40"/>
+        <source>F-1</source>
+        <translation>Fa3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="41"/>
+        <source>F♯-1</source>
+        <translation>Fa♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="42"/>
+        <source>G♭-1</source>
+        <translation>Sol♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="43"/>
+        <source>G-1</source>
+        <translation>Sol3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="44"/>
+        <source>G♯-1</source>
+        <translation>Sol♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="45"/>
+        <source>A♭-1</source>
+        <translation>La♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="46"/>
+        <source>A-1</source>
+        <translation>La3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="47"/>
+        <source>A♯-1</source>
+        <translation>La♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="48"/>
+        <source>B♭-1</source>
+        <translation>Si♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="49"/>
+        <source>B-1</source>
+        <translation>Si3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="50"/>
+        <source>B♯-1</source>
+        <translation>Si♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="52"/>
+        <source>C♭0</source>
+        <translation>Do♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="53"/>
+        <source>C0</source>
+        <translation>Do2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="54"/>
+        <source>C♯0</source>
+        <translation>Do♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="55"/>
+        <source>D♭0</source>
+        <translation>Re♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="56"/>
+        <source>D0</source>
+        <translation>Re2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="57"/>
+        <source>D♯0</source>
+        <translation>Re♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="58"/>
+        <source>E♭0</source>
+        <translation>Mi♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="59"/>
+        <source>E0</source>
+        <translation>Mi2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="60"/>
+        <source>E♯0</source>
+        <translation>Mi♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="61"/>
+        <source>F♭0</source>
+        <translation>Fa♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="62"/>
+        <source>F0</source>
+        <translation>Fa2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="63"/>
+        <source>F♯0</source>
+        <translation>Fa♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="64"/>
+        <source>G♭0</source>
+        <translation>Sol♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="65"/>
+        <source>G0</source>
+        <translation>Sol2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="66"/>
+        <source>G♯0</source>
+        <translation>Sol♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="67"/>
+        <source>A♭0</source>
+        <translation>La♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="68"/>
+        <source>A0</source>
+        <translation>La2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="69"/>
+        <source>A♯0</source>
+        <translation>La♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="70"/>
+        <source>B♭0</source>
+        <translation>Si♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="71"/>
+        <source>B0</source>
+        <translation>Si2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="72"/>
+        <source>B♯0</source>
+        <translation>Si♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="74"/>
+        <source>C♭1</source>
+        <translation>Do♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="75"/>
+        <source>C1</source>
+        <translation>Do1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="76"/>
+        <source>C♯1</source>
+        <translation>Do♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="77"/>
+        <source>D♭1</source>
+        <translation>Re♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="78"/>
+        <source>D1</source>
+        <translation>Re1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="79"/>
+        <source>D♯1</source>
+        <translation>Re♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="80"/>
+        <source>E♭1</source>
+        <translation>Mi♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="81"/>
+        <source>E1</source>
+        <translation>Mi1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="82"/>
+        <source>E♯1</source>
+        <translation>Mi♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="83"/>
+        <source>F♭1</source>
+        <translation>Fa♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="84"/>
+        <source>F1</source>
+        <translation>Fa1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="85"/>
+        <source>F♯1</source>
+        <translation>Fa♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="86"/>
+        <source>G♭1</source>
+        <translation>Sol♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="87"/>
+        <source>G1</source>
+        <translation>Sol1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="88"/>
+        <source>G♯1</source>
+        <translation>Sol♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="89"/>
+        <source>A♭1</source>
+        <translation>La♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="90"/>
+        <source>A1</source>
+        <translation>La1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="91"/>
+        <source>A♯1</source>
+        <translation>La♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="92"/>
+        <source>B♭1</source>
+        <translation>Si♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="93"/>
+        <source>B1</source>
+        <translation>Si1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="94"/>
+        <source>B♯1</source>
+        <translation>Si♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="96"/>
+        <source>C♭2</source>
+        <translation>Do♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="97"/>
+        <source>C2</source>
+        <translation>Do</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="98"/>
+        <source>C♯2</source>
+        <translation>Do♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="99"/>
+        <source>D♭2</source>
+        <translation>Re♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="100"/>
+        <source>D2</source>
+        <translation>Re</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="101"/>
+        <source>D♯2</source>
+        <translation>Re♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="102"/>
+        <source>E♭2</source>
+        <translation>Mi♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="103"/>
+        <source>E2</source>
+        <translation>Mi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="104"/>
+        <source>E♯2</source>
+        <translation>Mi♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="105"/>
+        <source>F♭2</source>
+        <translation>Fa♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="106"/>
+        <source>F2</source>
+        <translation>Fa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="107"/>
+        <source>F♯2</source>
+        <translation>Fa♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="108"/>
+        <source>G♭2</source>
+        <translation>Sol♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="109"/>
+        <source>G2</source>
+        <translation>Sol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="110"/>
+        <source>G♯2</source>
+        <translation>Sol♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="111"/>
+        <source>A♭2</source>
+        <translation>La♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="112"/>
+        <source>A2</source>
+        <translation>La</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="113"/>
+        <source>A♯2</source>
+        <translation>La♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="114"/>
+        <source>B♭2</source>
+        <translation>Si♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="115"/>
+        <source>B2</source>
+        <translation>Si</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="116"/>
+        <source>B♯2</source>
+        <translation>Si♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="118"/>
+        <source>C♭3</source>
+        <translation>do♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="119"/>
+        <source>C3</source>
+        <translation>do</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="120"/>
+        <source>C♯3</source>
+        <translation>do♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="121"/>
+        <source>D♭3</source>
+        <translation>re♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="122"/>
+        <source>D3</source>
+        <translation>re</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="123"/>
+        <source>D♯3</source>
+        <translation>re♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="124"/>
+        <source>E♭3</source>
+        <translation>mi♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="125"/>
+        <source>E3</source>
+        <translation>mi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="126"/>
+        <source>E♯3</source>
+        <translation>mi♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="127"/>
+        <source>F♭3</source>
+        <translation>fa♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="128"/>
+        <source>F3</source>
+        <translation>fa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="129"/>
+        <source>F♯3</source>
+        <translation>fa♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="130"/>
+        <source>G♭3</source>
+        <translation>sol♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="131"/>
+        <source>G3</source>
+        <translation>sol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="132"/>
+        <source>G♯3</source>
+        <translation>sol♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="133"/>
+        <source>A♭3</source>
+        <translation>la♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="134"/>
+        <source>A3</source>
+        <translation>la</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="135"/>
+        <source>A♯3</source>
+        <translation>la♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="136"/>
+        <source>B♭3</source>
+        <translation>si♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="137"/>
+        <source>B3</source>
+        <translation>si</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="138"/>
+        <source>B♯3</source>
+        <translation>si♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="140"/>
+        <source>C♭4</source>
+        <translation>do♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="141"/>
+        <source>C4</source>
+        <translation>do1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="142"/>
+        <source>C♯4</source>
+        <translation>do♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="143"/>
+        <source>D♭4</source>
+        <translation>re♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="144"/>
+        <source>D4</source>
+        <translation>re1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="145"/>
+        <source>D♯4</source>
+        <translation>re♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="146"/>
+        <source>E♭4</source>
+        <translation>mi♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="147"/>
+        <source>E4</source>
+        <translation>mi1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="148"/>
+        <source>E♯4</source>
+        <translation>mi♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="149"/>
+        <source>F♭4</source>
+        <translation>fa♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="150"/>
+        <source>F4</source>
+        <translation>fa1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="151"/>
+        <source>F♯4</source>
+        <translation>fa♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="152"/>
+        <source>G♭4</source>
+        <translation>sol♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="153"/>
+        <source>G4</source>
+        <translation>sol1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="154"/>
+        <source>G♯4</source>
+        <translation>sol♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="155"/>
+        <source>A♭4</source>
+        <translation>la♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="156"/>
+        <source>A4</source>
+        <translation>la1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="157"/>
+        <source>A♯4</source>
+        <translation>la♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="158"/>
+        <source>B♭4</source>
+        <translation>si♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="159"/>
+        <source>B4</source>
+        <translation>si1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="160"/>
+        <source>B♯4</source>
+        <translation>si♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="162"/>
+        <source>C♭5</source>
+        <translation>do♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="163"/>
+        <source>C5</source>
+        <translation>do2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="164"/>
+        <source>C♯5</source>
+        <translation>do♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="165"/>
+        <source>D♭5</source>
+        <translation>re♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="166"/>
+        <source>D5</source>
+        <translation>re2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="167"/>
+        <source>D♯5</source>
+        <translation>re♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="168"/>
+        <source>E♭5</source>
+        <translation>mi♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="169"/>
+        <source>E5</source>
+        <translation>mi2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="170"/>
+        <source>E♯5</source>
+        <translation>mi♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="171"/>
+        <source>F♭5</source>
+        <translation>fa♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="172"/>
+        <source>F5</source>
+        <translation>fa2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="173"/>
+        <source>F♯5</source>
+        <translation>fa♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="174"/>
+        <source>G♭5</source>
+        <translation>sol♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="175"/>
+        <source>G5</source>
+        <translation>sol2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="176"/>
+        <source>G♯5</source>
+        <translation>sol♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="177"/>
+        <source>A♭5</source>
+        <translation>la♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="178"/>
+        <source>A5</source>
+        <translation>la2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="179"/>
+        <source>A♯5</source>
+        <translation>la♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="180"/>
+        <source>B♭5</source>
+        <translation>si♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="181"/>
+        <source>B5</source>
+        <translation>si2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="182"/>
+        <source>B♯5</source>
+        <translation>si♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="184"/>
+        <source>C♭6</source>
+        <translation>do♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="185"/>
+        <source>C6</source>
+        <translation>do3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="186"/>
+        <source>C♯6</source>
+        <translation>do♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="187"/>
+        <source>D♭6</source>
+        <translation>re♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="188"/>
+        <source>D6</source>
+        <translation>re3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="189"/>
+        <source>D♯6</source>
+        <translation>re♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="190"/>
+        <source>E♭6</source>
+        <translation>mi♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="191"/>
+        <source>E6</source>
+        <translation>mi3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="192"/>
+        <source>E♯6</source>
+        <translation>mi♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="193"/>
+        <source>F♭6</source>
+        <translation>fa♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="194"/>
+        <source>F6</source>
+        <translation>fa3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="195"/>
+        <source>F♯6</source>
+        <translation>fa♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="196"/>
+        <source>G♭6</source>
+        <translation>sol♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="197"/>
+        <source>G6</source>
+        <translation>sol3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="198"/>
+        <source>G♯6</source>
+        <translation>sol♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="199"/>
+        <source>A♭6</source>
+        <translation>la♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="200"/>
+        <source>A6</source>
+        <translation>la3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="201"/>
+        <source>A♯6</source>
+        <translation>la♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="202"/>
+        <source>B♭6</source>
+        <translation>si♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="203"/>
+        <source>B6</source>
+        <translation>si3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="204"/>
+        <source>B♯6</source>
+        <translation>si♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="206"/>
+        <source>C♭7</source>
+        <translation>do♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="207"/>
+        <source>C7</source>
+        <translation>do4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="208"/>
+        <source>C♯7</source>
+        <translation>do♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="209"/>
+        <source>D♭7</source>
+        <translation>re♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="210"/>
+        <source>D7</source>
+        <translation>re4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="211"/>
+        <source>D♯7</source>
+        <translation>re♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="212"/>
+        <source>E♭7</source>
+        <translation>mi♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="213"/>
+        <source>E7</source>
+        <translation>mi4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="214"/>
+        <source>E♯7</source>
+        <translation>mi♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="215"/>
+        <source>F♭7</source>
+        <translation>fa♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="216"/>
+        <source>F7</source>
+        <translation>fa4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="217"/>
+        <source>F♯7</source>
+        <translation>fa♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="218"/>
+        <source>G♭7</source>
+        <translation>sol♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="219"/>
+        <source>G7</source>
+        <translation>sol4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="220"/>
+        <source>G♯7</source>
+        <translation>sol♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="221"/>
+        <source>A♭7</source>
+        <translation>la♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="222"/>
+        <source>A7</source>
+        <translation>la4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="223"/>
+        <source>A♯7</source>
+        <translation>la♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="224"/>
+        <source>B♭7</source>
+        <translation>si♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="225"/>
+        <source>B7</source>
+        <translation>si4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="226"/>
+        <source>B♯7</source>
+        <translation>si♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="228"/>
+        <source>C♭8</source>
+        <translation>do♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="229"/>
+        <source>C8</source>
+        <translation>do5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="230"/>
+        <source>C♯8</source>
+        <translation>do♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="231"/>
+        <source>D♭8</source>
+        <translation>re♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="232"/>
+        <source>D8</source>
+        <translation>re5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="233"/>
+        <source>D♯8</source>
+        <translation>re♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="234"/>
+        <source>E♭8</source>
+        <translation>mi♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="235"/>
+        <source>E8</source>
+        <translation>mi5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="236"/>
+        <source>E♯8</source>
+        <translation>mi♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="237"/>
+        <source>F♭8</source>
+        <translation>fa♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="238"/>
+        <source>F8</source>
+        <translation>fa5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="239"/>
+        <source>F♯8</source>
+        <translation>fa♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="240"/>
+        <source>G♭8</source>
+        <translation>sol♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="241"/>
+        <source>G8</source>
+        <translation>sol5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="242"/>
+        <source>G♯8</source>
+        <translation>sol♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="243"/>
+        <source>A♭8</source>
+        <translation>la♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="244"/>
+        <source>A8</source>
+        <translation>la5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="245"/>
+        <source>A♯8</source>
+        <translation>la♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="246"/>
+        <source>B♭8</source>
+        <translation>si♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="247"/>
+        <source>B8</source>
+        <translation>si5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="248"/>
+        <source>B♯8</source>
+        <translation>si♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="250"/>
+        <source>C♭9</source>
+        <translation>do♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="251"/>
+        <source>C9</source>
+        <translation>do6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="252"/>
+        <source>C♯9</source>
+        <translation>do♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="253"/>
+        <source>D♭9</source>
+        <translation>re♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="254"/>
+        <source>D9</source>
+        <translation>re6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="255"/>
+        <source>D♯9</source>
+        <translation>re♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="256"/>
+        <source>E♭9</source>
+        <translation>mi♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="257"/>
+        <source>E9</source>
+        <translation>mi6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="258"/>
+        <source>E♯9</source>
+        <translation>mi♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="259"/>
+        <source>F♭9</source>
+        <translation>fa♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="260"/>
+        <source>F9</source>
+        <translation>fa6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="261"/>
+        <source>F♯9</source>
+        <translation>fa♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="262"/>
+        <source>G♭9</source>
+        <translation>sol♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="263"/>
+        <source>G9</source>
+        <translation>sol6</translation>
+    </message>
 </context>
 <context>
     <name>import</name>
@@ -10218,17 +12325,17 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="168"/>
         <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
-        <translation type="unfinished"/>
+        <translation>Tempo buclă detectat la %1 bpm. Ce dorești să faci?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="138"/>
         <source>Match project tempo to loop</source>
-        <translation type="unfinished"/>
+        <translation>Potrivește tempoul proiectului la buclă</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="139"/>
         <source>Match loop to project tempo</source>
-        <translation type="unfinished"/>
+        <translation>Potrivește bucla la tempoul proiectului</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
@@ -10240,12 +12347,12 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="177"/>
         <source>Loop Tempo Detected</source>
-        <translation type="unfinished"/>
+        <translation>Tempo buclă detectat</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
         <source>Stretch loop to project tempo</source>
-        <translation type="unfinished"/>
+        <translation>Întinde bucla la tempoul proiectului</translation>
     </message>
 </context>
 <context>
@@ -10260,14 +12367,14 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="66"/>
         <source>Importing %1</source>
         <extracomment>%1 is the description of the file format being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se importă %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="396"/>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
@@ -10279,7 +12386,8 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../au3/libraries/au3-import-export/ExportPlugin.cpp" line="43"/>
         <source>Unable to export.
 Error %1</source>
-        <translation type="unfinished">NU s-a putut exporta</translation>
+        <translation>Nu se poate exporta.
+Eroare %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="92"/>
@@ -10303,7 +12411,9 @@ Error %1</source>
 is a not an audio file. 
 Audacity cannot open this type of file.</source>
         <extracomment>%1 is the name of the file</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” 
+nu este un fișier audio. 
+Audacity nu poate deschide acest tip de fișier.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
@@ -10314,7 +12424,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se importă %1…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -10324,7 +12434,7 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
-        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
+        <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
         <translation>Aceasră versiune Audacity nu a fost compilată cu suport pentru %1.</translation>
     </message>
     <message>
@@ -10334,7 +12444,10 @@ Audacity cannot open audio CDs directly.
 Extract (rip) the CD tracks to an audio format that 
 Audacity can import, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este o pistă de CD audio. 
+Audacity nu poate deschide CD-uri audio direct. 
+Extrage pistele CD-ului audio într-un format audio pe
+care Audacity le poate importa, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -10342,7 +12455,9 @@ Audacity can import, such as WAV or AIFF.</source>
 Audacity cannot open this file because it only contains links to other files. 
 You may be able to open it in a text editor and download the actual audio files.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier listă de redare.
+Audacity nu poate deschide acest fișier deoarece acesta conține referințe către alte fișiere audio.
+Poți să-l deschizi într-un editor text și să descarci fișierele audio aferente.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="712"/>
@@ -10350,7 +12465,9 @@ You may be able to open it in a text editor and download the actual audio files.
 Audacity cannot open this type of file due to patent restrictions. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier Windows Media Audio.
+Audacity nu poate deschide acest fișier din cauza restricțiilor patentelor.
+Va trebui să îl convertești într-un fișier audio suportat cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="722"/>
@@ -10358,7 +12475,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Without the optional FFmpeg library, Audacity cannot open this type of file.
 Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier Advanced Audio Coding.
+Fără biblioteca opțională FFmpeg, Audacity nu poate deschide acest tip de fișier.
+Altfel, va trebui să îl convertești într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="729"/>
@@ -10368,7 +12487,11 @@ Audacity cannot open this type of file due to the encryption.
 Try recording the file into Audacity, or burn it to audio CD then 
 extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier audio criptat.
+Aceste fișiere provin de regulă dintr-un magazin online de muzică.
+Audacity nu poate deschide acest fișier din cauza criptării.
+Încearcă să înregistrezi fișierul în Audacity sau scrie-l pe un CD audio după care
+extrage pista de pe CD într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="736"/>
@@ -10376,7 +12499,9 @@ extract the CD track to a supported audio format such as WAV or AIFF.</source>
 Audacity cannot open this proprietary format. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier media RealPlayer.
+Audacity nu poate deschide acest format de fișier proprietar.
+Va trebui să îl convertești într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="744"/>
@@ -10385,7 +12510,10 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%s” este un fișier bazat pe note muzicale, nu un fișier audio.
+Audacity nu poate deschide acest tip de fișier.
+Încearcă să-l convertești într-un format audio suportat, cum ar fi WAV sau
+AIFF și apoi să-l imporți, sau să-l înregistrezi direct în Audacity.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -10395,7 +12523,11 @@ If you think it might be an mp3 file, rename it to end with “.mp3”
 and try importing it again. Otherwise you need to convert it to a supported audio 
 format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier audio Musepack.
+Audacity nu poate deschide acest tip de fișier.
+Dacă crezi că acesta este un fișier mp3, redenumește-l cu extensia mp3
+și încearcă să-l imporți din nou. Altfel va trebui să-l convertești într-un format
+audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="760"/>
@@ -10403,7 +12535,9 @@ format, such as WAV or AIFF.</source>
 Audacity cannot open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier audio Wavpack.
+Audacity nu poate deschide acest tip de fișier.
+Va trebui să-l convertești într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="768"/>
@@ -10411,7 +12545,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier audio Dolby Digital.
+Audacity nu poate deschide acest tip de fișier.
+Va trebui să-l convertești într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="776"/>
@@ -10419,7 +12555,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier audio OGG Speex.
+Audacity nu poate deschide acest tip de fișier.
+Va trebui să-l convertești într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="789"/>
@@ -10427,12 +12565,14 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to extract the audio to a supported format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>„%1” este un fișier video.
+Audacity nu poate deschide acest tip de fișier.
+Va trebui să extragi partea audio într-un format audio suportat, cum ar fi WAV sau AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="795"/>
         <source>File “%1” not found.</source>
-        <translation type="unfinished"/>
+        <translation>Fișierul „%1” nu a fost găsit.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="810"/>
@@ -10440,13 +12580,15 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
 
 %2For uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity nu a recunoscut tipul fișierului „%1”.
+
+%2Pentru fișiere necomprimate încearcă de asemenea Fișier &gt; Importă &gt; Date brute.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
         <source>%1, %2</source>
         <extracomment>%1 is the list of importers so far, %2 is the next importer's format name being appended</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1, %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="827"/>
@@ -10455,7 +12597,10 @@ Importers supposedly supporting such files are:
 %2,
 but none of them understood this file format.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity a recunoscut tipul fișierului „%1”.
+Importatorii care ar suporta un asemenea fișier ar fi:
+%2,
+dar niciunul dintre ei nu a înțeles formatul fișierului.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
@@ -10465,7 +12610,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
-        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
+        <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -10536,7 +12681,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
-        <extracomment>"Log" is short for "logarithmic"</extracomment>
+        <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
         <translation>Căutare jurnal</translation>
     </message>
     <message>
@@ -10554,8 +12699,8 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
+        <translation>Index[%1] Codec[%2], Limbă[%3], Rată de biți[%4], Canale[%5], Durată[%6]</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="96"/>
@@ -10563,10 +12708,10 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>kbps abbreviates "thousands of bits per second"
+        <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="108"/>
@@ -10634,7 +12779,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
-        <extracomment>VBR is "variable bit rate"</extracomment>
+        <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
         <translation>Mod VBR</translation>
     </message>
     <message>
@@ -10663,7 +12808,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
-        <extracomment>VOIP is "voice over IP"</extracomment>
+        <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -10723,37 +12868,38 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-a putut determina descrierea formatului pentru fișierul „%1”.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-a putut aloca contextul formatului de ieșire.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-a putut adăuga fluxul audio în fișierul de ieșire „%1”.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-a putut deschide fișierul de ieșire „%1” pentru scriere. Codul de eroare este %2.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-au putut scrie antetele în fișierul de ieșire „%1”. Codul de eroare este %2.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
+        <translation>FFmpeg nu poate găsi codecul audio 0x%1.
+Probabil suportul pentru acest codec nu a fost compilat.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1075"/>
@@ -10770,18 +12916,20 @@ Support for this codec is probably not compiled in.</source>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
+        <translation>Nu s-a putut deschide codec-ul audio „%1” (0x%2)
+
+%3</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-a putut aloca buffer-ul pentru a citi din audio FIFO.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: EROARE - Nu s-a putut scrie cadrul audio în fișierul de ieșire.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1172"/>
@@ -10817,26 +12965,27 @@ Support for this codec is probably not compiled in.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
-        <translation type="unfinished"/>
+        <translation>Configurarea corectă a FFmpeg este necesară pentru a continua.
+Îl poți configura din Preferințe &gt; General.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
         <source>Attempted to export %1 channels, but maximum number of channels for selected output format is %2</source>
         <extracomment>%1 is the requested channel count, %2 is the maximum supported</extracomment>
-        <translation type="unfinished"/>
+        <translation>S-a încercat exportarea a %1 canale, dar numărul maxim de canale pentru formatul de ieșire selectat este de %2</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1451"/>
         <source>Exporting selected audio as %1</source>
         <extracomment>%1 is format description</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se exportă audio selectat ca %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="592"/>
         <source>Exporting the audio as %1</source>
         <extracomment>%1 is format description</extracomment>
-        <translation type="unfinished">Se exportă audio selectat ca Ogg Vorbis</translation>
+        <translation>Se exportă audio ca %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1566"/>
@@ -10852,13 +13001,15 @@ You can configure it at Preferences &gt; General.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1582"/>
         <source>The project sample rate (%1) is not supported by the current output
 file format. </source>
-        <translation type="unfinished"/>
+        <translation>Rata de eșantionare a proiectului (%1) nu este suportată de formatul
+de fișier de ieșire curent.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1585"/>
         <source>The project sample rate (%1) and bit rate (%2 kbps) combination is not
 supported by the current output file format. </source>
-        <translation type="unfinished"/>
+        <translation>Rata de eșantionare a proiectului (%1) și rata de biți (%2 kbps) nu sunt
+suportate de formatul de fișier de ieșire curent.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1588"/>
@@ -10963,13 +13114,14 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Exportarea FLAC nu a putut deschide %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
         <source>FLAC encoder failed to initialize
 Status: %1</source>
-        <translation type="unfinished"/>
+        <translation>Codorul FLAC nu a reușit să se inițializeze
+Stare: %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="326"/>
@@ -11008,12 +13160,12 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="245"/>
         <source>Exporting selected audio at %1 kbps</source>
-        <translation type="unfinished">Se exportă audio selectat ca Ogg Vorbis</translation>
+        <translation>Se exportă audio selectat la %1 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="247"/>
         <source>Exporting the audio at %1 kbps</source>
-        <translation type="unfinished">Se exportă audio selectat ca Ogg Vorbis</translation>
+        <translation>Se exportă audio la %1 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="66"/>
@@ -11161,7 +13313,8 @@ Status: %1</source>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ai făcut legătura cu lame_enc.dll v%1.%2. Această versiune nu este compatibilă cu Audacity %3.%4.%5.
+Descarcă ultima versiune de „LAME pentru Audacity”.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
@@ -11234,37 +13387,37 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
         <source>Exporting selected audio with %1 preset</source>
-        <translation type="unfinished"/>
+        <translation>Se exportă audio selectat cu presetarea %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>
         <source>Exporting the audio with %1 preset</source>
-        <translation type="unfinished">Se exportă audio selectat ca Ogg Vorbis</translation>
+        <translation>Se exportă audio cu presetarea %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1503"/>
         <source>Exporting selected audio with VBR quality %1</source>
-        <translation type="unfinished"/>
+        <translation>Se exportă audio selectat cu calitatea VBR %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1504"/>
         <source>Exporting the audio with VBR quality %1</source>
-        <translation type="unfinished">Se exportă audio selectat ca Ogg Vorbis</translation>
+        <translation>Se exportă audio cu calitatea VBR %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1508"/>
         <source>Exporting selected audio at %1 Kbps</source>
-        <translation type="unfinished"/>
+        <translation>Se exportă audio selectat la %1 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1509"/>
         <source>Exporting the audio at %1 Kbps</source>
-        <translation type="unfinished">Se exportă audio selectat ca Ogg Vorbis</translation>
+        <translation>Se exportă audio la %1 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1556"/>
         <source>Error %1 returned from MP3 encoder</source>
-        <translation type="unfinished"/>
+        <translation>Codorul MP3 a returnat eroarea %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1736"/>
@@ -11285,10 +13438,10 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates "thousands of bits per second"
+        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
-kbit/s abbreviates "kilobits per second"</extracomment>
-        <translation type="unfinished"/>
+kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
@@ -11333,7 +13486,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
         <source>Index[%1] Version[%2], Channels[%3], Rate[%4]</source>
-        <translation type="unfinished"/>
+        <translation>Index[%1] Versiune[%2], Canale[%3], Rată[%4]</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="353"/>
@@ -11570,7 +13723,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="337"/>
         <source>Failed to decode Opus file: %1</source>
         <extracomment>%1 is the error message</extracomment>
-        <translation type="unfinished">Nu s-a putut deschide fișierul:</translation>
+        <translation>A eșuat decodarea fișierului Opus: %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="57"/>
@@ -11630,14 +13783,15 @@ Audacity nu poate face acest lucru. Exportarea a fost abandomantă.</translation
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="590"/>
         <source>Exporting the selected audio as %1</source>
         <extracomment>%1 is a format description</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se exportă audio selectat ca %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
-        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like "system * error"</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
+        <translation>Eroare la scrierea fișierului %1 (disc plin?).
+Mesaj libsndfile: %2</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
@@ -11692,8 +13846,8 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>bps abbreviates "bits per sample"</extracomment>
-        <translation type="unfinished">%1 dB</translation>
+        <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
+        <translation>%1 bps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="65"/>
@@ -11714,11 +13868,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation><numerusform>A fost întâmpinată %1 eroare la decodarea fișierului WavPack!</numerusform><numerusform>Au fost întâmpinate %1 erori la decodarea fișierului WavPack!</numerusform><numerusform>Au fost întâmpinate %1 de erori la decodarea fișierului WavPack!</numerusform></translation>
     </message>
 </context>
 <context>
@@ -11851,27 +14001,143 @@ Libsndfile says “%2”</source>
     </message>
 </context>
 <context>
+    <name>languages</name>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
+        <source>Up to date</source>
+        <translation>La zi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
+        <source>Error while parsing response from server</source>
+        <translation>Eroare la parcurgerea răspunsului de la server</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
+        <source>Error while downloading language</source>
+        <translation>Eroare la descărcarea limbii</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
+        <source>Error while writing language files</source>
+        <translation>Eroare la scrierea fișierelor de limbă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
+        <source>Language not found</source>
+        <translation>Limba nu a fost găsită</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
+        <source>Error while removing language directory</source>
+        <translation>Eroare la ștergerea dosarului pentru limbă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
+        <source>Another operation on this language has already been started</source>
+        <translation>O altă operație pe această limbă a fost pornită deja</translation>
+    </message>
+</context>
+<context>
+    <name>learn</name>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
+        <source>Open %1</source>
+        <translation>Deschide %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <source>Sorry, we are unable to load these videos right now</source>
+        <translation>Ne cerem scuze, dar nu putem să încărcăm aceste filmulețe chiar acum</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="103"/>
+        <source>Learn</source>
+        <translation>Învață</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <source>Learn tab bar</source>
+        <translation>Bara filei Învață</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <source>Get started</source>
+        <translation>Noțiuni introductive</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <source>Classes</source>
+        <translation>Cursuri ghidate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
+        <source>The received playlist is empty.</source>
+        <translation>Lista de redare primită este goală.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <source>Marc Sabatella</source>
+        <translation>Marc Sabatella</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <source>Instructor</source>
+        <translation>Instructor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <source>Creator, Mastering MuseScore</source>
+        <translation>Creator al cursului „Aprofundare MuseScore”</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
+
+Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
+
+In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
+
+(Note: Mastering MuseScore is available in English only)</source>
+        <translation>Bun venit la „Aprofundare MuseScore” – cea mai cuprinzătoare resursă pentru învățarea celui mai popular software de notație muzicală! Numele meu este Marc Sabatella și am ajutat în dezvoltarea, suportul și promovarea MuseScore încă de la lansarea lui inițială acum mai bine de zece ani.
+
+Fie că abia acum începi drumul cu software-ul de notație muzicală sau ești deja un utilizator experimentat dornic să exploreze tehnici de așezare în pagină sau redare avansate, cursul meu online emblematic „Aprofundare MuseScore” acoperă tot ce trebuie să știi pentru a profita la maxim de MuseScore.
+
+Mai mult, „Aprofundare MuseScore” are o comunitate primitoare de muzicieni, cu spații de discuție, transmisiuni live și alte cursuri înrudite și servicii pentru a te ajuta să creezi cea mai bună muzică. Profită de această oportunitate pentru a învăța MuseScore de la unul din cei mai recunoscuți experți!
+
+(Notă: Aprofundare MuseScore este disponibil doar în engleză)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <source>Mastering MuseScore</source>
+        <translation>Aprofundare MuseScore</translation>
+    </message>
+</context>
+<context>
     <name>math</name>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="369"/>
         <source>None</source>
-        <translation>Nimic</translation>
+        <translation>fără</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="370"/>
         <source>Rectangle</source>
-        <translation>Dreptunghi</translation>
+        <translation>dreptunghiular</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="371"/>
         <source>Triangle</source>
         <comment>dither</comment>
-        <translation>Triunghiulară</translation>
+        <translation>triunghiular</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="372"/>
         <source>Shaped</source>
-        <translation>Profilat</translation>
+        <translation>profilat</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="58"/>
@@ -12177,6 +14443,53 @@ Libsndfile says “%2”</source>
     </message>
 </context>
 <context>
+    <name>midi</name>
+    <message>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
+        <source>No device</source>
+        <translation>Niciun dispozitiv</translation>
+    </message>
+</context>
+<context>
+    <name>midiremote</name>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
+        <source>MIDI remote control</source>
+        <translation>Control la distanță MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
+        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
+        <translation>Apasă o tastă sau modifică un control de pe dispozitivul tău MIDI pentru a-l asocia la această acțiune.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
+        <source>MIDI mapping:</source>
+        <translation>Asociere MIDI:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
+        <source>MIDI mapping bottom panel</source>
+        <translation>Panou inferior asocieri MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
+        <source>Assign MIDI mapping…</source>
+        <translation>Asignează asociere MIDI...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
+        <source>MIDI mapping top panel</source>
+        <translation>Panou superior asocieri MIDI</translation>
+    </message>
+</context>
+<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -12189,14 +14502,18 @@ Libsndfile says “%2”</source>
 
 Error: %2</source>
         <extracomment>%1 is the module name, %2 is the system error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu se poate încărca modulul „%1”.
+
+Eroare: %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>Modulul „%1” nu oferă o informație de versiune.
+
+Acesta nu va fi încărcat.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
@@ -12204,19 +14521,23 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation type="unfinished"/>
+        <translation>Modulul „%1” este potrivit cu versiunea Audacity „%2”.
+
+Acesta nu va fi încărcat.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>Modulul „%1” nu a reușit să se inițializeze.
+
+Acesta nu va fi încărcat.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
         <source>Module “%1” found.</source>
-        <translation type="unfinished"/>
+        <translation>Modulul „%1” nu a fost găsit.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
@@ -12252,12 +14573,14 @@ Folosește module doar din surse sigure</translation>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>Modulul „%1” nu oferă niciuna dintre funcțiile necesare.
+
+Acesta nu va fi încărcat.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
         <source>Overwrite the plug-in file %1?</source>
-        <translation type="unfinished">Suprascrie fișierele existente</translation>
+        <translation>Suprascrii fișierul plugin %1?</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
@@ -12274,19 +14597,16 @@ It will not be loaded.</source>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
-        <translation type="unfinished"/>
+        <translation>A eșuat înscrierea:
+%1</translation>
     </message>
     <message numerus="yes">
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="478"/>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of "Enable this plug-in?": "Enable these plug-ins?"</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
+        <translation><numerusform>Activezi acest plugin?</numerusform><numerusform>Activezi aceste plugin-uri?</numerusform><numerusform>Activezi aceste plugin-uri?</numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -12338,12 +14658,66 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>musesampler</name>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
+        <source>MuseSampler library is detected, version %1</source>
+        <translation>Biblioteca MuseSampler a fost găsită, versiune %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
+        <source>Installed MuseSampler library is not supported, version %1</source>
+        <translation>Biblioteca instalată MuseSampler nu este suportată, versiunea %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
+        <source>MuseSampler library is not found</source>
+        <translation>Biblioteca MuseSampler nu a fost găsită</translation>
+    </message>
+</context>
+<context>
+    <name>network</name>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
+        <source>The request was aborted</source>
+        <translation>Cererea a fost anulată</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
+        <source>The connection to the remote server timed out</source>
+        <translation>Conexiunea cu serverul a depășit timpul de așteptare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
+        <source>An unknown network-related error occurred</source>
+        <translation>A apărut o eroare necunoscută legată de rețea</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
+        <source>The I/O device was not opened for reading</source>
+        <translation>Dispozitivul de I/E nu a fost deschis pentru citire</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
+        <source>The I/O device was not opened for writing</source>
+        <translation>Dispozitivul de I/E nu a fost deschis pentru scriere</translation>
+    </message>
+</context>
+<context>
     <name>network-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="102"/>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="109"/>
         <source>Failed to open the file for upload: %1</source>
-        <translation type="unfinished">Nu s-a putut salva fișierul de genuri muzicale.</translation>
+        <translation>A eșuat deschiderea fișierului pentru încărcare: %1</translation>
+    </message>
+</context>
+<context>
+    <name>notation</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
+        <source>Extensions toolbar</source>
+        <translation>Bara de unelte Extensii</translation>
     </message>
 </context>
 <context>
@@ -12351,25 +14725,25 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>măsură</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>timp</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
         <translation>măsură:timp</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
         <translation>măsură:timp:16me</translation>
     </message>
     <message>
@@ -12754,22 +15128,22 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="20"/>
         <source>Low quality</source>
-        <translation>Calitate scăzută</translation>
+        <translation>calitate scăzută</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Medium quality</source>
-        <translation>Calitate medie</translation>
+        <translation>calitate medie</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
         <source>High quality</source>
-        <translation>Calitate înaltă</translation>
+        <translation>calitate înaltă</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
         <source>Best quality</source>
-        <translation>Calitatea cea mai bună</translation>
+        <translation>calitatea cea mai bună</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="27"/>
@@ -12799,7 +15173,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="41"/>
         <source>Moved volume slider</source>
-        <translation>A fost mutat glisorul de volum</translation>
+        <translation>Mutat glisor de volum</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="42"/>
@@ -12809,7 +15183,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
         <source>Moved pan dial</source>
-        <translation type="unfinished"/>
+        <translation>Mutat glisor de panoramare</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="69"/>
@@ -12822,12 +15196,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="64"/>
         <source>Loop in</source>
-        <translation type="unfinished"/>
+        <translation>Început buclă</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="110"/>
         <source>Loop out</source>
-        <translation type="unfinished"/>
+        <translation>Sfârșit buclă</translation>
     </message>
 </context>
 <context>
@@ -12857,12 +15231,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="16"/>
         <source>Asymmetric stereo heights</source>
-        <translation type="unfinished"/>
+        <translation>Înălțimi stereo asimetrice</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="55"/>
         <source>Dragging on the center line may adjust the height of the channel:</source>
-        <translation>Tragerea pe linia din centru poate ajusta înălțimea fizică a canalului:</translation>
+        <translation>Trăgând pe linia din centru se poate ajusta înălțimea fizică a canalului:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
@@ -12945,7 +15319,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="15"/>
         <source>Move cursor along the timeline during playback</source>
-        <translation>Mută cursorul de-a lungul cronologiei în timpul redării</translation>
+        <translation>Deplasare cursor de-a lungul cronologiei în timpul redării</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="23"/>
@@ -13095,7 +15469,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="116"/>
         <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
-        <translation type="unfinished"/>
+        <translation>Ratele de eșantionare implicite și formatele se aplică doar pistelor noi create. Înregistrarea pe piste existente va folosi rata de eșantionare și formatul pistei.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="15"/>
@@ -13222,7 +15596,7 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alege o cale care conține „%1”</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
@@ -13283,7 +15657,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation type="unfinished"/>
+        <translation>Versiunea ta de „%1” este la zi.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="101"/>
@@ -13393,7 +15767,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation type="unfinished"/>
+        <translation>Alege locația plugin-ului</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="75"/>
@@ -13403,12 +15777,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="78"/>
         <source>Remove location</source>
-        <translation type="unfinished"/>
+        <translation>Elimină locația</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="98"/>
         <source>The directory does not exist</source>
-        <translation type="unfinished"/>
+        <translation>Dosarul nu există</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="107"/>
@@ -13418,22 +15792,22 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
         <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Locație personalizată plugin-uri LV2</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Alete locația personalizată pentru plugin-urile LV2</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="80"/>
         <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Locație personalizată plugin-uri VST3</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="81"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Alete locația personalizată pentru plugin-urile VST3</translation>
     </message>
 </context>
 <context>
@@ -13523,7 +15897,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="366"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="217"/>
         <source>Project item menu</source>
-        <translation type="unfinished"/>
+        <translation>Meniu element proiect</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="471"/>
@@ -13538,7 +15912,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="492"/>
         <source>Files will appear here when you save a file to the cloud, or publish a project</source>
-        <translation>Fișierele vor apărea aici când vei salva un fișier în Cloud sau când vei publica un proiect</translation>
+        <translation>Fișierele vor apărea aici când vei salva unul în Cloud sau când vei publica un proiect</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="516"/>
@@ -13584,7 +15958,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="207"/>
         <source>Projects will appear here when you publish a project</source>
-        <translation>Proiectele vor apărea aici când vei publica unul</translation>
+        <translation>Proiectele vor apărea aici când vei avea unul publicat</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="232"/>
@@ -13683,7 +16057,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
-        <extracomment>accessibility name for the panel at the bottom of the "Projects" page</extracomment>
+        <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>Acțiuni pentru proiecte</translation>
     </message>
     <message>
@@ -13961,19 +16335,23 @@ A eșuat încărcarea proiectului: „%1”</translation>
         <source>The file:
 “%1”
 Cannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.</source>
-        <translation type="unfinished"/>
+        <translation>Fișierul:
+„%1”
+Nu poate fi găsit sau accesat la această locație. Dacă este stocat pe o unitate externă sau de Cloud, verifică dacă aceasta este conectată sau sincronizată corect.</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="57"/>
         <source>This file cannot be opened due to access restrictions</source>
-        <translation type="unfinished"/>
+        <translation>Fișierul nu poate fi deschis din cauza restricțiilor de acces</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="58"/>
         <source>To open this file:
 “%1”
 Please check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.</source>
-        <translation type="unfinished"/>
+        <translation>Pentru a deschide acest fișier:
+„%1”
+Verifică proprietățile și permisiunile fișierului, asigurându-te că nu este stocat pe o unitate sau într-un dosar cu acces restricționat. Poți încerca de asemenea să pornești Audacity ca administrator.</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="63"/>
@@ -13985,12 +16363,14 @@ Please check the file’s properties and permissions, ensure it is not stored on
         <source>To open this file:
 “%1”
 Please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.</source>
-        <translation type="unfinished"/>
+        <translation>Pentru a deschide acest fișier:
+„%1”
+Elimină protecția la scriere verificând proprietățile fișierului, asigurându-te că nu este stocat pe o unitate sau într-un dosar cu acces doar la citire. Poți încerca de asemenea să pornești Audacity ca administrator.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
         <source>Cloud project indicator</source>
-        <translation type="unfinished"/>
+        <translation>Indicator proiect în Cloud</translation>
     </message>
 </context>
 <context>
@@ -14027,22 +16407,22 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="120"/>
         <source>(%1): %2</source>
         <extracomment>%1 is the SQLite error code, %2 is the error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>(%1): %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
         <source>Failed to set page size for database %1</source>
-        <translation type="unfinished">Nu s-a putut salva fișierul de genuri muzicale.</translation>
+        <translation>A eșuat setarea mărimii paginii pentru baza de date %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>
         <source>Failed to set safe mode on primary connection to %1</source>
-        <translation type="unfinished">Reducere de zgomot</translation>
+        <translation>A eșuat setarea unui mod sigur al conexiunii primare la %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
-        <translation type="unfinished">Nu s-a putut citi fișierul de setări predefinite.</translation>
+        <translation>A eșuat setarea unui mod sigur al conexiunii al punctului de control la %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
@@ -14053,7 +16433,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
         <source>Checkpointing %1</source>
         <extracomment>%1 is the name of the project being checkpointed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se creează un punct de control pentru %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
@@ -14067,14 +16447,16 @@ Please remove the write protection by checking the file’s properties, ensuring
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished">Nu s-a putut scrie în fișier:</translation>
+        <translation>Nu se poate scrie în %1.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="540"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
-        <translation type="unfinished"/>
+        <translation>Discul este plin.
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="624"/>
@@ -14082,7 +16464,9 @@ Please remove the write protection by checking the file’s properties, ensuring
 
 %1</source>
         <extracomment>%1 is the name of the savepoint</extracomment>
-        <translation type="unfinished">Nu s-a putut scrie în fișier:</translation>
+        <translation>A eșuat crearea unui punct de salvare:
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="648"/>
@@ -14091,7 +16475,9 @@ Please remove the write protection by checking the file’s properties, ensuring
 
 %1</source>
         <extracomment>%1 is the name of the savepoint</extracomment>
-        <translation type="unfinished"/>
+        <translation>A eșuat eliberarea unui punct de salvare:
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="432"/>
@@ -14099,12 +16485,14 @@ Please remove the write protection by checking the file’s properties, ensuring
 Please select a bigger temporary directory location in
 Directories Preferences.</source>
         <extracomment>%1 is the drive or volume name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Mai este foarte puțin spațiu liber pe %1
+Alege un dosar temporar cu mai mult spațiu din
+Preferințe dosare.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="457"/>
         <source>Failed to open the project’s database</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat deschiderea bazei de date a proiectului</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="517"/>
@@ -14112,7 +16500,9 @@ Directories Preferences.</source>
 
 %1</source>
         <extracomment>%1 is the database file path</extracomment>
-        <translation type="unfinished">Nu s-a putut salva fișierul de genuri muzicale.</translation>
+        <translation>A eșuat deschiderea fișierului bazei de date:
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="576"/>
@@ -14130,7 +16520,9 @@ Directories Preferences.</source>
 
 %1</source>
         <extracomment>%1 is the SQL command that failed to execute</extracomment>
-        <translation type="unfinished"/>
+        <translation>A eșuat executarea unei comenzi din fișierul de proiect:
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="724"/>
@@ -14163,7 +16555,7 @@ Va trebuie să actualizezi această versiune pentru a-l putea deschide.</transla
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="834"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut adăuga funcția „inset” (nu se pot verifica blockid-urile)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="852"/>
@@ -14231,7 +16623,7 @@ Va trebuie să actualizezi această versiune pentru a-l putea deschide.</transla
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="883"/>
         <source>Total orphan blocks deleted %1</source>
         <extracomment>%1 is the number of deleted orphan blocks</extracomment>
-        <translation type="unfinished"/>
+        <translation>Blocuri orfane șterse în total: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="964"/>
@@ -14255,7 +16647,9 @@ Va trebuie să actualizezi această versiune pentru a-l putea deschide.</transla
 
 %1</source>
         <extracomment>%1 is the SQL command that could not be prepared</extracomment>
-        <translation type="unfinished">Nu s-a putut citi fișierul de setări predefinite.</translation>
+        <translation>Nu s-a putut pregăti comanda de fișier proiect:
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1070"/>
@@ -14270,7 +16664,10 @@ The following command failed:
 
 %1</source>
         <extracomment>%1 is the SQL command that failed</extracomment>
-        <translation type="unfinished"/>
+        <translation>A eșuat actualizarea fișierului de proiect.
+Următoarea comandă a eșuat:
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1127"/>
@@ -14293,7 +16690,9 @@ The following command failed:
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity a eșuat să scrie fișierul %1.
+Poate că discul este plin sau nu se poate scrie pe acesta.
+Pentru sfaturi despre eliberarea spațiului, apasă pe butonul de ajutor.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1479"/>
@@ -14304,7 +16703,7 @@ For tips on freeing up space, click the help button.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1578"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>[Proiect %1] Audacity „%2”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1580"/>
@@ -14328,7 +16727,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1695"/>
         <source>Can’t open project file</source>
-        <translation type="unfinished"/>
+        <translation>Nu se poate deschide fișierul proiect</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1811"/>
@@ -14351,7 +16750,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2170"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="unfinished"/>
+        <translation>Baza de date a proiectului nu s-a putut redeschide, posibil din cauza spațiului limitat de pe dispozitivul de stocare.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2186"/>
@@ -14378,7 +16777,10 @@ on the storage device.
 
 %1</source>
         <extracomment>%1 is the underlying error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>Proiectul nu s-a putut deschide, posibil din cauza spațiului
+limitat de pe dispozitivul de stocare.
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2264"/>
@@ -14387,7 +16789,10 @@ on the storage device.
 
 %1</source>
         <extracomment>%1 is the underlying error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut elimina informația de autosalvare, posibil din cauza spațiului
+limitat pe unitatea de stocare.
+
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2330"/>
@@ -14438,17 +16843,17 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="117"/>
         <source>Would you also like to share your music on Audio.com?</source>
-        <translation type="unfinished"/>
+        <translation>Dorești de asemenea să îți partajezi muzica pe Audio.com?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="126"/>
         <source>Share your project’s audio with millions of listeners on this free streaming platform</source>
-        <translation type="unfinished"/>
+        <translation>Partajează audioul proiectului tău cu milioane de ascultători de pe această platformă de streaming gratuită.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="145"/>
         <source>You can change this setting in Preferences at any time.</source>
-        <translation type="unfinished"/>
+        <translation>Poți schimba această setare oricând din Preferințe.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="165"/>
@@ -14458,7 +16863,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Se sincronizează cu audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -14608,6 +17013,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>Salvează pe calculator</translation>
@@ -14626,13 +17032,13 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
-        <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>copie</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
-        <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>selecție</translation>
     </message>
     <message>
@@ -14642,6 +17048,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Publică</translation>
     </message>
@@ -14672,6 +17079,58 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Nu s-a putut realiza conexiunea la Audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
+        <source>Public</source>
+        <translation>Public</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="167"/>
+        <source>Unlisted</source>
+        <translation>Nelistat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="173"/>
+        <source>Private</source>
+        <translation>Privat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
+        <source>Publish to MuseScore.com</source>
+        <translation>Publică pe MuseScore.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
+        <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation>Înlocuiește &lt;a href=&quot;%1&quot;&gt;partitura online&lt;/a&gt; existentă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
+        <source>Publish as new online score</source>
+        <translation>Publică online ca o partitură nouă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
+        <source>Share on Audio.com</source>
+        <translation>Distribuie pe Audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
+        <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation>Înlocuiește &lt;a href=&quot;%1&quot;&gt;melodia existentă&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
+        <source>Upload as new audio file</source>
+        <translation>Încarcă ca un nou fișier audio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
+        <source>Share</source>
+        <translation>Partajează</translation>
     </message>
 </context>
 <context>
@@ -14742,7 +17201,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/EffectCard.qml" line="128"/>
         <source>Get it on MuseHub</source>
-        <translation>Obține-l pe MuseHub</translation>
+        <translation>Obține-l în MuseHub</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="13"/>
@@ -14784,7 +17243,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="44"/>
         <source>Playback toolbar</source>
-        <translation type="unfinished"/>
+        <translation>Bara de unelte de redare</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="301"/>
@@ -14794,7 +17253,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="335"/>
         <source>Show/hide toolbar buttons</source>
-        <translation type="unfinished"/>
+        <translation>Arată/ascunde butoane bară de unelte</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
@@ -14814,7 +17273,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="59"/>
         <source>Workspace</source>
-        <translation type="unfinished"/>
+        <translation>Spațiu de lucru</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
@@ -14940,8 +17399,8 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
-        <source>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Watch video&lt;/a&gt;</source>
-        <translation>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Urmărește video&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Urmărește video&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
@@ -15048,7 +17507,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
         <source>Video frames (24 fps)</source>
-        <translation type="unfinished"/>
+        <translation>Cadre video (24 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="231"/>
@@ -15186,13 +17645,14 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="149"/>
         <source>Lead-in Recording error</source>
-        <translation type="unfinished"/>
+        <translation>Eroare înregistrare Lead-in</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="35"/>
         <source>Error opening recording device.
 Error code: %1</source>
-        <translation type="unfinished"/>
+        <translation>Eroare la deschiderea dispozitivului de înregistrare.
+Cod eroare: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="36"/>
@@ -15208,7 +17668,10 @@ Error code: %1</source>
         <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
-        <translation type="unfinished"/>
+        <translation>Sunt selectate prea puține piste pentru a înregistra la rata aceasta
+de eșantionare.
+(Audacity are nevoie de două canale la aceeași rată de eșantionare
+pentru fiecare pistă stereo)</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="45"/>
@@ -15218,7 +17681,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="48"/>
         <source>Please select a track for lead-in recording.</source>
-        <translation type="unfinished"/>
+        <translation>Alege o pistă pentru înregistrare lead-in.</translation>
     </message>
 </context>
 <context>
@@ -15227,19 +17690,19 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="189"/>
         <source>Plug-in group at %1 was merged with a previously defined group</source>
         <extracomment>%1 is the registry path of the merged plug-in group</extracomment>
-        <translation type="unfinished"/>
+        <translation>Grupul de plugin-uri de la %1 a fost contopit cu un grup definit anterior</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="197"/>
         <source>Plug-in item at %1 conflicts with a previously defined item and was discarded</source>
         <extracomment>%1 is the registry path of the conflicting plug-in item</extracomment>
-        <translation type="unfinished"/>
+        <translation>Elementul de plugin de la %1 este în conflict cu un element definit anterior așa că a fost înlăturat</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="205"/>
         <source>Plug-in items at %1 specify conflicting placements</source>
         <extracomment>%1 is the registry path of the conflicting plug-in items</extracomment>
-        <translation type="unfinished"/>
+        <translation>Elementele de plugin de la %1 menționează amplasări conflictuale</translation>
     </message>
 </context>
 <context>
@@ -15329,17 +17792,138 @@ Error code: %1</source>
     </message>
 </context>
 <context>
+    <name>shortcuts</name>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
+        <source>Old shortcut:</source>
+        <translation>Scurtătura veche:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
+        <source>New shortcut:</source>
+        <translation>Scurtătura nouă:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
+        <source>Type to set shortcut</source>
+        <translation>Tastați pentru a seta scurtătura</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
+        <source>Shortcuts bottom panel</source>
+        <translation>Panou inferior scurtături</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
+        <source>Import</source>
+        <translation>Importă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
+        <source>Export</source>
+        <translation>Exportă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
+        <source>Reset to default</source>
+        <translation>Aplică valorile implicite</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
+        <source>action</source>
+        <translation>acțiune</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="34"/>
+        <source>shortcut</source>
+        <translation>scurtătură</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
+        <source>Shortcuts top panel</source>
+        <translation>Panou superior scurtături</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
+        <source>Define…</source>
+        <translation>Definește…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="98"/>
+        <source>Search shortcut</source>
+        <translation>Caută scurtătură</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
+        <source>Enter shortcut sequence</source>
+        <translation>Introduceţi combinaţia de taste</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <source>Define keyboard shortcut</source>
+        <translation>Definește scurtătură tastatură</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
+        <source>Note %1</source>
+        <extracomment>A MIDI remote event, namely a note event</extracomment>
+        <translation>Nota %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
+        <source>CC %1</source>
+        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
+        <translation>CC %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
+        <source>None</source>
+        <extracomment>No MIDI remote event</extracomment>
+        <translation>Fără</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
+        <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>Această scurtătură este deja asignată la: &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
+        <translation>Ești sigur că vrei să-l asignezi în schimb la &lt;b&gt;%1&lt;/b&gt;?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <source>Reassign shortcut</source>
+        <translation>Reasignează scurtătură</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <source>MuseScore Studio shortcuts file</source>
+        <translation>Fișier scurtături MuseScore Studio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <source>Import shortcuts</source>
+        <translation>Importă scurtăturile</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <source>Export shortcuts</source>
+        <translation>Exportă scurtăturile</translation>
+    </message>
+</context>
+<context>
     <name>snapping</name>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>Timp</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>Măsură</translation>
     </message>
     <message>
@@ -15380,7 +17964,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>The music theory "triplet"</extracomment>
+        <extracomment>The music theory &quot;triplet&quot;</extracomment>
         <translation>Triolete</translation>
     </message>
     <message>
@@ -15668,7 +18252,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
         <source>High boost</source>
-        <translation type="unfinished"/>
+        <translation>Amplificare înalte</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="51"/>
@@ -15678,12 +18262,12 @@ Error code: %1</source>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="77"/>
         <source>Max frequency</source>
-        <translation type="unfinished"/>
+        <translation>Frecvența maximă</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="79"/>
         <source>Min frequency</source>
-        <translation type="unfinished"/>
+        <translation>Frecvența minimă</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="90"/>
@@ -15898,7 +18482,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
         <translation>Decupează/Copiază/Lipește</translation>
     </message>
     <message>
@@ -15914,19 +18498,19 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="194"/>
         <source>%1 bytes</source>
-        <translation type="unfinished">%1 octeți</translation>
+        <translation>%1 octeți</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="197"/>
         <source>%1 KB</source>
         <extracomment>Abbreviation for Kilo bytes</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 KB</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="200"/>
         <source>%1 MB</source>
         <extracomment>Abbreviation for Mega bytes</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 MO</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="203"/>
@@ -15943,6 +18527,59 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-strings/Languages.cpp" line="310"/>
         <source>System</source>
         <translation>Sistem</translation>
+    </message>
+</context>
+<context>
+    <name>system</name>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="54"/>
+        <source>The file does not exist</source>
+        <translation>Fișierul nu există</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="55"/>
+        <source>The file already exists</source>
+        <translation>Fișierul există deja</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="56"/>
+        <source>The file could not be removed</source>
+        <translation>Fișierul nu a putut fi eliminat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="57"/>
+        <source>The directory is not empty</source>
+        <translation>Dosarul nu este gol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
+        <source>The directory could not be cleared</source>
+        <translation>Dosarul nu a putut fi golit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
+        <source>An error occurred when reading from the file</source>
+        <translation>A apărut o eroare la citirea din fișier</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="60"/>
+        <source>An error occurred when writing to the file</source>
+        <translation>A apărut o eroare la scrierea în fișier</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="61"/>
+        <source>An error occurred when making a path</source>
+        <translation>A apărut o eroare la crearea unei căi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="62"/>
+        <source>An error occurred when copying the file</source>
+        <translation>A apărut o eroare la copierea fișierului</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="63"/>
+        <source>An error occurred when moving the file</source>
+        <translation>A apărut o eroare la mutarea fișierului</translation>
     </message>
 </context>
 <context>
@@ -15968,31 +18605,37 @@ Error code: %1</source>
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation><numerusform>%n oră rămasă</numerusform><numerusform>%n ore rămase</numerusform><numerusform>%n de ore rămase</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation><numerusform>%n minut rămas</numerusform><numerusform>%n minute rămase</numerusform><numerusform>%n de minute rămase</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation><numerusform>%n secundă rămasă</numerusform><numerusform>%n secunde rămase</numerusform><numerusform>%n de secunde rămase</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>tours</name>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
+        <source>Watch video</source>
+        <translation>Urmărește video</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Got it</source>
+        <translation>Am înțeles</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Next</source>
+        <translation>Următorul</translation>
     </message>
 </context>
 <context>
@@ -16008,29 +18651,29 @@ Error code: %1</source>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>Adăugat punct plic</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Clip envelope edit</source>
-        <translation type="unfinished"/>
+        <translation>Editare plic clip</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>Șters punct plic</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>Mutat punct plic</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="641"/>
         <source>Set looping region in/out</source>
-        <translation type="unfinished"/>
+        <translation>Setează intrare/ieșire regiune de buclă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
@@ -16051,12 +18694,12 @@ Error code: %1</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1410"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
-        <translation type="unfinished"/>
+        <translation>Această acțiune necesită ca unul sau mai multe clipuri să fie convertite la mono. Dorești să continui?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1477"/>
         <source>Combine mono tracks to stereo</source>
-        <translation type="unfinished"/>
+        <translation>Combină pistele mono în stereo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1478"/>
@@ -16065,7 +18708,15 @@ Error code: %1</source>
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
 
 Do you wish to continue?</source>
-        <translation type="unfinished"/>
+        <translation>Pistele pe care încerci să le contopești într-una stereo conțin clipuri la
+poziții diferite, altfel spus clipuri care nu se potrivesc. Prin contopirea
+lor se vor randa pistele.
+
+Aceasta are ca efect aplicarea oricăror efecte în timp real pe forma de
+undă și datele ascunse să fie eliminate. În plus, întreaga pistă va deveni
+un singur mare clip.
+
+Dorești să continui?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="666"/>
@@ -16083,7 +18734,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="747"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="778"/>
         <source>Select the audio to delete and try again.</source>
-        <translation type="unfinished"/>
+        <translation>Selectează audio pentru ștergere și încearcă din nou.</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1142"/>
@@ -16115,7 +18766,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="252"/>
         <source>Tracks: Empty</source>
-        <translation type="unfinished"/>
+        <translation>Piste: Gol</translation>
     </message>
 </context>
 <context>
@@ -16158,7 +18809,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
         <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
-        <translation type="unfinished"/>
+        <translation>Există de asemenea o varietate de noi scurtături care te lasă să accesezi rapid diferite comportamente la ștergere. Mergi la %2 pentru a afla mai multe.</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
@@ -16208,22 +18859,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
         <source>Pasting audio pushes other clips on the same track</source>
-        <translation type="unfinished"/>
+        <translation>Lipirea audio împinge celelalte clipuri de pe aceeași pistă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Lipirea audio împinge toate clipurile de pe toate pistele</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
         <source>Paste overlaps other clips</source>
-        <translation type="unfinished"/>
+        <translation>Lipirea se suprapune cu celelalte clipuri</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="77"/>
         <source>Paste pushes other clips</source>
-        <translation type="unfinished"/>
+        <translation>Lipirea împinge celelalte clipuri</translation>
     </message>
 </context>
 <context>
@@ -16239,7 +18890,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
         <source>Position:</source>
-        <translation type="unfinished">Poziție</translation>
+        <translation>Poziție:</translation>
     </message>
 </context>
 <context>
@@ -16252,12 +18903,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="121"/>
         <source>Ruler format</source>
-        <translation type="unfinished"/>
+        <translation>Format riglă</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="137"/>
         <source>Half wave</source>
-        <translation type="unfinished"/>
+        <translation>Monoalternanță</translation>
     </message>
 </context>
 <context>
@@ -16265,12 +18916,209 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="30"/>
         <source>Database error.  Sorry, but we don’t have more details.</source>
-        <translation type="unfinished"/>
+        <translation>Eroare bază de date. Scuze, dar nu avem mai multe detalii.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
         <source>Warning</source>
         <translation>Avertisment</translation>
+    </message>
+</context>
+<context>
+    <name>ui</name>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
+        <source>Browse</source>
+        <translation>Răsfoiește</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
+        <source>Current path:</source>
+        <translation>Cale curentă:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
+        <source>Choose file</source>
+        <translation>Alege fișier</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
+        <source>Choose directory</source>
+        <translation>Alege dosar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
+        <source>Directories actions</source>
+        <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
+        <translation>Acțiuni dosare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
+        <source>Directories</source>
+        <translation>Dosare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
+        <source>Add directory</source>
+        <translation>Adaugă dosar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
+        <source>Path</source>
+        <translation>Cale</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
+        <source>Directories list</source>
+        <translation>Listă dosare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>checked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <translation>bifat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>unchecked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <translation>nebifat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="82"/>
+        <source>selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is the chosen option in a list of options</extracomment>
+        <translation>selectat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="84"/>
+        <source>not selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is not the chosen option in a list of options</extracomment>
+        <translation>neselectat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="93"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
+        <source>Menu</source>
+        <extracomment>a type of ui item</extracomment>
+        <translation>Meniu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted ascending</source>
+        <translation>sortat crescător</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted descending</source>
+        <translation>sortat descrescător</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
+        <source>not sorted</source>
+        <translation>nesortat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
+        <source>Search</source>
+        <translation>Caută</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation>Roșu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation>Verde</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation>Albastru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
+        <source>Key</source>
+        <comment>key/value</comment>
+        <extracomment>As in a &quot;key/value&quot; pair: for example, the &quot;key&quot; could be the name of a setting and the &quot;value&quot; the value of that setting.</extracomment>
+        <translation>Cheie</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
+        <source>Value</source>
+        <translation>Valoare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation>Panou listă valori antet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <source>Value list panel</source>
+        <extracomment>Accessibility description of the body of a value list (table)</extracomment>
+        <translation>Panou listă valori</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Visible</source>
+        <translation>Vizibil</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Hidden</source>
+        <translation>Ascuns</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
+        <source>Light</source>
+        <extracomment>The name of the light ui theme</extracomment>
+        <translation>Luminoasă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
+        <source>Dark</source>
+        <extracomment>The name of the dark ui theme</extracomment>
+        <translation>Întunecată</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
+        <source>White</source>
+        <extracomment>The name of the high contrast light ui theme</extracomment>
+        <translation>Alb</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
+        <source>Black</source>
+        <extracomment>The name of the high contrast dark ui theme</extracomment>
+        <translation>Negru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="149"/>
+        <source>direction is horizontal</source>
+        <translation>direcția este orizontală</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="150"/>
+        <source>direction is vertical</source>
+        <translation>direcția este verticală</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
+        <source>direction is both</source>
+        <translation>direcția este ambele</translation>
     </message>
 </context>
 <context>
@@ -16373,7 +19221,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="64"/>
         <source>hh:mm:ss + CDDA frames (25 fps)</source>
-        <translation type="unfinished"/>
+        <translation>hh:mm:ss + cadre CDDA (25 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="67"/>
@@ -16390,6 +19238,210 @@ Do you wish to continue?</source>
         <source>bar:beat:tick</source>
         <translation>măsură:timp:16me</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
+        <source>No button</source>
+        <translation>Niciun buton</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
+        <source>Save</source>
+        <translation>Salvează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
+        <source>Save all</source>
+        <translation>Salvează tot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
+        <source>Don’t save</source>
+        <translation>Nu salva</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
+        <source>Open</source>
+        <translation>Deschis</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
+        <source>Yes to all</source>
+        <translation>Da pentru toate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
+        <source>No</source>
+        <translation>Nu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
+        <source>No to all</source>
+        <translation>Nu pentru toate</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
+        <source>Abort</source>
+        <translation>Anulează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
+        <source>Retry</source>
+        <translation>Reîncercați</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
+        <source>Ignore</source>
+        <translation>Ignoră</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
+        <source>Close</source>
+        <translation>Închide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
+        <source>Cancel</source>
+        <translation>Renunță</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
+        <source>Discard</source>
+        <translation>Revenire</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
+        <source>Help</source>
+        <translation>Ajutor</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
+        <source>Apply</source>
+        <translation>Aplică</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
+        <source>Reset</source>
+        <translation>Resetează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
+        <source>Restore defaults</source>
+        <translation>Restabilește valorile implicite</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
+        <source>Continue</source>
+        <translation>Continuă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
+        <source>Next</source>
+        <translation>Următorul</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
+        <source>Back</source>
+        <translation>Înapoi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
+        <source>Select</source>
+        <translation>Selectează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
+        <source>Clear</source>
+        <translation>Şterge</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
+        <source>Done</source>
+        <translation>Finalizare</translation>
+    </message>
+</context>
+<context>
+    <name>update</name>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <source>A new version of %1 is available!</source>
+        <translation>O nouă versiune de %1 este disponibilă!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <source>Release notes</source>
+        <translation>Note despre versiune</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <source>Skip this version</source>
+        <translation>Sări peste această versiune</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <source>Remind me later</source>
+        <translation>Amintește-mi mai târziu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <source>Install update</source>
+        <translation>Instalează actualizare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
+        <source>Read the %1 release notes</source>
+        <translation>Citește informațiile de versiune %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation>Ai deja ultima versiune de %1. Vizitează &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; pentru a afla ce urmează.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <source>You’re up to date!</source>
+        <translation>Ești la zi!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <source>Cannot connect to server</source>
+        <translation>Nu se poate conecta la server</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <source>Sorry - please try again later</source>
+        <translation>Scuze! Încearcă mai târziu!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation>%1 trebuie să se închidă pentru a finaliza instalarea. Dacă ai modificări nesalvate, vei fi întrebat dacă dorești să le salvezi înainte ca %1 să se închidă.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <source>Close</source>
+        <translation>Închide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating MuseScore Studio</source>
+        <translation>Se actualizează MuseScore Studio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading MuseScore Studio %1</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
+        <translation>Se descarcă MuseScore Studio %1</translation>
+    </message>
 </context>
 <context>
     <name>vst3</name>
@@ -16402,12 +19454,12 @@ Do you wish to continue?</source>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectBase.cpp" line="60"/>
         <source>SubCategories: %1</source>
         <extracomment>VST3 effect description string</extracomment>
-        <translation type="unfinished"/>
+        <translation>Subcategorii: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
         <source>Searching VST3 in: %1</source>
-        <translation type="unfinished"/>
+        <translation>Se caută VST3 în: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
@@ -16427,17 +19479,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
         <source>Looking in: %1</source>
-        <translation type="unfinished"/>
+        <translation>Se caută în: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
         <source>VST3 module error: %1</source>
-        <translation type="unfinished"/>
+        <translation>Eroare modul VST3: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="714"/>
         <source>Unable to apply VST3 preset file %1</source>
-        <translation type="unfinished">Nu s-a putut încărca fișierul de setări predefinite.</translation>
+        <translation>Nu s-a putut aplica fișierul de presetare VST3 %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="715"/>
@@ -16457,7 +19509,8 @@ Do you wish to continue?</source>
         <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1010"/>
         <source>Sequence has block file exceeding maximum %1 samples per block.
 Truncating to this maximum length.</source>
-        <translation type="unfinished"/>
+        <translation>Secvența are un fișier bloc ce depășește maximul de %1 eșantioane per bloc.
+Se trunchiază la lungimea maximă.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1015"/>
@@ -16508,7 +19561,7 @@ Truncating to this maximum length.</source>
         <extracomment>Template for clip name generation on copy-paste
 ----------
 Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1.%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2817"/>
@@ -16583,13919 +19636,104 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
 </context>
 <context>
+    <name>workspace</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
+        <source>Remove</source>
+        <translation>Șterge</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
+        <source>Workspaces</source>
+        <translation>Spații de lucru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
+        <source>Save layout as new workspace</source>
+        <translation>Salvează aspectul ca spațiu de lucru nou</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
+        <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
+        <translation>Spațiile de lucru îți permit să alegi configurații diferite ale interfeței %1. Poți de asemenea să salvezi configurațiile tale unice ca noi spații de lucru.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
+        <source>Reset</source>
+        <translation>Resetează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <source>Workspace name:</source>
+        <translation>Nume spațiu de lucru:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
+        <source>New</source>
+        <translation>Partitură nouă...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
+        <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
+        <translation>Un spațiu de lucru numit „%1” există deja. Alege un nume diferit.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
+        <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
+        <translation>„%1” nu poate fi folosit ca un nume de spațiu de lucru. Alege un nume diferit.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
+        <translation>Această acțiune va reseta spațiul tău de lucru la aspectul implicit și nu poate fi anulată. Dorești să continui?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <source>Resetting workspaces</source>
+        <translation>Se resetează spațiile de lucru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <source>Reset workspace</source>
+        <translation>Resetează spațiu de lucru</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <source>Name cannot be empty</source>
+        <translation>Numele nu poate fi gol</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <source>Name already exists</source>
+        <translation>Numele deja există</translation>
+    </message>
+</context>
+<context>
     <name>xml</name>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut deschide fișierul: „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="266"/>
         <source>Error: %1 at line %2</source>
         <extracomment>%1 is the parser error message, %2 is the line number in the file</extracomment>
-        <translation type="unfinished">Eroare: %1 la linia %2</translation>
+        <translation>Eroare: %1 la linia %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut încărca fișierul: „%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
         <translation>Nu s-a putut parcurge XML</translation>
-    </message>
-</context>
-<context>
-    <name>_au3_legacy_vanished</name>
-    <message>
-        <source>Stream is active ... unable to gather information.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No recording device found for '%s'.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No playback device found for '%s'.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment decreased the volume to %f.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment increased the volume to %.2f.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed to encode preset from "%s"</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Couldn't open "%s"</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>Failed to write XML preset to "%s"</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to read the preset from "%s"</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Failed to decode "%s" preset</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Failed to convert "%s" preset to internal format</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Failed to create property list for "%s" preset</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Failed to set class info for "%s" preset</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Applying %s...</source>
-        <translation type="vanished">Se aplică</translation>
-    </message>
-    <message>
-        <source>"%s" 
-is a not an audio file. 
-Audacity cannot open this type of file.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Importing %s...</source>
-        <translation type="vanished">Importă...</translation>
-    </message>
-    <message>
-        <source>"%s" is an audio CD track. 
-Audacity cannot open audio CDs directly. 
-Extract (rip) the CD tracks to an audio format that 
-Audacity can import, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a playlist file. 
-Audacity cannot open this file because it only contains links to other files. 
-You may be able to open it in a text editor and download the actual audio files.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a Windows Media Audio file. 
-Audacity cannot open this type of file due to patent restrictions. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is an Advanced Audio Coding file.
-Without the optional FFmpeg library, Audacity cannot open this type of file.
-Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is an encrypted audio file. 
-These typically are from an online music store. 
-Audacity cannot open this type of file due to the encryption. 
-Try recording the file into Audacity, or burn it to audio CD then 
-extract the CD track to a supported audio format such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a RealPlayer media file. 
-Audacity cannot open this proprietary format. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a notes-based file, not an audio file. 
-Audacity cannot open this type of file. 
-Try converting it to an audio file such as WAV or AIFF and 
-then import it, or record it into Audacity.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a Musepack audio file. 
-Audacity cannot open this type of file. 
-If you think it might be an mp3 file, rename it to end with ".mp3" 
-and try importing it again. Otherwise you need to convert it to a supported audio 
-format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a Wavpack audio file. 
-Audacity cannot open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a Dolby Digital audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is an Ogg Speex audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" is a video file. 
-Audacity cannot currently open this type of file. 
-You need to extract the audio to a supported format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>File "%s" not found.</source>
-        <translation type="vanished">FFmpeg nu a fost găsit</translation>
-    </message>
-    <message>
-        <source>Audacity did not recognize the type of the file '%s'.
-
-%sFor uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity recognized the type of the file '%s'.
-Importers supposedly supporting such files are:
-%s,
-but none of them understood this file format.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LADSPA</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LADSPA Effects</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Provides LADSPA Effects</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity no longer uses vst-bridge</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Could not load the library</source>
-        <translation type="vanished">Nu s-a putut deschide biblioteca de codare MP3 !</translation>
-    </message>
-    <message>
-        <source>LV2</source>
-        <extracomment>i18n-hint: abbreviates
-"Linux Audio Developer's Simple Plugin API (LADSPA) version 2"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Effect Settings</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>LV2 Effects</source>
-        <translation type="vanished">Efecte Vamp</translation>
-    </message>
-    <message>
-        <source>Provides LV2 Effects support to Audacity</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>dither</comment>
-        <translation type="vanished">Triunghi</translation>
-    </message>
-    <message>
-        <source>Command</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Repeat %s</source>
-        <extracomment>i18n-hint: %s will be the name of the effect which will be
-* repeated if this menu item is chosen</extracomment>
-        <translation type="vanished">Repetă %1</translation>
-    </message>
-    <message>
-        <source>
-* %s, because you have assigned the shortcut %s to %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>There was a problem with your last action. If you think
-this is a bug, please tell us exactly where it occurred.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Disallowed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Undo %s</source>
-        <translation type="vanished">&amp;Anulează %1</translation>
-    </message>
-    <message>
-        <source>&amp;Redo %s</source>
-        <translation type="vanished">&amp;Refă %1</translation>
-    </message>
-    <message>
-        <source>Unable to load the "%s" module.
-
-Error: %s</source>
-        <translation type="vanished">Nu s-a putut încărca fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide a version string.
-
-It will not be loaded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The module "%s" is matched with Audacity version "%s".
-
-It will not be loaded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The module "%s" failed to initialize.
-
-It will not be loaded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Module "%s" found.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The module "%s" does not provide any of the required functions.
-
-It will not be loaded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <oldsource>Enable these plug-ins?
-</oldsource>
-        <comment>plug-ins</comment>
-        <extracomment>i18n-hint A plug-in is an optional added program for a sound
-effect, or generator, or analyzer</extracomment>
-        <translation type="vanished">
-            <numerusform>Nu s-a putut determina</numerusform>
-            <numerusform>Nu s-a putut determina</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Nyquist Prompt</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>There was an error initializing the midi i/o layer.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You will not be able to play midi.
-
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Initializing Midi</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Note Track</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this is a Note track.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Seconds</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Beats</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation type="vanished">Repetă</translation>
-    </message>
-    <message>
-        <source>Supports output: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Supports input: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Opened: %d
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selected MIDI recording device: %d - %s
-</source>
-        <translation type="vanished">Selectați dispozitivul de înregistrare</translation>
-    </message>
-    <message>
-        <source>No MIDI recording device found for '%s'.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selected MIDI playback device: %d - %s
-</source>
-        <translation type="vanished">Selectați dispozitivul de redare</translation>
-    </message>
-    <message>
-        <source>No MIDI playback device found for '%s'.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <extracomment>i18n-hint: refers to optional plug-in software libraries</extracomment>
-        <translation type="vanished">Biblioteci</translation>
-    </message>
-    <message>
-        <source>Preferences for Library</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="vanished">Biblioteci</translation>
-    </message>
-    <message>
-        <source>Failed to open the project's database</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Unable to add 'inset' function (can't verify blockids)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate inset or blockids.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>[Project %02i] Audacity "%s"</source>
-        <extracomment>i18n-hint: The %02i is the project number, the %s is the project name.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Can't open project file</source>
-        <translation type="vanished">Nu se poate deschide fișierul de proiect</translation>
-    </message>
-    <message>
-        <source>The project's database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="vanished">În&amp;chide</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Preview</source>
-        <translation type="vanished">Pre&amp;vizualizare</translation>
-    </message>
-    <message>
-        <source>Dry Previe&amp;w</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="vanished">S&amp;etări</translation>
-    </message>
-    <message>
-        <source>Debu&amp;g</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>High Contrast</source>
-        <extracomment>i18n-hint: greater difference between foreground and
-background colors</extracomment>
-        <translation type="vanished">Contrast...</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/%s.</source>
-        <extracomment>i18n-hint: A theme is a consistent visual style across an application's
-graphical user interface, including choices of colors, and similarity of images
-such as those on button controls.  Audacity can load and save alternative
-themes.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not write file:
-  %s.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not open file:
-  %s
-for writing.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not write images to file:
-  %s.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not find file:
-  %s.
-Theme not loaded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not load file:
-  %s.
-Bad png format perhaps?</source>
-        <extracomment>i18n-hint: Do not translate png.  It is the name of a file format.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not read its default theme.
-Please report the problem.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Couldn't read from file: %s</source>
-        <translatorcomment>hm ? urmează numele fișierului sau al unei erori ?</translatorcomment>
-        <translation type="vanished">Nu s-a putut scrie în fișier:</translation>
-    </message>
-    <message>
-        <source>None of the expected theme component files
- were found in:
-  %s.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/Components/.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Could not create directory:
-  %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Some required files in:
-  %s
-were already present. Overwrite?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity could not save file:
-  %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Couldn't write to file: %s</source>
-        <translatorcomment>hm ? urmează numele fișierului sau al unei erori ?</translatorcomment>
-        <translation type="vanished">Nu s-a putut scrie în fișier:</translation>
-    </message>
-    <message>
-        <source>Themes as Cee code written to:
-  %s/*%s.</source>
-        <extracomment>i18n-hint "Cee" means the C computer programming language</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Custom</source>
-        <extracomment>i18n-hint: user defined</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Database error.  Sorry, but we don't have more details.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio In: %d, Audio Out: %d</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>VST</source>
-        <extracomment>i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-developed by Steinberg GmbH</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>VST Effects</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Adds the ability to use VST effects in Audacity.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to allocate memory when loading presets file.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Loading VST Presets</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to read presets file.</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Could not open file: "%s"</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>Error Saving VST Presets</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error writing to file: "%s"</source>
-        <translation type="vanished">Eroare la scrierea fișierului: „%1”</translation>
-    </message>
-    <message>
-        <source>Error Saving Effect Presets</source>
-        <translation type="vanished">Eroare la deschiderea fișierului sau a proiectului</translation>
-    </message>
-    <message>
-        <source>This parameter file was saved from %s. Continue?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s.%i</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Template for clip name generation on copy-paste
-i18n-hint Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>There is not enough room available to paste the selection</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show &amp;Log...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>More information about this error may be available %s.</source>
-        <translation type="vanished">Informațiile despre dispozitiv nu sunt disponibile</translation>
-    </message>
-    <message>
-        <source>here</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Would you like to send a report to help us fix this issue?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>All reports are anonymous. See %s for more info.</source>
-        <translation type="vanished">Instrument de selecție</translation>
-    </message>
-    <message>
-        <source>our Privacy Policy</source>
-        <extracomment>i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Problem details</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Don't send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Backwards</source>
-        <translation type="vanished">Înapoi</translation>
-    </message>
-    <message>
-        <source>&lt;</source>
-        <extracomment>i18n-hint arrowhead meaning backward movement</extracomment>
-        <translation type="vanished">&lt;</translation>
-    </message>
-    <message>
-        <source>Forwards</source>
-        <translation type="vanished">Înainte</translation>
-    </message>
-    <message>
-        <source>&gt;</source>
-        <extracomment>i18n-hint arrowhead meaning forward movement</extracomment>
-        <translation type="vanished">&gt;</translation>
-    </message>
-    <message>
-        <source>Help on the Internet</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>From Internet</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Welcome!</source>
-        <translation type="vanished">Bun venit !</translation>
-    </message>
-    <message>
-        <source>Playing Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Device</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Source</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording - Setting the Recording Level</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Editing and greyed out Menus</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Exporting an Audio File</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Saving an Audacity Project</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Support for Other Formats</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Burn to CD</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No Local Help</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]].</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].&lt;br&gt;&lt;br&gt;To always view the Manual online, change "Location of Manual" in Interface Preferences to "From Internet".</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity Log</source>
-        <translation type="vanished">Jurnal Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Save...</source>
-        <translation type="vanished">&amp;Salvează...</translation>
-    </message>
-    <message>
-        <source>Cl&amp;ear</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Șt&amp;erge</translation>
-    </message>
-    <message>
-        <source>log.txt</source>
-        <translation type="vanished">log.txt</translation>
-    </message>
-    <message>
-        <source>Save log to:</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>Couldn't save log to file: %s</source>
-        <translatorcomment>hm ? urmează numele fișierului sau al unei erori ?</translatorcomment>
-        <translation type="vanished">Nu s-a putut scrie în fișier:</translation>
-    </message>
-    <message>
-        <source>Show Log for Details</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Elapsed Time:</source>
-        <translation type="vanished">Timp scurs:</translation>
-    </message>
-    <message>
-        <source>Remaining Time:</source>
-        <translation type="vanished">Timp rămas:</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to cancel?</source>
-        <translation type="vanished">Sigur vreți să ștergeți „%1” ?</translation>
-    </message>
-    <message>
-        <source>Confirm Cancel</source>
-        <translation type="vanished">Confirmă</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to stop?</source>
-        <translation type="vanished">Sigur vreți să ștergeți „%1” ?</translation>
-    </message>
-    <message>
-        <source>Confirm Stop</source>
-        <translation type="vanished">Confirmă</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close?</source>
-        <translation type="vanished">Sigur vreți să ștergeți „%1” ?</translation>
-    </message>
-    <message>
-        <source>Confirm Close</source>
-        <translation type="vanished">Confirmă</translation>
-    </message>
-    <message>
-        <source>The specified filename could not be converted due to Unicode character use.</source>
-        <translation type="vanished">Numele specificat de fișier nu a putut fi convertit datorită folosirii caracterelor Unicode.</translation>
-    </message>
-    <message>
-        <source>Specify New Filename:</source>
-        <translation type="vanished">Specificați un nou nume de fișier:</translation>
-    </message>
-    <message>
-        <source>Don't ask me again</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>File '%s' already exists, do you really want to overwrite it?</source>
-        <translation type="vanished">Fișierul „%1” există deja, sigur vreți să fie suprascris ?</translation>
-    </message>
-    <message>
-        <source>Please choose an existing file.</source>
-        <translation type="vanished">Alegeți un fișier existent.</translation>
-    </message>
-    <message>
-        <source>File type:</source>
-        <translation type="vanished">Tipul de compilare:</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="vanished">Crează un director nou</translation>
-    </message>
-    <message>
-        <source>Panel</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dialog</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Directory Dialog</source>
-        <translation type="vanished">Directoare</translation>
-    </message>
-    <message>
-        <source>File Dialog</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Could not load file: "%s"</source>
-        <translation type="vanished">Nu s-a putut încărca fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>1st Experimental Command...</source>
-        <translation type="vanished">Selectați comanda</translation>
-    </message>
-    <message>
-        <source>2nd Experimental Command</source>
-        <translation type="vanished">Selectați comanda</translation>
-    </message>
-    <message>
-        <source>AUP project files (*.aup)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Couldn't import the project:
-
-%s</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to import an AUP project.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project was saved by Audacity version 1.0 or earlier. The format has
-changed and this version of Audacity is unable to import the project.
-
-Use a version of Audacity prior to v3.0.0 to upgrade the project and then
-you may import it with this version of Audacity.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Internal error in importer...tag not recognized</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'vpos' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'h' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'zoom' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'sel0' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'sel1' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'selLow' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid project 'selHigh' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Couldn't find the project data folder: "%s"</source>
-        <translation type="vanished">Nu s-a putut găsi dosarul cu datele proiectului: „%1”</translation>
-    </message>
-    <message>
-        <source>MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The active project already has a time track and one was encountered in the project being imported, bypassing imported time track.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid sequence 'maxsamples' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid sequence 'sampleformat' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid sequence 'numsamples' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to parse the waveblock 'start' attribute</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing project file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing or invalid simpleblockfile 'len' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing or invalid silentblockfile 'len' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing alias file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliasstart' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliaslen' attribute.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error while processing %s
-
-Inserting silence.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed to open %s</source>
-        <translation type="vanished">Nu s-a putut salva fișierul de genuri muzicale.</translation>
-    </message>
-    <message>
-        <source>Failed to seek to position %lld in %s</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Unable to read %lld samples from %s</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Command:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translatorcomment>hm ? sau răsfoiește ?</translatorcomment>
-        <translation type="vanished">Navighează...</translation>
-    </message>
-    <message>
-        <source>Show output</source>
-        <extracomment>i18n-hint: show output on a graph</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Data will be piped to standard in. "%f" uses the file name in the export window.</source>
-        <extracomment>i18n-hint: Some programmer-oriented terminology here:
-"Data" refers to the sound to be exported, "piped" means sent,
-and "standard in" means the default input stream that the external program,
-named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
-in the program as a format string.  Keep %f unchanged.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Program name appears to be missing.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" couldn't be found.</source>
-        <translation type="vanished">FFmpeg nu a fost găsit</translation>
-    </message>
-    <message>
-        <source>Unable to locate "%s" in your path.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Executables</source>
-        <extracomment>i18n-hint files that can be run as programs</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Find path to command</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(external program)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Exporting the selected audio using command-line encoder</source>
-        <translation type="vanished">Se exportă audio selectat folosind un codor în linie de comandă</translation>
-    </message>
-    <message>
-        <source>Exporting the audio using command-line encoder</source>
-        <translation type="vanished">Se exportă audio selectat folosind un codor în linie de comandă</translation>
-    </message>
-    <message>
-        <source>Command Output</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="vanished">&amp;OK</translation>
-    </message>
-    <message>
-        <source>%.2f kbps</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Current Format:</source>
-        <translation type="vanished">Directorul curent:</translation>
-    </message>
-    <message>
-        <source>Current Codec:</source>
-        <translation type="vanished">Directorul curent:</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't determine format description for file "%s".</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate output format context.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't add audio stream to output file "%s".</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't open output file "%s" to write. Error code is %d.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't write headers to output file "%s". Error code is %d.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Can't open audio codec "%s" (0x%x)
-
-%s</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Couldn't write audio frame to output file.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Properly configured FFmpeg is required to proceed.
-You can configure it at Preferences &gt; Libraries.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Configure custom FFmpeg options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Load Preset</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save Preset</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delete Preset</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Import Presets</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Presets</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show All Formats</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show All Codecs</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>General Options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>ISO 639 3-letter language code
-Optional
-empty - automatic</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation type="vanished">Limbă:</translation>
-    </message>
-    <message>
-        <source>Bit Reservoir</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Codec tag (FOURCC)
-Optional
-empty - automatic</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tag:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Bit Rate:</source>
-        <translation type="vanished">Rată de biți:</translation>
-    </message>
-    <message>
-        <source>Overall quality, used differently by different codecs
-Required for vorbis
-0 - automatic
--1 - off (use bitrate instead)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sample rate (Hz)
-0 - don't change sample rate</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sample Rate:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio cutoff bandwidth (Hz)
-Optional
-0 - automatic</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cutoff:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>AAC Profile
-Low Complexity - default
-Most players won't play anything other than LC</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Profile:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Compression level
-Required for FLAC
--1 - automatic
-min - 0 (fast encoding, large output file)
-max - 10 (slow encoding, small output file)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Compression:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frame size
-Optional
-0 - default
-min - 16
-max - 65535</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frame:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LPC coefficients precision
-Optional
-0 - default
-min - 1
-max - 15</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Prediction Order Method
-Estimate - fastest, lower compression
-Log search - slowest, best compression
-Full search - default</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>PdO Method:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Minimal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Maximal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Minimal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Maximal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Maximum bit rate of the multiplexed stream
-Optional
-0 - default</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mux Rate:</source>
-        <extracomment>i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
-it has a hard to predict effect on the degree of compression</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Packet size
-Optional
-0 - default</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Packet Size:</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can't delete a preset without name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delete preset '%s'?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Confirm Deletion</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can't save a preset without a name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select xml file with presets to import</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No presets to export</source>
-        <translation type="vanished">Nicio etichetă de exportat.</translation>
-    </message>
-    <message>
-        <source>Select xml file to export presets into</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Format %s is not compatible with codec %s.</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Incompatible format and codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed to guess format</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed to find the codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg was configured in Preferences and successfully loaded before, 
-but this time Audacity failed to load it at startup. 
-
-You may want to go back to Preferences &gt; Libraries and re-configure it.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg startup failed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Locate FFmpeg</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity needs the file '%s' to import and export audio via FFmpeg.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Location of '%s':</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To find '%s', click here --&gt;</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To get a free copy of FFmpeg, click here --&gt;</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Download</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Descarcă</translation>
-    </message>
-    <message>
-        <source>Only avformat.dll</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Only libavformat.dylib</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Only libavformat.so</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Where is '%s'?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-example, "Where is lame_enc.dll?" - you could translate
-"Where would I find the file '%s'?" instead if you want.</extracomment>
-        <translation type="vanished">Unde se află „%1” ?</translation>
-    </message>
-    <message>
-        <source>FFmpeg not found</source>
-        <translation type="vanished">FFmpeg nu a fost găsit</translation>
-    </message>
-    <message>
-        <source>Audacity attempted to use FFmpeg to import an audio file,
-but the libraries were not found.
-
-To use FFmpeg import, go to Edit &gt; Preferences &gt; Libraries
-to download or locate the FFmpeg libraries.</source>
-        <translation type="vanished">Audacity a încercat să folosească FFmpeg pentru importul unui fișier audio,
-însă bibliotecile nu au fost găsite.
-
-Pentru a folosi importul FFmpeg, mergeți la Preferințe &gt; Biblioteci
-pentru a descărca sau indica locul bibliotecilor FFmpeg.</translation>
-    </message>
-    <message>
-        <source>Do not show this warning again</source>
-        <translation type="vanished">Nu mai arăta din nou acest avertisment</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export Library</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No compatible FFmpeg library was found</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg Library Version:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFmpeg Library:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Loca&amp;te...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dow&amp;nload</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity has automatically detected valid FFmpeg libraries.
-Do you still want to locate them manually?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Saving FFmpeg Presets</source>
-        <translation type="vanished">Eroare la deschiderea fișierului sau a proiectului</translation>
-    </message>
-    <message>
-        <source>Overwrite preset '%s'?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Confirm Overwrite</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Please select format before saving a profile</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Please select codec before saving a profile</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preset '%s' does not exist.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Replace preset '%s'?</source>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>FLAC export couldn't open %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>List of Files in basic text format</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid window offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid duration in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MIDI tracks cannot be offset individually, only audio files can be.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid track offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Insane, 320 kbps</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Insane</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Locate LAME</source>
-        <extracomment>i18n-hint: LAME is the name of an MP3 converter and should not be translated</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity needs the file %s to create MP3s.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Location of %s:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To find %s, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To get a free copy of LAME, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Where is %s?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-* example, "Where is lame_enc.dll?" - you could translate
-* "Where would I find the file %s" instead if you want.</extracomment>
-        <translation type="vanished">Unde se află %1?</translation>
-    </message>
-    <message>
-        <source>You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.
-Please download the latest version of 'LAME for Audacity'.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The project sample rate (%d) is not supported by the MP3
-file format. </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The project sample rate (%d) and bit rate (%d kbps) combination is not
-supported by the MP3 file format. </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LAME MP3 Export Library</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MP3 Library Version:</source>
-        <translation type="vanished">Versiunea bibliotecilor MP3:</translation>
-    </message>
-    <message>
-        <source>Error while writing %s file (disk full?).
-Libsndfile says "%s"</source>
-        <extracomment>i18n-hint: %s will be the error message from libsndfile, which
-* is usually something unhelpful (and untranslated) like "system
-* error"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>AU (Sun/NeXT)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>AVR (Audio Visual Research)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>CAF (Apple Core Audio File)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FLAC (FLAC Lossless Audio Codec)</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>HTK (HMM Tool Kit)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>IFF (Amiga IFF/SVX8/SV16)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MAT4 (GNU Octave 2.0 / Matlab 4.2)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MAT5 (GNU Octave 2.1 / Matlab 5.0)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MPC (Akai MPC 2k)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>OGG (OGG Container format)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>PAF (Ensoniq PARIS)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>PVF (Portable Voice Format)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>RAW (header-less)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>RF64 (RIFF 64)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>SD2 (Sound Designer II)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>SDS (Midi Sample Dump Standard)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>SF (Berkeley/IRCAM/CARL)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>VOC (Creative Labs)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>W64 (SoundFoundry WAVE 64)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WAV (NIST Sphere)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WAVEX (Microsoft)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WVE (Psion Series 3)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>XI (FastTracker 2)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Signed 8 bit PCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Signed 16 bit PCM</source>
-        <translation type="vanished">16 biți PCM</translation>
-    </message>
-    <message>
-        <source>Signed 24 bit PCM</source>
-        <translation type="vanished">24 biți PCM</translation>
-    </message>
-    <message>
-        <source>Signed 32 bit PCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unsigned 8 bit PCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>64 bit float</source>
-        <translation type="vanished">32 de biți flotant</translation>
-    </message>
-    <message>
-        <source>U-Law</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A-Law</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>IMA ADPCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Microsoft ADPCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>GSM 6.10</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>32kbs G721 ADPCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>24kbs G723 ADPCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>12 bit DWVW</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>16 bit DWVW</source>
-        <translation type="vanished">16 biți</translation>
-    </message>
-    <message>
-        <source>24 bit DWVW</source>
-        <translation type="vanished">24 de biți</translation>
-    </message>
-    <message>
-        <source>VOX ADPCM</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>16 bit DPCM</source>
-        <translation type="vanished">16 biți PCM</translation>
-    </message>
-    <message>
-        <source>8 bit DPCM</source>
-        <translation type="vanished">16 biți PCM</translation>
-    </message>
-    <message>
-        <source>Vorbis</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Nyquist Workbench...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Undo	Ctrl+Z</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Redo	Ctrl+Y</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cu&amp;t	Ctrl+X</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Copy	Ctrl+C</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Paste	Ctrl+V</source>
-        <translation type="vanished">Li&amp;pește</translation>
-    </message>
-    <message>
-        <source>Cle&amp;ar	Ctrl+L</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select A&amp;ll	Ctrl+A</source>
-        <translation type="vanished">&amp;Selectează</translation>
-    </message>
-    <message>
-        <source>&amp;Find...	Ctrl+F</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Matching Paren	F8</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Top S-expr	F9</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Higher S-expr	F10</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Previous S-expr	F11</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Next S-expr	F12</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Go to</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select &amp;Font...</source>
-        <translation type="vanished">&amp;Font...</translation>
-    </message>
-    <message>
-        <source>Split &amp;Vertically</source>
-        <translation type="vanished">Potrivește &amp;vertical</translation>
-    </message>
-    <message>
-        <source>Split &amp;Horizontally</source>
-        <translation type="vanished">Orizontal</translation>
-    </message>
-    <message>
-        <source>Show S&amp;cript</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show &amp;Output</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Large Icons</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Small Icons</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Toolbar</source>
-        <translation type="vanished">Bare de instrumen&amp;te</translation>
-    </message>
-    <message>
-        <source>&amp;Go	F5</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Stop	F6</source>
-        <translation type="vanished">Stop</translation>
-    </message>
-    <message>
-        <source>&amp;About</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Script</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Script was not saved.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Find dialog</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Harvey Lubin (logo)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tango Icon Gallery (toolbar icons)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Leland Lucius</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(C) 2009 by Leland Lucius</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>External Audacity module which provides a simple IDE for writing effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench</source>
-        <translation type="vanished">Efecte Nyquist</translation>
-    </message>
-    <message>
-        <source>No matches found</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Code has been modified. Are you sure?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench - </source>
-        <translation type="vanished">Efecte Nyquist</translation>
-    </message>
-    <message>
-        <source>New script</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open script</source>
-        <translation type="vanished">Deschide fișiere recente</translation>
-    </message>
-    <message>
-        <source>Save script</source>
-        <translation type="vanished">Salvat %1</translation>
-    </message>
-    <message>
-        <source>Save As</source>
-        <translation type="vanished">Salvat %1</translation>
-    </message>
-    <message>
-        <source>Save script as...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">Taie și copiază în clipboard</translation>
-    </message>
-    <message>
-        <source>Cut to clipboard</source>
-        <translation type="vanished">Taie și copiază în clipboard</translation>
-    </message>
-    <message>
-        <source>Paste from clipboard</source>
-        <translation type="vanished">Lipit din clipboard</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation type="vanished">&amp;Selectează</translation>
-    </message>
-    <message>
-        <source>Select all text</source>
-        <translation type="vanished">&amp;Selectează</translation>
-    </message>
-    <message>
-        <source>Undo last change</source>
-        <translation type="vanished">Schimbare de format</translation>
-    </message>
-    <message>
-        <source>Redo previous change</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Find</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Find text</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Match</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Go to matching paren</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Go to top S-expr</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Go to higher S-expr</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation type="vanished">Instrumentul precedent</translation>
-    </message>
-    <message>
-        <source>Go to previous S-expr</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Go to next S-expr</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Început</translation>
-    </message>
-    <message>
-        <source>Start script</source>
-        <translation type="vanished">Timpul de început</translation>
-    </message>
-    <message>
-        <source>Stop script</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Waiting for audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. You can cancel this operation.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Generating audio preview...</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>Open trace audio.com</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Synchronizing project</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Previews can be updated only for Cloud projects</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save &amp;To Cloud...</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>&amp;Update Cloud Audio Preview</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open Fro&amp;m Cloud...</source>
-        <translation type="vanished">Deschide &amp;recente...</translation>
-    </message>
-    <message>
-        <source>S&amp;hare Audio...</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export behavior</source>
-        <translation type="vanished">Exportă MIDI</translation>
-    </message>
-    <message>
-        <source>S&amp;how 'How would you like to export?' dialog</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save behavior</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Always &amp;ask</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Always &amp;save to cloud</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>Always save to the co&amp;mputer</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Temporary Cloud files directory</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Location:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Browse...</source>
-        <translatorcomment>hm ? sau răsfoiește ?</translatorcomment>
-        <translation type="vanished">Navighează...</translation>
-    </message>
-    <message>
-        <source>days</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Remove temporary files after:</source>
-        <translation type="vanished">Nu se poate deschide fișierul de proiect</translation>
-    </message>
-    <message>
-        <source>Preferences for Cloud</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Choose a location to place the temporary directory</source>
-        <translation type="vanished">Alegeți o locație pentru amplasarea directorului temporar</translation>
-    </message>
-    <message>
-        <source>Temporary files directory cannot be on a FAT drive.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cannot set the preference.</source>
-        <translation type="vanished">Preferințe...</translation>
-    </message>
-    <message>
-        <source>Failed.</source>
-        <translation type="vanished">Eșuat</translation>
-    </message>
-    <message>
-        <source>Syncing to audio.com... (%d%%)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Waiting for space to free up</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Once you have made storage space available on audio.com, click Retry.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Share Audio</source>
-        <extracomment>i18n-hint: Share audio button text, keep as short as possible</extracomment>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>&amp;Share Audio Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that opens Share Audio dialog</extracomment>
-        <translation type="vanished">&amp;Editează bara de unelte</translation>
-    </message>
-    <message>
-        <source>Account not linked</source>
-        <translation type="vanished">Fișierul a fost decodat cu succes
-</translation>
-    </message>
-    <message>
-        <source>&amp;Link Account</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Unlink Account</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open from audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Don't show this again</source>
-        <translation type="vanished">Nu mai arăta acest avertisment</translation>
-    </message>
-    <message>
-        <source>Save to the Cloud (free)</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>&amp;Save to Cloud</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>Files are saved on your device.
-Note: To export MP3 and WAV files, use File &gt; Export Audio instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save to &amp;computer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Remember my choice and don't show again</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>How would you like to export?</source>
-        <extracomment>i18n-hint: A title that is shown on export that allows the user to select
-Cloud or local export.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Share to audio.com</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Share to audio.com</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export to &amp;computer</source>
-        <translation type="vanished">Exportă MIDI</translation>
-    </message>
-    <message>
-        <source>&amp;Don't show again</source>
-        <translation type="vanished">Nu mai arăta acest avertisment</translation>
-    </message>
-    <message>
-        <source>Project Name</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Cloud saving requires a free audio.com account linked to Audacity. Press "Link account" above to proceed.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unlisted</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Public</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save to computer...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>We encountered an issue syncing your file</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Log in to audio.com to proceed.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>We were unable to link your account. Please try again.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Try again</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Account linked successfully!</source>
-        <translation type="vanished">Fișierul a fost decodat cu succes
-</translation>
-    </message>
-    <message>
-        <source>Enter token to link your account</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Token</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>C&amp;ontinue</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>L&amp;ink audio.com account...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project is no longer saved to the Cloud</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project was removed from audio.com and therefore cannot be saved at this time. </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can either save it to the Cloud as a new project, or save it to your computer.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save to Cloud</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>Your project storage limit has been reached.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You may need to remove older projects to make space available. For more options, visit audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can also save this project locally to avoid losing changes.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project version conflict detected</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save this project</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Discard and open latest version</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open local project</source>
-        <translation type="vanished">Se deschide proiectul Audacity</translation>
-    </message>
-    <message>
-        <source>Cloud project conflict</source>
-        <translation type="vanished">Nu se poate deschide fișierul de proiect</translation>
-    </message>
-    <message>
-        <source>You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Keep currently open version</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open new version</source>
-        <translation type="vanished">Conversie a ratei de eșantionare</translation>
-    </message>
-    <message>
-        <source>Open from Cloud</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>less than 1 minute</source>
-        <translation type="vanished"/>
-    </message>
-    <message numerus="yes">
-        <source>one minutes ago</source>
-        <oldsource>%d minutes ago</oldsource>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>one hour ago</source>
-        <oldsource>%d hours ago</oldsource>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message>
-        <source>Failed to authorize account</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Loading projects list...</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Failed to get projects list</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Cloud saved projects</source>
-        <translation type="vanished">Nu se poate deschide fișierul de proiect</translation>
-    </message>
-    <message>
-        <source>Search:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Prev</source>
-        <translation type="vanished">Pre&amp;vizualizare</translation>
-    </message>
-    <message>
-        <source>View in audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Page %d of %d</source>
-        <translation type="vanished">Plug-in-uri de la %1 la %2</translation>
-    </message>
-    <message>
-        <source>Anyone will be able to listen to this audio.</source>
-        <translation type="vanished">Nu veți putea să ascultați sau să înregistrați audio.
-
-</translation>
-    </message>
-    <message>
-        <source>Only you and people you share a link with will be able to listen to this audio.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Are you sure you want to cancel?</source>
-        <translation type="vanished">Sigur vreți să ștergeți „%1” ?</translation>
-    </message>
-    <message>
-        <source>Cancel upload to Audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Uploading audio...</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Upload error</source>
-        <translation type="vanished">Necunoscut</translation>
-    </message>
-    <message>
-        <source>We are unable to prepare this file for uploading.</source>
-        <translation type="vanished">Fișierul țintă nu a putut fi deschis pentru scriere</translation>
-    </message>
-    <message>
-        <source>Finalizing upload...</source>
-        <translation type="vanished">&amp;Analizare</translation>
-    </message>
-    <message>
-        <source>Track Title</source>
-        <translation type="vanished">Titlu pistă</translation>
-    </message>
-    <message>
-        <source>Sharing audio requires a free %s account linked to Audacity. %%Press "Link account" above to proceed.</source>
-        <extracomment>i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Press "Continue" to upload to audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preparing audio...</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>You are not authorized to access this project.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You tried to access a project that has expired.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity had trouble connecting to the server.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The project is too large to upload. Please save it to your computer instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You don't have access to this project.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The project could not be found.</source>
-        <translation type="vanished">FFmpeg nu a fost găsit</translation>
-    </message>
-    <message>
-        <source>The server responded with something Audacity could not understand.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity encountered an internal error.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio.com encountered an internal error.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity encountered an unknown error.</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>Sync failed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error details:
-%s</source>
-        <translation type="vanished">Eroare:</translation>
-    </message>
-    <message>
-        <source>Syncing your project</source>
-        <translation type="vanished">Avertisment - proiect gol</translation>
-    </message>
-    <message>
-        <source>The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cloud project incomplete</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul:</translation>
-    </message>
-    <message>
-        <source>The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No version of this project has been fully uploaded to audio.com. It cannot be loaded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You have canceled this upload to audio.com</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Retry</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. Once you are done with it, click Retry</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Exported Allegro (.gro) files save time as:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Please select only one Note Track at a time.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Please select a Note Track.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Export MIDI As:</source>
-        <translation type="vanished">Exportă MIDI ca:</translation>
-    </message>
-    <message>
-        <source>MIDI file</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>Allegro file</source>
-        <translation type="vanished">Toate Fișierele|*</translation>
-    </message>
-    <message>
-        <source>You have selected a filename with an unrecognized file extension.
-Do you want to continue?</source>
-        <translation type="vanished">Ați selectat un nume de fișier cu o extensie de fișier nerecunoascută.
-Vreți să continuați ?</translation>
-    </message>
-    <message>
-        <source>Export MI&amp;DI...</source>
-        <translation type="vanished">Exportă MIDI...</translation>
-    </message>
-    <message>
-        <source>Imported MIDI from '%s'</source>
-        <translation type="vanished">MIDI importat de la '%1'</translation>
-    </message>
-    <message>
-        <source>Import MIDI</source>
-        <translation type="vanished">Importă MIDI</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Filename too short.</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul:</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Incorrect filetype.</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul:</translation>
-    </message>
-    <message>
-        <source>Could not open file %s.</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>Select a MIDI file</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>MIDI and Allegro files</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MIDI files</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>Allegro files</source>
-        <translation type="vanished">Toate Fișierele|*</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI...</source>
-        <translation type="vanished">&amp;MIDI...</translation>
-    </message>
-    <message>
-        <source>No revision identifier was provided</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, system administration</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, co-founder and developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, designer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Nivel</translation>
-    </message>
-    <message>
-        <source>%s, developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Nivel</translation>
-    </message>
-    <message>
-        <source>%s, developer and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Nivel</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, QA tester, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, documentation and support, French</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, quality assurance</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, accessibility advisor</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, graphic artist</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, composer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, tester</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, Nyquist plug-ins</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Nyquist</translation>
-    </message>
-    <message>
-        <source>%s, web developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Nivel</translation>
-    </message>
-    <message>
-        <source>%s, graphics</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, effects presets</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Presetări de fabrică</translation>
-    </message>
-    <message>
-        <source>%s (incorporating %s, %s, %s, %s and %s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>About %s</source>
-        <extracomment>i18n-hint: information about the program</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&lt;h3&gt;</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s the free, open source, cross-platform software for recording and editing sounds.</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">software gratuit, cu sursă deschisă, multiplatformă, pentru editarea și codarea sunetelor&lt;br&gt;</translation>
-    </message>
-    <message>
-        <source>%s Team Members</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished"> Membri emeriți ai echipei</translation>
-    </message>
-    <message>
-        <source>Emeritus:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Distinguished %s Team members, not currently active</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Contributors</source>
-        <translation type="vanished">Alți contribuitori</translation>
-    </message>
-    <message>
-        <source>Website and Graphics</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Translators</source>
-        <translation type="vanished">&lt;b&gt;Traducere în limba română&lt;/b&gt;&lt;br&gt;&lt;a href="mailto:gale@audacityteam.org"&gt;Gale&lt;/a&gt; (20??-2012)&lt;br&gt;&lt;a href="mailto:cristi@secarica.ro"&gt;Cristian Secară&lt;/a&gt; (2014-2015)</translation>
-    </message>
-    <message>
-        <source>%s includes code from the following projects:</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">Audacity se bazează pe codul din următoarele proiecte:</translation>
-    </message>
-    <message>
-        <source>Special thanks:</source>
-        <translation type="vanished">Mulțumiri speciale:</translation>
-    </message>
-    <message>
-        <source>%s website: </source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">Prima rulare a programului Audacity</translation>
-    </message>
-    <message>
-        <source>%s software is copyright %s 1999-2024 %s Team.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for first and third %s,
-and a "copyright" symbol for the second</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The name %s is a registered trademark.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for %s</extracomment>
-        <translation type="vanished">Numele &lt;b&gt;Audacity&amp;reg;&lt;/b&gt; este o marcă înregistrată a lui Dominic Mazzoni.</translation>
-    </message>
-    <message>
-        <source>Build Information</source>
-        <translation type="vanished">Informații despre compilare</translation>
-    </message>
-    <message>
-        <source>The Build</source>
-        <extracomment>i18n-hint: Information about when audacity was compiled follows</extracomment>
-        <translation type="vanished">Compilare pentru testare și depanare</translation>
-    </message>
-    <message>
-        <source>Program build date:</source>
-        <translation type="vanished">Data compilării programului:</translation>
-    </message>
-    <message>
-        <source>Commit Id:</source>
-        <translation type="vanished">ID-ul de comitere:</translation>
-    </message>
-    <message>
-        <source>Debug build (debug level %d)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Release build (debug level %d)</source>
-        <translation type="vanished">Compilare pentru publicare</translation>
-    </message>
-    <message>
-        <source>%s, 64 bits</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s, 32 bits</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Build type:</source>
-        <translation type="vanished">Tipul de compilare:</translation>
-    </message>
-    <message>
-        <source>Compiler:</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Installation Prefix:</source>
-        <extracomment>i18n-hint: The directory audacity is installed into (on *nix systems)</extracomment>
-        <translation type="vanished">Prefix de instalare:</translation>
-    </message>
-    <message>
-        <source>Cache folder:</source>
-        <translation type="vanished">Dosar pentru setări:</translation>
-    </message>
-    <message>
-        <source>Settings folder:</source>
-        <translation type="vanished">Dosar pentru setări:</translation>
-    </message>
-    <message>
-        <source>Data folder:</source>
-        <translation type="vanished">Dosar pentru setări:</translation>
-    </message>
-    <message>
-        <source>State folder:</source>
-        <translation type="vanished">Dosar pentru setări:</translation>
-    </message>
-    <message>
-        <source>Core Libraries</source>
-        <extracomment>i18n-hint: Libraries that are essential to audacity</extracomment>
-        <translation type="vanished">Biblioteci principale</translation>
-    </message>
-    <message>
-        <source>Cross-platform GUI library</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio playback and recording</source>
-        <translation type="vanished">Redare și înregistrare audio</translation>
-    </message>
-    <message>
-        <source>Sample rate conversion</source>
-        <translation type="vanished">Conversie a ratei de eșantionare</translation>
-    </message>
-    <message>
-        <source>File Format Support</source>
-        <translation type="vanished">Suportul formatelor de fișiere</translation>
-    </message>
-    <message>
-        <source>MP3 Import</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Import MP3</translation>
-    </message>
-    <message>
-        <source>MP3 Export</source>
-        <extracomment>i18n-hint: LAME is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">Export MP2</translation>
-    </message>
-    <message>
-        <source>Opus Import and Export</source>
-        <extracomment>i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">Import și export Ogg Vorbis</translation>
-    </message>
-    <message>
-        <source>Ogg Vorbis Import and Export</source>
-        <extracomment>i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-* Both are proper nouns and shouldn't be translated</extracomment>
-        <translation type="vanished">Import și export Ogg Vorbis</translation>
-    </message>
-    <message>
-        <source>ID3 tag support</source>
-        <translation type="vanished">Suport pentru etichetă ID3</translation>
-    </message>
-    <message>
-        <source>FLAC import and export</source>
-        <extracomment>i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-* a proper noun and so shouldn't be translated</extracomment>
-        <translation type="vanished">Import și export FLAC</translation>
-    </message>
-    <message>
-        <source>MP2 export</source>
-        <translation type="vanished">Export MP2</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export</source>
-        <translation type="vanished">Import sau export FFmpeg</translation>
-    </message>
-    <message>
-        <source>Features</source>
-        <translation type="vanished">Caracteristici</translation>
-    </message>
-    <message>
-        <source>Plug-in support</source>
-        <translation type="vanished">Suport pe bază de plug-in</translation>
-    </message>
-    <message>
-        <source>Sound card mixer support</source>
-        <translation type="vanished">Suport pe baza mixerului plăcii de sunet</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo Change support</source>
-        <translation type="vanished">Suport pentru modificarea înălțimii și tempoului sunetului</translation>
-    </message>
-    <message>
-        <source>Extreme Pitch and Tempo Change support</source>
-        <translation type="vanished">Suport pentru modificarea extremă a înălțimii și tempoului sunetului</translation>
-    </message>
-    <message>
-        <source>Legal</source>
-        <comment>about dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>GPL License</source>
-        <translation type="vanished">Licență GPL</translation>
-    </message>
-    <message>
-        <source>PRIVACY POLICY</source>
-        <comment>about dialog</comment>
-        <extracomment>i18n-hint: For "About Audacity...": Title for Privacy Policy section</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>App update checking and error reporting require network access. These features are optional.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>See %s for more info.</source>
-        <extracomment>i18n-hint: %s will be replaced with "our Privacy Policy"</extracomment>
-        <translation type="vanished">Instrument de selecție</translation>
-    </message>
-    <message>
-        <source>Click and drag to define a looping region.</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Timeline actions disabled during recording</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click and drag to adjust, double-click to reset</source>
-        <translation type="vanished">Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo.</translation>
-    </message>
-    <message>
-        <source>Record/Playhead</source>
-        <extracomment>i18n-hint: This text is a tooltip on the icon (of a pin) representing
-the temporal position in the audio.</extracomment>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click or drag to begin Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Click &amp; move to Scrub. Click &amp; drag to Seek.</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move to Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move to Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Drag to Seek. Release to stop seeking.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Drag to Seek. Release and move to Scrub.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move to Scrub. Drag to Seek.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Quick-Play disabled</source>
-        <translation type="vanished"> (dezactivat)</translation>
-    </message>
-    <message>
-        <source>Quick-Play enabled</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Timeline Options</source>
-        <translation type="vanished">Acțiune</translation>
-    </message>
-    <message>
-        <source>Minutes and Seconds</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Beats and Measures</source>
-        <translation type="vanished">Repetă</translation>
-    </message>
-    <message>
-        <source>Setting a loop region also makes an audio selection</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Clear Loop</source>
-        <extracomment>i18n-hint Clear is a verb</extracomment>
-        <translation type="vanished">&amp;Curăță</translation>
-    </message>
-    <message>
-        <source>Set Loop To Selection</source>
-        <translation type="vanished">&amp;Zoom la selecție</translation>
-    </message>
-    <message>
-        <source>Scroll view to playhead</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Continuous scrolling</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed to remove %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed!</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s could not be found.
-
-It has been removed from the list of recent files.</source>
-        <translation type="vanished">%1 nu a putut fi găsit.
-
-A fost eliminat din lista fișierelor recente.</translation>
-    </message>
-    <message>
-        <source>SQLite library failed to initialize.  Audacity cannot continue.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Block size must be within 256 to 100000000
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity is starting up...</source>
-        <translation type="vanished">Audacity pornește...</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <extracomment>i18n-hint: "New" is an action (verb) to create a NEW project</extracomment>
-        <translation type="vanished">&amp;Nou</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Deschide...</translation>
-    </message>
-    <message>
-        <source>Open &amp;Recent...</source>
-        <translation type="vanished">Deschide &amp;recente...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity...</source>
-        <translation type="vanished">Despre &amp;Audacity...</translation>
-    </message>
-    <message>
-        <source>&amp;Preferences...</source>
-        <translation type="vanished">&amp;Preferințe...</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a safe place to store temporary files.
-Audacity needs a place where automatic cleanup programs won't delete the temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity nu a putut găsi un loc unde să stocheze fișierele temporare.
-Introduceți un director adecvat în dialogul de preferințe.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a place to store temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity nu a putut găsi un loc unde să stocheze fișierele temporare.
-Introduceți un director adecvat în dialogul de preferințe.</translation>
-    </message>
-    <message>
-        <source>Audacity is now going to exit. Please launch Audacity again to use the new temporary directory.</source>
-        <translation type="vanished">Audacity este pe cale de a se închide. Reporniți Audacity pentru a folosi noul director pentru fișiere temporare.</translation>
-    </message>
-    <message>
-        <source>Running two copies of Audacity simultaneously may cause
-data loss or cause your system to crash.
-
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity was not able to lock the temporary files directory.
-This folder may be in use by another copy of Audacity.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Do you still want to start Audacity?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Locking Temporary Folder</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The system has detected that another copy of Audacity is running.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Use the New or Open commands in the currently running Audacity
-process to open multiple projects simultaneously.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity is already running</source>
-        <translation type="vanished">Audacity rulează deja</translation>
-    </message>
-    <message>
-        <source>Unable to create shared memory segment.
-
-error code=%d : "%s".</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity Startup Failure</source>
-        <translation type="vanished">Fișiere de proiect Audacity</translation>
-    </message>
-    <message>
-        <source>Unable to acquire semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to create semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to acquire lock semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to acquire server semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The Audacity IPC server failed to initialize.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>An unrecoverable error has occurred during startup</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>set max disk block size in bytes</source>
-        <extracomment>i18n-hint: This controls the number of bytes that Audacity will
-*           use when writing files to the disk</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>replay a journal file</source>
-        <extracomment>i18n-hint: brief help message for Audacity's command-line options
-A journal contains a sequence of user interface interactions to be repeated
-"log," "trail," "trace" have somewhat similar meanings</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>this help message</source>
-        <extracomment>i18n-hint: This displays a list of available options</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>run self diagnostics</source>
-        <extracomment>i18n-hint: This runs a set of automatic tests on Audacity itself</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>display Audacity version</source>
-        <extracomment>i18n-hint: This displays the Audacity version</extracomment>
-        <translation type="vanished">afișează versiunea Audacity</translation>
-    </message>
-    <message>
-        <source>audio or project file name</source>
-        <extracomment>i18n-hint: This is a list of one or more files that Audacity
-*           should open upon startup</extracomment>
-        <translation type="vanished">numele de fișier audio sau al proiectului</translation>
-    </message>
-    <message>
-        <source>Handle 'audacity://' url</source>
-        <extracomment>i18n-hint: This option is used to handle custom URLs in Audacity</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity project (.aup3) files are not currently 
-associated with Audacity. 
-
-Associate them, so they open on double-click?</source>
-        <translation type="vanished">În acest moment fișierele de proiect Audacity (.AUP)
-nu sunt asociate cu Audacity.
-
-Doriți să fie asociate, astfel încât să se deschidă la dublu clic ?</translation>
-    </message>
-    <message>
-        <source>Audacity Project Files</source>
-        <translation type="vanished">Fișiere de proiect Audacity</translation>
-    </message>
-    <message>
-        <source>Audacity Configuration Error</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>The following configuration file could not be accessed:
-
-	%s
-
-This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. 
-
-You can attempt to correct the issue and then click "Retry" to continue.
-
-If you choose to "Quit Audacity", your project may be left in an unsaved state which will be recovered the next time you open it.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Quit Audacity</source>
-        <translation type="vanished">Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Retry</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Configure Project from Music File</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automatic Music Configuration</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>Audacity detected this file to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity detected one or more files to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Music Import</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Import MP3</translation>
-    </message>
-    <message>
-        <source>Smart clip.
-The entire source clip will be pasted into your project, allowing you to access
-trimmed audio data anytime.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selected audio only.
-Only the selected portion of the source clip will be pasted.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Paste audio</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>How would you like to paste your audio?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The full smart clip is %s. Larger sizes will take longer to paste.</source>
-        <extracomment>i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Remember my choice and don't ask again</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automatic Crash Recovery</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
-
-After recovery, save the projects to ensure changes are written to disk.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recoverable &amp;projects</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Discard Selected</source>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source>&amp;Recover Selected</source>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No projects selected</source>
-        <translation type="vanished">Nu sunt selectate suficiente date.</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to discard the selected projects?
-
-Choosing "Yes" permanently deletes the selected projects immediately.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Command</source>
-        <translation type="vanished">Selectați comanda</translation>
-    </message>
-    <message>
-        <source>&amp;Command</source>
-        <translation type="vanished">&amp;Comandă</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Parameters</source>
-        <translation type="vanished">&amp;Editare parametri</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preset</source>
-        <translation type="vanished">Presetări de utilizatori</translation>
-    </message>
-    <message>
-        <source>&amp;Parameters</source>
-        <translation type="vanished">&amp;Parametri</translation>
-    </message>
-    <message>
-        <source>&amp;Details</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Choose command</source>
-        <translation type="vanished">Ale&amp;geți comanda</translation>
-    </message>
-    <message>
-        <source>MP3 Conversion</source>
-        <translation type="vanished">Conversie în timp real</translation>
-    </message>
-    <message>
-        <source>Fade Ends</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Import Macro</source>
-        <translatorcomment>hm ? sau import brut ?</translatorcomment>
-        <translation type="vanished">Importă brut</translation>
-    </message>
-    <message>
-        <source>Macro %s already exists. Would you like to replace it?</source>
-        <translation type="vanished">Fișierul „%1” există deja, sigur vreți să fie suprascris ?</translation>
-    </message>
-    <message>
-        <source>Export Macro</source>
-        <translation type="vanished">Exportă MIDI</translation>
-    </message>
-    <message>
-        <source>Effect</source>
-        <translation type="vanished">Efe&amp;ct</translation>
-    </message>
-    <message>
-        <source>Menu Command (With Parameters)</source>
-        <translation type="vanished">&amp;Editare parametri</translation>
-    </message>
-    <message>
-        <source>Menu Command (No Parameters)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"%s" requires one or more tracks to be selected.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Your batch command of %s was not recognized.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Applied Macro</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Apply Macro</source>
-        <translation type="vanished">Se aplică</translation>
-    </message>
-    <message>
-        <source>Applied Macro '%s'</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">Efectul aplicat: %1</translation>
-    </message>
-    <message>
-        <source>Apply '%s'</source>
-        <translation type="vanished">Se aplică</translation>
-    </message>
-    <message>
-        <source>Apply %s with parameter(s)
-
-%s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Test Mode</source>
-        <translation type="vanished">Mod de test</translation>
-    </message>
-    <message>
-        <source>Apply %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Macros Palette</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Manage Macros</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Macro</source>
-        <extracomment>i18n-hint: A macro is a sequence of commands that can be applied
-* to one or more audio files.</extracomment>
-        <translation type="vanished">Presetări de fabrică</translation>
-    </message>
-    <message>
-        <source>Macro</source>
-        <extracomment>i18n-hint: This is the heading for a column in the edit macros dialog</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Apply Macro to:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Apply macro to project</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Project</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Apply macro to files...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Files...</source>
-        <translation type="vanished">&amp;Fișier</translation>
-    </message>
-    <message>
-        <source>&amp;Expand</source>
-        <extracomment>i18n-hint: The Expand button makes the dialog bigger, with more in it</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No macro selected</source>
-        <translation type="vanished">Nu sunt selectate suficiente date.</translation>
-    </message>
-    <message>
-        <source>Applying '%s' to current project</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Please save and close the current project first.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select file(s) for batch processing...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Applying...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Remo&amp;ve</source>
-        <translation type="vanished">Elimină</translation>
-    </message>
-    <message>
-        <source>&amp;Rename...</source>
-        <translation type="vanished">&amp;Redenumește...</translation>
-    </message>
-    <message>
-        <source>Re&amp;store</source>
-        <translation type="vanished">Restaurează zo&amp;na</translation>
-    </message>
-    <message>
-        <source>I&amp;mport...</source>
-        <translation type="vanished">I&amp;mportă...</translation>
-    </message>
-    <message>
-        <source>E&amp;xport...</source>
-        <translation type="vanished">E&amp;xport...</translation>
-    </message>
-    <message>
-        <source>Edit Steps</source>
-        <translation type="vanished">Editare etichete</translation>
-    </message>
-    <message>
-        <source>Num</source>
-        <extracomment>i18n-hint: This is the number of the command in the list</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Command  </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Parameters</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Insert</source>
-        <translation type="vanished">&amp;Inserează</translation>
-    </message>
-    <message>
-        <source>&amp;Edit...</source>
-        <translation type="vanished">E&amp;ditare...</translation>
-    </message>
-    <message>
-        <source>Move &amp;Up</source>
-        <translation type="vanished">Mută mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Move &amp;Down</source>
-        <translation type="vanished">Mută mai j&amp;os</translation>
-    </message>
-    <message>
-        <source>Shrin&amp;k</source>
-        <extracomment>i18n-hint: The Shrink button makes the dialog smaller, with less in it</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>- END -</source>
-        <extracomment>i18n-hint: This is the last item in a list.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s changed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Do you want to save the changes?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enter name of new macro</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Name of new macro</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Name must not be blank</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Names may not contain '%c' and '%c'</source>
-        <extracomment>i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s?</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of a file.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Repeat %s</source>
-        <translation type="vanished">Repetă %1</translation>
-    </message>
-    <message>
-        <source>Repeat Last Tool</source>
-        <translation type="vanished">Repetă ultimul efect</translation>
-    </message>
-    <message>
-        <source>&amp;Macro Manager</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Apply Macro</source>
-        <translation type="vanished">&amp;Aplică</translation>
-    </message>
-    <message>
-        <source>Palette...</source>
-        <translation type="vanished">Șt&amp;erge...</translation>
-    </message>
-    <message>
-        <source>Script&amp;ables I</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">Toate Fișierele|*</translation>
-    </message>
-    <message>
-        <source>Scripta&amp;bles II</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Disk Block Size (KB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Number of Edits:</source>
-        <translation type="vanished">De câte ori să se repete:</translation>
-    </message>
-    <message>
-        <source>Test Data Size (MB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Random Seed:</source>
-        <extracomment>i18n-hint: A "seed" is a number that initializes a
-pseudorandom number generating algorithm</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show detailed info about each block file</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show detailed info about each editing operation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Run</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>benchmark.txt</source>
-        <extracomment>i18n-hint: Benchmark means a software speed test;
-leave untranslated file extension .txt</extracomment>
-        <translation type="vanished">&amp;Rulează un test de performanță...</translation>
-    </message>
-    <message>
-        <source>Export Benchmark Data as:</source>
-        <translation type="vanished">Exportă etichetele ca:</translation>
-    </message>
-    <message>
-        <source>Block size should be in the range 1 - 1024 KB.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Number of edits should be in the range 1 - 10000.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Test data size should be in the range 1 - 2000 MB.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Using %lld chunks of %lld samples each, for a total of %.1f MB.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preparing...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Expected len %lld, track len %lld.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Performing %d edits...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cut: %lld - %lld 
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Trial %d
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cut (%lld, %lld) failed.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Paste: %lld
-</source>
-        <translation type="vanished">Lipește</translation>
-    </message>
-    <message>
-        <source>Trial %d
-Failed on Paste.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Time to perform %d edits: %ld ms
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Checking file pointer leaks:
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Track # blocks: %ld
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Disk # blocks: 
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Doing correctness check...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Bad: chunk %lld sample %lld
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Passed correctness check!
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Errors in %d/%lld chunks
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Time to check all data: %ld ms
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Reading data again...
-</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>Time to check all data (2): %ld ms
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>At 44100 Hz, %d bytes per sample, the estimated number of
- simultaneous tracks that could be played at once: %.1f
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>TEST FAILED!!!
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Benchmark completed successfully.
-</source>
-        <translation type="vanished">Fișierul a fost decodat cu succes
-</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Cmd + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No Audio Selected</source>
-        <translation type="vanished">Nu sunt selectate suficiente date.</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use.
-
-1. Select audio that represents noise and use %s to get your 'noise profile'.
-
-2. When you have got your noise profile, select the audio you want to change
-and use %s to change that audio.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can only do this when playing and recording are
-stopped. (Pausing is not sufficient.)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You must first select some stereo audio to perform this
-action. (You cannot use this with mono.)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You must first select some audio to perform this action.
-(Selecting other kinds of track won't work.)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity Support Data</source>
-        <translation type="vanished">Echipa de suport Audacity</translation>
-    </message>
-    <message>
-        <source>Report generated to:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Removing Dependencies</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Copying audio data into project...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project Depends on Other Audio Files</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Copying these files into your project will remove this dependency.
-This is safer, but needs more disk space.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>
-
-Files shown as MISSING have been moved or deleted and cannot be copied.
-Restore them to their original location to be able to copy into project.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project Dependencies</source>
-        <translation type="vanished">Dependințele proiectului</translation>
-    </message>
-    <message>
-        <source>Audio File</source>
-        <translation type="vanished">Fișier audio</translation>
-    </message>
-    <message>
-        <source>Disk Space</source>
-        <translation type="vanished">Spațiu pe disc</translation>
-    </message>
-    <message>
-        <source>Copy Selected Files</source>
-        <translation type="vanished">Copiază fișierele selectate</translation>
-    </message>
-    <message>
-        <source>Cancel Save</source>
-        <translation type="vanished">Anulează salvarea</translation>
-    </message>
-    <message>
-        <source>Save Without Copying</source>
-        <translation type="vanished">Salvează fără copiere</translation>
-    </message>
-    <message>
-        <source>Do Not Copy</source>
-        <translation type="vanished">Nu copia</translation>
-    </message>
-    <message>
-        <source>Copy All Files (Safer)</source>
-        <translation type="vanished">Copiază toate fișierele (mai sigur)</translation>
-    </message>
-    <message>
-        <source>Whenever a project depends on other files:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ask me</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Întreabă-mă</translation>
-    </message>
-    <message>
-        <source>Always copy all files (safest)</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Copiază întotdeauna toate fișierele (cel mai sigur)</translation>
-    </message>
-    <message>
-        <source>Never copy any files</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Nu copia niciodată niciun fișier</translation>
-    </message>
-    <message>
-        <source>MISSING %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Copy Names to Clipboard</source>
-        <translation type="vanished">Taie și copiază în clipboard</translation>
-    </message>
-    <message>
-        <source>"%s", "%s", "%s"
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing</source>
-        <translation type="vanished">Lipsesc fișierele</translation>
-    </message>
-    <message>
-        <source>If you proceed, your project will not be saved to disk. Is this what you want?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Your project is self-contained; it does not depend on any external audio files. 
-
-Some older Audacity projects may not be self-contained, and care 
-is needed to keep their external dependencies in the right place.
-New projects will be self-contained and are less risky.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dependency Check</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dropouts</source>
-        <extracomment>i18n-hint:  A name given to a track, appearing as its menu button.
-The translation should be short or else it will not display well.
-At most, about 11 Latin characters.
-Dropout is a loss of a short sequence of audio sample data from the
-recording</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recorded audio was lost at the labeled locations. Possible causes:
-
-Other applications are competing with Audacity for processor time
-
-You are saving directly to a slow external storage device
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Turn off dropout detection</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frequency Analysis</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Analiza frecvenței</translation>
-    </message>
-    <message>
-        <source>Spectrum</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Standard Autocorrelation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cuberoot Autocorrelation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enhanced Autocorrelation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cepstrum</source>
-        <extracomment>i18n-hint: This is a technical term, derived from the word
-* "spectrum".  Do not translate it unless you are sure you
-* know the correct technical word in your language.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s window</source>
-        <extracomment>i18n-hint: This refers to a "window function",
-* such as Hann or Rectangular, used in the
-* Frequency analyze dialog box.</extracomment>
-        <translation type="vanished">&amp;Potrivește în fereastră</translation>
-    </message>
-    <message>
-        <source>Linear frequency</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Log frequency</source>
-        <translation type="vanished">Frecvența de jurnalizare</translation>
-    </message>
-    <message>
-        <source>Scroll</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor:</source>
-        <translation type="vanished">&amp;Mută cursorul</translation>
-    </message>
-    <message>
-        <source>Peak:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Grids</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Algorithm:</source>
-        <translation type="vanished">L&amp;ogaritmic</translation>
-    </message>
-    <message>
-        <source>&amp;Size:</source>
-        <translation type="vanished">Dimensiune</translation>
-    </message>
-    <message>
-        <source>&amp;Export...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Function:</source>
-        <translation type="vanished">Acțiune</translation>
-    </message>
-    <message>
-        <source>&amp;Axis:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Replot...</source>
-        <translation type="vanished">Repetă...</translation>
-    </message>
-    <message>
-        <source>Not enough data selected.</source>
-        <translation type="vanished">Nu sunt selectate suficiente date.</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %d dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %.1f dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %.3f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>spectrum.txt</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Spectral Data As:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frequency (Hz)	Level (dB)</source>
-        <translation type="vanished">Frecvență (Hz)	Nivel (dB)</translation>
-    </message>
-    <message>
-        <source>Lag (seconds)	Frequency (Hz)	Level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Plot Spectrum...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save %s</source>
-        <translation type="vanished">Salvat %1</translation>
-    </message>
-    <message>
-        <source>Unable to save %s</source>
-        <translation type="vanished">Nu s-a putut salva fișierul de genuri muzicale.</translation>
-    </message>
-    <message>
-        <source>&amp;Manage History</source>
-        <translation type="vanished">&amp;Gestionare istoric</translation>
-    </message>
-    <message>
-        <source>Used Space</source>
-        <translation type="vanished">Spațiu pe disc</translation>
-    </message>
-    <message>
-        <source>&amp;Total space used</source>
-        <translation type="vanished">Spațiu &amp;total utilizat</translation>
-    </message>
-    <message>
-        <source>&amp;Undo levels available</source>
-        <translation type="vanished">Niveluri de an&amp;ulări disponibile</translation>
-    </message>
-    <message>
-        <source>&amp;Levels to discard</source>
-        <translation type="vanished">Nive&amp;luri de suprimat</translation>
-    </message>
-    <message>
-        <source>&amp;Discard</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Suprimă</translation>
-    </message>
-    <message>
-        <source>Clip&amp;board space used</source>
-        <translation type="vanished">Spațiu &amp;total utilizat</translation>
-    </message>
-    <message>
-        <source>D&amp;iscard</source>
-        <translation type="vanished">&amp;Suprimă</translation>
-    </message>
-    <message>
-        <source>&amp;Compact</source>
-        <translation type="vanished">&amp;Comandă</translation>
-    </message>
-    <message>
-        <source>Compacting actually freed %s of disk space.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;History</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the various editing steps
-that have been taken.</extracomment>
-        <translation type="vanished">&amp;Istoric...</translation>
-    </message>
-    <message>
-        <source>New Plugins</source>
-        <translation type="vanished">Nu s-a putut determina</translation>
-    </message>
-    <message>
-        <source>Incompatible plugin(s) found</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Manage Plugins</source>
-        <translation type="vanished">Nu s-a putut determina</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using "Manage Plugins". Otherwise, select "Continue".</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Journal recording failed</source>
-        <translation type="vanished">Eroare la deschiderea fișierului</translation>
-    </message>
-    <message>
-        <source>Edit Labels</source>
-        <translation type="vanished">Editare etichete</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Timpul de început</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Timpul de sfârșit</translation>
-    </message>
-    <message>
-        <source>Low Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Frecvență joasă:</translation>
-    </message>
-    <message>
-        <source>High Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Frecvență înaltă</translation>
-    </message>
-    <message>
-        <source>New...</source>
-        <translation type="vanished">Nou...</translation>
-    </message>
-    <message>
-        <source>Press F2 or double click to edit cell contents.</source>
-        <translation type="vanished">Apăsați F2 sau cublu clic pentru a edita conținutul celulei.</translation>
-    </message>
-    <message>
-        <source>Select a text file containing labels</source>
-        <translation type="vanished">Selectați un fișier text ce conține etichete...</translation>
-    </message>
-    <message>
-        <source>No labels to export.</source>
-        <translation type="vanished">Nicio etichetă de exportat.</translation>
-    </message>
-    <message>
-        <source>Export Labels As:</source>
-        <translation type="vanished">Exportă etichetele ca:</translation>
-    </message>
-    <message>
-        <source>New Label Track</source>
-        <translation type="vanished">Pistă nouă de etichete</translation>
-    </message>
-    <message>
-        <source>Enter track name</source>
-        <translation type="vanished">Introduceți numele pistei</translation>
-    </message>
-    <message>
-        <source>Exported Label Style:</source>
-        <translation type="vanished">Exportă etichetele ca:</translation>
-    </message>
-    <message>
-        <source>Audacity First Run</source>
-        <extracomment>i18n-hint: Title on a dialog indicating that this is the first
-* time Audacity has been run.</extracomment>
-        <translation type="vanished">Prima rulare a programului Audacity</translation>
-    </message>
-    <message>
-        <source>Choose Language for Audacity to use:</source>
-        <translation type="vanished">Alegeți limba care să fie folosită de Audacity:</translation>
-    </message>
-    <message>
-        <source>The language you have chosen, %s (%s), is not the same as the system language, %s (%s).</source>
-        <extracomment>i18n-hint: The %s's are replaced by translated and untranslated
-* versions of language names.</extracomment>
-        <translation type="vanished">Limba pe care ați ales-o, %1 (%2), nu este aceeași cu limba sistemului, %3 (%4).</translation>
-    </message>
-    <message>
-        <source>Error Converting Legacy Project File</source>
-        <translation type="vanished">Eroare la scrierea fișierului</translation>
-    </message>
-    <message>
-        <source>Converted a 1.0 project file to the new format.
-The old file has been saved as '%s'</source>
-        <translation type="vanished">Un proiect 1.0 a fost convertit în formatul nou.
-Fișierul vechi a fost salvat ca '%1'</translation>
-    </message>
-    <message>
-        <source>Opening Audacity Project</source>
-        <translation type="vanished">Se deschide proiectul Audacity</translation>
-    </message>
-    <message>
-        <source>The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Shortcuts have been removed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity Mixer%s</source>
-        <translation type="vanished">Prima rulare a programului Audacity</translation>
-    </message>
-    <message>
-        <source>Velocity</source>
-        <extracomment>i18n-hint: title of the MIDI Velocity slider
-i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Musical Instrument</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mute</source>
-        <extracomment>i18n-hint: This is on a button that will silence this track.</extracomment>
-        <translation type="vanished">Mut</translation>
-    </message>
-    <message>
-        <source>Solo</source>
-        <extracomment>i18n-hint: This is on a button that will silence all the other tracks.</extracomment>
-        <translation type="vanished">Solo</translation>
-    </message>
-    <message>
-        <source>Signal Level Meter</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Moved gain slider</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Moved velocity slider</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Moved pan slider</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Mixer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Effect or Command at %s failed to register:
-%s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="vanished">Dezactivat</translation>
-    </message>
-    <message>
-        <source>Enable</source>
-        <translation type="vanished">Activează</translation>
-    </message>
-    <message>
-        <source>Generator</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Analyzer</source>
-        <translation type="vanished">&amp;Analizare</translation>
-    </message>
-    <message>
-        <source>Tool</source>
-        <translation type="vanished">Instrument</translation>
-    </message>
-    <message>
-        <source>Manage Plugins</source>
-        <translation type="vanished">Nu s-a putut determina</translation>
-    </message>
-    <message>
-        <source>Native Audacity</source>
-        <translation type="vanished">Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Show:</source>
-        <translation type="vanished">Arată:</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="vanished">Tip</translation>
-    </message>
-    <message>
-        <source>C&amp;ategory:</source>
-        <translation type="vanished">C&amp;ategorie:</translation>
-    </message>
-    <message>
-        <source>Searc&amp;h:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Plugin</source>
-        <translation type="vanished">Nyquist</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Get more effects...</source>
-        <translation type="vanished">Preferințe...</translation>
-    </message>
-    <message>
-        <source>Searching for plugins</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Actual Rate: %d</source>
-        <translation type="vanished">Rata de biți actuală: %1</translation>
-    </message>
-    <message>
-        <source>Error opening sound device.
-Try changing the audio host, playback device and the project sample rate.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mismatched Sampling Rates</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Too few tracks are selected for recording at this sample rate.
-(Audacity requires two channels at the same sample rate for
-each stereo track)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Too Few Compatible Tracks Selected</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s.%d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recorded Audio</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Project check read faulty Sequence tags.</source>
-        <extracomment>i18n-hint: The audacity project file is XML and has 'tags' in it,
-rather like html tags &lt;something&gt;some stuff&lt;/something&gt;.
-This error message is about the tags that hold the sequence information.
-The error message is confusing to users in English, and could just say
-"Found problems with &lt;sequence&gt; when checking project file."</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Close project immediately with no changes</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you "Close project immediately" on further error alerts.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning - Problems Reading Sequence Tags</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Inspecting project file data</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing external audio file(s) 
-('aliased files'). There is no way for Audacity 
-to recover these files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence. 
-
-If you choose the third option, this will save the 
-project in its current state, unless you "Close 
-project immediately" on further error alerts.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Treat missing audio as silence (this session only)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning - Missing Aliased File(s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing alias (.auf) blockfile(s). 
-Audacity can fully regenerate these files 
-from the current audio in the project.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Regenerate alias summary files (safe and recommended)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Fill in silence for missing display data (this session only)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Close project immediately with no further changes</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning - Missing Alias Summary File(s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing audio data (.au) blockfile(s), 
-probably due to a bug, system crash, or accidental 
-deletion. There is no way for Audacity to recover 
-these missing files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning - Missing Audio Data Block File(s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-found %d orphan block file(s). These files are 
-unused by this project, but might belong to other projects. 
-They are doing no harm and are small.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Continue without deleting; ignore the extra files this session</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delete orphan files (permanent immediately)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning - Orphan Block File(s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cleaning up unused directories in project data</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project check found file inconsistencies during automatic recovery.
-
-Select 'Help &gt; Diagnostics &gt; Show Log...' to see details.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning: Problems in Automatic Recovery</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-As a result, some realtime effects may be missing.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to open a project created by Audacity version prior to 3.4.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot, but you must save it
-to preserve its contents.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project Recovered</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Projects cannot be saved to FAT drives.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Insufficient Disk Space</source>
-        <translation type="vanished">Spațiu pe disc</translation>
-    </message>
-    <message>
-        <source>The project size exceeds the available free space on the target disk.
-
-Please select a different disk with more free space.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Saved %s</source>
-        <translation type="vanished">Salvat %1</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the file name provided would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%sSave Project "%s" As...</source>
-        <translation type="vanished">Salvează proiectul „%1” ca...</translation>
-    </message>
-    <message>
-        <source>   Do you want to overwrite the project:
-"%s"?
-
-   If you select "Yes" the project
-"%s"
-   will be irreversibly overwritten.</source>
-        <extracomment>i18n-hint: In each case, %s is the name
-of the file being overwritten.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Overwrite Project Warning</source>
-        <extracomment>i18n-hint: Heading: A warning that a project is about to be overwritten.</extracomment>
-        <translation type="vanished">Suprascrie fișierele existente</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the selected project is open in another window.
-Please try again and select an original name.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%sSave Copy of Project "%s" As...</source>
-        <translation type="vanished">Salvează proiectul „%1” ca...</translation>
-    </message>
-    <message>
-        <source>Saving a copy must not overwrite an existing saved project.
-Please try again and select an original name.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Saving Copy of Project</source>
-        <translation type="vanished">Eroare la deschiderea fișierului sau a proiectului</translation>
-    </message>
-    <message>
-        <source>Select one or more files</source>
-        <translation type="vanished">Instrument de selecție</translation>
-    </message>
-    <message>
-        <source>%s is already open in another window.</source>
-        <translation type="vanished">%1 este deja deschis în altă fereastră.</translation>
-    </message>
-    <message>
-        <source>Error Opening Project</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You are trying to open an automatically created backup file.
-Doing this may result in severe data loss.
-
-Please open the actual Audacity project file instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning - Backup File Detected</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Opening File</source>
-        <translation type="vanished">Eroare la deschiderea fișierului</translation>
-    </message>
-    <message>
-        <source>File may be invalid or corrupted: 
-%s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Opening File or Project</source>
-        <translation type="vanished">Eroare la deschiderea fișierului sau a proiectului</translation>
-    </message>
-    <message>
-        <source>Project resides on FAT formatted drive.
-Copy it to another drive to open it.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A channel of a stereo track was missing.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample rates per channel.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample formats in channels.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with non-aligned content.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Project was recovered</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recover</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s %d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Name default name assigned to a clip on track import</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Imported '%s'</source>
-        <translation type="vanished">Importat '%1'</translation>
-    </message>
-    <message>
-        <source>Select stream(s) to import</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Music Information Retrieval</source>
-        <translation type="vanished">Informații despre compilare</translation>
-    </message>
-    <message>
-        <source>Analyzing imported audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed to import project</source>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Error Importing</source>
-        <translation type="vanished">Eroare la import</translation>
-    </message>
-    <message>
-        <source>Cannot import AUP3 format.  Use File &gt; Open instead</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Compact Project</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Compacting this project will free up disk space by removing unused bytes within the file.
-
-There is %s of free disk space and this project is currently using %s.
-
-If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.
-
-Do you want to continue?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Compacted project file</source>
-        <translation type="vanished">Nu se poate deschide fișierul de proiect</translation>
-    </message>
-    <message>
-        <source>Compact</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>[Project %02i] </source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity version %s</source>
-        <translation type="vanished">Bun venit la Audacity versiunea %1</translation>
-    </message>
-    <message>
-        <source>%sSave changes to %s?</source>
-        <translatorcomment>titlu</translatorcomment>
-        <extracomment>i18n-hint: The first %s numbers the project, the second %s is the project name.</extracomment>
-        <translation type="vanished">Salvarea modificărilor</translation>
-    </message>
-    <message>
-        <source>Save project before closing?</source>
-        <translation type="vanished">Doriți salvarea modificărilor înainte închidere ?</translation>
-    </message>
-    <message>
-        <source>Disk space remaining for recording: %s</source>
-        <translation type="vanished">Pe disc mai este spațiu pentru %1 minute de înregistrare.</translation>
-    </message>
-    <message>
-        <source>Less than 1 minute</source>
-        <translation type="vanished"/>
-    </message>
-    <message numerus="yes">
-        <source>%d hour</source>
-        <oldsource>%d hours</oldsource>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%d minute</source>
-        <oldsource>%d minutes</oldsource>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message>
-        <source>%s and %s.</source>
-        <extracomment>i18n-hint: A time in hours and minutes. Only translate the "and".</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Horizontal Scrollbar</source>
-        <translation type="vanished">Orizontal</translation>
-    </message>
-    <message>
-        <source>Vertical Scrollbar</source>
-        <translation type="vanished">Vertical</translation>
-    </message>
-    <message>
-        <source>No Effect</source>
-        <translation type="vanished">Efe&amp;ct</translation>
-    </message>
-    <message>
-        <source>Get more effects...</source>
-        <translation type="vanished">Preferințe...</translation>
-    </message>
-    <message>
-        <source>Analyze</source>
-        <translation type="vanished">&amp;Analizare</translation>
-    </message>
-    <message>
-        <source>%s (missing)</source>
-        <translation type="vanished">Lipsesc fișierele</translation>
-    </message>
-    <message>
-        <source>Effect %d</source>
-        <extracomment>i18n-hint: argument - position of the effect in the effect stack</extracomment>
-        <translation type="vanished">Efe&amp;ct</translation>
-    </message>
-    <message>
-        <source>Power</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Replace effect</source>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>Removed %s from %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">Etichete importate de la '%1'</translation>
-    </message>
-    <message>
-        <source>Remove %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">Elimină</translation>
-    </message>
-    <message>
-        <source>Replaced %s with %s</source>
-        <extracomment>i18n-hint: undo history,
-first and second parameters - realtime effect names</extracomment>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>Replace %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>Moved %s up in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Moved %s down in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Change effect order</source>
-        <translation type="vanished">Modifică viteza</translation>
-    </message>
-    <message>
-        <source>This plugin could not be loaded.
-It may have been deleted.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Plugin Error</source>
-        <translation type="vanished">Eroare LOF</translation>
-    </message>
-    <message>
-        <source>Added %s to %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Add %s</source>
-        <extracomment>i18n-hint: undo history record</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Realtime effects for %s</source>
-        <extracomment>i18n-hint: argument - track name</extracomment>
-        <translation type="vanished">Efectul aplicat: %1</translation>
-    </message>
-    <message>
-        <source>Realtime Effects</source>
-        <translation type="vanished">Efecte Vamp</translation>
-    </message>
-    <message>
-        <source>Master Effects</source>
-        <translation type="vanished">Pre&amp;vizualizare</translation>
-    </message>
-    <message>
-        <source>Applies to all tracks</source>
-        <translation type="vanished">&amp;Aliniază pistele</translation>
-    </message>
-    <message>
-        <source>Sound Activated Record</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Activation level (dB):</source>
-        <translation type="vanished">Nivel de activare (dB):</translation>
-    </message>
-    <message>
-        <source>Spectral Data Control Panel</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Brush Tool</source>
-        <translation type="vanished">Instrumentul precedent</translation>
-    </message>
-    <message>
-        <source>Spectral Brush</source>
-        <translation type="vanished">S&amp;pectral</translation>
-    </message>
-    <message>
-        <source>Brush radius</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Custom brush size</source>
-        <translation type="vanished">Nume pistă</translation>
-    </message>
-    <message>
-        <source>Auto-select overtones (beta)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable smart selection</source>
-        <translation type="vanished">Comută selecția &amp;spectrală</translation>
-    </message>
-    <message>
-        <source>Select the fundamental frequency
-and release the mouse</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Spectra&amp;l Selection Panel</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Applied effect to selection</source>
-        <translation type="vanished">Liniște în locul selecției audi&amp;o</translation>
-    </message>
-    <message>
-        <source>Artist Name</source>
-        <translation type="vanished">Nume artist</translation>
-    </message>
-    <message>
-        <source>Album Title</source>
-        <translation type="vanished">Titlu album</translation>
-    </message>
-    <message>
-        <source>Track Number</source>
-        <translation type="vanished">Număr pistă</translation>
-    </message>
-    <message>
-        <source>Genre</source>
-        <translation type="vanished">Gen muzical</translation>
-    </message>
-    <message>
-        <source>Use arrow keys (or ENTER key after editing) to navigate fields.</source>
-        <translation type="vanished">Folosiți tastele săgeți (sau tasta ENTER după editare) pentru a naviga între câmpuri.</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Genres</source>
-        <translation type="vanished">Genuri muzicale</translation>
-    </message>
-    <message>
-        <source>E&amp;dit...</source>
-        <translation type="vanished">E&amp;ditare...</translation>
-    </message>
-    <message>
-        <source>Rese&amp;t...</source>
-        <translation type="vanished">Rese&amp;tare...</translation>
-    </message>
-    <message>
-        <source>Template</source>
-        <translation type="vanished">Șablon</translation>
-    </message>
-    <message>
-        <source>&amp;Load...</source>
-        <translation type="vanished">Î&amp;ncarcă...</translation>
-    </message>
-    <message>
-        <source>Set De&amp;fault</source>
-        <translation type="vanished">Stabilește ca &amp;implicit</translation>
-    </message>
-    <message>
-        <source>Edit Genres</source>
-        <translation type="vanished">Editare genuri muzicale</translation>
-    </message>
-    <message>
-        <source>Unable to save genre file.</source>
-        <translation type="vanished">Nu s-a putut salva fișierul de genuri muzicale.</translation>
-    </message>
-    <message>
-        <source>Reset Genres</source>
-        <translation type="vanished">Resetare genuri muzicale</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to reset the genre list to defaults?</source>
-        <translation type="vanished">Sigur vreți ca lista de genuri muzicale să fie resetată la implicit ?</translation>
-    </message>
-    <message>
-        <source>Unable to open genre file.</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul de genuri muzicale.</translation>
-    </message>
-    <message>
-        <source>Load Metadata As:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Loading Metadata</source>
-        <translation type="vanished">Eroare la încărcarea metadatelor</translation>
-    </message>
-    <message>
-        <source>Save Metadata As:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Saving Tags File</source>
-        <translation type="vanished">Eroare la salvarea fișierului de etichete</translation>
-    </message>
-    <message>
-        <source>Edit Metadata Tags</source>
-        <translation type="vanished">Editare etichete metadate</translation>
-    </message>
-    <message>
-        <source>Metadata Tags</source>
-        <translation type="vanished">Editare etichete metadate</translation>
-    </message>
-    <message>
-        <source>&amp;Metadata Editor</source>
-        <translation type="vanished">Editare me&amp;tadate...</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save Timer Recording As</source>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>The selected file name could not be used
-for Timer Recording because it would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Saving Timer Recording Project</source>
-        <translation type="vanished">Eroare la deschiderea fișierului sau a proiectului</translation>
-    </message>
-    <message>
-        <source>Duration is zero. Nothing will be recorded.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error in Duration</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automatic Save path is invalid.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error in Automatic Save</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automatic Export path is invalid.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error in Automatic Export</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You may not have enough free disk space to complete this Timer Recording, based on your current settings.
-
-Do you wish to continue?
-
-Planned recording duration:   %s
-Recording time remaining on disk:   %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Timer Recording Disk Space Warning</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Current Project</source>
-        <translation type="vanished">Directorul curent:</translation>
-    </message>
-    <message>
-        <source>Recording start:</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Recording end:</source>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>Automatic Save enabled:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automatic Export enabled:</source>
-        <translation type="vanished">NU s-a putut exporta</translation>
-    </message>
-    <message>
-        <source>Action after Timer Recording:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity Timer Record Progress</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>All audio is muted.</source>
-        <translation type="vanished">Întregul audio este pus pe mut.</translation>
-    </message>
-    <message>
-        <source>Timer Recording stopped.</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Timer Recording completed.</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording saved: %s</source>
-        <translation type="vanished">Nivel de înregistrare</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error saving recording.</source>
-        <translation type="vanished">Eroare la deschiderea fișierului sau a proiectului</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording exported: %s</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error exporting recording.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled due to the error(s) noted above.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled as the recording was stopped.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Timer Recording</source>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>099 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for hours, minutes, and seconds</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>099 days 024 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for days, hours, minutes, and seconds</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start Date and Time</source>
-        <extracomment>i18n-hint: This string is used to configure the controls for times when the recording is
-* started and stopped. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-* displayed is minutes, and the 's' indicates that the third number displayed is seconds.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start Date</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>End Date and Time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>End Date</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automatic Save</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable &amp;Automatic Save?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save Project As:</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Select...</source>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source>Automatic Export</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable Automatic &amp;Export?</source>
-        <translation type="vanished">NU s-a putut exporta</translation>
-    </message>
-    <message>
-        <source>Export Project As:</source>
-        <translation type="vanished">Exportă etichetele ca:</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="vanished">Opțiuni...</translation>
-    </message>
-    <message>
-        <source>After Recording completes:</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Exit Audacity</source>
-        <translation type="vanished">Audacity</translation>
-    </message>
-    <message>
-        <source>Restart system</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Shutdown system</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Waiting to start recording at:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording duration:</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>Scheduled to stop at:</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting for Start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording will commence in:</source>
-        <extracomment>i18n-hint: "in" means after a duration of time,
-which is shown below this string</extracomment>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>%s in:</source>
-        <extracomment>i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
-or "Shutdown system", and
-"in" means after a duration of time, shown below this string</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording Saved:</source>
-        <translation type="vanished">Nivel de înregistrare</translation>
-    </message>
-    <message>
-        <source>Recording Exported:</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used with more than one open project.
-
-Please close any additional projects and try again.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used while you have unsaved changes.
-
-Please save or close this project and try again.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Timer Record...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Audio</source>
-        <translation type="vanished">Export audio</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Metadata...</source>
-        <translation type="vanished">Editare metadate</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <source>Exported Tags</source>
-        <translation type="vanished">Importat '%1'</translation>
-    </message>
-    <message>
-        <source>Track Panel</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(Esc to cancel)</source>
-        <extracomment>i18n-hint Esc is a key on the keyboard</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>TrackView</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Muted</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is muted. (The mute button is on.)</extracomment>
-        <translation type="vanished">Mut</translation>
-    </message>
-    <message>
-        <source> Soloed</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is soloed. (The Solo button is on.)</extracomment>
-        <translation type="vanished">Solo</translation>
-    </message>
-    <message>
-        <source> Selected</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is selected.</extracomment>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source> Sync Locked</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is shown with a sync-locked icon.
-The absence of a dash between Sync and Locked is deliberate -
-if present, Jaws reads it as "dash".</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Track %d</source>
-        <extracomment>i18n-hint: The %d is replaced by the number of the track.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Mute On</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Solo On</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Select On</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click and drag to adjust relative size of stereo tracks, double-click to make heights equal</source>
-        <translation type="vanished">Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo.</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize the track.</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Removed audio track(s)</source>
-        <translation type="vanished">Piste audio eliminate</translation>
-    </message>
-    <message>
-        <source>Remove Track</source>
-        <translation type="vanished">Elimină pista</translation>
-    </message>
-    <message>
-        <source>Removed track '%s'.</source>
-        <translation type="vanished">Pista '%1' a fost eliminată.</translation>
-    </message>
-    <message>
-        <source>Track Remove</source>
-        <translation type="vanished">Eliminare pistă</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Top</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Move Track to Top</source>
-        <translation type="vanished">Mută pista sus de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Bottom</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">Mută pista jos de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Move Track to Bottom</source>
-        <translation type="vanished">Mută pista jos de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Down</source>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Move Track Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Move Track Down</source>
-        <translation type="vanished">Mută pista mai &amp;jos</translation>
-    </message>
-    <message>
-        <source>Playing</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">În redare</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>Selection is too small to use voice key.</source>
-        <extracomment>i18n-hint: Voice key is an experimental/incomplete feature that
-is used to navigate in vocal recordings, to move forwards and
-backwards by words.  So 'key' is being used in the sense of an index.
-This error message means that you've selected too short
-a region of audio to be able to use this feature.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Calibration Results
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Energy                  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <extracomment>i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sign Changes        -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Direction Changes  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Calibration Complete</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>What's new in Audacity %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!&lt;/p&gt;</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Get free plugins &amp; sounds</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&lt;p&gt;Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users&lt;/p&gt;</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Welcome to Audacity!</source>
-        <translation type="vanished">Bun venit la Audacity !</translation>
-    </message>
-    <message>
-        <source>View tutorials</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Visit our forum</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Don't show this again at start up</source>
-        <translation type="vanished">Nu mai arăta din nou acest dialog la pornire</translation>
-    </message>
-    <message>
-        <source>%s: %s</source>
-        <extracomment>i18n-hint: An item name followed by a value, with appropriate separating punctuation</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FAIL</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Batch Command</source>
-        <translation type="vanished">Selectați comanda</translation>
-    </message>
-    <message>
-        <source>%s is not a parameter accepted by %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid value for parameter '%s': should be %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Compare Audio</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Compare Audio...</source>
-        <translation type="vanished">&amp;Exportă audio...</translation>
-    </message>
-    <message>
-        <source>Compares a range on two tracks.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Demo</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delay time (seconds):</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>Decay factor:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Does the demo action.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Drag</source>
-        <translation type="vanished">Tragere spre stânga</translation>
-    </message>
-    <message>
-        <source>Track 0</source>
-        <translation type="vanished">Pistă</translation>
-    </message>
-    <message>
-        <source>Track 1</source>
-        <translation type="vanished">Pistă</translation>
-    </message>
-    <message>
-        <source>Id:</source>
-        <extracomment>i18n-hint abbreviates "Identity" or "Identifier"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Window Name:</source>
-        <translation type="vanished">Dimensiune &amp;fereastră</translation>
-    </message>
-    <message>
-        <source>From X:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>From Y:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To X:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To Y:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Relative To:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move Mouse...</source>
-        <translation type="vanished">&amp;Obține mai multe...</translation>
-    </message>
-    <message>
-        <source>Drags mouse from one place to another.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Get Info</source>
-        <translation type="vanished">Informații</translation>
-    </message>
-    <message>
-        <source>Commands</source>
-        <translation type="vanished">&amp;Comandă</translation>
-    </message>
-    <message>
-        <source>Menus</source>
-        <translation type="vanished">Meniu</translation>
-    </message>
-    <message>
-        <source>Clips</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Envelopes</source>
-        <translation type="vanished">Instrument de anvelopă</translation>
-    </message>
-    <message>
-        <source>Boxes</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>JSON</source>
-        <extracomment>i18n-hint JavaScript Object Notation</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LISP</source>
-        <extracomment>i18n-hint name of a computer programming language</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Brief</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Get Info...</source>
-        <translation type="vanished">&amp;Obține mai multe...</translation>
-    </message>
-    <message>
-        <source>Gets information in JSON format.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Get Track Info</source>
-        <translation type="vanished">Mută pista mai &amp;jos</translation>
-    </message>
-    <message>
-        <source>Types:</source>
-        <translation type="vanished">Tip</translation>
-    </message>
-    <message>
-        <source>Gets track values as JSON.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation type="vanished">Comentarii</translation>
-    </message>
-    <message>
-        <source>_</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Help...</source>
-        <translation type="vanished">&amp;Ajutor</translation>
-    </message>
-    <message>
-        <source>Gives help on a command.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>For comments in a macro.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Import2</source>
-        <translation type="vanished">Importă</translation>
-    </message>
-    <message>
-        <source>File Name:</source>
-        <translation type="vanished">Tipul de compilare:</translation>
-    </message>
-    <message>
-        <source>Export2</source>
-        <translation type="vanished">Exportă...</translation>
-    </message>
-    <message>
-        <source>Number of Channels:</source>
-        <translation type="vanished">De câte ori să se repete:</translation>
-    </message>
-    <message>
-        <source>Import...</source>
-        <translation type="vanished">Importă...</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="vanished">Exportă...</translation>
-    </message>
-    <message>
-        <source>Imports from a file.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Exports to a file.</source>
-        <translation type="vanished">Exportă &amp;multiplu...</translation>
-    </message>
-    <message>
-        <source>Builtin Commands</source>
-        <translation type="vanished">Selectați comanda</translation>
-    </message>
-    <message>
-        <source>Provides builtin commands to Audacity</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unknown built-in command name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Text:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Message...</source>
-        <translation type="vanished">&amp;Reeșantionează...</translation>
-    </message>
-    <message>
-        <source>Echos a message.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open Project2</source>
-        <translation type="vanished">Directorul curent:</translation>
-    </message>
-    <message>
-        <source>Add to History</source>
-        <translation type="vanished">Istoric de anulări</translation>
-    </message>
-    <message>
-        <source>Save Project2</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Save Copy</source>
-        <translation type="vanished">Etichetă</translation>
-    </message>
-    <message>
-        <source>Save Log</source>
-        <translation type="vanished">Salvează jurnalul în:</translation>
-    </message>
-    <message>
-        <source>Clear Log</source>
-        <translation type="vanished">&amp;Curăță</translation>
-    </message>
-    <message>
-        <source>Open Project...</source>
-        <translation type="vanished">Deschide &amp;recente...</translation>
-    </message>
-    <message>
-        <source>Save Project...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Opens a project.</source>
-        <translation type="vanished">Se deschide proiectul Audacity</translation>
-    </message>
-    <message>
-        <source>Saves a project.</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Saves a copy of current project.</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Saves the log contents.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Clears the log contents.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Get Preference</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation type="vanished">Nume</translation>
-    </message>
-    <message>
-        <source>Set Preference</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Value:</source>
-        <translation type="vanished">Valoare</translation>
-    </message>
-    <message>
-        <source>Reload</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Get Preference...</source>
-        <translation type="vanished">Preferințe...</translation>
-    </message>
-    <message>
-        <source>Set Preference...</source>
-        <translation type="vanished">Preferințe...</translation>
-    </message>
-    <message>
-        <source>Gets the value of a single preference.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sets the value of a single preference.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Time</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>Project Start</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Project End</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Selection Start</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Selection End</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>Start Time:</source>
-        <translation type="vanished">Timpul de început</translation>
-    </message>
-    <message>
-        <source>End Time:</source>
-        <translation type="vanished">Timpul de sfârșit</translation>
-    </message>
-    <message>
-        <source>Select Frequencies</source>
-        <translation type="vanished">Liniște</translation>
-    </message>
-    <message>
-        <source>High:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Low:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Tracks</source>
-        <translation type="vanished">&amp;Ordonează pistele</translation>
-    </message>
-    <message>
-        <source>Set</source>
-        <extracomment>i18n-hint verb, imperative</extracomment>
-        <translation type="vanished">Stabilește</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>First Track:</source>
-        <translation type="vanished">&amp;Ordonează pistele</translation>
-    </message>
-    <message>
-        <source>Track Count:</source>
-        <translation type="vanished">Pistă de etichete</translation>
-    </message>
-    <message>
-        <source>Mode:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Time...</source>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source>Select Frequencies...</source>
-        <translation type="vanished">Liniște</translation>
-    </message>
-    <message>
-        <source>Select Tracks...</source>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source>Selects a time range.</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>Selects a frequency range.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selects a range of tracks.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Selects Audio.</source>
-        <translation type="vanished">Selectați gazda audio</translation>
-    </message>
-    <message>
-        <source>Set Clip</source>
-        <translation type="vanished">Instrumentul următor</translation>
-    </message>
-    <message>
-        <source>Color 0</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Color 1</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Color 2</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Color 3</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start:</source>
-        <translation type="vanished">Început</translation>
-    </message>
-    <message>
-        <source>Set Clip...</source>
-        <translation type="vanished">Instrumentul următor</translation>
-    </message>
-    <message>
-        <source>Sets various values for a clip.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Envelope</source>
-        <translation type="vanished">Nivel</translation>
-    </message>
-    <message>
-        <source>Time:</source>
-        <translation type="vanished">Timpul de sfârșit</translation>
-    </message>
-    <message>
-        <source>Edited Envelope</source>
-        <translation type="vanished">Nivel</translation>
-    </message>
-    <message>
-        <source>Envelope</source>
-        <extracomment>i18n-hint: The envelope is a curve that controls the audio loudness.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Envelope...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sets an envelope point position.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Label</source>
-        <translation type="vanished">Șterge etic&amp;heta</translation>
-    </message>
-    <message>
-        <source>Label Index</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>End:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selected</source>
-        <translation type="vanished">Selectare</translation>
-    </message>
-    <message>
-        <source>Edited Label</source>
-        <translation type="vanished">Editare etichete</translation>
-    </message>
-    <message>
-        <source>Set Label...</source>
-        <translation type="vanished">&amp;Editare etichete...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a label.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Project</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Rate:</source>
-        <translation type="vanished">Stabilește rata</translation>
-    </message>
-    <message>
-        <source>Resize:</source>
-        <translation type="vanished">Dimensiune</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation type="vanished">Lățime de bandă:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation type="vanished">Dreapta</translation>
-    </message>
-    <message>
-        <source>Set Project...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a project.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Track Status</source>
-        <translation type="vanished">la începutul pi&amp;stei</translation>
-    </message>
-    <message>
-        <source>Unnamed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Focused</source>
-        <translation type="vanished">În pauză</translation>
-    </message>
-    <message>
-        <source>Set Track Audio</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Gain:</source>
-        <translatorcomment>hm ? sau Amplificare ?</translatorcomment>
-        <translation type="vanished">Câștig</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals</source>
-        <translation type="vanished">&amp;Ordonează pistele</translation>
-    </message>
-    <message>
-        <source>Times 2</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>HalfWave</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Display:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Scale:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>VZoom:</source>
-        <translation type="vanished">Zoom</translation>
-    </message>
-    <message>
-        <source>VZoom Top:</source>
-        <translation type="vanished">Zoom</translation>
-    </message>
-    <message>
-        <source>VZoom Bottom:</source>
-        <translation type="vanished">Instrument de zoom</translation>
-    </message>
-    <message>
-        <source>Use Spectral Prefs</source>
-        <translation type="vanished">Presetări de utilizatori</translation>
-    </message>
-    <message>
-        <source>Spectral Select</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Sche&amp;me:</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint Scheme refers to a color scheme for spectrogram colors</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Track</source>
-        <translation type="vanished">Pistă nouă</translation>
-    </message>
-    <message>
-        <source>Set Track Status...</source>
-        <translation type="vanished">la începutul pi&amp;stei</translation>
-    </message>
-    <message>
-        <source>Set Track Audio...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Track Visuals...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Track...</source>
-        <translation type="vanished">&amp;Ordonează pistele</translation>
-    </message>
-    <message>
-        <source>Sets various values for a track.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Long Message</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Amplification (dB):</source>
-        <translation type="vanished">Amplificare (dB):</translation>
-    </message>
-    <message>
-        <source>Amplification dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;New Peak Amplitude (dB):</source>
-        <translation type="vanished">Amplificator</translation>
-    </message>
-    <message>
-        <source>Allo&amp;w clipping</source>
-        <translation type="vanished">Arată li&amp;mitarea</translation>
-    </message>
-    <message>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified "control" track reaches a particular level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>db</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Duck &amp;amount:</source>
-        <translation type="vanished">Pistă de etichete</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ximum pause:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Outer fade &amp;down length:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Outer fade &amp;up length:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Inner fade d&amp;own length:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Inner &amp;fade up length:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Threshold:</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Preview not available</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Effect Parameters</source>
-        <translation type="vanished">&amp;Editare parametri</translation>
-    </message>
-    <message>
-        <source>Import Effect Parameters</source>
-        <translation type="vanished">&amp;Editare parametri</translation>
-    </message>
-    <message>
-        <source>%s: is not a valid presets file.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">Nu s-a putut încărca fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>%s: is for a different Effect, Generator or Analyzer.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tone controls</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Bass (dB):</source>
-        <translation type="vanished">Bași (dB):</translation>
-    </message>
-    <message>
-        <source>Ba&amp;ss (dB):</source>
-        <translation type="vanished">Bași (dB):</translation>
-    </message>
-    <message>
-        <source>Bass</source>
-        <translation type="vanished">Bași</translation>
-    </message>
-    <message>
-        <source>&amp;Treble (dB):</source>
-        <translation type="vanished">Înal&amp;te (dB):</translation>
-    </message>
-    <message>
-        <source>Treble</source>
-        <translation type="vanished">Înalte</translation>
-    </message>
-    <message>
-        <source>&amp;Volume (dB):</source>
-        <translation type="vanished">Înal&amp;te (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Link Volume control to Tone controls</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Change Pitch</source>
-        <translation type="vanished">Modifică înălțimea sunetului</translation>
-    </message>
-    <message>
-        <source>Estimated Start Pitch: %s%d (%.3f Hz)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">de la</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">de la</translation>
-    </message>
-    <message>
-        <source>from Octave</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>to Octave</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Semitones (half-steps)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Semitones (half-steps):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>from (Hz)</source>
-        <translation type="vanished">de la (Hz)</translation>
-    </message>
-    <message>
-        <source>f&amp;rom</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>to (Hz)</source>
-        <translation type="vanished">la (Hz)</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>Percent C&amp;hange:</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Schimbare în procente:</translation>
-    </message>
-    <message>
-        <source>Percent Change</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Use high quality stretching (slow)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>33⅓</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>45</source>
-        <translation type="vanished">4</translation>
-    </message>
-    <message>
-        <source>78</source>
-        <translation type="vanished">8</translation>
-    </message>
-    <message>
-        <source>&amp;Speed Multiplier:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Standard Vinyl rpm:</source>
-        <extracomment>i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
-"vinyl" refers to old-fashioned phonograph records</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>From rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">de la</translation>
-    </message>
-    <message>
-        <source>To rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>Selection Length</source>
-        <translation type="vanished">Lungimea selecției</translation>
-    </message>
-    <message>
-        <source>C&amp;urrent Length:</source>
-        <translation type="vanished">Lungimea curentă</translation>
-    </message>
-    <message>
-        <source>Current length of selection.</source>
-        <translation type="vanished">Lungimea curentă a selecției.</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">de la</translation>
-    </message>
-    <message>
-        <source>&amp;New Length:</source>
-        <translation type="vanished">Lungime nouă</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>Beats per minute</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Beats per minute, from</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">de la</translation>
-    </message>
-    <message>
-        <source>Beats per minute, to</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>Length (seconds)</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">de la</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">către</translation>
-    </message>
-    <message>
-        <source>Length in seconds from %s, to</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>Click Removal</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click Removal is designed to remove clicks on audio tracks</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selection must be larger than %d samples.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Threshold (lower is more sensitive):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Max &amp;Spike Width (higher is more sensitive):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Max Spike Width</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Reduces "dynamic range", or differences between loud and quiet parts.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Contrast Analyzer, for measuring RMS volume differences between two selections of audio.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>End</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Sfârșit</translation>
-    </message>
-    <message>
-        <source>Volume    </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Foreground:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Foreground start time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Foreground end time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Measure selection</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Background:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Background start time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Background end time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mea&amp;sure selection</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Result</source>
-        <translation type="vanished">Rezultat</translation>
-    </message>
-    <message>
-        <source>Co&amp;ntrast Result:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>R&amp;eset</source>
-        <translation type="vanished">R&amp;eset</translation>
-    </message>
-    <message>
-        <source>&amp;Difference:</source>
-        <translation type="vanished">&amp;Diferență:</translation>
-    </message>
-    <message>
-        <source>RMS = %s.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s dB</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>zero</source>
-        <translation type="vanished">zero</translation>
-    </message>
-    <message>
-        <source>indeterminate</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.2f dB RMS</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-* RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>Infinite dB difference</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Difference is indeterminate.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Difference = %.2f RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Difference = infinite RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Foreground level too high</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Background level too high</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Background higher than foreground</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WCAG2 Pass</source>
-        <extracomment>i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WCAG2 Fail</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Current difference</source>
-        <extracomment>i18n-hint: i.e. difference in loudness at the moment.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Measured foreground level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.2f dB</source>
-        <extracomment>i18n-hint: short form of 'decibels'</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>No foreground measured</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Foreground not yet measured</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Measured background level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No background measured</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Background not yet measured</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Contrast Result As:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WCAG 2.0 Success Criteria 1.4.7 Contrast Results</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Filename = %s.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Foreground</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Time started = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Time ended = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Background</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Results</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Pass</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Fail</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Data gathered</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%d %s %02d %02dh %02dm %02ds</source>
-        <extracomment>i18n-hint: day of month, month, year, hour, minute, second</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Contrast Analysis (WCAG 2 compliance)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Contrast...</source>
-        <translation type="vanished">Contrast...</translation>
-    </message>
-    <message>
-        <source>Upper Threshold</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Noise Floor</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Parameter 1</source>
-        <translation type="vanished">&amp;Parametri</translation>
-    </message>
-    <message>
-        <source>Parameter 2</source>
-        <translation type="vanished">&amp;Parametri</translation>
-    </message>
-    <message>
-        <source>Number of repeats</source>
-        <translation type="vanished">De câte ori să se repete:</translation>
-    </message>
-    <message>
-        <source>Distortion type:</source>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>DC blocking filter</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Threshold controls</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Parameter controls</source>
-        <translation type="vanished">&amp;Parametri</translation>
-    </message>
-    <message>
-        <source>Clipping level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Drive</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Make-up Gain</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Clipping threshold</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Hardness</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Distortion amount</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Output level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Repeat processing</source>
-        <translation type="vanished">Repetă %1</translation>
-    </message>
-    <message>
-        <source>Harmonic brightness</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Levelling fine adjustment</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Degree of Levelling</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>dB Limit</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Wet level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Residual level</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(Not Used):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(-100 to 0 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(-80 to -20 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(0 to 100):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(0 to 5):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>DTMF sequence empty.
-Check ALL settings for this effect.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>DTMF &amp;sequence:</source>
-        <translation type="vanished">Liniște</translation>
-    </message>
-    <message>
-        <source>&amp;Amplitude (0-1):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Duration:</source>
-        <translation type="vanished">&amp;Durată:</translation>
-    </message>
-    <message>
-        <source>&amp;Tone/silence ratio:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Duty cycle:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.1f %%</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tone duration:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silence duration:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%0.f ms</source>
-        <extracomment>i18n-hint milliseconds</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>I&amp;nput</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show input</source>
-        <extracomment>i18n-hint: show input on a graph</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>O&amp;utput</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A&amp;ctual compression</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Show actual compression</source>
-        <extracomment>i18n-hint: show actual compression on a graph</extracomment>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Tar&amp;get compression</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Show target compression</source>
-        <extracomment>i18n-hint: show target compression on a graph</extracomment>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Compression curve</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Smoothing</source>
-        <translation type="vanished">Ordonează după timp</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (dB)</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up gain (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Make-up target (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Knee &amp;width (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rati&amp;o:</source>
-        <translation type="vanished">&amp;Durată:</translation>
-    </message>
-    <message>
-        <source>&amp;Lookahead (ms)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Attac&amp;k (ms)</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>&amp;Release (ms)</source>
-        <translation type="vanished">Repetat de %1 ori</translation>
-    </message>
-    <message>
-        <source>Actual Compression</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Target Compression</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>awaiting playback</source>
-        <translation type="vanished">&amp;Pornește redarea</translation>
-    </message>
-    <message>
-        <source>&amp;Delay time (seconds):</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>D&amp;ecay factor:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Applied command: %s</source>
-        <translation type="vanished">Efectul aplicat: %1</translation>
-    </message>
-    <message>
-        <source>Select Preset</source>
-        <translation type="vanished">Presetări de fabrică</translation>
-    </message>
-    <message>
-        <source>&amp;Preset:</source>
-        <translation type="vanished">Apăsați</translation>
-    </message>
-    <message>
-        <source>User Presets</source>
-        <translation type="vanished">Presetări de utilizatori</translation>
-    </message>
-    <message>
-        <source>Factory Presets</source>
-        <translation type="vanished">Presetări de fabrică</translation>
-    </message>
-    <message>
-        <source>Current Settings</source>
-        <translation type="vanished">Lungimea curentă</translation>
-    </message>
-    <message>
-        <source>Factory Defaults</source>
-        <translation type="vanished">Stabilește ca &amp;implicit</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following effect failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Effect failed to initialize</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Attempting to initialize the following command failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Command failed to initialize</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Previewing</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Manage presets and options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Presets &amp;&amp; settings</source>
-        <translation type="vanished">Lungimea curentă</translation>
-    </message>
-    <message>
-        <source>Preview effect</source>
-        <translation type="vanished">Pre&amp;vizualizare</translation>
-    </message>
-    <message>
-        <source>&amp;Apply</source>
-        <translation type="vanished">&amp;Aplică</translation>
-    </message>
-    <message>
-        <source>Save Preset...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Defaults</source>
-        <translation type="vanished">Implicite</translation>
-    </message>
-    <message>
-        <source>Options...</source>
-        <translation type="vanished">Opțiuni...</translation>
-    </message>
-    <message>
-        <source>Type: %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Name: %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Version: %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Vendor: %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Description: %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Are you sure you want to delete "%s"?</source>
-        <translation type="vanished">Sigur vreți să ștergeți „%1” ?</translation>
-    </message>
-    <message>
-        <source>Preset name:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You must specify a name</source>
-        <translation type="vanished">Mai întâi trebuie să selectați o pistă.</translation>
-    </message>
-    <message>
-        <source>Preset already exists.
-
-Replace?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Effect Unavailable</source>
-        <translation type="vanished">Previzualizare efecte</translation>
-    </message>
-    <message>
-        <source>Benchmark times:
-Original: %s
-Default Segmented: %s
-Default Threaded: %s
-SSE: %s
-SSE Threaded: %s
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%d Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%g kHz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%gk</source>
-        <extracomment>i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%d dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error Loading EQ Curves</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Manage Curves List</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Manage Curves</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Curves</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Curve Name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>D&amp;elete...</source>
-        <translation type="vanished">Șt&amp;erge...</translation>
-    </message>
-    <message>
-        <source>&amp;Get More...</source>
-        <translation type="vanished">&amp;Obține mai multe...</translation>
-    </message>
-    <message>
-        <source>De&amp;faults</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rename 'unnamed' to save a new entry.
-'OK' saves all changes, 'Cancel' doesn't.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'unnamed' always stays at the bottom of the list</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'unnamed' is special</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rename '%s' to...</source>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>Rename...</source>
-        <translation type="vanished">Redenumește...</translation>
-    </message>
-    <message>
-        <source>Rename '%s'</source>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>Name is the same as the original one</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Same name</source>
-        <translation type="vanished">Același nume</translation>
-    </message>
-    <message>
-        <source>Overwrite existing curve '%s'?</source>
-        <translation type="vanished">Suprascrie curba existentă '</translation>
-    </message>
-    <message>
-        <source>Curve exists</source>
-        <translation type="vanished">Curba există</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Can't delete 'unnamed'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delete '%s'?</source>
-        <translation type="vanished">Șterge '</translation>
-    </message>
-    <message>
-        <source>Delete %d items?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve, it is special.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Choose an EQ curve file</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export EQ curves as...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You cannot export 'unnamed' curve, it is special.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cannot Export 'unnamed'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%d curves exported to %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Curves exported</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No curves exported</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To use this filter curve in a macro, please choose a new name for it.
-Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Filter Curve EQ needs a different name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>+ dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Max dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Min dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>- dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;EQ Type:</source>
-        <translation type="vanished">Tip</translation>
-    </message>
-    <message>
-        <source>Draw Curves</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Draw</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Graphic</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Interpolation type</source>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Linear Frequency Scale</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Li&amp;near Frequency Scale</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Length of &amp;Filter:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Length of Filter</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Select Curve:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Curve</source>
-        <translation type="vanished">Presetări de fabrică</translation>
-    </message>
-    <message>
-        <source>S&amp;ave/Manage Curves...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Fla&amp;tten</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Invert</source>
-        <translation type="vanished">&amp;Inversează</translation>
-    </message>
-    <message>
-        <source>Show grid lines</source>
-        <translation type="vanished">Arată fișierele ascunse</translation>
-    </message>
-    <message>
-        <source>Show g&amp;rid lines</source>
-        <translation type="vanished">Arată fișierele ascunse</translation>
-    </message>
-    <message>
-        <source>Requested curve not found, using 'unnamed'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Curve not found</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%lld of %lld</source>
-        <comment>find clipping</comment>
-        <extracomment>i18n-hint: Two numbers are substituted; the second is the
-size of a set, the first is the size of a subset, and not
-understood as an ordinal (i.e., not meaning "first", or
-"second", etc.)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Start threshold (samples):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>St&amp;op threshold (samples):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%3d dB</source>
-        <extracomment>i18n-hint: usually leave this as is as dB doesn't get translated</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.2f secs</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.1f secs</source>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.0f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.1f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ratio %.0f to 1</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ratio %.1f to 1</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Noise Floor:</source>
-        <translation type="vanished">Zgomot:</translation>
-    </message>
-    <message>
-        <source>&amp;Ratio:</source>
-        <translation type="vanished">&amp;Durată:</translation>
-    </message>
-    <message>
-        <source>&amp;Attack Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>Attack Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>R&amp;elease Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">Repetat de %1 ori</translation>
-    </message>
-    <message>
-        <source>Release Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">Repetat de %1 ori</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke-up gain for 0 dB after compressing</source>
-        <extracomment>i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>C&amp;ompress based on Peaks</source>
-        <extracomment>i18n-hint: "Compress" here means reduce variations of sound volume,
-NOT related to file-size compression; Peaks means extremes in volume</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Threshold %d dB</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Noise Floor %d dB</source>
-        <translation type="vanished">Zgomot:</translation>
-    </message>
-    <message>
-        <source>Attack Time %.2f secs</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>Release Time %.1f secs</source>
-        <translation type="vanished">Repetat de %1 ori</translation>
-    </message>
-    <message>
-        <source>perceived loudness</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Normalizing Loudness...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Normalize</source>
-        <translation type="vanished">Zoom &amp;normal</translation>
-    </message>
-    <message>
-        <source>Loudness LUFS</source>
-        <extracomment>i18n-hint: LUFS is a particular method for measuring loudnesss</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LUFS</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>RMS dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Normalize &amp;stereo channels independently</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Treat mono as dual-mono (recommended)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(Maximum 0dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>White</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "white noise" having a uniform spectrum</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pink</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "pink noise" having a spectrum with more power
-in low frequencies</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Brownian</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: a kind of noise spectrum also known as "red" or "brown"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Noise type:</source>
-        <translation type="vanished">Tipul de compilare:</translation>
-    </message>
-    <message>
-        <source>Old</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Noise Reduction</source>
-        <translation type="vanished">Reducere de zgomot</translation>
-    </message>
-    <message>
-        <source>Steps per block are too few for the window types.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Steps per block cannot exceed the window size.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Median method is not implemented for more than four steps per window.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Warning: window types are not the same as for profiling.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Noise reduction (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Sensitivity:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Attac&amp;k time (secs):</source>
-        <translation type="vanished">Timpul de întârziere (secunde):</translation>
-    </message>
-    <message>
-        <source>Attack time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>R&amp;elease time (secs):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Release time</source>
-        <translation type="vanished">Repetat de %1 ori</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency smoothing (bands):</source>
-        <translation type="vanished">N&amp;etezire de frecvență (Hz):</translation>
-    </message>
-    <message>
-        <source>Sensiti&amp;vity (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Old Sensitivity</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select a few seconds of just noise so Audacity knows what to filter out,
-then click Get Noise Profile:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Get Noise Profile</source>
-        <translation type="vanished">Obține profilul de z&amp;gomot</translation>
-    </message>
-    <message>
-        <source>Select all of the audio you want filtered, choose how much noise you want
-filtered out, and then click 'OK' to reduce noise.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Noise:</source>
-        <translation type="vanished">Zgomot:</translation>
-    </message>
-    <message>
-        <source>Re&amp;duce</source>
-        <extracomment>i18n-hint: Translate differently from "Residue" !</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Isolate</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Resid&amp;ue</source>
-        <extracomment>i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Advanced Settings</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>&amp;Window types:</source>
-        <translation type="vanished">Dimensiune &amp;fereastră</translation>
-    </message>
-    <message>
-        <source>Window si&amp;ze:</source>
-        <translation type="vanished">Dimensiune &amp;fereastră</translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="vanished">8</translation>
-    </message>
-    <message>
-        <source>16</source>
-        <translation type="vanished">16</translation>
-    </message>
-    <message>
-        <source>32</source>
-        <translation type="vanished">32</translation>
-    </message>
-    <message>
-        <source>64</source>
-        <translation type="vanished">64</translation>
-    </message>
-    <message>
-        <source>128</source>
-        <translation type="vanished">128</translation>
-    </message>
-    <message>
-        <source>256</source>
-        <translation type="vanished">256</translation>
-    </message>
-    <message>
-        <source>512</source>
-        <translation type="vanished">512</translation>
-    </message>
-    <message>
-        <source>1024</source>
-        <translation type="vanished">1024</translation>
-    </message>
-    <message>
-        <source>2048 (default)</source>
-        <translation type="vanished">256 - implicit</translation>
-    </message>
-    <message>
-        <source>4096</source>
-        <translation type="vanished">4096</translation>
-    </message>
-    <message>
-        <source>8192</source>
-        <translation type="vanished">8192</translation>
-    </message>
-    <message>
-        <source>16384</source>
-        <translation type="vanished">16384</translation>
-    </message>
-    <message>
-        <source>S&amp;teps per window:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>4 (default)</source>
-        <translation type="vanished">Zoom implicit</translation>
-    </message>
-    <message>
-        <source>Discrimination &amp;method:</source>
-        <translation type="vanished">&amp;Metodă de discriminare</translation>
-    </message>
-    <message>
-        <source>Removing DC offset and Normalizing...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Removing DC offset...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Normalizing without removing DC offset...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Not doing anything...
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Normalize peak amplitude to   </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Peak amplitude dB</source>
-        <translation type="vanished">Amplificator</translation>
-    </message>
-    <message>
-        <source>N&amp;ormalize stereo channels independently</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Paulstretch is only for an extreme time-stretch or "stasis" effect</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Stretch Factor:</source>
-        <extracomment>i18n-hint: This is how many times longer the sound will be, e.g. applying
-* the effect to a 1-second sample, with the default Stretch Factor of 10.0
-* will give an (approximately) 10 second sound</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Time Resolution (seconds):</source>
-        <translation type="vanished">Reducere de zgomot</translation>
-    </message>
-    <message>
-        <source>Audio selection too short to preview.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to Preview.
-
-For the current audio selection, the maximum
-'Time Resolution' is %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The 'Time Resolution' is too long for the selection.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Stages:</source>
-        <translation type="vanished">Etape:</translation>
-    </message>
-    <message>
-        <source>Stages</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Dry/Wet:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dry Wet</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LFO Freq&amp;uency (Hz):</source>
-        <translation type="vanished">N&amp;etezire de frecvență (Hz):</translation>
-    </message>
-    <message>
-        <source>LFO frequency in hertz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LFO Sta&amp;rt Phase (deg.):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LFO start phase in degrees</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dept&amp;h:</source>
-        <translation type="vanished">Profunzime:</translation>
-    </message>
-    <message>
-        <source>Depth in percent</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Feedbac&amp;k (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Feedback in percent</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Output gain (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Output gain (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s - %s</source>
-        <extracomment>i18n-hint: First %s is an effect name, second is a track name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Repair works by using audio data outside the selection region.
-
-Please select a region that has audio touching at least one side of it.
-
-The more surrounding audio, the better it performs.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Number of repeats to add:</source>
-        <translation type="vanished">De câte ori să se repete:</translation>
-    </message>
-    <message>
-        <source>Current selection length: dd:hh:mm:ss</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>New selection length: dd:hh:mm:ss</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Current selection length: %s</source>
-        <translation type="vanished">Lungimea curentă</translation>
-    </message>
-    <message>
-        <source>New selection length: %s</source>
-        <translation type="vanished">Lungimea curentă</translation>
-    </message>
-    <message>
-        <source>Warning: No repeats.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Adds ambience or a "hall effect"</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Room Size (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Pre-delay (ms):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rever&amp;berance (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Da&amp;mping (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tone &amp;Low (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tone &amp;High (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Wet &amp;Gain (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dr&amp;y Gain (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Stereo Wid&amp;th (%):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Wet O&amp;nly</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Filter Type:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>O&amp;rder:</source>
-        <extracomment>i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Passband Ripple:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Passband Ripple (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Subtype:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cutoff (Hz)</source>
-        <translation type="vanished">la (Hz)</translation>
-    </message>
-    <message>
-        <source>C&amp;utoff:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation (dB)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Align MIDI to Audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frame Period:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frame Period</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Window Size:</source>
-        <translation type="vanished">Dimensiune &amp;fereastră</translation>
-    </message>
-    <message>
-        <source>Window Size</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Force Final Alignment</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ignore Silence at Beginnings and Endings</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silence Threshold:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silence Threshold</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Presmooth Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Ordonează după timp</translation>
-    </message>
-    <message>
-        <source>Presmooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Line Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Timpul de sfârșit</translation>
-    </message>
-    <message>
-        <source>Line Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Timpul de sfârșit</translation>
-    </message>
-    <message>
-        <source>Smooth Time:</source>
-        <translation type="vanished">Ordonează după timp</translation>
-    </message>
-    <message>
-        <source>Smooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Ordonează după timp</translation>
-    </message>
-    <message>
-        <source>Use Defaults</source>
-        <translation type="vanished">Stabilește ca &amp;implicit</translation>
-    </message>
-    <message>
-        <source>Restore Defaults</source>
-        <translation type="vanished">Stabilește ca &amp;implicit</translation>
-    </message>
-    <message>
-        <source>%.3f</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>generator</comment>
-        <extracomment>i18n-hint: noun</extracomment>
-        <translation type="vanished">Liniște</translation>
-    </message>
-    <message>
-        <source>Stereo To Mono</source>
-        <translation type="vanished">Stereo la mono</translation>
-    </message>
-    <message>
-        <source>Converts stereo tracks to mono</source>
-        <translation type="vanished">Pistă stereo la &amp;mono</translation>
-    </message>
-    <message>
-        <source>Mixing down to mono</source>
-        <translation type="vanished">Divizează stereo în mono „%1”</translation>
-    </message>
-    <message>
-        <source>Sliding Stretch</source>
-        <translation type="vanished">Liniște în locul audio</translation>
-    </message>
-    <message>
-        <source>Initial Tempo Change (%)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Final Tempo Change (%)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Initial Pitch Shift</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(&amp;semitones) [-12 to 12]:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(%) [-50 to 100]:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Final Pitch Shift</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(s&amp;emitones) [-12 to 12]:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>waveform</comment>
-        <translation type="vanished">Triunghi</translation>
-    </message>
-    <message>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Waveform:</source>
-        <translation type="vanished">Nive&amp;l (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency (Hz):</source>
-        <translation type="vanished">N&amp;etezire de frecvență (Hz):</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz Start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Frequency Hertz End</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Amplitude Start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Amplitude End</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>I&amp;nterpolation:</source>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Truncate Silence</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Detect Silence</source>
-        <translation type="vanished">Detectează liniștea</translation>
-    </message>
-    <message>
-        <source>Tr&amp;uncate to:</source>
-        <translation type="vanished">Trunchiază la:</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress to:</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Trunc&amp;ate tracks independently</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save VST Preset As:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Standard VST bank file</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Standard VST program file</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity VST preset file</source>
-        <translation type="vanished">Fișiere de proiect Audacity</translation>
-    </message>
-    <message>
-        <source>Unrecognized file extension.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Load VST Preset:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>VST preset files</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>Unable to load presets file.</source>
-        <translation type="vanished">Nu s-a putut încărca fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>VST Effect Options</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>Buffer Size</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to 1048576 samples):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Latency Compensation</source>
-        <translation type="vanished">Combinație de taste</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable &amp;compensation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Graphical Mode</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable &amp;graphical interface</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save VST3 Preset As:</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>VST3 preset file</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>Load VST3 preset:</source>
-        <translation type="vanished">Selectați un fișier MIDI...</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rapid tone quality variations, like that guitar sound so popular in the 1970's</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Dept&amp;h (%):</source>
-        <translation type="vanished">Profunzime (%):</translation>
-    </message>
-    <message>
-        <source>Reso&amp;nance:</source>
-        <translation type="vanished">Rezonanța:</translation>
-    </message>
-    <message>
-        <source>Resonance</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Wah Frequency Offse&amp;t (%):</source>
-        <translation type="vanished">N&amp;etezire de frecvență (Hz):</translation>
-    </message>
-    <message>
-        <source>Wah frequency offset in percent</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Audio Unit Preset As %s:</source>
-        <translation type="vanished">Se exportă audio selectat ca Ogg Vorbis</translation>
-    </message>
-    <message>
-        <source>Standard Audio Unit preset file</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Could not export "%s" preset
-
-%s</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Presets</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Import Audio Unit Preset As %s:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Could not import "%s" preset
-
-%s</source>
-        <translation type="vanished">Nu s-a putut deschide fișierul: „%1”</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Presets</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio Unit Effect Options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Select "Full" to use the graphical interface if supplied by the Audio Unit. Select "Generic" to use the system supplied generic interface. Select "Basic" for a basic text-only interface. Reopen the effect for this to take effect.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select &amp;interface</source>
-        <translation type="vanished">Selectează clipul sau întreaga pistă</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Generic</source>
-        <translation type="vanished">&amp;Generare</translation>
-    </message>
-    <message>
-        <source>Basic</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s:</source>
-        <extracomment>i18n-hint: An item name introducing a value, which is not part of the string but
-appears in a following text box window; translate with appropriate punctuation</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Effect Output</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LADSPA Effect Options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Couldn't instantiate effect</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LV2 Effect Settings</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to %d) samples:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Applying Nyquist Effect...</source>
-        <translation type="vanished">Se aplică efectul Nyquist...</translation>
-    </message>
-    <message>
-        <source>Enable track spectrogram view before
-applying 'Spectral' effects.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To use 'Spectral effects', enable 'Spectral Selection'
-in the track Spectrogram settings and select the
-frequency range for the effect to act on.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>error: File "%s" specified in header but not found in plug-in path.
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Nyquist Error</source>
-        <translation type="vanished">Nyquist</translation>
-    </message>
-    <message>
-        <source>Debug Output: </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return audio from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return labels from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Nyquist returned the value: %d</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Your code looks like SAL syntax, but there is no 'return' statement.
-For SAL, use a return statement such as:
-	return *track* * 0.1
-or for LISP, begin with an open parenthesis such as:
-	(mult *track* 0.1)
- .</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error in Nyquist code</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Could not determine language</source>
-        <extracomment>i18n-hint: refers to programming "languages"</extracomment>
-        <translation type="vanished">Nu s-a putut deschide fișierul:</translation>
-    </message>
-    <message>
-        <source>"%s" is not a valid file path.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mismatched quotes in
-%s</source>
-        <extracomment>i18n-hint: Warning that there is one quotation mark rather than a pair.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enter Nyquist Command: </source>
-        <translation type="vanished">Introduceți comanda Nyquist:</translation>
-    </message>
-    <message>
-        <source>&amp;Load</source>
-        <translation type="vanished">În&amp;carcă</translation>
-    </message>
-    <message>
-        <source>Current program has been modified.
-Discard changes?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>File could not be loaded</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>File could not be saved</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Value range:
-%s to %s</source>
-        <translatorcomment>titlu</translatorcomment>
-        <translation type="vanished">Salvarea modificărilor</translation>
-    </message>
-    <message>
-        <source>Value Error</source>
-        <translation type="vanished">Eroare LOF</translation>
-    </message>
-    <message>
-        <source>Save file as</source>
-        <translation type="vanished">Salvează fișierele</translation>
-    </message>
-    <message>
-        <source>Vamp Effects</source>
-        <translation type="vanished">Efecte Vamp</translation>
-    </message>
-    <message>
-        <source>Provides Vamp Effects support to Audacity</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sorry, failed to load Vamp Plug-in.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sorry, Vamp Plug-in failed to initialize.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Plugin Settings</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Program</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Vamp</source>
-        <extracomment>i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-It is not an abbreviation for anything.  See http://vamp-plugins.org</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Entire &amp;Project</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>M&amp;ultiple Files</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Curren&amp;t Selection</source>
-        <translation type="vanished">Taie selecția</translation>
-    </message>
-    <message>
-        <source>Using Label/Track Name</source>
-        <translation type="vanished">Se folosește eticheta sau numele pistei</translation>
-    </message>
-    <message>
-        <source>Numbering before Label/Track Name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Numbering after File name prefix</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Range:</source>
-        <translation type="vanished">Importat '%1'</translation>
-    </message>
-    <message>
-        <source>Export entire project</source>
-        <translation type="vanished">Se exportă întregul proiect ca Ogg Vorbis</translation>
-    </message>
-    <message>
-        <source>Export multiple files</source>
-        <translation type="vanished">Exportă &amp;multiplu...</translation>
-    </message>
-    <message>
-        <source>Export current selection</source>
-        <translation type="vanished">Taie selecția</translation>
-    </message>
-    <message>
-        <source>Split files based on:</source>
-        <translation type="vanished">Divizează fișierele pe baza:</translation>
-    </message>
-    <message>
-        <source>Include audio before first label</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Name files:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>File name prefix:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Overwrite existing files</source>
-        <translation type="vanished">Suprascrie fișierele existente</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="vanished">Exportă...</translation>
-    </message>
-    <message>
-        <source>Successfully exported the following %lld file(s).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Something went wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export canceled after exporting the following %lld file(s).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export stopped after exporting the following %lld file(s).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Something went really wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A file named "%s" already exists. Replace?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>All selected audio is muted.</source>
-        <translation type="vanished">Întregul audio selectat este pus pe mut.</translation>
-    </message>
-    <message>
-        <source>Continue to export remaining files?</source>
-        <translation type="vanished">Nu s-a putut încărca fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Custom Sample Rate</source>
-        <translation type="vanished">&amp;Rata de eșantionare implicită:</translation>
-    </message>
-    <message>
-        <source>File &amp;Name:</source>
-        <translation type="vanished">Tipul de compilare:</translation>
-    </message>
-    <message>
-        <source>Fo&amp;lder:</source>
-        <translation type="vanished">Dosar pentru setări:</translation>
-    </message>
-    <message>
-        <source>&amp;Format:</source>
-        <translation type="vanished">Schimbare de format</translation>
-    </message>
-    <message>
-        <source>M&amp;ono</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation type="vanished">2 (stereo)</translation>
-    </message>
-    <message>
-        <source>Custom mappin&amp;g</source>
-        <extracomment>i18n-hint refers to custom channel mapping configuration</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Configure custom mapping</source>
-        <extracomment>i18n-hint accessibility hint, refers to export channel configuration</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Configure</source>
-        <translation type="vanished">Confirmă</translation>
-    </message>
-    <message>
-        <source>Sample &amp;Rate</source>
-        <translation type="vanished">Simplu</translation>
-    </message>
-    <message>
-        <source>Choose a location to save the exported files</source>
-        <translation type="vanished">Alegeți o locație pentru salvarea fișierelor exportate</translation>
-    </message>
-    <message>
-        <source>Advanced Mixing Options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%d Hz (custom)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Other...</source>
-        <translation type="vanished">Altele...</translation>
-    </message>
-    <message>
-        <source>%s - L</source>
-        <extracomment>i18n-hint: track name and L abbreviating Left channel</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s - R</source>
-        <extracomment>i18n-hint: track name and R abbreviating Right channel</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Output Channels: %2d</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mixer Panel</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Channel: %2d</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No format specific options</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Import Raw</source>
-        <translatorcomment>hm ? sau import brut ?</translatorcomment>
-        <extracomment>i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.</extracomment>
-        <translation type="vanished">Importă brut</translation>
-    </message>
-    <message>
-        <source>Import Raw Data</source>
-        <translation type="vanished">Importă date brute</translation>
-    </message>
-    <message>
-        <source>No endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Little-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Big-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Default endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>1 Channel (Mono)</source>
-        <translation type="vanished">1 canal (mono)</translation>
-    </message>
-    <message>
-        <source>2 Channels (Stereo)</source>
-        <translation type="vanished">2 canale (stereo)</translation>
-    </message>
-    <message>
-        <source>%d Channels</source>
-        <translation type="vanished">%1 canale</translation>
-    </message>
-    <message>
-        <source>Encoding:</source>
-        <translation type="vanished">Codare:</translation>
-    </message>
-    <message>
-        <source>Byte order:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Channels:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start offset:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="vanished">baiți</translation>
-    </message>
-    <message>
-        <source>Amount to import:</source>
-        <translation type="vanished">Cantitate de importat:</translation>
-    </message>
-    <message>
-        <source>Sample rate:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Detect</source>
-        <extracomment>i18n-hint: Guess format of raw file</extracomment>
-        <translation type="vanished">Detectează liniștea</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="vanished">&amp;Importă</translation>
-    </message>
-    <message>
-        <source>Bad data size. Could not import audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message numerus="yes">
-        <source>%s %s, %d of %d clip %s</source>
-        <oldsource>%s %s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First %s is replaced with the noun "start" or "end"
-identifying one end of a clip,
-second string is the name of that clip,
-first number gives the position of that clip in a sequence
-of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message>
-        <source>start</source>
-        <translation type="vanished">Început</translation>
-    </message>
-    <message>
-        <source>end</source>
-        <translation type="vanished">Sfârșit</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s and %s %s, %d and %d of %d clip %s</source>
-        <oldsource>%s %s and %s %s, %d and %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First and third %s are each replaced with the noun "start"
-or with "end", identifying and end of a clip,
-second and fourth strings are the names of those clips,
-first and second numbers give the position of those clips in
-a sequence of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip %s</source>
-        <oldsource>%s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-first string is the name of a clip,
-first number gives the position of that clip
-in a sequence of clips,
-last number counts all clips,
-last string names a track</extracomment>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message>
-        <source>Moved clips to the right</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>Moved clips to the left</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>Move audio clips</source>
-        <translation type="vanished">Fișier audio</translation>
-    </message>
-    <message>
-        <source>clip not moved</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audi&amp;o Clips</source>
-        <translation type="vanished">Fișier audio</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary to Cursor</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor to Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Previo&amp;us Clip</source>
-        <translation type="vanished">Instrumentul precedent</translation>
-    </message>
-    <message>
-        <source>Select Previous Clip</source>
-        <translation type="vanished">Instrumentul precedent</translation>
-    </message>
-    <message>
-        <source>N&amp;ext Clip</source>
-        <translation type="vanished">Instrumentul următor</translation>
-    </message>
-    <message>
-        <source>Select Next Clip</source>
-        <translation type="vanished">Instrumentul următor</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary</source>
-        <translation type="vanished">Limitele &amp;clipului</translation>
-    </message>
-    <message>
-        <source>Cursor to Prev Clip Boundary</source>
-        <translation type="vanished">Limitele &amp;clipului</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">Limitele &amp;clipului</translation>
-    </message>
-    <message>
-        <source>Cursor to Next Clip Boundary</source>
-        <translation type="vanished">Limitele &amp;clipului</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Left</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Instrument de decalaj temporal</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Right</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Instrument de decalaj temporal</translation>
-    </message>
-    <message>
-        <source>Pasted text from the clipboard</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pasted from the clipboard</source>
-        <translation type="vanished">Lipit din clipboard</translation>
-    </message>
-    <message>
-        <source>Nothing to undo</source>
-        <translation type="vanished">Nu există nimic de anulat</translation>
-    </message>
-    <message>
-        <source>Nothing to redo</source>
-        <translation type="vanished">Nu există nimic de refăcut</translation>
-    </message>
-    <message>
-        <source>Cut to the clipboard</source>
-        <translation type="vanished">Taie și copiază în clipboard</translation>
-    </message>
-    <message>
-        <source>Deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Au fost șterse %1 secunde la t=%2</translation>
-    </message>
-    <message>
-        <source>Paste clip</source>
-        <translation type="vanished">Lipit din clipboard</translation>
-    </message>
-    <message>
-        <source>Pasting clip contents, please wait</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Duplicated</source>
-        <translation type="vanished">Duplicat</translation>
-    </message>
-    <message>
-        <source>Split-cut to the clipboard</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Cut</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split-deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Delete</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silenced selected tracks for %.2f seconds at %.2f</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>command</comment>
-        <extracomment>i18n-hint: verb</extracomment>
-        <translation type="vanished">Liniște</translation>
-    </message>
-    <message>
-        <source>Trim selected audio tracks from %.2f seconds to %.2f seconds</source>
-        <translation type="vanished">Suprimă audio de la %1 secunde la %2 secunde din pistele audio selectate</translation>
-    </message>
-    <message>
-        <source>Trim Audio</source>
-        <translatorcomment>în meniul Edit -&gt; Edit Special
-ca tooltip</translatorcomment>
-        <translation type="vanished">Suprimă audio în afara selecției</translation>
-    </message>
-    <message>
-        <source>Split to new track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split New</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Joined %.2f seconds at t=%.2f</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Join</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Detached %.2f seconds at t=%.2f</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Detach</source>
-        <translation type="vanished">Detașează</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Taie</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="vanished">Ș&amp;terge</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Copiază</translation>
-    </message>
-    <message>
-        <source>Duplic&amp;ate</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Duplică</translation>
-    </message>
-    <message>
-        <source>R&amp;emove Special</source>
-        <translation type="vanished">&amp;Elimină special</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Cut</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut</extracomment>
-        <translation type="vanished">Divizează și ta&amp;ie</translation>
-    </message>
-    <message>
-        <source>Split D&amp;elete</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE</extracomment>
-        <translation type="vanished">Divizează și șt&amp;erge</translation>
-    </message>
-    <message>
-        <source>Silence Audi&amp;o</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Liniște în locul audi&amp;o</translation>
-    </message>
-    <message>
-        <source>Tri&amp;m Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Supri&amp;mă audio în afara selecției</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit</source>
-        <extracomment>i18n-hint: (verb) It's an item on a menu.</extracomment>
-        <translation type="vanished">&amp;Divizează</translation>
-    </message>
-    <message>
-        <source>Split Ne&amp;w</source>
-        <translation type="vanished">Divizează no&amp;u</translation>
-    </message>
-    <message>
-        <source>&amp;Join</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Unește</translation>
-    </message>
-    <message>
-        <source>Detac&amp;h at Silences</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">&amp;Detașează în locurile de liniște</translation>
-    </message>
-    <message>
-        <source>Pre&amp;ferences</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Key</source>
-        <translation type="vanished">Tasta de ștergere</translation>
-    </message>
-    <message>
-        <source>Delete Key&amp;2</source>
-        <translation type="vanished">Tasta de ștergere2</translation>
-    </message>
-    <message>
-        <source>Ext&amp;ra</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable &amp;Full Screen</source>
-        <translation type="vanished">Ecran întreg pornit/oprit</translation>
-    </message>
-    <message>
-        <source>Cannot proceed to export.</source>
-        <translation type="vanished">Nicio etichetă de exportat.</translation>
-    </message>
-    <message>
-        <source>Cannot create directory '%s'. 
-File already exists that is not a directory</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>labels.txt</source>
-        <extracomment>i18n-hint: filename containing exported text from label tracks</extracomment>
-        <translation type="vanished">etichete.txt</translation>
-    </message>
-    <message>
-        <source>There are no label tracks to export.</source>
-        <translation type="vanished">Nu există nicio pistă de etichete de exportat.</translation>
-    </message>
-    <message>
-        <source>Imported labels from '%s'</source>
-        <translation type="vanished">Etichete importate de la '%1'</translation>
-    </message>
-    <message>
-        <source>Import Labels</source>
-        <translation type="vanished">Importă etichetele</translation>
-    </message>
-    <message>
-        <source>&amp;Dangerous Reset...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>Open Recent</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Mac OS X only</extracomment>
-        <translation type="vanished">Deschide fișiere recente</translation>
-    </message>
-    <message>
-        <source>Recent &amp;Files</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Windows and Linux</extracomment>
-        <translation type="vanished">&amp;Fișiere recente</translation>
-    </message>
-    <message>
-        <source>&amp;Save Project</source>
-        <translation type="vanished">&amp;Salvează proiectul</translation>
-    </message>
-    <message>
-        <source>Save Project &amp;As...</source>
-        <translation type="vanished">Salvează proiectul c&amp;a...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Project...</source>
-        <translation type="vanished">Deschide &amp;recente...</translation>
-    </message>
-    <message>
-        <source>&amp;Export Audio...</source>
-        <translation type="vanished">&amp;Exportă audio...</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Other</source>
-        <translation type="vanished">Exportă MIDI</translation>
-    </message>
-    <message>
-        <source>Export &amp;Labels...</source>
-        <translation type="vanished">Exportă etichete&amp;le...</translation>
-    </message>
-    <message>
-        <source>&amp;Audio...</source>
-        <translation type="vanished">&amp;Audio...</translation>
-    </message>
-    <message>
-        <source>&amp;Labels...</source>
-        <translation type="vanished">&amp;Etichete...</translation>
-    </message>
-    <message>
-        <source>&amp;Raw Data...</source>
-        <translation type="vanished">Date b&amp;rute...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <extracomment>i18n-hint: (verb) It's item on a menu.</extracomment>
-        <translation type="vanished">&amp;Ieșire</translation>
-    </message>
-    <message>
-        <source>Export as MP&amp;3</source>
-        <translation type="vanished">Importat '%1'</translation>
-    </message>
-    <message>
-        <source>Export as &amp;WAV</source>
-        <translation type="vanished">Exportă etichetele ca:</translation>
-    </message>
-    <message>
-        <source>Export as &amp;OGG</source>
-        <translation type="vanished">Importat '%1'</translation>
-    </message>
-    <message>
-        <source>Export as FLAC</source>
-        <translation type="vanished">Exportă etichetele ca:</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Selected Audio...</source>
-        <translation type="vanished">Expo&amp;rtă audio selectat...</translation>
-    </message>
-    <message>
-        <source>Do you have these problems?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Fix</source>
-        <translation type="vanished">Mixează</translation>
-    </message>
-    <message>
-        <source>Quick Fixes</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Nothing to do</source>
-        <translation type="vanished">Nu există nimic de anulat</translation>
-    </message>
-    <message>
-        <source>No quick, easily fixed problems were found</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Clocks on the Tracks</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Can't select precisely</source>
-        <translation type="vanished">Nu se poate deschide fișierul de proiect</translation>
-    </message>
-    <message>
-        <source>Recording stops and starts</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Fixed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio Device Info</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Quick Help...</source>
-        <translation type="vanished">&amp;Ajutor rapid</translation>
-    </message>
-    <message>
-        <source>&amp;Manual...</source>
-        <translation type="vanished">&amp;Manual</translation>
-    </message>
-    <message>
-        <source>Au&amp;dio Device Info...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Generate Support Data...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Check for Updates...</source>
-        <translation type="vanished">&amp;Caută actualizări...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity</source>
-        <translation type="vanished">Despre Audacity</translation>
-    </message>
-    <message>
-        <source>Added label</source>
-        <translation type="vanished">Etichetă adaugată</translation>
-    </message>
-    <message>
-        <source>Paste Text to New Label</source>
-        <translation type="vanished">Lipește textul într-o etichetă nouă</translation>
-    </message>
-    <message>
-        <source>Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
-regions.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just deleted the labeled audio regions</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) Audacity has just split cut the labeled audio
-regions</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut on the labels</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just done a special kind of DELETE on
-the labeled audio regions</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE on labeled audio
-regions</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silenced labeled audio regions</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Silence Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Copied labeled audio regions to clipboard</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Copy Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just split the labeled
-audio (a point or a region)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Split Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Joined labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) Audacity has just joined the labeled audio (points or
-regions)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Join Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Detached labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-This message appears in history and tells you about something
-Audacity has done.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Detach Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Created new label track</source>
-        <translation type="vanished">A fost creată o nouă pistă de etichete</translation>
-    </message>
-    <message>
-        <source>New Track</source>
-        <translation type="vanished">Pistă nouă</translation>
-    </message>
-    <message>
-        <source>&amp;Labels</source>
-        <translation type="vanished">Etichete</translation>
-    </message>
-    <message>
-        <source>Label &amp;Editor</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Selection</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Playback Position</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Paste Te&amp;xt to New Label</source>
-        <translation type="vanished">Lipește te&amp;xtul într-o nouă etichetă</translation>
-    </message>
-    <message>
-        <source>&amp;Typing Creates New Labels</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>La&amp;beled Audio</source>
-        <translation type="vanished">Audio etic&amp;hetat</translation>
-    </message>
-    <message>
-        <source>&amp;Cut</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Taie</translation>
-    </message>
-    <message>
-        <source>Label Cut</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>Label Delete</source>
-        <translation type="vanished">Șterge</translation>
-    </message>
-    <message>
-        <source>&amp;Split Cut</source>
-        <extracomment>i18n-hint: (verb) A special way to cut out a piece of audio</extracomment>
-        <translation type="vanished">Divi&amp;zează și taie</translation>
-    </message>
-    <message>
-        <source>Label Split Cut</source>
-        <translation type="vanished">Divi&amp;zează și taie</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit Delete</source>
-        <translation type="vanished">Divize&amp;ază și șterge</translation>
-    </message>
-    <message>
-        <source>Label Split Delete</source>
-        <translation type="vanished">Divize&amp;ază și șterge</translation>
-    </message>
-    <message>
-        <source>Silence &amp;Audio</source>
-        <translation type="vanished">Liniște în locul &amp;audio</translation>
-    </message>
-    <message>
-        <source>Label Silence</source>
-        <translation type="vanished">Liniște</translation>
-    </message>
-    <message>
-        <source>Co&amp;py</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Co&amp;piază</translation>
-    </message>
-    <message>
-        <source>Label Copy</source>
-        <translation type="vanished">Etichetă</translation>
-    </message>
-    <message>
-        <source>Spli&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Di&amp;vizează</translation>
-    </message>
-    <message>
-        <source>Label Split</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>Label Join</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>&amp;Label Track</source>
-        <translation type="vanished">Pistă de etic&amp;hete</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="vanished">..</translation>
-    </message>
-    <message>
-        <source>Uncategorized</source>
-        <translation type="vanished">Neclasificat</translation>
-    </message>
-    <message>
-        <source>Move Backward Through Active Windows</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move Forward Through Active Windows</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Foc&amp;us</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move &amp;Backward from Toolbars to Tracks</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move F&amp;orward from Toolbars to Tracks</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Previous Track</source>
-        <translation type="vanished">Mută efectul mai jos în rack</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Next Track</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;First Track</source>
-        <translation type="vanished">Mută efectul mai jos în rack</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Last Track</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>Move Focus to P&amp;revious and Select</source>
-        <translation type="vanished">Mută efectul mai jos în rack</translation>
-    </message>
-    <message>
-        <source>Move Focus to N&amp;ext and Select</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>&amp;Toggle Focused Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Toggle Focuse&amp;d Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>A journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Plugin Manager</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Repeat Last Generator</source>
-        <translation type="vanished">Repetă ultimul efect</translation>
-    </message>
-    <message>
-        <source>Effe&amp;ct</source>
-        <translation type="vanished">Efe&amp;ct</translation>
-    </message>
-    <message>
-        <source>Add Realtime Effects</source>
-        <translation type="vanished">Efecte Vamp</translation>
-    </message>
-    <message>
-        <source>Get AI effects...</source>
-        <translation type="vanished">Preferințe...</translation>
-    </message>
-    <message>
-        <source>Repeat Last Effect</source>
-        <translation type="vanished">Repetă ultimul efect</translation>
-    </message>
-    <message>
-        <source>Repeat Last Analyzer</source>
-        <translation type="vanished">Repetă ultimul efect</translation>
-    </message>
-    <message>
-        <source>T&amp;ools</source>
-        <translation type="vanished">Bare de instrumen&amp;te</translation>
-    </message>
-    <message>
-        <source>Reset &amp;Configuration</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>&amp;Run Benchmark...</source>
-        <translation type="vanished">&amp;Rulează un test de performanță...</translation>
-    </message>
-    <message>
-        <source>Simulate Recording Errors</source>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>Detect Upstream Dropouts</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Write Journal</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Left Selection Boundary</source>
-        <translation type="vanished">Stabilește limita de selecție din stânga</translation>
-    </message>
-    <message>
-        <source>Set Right Selection Boundary</source>
-        <translation type="vanished">Stabilește limita de selecție din dreapta</translation>
-    </message>
-    <message>
-        <source>Zero-crossing search regions intersect stretched clip(s).</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation type="vanished">To&amp;ate</translation>
-    </message>
-    <message>
-        <source>&amp;None</source>
-        <translation type="vanished">&amp;Nimic</translation>
-    </message>
-    <message>
-        <source>Select None</source>
-        <translation type="vanished">Selecție</translation>
-    </message>
-    <message>
-        <source>In All &amp;Tracks</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>In All &amp;Sync-Locked Tracks</source>
-        <translation type="vanished">Blochează sincronizarea pistelor</translation>
-    </message>
-    <message>
-        <source>Select Sync-Locked</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>R&amp;egion</source>
-        <translation type="vanished">Zona de re&amp;dare</translation>
-    </message>
-    <message>
-        <source>&amp;Left at Playback Position</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Selection Left at Play Position</source>
-        <translation type="vanished">Stabilește punctul de selecție</translation>
-    </message>
-    <message>
-        <source>&amp;Right at Playback Position</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Selection Right at Play Position</source>
-        <translation type="vanished">Stabilește punctul de selecție</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start to Cursor</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Track Start to Cursor</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Cursor to Track &amp;End</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Cursor to Track End</source>
-        <translation type="vanished">Selectează clipul sau întreaga pistă</translation>
-    </message>
-    <message>
-        <source>Track Start to En&amp;d</source>
-        <translation type="vanished">la începutul pi&amp;stei</translation>
-    </message>
-    <message>
-        <source>Select Track Start to End</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>S&amp;tore Selection</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Retrieve Selectio&amp;n</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Cursor to Stored &amp;Cursor Position</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select Cursor to Stored</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Store Cursor Pos&amp;ition</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>At &amp;Zero Crossings</source>
-        <translation type="vanished">Găsește trecerile prin &amp;zero</translation>
-    </message>
-    <message>
-        <source>Select Zero Crossing</source>
-        <translation type="vanished">Găsește trecerile prin &amp;zero</translation>
-    </message>
-    <message>
-        <source>&amp;Selection</source>
-        <translation type="vanished">Selecție</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Off</source>
-        <translation type="vanished">Acroșare dezactivată</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Nearest</source>
-        <translation type="vanished">Acroșare la cel mai apropiat</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Prior</source>
-        <translation type="vanished">Acroșare la precedent</translation>
-    </message>
-    <message>
-        <source>Selection to &amp;Start</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Selection to En&amp;d</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Left</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Right</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Le&amp;ft Selection</source>
-        <translation type="vanished">Stabilește limita de selecție din stânga</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Rig&amp;ht Selection</source>
-        <translation type="vanished">Stabilește limita de selecție din dreapta</translation>
-    </message>
-    <message>
-        <source>Selection Contract L&amp;eft</source>
-        <translation type="vanished">câtre începu&amp;tul selecției</translation>
-    </message>
-    <message>
-        <source>Selection Contract R&amp;ight</source>
-        <translation type="vanished">câtre începu&amp;tul selecției</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor to</source>
-        <translation type="vanished">&amp;Mută cursorul</translation>
-    </message>
-    <message>
-        <source>Selection Star&amp;t</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection Start</source>
-        <translation type="vanished">Du-&amp;te la începutul selecției</translation>
-    </message>
-    <message>
-        <source>Selection En&amp;d</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection End</source>
-        <translation type="vanished">&amp;Du-te la sfârșitul selecției</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start</source>
-        <translation type="vanished">la începutul pi&amp;stei</translation>
-    </message>
-    <message>
-        <source>Cursor to Track Start</source>
-        <translation type="vanished">la începutul pi&amp;stei</translation>
-    </message>
-    <message>
-        <source>Track &amp;End</source>
-        <translation type="vanished">la sfârșitul pist&amp;ei</translation>
-    </message>
-    <message>
-        <source>Cursor to Track End</source>
-        <translation type="vanished">Nume pistă</translation>
-    </message>
-    <message>
-        <source>&amp;Project Start</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Cursor to Project Start</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Project E&amp;nd</source>
-        <translation type="vanished">Proiecte</translation>
-    </message>
-    <message>
-        <source>Cursor to Project End</source>
-        <translation type="vanished">Directorul curent:</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor</source>
-        <translation type="vanished">&amp;Mută cursorul</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Left</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor &amp;Right</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor Sh&amp;ort Jump Left</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor Shor&amp;t Jump Right</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor Long J&amp;ump Left</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cursor Long Ju&amp;mp Right</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>See&amp;k</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Short Seek &amp;Left During Playback</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Short Seek &amp;Right During Playback</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Long Seek Le&amp;ft During Playback</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Long Seek Rig&amp;ht During Playback</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tim&amp;eline</source>
-        <translation type="vanished">Acțiune</translation>
-    </message>
-    <message>
-        <source>&amp;Toolbars</source>
-        <translation type="vanished">Bare de instrumen&amp;te</translation>
-    </message>
-    <message>
-        <source>Reset Toolb&amp;ars</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Bare de instrumen&amp;te</translation>
-    </message>
-    <message>
-        <source>Mix</source>
-        <translation type="vanished">Mixează</translation>
-    </message>
-    <message>
-        <source>Rendered all audio in track '%s'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Render</source>
-        <extracomment>i18n-hint: Convert the audio into a more usable form, so apply
-* panning and amplification and write to some external file.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new stereo track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new mono track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Panned audio track(s)</source>
-        <extracomment>i18n-hint: One or more audio tracks have been panned</extracomment>
-        <translation type="vanished">Piste audio eliminate</translation>
-    </message>
-    <message>
-        <source>Pan Track</source>
-        <translation type="vanished">Pistă</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Zero</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start to &amp;Cursor/Selection Start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Start to Selection &amp;End</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>End to Cu&amp;rsor/Selection Start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>End to Selection En&amp;d</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Aligned/Moved start to zero</source>
-        <extracomment>i18n-hint: In this and similar messages describing editing actions,
-the starting or ending points of tracks are re-"aligned" to other
-times, and the time selection may be "moved" too.  The first
-noun -- "start" in this example -- is the object of a verb (not of
-an implied preposition "from").</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Aligned start to zero</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Align/Move Start</source>
-        <extracomment>i18n-hint: This and similar messages give shorter descriptions of
-the aligning and moving editing actions</extracomment>
-        <translation type="vanished">Clic pentru a începe</translation>
-    </message>
-    <message>
-        <source>Align Start</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to cursor/selection start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Aligned start to cursor/selection start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Aligned/Moved start to selection end</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Aligned start to selection end</source>
-        <translation type="vanished">Taie selecția</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to cursor/selection start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Aligned end to cursor/selection start</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Align/Move End</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Align End</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to selection end</source>
-        <translation type="vanished">&amp;Du-te la sfârșitul selecției</translation>
-    </message>
-    <message>
-        <source>Aligned end to selection end</source>
-        <translation type="vanished">Liniște în locul selecției audi&amp;o</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to end</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Aligned end to end</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Align/Move End to End</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Align End to End</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved together</source>
-        <translation type="vanished">A&amp;liniază împreună</translation>
-    </message>
-    <message>
-        <source>Aligned together</source>
-        <translation type="vanished">A&amp;liniază împreună</translation>
-    </message>
-    <message>
-        <source>Align/Move Together</source>
-        <translation type="vanished">A&amp;liniază împreună</translation>
-    </message>
-    <message>
-        <source>Align Together</source>
-        <translation type="vanished">A&amp;liniază împreună</translation>
-    </message>
-    <message>
-        <source>Synchronize MIDI with Audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Synchronizing MIDI and Audio Tracks</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Adjusted gain</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Adjusted Pan</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The entered value is invalid</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Resampling track %d</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Resampled audio track(s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Resample Track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Please select at least one audio track and one MIDI track.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sync MIDI with Audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Internal error reported by alignment process.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tracks sorted by time</source>
-        <translation type="vanished">Piste ordonate după timp</translation>
-    </message>
-    <message>
-        <source>Sort by Time</source>
-        <translation type="vanished">Ordonează după timp</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by name</source>
-        <translation type="vanished">Piste ordonate după nume</translation>
-    </message>
-    <message>
-        <source>Sort by Name</source>
-        <translation type="vanished">Ordonează după nume</translation>
-    </message>
-    <message>
-        <source>Can't delete track with active audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Add &amp;New</source>
-        <translation type="vanished">Adaugă o &amp;nouă</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mix Stereo Down to &amp;Mono</source>
-        <translation type="vanished">Divizează stereo în mono „%1”</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x and Render</source>
-        <translation type="vanished">Mi&amp;xează și randează</translation>
-    </message>
-    <message>
-        <source>Mix and Render to Ne&amp;w Track</source>
-        <translation type="vanished">Mixează și randează într-o nouă &amp;pistă</translation>
-    </message>
-    <message>
-        <source>&amp;Resample...</source>
-        <translation type="vanished">&amp;Reeșantionează...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve Tracks</source>
-        <translation type="vanished">Elimină &amp;pistele</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>&amp;Mute All Tracks</source>
-        <translation type="vanished">Pune toate pistele pe &amp;mut</translation>
-    </message>
-    <message>
-        <source>&amp;Unmute All Tracks</source>
-        <translation type="vanished">Activează sunet&amp;ul pe toate pistele</translation>
-    </message>
-    <message>
-        <source>Mut&amp;e Tracks</source>
-        <translation type="vanished">Pune toate pistele pe &amp;mut</translation>
-    </message>
-    <message>
-        <source>U&amp;nmute Tracks</source>
-        <translation type="vanished">Activează sunet&amp;ul pe toate pistele</translation>
-    </message>
-    <message>
-        <source>&amp;Pan</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Left</source>
-        <translation type="vanished">Stânga</translation>
-    </message>
-    <message>
-        <source>Pan Left</source>
-        <translation type="vanished">Stânga</translation>
-    </message>
-    <message>
-        <source>&amp;Right</source>
-        <translation type="vanished">Dreapta</translation>
-    </message>
-    <message>
-        <source>Pan Right</source>
-        <translation type="vanished">Dreapta</translation>
-    </message>
-    <message>
-        <source>&amp;Center</source>
-        <translation type="vanished">Centrează</translation>
-    </message>
-    <message>
-        <source>Pan Center</source>
-        <translation type="vanished">Centrează</translation>
-    </message>
-    <message>
-        <source>&amp;Align Tracks</source>
-        <translation type="vanished">&amp;Aliniază pistele</translation>
-    </message>
-    <message>
-        <source>&amp;Align End to End</source>
-        <translation type="vanished">&amp;Aliniază sfârșit la sfârșit</translation>
-    </message>
-    <message>
-        <source>Align &amp;Together</source>
-        <translation type="vanished">A&amp;liniază împreună</translation>
-    </message>
-    <message>
-        <source>&amp;Move Selection with Tracks</source>
-        <translation type="vanished">Mută efectul mai jos în rack</translation>
-    </message>
-    <message>
-        <source>Move Sele&amp;ction and Tracks</source>
-        <translation type="vanished">Mută efectul mai jos în rack</translation>
-    </message>
-    <message>
-        <source>S&amp;ort Tracks</source>
-        <translation type="vanished">&amp;Ordonează pistele</translation>
-    </message>
-    <message>
-        <source>By &amp;Start Time</source>
-        <translation type="vanished">După timpul de &amp;start</translation>
-    </message>
-    <message>
-        <source>By &amp;Name</source>
-        <translation type="vanished">După &amp;nume</translation>
-    </message>
-    <message>
-        <source>Keep tracks synchronized (Sync-&amp;Lock)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Track</source>
-        <translation type="vanished">Pis&amp;te</translation>
-    </message>
-    <message>
-        <source>Change P&amp;an on Focused Track...</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Left on Focused Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Right on Focused Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Change Gai&amp;n on Focused Track...</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Gain on Focused Track</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Gain on Focused Track</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>Op&amp;en Menu on Focused Track...</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute Focused Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>&amp;Solo/Unsolo Focused Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Delete Fo&amp;cused Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Move Focused Track U&amp;p</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Move Focused Track Do&amp;wn</source>
-        <translation type="vanished">Mută pista mai &amp;jos</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to T&amp;op</source>
-        <translation type="vanished">Mută pista sus de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to &amp;Bottom</source>
-        <translation type="vanished">Mută pista jos de &amp;tot</translation>
-    </message>
-    <message>
-        <source>no label track</source>
-        <translation type="vanished">Pistă de etichete</translation>
-    </message>
-    <message>
-        <source>no label track at or below focused track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s %d of %d</source>
-        <extracomment>i18n-hint:
-String is replaced by the name of a label,
-first number gives the position of that label in a sequence
-of labels,
-and the last number is the total number of labels in the sequence.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>no labels in label track</source>
-        <translation type="vanished">A fost creată o nouă pistă de etichete</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;In</source>
-        <extracomment>i18n-hint Sets a starting point for looping play</extracomment>
-        <translation type="vanished">Măreșt&amp;e</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;Out</source>
-        <extracomment>i18n-hint Sets an ending point for looping play</extracomment>
-        <translation type="vanished">Micș&amp;orează</translation>
-    </message>
-    <message>
-        <source>Please select in a mono track.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Please select in a stereo track or two mono tracks.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Please select at least %d channels.</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Tra&amp;nsport</source>
-        <extracomment>i18n-hint: 'Transport' is the name given to the set of controls that
-play, record, pause etc.</extracomment>
-        <translation type="vanished">T&amp;ransport</translation>
-    </message>
-    <message>
-        <source>Pl&amp;aying</source>
-        <translation type="vanished">În redare</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay/Stop</source>
-        <extracomment>i18n-hint: (verb) Start or Stop audio playback</extracomment>
-        <translation type="vanished">Red&amp;are/Stop</translation>
-    </message>
-    <message>
-        <source>Play/Stop and &amp;Set Cursor</source>
-        <translatorcomment>hm ? sau potrivire cursor ?</translatorcomment>
-        <translation type="vanished">Redare/Stop și potrivește cursorul</translation>
-    </message>
-    <message>
-        <source>Play &amp;Once/Stop</source>
-        <translation type="vanished">Red&amp;are/Stop</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation type="vanished">&amp;Pauză</translation>
-    </message>
-    <message>
-        <source>&amp;Recording</source>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>&amp;Append Record</source>
-        <translation type="vanished">) / Adaugă înregistrarea (</translation>
-    </message>
-    <message>
-        <source>Record &amp;New Track</source>
-        <translation type="vanished">Elimină &amp;pistele</translation>
-    </message>
-    <message>
-        <source>Punch and Rol&amp;l Record</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Looping</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Clear Loop</source>
-        <translation type="vanished">&amp;Curăță</translation>
-    </message>
-    <message>
-        <source>&amp;Set Loop to Selection</source>
-        <translation type="vanished">&amp;Zoom la selecție</translation>
-    </message>
-    <message>
-        <source>R&amp;escan Audio Devices</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Transport &amp;Options</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>Set sound activation le&amp;vel...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable sound a&amp;ctivated recording</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks during recording</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable audible input &amp;monitoring</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A&amp;utomated Recording Level Adjustment (on/off)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>T&amp;ransport</source>
-        <translation type="vanished">T&amp;ransport</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay Once</source>
-        <extracomment>i18n-hint: (verb) Start playing audio</extracomment>
-        <translation type="vanished">În redare</translation>
-    </message>
-    <message>
-        <source>Sto&amp;p</source>
-        <extracomment>i18n-hint: (verb) Stop playing audio</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Play &amp;One Second</source>
-        <translation type="vanished">Redă o secundă</translation>
-    </message>
-    <message>
-        <source>Play to &amp;Selection</source>
-        <translation type="vanished">Redă două secunde</translation>
-    </message>
-    <message>
-        <source>Play &amp;Before Selection Start</source>
-        <translation type="vanished">câtre începu&amp;tul selecției</translation>
-    </message>
-    <message>
-        <source>Play Af&amp;ter Selection Start</source>
-        <translation type="vanished">câtre începu&amp;tul selecției</translation>
-    </message>
-    <message>
-        <source>Play Be&amp;fore Selection End</source>
-        <translation type="vanished">Redă două secunde</translation>
-    </message>
-    <message>
-        <source>Play Aft&amp;er Selection End</source>
-        <translation type="vanished">către s&amp;fârșitul selecției</translation>
-    </message>
-    <message>
-        <source>Play Before a&amp;nd After Selection Start</source>
-        <translation type="vanished">Du-&amp;te la începutul selecției</translation>
-    </message>
-    <message>
-        <source>Play Before an&amp;d After Selection End</source>
-        <translation type="vanished">&amp;Du-te la sfârșitul selecției</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview</source>
-        <translation type="vanished">Redă previzualizarea tăiată</translation>
-    </message>
-    <message>
-        <source>Move to Pre&amp;vious Label</source>
-        <translation type="vanished">Lipește textul într-o etichetă nouă</translation>
-    </message>
-    <message>
-        <source>Move to Ne&amp;xt Label</source>
-        <translation type="vanished">Lipește textul într-o etichetă nouă</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom</source>
-        <translation type="vanished">Zoom</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;In</source>
-        <translation type="vanished">Măreșt&amp;e</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Normal</source>
-        <translation type="vanished">Zoom &amp;normal</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Out</source>
-        <translation type="vanished">Micș&amp;orează</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom to Selection</source>
-        <translation type="vanished">&amp;Zoom la selecție</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Toggle</source>
-        <translation type="vanished">Instrument de zoom</translation>
-    </message>
-    <message>
-        <source>T&amp;rack Size</source>
-        <translation type="vanished">Titlu pistă</translation>
-    </message>
-    <message>
-        <source>&amp;Fit to Width</source>
-        <translation type="vanished">&amp;Potrivește în fereastră</translation>
-    </message>
-    <message>
-        <source>Fit to &amp;Height</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Collapse All Tracks</source>
-        <translation type="vanished">&amp;Restrânge toate pistele</translation>
-    </message>
-    <message>
-        <source>E&amp;xpand Collapsed Tracks</source>
-        <translation type="vanished">E&amp;xtinde toate pistele</translation>
-    </message>
-    <message>
-        <source>Sk&amp;ip to</source>
-        <translation type="vanished">Sari la sfârșit</translation>
-    </message>
-    <message>
-        <source>Selection Sta&amp;rt</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>Skip to Selection Start</source>
-        <translation type="vanished">Du-&amp;te la începutul selecției</translation>
-    </message>
-    <message>
-        <source>Skip to Selection End</source>
-        <translation type="vanished">către s&amp;fârșitul selecției</translation>
-    </message>
-    <message>
-        <source>Enable E&amp;xtra Menus</source>
-        <translation type="vanished">Nu s-a putut determina</translation>
-    </message>
-    <message>
-        <source>&amp;Show Clipping in Waveform</source>
-        <translation type="vanished">Arată li&amp;mitarea</translation>
-    </message>
-    <message>
-        <source>Show &amp;RMS in Waveform</source>
-        <translation type="vanished">Arată li&amp;mitarea</translation>
-    </message>
-    <message>
-        <source>Preferences for Application</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Update notifications</source>
-        <extracomment>i18n-hint: Title for the update notifications panel in the preferences dialog.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Check for updates</source>
-        <comment>application preferences</comment>
-        <extracomment>i18n-hint: Check-box title that configures periodic updates checking.</extracomment>
-        <translation type="vanished">&amp;Caută actualizări...</translation>
-    </message>
-    <message>
-        <source>App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Batch</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for Batch</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Behaviors</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Don't apply effects in batch mode</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audio Settings</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>%i Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>device</comment>
-        <extracomment>i18n-hint Software interface to audio devices</extracomment>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>&amp;Host:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">&amp;Gazdă:</translation>
-    </message>
-    <message>
-        <source>Using:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Device:</source>
-        <translation type="vanished">&amp;Dispozitiv:</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <comment>preference</comment>
-        <extracomment>i18n-hint: modifier as in "Recording preferences", not progressive verb</extracomment>
-        <translation type="vanished">Înregistrare</translation>
-    </message>
-    <message>
-        <source>De&amp;vice:</source>
-        <translation type="vanished">Dispoziti&amp;v:</translation>
-    </message>
-    <message>
-        <source>Cha&amp;nnels:</source>
-        <translation type="vanished">Ca&amp;nale:</translation>
-    </message>
-    <message>
-        <source>&amp;Project Sample Rate:</source>
-        <translation type="vanished">&amp;Rata de eșantionare implicită:</translation>
-    </message>
-    <message>
-        <source>Sample Rate used when recording new tracks, mixing down tracks and for playback in this project.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>D&amp;efault Sample Rate:</source>
-        <translation type="vanished">&amp;Rata de eșantionare implicită:</translation>
-    </message>
-    <message>
-        <source>Default Sample &amp;Format:</source>
-        <translation type="vanished">&amp;Formatul implicit al eșantionării:</translation>
-    </message>
-    <message>
-        <source>Latency</source>
-        <translation type="vanished">Latență</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer length:</source>
-        <translation type="vanished">Lungime nouă</translation>
-    </message>
-    <message>
-        <source>&amp;Latency compensation:</source>
-        <translation type="vanished">Combinație de taste</translation>
-    </message>
-    <message>
-        <source>No audio interfaces</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No devices found</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>1 (Mono)</source>
-        <translation type="vanished">1 (mono)</translation>
-    </message>
-    <message>
-        <source>2 (Stereo)</source>
-        <translation type="vanished">2 (stereo)</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <extracomment>i18n-hint:  Directories, also called directories, in computer file systems</extracomment>
-        <translation type="vanished">Directoare</translation>
-    </message>
-    <message>
-        <source>Preferences for Directories</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Default directories</source>
-        <translation type="vanished">Directoare</translation>
-    </message>
-    <message>
-        <source>Leave a field empty to go to the last directory used for that operation.
-Fill in a field to always go to that directory for that operation.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>O&amp;pen:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>S&amp;ave:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>B&amp;rowse...</source>
-        <translatorcomment>hm ? sau răsfoiește ?</translatorcomment>
-        <translation type="vanished">Navighează...</translation>
-    </message>
-    <message>
-        <source>&amp;Import:</source>
-        <translation type="vanished">&amp;Importă</translation>
-    </message>
-    <message>
-        <source>Br&amp;owse...</source>
-        <translatorcomment>hm ? sau răsfoiește ?</translatorcomment>
-        <translation type="vanished">Navighează...</translation>
-    </message>
-    <message>
-        <source>&amp;Export:</source>
-        <translation type="vanished">Exportă...</translation>
-    </message>
-    <message>
-        <source>Bro&amp;wse...</source>
-        <translatorcomment>hm ? sau răsfoiește ?</translatorcomment>
-        <translation type="vanished">Navighează...</translation>
-    </message>
-    <message>
-        <source>&amp;Macro output:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Temporary files directory</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Brow&amp;se...</source>
-        <translatorcomment>hm ? sau răsfoiește ?</translatorcomment>
-        <translation type="vanished">Navighează...</translation>
-    </message>
-    <message>
-        <source>&amp;Free Space:</source>
-        <translation type="vanished">Spațiu liber:</translation>
-    </message>
-    <message>
-        <source>unavailable - above location doesn't exist</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Choose a location</source>
-        <translation type="vanished">Ale&amp;geți comanda</translation>
-    </message>
-    <message>
-        <source>
-Directory %s does not exist. Create it?</source>
-        <translation type="vanished">Directorul %1 nu există. Doriți să fie creat ?</translation>
-    </message>
-    <message>
-        <source>Directory creation failed.</source>
-        <translation type="vanished">Directoare</translation>
-    </message>
-    <message>
-        <source>
-%s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Directory %s is not suitable (at risk of being cleaned out)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'Temporary Directory' cannot be set.</source>
-        <translation type="vanished">Director temporar nou</translation>
-    </message>
-    <message>
-        <source>'Temporary files' directory cannot be set.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Directory %s is not writable</source>
-        <translation type="vanished">Directorul %1 nu este scriibil</translation>
-    </message>
-    <message>
-        <source>Temp Directory Update</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'Open' directory cannot be set.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'Save' directory cannot be set.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'Import' directory cannot be set.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'Export' directory cannot be set.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>'Macro Output' directory cannot be set.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for Effects</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Sort by effect name</source>
-        <translation type="vanished">Ordonează după nume</translation>
-    </message>
-    <message>
-        <source>Sort by publisher and effect name</source>
-        <translation type="vanished">Ordonează după nume</translation>
-    </message>
-    <message>
-        <source>Sort by type and effect name</source>
-        <translation type="vanished">Ordonează după nume</translation>
-    </message>
-    <message>
-        <source>Group by publisher</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Group by type</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Group by category</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Group by type and publisher</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Effect Options</source>
-        <translation type="vanished">Setările efectului</translation>
-    </message>
-    <message>
-        <source>Effect menu &amp;organization:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Realtime effect o&amp;rganization:</source>
-        <translation type="vanished">Efectul aplicat: %1</translation>
-    </message>
-    <message>
-        <source>Instruction Set</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Use SSE/SSE2/.../AVX</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s plugin locations</source>
-        <extracomment>i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-* First argument is replaced with plugin type (e.g. "LV2 plugin locations")</extracomment>
-        <translation type="vanished">Acțiune</translation>
-    </message>
-    <message>
-        <source>&amp;Skip effects scanning at startup</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open Plugin &amp;Manager</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Extended Import</source>
-        <extracomment>i18n-hint:  Title of dialog governing "Extended", or "advanced,"
-* audio file import options</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for ExtImport</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>A&amp;ttempt to use filter in OpenFile dialog first</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rules to choose import filters</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>File extensions</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mime-types</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Importer order</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move rule &amp;up</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move rule &amp;down</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move f&amp;ilter up</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Move &amp;filter down</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Add new rule</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>De&amp;lete selected rule</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unused filters:</source>
-        <translation type="vanished">Filtre neutilizate:</translation>
-    </message>
-    <message>
-        <source>There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Spaces detected</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Do you really want to delete selected rule?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rule deletion confirmation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ext Import</source>
-        <translation type="vanished">Importă</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>GUI</comment>
-        <extracomment>i18n-hint: refers to Audacity's user interface settings</extracomment>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Preferences for GUI</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Language:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Th&amp;eme:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Meter dB &amp;range:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show 'How to Get &amp;Help' at launch</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Show e&amp;xtra menus</source>
-        <translation type="vanished">Arată fișierele ascunse</translation>
-    </message>
-    <message>
-        <source>Show alternative &amp;styling (Mac vs PC)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Beep on completion of longer activities</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Re&amp;tain labels if selection snaps to a label</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Use mostly Left-to-Right layouts in RTL languages</source>
-        <extracomment>i18n-hint: RTL stands for 'Right to Left'</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Never use comma as decimal point</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Language "%s" is unknown</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Import / Export</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for ImportExport</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>S&amp;witch view to Beats and Measures and align with musical grid</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Ask me each time</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Do &amp;nothing</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Music Imports</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Import MP3</translation>
-    </message>
-    <message>
-        <source>When Audacity detects music in file imported on empty project</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>IMPORT EXPORT</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for KeyConfig</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Keyboard preferences currently unavailable.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Open a new project to modify keyboard shortcuts.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Hotkey:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Tree</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Key</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Key Bindings</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>View by:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>View by tree</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>View by name</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>View by key</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Bindings</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Short cut</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Set</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Note: Pressing Cmd+Q will quit. All other keys are valid.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Import...</source>
-        <translation type="vanished">&amp;Importă...</translation>
-    </message>
-    <message>
-        <source>&amp;Defaults</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>
-   *   "%s"  (because the shortcut '%s' is used by "%s")
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Select an XML file containing Audacity keyboard shortcuts...</source>
-        <translation type="vanished">Selectați un fișier XML care conține scurtăturile din tastatură Audacity...</translation>
-    </message>
-    <message>
-        <source>Error Importing Keyboard Shortcuts</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The file with the shortcuts contains illegal shortcut duplicates for "%s" and "%s".
-Nothing is imported.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Loaded %d keyboard shortcuts
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>
-The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:
-</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Loading Keyboard Shortcuts</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Export Keyboard Shortcuts As:</source>
-        <translation type="vanished">Exportă scurtăturile de tastatură ca:</translation>
-    </message>
-    <message>
-        <source>Error Exporting Keyboard Shortcuts</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You may not assign a key to this entry</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You must select a binding before assigning a shortcut</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>
-
-	 and
-
-	</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The keyboard shortcut '%s' is already assigned to:
-
-	%s
-
-
-Click OK to assign the shortcut to
-
-	%s
-
-instead. Otherwise, click Cancel.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Key Config</source>
-        <translation type="vanished">Combinație de taste</translation>
-    </message>
-    <message>
-        <source>MIDI Devices</source>
-        <extracomment>i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for MidiIO</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>No MIDI interfaces</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>MIDI</comment>
-        <extracomment>i18n-hint Software interface to MIDI</extracomment>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Using: PortMidi</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>MIDI Synth L&amp;atency (ms):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The MIDI Synthesizer Latency must be an integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Midi IO</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Modules</source>
-        <extracomment>i18n-hint: Modules are optional extensions to Audacity that add NEW features.</extracomment>
-        <translation type="vanished">Module</translation>
-    </message>
-    <message>
-        <source>Preferences for Module</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Modules are optional components of Audacity that enable some functionality, such as importing and exporting. 
-It is generally not necessary to change these settings.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Changes to these settings only take effect when restarting Audacity.
-</source>
-        <translation type="vanished">Schimbările asupra directorului temporar vor avea efect numai după repornirea Audacity</translation>
-    </message>
-    <message>
-        <source>Always ask</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="vanished">Eșuat</translation>
-    </message>
-    <message>
-        <source>No choice made</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error: No modules were found. This may indicate a faulty installation.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Module</source>
-        <translation type="vanished">Module</translation>
-    </message>
-    <message>
-        <source>Preferences for Playback</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Effects Preview</source>
-        <translation type="vanished">Previzualizare efecte</translation>
-    </message>
-    <message>
-        <source>&amp;Length:</source>
-        <translation type="vanished">Lungime</translation>
-    </message>
-    <message>
-        <source>Cut Preview</source>
-        <extracomment>i18n-hint: (noun) this is a preview of the cut</extracomment>
-        <translation type="vanished">Taie previzualizarea</translation>
-    </message>
-    <message>
-        <source>&amp;Before cut region:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;After cut region:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Seek Time when playing</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Short period:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Lo&amp;ng period:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Micro-fades</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Always scrub un&amp;pinned</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity Preferences</source>
-        <translation type="vanished">Preferințe Audacity</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="vanished">C&amp;ategorie:</translation>
-    </message>
-    <message>
-        <source>Preferences:</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Preferences for Quality</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Real-time Conversion</source>
-        <translation type="vanished">Conversie în timp real</translation>
-    </message>
-    <message>
-        <source>Sample Rate Con&amp;verter:</source>
-        <translation type="vanished">Con&amp;vertor al ratei de eșantionare:</translation>
-    </message>
-    <message>
-        <source>&amp;Dither:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>High-quality Conversion</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sample Rate Conver&amp;ter:</source>
-        <translation type="vanished">Conver&amp;tor al ratei de eșantionare:</translation>
-    </message>
-    <message>
-        <source>Dit&amp;her:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for Recording</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks while recording (overdub)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Use &amp;hardware to play other tracks</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audible input &amp;monitoring</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Record on a new track</source>
-        <translation type="vanished">Pistă nouă</translation>
-    </message>
-    <message>
-        <source>Detect dropouts</source>
-        <extracomment>i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sound Activated Recording</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Enable</source>
-        <translation type="vanished">Activ&amp;ează</translation>
-    </message>
-    <message>
-        <source>Le&amp;vel (dB):</source>
-        <translation type="vanished">Nive&amp;l (dB):</translation>
-    </message>
-    <message>
-        <source>Name newly recorded tracks</source>
-        <extracomment>i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">A fost creată o nouă pistă audio stereo</translation>
-    </message>
-    <message>
-        <source>With:</source>
-        <extracomment>i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Custom Track &amp;Name</source>
-        <translation type="vanished">Nume pistă</translation>
-    </message>
-    <message>
-        <source>Custom name text</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recorded_Audio</source>
-        <translation type="vanished">Sunete înregistrate</translation>
-    </message>
-    <message>
-        <source>&amp;Track Number</source>
-        <translation type="vanished">Număr pistă</translation>
-    </message>
-    <message>
-        <source>System &amp;Date</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>System T&amp;ime</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Enable Automated Recording Level Adjustment.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Target Peak:</source>
-        <extracomment>i18n-hint: Desired maximum (peak) volume for sound</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Within:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Analysis Time:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>milliseconds (time of one analysis)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Number of consecutive analysis:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>0 means endless</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Punch and Roll Recording</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pre-ro&amp;ll:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cross&amp;fade:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Color (Roseus)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme</extracomment>
-        <translation type="vanished">Zoom implicit</translation>
-    </message>
-    <message>
-        <source>Color (classic)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Classic color scheme(from theme) for spectrograms</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Inverse grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Inverse grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">&amp;Liniar</translation>
-    </message>
-    <message>
-        <source>Pitch (EAC)</source>
-        <extracomment>i18n-hint: EAC abbreviates "Enhanced Autocorrelation"</extracomment>
-        <translation type="vanished">Înălțime sunet (EAC)</translation>
-    </message>
-    <message>
-        <source>Maximum frequency must be 100 Hz or above</source>
-        <translation type="vanished">Frecvența maximă trebuie să fie 100 Hz sau peste</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be at least 0 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Minimum frequency must be less than maximum frequency</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The range must be at least 1 dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The frequency gain cannot be negative</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The frequency gain must be no more than 60 dB/dec</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Spectrogram Settings</source>
-        <translation type="vanished">Spectrograme</translation>
-    </message>
-    <message>
-        <source>Spectrograms</source>
-        <translation type="vanished">Spectrograme</translation>
-    </message>
-    <message>
-        <source>Preferences for Spectrum</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preferences</source>
-        <extracomment>i18n-hint: use is a verb</extracomment>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>S&amp;cale:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mi&amp;n Frequency (Hz):</source>
-        <translation type="vanished">N&amp;etezire de frecvență (Hz):</translation>
-    </message>
-    <message>
-        <source>Ma&amp;x Frequency (Hz):</source>
-        <translation type="vanished">N&amp;etezire de frecvență (Hz):</translation>
-    </message>
-    <message>
-        <source>&amp;Gain (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Range (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>High &amp;boost (dB/dec):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A&amp;lgorithm:</source>
-        <translation type="vanished">L&amp;ogaritmic</translation>
-    </message>
-    <message>
-        <source>Window &amp;size:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>2048</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Window &amp;type:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Zero padding factor:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ena&amp;ble Spectral Selection</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Show a grid along the &amp;Y-axis</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>FFT Find Notes</source>
-        <extracomment>i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Minimum Amplitude (dB):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Max. Number of Notes (1..128):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Find Notes</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Quantize Notes</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Global settings</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ena&amp;ble spectral selection</source>
-        <translation type="vanished">Comută selecția &amp;spectrală</translation>
-    </message>
-    <message>
-        <source>The maximum frequency must be an integer</source>
-        <translation type="vanished">Frecvența maximă trebuie să fie un număr întreg</translation>
-    </message>
-    <message>
-        <source>The minimum frequency must be an integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The gain must be an integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The range must be a positive integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The frequency gain must be an integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The minimum amplitude (dB) must be an integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The maximum number of notes must be an integer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The maximum number of notes must be in the range 1..128</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for Theme</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="vanished">Informații</translation>
-    </message>
-    <message>
-        <source>Themability is an experimental feature.
-
-To try it out, click "Save Theme Cache" then find and modify the images and colors in
-ImageCacheVxx.png using an image editor such as the Gimp.
-
-Click "Load Theme Cache" to load the changed images and colors back into Audacity.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Saving and loading individual theme files uses a separate file for each image, but is
-otherwise the same idea.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Theme Cache - Images &amp;&amp; Color</source>
-        <extracomment>i18n-hint: &amp;&amp; in here is an escape character to get a single &amp; on screen,
-* so keep it as is</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save Theme Cache</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Load Theme Cache</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Individual Theme Files</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save Files</source>
-        <translation type="vanished">Salvează fișierele</translation>
-    </message>
-    <message>
-        <source>Load Files</source>
-        <translation type="vanished">Încarcă fișiere</translation>
-    </message>
-    <message>
-        <source>Tracks Behaviors</source>
-        <extracomment>i18n-hint: i.e. the behaviors of tracks</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for TracksBehaviors</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ask me each time.
-Show dialog each time audio is pasted.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Select all audio, if selection required</source>
-        <translation type="vanished">Nu sunt selectate suficiente date.</translation>
-    </message>
-    <message>
-        <source>Enable cut &amp;lines</source>
-        <extracomment>i18n-hint: Cut-lines are lines that can expand to show the cut audio.</extracomment>
-        <translation type="vanished">Nu s-a putut determina</translation>
-    </message>
-    <message>
-        <source>Editing a clip can &amp;move other clips</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Always paste audio as new clips</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>"Move track focus" c&amp;ycles repeatedly through tracks</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Type to create a label</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Use dialog for the &amp;name of a new label</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Solo &amp;Button:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pasted audio</source>
-        <translation type="vanished">Audio etic&amp;hetat</translation>
-    </message>
-    <message>
-        <source>Paste audio from other Audacity project as</source>
-        <translation type="vanished">Lipit din clipboard</translation>
-    </message>
-    <message>
-        <source>Connect dots</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Stem plot</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for Tracks</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Auto-&amp;fit track height</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Use &amp;half-wave display when collapsed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Pinned Recording/Playback head</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>A&amp;uto-scroll if head unpinned</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pinned &amp;head position</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Default &amp;view mode:</source>
-        <translation type="vanished">&amp;Rata de eșantionare implicită:</translation>
-    </message>
-    <message>
-        <source>Default Waveform scale:</source>
-        <translation type="vanished">&amp;Formatul implicit al eșantionării:</translation>
-    </message>
-    <message>
-        <source>Display &amp;samples:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Default audio track &amp;name:</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Zoom Toggle</source>
-        <translation type="vanished">Instrument de zoom</translation>
-    </message>
-    <message>
-        <source>Preset 1:</source>
-        <translation type="vanished">Apăsați</translation>
-    </message>
-    <message>
-        <source>Preset 2:</source>
-        <translation type="vanished">Apăsați</translation>
-    </message>
-    <message>
-        <source>Waveforms</source>
-        <extracomment>i18n-hint: A waveform is a visual representation of vibration</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences for Waveforms</source>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Waveform dB &amp;range:</source>
-        <translation type="vanished">Nive&amp;l (dB):</translation>
-    </message>
-    <message>
-        <source>Audio Setup</source>
-        <extracomment>i18n-hint: Audio setup button text, keep as short as possible</extracomment>
-        <translation type="vanished">Fișier audio</translation>
-    </message>
-    <message>
-        <source>&amp;Host</source>
-        <extracomment>i18n-hint: Audio setup menu</extracomment>
-        <translation type="vanished">&amp;Gazdă:</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Device</source>
-        <translation type="vanished">Dispozitiv de redare</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Device</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Recording &amp;Channels</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Settings...</source>
-        <translation type="vanished">Spectrograme</translation>
-    </message>
-    <message>
-        <source>1 (Mono) Recording Channel</source>
-        <translation type="vanished">1 canal de înregistrare (mono)</translation>
-    </message>
-    <message>
-        <source>2 (Stereo) Recording Channels</source>
-        <translation type="vanished">2 canale de înregistrare (stereo)</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Setup Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages the audio devices</extracomment>
-        <translation type="vanished">&amp;Editează bara de unelte</translation>
-    </message>
-    <message>
-        <source>Stopped</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Oprit</translation>
-    </message>
-    <message>
-        <source>Transport</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Skip to Start</source>
-        <translation type="vanished">Sari la început</translation>
-    </message>
-    <message>
-        <source>Skip to End</source>
-        <translation type="vanished">Sari la sfârșit</translation>
-    </message>
-    <message>
-        <source>Play Once</source>
-        <translation type="vanished">Redă o secundă</translation>
-    </message>
-    <message>
-        <source>Record New Track</source>
-        <translation type="vanished">Pistă nouă</translation>
-    </message>
-    <message>
-        <source>Append Record</source>
-        <translation type="vanished">) / Adaugă înregistrarea (</translation>
-    </message>
-    <message>
-        <source>Select to End</source>
-        <translation type="vanished">Sfârșitul selecției:</translation>
-    </message>
-    <message>
-        <source>Select to Start</source>
-        <translation type="vanished">Începutul selecției:</translation>
-    </message>
-    <message>
-        <source>%s Paused.</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused.</extracomment>
-        <translation type="vanished">În pauză</translation>
-    </message>
-    <message>
-        <source>%s.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Transport Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-with the big buttons on it (play record etc)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Playback Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for playback.</extracomment>
-        <translation type="vanished">Dispozitiv de redare</translation>
-    </message>
-    <message>
-        <source>Recording Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for recording.</extracomment>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Audio Host</source>
-        <translation type="vanished">Gazdă audio</translation>
-    </message>
-    <message>
-        <source>Recording Channels</source>
-        <translation type="vanished">Canale de înregistrare</translation>
-    </message>
-    <message>
-        <source>Select Recording Device</source>
-        <translation type="vanished">Selectați dispozitivul de înregistrare</translation>
-    </message>
-    <message>
-        <source>Select Playback Device</source>
-        <translation type="vanished">Selectați dispozitivul de redare</translation>
-    </message>
-    <message>
-        <source>Select Audio Host</source>
-        <translation type="vanished">Selectați gazda audio</translation>
-    </message>
-    <message>
-        <source>Select Recording Channels</source>
-        <translation type="vanished">Selectați canalele de înregistrare</translation>
-    </message>
-    <message>
-        <source>Device information is not available.</source>
-        <translation type="vanished">Informațiile despre dispozitiv nu sunt disponibile</translation>
-    </message>
-    <message>
-        <source>&amp;Device Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages devices</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>De&amp;vice</source>
-        <translation type="vanished">Dispoziti&amp;v:</translation>
-    </message>
-    <message>
-        <source>Change &amp;Recording Device...</source>
-        <translation type="vanished">Schimbă dispozitivul de înregistrare</translation>
-    </message>
-    <message>
-        <source>Change &amp;Playback Device...</source>
-        <translation type="vanished">Schimbă dispozitivul de redare</translation>
-    </message>
-    <message>
-        <source>Change Audio &amp;Host...</source>
-        <translation type="vanished">Schimbă gazda audio</translation>
-    </message>
-    <message>
-        <source>Change Recording Cha&amp;nnels...</source>
-        <translation type="vanished">Schimbă canalele de înregistrare</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation type="vanished">Mărește</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation type="vanished">Micșorează</translation>
-    </message>
-    <message>
-        <source>Fit selection to width</source>
-        <translation type="vanished">Potrivește selecția la fereastră</translation>
-    </message>
-    <message>
-        <source>Fit project to width</source>
-        <translation type="vanished">Potrivește proiectul la fereastră</translation>
-    </message>
-    <message>
-        <source>Trim audio outside selection</source>
-        <translation type="vanished">Suprimă audio în afara selecției</translation>
-    </message>
-    <message>
-        <source>Silence audio selection</source>
-        <translation type="vanished">Liniște în locul selecției audi&amp;o</translation>
-    </message>
-    <message>
-        <source>Sync-Lock Tracks</source>
-        <translation type="vanished">Blochează sincronizarea pistelor</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar for editing</extracomment>
-        <translation type="vanished">&amp;Editează bara de unelte</translation>
-    </message>
-    <message>
-        <source> Monitoring </source>
-        <translation type="vanished"> Monitorizare </translation>
-    </message>
-    <message>
-        <source> Active </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Peak %2.f dB</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Peak %.2f </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source> Clipped </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Record Meter</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.</extracomment>
-        <translation type="vanished">Nivel de înregistrare</translation>
-    </message>
-    <message>
-        <source>Meter-Record</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Playback Meter</source>
-        <translation type="vanished">Nivel de redare</translation>
-    </message>
-    <message>
-        <source>Playback Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.</extracomment>
-        <translation type="vanished">Nivel de redare</translation>
-    </message>
-    <message>
-        <source>Meter-Play</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Recording Meter</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Combined Meter</source>
-        <translation type="vanished">Activează instrumentul de măsură</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Meter Toolbar</source>
-        <translation type="vanished">Bară de unelte pentru în&amp;registrare</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Meter Toolbar</source>
-        <translation type="vanished">Bară de unelte &amp;pentru înregistrare</translation>
-    </message>
-    <message>
-        <source>Mi&amp;xer</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Volume...</source>
-        <translation type="vanished">Ajustează volumul de redare</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Volume</source>
-        <translation type="vanished">Mărește volumul de redare</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Volume</source>
-        <translation type="vanished">Scade volumul de redare</translation>
-    </message>
-    <message>
-        <source>Adj&amp;ust Recording Volume...</source>
-        <translation type="vanished">Ajustează volumul de înregistrare</translation>
-    </message>
-    <message>
-        <source>I&amp;ncrease Recording Volume</source>
-        <translation type="vanished">Mărește volumul de înregistrare</translation>
-    </message>
-    <message>
-        <source>D&amp;ecrease Recording Volume</source>
-        <translation type="vanished">Scade volumul de înregistrare</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Lungime</translation>
-    </message>
-    <message>
-        <source>Center</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Centrează</translation>
-    </message>
-    <message>
-        <source>Selection Toolbar Setup</source>
-        <translation type="vanished">Instrument de selecție</translation>
-    </message>
-    <message>
-        <source>Start and End of Selection</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Start and Length of Selection</source>
-        <translation type="vanished">Lungimea curentă a selecției.</translation>
-    </message>
-    <message>
-        <source>Length and End of Selection</source>
-        <translation type="vanished">Lungimea curentă a selecției.</translation>
-    </message>
-    <message>
-        <source>Length and Center of Selection</source>
-        <translation type="vanished">Lungimea curentă a selecției.</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Snap to combo box</source>
-        <extracomment>i18n-hint: combo box is the type of the control/widget</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Snapping Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">&amp;Editează bara de unelte</translation>
-    </message>
-    <message>
-        <source>Spectral Selection</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Center frequency and Width</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Low and High Frequencies</source>
-        <translation type="vanished">Frecvențe joase și înalte</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="vanished">Arată:</translation>
-    </message>
-    <message>
-        <source>Center Frequency</source>
-        <translation type="vanished">Frecvență centrală:</translation>
-    </message>
-    <message>
-        <source>Bandwidth</source>
-        <translation type="vanished">Lățime de bandă:</translation>
-    </message>
-    <message>
-        <source>Spe&amp;ctral Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a frequency range of audio</extracomment>
-        <translation type="vanished">Bară de unelte pentru selecție &amp;spectrală</translation>
-    </message>
-    <message>
-        <source>Time Signature</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <translation type="vanished">Instrument de decalaj temporal</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Lower Time Signature</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Tempo Changed</source>
-        <translation type="vanished">Schimbare de rată</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature Changed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Lower Time Signature Changed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Time Signature Toolbar</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">Instrument de decalaj temporal</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation type="vanished">Timpul de sfârșit</translation>
-    </message>
-    <message>
-        <source>Audio Position</source>
-        <translation type="vanished">Poziție audio:</translation>
-    </message>
-    <message>
-        <source>&amp;Time Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for viewing actual time of the cursor</extracomment>
-        <translation type="vanished">&amp;Editează bara de unelte</translation>
-    </message>
-    <message>
-        <source>Audacity %s Toolbar</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of the kind of toolbar.</extracomment>
-        <translation type="vanished">Bara de instrumente %1 Audacity</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize toolbar</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>ToolDock</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selection Tool</source>
-        <translation type="vanished">Instrument de selecție</translation>
-    </message>
-    <message>
-        <source>Envelope Tool</source>
-        <translation type="vanished">Instrument de anvelopă</translation>
-    </message>
-    <message>
-        <source>Draw Tool</source>
-        <translation type="vanished">Instrument de desenare</translation>
-    </message>
-    <message>
-        <source>Multi-Tool</source>
-        <translatorcomment>hm ? sau de multiplicare ?</translatorcomment>
-        <translation type="vanished">Instrument multiplu</translation>
-    </message>
-    <message>
-        <source>T&amp;ools Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows a toolbar
-that has some tools in it</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Selection Tool</source>
-        <translation type="vanished">Instrument de selecție</translation>
-    </message>
-    <message>
-        <source>&amp;Envelope Tool</source>
-        <translation type="vanished">Instrument de anvelopă</translation>
-    </message>
-    <message>
-        <source>&amp;Draw Tool</source>
-        <translation type="vanished">Instrument de desenare</translation>
-    </message>
-    <message>
-        <source>&amp;Multi Tool</source>
-        <translatorcomment>hm ? sau de multiplicare ?</translatorcomment>
-        <translation type="vanished">Instrument multiplu</translation>
-    </message>
-    <message>
-        <source>&amp;Previous Tool</source>
-        <translation type="vanished">Instrumentul precedent</translation>
-    </message>
-    <message>
-        <source>&amp;Next Tool</source>
-        <translation type="vanished">Instrumentul următor</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed</source>
-        <translation type="vanished">Redă-cu-viteza</translation>
-    </message>
-    <message>
-        <source>Play at selected speed</source>
-        <translation type="vanished">Redă la viteza selectată</translation>
-    </message>
-    <message>
-        <source>Playback Speed</source>
-        <translation type="vanished">Viteza de redare</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed Once</source>
-        <translation type="vanished">Redă-cu-viteza</translation>
-    </message>
-    <message>
-        <source>Pla&amp;y-at-Speed Toolbar</source>
-        <translation type="vanished">Redă-cu-viteza</translation>
-    </message>
-    <message>
-        <source>&amp;Play-at-Speed</source>
-        <extracomment>i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.</extracomment>
-        <translation type="vanished">Redă-cu-viteza</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed &amp;Once</source>
-        <translation type="vanished">Redă-cu-viteza</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview-at-Speed</source>
-        <translation type="vanished">Redă previzualizarea tăiată la viteza</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Speed...</source>
-        <translation type="vanished">Ajustează viteza de redare</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Speed</source>
-        <translation type="vanished">Crește viteza de redare</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Speed</source>
-        <translation type="vanished">Scade viteza de redare</translation>
-    </message>
-    <message>
-        <source>Drag label. Hold shift and drag to move all labels on the same track.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Drag one or more label boundaries.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Drag label boundary.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Modified Label</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Label Edit</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>Click to edit label text</source>
-        <translation type="vanished">Clic pentru a începe</translation>
-    </message>
-    <message>
-        <source>&amp;Font...</source>
-        <translation type="vanished">&amp;Font...</translation>
-    </message>
-    <message>
-        <source>Label Track Font</source>
-        <extracomment>i18n-hint: (noun) This is the font for the label track.</extracomment>
-        <translation type="vanished">Pistă de etichete</translation>
-    </message>
-    <message>
-        <source>Face name</source>
-        <extracomment>i18n-hint: (noun) The name of the typeface</extracomment>
-        <translation type="vanished">Același nume</translation>
-    </message>
-    <message>
-        <source>Face size</source>
-        <extracomment>i18n-hint: (noun) The size of the typeface</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Cu&amp;t Label text</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Label text</source>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Label</source>
-        <translation type="vanished">Șterge etic&amp;heta</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Label...</source>
-        <translation type="vanished">&amp;Editare etichete...</translation>
-    </message>
-    <message>
-        <source>Deleted Label</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Edited labels</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>New label</source>
-        <translation type="vanished">Etichetă adaugată</translation>
-    </message>
-    <message>
-        <source>Up &amp;Octave</source>
-        <translation type="vanished">Mai sus o &amp;octavă</translation>
-    </message>
-    <message>
-        <source>Down Octa&amp;ve</source>
-        <translation type="vanished">Mai jos o octa&amp;vă</translation>
-    </message>
-    <message>
-        <source>MIDI Device Info</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;MIDI Device Info...</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Zoom Reset</source>
-        <translation type="vanished">Micșorează</translation>
-    </message>
-    <message>
-        <source>Shift-Right-Click</source>
-        <translation type="vanished">Shift + clic stânga</translation>
-    </message>
-    <message>
-        <source>Left-Click/Left-Drag</source>
-        <translation type="vanished">Shift + clic stânga</translation>
-    </message>
-    <message>
-        <source>Shift-Left-Click</source>
-        <translation type="vanished">Shift + clic stânga</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch selected region.</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Stretch Note Track</source>
-        <extracomment>i18n-hint: (noun) The track that is used for MIDI notes which can be
-dragged to change their duration.</extracomment>
-        <translation type="vanished">Pistă stereo</translation>
-    </message>
-    <message>
-        <source>Stretch</source>
-        <extracomment>i18n-hint: In the history list, indicates a MIDI note has
-been dragged to change its duration (stretch it). Using either past
-or present tense is fine here.  If unsure, go for whichever is
-shorter.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click to open clip context menu.</source>
-        <translation type="vanished">Clic pentru a începe</translation>
-    </message>
-    <message>
-        <source>Reset Clip Pitch</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Not enough space</source>
-        <translation type="vanished">Nu sunt selectate suficiente date.</translation>
-    </message>
-    <message>
-        <source>There is not enough space to expand the clip to its original speed.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Reset Clip Speed</source>
-        <translation type="vanished">Spațiu &amp;total utilizat</translation>
-    </message>
-    <message>
-        <source>Click to reset clip pitch.</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Cmd + click to reset.</source>
-        <translation type="vanished">Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo.</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Ctrl + click to reset.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click to reset clip speed.</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Cmd + click to reset.</source>
-        <translation type="vanished">Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo.</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Ctrl + click to reset.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Left-Click to expand, Right-Click to remove</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Expanded Cut Line</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Expand</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Removed Cut Line</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pitch and Speed</source>
-        <translation type="vanished">Suport pentru modificarea înălțimii și tempoului sunetului</translation>
-    </message>
-    <message>
-        <source>Clip Pitch</source>
-        <translation type="vanished">Modifică înălțimea sunetului</translation>
-    </message>
-    <message>
-        <source>se&amp;mitones:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;cents:</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Clip Speed</source>
-        <translation type="vanished">Spațiu &amp;total utilizat</translation>
-    </message>
-    <message>
-        <source>&amp;speed %: </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Optimize for Voice</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Changed Speed</source>
-        <translation type="vanished">Modifică viteza</translation>
-    </message>
-    <message>
-        <source>Changed Pitch</source>
-        <translation type="vanished">Modifică înălțimea sunetului</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the samples</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>To use Draw, zoom in further until you can see the individual samples.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Moved Samples</source>
-        <translation type="vanished">Modifică eșantionul</translation>
-    </message>
-    <message>
-        <source>Sample Edit</source>
-        <translation type="vanished">Editare eșantion</translation>
-    </message>
-    <message>
-        <source>Zoom to Fit</source>
-        <translation type="vanished">Mărește pe punct</translation>
-    </message>
-    <message>
-        <source>Reset Zoom</source>
-        <translation type="vanished">R&amp;eset</translation>
-    </message>
-    <message>
-        <source>&amp;Spectrogram</source>
-        <translation type="vanished">Spectrogramă</translation>
-    </message>
-    <message>
-        <source>To change Spectrogram Settings, stop any
- playing or recording first.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Stop the Audio First</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>S&amp;pectrogram Settings...</source>
-        <translation type="vanished">Spectrograme</translation>
-    </message>
-    <message>
-        <source>S&amp;pectral</source>
-        <translation type="vanished">S&amp;pectral</translation>
-    </message>
-    <message>
-        <source>To&amp;ggle Spectral Selection</source>
-        <translation type="vanished">Comută selecția &amp;spectrală</translation>
-    </message>
-    <message>
-        <source>Next &amp;Higher Peak Frequency</source>
-        <translation type="vanished">Frecvență înaltă</translation>
-    </message>
-    <message>
-        <source>Next &amp;Lower Peak Frequency</source>
-        <translation type="vanished">Frecvență joasă:</translation>
-    </message>
-    <message>
-        <source>Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">Click dreapta</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust sizes of sub-views, double-click to split evenly</source>
-        <translation type="vanished">Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo.</translation>
-    </message>
-    <message>
-        <source>Click and drag to rearrange sub-views</source>
-        <translation type="vanished">Click and Drag pentru a muta o piesă în timp</translation>
-    </message>
-    <message>
-        <source>Rearrange sub-views</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Close sub-view</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Mute/Unmute Track</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip</source>
-        <oldsource>%s, %d of %d clips</oldsource>
-        <extracomment>i18n-hint:
-string is the name of a clip
-first number is the position of that clip in a sequence of clips,
-second number counts the clips</extracomment>
-        <translation type="vanished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
-    </message>
-    <message>
-        <source>Adjust left trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Trim by %.02fs</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Adjust right trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click and drag to move clip boundary in time</source>
-        <translation type="vanished">Click and Drag pentru a muta o piesă în timp</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch clip</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Split Clip</source>
-        <translation type="vanished">Instrumentul următor</translation>
-    </message>
-    <message>
-        <source>Join Clips</source>
-        <translation type="vanished">Fișier audio</translation>
-    </message>
-    <message>
-        <source>Rename Clip...</source>
-        <translation type="vanished">Redenumește...</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed...</source>
-        <translation type="vanished">Modifică viteza</translation>
-    </message>
-    <message>
-        <source>Render Pitch and Speed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Changed Clip Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Changed Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">Modifică viteza</translation>
-    </message>
-    <message>
-        <source>Set Wave Clip Name</source>
-        <translation type="vanished">Nume pistă</translation>
-    </message>
-    <message>
-        <source>Click and drag to select text</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Modified Clip Name</source>
-        <translation type="vanished">Modificat</translation>
-    </message>
-    <message>
-        <source>Clip Name Edit</source>
-        <translation type="vanished">Editare eșantion</translation>
-    </message>
-    <message>
-        <source>Rendered time-stretched audio</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pitch Shift</source>
-        <translation type="vanished">Pre&amp;vizualizare</translation>
-    </message>
-    <message>
-        <source>Changed Pitch Shift</source>
-        <translation type="vanished">Modifică înălțimea sunetului</translation>
-    </message>
-    <message>
-        <source>&amp;Rename Clip...</source>
-        <translation type="vanished">Redenumește...</translation>
-    </message>
-    <message>
-        <source>&amp;Pitch and Speed...</source>
-        <translation type="vanished">Modifică viteza</translation>
-    </message>
-    <message>
-        <source>Render Pitch and &amp;Speed</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pitch &amp;Up</source>
-        <translation type="vanished">Înălțime sunet (EAC)</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Down</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Format</source>
-        <translation type="vanished">Schimbare de format</translation>
-    </message>
-    <message>
-        <source>Changing sample format</source>
-        <translation type="vanished">Modifică eșantionul</translation>
-    </message>
-    <message>
-        <source>Processing...   0%%</source>
-        <translation type="vanished">&amp;Restrânge toate pistele</translation>
-    </message>
-    <message>
-        <source>Processing...   %i%%</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Changed '%s' to %s</source>
-        <extracomment>i18n-hint: The strings name a track and a format</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Format Change</source>
-        <translation type="vanished">Schimbare de format</translation>
-    </message>
-    <message>
-        <source>Rat&amp;e</source>
-        <translation type="vanished">Stabileșt&amp;e rata</translation>
-    </message>
-    <message>
-        <source>8000 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>11025 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>16000 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>22050 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>44100 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>48000 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>88200 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>96000 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>176400 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>192000 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>352800 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>384000 Hz</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Other...</source>
-        <translation type="vanished">Altele...</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s Hz</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2 Hz</translation>
-    </message>
-    <message>
-        <source>Rate Change</source>
-        <translation type="vanished">Schimbare de rată</translation>
-    </message>
-    <message>
-        <source>Set Rate</source>
-        <translation type="vanished">Stabilește rata</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke Stereo Track</source>
-        <translation type="vanished">Pistă stereo</translation>
-    </message>
-    <message>
-        <source>Swap Stereo &amp;Channels</source>
-        <translation type="vanished">2 canale de înregistrare (stereo)</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Stereo Track</source>
-        <translation type="vanished">Pistă stereo</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mo&amp;no</source>
-        <translation type="vanished">Divizează stereo în mono „%1”</translation>
-    </message>
-    <message>
-        <source>The tracks you are attempting to merge to stereo contain clips at
-different positions, or otherwise mismatching clips. Merging them
-will render the tracks.
-
-This causes any realtime effects to be applied to the waveform and
-hidden data to be removed. Additionally, the entire track will
-become one large clip.
-
-Do you wish to continue?</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Combine mono to stereo</source>
-        <translation type="vanished">Activează instrumentul de măsură</translation>
-    </message>
-    <message>
-        <source>Made '%s' a stereo track</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Make Stereo</source>
-        <translation type="vanished">Transformă în stereo</translation>
-    </message>
-    <message>
-        <source>Swapped Channels in '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Swap Channels</source>
-        <translation type="vanished">%1 canale</translation>
-    </message>
-    <message>
-        <source>Split stereo track '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Divizează stereo în mono „%1”</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mono '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Divizează stereo în mono „%1”</translation>
-    </message>
-    <message>
-        <source>Split to Mono</source>
-        <translation type="vanished">Divizează în mono</translation>
-    </message>
-    <message>
-        <source>Created new audio track</source>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Created new stereo audio track</source>
-        <translation type="vanished">A fost creată o nouă pistă audio stereo</translation>
-    </message>
-    <message>
-        <source>&amp;Mono Track</source>
-        <translation type="vanished">Pistă &amp;mono</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo Track</source>
-        <translation type="vanished">Pistă stereo</translation>
-    </message>
-    <message>
-        <source>%+.1f dB</source>
-        <extracomment>i18n-hint dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.0f%% Left</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%.0f%% Right</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Half Wave</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Wa&amp;veform</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Wave Color</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Instrument %i</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>WaveColor Change</source>
-        <translation type="vanished">Schimbare de rată</translation>
-    </message>
-    <message>
-        <source>Change Speed Limits</source>
-        <translation type="vanished">Modifică viteza</translation>
-    </message>
-    <message>
-        <source>Change speed limit (%) to:</source>
-        <translation type="vanished">Schimbă limita vitezei inferioare (%) la:</translation>
-    </message>
-    <message>
-        <source>Lower Speed Limit</source>
-        <translation type="vanished">Limita superioară de viteză</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit</source>
-        <translation type="vanished">Limita superioară de viteză</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit must be greater than the Lower Speed Limit</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid Limits</source>
-        <translation type="vanished">Arată li&amp;mitarea</translation>
-    </message>
-    <message>
-        <source>Set range to '%ld' - '%ld'</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Range</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Stabilește rata</translation>
-    </message>
-    <message>
-        <source>Set time track display to linear</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Display</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set time track display to logarithmic</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set time track interpolation to linear</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Set Interpolation</source>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to logarithmic</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Linear scale</source>
-        <translation type="vanished">&amp;Liniar</translation>
-    </message>
-    <message>
-        <source>L&amp;ogarithmic scale</source>
-        <translation type="vanished">L&amp;ogaritmic</translation>
-    </message>
-    <message>
-        <source>&amp;Range...</source>
-        <translation type="vanished">Gestionare...</translation>
-    </message>
-    <message>
-        <source>Logarithmic &amp;Interpolation</source>
-        <translation type="vanished">Interfață</translation>
-    </message>
-    <message>
-        <source>Created new time track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Time Track</source>
-        <translation type="vanished">Pistă de &amp;timp</translation>
-    </message>
-    <message>
-        <source>Right-click for menu.</source>
-        <translation type="vanished">Click dreapta</translation>
-    </message>
-    <message>
-        <source>Drag clips to reposition them. Hold Shift and drag to move all clips on the same track.</source>
-        <extracomment>i18n-hint Appears on hovering mouse over clip affordance</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Add Mono Track</source>
-        <translation type="vanished">Pistă &amp;mono</translation>
-    </message>
-    <message>
-        <source>Add Stereo Track</source>
-        <translation type="vanished">Pistă stereo</translation>
-    </message>
-    <message>
-        <source>Add Label Track</source>
-        <translation type="vanished">Pistă de etichete</translation>
-    </message>
-    <message>
-        <source>Export Audio...</source>
-        <translation type="vanished">&amp;Exportă audio...</translation>
-    </message>
-    <message>
-        <source>Erased selected area</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Selected area using Brush Tool</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Brush tool selection</source>
-        <translation type="vanished">Taie selecția</translation>
-    </message>
-    <message>
-        <source>Re&amp;name Track...</source>
-        <translation type="vanished">Redenumește...</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Up</source>
-        <translation type="vanished">Mută pista mai s&amp;us</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Down</source>
-        <translation type="vanished">Mută pista mai &amp;jos</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Top</source>
-        <translation type="vanished">Mută pista sus de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Bottom</source>
-        <translation type="vanished">Mută pista jos de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Set Track Name</source>
-        <translation type="vanished">Nume pistă</translation>
-    </message>
-    <message>
-        <source>Renamed '%s' to '%s'</source>
-        <translation type="vanished">'%1' a fost redenumit în '%2'</translation>
-    </message>
-    <message>
-        <source>Name Change</source>
-        <translation type="vanished">Schimbare de nume</translation>
-    </message>
-    <message>
-        <source>Click and drag to warp playback time</source>
-        <translation type="vanished">Click and Drag pentru a muta o piesă în timp</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the amplitude envelope</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>Adjusted envelope.</source>
-        <extracomment>i18n-hint: (verb) Audacity has just adjusted the envelope .</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Scrub &amp;Ruler</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">Bare de instrumen&amp;te</translation>
-    </message>
-    <message>
-        <source>Playing at Speed</source>
-        <translation type="vanished">Redă la viteza</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Seek</source>
-        <translation type="vanished">Mută pista sus de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Scrub</source>
-        <translation type="vanished">Mută pista jos de &amp;tot</translation>
-    </message>
-    <message>
-        <source>Scru&amp;bbing</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Scrub Bac&amp;kwards</source>
-        <translation type="vanished">Înapoi</translation>
-    </message>
-    <message>
-        <source>Scrub For&amp;wards</source>
-        <translation type="vanished">Înainte</translation>
-    </message>
-    <message>
-        <source>Click and drag to move left selection boundary.</source>
-        <translation type="vanished">Clic și trageți pentru a modifica limita stângă a selecției.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move right selection boundary.</source>
-        <translation type="vanished">Clic și trageți pentru a modifica limita dreaptă a selecției.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move bottom selection frequency.</source>
-        <translation type="vanished">Clic și trageți pentru a modifica limita stângă a selecției.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move top selection frequency.</source>
-        <translation type="vanished">Clic și trageți pentru a modifica limita stângă a selecției.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency to a spectral peak.</source>
-        <translation type="vanished">Clic și trageți pentru a modifica limita stângă a selecției.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency.</source>
-        <translation type="vanished">Clic și trageți pentru a muta selecția centrală.</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust frequency bandwidth.</source>
-        <translation type="vanished">Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo.</translation>
-    </message>
-    <message>
-        <source>Edit, Preferences...</source>
-        <extracomment>i18n-hint: These are the names of a menu and a command in that menu</extracomment>
-        <translation type="vanished">Editare, Preferințe...</translation>
-    </message>
-    <message>
-        <source>Multi-Tool Mode: %s for Mouse and Keyboard Preferences.</source>
-        <extracomment>i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click and drag to set frequency bandwidth.</source>
-        <translation type="vanished">Clic și trageți pentru a modifica limita stângă a selecției.</translation>
-    </message>
-    <message>
-        <source>Click and drag to select audio</source>
-        <translation type="vanished">Clic și trageți pentru a redimensiona pista.</translation>
-    </message>
-    <message>
-        <source>(snapping)</source>
-        <extracomment>i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click and drag to move a track in time</source>
-        <translation type="vanished">Click and Drag pentru a muta o piesă în timp</translation>
-    </message>
-    <message>
-        <source>Could not shift between tracks</source>
-        <translation type="vanished">Mută clipul mai sus sau mai jos între piste</translation>
-    </message>
-    <message>
-        <source>Moved clips to another track</source>
-        <translation type="vanished">Mută efectul mai sus în rack</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips right %.02f seconds</source>
-        <translation type="vanished">Suprimă audio de la %1 secunde la %2 secunde din pistele audio selectate</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips left %.02f seconds</source>
-        <translation type="vanished">Suprimă audio de la %1 secunde la %2 secunde din pistele audio selectate</translation>
-    </message>
-    <message>
-        <source>Move Clip</source>
-        <translation type="vanished">Mută mai sus</translation>
-    </message>
-    <message>
-        <source>Collapse</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Delete Track</source>
-        <translation type="vanished">&amp;Ordonează pistele</translation>
-    </message>
-    <message>
-        <source>Open menu...</source>
-        <translation type="vanished">Deschide &amp;recente...</translation>
-    </message>
-    <message>
-        <source>Command+Click</source>
-        <extracomment>i18n-hint: Command names a modifier key on Macintosh keyboards</extracomment>
-        <translation type="vanished">&amp;Comandă</translation>
-    </message>
-    <message>
-        <source>Ctrl+Click</source>
-        <extracomment>i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards</extracomment>
-        <translation type="vanished">Ctrl + clic stânga</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track. Drag up or down to change track order.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>%s to select or deselect track.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">A fost creată o nouă pistă audio</translation>
-    </message>
-    <message>
-        <source>Moved '%s' up</source>
-        <extracomment>i18n-hint: will substitute name of track for %s</extracomment>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Moved '%s' down</source>
-        <translation type="vanished">'%1' a fost schimbat în %2</translation>
-    </message>
-    <message>
-        <source>Move Track</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Click to Zoom In, Shift-Click to Zoom Out</source>
-        <translation type="vanished">Click pentru Zoom In, Shift-Click pentru Zoom Out</translation>
-    </message>
-    <message>
-        <source>Drag to Zoom Into Region, Right-Click to Zoom Out</source>
-        <translation type="vanished">Clic pentru a mări zona, Shift-Clic pentru a o micșora</translation>
-    </message>
-    <message>
-        <source>Left=Zoom In, Right=Zoom Out, Middle=Normal</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>No Updates Available</source>
-        <extracomment>i18n-hint: Title of the dialog no updates available.</extracomment>
-        <translation type="vanished">Previzualizare efecte</translation>
-    </message>
-    <message>
-        <source>Check for Updates</source>
-        <translation type="vanished">&amp;Caută actualizări...</translation>
-    </message>
-    <message>
-        <source>If you want to change your preference for automatic updates checking, you can find it in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Application'.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Preferences &gt; Application</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
-i18n-hint: a page in the Preferences dialog; use same name</extracomment>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Error checking for update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Eroare la deschiderea fișierului</translation>
-    </message>
-    <message>
-        <source>Unable to connect to Audacity update server.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Update data was corrupted.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error downloading update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Eroare la încărcarea metadatelor</translation>
-    </message>
-    <message>
-        <source>Can't open the Audacity download link.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity update</source>
-        <translation type="vanished">Jurnal Audacity</translation>
-    </message>
-    <message>
-        <source>Downloading %s</source>
-        <translation type="vanished">Descarcă</translation>
-    </message>
-    <message>
-        <source>App update checking</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.</source>
-        <extracomment>i18n-hint: The first paragraph of app update notice dialog.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.</source>
-        <extracomment>i18n-hint: The second paragraph of app update notice dialog</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can turn off app update checking at any time in %s.</source>
-        <extracomment>i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences &gt; Application" link</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>App updates</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Update Audacity</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <comment>update dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Install update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Audacity %s is available!</source>
-        <comment>update dialog</comment>
-        <extracomment>i18n-hint Substitution of version number for %s.</extracomment>
-        <translation type="vanished">Bara de instrumente %1 Audacity</translation>
-    </message>
-    <message>
-        <source>Changelog</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Canal</translation>
-    </message>
-    <message>
-        <source>Read more on GitHub</source>
-        <comment>update dialog</comment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(disabled)</source>
-        <translation type="vanished"> (dezactivat)</translation>
-    </message>
-    <message>
-        <source>Press</source>
-        <translation type="vanished">Apăsați</translation>
-    </message>
-    <message>
-        <source>Button</source>
-        <translation type="vanished">Buton</translation>
-    </message>
-    <message>
-        <source>pressed</source>
-        <extracomment>i18n-hint: whether a button is pressed or not pressed</extracomment>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>not pressed</source>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Left, in the Pan slider
-i18n-hint: One-letter abbreviation for Left, in VU Meter</extracomment>
-        <translation type="vanished">L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Right, in the Pan slider
-i18n-hint: One-letter abbreviation for Right, in VU Meter</extracomment>
-        <translation type="vanished">R</translation>
-    </message>
-    <message>
-        <source>%.3fx</source>
-        <extracomment>i18n-hint: "x" suggests a multiplicative factor</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>&amp;Clear</source>
-        <translation type="vanished">&amp;Curăță</translation>
-    </message>
-    <message>
-        <source>Grabber</source>
-        <translatorcomment>hm ?</translatorcomment>
-        <extracomment>i18n-hint: A 'Grabber' is a region you can click and drag on
-It's used to drag a track around (when in multi-tool mode) rather
-than requiring that you use the drag tool.  It's shown as a series
-of horizontal bumps</extracomment>
-        <translation type="vanished">Acaparator</translation>
-    </message>
-    <message>
-        <source>Empty</source>
-        <translation type="vanished">Gol</translation>
-    </message>
-    <message>
-        <source>Menu</source>
-        <translation type="vanished">Meniu</translation>
-    </message>
-    <message>
-        <source>Meter</source>
-        <extracomment>i18n-hint: Noun (the meter is used for playback or record level monitoring)</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Disable Silent Monitoring</source>
-        <translation type="vanished">Oprește monitorizarea</translation>
-    </message>
-    <message>
-        <source>Enable Silent Monitoring</source>
-        <translation type="vanished">Oprește monitorizarea</translation>
-    </message>
-    <message>
-        <source>Recording Meter Options</source>
-        <translation type="vanished">Dispozitiv de înregistrare</translation>
-    </message>
-    <message>
-        <source>Playback Meter Options</source>
-        <translation type="vanished">Nivel de redare</translation>
-    </message>
-    <message>
-        <source>Refresh Rate</source>
-        <translation type="vanished">Rată de reîmprospătare</translation>
-    </message>
-    <message>
-        <source>Higher refresh rates make the meter show more frequent
-changes. A rate of 30 per second or less should prevent
-the meter affecting audio quality on slower machines.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]: </source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Meter Style</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Meter Type</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Orientation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Missing Plugins</source>
-        <translation type="vanished">Nu s-a putut determina</translation>
-    </message>
-    <message>
-        <source>This project contains some realtime effect plugins that cannot be found on this system.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>The project may sound different than intended. %s</source>
-        <extracomment>i18n-hint: %s will be replaced with "Learn more"</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Learn more</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>(Use context menu to change format.)</source>
-        <translation type="vanished">(Folosiți meniul contextual pentru a modifica formatul)</translation>
-    </message>
-    <message>
-        <source>%s (%s)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Unable to write files to directory: %s.</source>
-        <extracomment>i18n-hint: %s is replaced with a directory path.</extracomment>
-        <translation type="vanished">Nu s-a putut citi fișierul de setări predefinite.</translation>
-    </message>
-    <message>
-        <source>Please check that the directory exists, has the necessary permissions, and the drive isn't full.</source>
-        <extracomment>i18n-hint: This message describes the error in the Error dialog.</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>You can change the directory in %s.</source>
-        <translatorcomment>hm ? urmează numele fișierului sau al unei erori ?</translatorcomment>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Directories'.</extracomment>
-        <translation type="vanished">Nu s-a putut scrie în fișier:</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Directories</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.</extracomment>
-        <translation type="vanished">Preferințe:</translation>
-    </message>
-    <message>
-        <source>Don't show this warning again</source>
-        <translation type="vanished">Nu mai arăta acest avertisment</translation>
-    </message>
-    <message>
-        <source>NaN</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Infinity</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>-Infinity</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Validation error</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Empty value</source>
-        <translation type="vanished">Valoare goală</translation>
-    </message>
-    <message>
-        <source>Malformed number</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Not in range %d to %d</source>
-        <translation type="vanished">În afara intervalului</translation>
-    </message>
-    <message>
-        <source>Value overflow</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Too many decimal digits</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Value not in range: %s to %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Value must not be less than %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Value must not be greater than %s</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Shelf Filter</source>
-        <translation type="vanished">Se aplică efectul Nyquist...</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Multi Tool</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>~aNotch filter parameters cannot be applied.~%~
-                      Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Spectral Edit Parametric EQ</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Shelves</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Studio Fade Out</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Adjustable Fade</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Beat Finder</source>
-        <translation type="vanished">Repetă</translation>
-    </message>
-    <message>
-        <source>Clip Fix</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Crossfade Clips</source>
-        <translation type="vanished">&amp;Restrânge toate pistele</translation>
-    </message>
-    <message>
-        <source>Crossfade Tracks</source>
-        <translation type="vanished">&amp;Restrânge toate pistele</translation>
-    </message>
-    <message>
-        <source>Regular Interval Labels</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error: There is insufficient space to create labels.~%</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>High-Pass Filter</source>
-        <translation type="vanished">Încarcă fișiere</translation>
-    </message>
-    <message>
-        <source>Label Sounds</source>
-        <extracomment>i18n-hint: Name of effect that labels sounds</extracomment>
-        <translation type="vanished">Editare etichetă</translation>
-    </message>
-    <message>
-        <source>No sounds found.~%~
-                 Try lowering 'Threshold level (dB)'.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Legacy Limiter</source>
-        <translation type="vanished">Arată li&amp;mitarea</translation>
-    </message>
-    <message>
-        <source>Low-Pass Filter</source>
-        <translation type="vanished">Încarcă fișiere</translation>
-    </message>
-    <message>
-        <source>Noise Gate</source>
-        <translation type="vanished">Zgomot:</translation>
-    </message>
-    <message>
-        <source>Don't Link Stereo</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Notch Filter</source>
-        <translation type="vanished">Se aplică efectul Nyquist...</translation>
-    </message>
-    <message>
-        <source>Nyquist Plugin Installer</source>
-        <translation type="vanished">Nyquist</translation>
-    </message>
-    <message>
-        <source>Files already installed ('Allow Overwriting' disabled):</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Rhythm Track</source>
-        <translation type="vanished">Elimină pista</translation>
-    </message>
-    <message>
-        <source>Set 'Number of bars' to zero to enable the 'Rhythm track duration'.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Used if 'Number of bars' = 0</source>
-        <translation type="vanished">De câte ori să se repete:</translation>
-    </message>
-    <message>
-        <source>Set either 'Number of bars' or~%~
-                    'Rhythm track duration' to greater than zero.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Risset Drum</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error.~%"~a" cannot be written.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Sample Data Import</source>
-        <translation type="vanished">Con&amp;vertor al ratei de eșantionare:</translation>
-    </message>
-    <message>
-        <source>Error~%~
-                        '~a' could not be opened.~%~
-                        Check that file exists.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error:~%~
-              The file must contain only plain ASCII text.~%~
-              (Invalid byte '~a' at byte number: ~a)</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Error~%~
-              Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Spectral Delete</source>
-        <translation type="vanished">Potrivește selecția</translation>
-    </message>
-    <message>
-        <source>Volume and Compression</source>
-        <extracomment>Effects menu group name; audio dynamics compression, not data compression</extracomment>
-        <translation type="vanished">Compresor</translation>
-    </message>
-    <message>
-        <source>Fading</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Pitch and Tempo</source>
-        <translation type="vanished">Suport pentru modificarea înălțimii și tempoului sunetului</translation>
-    </message>
-    <message>
-        <source>EQ and Filters</source>
-        <translation type="vanished">Încarcă fișiere</translation>
-    </message>
-    <message>
-        <source>Noise Removal and Repair</source>
-        <translation type="vanished">Eliminare zgomot</translation>
-    </message>
-    <message>
-        <source>Delay and Reverb</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Distortion and Modulation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Special</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">Mulțumiri speciale:</translation>
-    </message>
-    <message>
-        <source>Vocal Reduction and Isolation</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Vocal Remover</source>
-        <translation type="vanished">Eliminare pistă</translation>
-    </message>
-    <message>
-        <source>Spectral Tools</source>
-        <translation type="vanished">S&amp;pectral</translation>
-    </message>
-    <message>
-        <source>Legacy</source>
-        <translation type="vanished"/>
     </message>
 </context>
 </TS>

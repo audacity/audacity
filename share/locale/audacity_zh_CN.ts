@@ -1,5 +1,72 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
 <context>
+    <name>KDDockWidgets::Debug::DebugWindow</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
+        <source>DockWidget unique name</source>
+        <translation>边栏组件标识名称</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::DockWidgetBase</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
+        <source>Dock</source>
+        <translation>边栏化</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
+        <source>Detach</source>
+        <translation>分弓</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBar</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Dock window</source>
+        <translation>边栏化窗口</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Undock window</source>
+        <translation>悬浮化窗口</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBarWidget</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
+        <source>Minimize</source>
+        <translation>最小化</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
+        <source>Auto-hide</source>
+        <translation>自动隐藏</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
+        <source>Disable auto-hide</source>
+        <translation>停用自动隐藏</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Restore</source>
+        <translation>恢复</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Maximize</source>
+        <translation>最大化</translation>
+    </message>
+</context>
+<context>
     <name>Playback</name>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
@@ -23,6 +90,14 @@
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Disabled</source>
         <translation>未启用</translation>
+    </message>
+</context>
+<context>
+    <name>accessibility</name>
+    <message>
+        <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
+        <source>%1 panel</source>
+        <translation>%1 面板</translation>
     </message>
 </context>
 <context>
@@ -527,12 +602,12 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
         <source>Open recent</source>
-        <translation type="unfinished">打开最近访问的文件</translation>
+        <translation>打开最近的文件</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
         <source>Open recent project</source>
-        <translation type="unfinished"/>
+        <translation>打开最近的项目</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="55"/>
@@ -920,19 +995,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"/>
+        <translation>在访达中显示</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="40"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"/>
+        <translation>在资源管理器中显示</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="43"/>
         <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>在文件管理器中显示</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
@@ -958,7 +1033,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="259"/>
         <source>Show effects panel</source>
-        <translation type="unfinished"/>
+        <translation>显示实时效果器面板</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
@@ -970,7 +1045,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="399"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Add track effects</source>
-        <translation type="unfinished"/>
+        <translation>添加实时效果器</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
@@ -1653,7 +1728,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="327"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
         <source>Reset pitch and speed</source>
-        <translation type="unfinished"/>
+        <translation>重置音高与速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="333"/>
@@ -1829,6 +1904,186 @@
         <source>Change track sample rate</source>
         <translation>更改音轨采样率</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
+        <source>Save diagnostic files</source>
+        <translation>保存诊断文件</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
+        <source>Show p&amp;aths…</source>
+        <translation>显示路径… (&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
+        <source>Show paths</source>
+        <translation>显示路径</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
+        <source>Show pr&amp;ofiler…</source>
+        <translation>显示分析器… (&amp;O)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>显示分析器</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
+        <source>Show g&amp;raphics info…</source>
+        <translation>显示显卡信息… (&amp;R)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
+        <source>Show graphics info</source>
+        <translation>显示图形信息</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
+        <source>Show &amp;navigation tree…</source>
+        <translation>显示导航树状图… (&amp;N)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
+        <source>Show navigation tree</source>
+        <translation>显示导航树状图</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
+        <source>Show &amp;accessibility tree…</source>
+        <translation>显示无障碍树状图… (&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
+        <source>Show accessibility tree</source>
+        <translation>显示无障碍树状图</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
+        <source>&amp;Dump accessibility tree to console</source>
+        <translation>将无障碍树转储到控制台 (&amp;D)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>将无障碍树转储到控制台</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
+        <source>Show engraving &amp;elements</source>
+        <translation>显示排版元素 (&amp;E)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
+        <source>Show engraving elements</source>
+        <translation>显示排版元素</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
+        <source>Show engraving &amp;undo stack</source>
+        <translation>显示制谱撤销栈 (&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
+        <source>Show engraving undo stack</source>
+        <translation>显示制谱撤销栈</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
+        <source>Show engraving &amp;style options list</source>
+        <translation>显示排版样式选项列表 (&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
+        <source>Show engraving style options list</source>
+        <translation>显示排版样式选项列表</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
+        <source>Show &amp;actions list</source>
+        <translation>显示操作列表 (&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
+        <source>Show actions list</source>
+        <translation>显示操作列表</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
+        <source>&amp;Manage plugins…</source>
+        <translation>管理插件... (&amp;M)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
+        <source>Manage plugins…</source>
+        <translation>管理插件...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
+        <source>Show API dump</source>
+        <translation>显示API转存</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
+        <source>&amp;Multiinstances</source>
+        <translation>多实例 (&amp;M)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
+        <source>Check MuseSampler</source>
+        <translation>检查Muse采样器</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
+        <source>Reload MuseSampler</source>
+        <translation>重新加载Muse采样器</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
+        <source>Show &amp;scripts…</source>
+        <translation>显示脚本… (&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
+        <source>Show scripts</source>
+        <translation>显示脚本</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
+        <source>Check for &amp;update</source>
+        <translation>检查更新 (&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
+        <source>Use old view</source>
+        <translation>使用旧视图</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
+        <source>Use new view</source>
+        <translation>使用新视图</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
+        <source>Select workspace</source>
+        <translation>选择工作区</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
+        <source>Edit workspaces…</source>
+        <translation>编辑工作区…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
+        <source>Edit workspaces</source>
+        <translation>编辑工作区</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
+        <source>Create new workspace</source>
+        <translation>新建工作区</translation>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -1928,12 +2183,12 @@
         <translation>如果接收器支持，则生成 MIDI 2.0 输出</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="382"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>您确定要恢复出厂设置吗？</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="383"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -1942,27 +2197,27 @@ This action will not delete any of your projects.</source>
 此操作不会删除您的任何项目。</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="395"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
         <source>Revert</source>
         <translation>恢复</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
         <source>Revert to factory settings</source>
         <translation>恢复默认设置</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>您现在要重新启动 Audacity 吗？</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="410"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>需要重启 Audacity 才能使这些更改生效。</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="416"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
         <source>Restart</source>
         <translation>重启</translation>
     </message>
@@ -1994,12 +2249,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="28"/>
         <source>Validate audio plugins</source>
-        <translation type="unfinished"/>
+        <translation>验证音频插件</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 检测到一些插件需要先扫描才能使用。您是否需要立刻扫描？</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="34"/>
@@ -2009,12 +2264,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="37"/>
         <source>Validate</source>
-        <translation type="unfinished"/>
+        <translation>扫描</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Audio plugin validation</source>
-        <translation type="unfinished"/>
+        <translation>音频插件扫描</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
@@ -2058,12 +2313,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 - %3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
-        <translation type="unfinished"/>
+        <translation>*</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
+        <source>Accounts</source>
+        <translation>账户</translation>
     </message>
 </context>
 <context>
@@ -2539,6 +2799,27 @@ This action will not delete any of your projects.</source>
     </message>
 </context>
 <context>
+    <name>appshell/dock</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Dock</source>
+        <translation>边栏化</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Undock</source>
+        <translation>浮窗化</translation>
+    </message>
+</context>
+<context>
     <name>appshell/gettingstarted</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
@@ -2588,7 +2869,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")</extracomment>
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
         <translation>更新使用情况。%1</translation>
     </message>
     <message>
@@ -2599,15 +2880,15 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="183"/>
         <source>%1. %2</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the selection status (e.g. "Currently selected" or "Click to select this style")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this style&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the availability status (e.g. "Currently selected" or "Available option")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available option&quot;)
 ----------
-%1 is the workspace description, %2 is the selection status (e.g. "Currently selected" or "Click to select this workspace")
+%1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
-%1 is the workspace description, %2 is the availability status (e.g. "Currently selected" or "Available workspace")</extracomment>
+%1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
         <translation>%1. %2</translation>
     </message>
     <message>
@@ -2652,8 +2933,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
-        <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href="%1"&gt;忘记密码了吗？&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;忘记密码了吗？&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -2747,13 +3028,13 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>%1 主题</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>选择 %1 主题</translation>
     </message>
     <message>
@@ -2893,7 +3174,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
-        <extracomment>here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"</extracomment>
+        <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
         <translation>启用高对比度模式以获得更佳的可视性 %1</translation>
     </message>
     <message>
@@ -3410,8 +3691,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>更新检查需要网络连接。为了保护您的隐私，Audacity 不会存储任何个人信息。请参阅我们的&lt;a href="%1"&gt;隐私政策&lt;/a&gt;了解更多信息。</translation>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation>更新检查需要网络连接。为了保护您的隐私，Audacity 不会存储任何个人信息。请参阅我们的&lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;了解更多信息。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3682,8 +3963,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
-        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>为了帮助我们了解用户使用 Audacity 的频率，我们会为每次安装生成一个随机 ID（UUID）。此 ID 不包含任何个人身份信息。想了解更多信息？请查看我们的&lt;a href="%1"&gt;隐私政策&lt;/a&gt;。</translation>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation>为了帮助我们了解用户使用 Audacity 的频率，我们会为每次安装生成一个随机 ID（UUID）。此 ID 不包含任何个人身份信息。想了解更多信息？请查看我们的&lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
@@ -3907,7 +4188,7 @@ This action will not delete any of your projects.</source>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 #%2</translation>
     </message>
 </context>
 <context>
@@ -3915,17 +4196,55 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>Audio plugins scan completed</source>
-        <translation type="unfinished"/>
+        <translation>音频插件扫描已完成</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>All audio plugins are up to date.</source>
-        <translation type="unfinished"/>
+        <translation>所有音频插件均已更新。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
         <source>Scanning audio plugins</source>
         <translation>正在扫描音频插件</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
+        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
+        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
+        <source>System default</source>
+        <translation>系统默认</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
+        <source>Do you want to add SoundFont %1?</source>
+        <translation>您是否想要添加音乐字体 %1？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
+        <source>File already exists. Do you want to overwrite it?</source>
+        <translation>文件已存在。您想要覆盖它吗？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
+        <source>File path: %1</source>
+        <translation>文件路径：%1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
+        <source>SoundFont installed</source>
+        <translation>已安装声音字体</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
+        <source>You can assign soundfonts to instruments using the mixer panel.</source>
+        <translation>您可以使用混音器面板为乐器分配声音字体。</translation>
     </message>
 </context>
 <context>
@@ -3957,7 +4276,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="804"/>
         <source>Stream is active … unable to gather information.
 </source>
-        <translation type="unfinished"/>
+        <translation>数据流处于活动状态… 无法获取信息。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="817"/>
@@ -4080,7 +4400,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="899"/>
         <source>No recording device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>未找到适用于 “%1” 的录制设备。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="904"/>
@@ -4094,7 +4415,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="906"/>
         <source>No playback device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>未找到适用于 “%1” 的播放设备。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="914"/>
@@ -4233,7 +4555,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="56"/>
         <source>Failed to encode preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法从 %1 编码预设</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
@@ -4243,7 +4565,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
+        <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
         <translation>不可用</translation>
     </message>
     <message>
@@ -4251,19 +4573,19 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="496"/>
         <source>Couldn’t open “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法打开 %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="482"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法将 XML 预设写入 %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="504"/>
         <source>Unable to read the preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法从 %1 读取预设</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
@@ -4291,22 +4613,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
         <source>Audio Unit Generators</source>
-        <translation type="unfinished"/>
+        <translation>Audio Unit 生成器</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="196"/>
         <source>Audio Unit Mixers</source>
-        <translation type="unfinished"/>
+        <translation>Audio Unit 混音器</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="197"/>
         <source>Audio Unit Music Effects</source>
-        <translation type="unfinished"/>
+        <translation>Audio Unit 音乐效果</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="198"/>
         <source>Audio Unit Panners</source>
-        <translation type="unfinished"/>
+        <translation>音频单元声像定位器</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
@@ -4321,22 +4643,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="292"/>
         <source>Failed to decode “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>无法解码“%1”预设</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="301"/>
         <source>Failed to convert “%1” preset to internal format</source>
-        <translation type="unfinished"/>
+        <translation>无法将“%1”预设转换为内部格式</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="313"/>
         <source>Failed to create property list for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>无法为“%1”预设创建属性列表</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="319"/>
         <source>Failed to set class info for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>无法为“%1”预设设置类信息</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="420"/>
@@ -4385,7 +4707,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation type="unfinished"/>
+        <translation>当指定“控制”音轨的音量达到特定级别时，降低（闪避）一个或多个音轨的音量。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
@@ -4722,7 +5044,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="280"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
-        <translation type="unfinished"/>
+        <translation>若要应用均衡处理，请选择一个或多个音频轨道。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="291"/>
@@ -4760,7 +5082,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
         <source>Requested curve not found, using ‘unnamed’</source>
-        <translation type="unfinished"/>
+        <translation>未找到请求的曲线，使用“未命名”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
@@ -4898,7 +5220,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>"infinite impulse response"</extracomment>
+        <extracomment>&quot;infinite impulse response&quot;</extracomment>
         <translation>执行 IIR 滤波以模拟模拟信号滤波器</translation>
     </message>
     <message>
@@ -4981,7 +5303,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
         <source>Rapid tone quality variations, like that guitar sound so popular in the 1970’s</source>
-        <translation type="unfinished"/>
+        <translation>音色的快速变化，比如那种在 20 世纪 70 年代风靡一时的吉他音色</translation>
     </message>
 </context>
 <context>
@@ -5083,11 +5405,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>未登录</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>我的配置文件</translation>
     </message>
@@ -5095,12 +5420,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>Sign in</source>
         <translation>登录</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>退出登录</translation>
     </message>
@@ -5108,6 +5435,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <source>Create account</source>
         <translation>创建账户</translation>
     </message>
@@ -5125,6 +5454,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="36"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="69"/>
         <source>You are not signed in</source>
         <translation>您还没有登录</translation>
     </message>
@@ -5218,7 +5548,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Create an account on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 上创建账户</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
@@ -5229,7 +5559,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
         <source>Sign in buttons</source>
-        <translation type="unfinished"/>
+        <translation>登录按钮</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
+        <source>My accounts</source>
+        <translation>我的账户</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
+        <source>Log in</source>
+        <translation>登录</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
+        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
+        <translation>登录成功！您可以返回 MuseScore Studio。</translation>
     </message>
 </context>
 <context>
@@ -5293,6 +5638,24 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
         <translation>保存到 audio.com</translation>
+    </message>
+</context>
+<context>
+    <name>diagnostics</name>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <source>Save diagnostic files?</source>
+        <translation>是否保存诊断文件？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>这将创建一个.zip文件，其中包含有关您的MuseScore Studio设置的信息，以帮助开发人员诊断您遇到的任何问题。 在发送给任何人之前，您可以检查此文件的内容。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <source>Save diagnostic files</source>
+        <translation>保存诊断文件</translation>
     </message>
 </context>
 <context>
@@ -5541,7 +5904,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="24"/>
         <source>Preset name cannot contain %1 or %2</source>
         <extracomment>%1 is a forward slash, %2 is a backslash; neither character is allowed in a preset name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>预设名称不能包含 %1 或 %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
@@ -5831,28 +6194,28 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished">管理插件</translation>
+        <translation>管理插件</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
         <source>Rescan plugins</source>
-        <translation type="unfinished"/>
+        <translation>重新扫描插件</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="106"/>
         <source>Include plugins with errors</source>
-        <translation type="unfinished"/>
+        <translation>包含有错误的插件</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished">缺失插件</translation>
+        <translation>缺失插件</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation type="unfinished"/>
+        <translation>未找到本项目中使用的某些插件。双击条目可查看其位置。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
@@ -5863,12 +6226,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation type="unfinished"/>
+        <translation>插件详细信息</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
         <source>Vendor:</source>
-        <translation type="unfinished"/>
+        <translation>提供者：%s</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
@@ -5878,7 +6241,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished">路径</translation>
+        <translation>路径：</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5908,18 +6271,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">起始速度改变（%）</translation>
+        <translation>初始速度变化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">终点速度改变（%）</translation>
+        <translation>最终速度变化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">开始音调变化</translation>
+        <translation>初始音高偏移</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5931,7 +6294,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">终点音调变化</translation>
+        <translation>最终音高变换</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
@@ -5955,7 +6318,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="250"/>
         <source>“%1” (broken)</source>
         <extracomment>%1 is the name of the plugin that failed to load</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”（已损坏）</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
@@ -5966,7 +6329,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="217"/>
         <source>Vendor</source>
-        <translation type="unfinished"/>
+        <translation>提供者</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
@@ -5981,17 +6344,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <source>%1 (broken)</source>
-        <translation type="unfinished"/>
+        <translation>%1（已损坏）</translation>
     </message>
     <message>
         <source>Missing - %1</source>
-        <translation type="unfinished"/>
+        <translation>缺失 - %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
-        <translation type="unfinished"/>
+        <translation>缺失 - “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="55"/>
@@ -6016,7 +6379,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
+        <extracomment>&quot;Nyquist&quot; is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>奈奎斯特</translation>
     </message>
     <message>
@@ -6081,7 +6444,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished">咔嚓声移除工具用于移除音频中的咔嚓声</translation>
+        <translation>爆音去除功能旨在消除音频轨道上的爆音。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -6091,7 +6454,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation type="unfinished"/>
+        <translation>所选范围必须大于 4096 个采样点。</translation>
     </message>
 </context>
 <context>
@@ -6117,7 +6480,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
         <source>Reduces “dynamic range”, or differences between loud and quiet parts.</source>
-        <translation type="unfinished"/>
+        <translation>减小“动态范围”，即响亮部分与轻柔部分之间的差异。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitereffect.cpp" line="13"/>
@@ -6206,7 +6569,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
         <source>Normalizing Loudness…
 </source>
-        <translation type="unfinished"/>
+        <translation>正在标准化响度…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
@@ -6259,7 +6623,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished">没有选择音频</translation>
+        <translation>未选择音频。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6298,25 +6662,29 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="96"/>
         <source>Removing DC offset and Normalizing…
 </source>
-        <translation type="unfinished"/>
+        <translation>去除直流偏置并进行归一化…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="98"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>正在去除直流偏置…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="100"/>
         <source>Normalizing without removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>在不去除直流偏置的情况下进行归一化…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="102"/>
         <source>Not doing anything…
 </source>
-        <translation type="unfinished"/>
+        <translation>什么也没做…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="128"/>
@@ -6388,7 +6756,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
         <source>Applying Nyquist Effect…</source>
-        <translation type="unfinished"/>
+        <translation>正在应用奈奎斯特效果器…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="67"/>
@@ -6400,7 +6768,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
+        <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>奈奎斯特提示符</translation>
     </message>
     <message>
@@ -6419,13 +6787,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
-        <translation type="unfinished"/>
+        <translation>若要使用“频谱效果”，请在轨道频谱图设置中启用“频谱选择”功能，并选择该效果作用的频率范围。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="655"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation type="unfinished"/>
+        <translation>错误：头文件中指定了文件“%1”，但在插件路径中未找到该文件。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="821"/>
@@ -6443,20 +6812,22 @@ frequency range for the effect to act on.</source>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>“type tool” 效果无法从 Nyquist 返回音频。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1398"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>“type tool” 效果无法从 Nyquist 返回标签。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
+        <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
         <translation>nyx_error，返回自 %1。
 </translation>
     </message>
@@ -6527,7 +6898,12 @@ frequency range for the effect to act on.</source>
             or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>你的代码看起来像是 SAL 语法，但缺少了 `return` 语句。
+           对于 SAL，请使用类似如下的 return 语句：
+	返回 *track* * 0.1
+           或者对于 LISP，以左括号开头，例如：
+	(多 *track* 0.1)
+ .</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2599"/>
@@ -6537,7 +6913,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished">搁架滤波器</translation>
+        <translation>搁架滤波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -6582,7 +6958,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
         <source>Delete selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>删除所选中心频率</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
@@ -6608,7 +6984,9 @@ frequency range for the effect to act on.</source>
         <source>~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
                       or reduce the filter ‘Width’.</source>
-        <translation type="unfinished"/>
+        <translation>~无法应用陷波滤波器参数。~%~
+                      请尝试提高低频边界~%~
+                      或减小滤波器“宽度”。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="22"/>
@@ -6618,7 +6996,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="23"/>
         <source>Amplify selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>放大选择中心频率</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
@@ -6660,7 +7038,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="30"/>
         <source>Amplify selection</source>
-        <translation type="unfinished"/>
+        <translation>放大选区</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
@@ -6670,7 +7048,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished">录音室淡出</translation>
+        <translation>录音室淡出</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -6680,7 +7058,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished">可调整的渐变</translation>
+        <translation>可调节渐变</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -6834,7 +7212,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished">节拍寻找</translation>
+        <translation>寻找节拍</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -6844,7 +7222,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished">削波失真修复</translation>
+        <translation>削波失真修复</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -6864,7 +7242,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished">交叉渐变片段</translation>
+        <translation>交叉渐变片段</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -6884,7 +7262,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished">交叉渐变轨道</translation>
+        <translation>交叉渐变轨道</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -7169,7 +7547,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished">高通滤波器</translation>
+        <translation>高通滤波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -7223,7 +7601,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished">标示声音</translation>
+        <translation>标示声音</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -7314,7 +7692,8 @@ frequency range for the effect to act on.</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
-        <translation type="unfinished"/>
+        <translation>未找到声音。~%~
+                 尝试降低“阈值级别 (dB)”。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -7328,7 +7707,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished">传统限制器</translation>
+        <translation>传统限制器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -7387,12 +7766,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished">低通滤波器</translation>
+        <translation>低通滤波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished">噪声门</translation>
+        <translation>噪声门</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -7422,7 +7801,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="180"/>
         <source>Don’t Link Stereo</source>
-        <translation type="unfinished"/>
+        <translation>不要链接立体声</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
@@ -7484,7 +7863,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished">陷波滤波器</translation>
+        <translation>陷波滤波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -7518,7 +7897,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
         <source>Browse…</source>
-        <translation type="unfinished"/>
+        <translation>浏览...</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
@@ -7603,7 +7982,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation type="unfinished"/>
+        <translation>已安装的文件（&quot;允许文件被覆盖&quot; 已禁用）：</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
@@ -7653,7 +8032,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Rhythm track</source>
-        <translation type="unfinished">节奏轨道</translation>
+        <translation>节奏轨道</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -7693,7 +8072,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation type="unfinished"/>
+        <translation>设置“小节数”为零以启用“节奏轨道持续时长”。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
@@ -7713,7 +8092,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
         <source>Used if ‘Number of bars’ = 0</source>
-        <translation type="unfinished"/>
+        <translation>如果“条数”= 0，则使用</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
@@ -7789,12 +8168,13 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
-        <translation type="unfinished"/>
+        <translation>将“小节数”或~%~
+                    “节奏轨道时长”设置为大于零。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Risset drum</source>
-        <translation type="unfinished">Risset 鼓</translation>
+        <translation>Risset 鼓</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
@@ -7829,7 +8209,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished">左(L)</translation>
+        <translation>左</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7839,7 +8219,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished">右(R)</translation>
+        <translation>右</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -8125,10 +8505,10 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
         <translation>利用 Audacity 的 &lt;span&gt;样本数据导出&lt;/span&gt;生成
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; 作者：Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; 作者：Steve
 Daulton</translation>
     </message>
     <message>
@@ -8179,12 +8559,12 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="326"/>
         <source>Error.~%“~a” cannot be written.</source>
-        <translation type="unfinished"/>
+        <translation>错误。~%“~a”无法写入。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Sample data Import</source>
-        <translation type="unfinished">样本数据导入</translation>
+        <translation>采样数据导入</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
@@ -8211,21 +8591,27 @@ Daulton</translation>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation type="unfinished"/>
+        <translation>错误~%~
+                        无法打开 &quot;~a&quot;。~%~
+                        检查文件是否存在。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation type="unfinished"/>
+        <translation>错误：~%~
+              文件必须仅有纯 ASCII 文本。~%~
+              （无效的字节“~a”在位置 ~a ）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
         <source>Error~%~
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
-        <translation type="unfinished"/>
+        <translation>错误：~%~
+              数据必须是纯 ASCII 文本的数字。~%~
+              “~a”不是一个数字值。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
@@ -8235,7 +8621,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
         <source>Delete selection</source>
-        <translation type="unfinished"/>
+        <translation>删除所选</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
@@ -8358,7 +8744,7 @@ Daulton</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation type="unfinished"/>
+        <translation>Paulstretch 仅适用于极端的延时拉伸或“静止”效果。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -8372,7 +8758,10 @@ Daulton</translation>
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>音频选区过短，无法预览。
+
+请尝试将音频选区延长至至少 %1 秒，
+或将“时间分辨率”减小至 %2 秒以下。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
@@ -8381,7 +8770,10 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法预览。
+
+对于当前选择的音频，最大
+“时间分辨率”为 %1 秒。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
@@ -8390,7 +8782,10 @@ For the current audio selection, the maximum
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>对于当前选定内容而言，“时间分辨率”设置过长。
+
+请尝试将音频选定范围增加至至少 %1 秒，
+或将“时间分辨率”减小至 %2 秒以下。</translation>
     </message>
 </context>
 <context>
@@ -8398,18 +8793,19 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="30"/>
         <source>Remove DC offset</source>
-        <translation type="unfinished"/>
+        <translation>移除 DC 偏移</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="49"/>
         <source>Removes DC offset (centers audio on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>移除 DC 偏移（垂直中心位于 0.0）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="67"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>正在去除直流偏置…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
@@ -8455,7 +8851,9 @@ Zoom in and select a tiny fraction of a second to repair.</source>
         <source>The Repair effect needs some data to go on.
 
 Please select an area to repair with some audio on at least one side (the more the better).</source>
-        <translation type="unfinished"/>
+        <translation>“修复”效果需要一些数据作为依据。
+
+请选择一个至少在一侧包含音频的区域进行修复（音频内容越丰富，效果越好）。</translation>
     </message>
 </context>
 <context>
@@ -8576,7 +8974,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
         <source>Adds ambience or a “hall effect”</source>
-        <translation type="unfinished"/>
+        <translation>添加氛围效果或者“大厅效果器”</translation>
     </message>
 </context>
 <context>
@@ -8597,7 +8995,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">滑动拉伸</translation>
+        <translation>滑动拉伸</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -8866,12 +9264,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished">线性频率缩放</translation>
+        <translation>线性频率缩放</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
         <source>Grid lines</source>
-        <translation type="unfinished"/>
+        <translation>网格线</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="113"/>
@@ -9184,7 +9582,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="29"/>
         <source>Semitones (%1 → %2)</source>
-        <translation type="unfinished"/>
+        <translation>半音 (%1 → %2)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="61"/>
@@ -9194,27 +9592,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">滑动拉伸</translation>
+        <translation>滑动拉伸</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">起始速度改变（%）</translation>
+        <translation>初始速度变化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">终点速度改变（%）</translation>
+        <translation>最终速度变化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">开始音调变化</translation>
+        <translation>初始音高偏移</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">终点音调变化</translation>
+        <translation>最终音高变换</translation>
     </message>
 </context>
 <context>
@@ -9333,7 +9731,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>Abbreviation of "seconds"</extracomment>
+        <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
         <translation>秒</translation>
     </message>
     <message>
@@ -9344,7 +9742,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>毫秒</translation>
     </message>
     <message>
@@ -9361,7 +9759,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>Abbreviation of "hertz"</extracomment>
+        <extracomment>Abbreviation of &quot;hertz&quot;</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
@@ -9372,7 +9770,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>Abbreviation of "kilohertz"</extracomment>
+        <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
         <translation>仟赫</translation>
     </message>
     <message>
@@ -9383,7 +9781,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>Abbreviation of "decibels"</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9394,7 +9792,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
-        <extracomment>Symbol of "percent"</extracomment>
+        <extracomment>Symbol of &quot;percent&quot;</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9411,7 +9809,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
-        <extracomment>Abbreviation of "beats per minute"</extracomment>
+        <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
         <translation>每分钟节拍数</translation>
     </message>
     <message>
@@ -9422,7 +9820,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
-        <extracomment>Symbol of "degrees"</extracomment>
+        <extracomment>Symbol of &quot;degrees&quot;</extracomment>
         <translation>°</translation>
     </message>
     <message>
@@ -9840,6 +10238,160 @@ Master effects will be turned back on after export.</source>
         <source>Reload plugins</source>
         <translation>重新加载插件</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
+        <source>Disabled</source>
+        <translation>已停用</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <source>Version:</source>
+        <translation>版本：</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <source>Shortcut:</source>
+        <extracomment>Keyboard shortcut</extracomment>
+        <translation>快捷键：</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <source>Edit shortcut</source>
+        <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
+        <translation>编辑快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Enable</source>
+        <translation>启用</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Disable</source>
+        <translation>停用</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
+        <source>Plugin not found</source>
+        <translation>未找到插件</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
+        <source>Could not load plugin</source>
+        <translation>无法加载插件</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
+        <source>Plugin is not in the correct format</source>
+        <translation>插件格式不正确</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
+        <source>Manually</source>
+        <translation>手动</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
+        <source>Failed to install extension</source>
+        <translation>未能安装扩展</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
+        <source>The extension does not contain a valid manifest file.</source>
+        <translation>扩展不包含有效的实体描述文件。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
+        <source>The extension is already installed.</source>
+        <translation>已经安装该扩展。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
+        <source>This extension cannot be updated.</source>
+        <translation>无法更新此扩展。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
+        <source>The currently installed version cannot be uninstalled.</source>
+        <translation>无法卸载当前安装的版本。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
+        <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
+        <translation>已经安装扩展“%1”的另一版本（版本 %2）。您想要将其替换为版本 %3 吗？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
+        <source>Update extension</source>
+        <translation>更新扩展</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <source>Error code: %1</source>
+        <translation>错误代码：%1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
+        <translation>插件“%1”当前已禁用。您要立即启用它吗？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
+        <translation>或者，您能随时从主页 &gt; 插件启用它。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <source>Composing/arranging tools</source>
+        <translation>作曲/编排工具</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <source>Color notes</source>
+        <translation>音符着色</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Playback</source>
+        <translation>播放</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <source>Lyrics</source>
+        <translation>唱词</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
+        <source>Run plugin %1</source>
+        <extracomment>%1 is replaced with the name of the plugin</extracomment>
+        <translation>运行插件%1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
+        <source>Run plugin %1: %2</source>
+        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
+        <translation>运行插件 %1：%2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <source>Not specified</source>
+        <extracomment>No version is specified for this plugin.</extracomment>
+        <translation>未指定</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <source>Not defined</source>
+        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
+        <translation>未定义</translation>
+    </message>
 </context>
 <context>
     <name>fft</name>
@@ -9985,13 +10537,13 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
+        <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>%1 文件</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
-        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
+        <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>（%1）</translation>
     </message>
     <message>
@@ -10041,6 +10593,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -10073,9 +10626,12 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -10085,6 +10641,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
@@ -10098,6 +10655,8 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
@@ -10108,6 +10667,10 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
@@ -10124,7 +10687,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>毫秒</translation>
     </message>
     <message>
@@ -10137,7 +10700,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
-        <extracomment>Abbreviation of "points", used to specify a font size</extracomment>
+        <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
         <translation>点</translation>
     </message>
     <message>
@@ -10150,6 +10713,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
         <translation>未找到结果</translation>
     </message>
@@ -10163,6 +10727,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="365"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="296"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="63"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
@@ -10176,6 +10741,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>请检查您的网络连接或稍后再试。</translation>
     </message>
@@ -10235,11 +10801,13 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
@@ -10254,6 +10822,1506 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
         <source>Stop</source>
         <translation>停止</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
+        <source>Copy</source>
+        <translation>拷贝</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
+        <source>Error details have been copied to the clipboard.</source>
+        <translation>错误详情已拷贝到剪贴板。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Hide details</source>
+        <translation>隐藏详情</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Show details</source>
+        <translation>显示详情</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <source>Question</source>
+        <translation>问题</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <source>Information</source>
+        <translation>信息</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <source>Don’t show this message again</source>
+        <translation>不再显示此消息</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
+        <source>Waiting…</source>
+        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
+        <translation>等待中…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
+        <source>Clear all</source>
+        <translation>清除全部</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
+        <source>action</source>
+        <translation>命令</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
+        <source>status</source>
+        <translation>状态</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>On</source>
+        <translation>开</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>Off</source>
+        <translation>关</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
+        <source>Hours</source>
+        <translation>小时</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
+        <source>Minutes</source>
+        <translation>分钟</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
+        <source>Seconds</source>
+        <translation>秒</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
+        <source>Milliseconds</source>
+        <translation>毫秒</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation>百分之</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
+        <source>Collapse</source>
+        <extracomment>Collapse a tree item</extracomment>
+        <translation>折叠</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
+        <source>Expand</source>
+        <extracomment>Expand a tree item</extracomment>
+        <translation>展开</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <source>Create</source>
+        <translation>创建</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <source>Select</source>
+        <translation>选择</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
+        <source>Today</source>
+        <translation>今日</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="49"/>
+        <source>Yesterday</source>
+        <translation>昨日</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>%n日前</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
+        <source>Last week</source>
+        <translation>上周</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
+        <source>%n week(s) ago</source>
+        <translation><numerusform>%n周前</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
+        <source>Last month</source>
+        <translation>上个月</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
+        <source>%n month(s) ago</source>
+        <translation><numerusform>%n个月前</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
+        <source>%n year(s) ago</source>
+        <translation><numerusform>%n年前</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
+        <source>%1 GB</source>
+        <comment>gigabyte</comment>
+        <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
+        <source>%1 MB</source>
+        <comment>megabyte</comment>
+        <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
+        <source>%1 KB</source>
+        <comment>kilobyte</comment>
+        <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 KB</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
+        <source>%Ln byte(s)</source>
+        <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
+        <translation><numerusform>%Ln字节</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <source>Save all</source>
+        <translation>全部保存</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <source>Don’t save</source>
+        <translation>不保存</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <source>Yes to all</source>
+        <translation>全部皆是</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <source>No</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <source>No to all</source>
+        <translation>全部皆否</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <source>Abort</source>
+        <translation>中止</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <source>Retry</source>
+        <translation>重试</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <source>Ignore</source>
+        <translation>忽略</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <source>Discard</source>
+        <translation>放弃</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <source>Reset</source>
+        <translation>重置</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <source>Continue</source>
+        <translation>继续</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <source>Checking for updates…</source>
+        <translation>正在检查更新...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <source>Downloading %1…</source>
+        <translation>正在下载 %1…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <source>Unpacking %1…</source>
+        <translation>正在解包 %1…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
+        <source>Inactive</source>
+        <translation>未激活</translation>
+    </message>
+</context>
+<context>
+    <name>global/noteName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="267"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="282"/>
+        <source>C</source>
+        <translation>C</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="268"/>
+        <source>C♯</source>
+        <translation>C♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="269"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="284"/>
+        <source>D</source>
+        <translation>D</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="270"/>
+        <source>D♯</source>
+        <translation>D♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="271"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="286"/>
+        <source>E</source>
+        <translation>E</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="272"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="287"/>
+        <source>F</source>
+        <translation>F</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="273"/>
+        <source>F♯</source>
+        <translation>F♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="274"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="289"/>
+        <source>G</source>
+        <translation>G</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="275"/>
+        <source>G♯</source>
+        <translation>G♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="276"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="291"/>
+        <source>A</source>
+        <translation>A</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="277"/>
+        <source>A♯</source>
+        <translation>A♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="278"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="293"/>
+        <source>B</source>
+        <translation>B</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="283"/>
+        <source>D♭</source>
+        <translation>D♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="285"/>
+        <source>E♭</source>
+        <translation>E♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="288"/>
+        <source>G♭</source>
+        <translation>G♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="290"/>
+        <source>A♭</source>
+        <translation>A♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="292"/>
+        <source>B♭</source>
+        <translation>B♭</translation>
+    </message>
+</context>
+<context>
+    <name>global/pitchName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="31"/>
+        <source>C-1</source>
+        <translation>C-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="32"/>
+        <source>C♯-1</source>
+        <translation>C♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="33"/>
+        <source>D♭-1</source>
+        <translation>D♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="34"/>
+        <source>D-1</source>
+        <translation>D-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="35"/>
+        <source>D♯-1</source>
+        <translation>D♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="36"/>
+        <source>E♭-1</source>
+        <translation>E♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="37"/>
+        <source>E-1</source>
+        <translation>E-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="38"/>
+        <source>E♯-1</source>
+        <translation>E♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="39"/>
+        <source>F♭-1</source>
+        <translation>F♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="40"/>
+        <source>F-1</source>
+        <translation>F-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="41"/>
+        <source>F♯-1</source>
+        <translation>F♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="42"/>
+        <source>G♭-1</source>
+        <translation>G♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="43"/>
+        <source>G-1</source>
+        <translation>G-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="44"/>
+        <source>G♯-1</source>
+        <translation>G♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="45"/>
+        <source>A♭-1</source>
+        <translation>A♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="46"/>
+        <source>A-1</source>
+        <translation>A-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="47"/>
+        <source>A♯-1</source>
+        <translation>A♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="48"/>
+        <source>B♭-1</source>
+        <translation>B♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="49"/>
+        <source>B-1</source>
+        <translation>B-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="50"/>
+        <source>B♯-1</source>
+        <translation>B♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="52"/>
+        <source>C♭0</source>
+        <translation>C♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="53"/>
+        <source>C0</source>
+        <translation>C0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="54"/>
+        <source>C♯0</source>
+        <translation>C♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="55"/>
+        <source>D♭0</source>
+        <translation>D♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="56"/>
+        <source>D0</source>
+        <translation>D0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="57"/>
+        <source>D♯0</source>
+        <translation>D♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="58"/>
+        <source>E♭0</source>
+        <translation>E♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="59"/>
+        <source>E0</source>
+        <translation>E0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="60"/>
+        <source>E♯0</source>
+        <translation>E♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="61"/>
+        <source>F♭0</source>
+        <translation>F♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="62"/>
+        <source>F0</source>
+        <translation>F0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="63"/>
+        <source>F♯0</source>
+        <translation>F♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="64"/>
+        <source>G♭0</source>
+        <translation>G♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="65"/>
+        <source>G0</source>
+        <translation>G0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="66"/>
+        <source>G♯0</source>
+        <translation>G♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="67"/>
+        <source>A♭0</source>
+        <translation>A♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="68"/>
+        <source>A0</source>
+        <translation>A0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="69"/>
+        <source>A♯0</source>
+        <translation>A♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="70"/>
+        <source>B♭0</source>
+        <translation>B♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="71"/>
+        <source>B0</source>
+        <translation>B0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="72"/>
+        <source>B♯0</source>
+        <translation>B♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="74"/>
+        <source>C♭1</source>
+        <translation>C♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="75"/>
+        <source>C1</source>
+        <translation>C1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="76"/>
+        <source>C♯1</source>
+        <translation>C♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="77"/>
+        <source>D♭1</source>
+        <translation>D♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="78"/>
+        <source>D1</source>
+        <translation>D1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="79"/>
+        <source>D♯1</source>
+        <translation>D♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="80"/>
+        <source>E♭1</source>
+        <translation>E♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="81"/>
+        <source>E1</source>
+        <translation>E1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="82"/>
+        <source>E♯1</source>
+        <translation>E♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="83"/>
+        <source>F♭1</source>
+        <translation>F♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="84"/>
+        <source>F1</source>
+        <translation>F1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="85"/>
+        <source>F♯1</source>
+        <translation>F♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="86"/>
+        <source>G♭1</source>
+        <translation>G♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="87"/>
+        <source>G1</source>
+        <translation>G1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="88"/>
+        <source>G♯1</source>
+        <translation>G♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="89"/>
+        <source>A♭1</source>
+        <translation>A♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="90"/>
+        <source>A1</source>
+        <translation>A1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="91"/>
+        <source>A♯1</source>
+        <translation>A♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="92"/>
+        <source>B♭1</source>
+        <translation>B♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="93"/>
+        <source>B1</source>
+        <translation>B1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="94"/>
+        <source>B♯1</source>
+        <translation>B♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="96"/>
+        <source>C♭2</source>
+        <translation>C♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="97"/>
+        <source>C2</source>
+        <translation>C2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="98"/>
+        <source>C♯2</source>
+        <translation>C♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="99"/>
+        <source>D♭2</source>
+        <translation>D♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="100"/>
+        <source>D2</source>
+        <translation>D2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="101"/>
+        <source>D♯2</source>
+        <translation>D♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="102"/>
+        <source>E♭2</source>
+        <translation>E♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="103"/>
+        <source>E2</source>
+        <translation>E2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="104"/>
+        <source>E♯2</source>
+        <translation>E♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="105"/>
+        <source>F♭2</source>
+        <translation>F♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="106"/>
+        <source>F2</source>
+        <translation>F2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="107"/>
+        <source>F♯2</source>
+        <translation>F♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="108"/>
+        <source>G♭2</source>
+        <translation>G♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="109"/>
+        <source>G2</source>
+        <translation>G2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="110"/>
+        <source>G♯2</source>
+        <translation>G♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="111"/>
+        <source>A♭2</source>
+        <translation>A♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="112"/>
+        <source>A2</source>
+        <translation>A2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="113"/>
+        <source>A♯2</source>
+        <translation>A♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="114"/>
+        <source>B♭2</source>
+        <translation>B♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="115"/>
+        <source>B2</source>
+        <translation>B2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="116"/>
+        <source>B♯2</source>
+        <translation>B♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="118"/>
+        <source>C♭3</source>
+        <translation>C♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="119"/>
+        <source>C3</source>
+        <translation>C3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="120"/>
+        <source>C♯3</source>
+        <translation>C♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="121"/>
+        <source>D♭3</source>
+        <translation>D♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="122"/>
+        <source>D3</source>
+        <translation>D3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="123"/>
+        <source>D♯3</source>
+        <translation>D♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="124"/>
+        <source>E♭3</source>
+        <translation>E♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="125"/>
+        <source>E3</source>
+        <translation>E3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="126"/>
+        <source>E♯3</source>
+        <translation>E♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="127"/>
+        <source>F♭3</source>
+        <translation>F♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="128"/>
+        <source>F3</source>
+        <translation>F3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="129"/>
+        <source>F♯3</source>
+        <translation>F♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="130"/>
+        <source>G♭3</source>
+        <translation>G♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="131"/>
+        <source>G3</source>
+        <translation>G3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="132"/>
+        <source>G♯3</source>
+        <translation>G♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="133"/>
+        <source>A♭3</source>
+        <translation>A♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="134"/>
+        <source>A3</source>
+        <translation>A3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="135"/>
+        <source>A♯3</source>
+        <translation>A♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="136"/>
+        <source>B♭3</source>
+        <translation>B♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="137"/>
+        <source>B3</source>
+        <translation>B3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="138"/>
+        <source>B♯3</source>
+        <translation>B♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="140"/>
+        <source>C♭4</source>
+        <translation>C♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="141"/>
+        <source>C4</source>
+        <translation>C4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="142"/>
+        <source>C♯4</source>
+        <translation>C♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="143"/>
+        <source>D♭4</source>
+        <translation>D♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="144"/>
+        <source>D4</source>
+        <translation>D4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="145"/>
+        <source>D♯4</source>
+        <translation>D♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="146"/>
+        <source>E♭4</source>
+        <translation>E♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="147"/>
+        <source>E4</source>
+        <translation>E4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="148"/>
+        <source>E♯4</source>
+        <translation>E♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="149"/>
+        <source>F♭4</source>
+        <translation>F♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="150"/>
+        <source>F4</source>
+        <translation>F4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="151"/>
+        <source>F♯4</source>
+        <translation>F♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="152"/>
+        <source>G♭4</source>
+        <translation>G♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="153"/>
+        <source>G4</source>
+        <translation>G4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="154"/>
+        <source>G♯4</source>
+        <translation>G♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="155"/>
+        <source>A♭4</source>
+        <translation>A♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="156"/>
+        <source>A4</source>
+        <translation>A4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="157"/>
+        <source>A♯4</source>
+        <translation>A♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="158"/>
+        <source>B♭4</source>
+        <translation>B♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="159"/>
+        <source>B4</source>
+        <translation>B4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="160"/>
+        <source>B♯4</source>
+        <translation>B♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="162"/>
+        <source>C♭5</source>
+        <translation>C♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="163"/>
+        <source>C5</source>
+        <translation>C5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="164"/>
+        <source>C♯5</source>
+        <translation>C♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="165"/>
+        <source>D♭5</source>
+        <translation>D♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="166"/>
+        <source>D5</source>
+        <translation>D5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="167"/>
+        <source>D♯5</source>
+        <translation>D♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="168"/>
+        <source>E♭5</source>
+        <translation>E♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="169"/>
+        <source>E5</source>
+        <translation>E5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="170"/>
+        <source>E♯5</source>
+        <translation>E♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="171"/>
+        <source>F♭5</source>
+        <translation>F♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="172"/>
+        <source>F5</source>
+        <translation>F5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="173"/>
+        <source>F♯5</source>
+        <translation>F♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="174"/>
+        <source>G♭5</source>
+        <translation>G♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="175"/>
+        <source>G5</source>
+        <translation>G5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="176"/>
+        <source>G♯5</source>
+        <translation>G♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="177"/>
+        <source>A♭5</source>
+        <translation>A♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="178"/>
+        <source>A5</source>
+        <translation>A5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="179"/>
+        <source>A♯5</source>
+        <translation>A♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="180"/>
+        <source>B♭5</source>
+        <translation>B♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="181"/>
+        <source>B5</source>
+        <translation>B5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="182"/>
+        <source>B♯5</source>
+        <translation>B♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="184"/>
+        <source>C♭6</source>
+        <translation>C♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="185"/>
+        <source>C6</source>
+        <translation>C6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="186"/>
+        <source>C♯6</source>
+        <translation>C♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="187"/>
+        <source>D♭6</source>
+        <translation>D♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="188"/>
+        <source>D6</source>
+        <translation>D6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="189"/>
+        <source>D♯6</source>
+        <translation>D♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="190"/>
+        <source>E♭6</source>
+        <translation>E♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="191"/>
+        <source>E6</source>
+        <translation>E6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="192"/>
+        <source>E♯6</source>
+        <translation>E♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="193"/>
+        <source>F♭6</source>
+        <translation>F♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="194"/>
+        <source>F6</source>
+        <translation>F6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="195"/>
+        <source>F♯6</source>
+        <translation>F♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="196"/>
+        <source>G♭6</source>
+        <translation>G♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="197"/>
+        <source>G6</source>
+        <translation>G6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="198"/>
+        <source>G♯6</source>
+        <translation>G♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="199"/>
+        <source>A♭6</source>
+        <translation>A♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="200"/>
+        <source>A6</source>
+        <translation>A6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="201"/>
+        <source>A♯6</source>
+        <translation>A♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="202"/>
+        <source>B♭6</source>
+        <translation>B♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="203"/>
+        <source>B6</source>
+        <translation>B6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="204"/>
+        <source>B♯6</source>
+        <translation>B♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="206"/>
+        <source>C♭7</source>
+        <translation>C♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="207"/>
+        <source>C7</source>
+        <translation>C7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="208"/>
+        <source>C♯7</source>
+        <translation>C♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="209"/>
+        <source>D♭7</source>
+        <translation>D♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="210"/>
+        <source>D7</source>
+        <translation>D7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="211"/>
+        <source>D♯7</source>
+        <translation>D♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="212"/>
+        <source>E♭7</source>
+        <translation>E♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="213"/>
+        <source>E7</source>
+        <translation>E7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="214"/>
+        <source>E♯7</source>
+        <translation>E♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="215"/>
+        <source>F♭7</source>
+        <translation>F♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="216"/>
+        <source>F7</source>
+        <translation>F7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="217"/>
+        <source>F♯7</source>
+        <translation>F♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="218"/>
+        <source>G♭7</source>
+        <translation>G♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="219"/>
+        <source>G7</source>
+        <translation>G7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="220"/>
+        <source>G♯7</source>
+        <translation>G♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="221"/>
+        <source>A♭7</source>
+        <translation>A♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="222"/>
+        <source>A7</source>
+        <translation>A7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="223"/>
+        <source>A♯7</source>
+        <translation>A♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="224"/>
+        <source>B♭7</source>
+        <translation>B♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="225"/>
+        <source>B7</source>
+        <translation>B7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="226"/>
+        <source>B♯7</source>
+        <translation>B♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="228"/>
+        <source>C♭8</source>
+        <translation>C♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="229"/>
+        <source>C8</source>
+        <translation>C8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="230"/>
+        <source>C♯8</source>
+        <translation>C♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="231"/>
+        <source>D♭8</source>
+        <translation>D♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="232"/>
+        <source>D8</source>
+        <translation>D8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="233"/>
+        <source>D♯8</source>
+        <translation>D♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="234"/>
+        <source>E♭8</source>
+        <translation>E♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="235"/>
+        <source>E8</source>
+        <translation>E8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="236"/>
+        <source>E♯8</source>
+        <translation>E♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="237"/>
+        <source>F♭8</source>
+        <translation>F♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="238"/>
+        <source>F8</source>
+        <translation>F8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="239"/>
+        <source>F♯8</source>
+        <translation>F♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="240"/>
+        <source>G♭8</source>
+        <translation>G♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="241"/>
+        <source>G8</source>
+        <translation>G8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="242"/>
+        <source>G♯8</source>
+        <translation>G♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="243"/>
+        <source>A♭8</source>
+        <translation>A♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="244"/>
+        <source>A8</source>
+        <translation>A8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="245"/>
+        <source>A♯8</source>
+        <translation>A♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="246"/>
+        <source>B♭8</source>
+        <translation>B♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="247"/>
+        <source>B8</source>
+        <translation>B8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="248"/>
+        <source>B♯8</source>
+        <translation>B♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="250"/>
+        <source>C♭9</source>
+        <translation>C♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="251"/>
+        <source>C9</source>
+        <translation>C9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="252"/>
+        <source>C♯9</source>
+        <translation>C♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="253"/>
+        <source>D♭9</source>
+        <translation>D♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="254"/>
+        <source>D9</source>
+        <translation>D9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="255"/>
+        <source>D♯9</source>
+        <translation>D♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="256"/>
+        <source>E♭9</source>
+        <translation>E♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="257"/>
+        <source>E9</source>
+        <translation>E9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="258"/>
+        <source>E♯9</source>
+        <translation>E♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="259"/>
+        <source>F♭9</source>
+        <translation>F♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="260"/>
+        <source>F9</source>
+        <translation>F9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="261"/>
+        <source>F♯9</source>
+        <translation>F♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="262"/>
+        <source>G♭9</source>
+        <translation>G♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="263"/>
+        <source>G9</source>
+        <translation>G9</translation>
     </message>
 </context>
 <context>
@@ -10311,7 +12379,7 @@ For tips on suitable drives, click the help button.</source>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
@@ -10348,7 +12416,9 @@ Error %1</source>
 is a not an audio file. 
 Audacity cannot open this type of file.</source>
         <extracomment>%1 is the name of the file</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 
+这不是音频文件。
+Audacity 无法打开此类文件。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
@@ -10359,7 +12429,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>正在导入 %1……</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -10369,7 +12439,7 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
-        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
+        <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
         <translation>此版本 Audacity 在编译时没有开启对 %1 的支持。</translation>
     </message>
     <message>
@@ -10379,7 +12449,9 @@ Audacity cannot open audio CDs directly.
 Extract (rip) the CD tracks to an audio format that 
 Audacity can import, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是音频 CD 曲目。
+Audacity 无法直接打开音频 CD。
+请将 CD 曲目提取（抓取）为 Audacity 能够导入的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -10387,7 +12459,9 @@ Audacity can import, such as WAV or AIFF.</source>
 Audacity cannot open this file because it only contains links to other files. 
 You may be able to open it in a text editor and download the actual audio files.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个播放列表文件。
+Audacity 无法打开此文件，因为它仅包含指向其他文件的链接。
+您可以尝试用文本编辑器打开它，并下载实际的音频文件。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="712"/>
@@ -10395,7 +12469,9 @@ You may be able to open it in a text editor and download the actual audio files.
 Audacity cannot open this type of file due to patent restrictions. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个 Windows Media Audio 文件。
+由于专利限制，Audacity 无法打开此类文件。
+您需要将其转换为受支持的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="722"/>
@@ -10403,7 +12479,11 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Without the optional FFmpeg library, Audacity cannot open this type of file.
 Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个高级音频编码文件。
+
+如果没有可选的 FFmpeg 库，Audacity 将无法打开此类文件。
+
+否则，您需要将其转换为支持的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="729"/>
@@ -10413,7 +12493,11 @@ Audacity cannot open this type of file due to the encryption.
 Try recording the file into Audacity, or burn it to audio CD then 
 extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个加密音频文件。
+此类文件通常来自在线音乐商店。
+由于存在加密，Audacity 无法打开该类型的文件。
+您可以尝试将该文件录制到 Audacity 中，或者将其刻录为音频 CD，
+然后再将 CD 曲目提取为 WAV 或 AIFF 等受支持的音频格式。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="736"/>
@@ -10421,7 +12505,9 @@ extract the CD track to a supported audio format such as WAV or AIFF.</source>
 Audacity cannot open this proprietary format. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个 RealPlayer 媒体文件。
+Audacity 无法打开这种专有格式。
+您需要将其转换为受支持的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="744"/>
@@ -10430,7 +12516,9 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是基于音符的文件，而非音频文件。
+Audacity 无法打开此类文件。
+请尝试将其转换为 WAV 或 AIFF 等音频文件后再导入，或者将其录制到 Audacity 中。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -10440,7 +12528,11 @@ If you think it might be an mp3 file, rename it to end with “.mp3”
 and try importing it again. Otherwise you need to convert it to a supported audio 
 format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是一个 Musepack 音频文件。
+Audacity 无法打开此类文件。
+如果您认为它可能是 MP3 文件，请将其重命名为以“.mp3”结尾，
+然后再次尝试导入。否则，您需要将其转换为受支持的音频格式，
+例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="760"/>
@@ -10448,7 +12540,9 @@ format, such as WAV or AIFF.</source>
 Audacity cannot open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是一个 Wavpack 音频文件。
+Audacity 无法打开此类文件。
+您需要将其转换为受支持的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="768"/>
@@ -10456,7 +12550,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个 Dolby Digital 音频文件。
+Audacity 目前无法打开此类文件。
+您需要将其转换为受支持的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="776"/>
@@ -10464,7 +12560,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是一个 Ogg Speex 音频文件。
+Audacity 目前无法打开此类文件。
+您需要将其转换为受支持的音频格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="789"/>
@@ -10472,12 +12570,14 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to extract the audio to a supported format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一个视频文件。
+Audacity 目前无法打开此类文件。
+您需要将音频提取为受支持的格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="795"/>
         <source>File “%1” not found.</source>
-        <translation type="unfinished"/>
+        <translation>未找到文件“%1”。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="810"/>
@@ -10485,7 +12585,9 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
 
 %2For uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity 无法识别文件“%1”的类型。
+
+%2 对于未压缩文件，也可以尝试“文件”&gt;“导入”&gt;“原始数据”。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
@@ -10500,7 +12602,10 @@ Importers supposedly supporting such files are:
 %2,
 but none of them understood this file format.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity 识别出了文件“%1”的类型。
+理论上支持此类文件的导入器包括：
+%2，
+但它们均无法识别该文件格式。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
@@ -10510,7 +12615,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
-        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
+        <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -10581,7 +12686,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
-        <extracomment>"Log" is short for "logarithmic"</extracomment>
+        <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
         <translation>日志搜索</translation>
     </message>
     <message>
@@ -10599,7 +12704,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>索引[%1] 编解码器[%2], 语言[%3], 比特率[%4], 声道数[%5], 时长[%6]</translation>
     </message>
     <message>
@@ -10608,7 +12713,7 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>kbps abbreviates "thousands of bits per second"
+        <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
@@ -10679,7 +12784,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
-        <extracomment>VBR is "variable bit rate"</extracomment>
+        <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
         <translation>Vbr 模式</translation>
     </message>
     <message>
@@ -10708,7 +12813,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
-        <extracomment>VOIP is "voice over IP"</extracomment>
+        <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -10768,36 +12873,36 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：错误 - 无法确定文件“%1”的格式描述。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：错误 - 无法分配输出格式上下文。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：错误 - 无法向输出文件“%1”添加音频流。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：错误 - 无法打开输出文件“%1”进行写入。错误代码为 %2。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：错误 - 无法将文件头写入输出文件“%1”。错误代码为 %2。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>FFmpeg 找不到音频编码器 0x%1。
 很可能没有编译入此编码器的支持。</translation>
     </message>
@@ -10816,18 +12921,20 @@ Support for this codec is probably not compiled in.</source>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
+        <translation>无法打开音频编解码器“%1” (0x%2)
+
+%3</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：错误 - 无法分配缓冲区以从音频 FIFO 读取数据。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 错误 - 无法向输出文件写入音频帧。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1172"/>
@@ -10863,7 +12970,8 @@ Support for this codec is probably not compiled in.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
-        <translation type="unfinished"/>
+        <translation>需要正确配置 FFmpeg 才能继续。
+您可以在“首选项” &gt; “常规”中进行配置。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
@@ -11010,7 +13118,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FLAC 导出无法打开 %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
@@ -11209,7 +13317,8 @@ Status: %1</source>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
-        <translation type="unfinished"/>
+        <translation>您正在链接到 lame_enc.dll v%1.%2。该版本与 Audacity %3.%4.%5 不兼容。
+请下载最新版本的“LAME for Audacity”。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
@@ -11333,10 +13442,10 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates "thousands of bits per second"
+        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
-kbit/s abbreviates "kilobits per second"</extracomment>
-        <translation type="unfinished"/>
+kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
@@ -11684,8 +13793,9 @@ Audacity 无法完成，将丢弃此次导出。</translation>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
-        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like "system * error"</extracomment>
-        <translation type="unfinished"/>
+        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
+        <translation>写入 %1 文件时出错（磁盘已满？）。
+Libsndfile 提示：“%2”</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
@@ -11740,7 +13850,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>bps abbreviates "bits per sample"</extracomment>
+        <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
         <translation>%1 bps</translation>
     </message>
     <message>
@@ -11762,9 +13872,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation><numerusform>解码 WavPack 文件时遇到 %1 个错误！</numerusform></translation>
     </message>
 </context>
 <context>
@@ -11894,6 +14002,122 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
         <source>One or more saved labels could not be read.</source>
         <translation>一个或更多已保存标签无法读取。</translation>
+    </message>
+</context>
+<context>
+    <name>languages</name>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
+        <source>Up to date</source>
+        <translation>已是最新</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
+        <source>Error while parsing response from server</source>
+        <translation>从服务器解析响应时出错</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
+        <source>Error while downloading language</source>
+        <translation>下载语言时出错</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
+        <source>Error while writing language files</source>
+        <translation>写入语言文件时出错</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
+        <source>Language not found</source>
+        <translation>未找到语言</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
+        <source>Error while removing language directory</source>
+        <translation>删除语言目录时出错</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
+        <source>Another operation on this language has already been started</source>
+        <translation>关于这种语言的另一操作已经开始</translation>
+    </message>
+</context>
+<context>
+    <name>learn</name>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
+        <source>Open %1</source>
+        <translation>打开%1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <source>Sorry, we are unable to load these videos right now</source>
+        <translation>抱歉，我们现在无法加载这些视频</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="103"/>
+        <source>Learn</source>
+        <translation>学习</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <source>Learn tab bar</source>
+        <translation>学习标签页栏</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <source>Get started</source>
+        <translation>入门</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <source>Classes</source>
+        <translation>课程</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
+        <source>The received playlist is empty.</source>
+        <translation>接收到的播放列表是空的。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <source>Marc Sabatella</source>
+        <translation>马克·萨巴泰拉（Marc Sabatella）</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <source>Instructor</source>
+        <translation>讲师</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <source>Creator, Mastering MuseScore</source>
+        <translation>精通MuseScore创始人</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
+
+Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
+
+In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
+
+(Note: Mastering MuseScore is available in English only)</source>
+        <translation>欢迎来到《精通 MuseScore》——这里有学习全世界最流行的音乐记谱软件：Musescore 的最全面的资源！我的名字是马克·萨巴泰拉。MuseScore 首次发布后的十多年里，我一直致力于帮助开发、支持和宣传 MuseScore。
+
+无论您是音乐记谱软件的初学者，还是渴望探索进阶排版和声音播放技巧的高级用户，我旗舰的在线课程《精通 MuseScore》里拥有您需要知晓的有关 MuseScore 的一切。
+
+此外，《精通 MuseScore》的特色在于它有一个支持性的音乐人社区，带有讨论空间、现场直播和其他相关课程和服务，以帮助您创建您最棒的音乐。抓住机会，从其最受公认的专家之一那里学习 MuseScore！
+
+（注意：《精通 MuseScore》只提供英文版本）</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <source>Mastering MuseScore</source>
+        <translation>精通MuseScore</translation>
     </message>
 </context>
 <context>
@@ -12223,6 +14447,53 @@ Libsndfile says “%2”</source>
     </message>
 </context>
 <context>
+    <name>midi</name>
+    <message>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
+        <source>No device</source>
+        <translation>无设备</translation>
+    </message>
+</context>
+<context>
+    <name>midiremote</name>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
+        <source>MIDI remote control</source>
+        <translation>MIDI 遥控</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
+        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
+        <translation>按下 MIDI 设备上的某个键或调节其控件，将其分配给此操作。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
+        <source>MIDI mapping:</source>
+        <translation>MIDI 映射：</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
+        <source>MIDI mapping bottom panel</source>
+        <translation>MIDI 映射底部面板</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
+        <source>Assign MIDI mapping…</source>
+        <translation>指定 MIDI 映射…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
+        <source>MIDI mapping top panel</source>
+        <translation>顶部面板 MIDI 映射</translation>
+    </message>
+</context>
+<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -12235,14 +14506,18 @@ Libsndfile says “%2”</source>
 
 Error: %2</source>
         <extracomment>%1 is the module name, %2 is the system error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法加载“%1”模块。
+
+错误：%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>模块“%1”未提供版本字符串。
+
+它将不会被加载。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
@@ -12250,19 +14525,23 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation type="unfinished"/>
+        <translation>模块“%1”与 Audacity 版本“%2”匹配。
+
+它将不会被加载。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>模块“%1”初始化失败。
+
+它将不会被加载。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
         <source>Module “%1” found.</source>
-        <translation type="unfinished"/>
+        <translation>已找到模块“%1”。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
@@ -12298,7 +14577,9 @@ Only use modules from trusted sources</source>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>模块“%1”未提供任何所需功能。
+
+它将不会被加载。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
@@ -12328,10 +14609,9 @@ It will not be loaded.</source>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of "Enable this plug-in?": "Enable these plug-ins?"</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
+        <translation><numerusform>启用此插件？
+</numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -12383,6 +14663,52 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>musesampler</name>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
+        <source>MuseSampler library is detected, version %1</source>
+        <translation>检测到Muse采样库，版本为%1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
+        <source>Installed MuseSampler library is not supported, version %1</source>
+        <translation>不支持所安装的MuseSampler库，版本为%1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
+        <source>MuseSampler library is not found</source>
+        <translation>未找到Muse采样库</translation>
+    </message>
+</context>
+<context>
+    <name>network</name>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
+        <source>The request was aborted</source>
+        <translation>请求被中止</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
+        <source>The connection to the remote server timed out</source>
+        <translation>与远程服务器的连接超时</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
+        <source>An unknown network-related error occurred</source>
+        <translation>发生未知的网络相关错误</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
+        <source>The I/O device was not opened for reading</source>
+        <translation>用于读取的I/O设备未打开</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
+        <source>The I/O device was not opened for writing</source>
+        <translation>用于写入的I/O设备未打开</translation>
+    </message>
+</context>
+<context>
     <name>network-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="102"/>
@@ -12392,29 +14718,37 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>notation</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
+        <source>Extensions toolbar</source>
+        <translation>扩展包工具栏</translation>
+    </message>
+</context>
+<context>
     <name>numeric-formats</name>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>小节</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>拍子</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
         <translation>小节:拍子</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
         <translation>小节:拍子:时钟点</translation>
     </message>
     <message>
@@ -13261,13 +15595,13 @@ It will not be loaded.</source>
     </message>
     <message>
         <source>Please select a path that contains %1</source>
-        <translation>请选择包含 "%1" 的路径。</translation>
+        <translation>请选择包含 &quot;%1&quot; 的路径。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
-        <translation type="unfinished"/>
+        <translation>请选择包含“%1”的路径。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
@@ -13328,7 +15662,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation type="unfinished"/>
+        <translation>您的“%1”版本已是最新。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="101"/>
@@ -13438,7 +15772,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation type="unfinished"/>
+        <translation>选择插件位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="75"/>
@@ -13448,12 +15782,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="78"/>
         <source>Remove location</source>
-        <translation type="unfinished"/>
+        <translation>移除位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="98"/>
         <source>The directory does not exist</source>
-        <translation type="unfinished"/>
+        <translation>该目录不存在</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="107"/>
@@ -13463,22 +15797,22 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
         <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>自定义 LV2 插件位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>选择自定义 LV2 插件位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="80"/>
         <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>自定义 VST3 插件位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="81"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>选择自定义 VST3 插件位置</translation>
     </message>
 </context>
 <context>
@@ -13568,7 +15902,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="366"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="217"/>
         <source>Project item menu</source>
-        <translation type="unfinished"/>
+        <translation>项目条目菜单</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="471"/>
@@ -13728,7 +16062,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
-        <extracomment>accessibility name for the panel at the bottom of the "Projects" page</extracomment>
+        <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>项目操作</translation>
     </message>
     <message>
@@ -14041,7 +16375,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
         <source>Cloud project indicator</source>
-        <translation type="unfinished"/>
+        <translation>云项目指标</translation>
     </message>
 </context>
 <context>
@@ -14163,7 +16497,7 @@ Directories Preferences.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="457"/>
         <source>Failed to open the project’s database</source>
-        <translation type="unfinished"/>
+        <translation>无法打开项目的数据库</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="517"/>
@@ -14226,7 +16560,7 @@ You will need to upgrade to open it.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="834"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法添加“inset”函数（无法验证 blockid）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="852"/>
@@ -14374,7 +16708,7 @@ For tips on freeing up space, click the help button.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1578"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>[项目 %1] Audacity “%2”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1580"/>
@@ -14398,7 +16732,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1695"/>
         <source>Can’t open project file</source>
-        <translation type="unfinished"/>
+        <translation>无法打开项目文件</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1811"/>
@@ -14421,7 +16755,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2170"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="unfinished"/>
+        <translation>该项目的数据库未能重新打开，这可能是由于存储设备空间不足所致。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2186"/>
@@ -14534,7 +16868,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>正在与 audio.com 同步</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -14684,6 +17018,7 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>保存到计算机</translation>
@@ -14702,13 +17037,13 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
-        <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>复制</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
-        <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>选择</translation>
     </message>
     <message>
@@ -14718,6 +17053,7 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>发布</translation>
     </message>
@@ -14748,6 +17084,58 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>无法连接到 Audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
+        <source>Public</source>
+        <translation>公开</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="167"/>
+        <source>Unlisted</source>
+        <translation>未列出</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="173"/>
+        <source>Private</source>
+        <translation>私有</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
+        <source>Publish to MuseScore.com</source>
+        <translation>发布到MuseScore.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
+        <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation>替换已有&lt;a href=&quot;%1&quot;&gt;在线乐谱&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
+        <source>Publish as new online score</source>
+        <translation>发布为新的在线乐谱</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
+        <source>Share on Audio.com</source>
+        <translation>在Audio.com上分享</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
+        <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation>替换&lt;a href=&quot;%1&quot;&gt;现有音频&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
+        <source>Upload as new audio file</source>
+        <translation>作为新音频文件上传</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
+        <source>Share</source>
+        <translation>分享</translation>
     </message>
 </context>
 <context>
@@ -15016,8 +17404,8 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
-        <source>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Watch video&lt;/a&gt;</source>
-        <translation>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;观看视频&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;观看视频&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
@@ -15407,17 +17795,138 @@ Error code: %1</source>
     </message>
 </context>
 <context>
+    <name>shortcuts</name>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
+        <source>Old shortcut:</source>
+        <translation>原快捷键：</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
+        <source>New shortcut:</source>
+        <translation>新快捷键：</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
+        <source>Type to set shortcut</source>
+        <translation>键入以设置快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
+        <source>Shortcuts bottom panel</source>
+        <translation>快捷键底部面板</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
+        <source>Import</source>
+        <translation>导入</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
+        <source>Export</source>
+        <translation>导出</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
+        <source>Reset to default</source>
+        <translation>重置为默认</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
+        <source>action</source>
+        <translation>命令</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="34"/>
+        <source>shortcut</source>
+        <translation>快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
+        <source>Shortcuts top panel</source>
+        <translation>快捷键顶部面板</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
+        <source>Define…</source>
+        <translation>自定义…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="98"/>
+        <source>Search shortcut</source>
+        <translation>搜索快捷键设置</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
+        <source>Enter shortcut sequence</source>
+        <translation>输入快捷键序列</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <source>Define keyboard shortcut</source>
+        <translation>自定义键盘快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
+        <source>Note %1</source>
+        <extracomment>A MIDI remote event, namely a note event</extracomment>
+        <translation>音符 %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
+        <source>CC %1</source>
+        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
+        <translation>控制更改 %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
+        <source>None</source>
+        <extracomment>No MIDI remote event</extracomment>
+        <translation>无</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
+        <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>此快捷键已分配给&lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
+        <translation>您确定要将其分配给&lt;b&gt;%1&lt;/b&gt;吗？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <source>Reassign shortcut</source>
+        <translation>重分配快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <source>MuseScore Studio shortcuts file</source>
+        <translation>MuseScore Studio快捷键文件</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <source>Import shortcuts</source>
+        <translation>导入快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <source>Export shortcuts</source>
+        <translation>导出快捷键</translation>
+    </message>
+</context>
+<context>
     <name>snapping</name>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>拍子</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>小节</translation>
     </message>
     <message>
@@ -15458,7 +17967,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>The music theory "triplet"</extracomment>
+        <extracomment>The music theory &quot;triplet&quot;</extracomment>
         <translation>三连音</translation>
     </message>
     <message>
@@ -15976,7 +18485,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
         <translation>剪切/拷贝/粘贴</translation>
     </message>
     <message>
@@ -16024,6 +18533,59 @@ Error code: %1</source>
     </message>
 </context>
 <context>
+    <name>system</name>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="54"/>
+        <source>The file does not exist</source>
+        <translation>文件不存在</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="55"/>
+        <source>The file already exists</source>
+        <translation>文件已存在</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="56"/>
+        <source>The file could not be removed</source>
+        <translation>文件无法被移除</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="57"/>
+        <source>The directory is not empty</source>
+        <translation>目录不是空的</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
+        <source>The directory could not be cleared</source>
+        <translation>无法清除该目录</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
+        <source>An error occurred when reading from the file</source>
+        <translation>从文件中读取时发生错误</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="60"/>
+        <source>An error occurred when writing to the file</source>
+        <translation>写入文件时发生错误</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="61"/>
+        <source>An error occurred when making a path</source>
+        <translation>生成路径时发生错误</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="62"/>
+        <source>An error occurred when copying the file</source>
+        <translation>拷贝文件时发生错误</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="63"/>
+        <source>An error occurred when moving the file</source>
+        <translation>移动文件时发生错误</translation>
+    </message>
+</context>
+<context>
     <name>time-frequency-selection</name>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
@@ -16046,25 +18608,37 @@ Error code: %1</source>
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation><numerusform>剩余 %n 小时</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation><numerusform>剩余 %n 分钟</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-        </translation>
+        <translation><numerusform>剩余 %n 秒</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>tours</name>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
+        <source>Watch video</source>
+        <translation>观看视频</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Got it</source>
+        <translation>知道了</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Next</source>
+        <translation>下一步</translation>
     </message>
 </context>
 <context>
@@ -16191,7 +18765,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="252"/>
         <source>Tracks: Empty</source>
-        <translation type="unfinished"/>
+        <translation>曲目：空</translation>
     </message>
 </context>
 <context>
@@ -16341,12 +18915,209 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="30"/>
         <source>Database error.  Sorry, but we don’t have more details.</source>
-        <translation type="unfinished"/>
+        <translation>数据库错误。抱歉，我们没有更多详细信息。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
         <source>Warning</source>
         <translation>警告</translation>
+    </message>
+</context>
+<context>
+    <name>ui</name>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
+        <source>Browse</source>
+        <translation>浏览</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
+        <source>Current path:</source>
+        <translation>当前路径:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
+        <source>Choose file</source>
+        <translation>选择文件</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
+        <source>Choose directory</source>
+        <translation>选择目录</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
+        <source>Directories actions</source>
+        <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
+        <translation>目录命令</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
+        <source>Directories</source>
+        <translation>目录</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
+        <source>Add directory</source>
+        <translation>添加目录</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
+        <source>Path</source>
+        <translation>路径</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
+        <source>Directories list</source>
+        <translation>目录列表</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>checked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <translation>已勾选</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>unchecked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <translation>未勾选</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="82"/>
+        <source>selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is the chosen option in a list of options</extracomment>
+        <translation>已选中</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="84"/>
+        <source>not selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is not the chosen option in a list of options</extracomment>
+        <translation>未选中</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="93"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
+        <source>Menu</source>
+        <extracomment>a type of ui item</extracomment>
+        <translation>菜单</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted ascending</source>
+        <translation>升序</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted descending</source>
+        <translation>降序</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
+        <source>not sorted</source>
+        <translation>未排序</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
+        <source>Search</source>
+        <translation>搜索</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation>红</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation>绿</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation>蓝</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
+        <source>Key</source>
+        <comment>key/value</comment>
+        <extracomment>As in a &quot;key/value&quot; pair: for example, the &quot;key&quot; could be the name of a setting and the &quot;value&quot; the value of that setting.</extracomment>
+        <translation>键</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
+        <source>Value</source>
+        <translation>值</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation>值列表顶部面板</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <source>Value list panel</source>
+        <extracomment>Accessibility description of the body of a value list (table)</extracomment>
+        <translation>值列表面板</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Visible</source>
+        <translation>可见</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Hidden</source>
+        <translation>隐藏</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
+        <source>Light</source>
+        <extracomment>The name of the light ui theme</extracomment>
+        <translation>浅色</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
+        <source>Dark</source>
+        <extracomment>The name of the dark ui theme</extracomment>
+        <translation>深色</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
+        <source>White</source>
+        <extracomment>The name of the high contrast light ui theme</extracomment>
+        <translation>白色</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
+        <source>Black</source>
+        <extracomment>The name of the high contrast dark ui theme</extracomment>
+        <translation>黑色</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="149"/>
+        <source>direction is horizontal</source>
+        <translation>方向为水平</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="150"/>
+        <source>direction is vertical</source>
+        <translation>方向为垂直</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
+        <source>direction is both</source>
+        <translation>方向为两者</translation>
     </message>
 </context>
 <context>
@@ -16466,6 +19237,210 @@ Do you wish to continue?</source>
         <source>bar:beat:tick</source>
         <translation>小节:拍子:时钟点</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
+        <source>No button</source>
+        <translation>无按钮</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
+        <source>Save all</source>
+        <translation>全部保存</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
+        <source>Don’t save</source>
+        <translation>不保存</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
+        <source>Open</source>
+        <translation>打开</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
+        <source>Yes to all</source>
+        <translation>全部皆是</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
+        <source>No</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
+        <source>No to all</source>
+        <translation>全部皆否</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
+        <source>Abort</source>
+        <translation>中止</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
+        <source>Retry</source>
+        <translation>重试</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
+        <source>Ignore</source>
+        <translation>忽略</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
+        <source>Discard</source>
+        <translation>丢弃</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
+        <source>Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
+        <source>Reset</source>
+        <translation>重置</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
+        <source>Restore defaults</source>
+        <translation>恢复默认</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
+        <source>Continue</source>
+        <translation>继续</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
+        <source>Next</source>
+        <translation>下一步</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
+        <source>Back</source>
+        <translation>上一步</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
+        <source>Select</source>
+        <translation>选择</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
+        <source>Clear</source>
+        <translation>清除</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
+        <source>Done</source>
+        <translation>完成</translation>
+    </message>
+</context>
+<context>
+    <name>update</name>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <source>A new version of %1 is available!</source>
+        <translation>%1 的新版本现已推出！</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <source>Release notes</source>
+        <translation>版本说明</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <source>Skip this version</source>
+        <translation>跳过此版本</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <source>Remind me later</source>
+        <translation>稍后提醒我</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <source>Install update</source>
+        <translation>安装更新</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
+        <source>Read the %1 release notes</source>
+        <translation>阅读%1版本说明</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation>您已拥有 %1 的最新版本。请访问 &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;以了解后续动态。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <source>You’re up to date!</source>
+        <translation>已是最新版本！</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <source>Cannot connect to server</source>
+        <translation>无法连接到服务器</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <source>Sorry - please try again later</source>
+        <translation>抱歉，请稍后再试</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation>%1 需要关闭以完成安装。如果您有任何未保存的更改，系统会在 %1 关闭前提示您进行保存。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating MuseScore Studio</source>
+        <translation>正在更新MuseScore Studio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading MuseScore Studio %1</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
+        <translation>正在下载MuseScore Studio %1</translation>
+    </message>
 </context>
 <context>
     <name>vst3</name>
@@ -16483,7 +19458,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
         <source>Searching VST3 in: %1</source>
-        <translation type="unfinished"/>
+        <translation>在以下位置搜索 VST3：%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
@@ -16503,7 +19478,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
         <source>Looking in: %1</source>
-        <translation type="unfinished"/>
+        <translation>正在查看：%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
@@ -16585,7 +19560,7 @@ Truncating to this maximum length.</source>
         <extracomment>Template for clip name generation on copy-paste
 ----------
 Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1.%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2817"/>
@@ -16660,11 +19635,85 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
 </context>
 <context>
+    <name>workspace</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
+        <source>Workspaces</source>
+        <translation>工作区</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
+        <source>Save layout as new workspace</source>
+        <translation>将布局保存为新工作区</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
+        <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
+        <translation>工作区允许您选择 %1 的不同界面配置。您还能将您自己的个性化配置保存为新工作区。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
+        <source>Reset</source>
+        <translation>重置</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <source>Workspace name:</source>
+        <translation>工作区名称：</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
+        <source>New</source>
+        <translation>新建</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
+        <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
+        <translation>名为“%1”的工作区已存在，请选择其他名称。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
+        <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
+        <translation>“%1”不能用作工作区名称，请选择其他名称。</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
+        <translation>此操作会将您的工作区重置到默认版式且不能撤销。您想要继续吗？</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <source>Resetting workspaces</source>
+        <translation>正在重置工作区</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <source>Reset workspace</source>
+        <translation>重置工作区</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <source>Name cannot be empty</source>
+        <translation>名称不能为空</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <source>Name already exists</source>
+        <translation>名称已存在</translation>
+    </message>
+</context>
+<context>
     <name>xml</name>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>无法打开文件：“%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
@@ -16677,14296 +19726,13 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>无法加载文件：“%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
         <translation>无法解析 XML</translation>
-    </message>
-</context>
-<context>
-    <name>_au3_legacy_vanished</name>
-    <message>
-        <source>Stream is active ... unable to gather information.
-</source>
-        <translation type="vanished">流活跃中... 无法收集信息。
-</translation>
-    </message>
-    <message>
-        <source>No recording device found for '%s'.
-</source>
-        <translation type="vanished">未找到适用于 '%1' 的录制设备。
-</translation>
-    </message>
-    <message>
-        <source>No playback device found for '%s'.
-</source>
-        <translation type="vanished">未找到适用于 '%1' 的播放设备。
-</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.</source>
-        <translation type="vanished">录制音量自动调整已停止。无法进一步优化。音量依然过高。</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment decreased the volume to %f.</source>
-        <translation type="vanished">录制音量自动调整器已将音量降低到 %1。</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.</source>
-        <translation type="vanished">录制音量自动调整已停止。无法进一步优化。音量依然过低。</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment increased the volume to %.2f.</source>
-        <translation type="vanished">录制音量自动调整器已将音量提高到 %1。</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.</source>
-        <translation type="vanished">录制音量自动调整已停止。分析数值已经超过上限，但仍未找到合适的音量值。音量依然过高。</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.</source>
-        <translation type="vanished">录制音量自动调整已停止。分析数值已经超过上限，但仍未找到合适的音量值。音量依然过低。</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.</source>
-        <translation type="vanished">录制音量自动调整已停止。 %1 似乎是合适的音量。</translation>
-    </message>
-    <message>
-        <source>Failed to encode preset from "%s"</source>
-        <translation type="vanished">无法从 "%1" 编码预设</translation>
-    </message>
-    <message>
-        <source>Couldn't open "%s"</source>
-        <translation type="vanished">无法打开文件 "%1"</translation>
-    </message>
-    <message>
-        <source>Failed to write XML preset to "%s"</source>
-        <translation type="vanished">无法将 XML 预设写入 "%1"</translation>
-    </message>
-    <message>
-        <source>Unable to read the preset from "%s"</source>
-        <translation type="vanished">无法从 "%1" 读取预设</translation>
-    </message>
-    <message>
-        <source>Failed to decode "%s" preset</source>
-        <translation type="vanished">无法解码%1预设</translation>
-    </message>
-    <message>
-        <source>Failed to convert "%s" preset to internal format</source>
-        <translation type="vanished">无法将%1预设转换为内部格式</translation>
-    </message>
-    <message>
-        <source>Failed to create property list for "%s" preset</source>
-        <translation type="vanished">无法为%1预设创建属性列表</translation>
-    </message>
-    <message>
-        <source>Failed to set class info for "%s" preset</source>
-        <translation type="vanished">无法为 "%1" 预设设定类信息</translation>
-    </message>
-    <message>
-        <source>Applying %s...</source>
-        <translation type="vanished">应用 %1 中...</translation>
-    </message>
-    <message>
-        <source>"%s" 
-is a not an audio file. 
-Audacity cannot open this type of file.</source>
-        <translation type="vanished">"%1"
-不是音频文件。
-Audacity 无法打开此类文件。</translation>
-    </message>
-    <message>
-        <source>Importing %s...</source>
-        <translation type="vanished">正在倒入 %1...</translation>
-    </message>
-    <message>
-        <source>"%s" is an audio CD track. 
-Audacity cannot open audio CDs directly. 
-Extract (rip) the CD tracks to an audio format that 
-Audacity can import, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" 是音频 CD 轨道。
-Audacity 无法直接打开音频 CD。
-请将 CD 轨道提取到 Audacity 能导入的
-音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is a playlist file. 
-Audacity cannot open this file because it only contains links to other files. 
-You may be able to open it in a text editor and download the actual audio files.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是播放列表文件。
-它只包含链接文件的位置，所以 Audacity 无法打开它。
-您可以用文字编辑器打开它，查看所列文件的位置，并获得实际的音频文件。</translation>
-    </message>
-    <message>
-        <source>"%s" is a Windows Media Audio file. 
-Audacity cannot open this type of file due to patent restrictions. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是 Windows Media Audio 文件。
-因为专利限制，Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is an Advanced Audio Coding file.
-Without the optional FFmpeg library, Audacity cannot open this type of file.
-Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是高级音频编码（AAC）文件。
-没有可选的 FFmpeg 库的情况下，Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is an encrypted audio file. 
-These typically are from an online music store. 
-Audacity cannot open this type of file due to the encryption. 
-Try recording the file into Audacity, or burn it to audio CD then 
-extract the CD track to a supported audio format such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是加密的音频文件。
-这类文件通常来自在线音乐商店。
-Audacity 无法打开这类文件，因为它被加密了。
-可以尝试把它录制进 Audacity，或刻录成音频 CD，然后
-把 CD 音轨提取为支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is a RealPlayer media file. 
-Audacity cannot open this proprietary format. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是 RealPlayer 媒体文件。
-Audacity 无法打开这类专有格式文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is a notes-based file, not an audio file. 
-Audacity cannot open this type of file. 
-Try converting it to an audio file such as WAV or AIFF and 
-then import it, or record it into Audacity.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是基于音符的文件，不是音频文件。
-Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF，
-然后导入，或将其录制到 Audacity。</translation>
-    </message>
-    <message>
-        <source>"%s" is a Musepack audio file. 
-Audacity cannot open this type of file. 
-If you think it might be an mp3 file, rename it to end with ".mp3" 
-and try importing it again. Otherwise you need to convert it to a supported audio 
-format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1"是 Musepack 音频文件。
-Audacity 无法打开此类型文件。
-如果您认为它有可能是 MP3文件，请将它的扩展名
-更改为 ".mp3" 后再重新导入一次，
-或者将其转换为 Audacity 支持的文件格式，
-如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is a Wavpack audio file. 
-Audacity cannot open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" 是 Wavpack 音频文件。
-Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is a Dolby Digital audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" 是杜比数字（Dolby Digital）音频文件。
-Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is an Ogg Speex audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" 是 Ogg Speex 音频文件。
-Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>"%s" is a video file. 
-Audacity cannot currently open this type of file. 
-You need to extract the audio to a supported format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" 是视频文件。
-Audacity 无法打开这类文件。
-您需要把它转换到支持的音频格式，如 WAV 或 AIFF。</translation>
-    </message>
-    <message>
-        <source>File "%s" not found.</source>
-        <translation type="vanished">未找到文件 "%1"。</translation>
-    </message>
-    <message>
-        <source>Audacity did not recognize the type of the file '%s'.
-
-%sFor uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">Audacity 未能识别文件 '%1' 的类型。
-
-%2对于为压缩文件，也可尝试 文件 &gt; 导入 &gt; 原始数据。</translation>
-    </message>
-    <message>
-        <source>Audacity recognized the type of the file '%s'.
-Importers supposedly supporting such files are:
-%s,
-but none of them understood this file format.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">Audacity 识别了文件“%1”的类型。
-估计支持这些文件的导入器有：
-%2，
-但它们都不能读取这个文件格式.</translation>
-    </message>
-    <message>
-        <source>LADSPA</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA</translation>
-    </message>
-    <message>
-        <source>LADSPA Effects</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA 效果器</translation>
-    </message>
-    <message>
-        <source>Provides LADSPA Effects</source>
-        <translation type="vanished">提供 LADSPA 效果器</translation>
-    </message>
-    <message>
-        <source>Audacity no longer uses vst-bridge</source>
-        <translation type="vanished">Audacity 不再使用 VST 桥</translation>
-    </message>
-    <message>
-        <source>Could not load the library</source>
-        <translation type="vanished">无法载入此库</translation>
-    </message>
-    <message>
-        <source>LV2</source>
-        <extracomment>i18n-hint: abbreviates
-"Linux Audio Developer's Simple Plugin API (LADSPA) version 2"</extracomment>
-        <translation type="vanished">LV2</translation>
-    </message>
-    <message>
-        <source>Effect Settings</source>
-        <translation type="vanished">效果器设置</translation>
-    </message>
-    <message>
-        <source>LV2 Effects</source>
-        <translation type="vanished">LV2 效果器</translation>
-    </message>
-    <message>
-        <source>Provides LV2 Effects support to Audacity</source>
-        <translation type="vanished">为 Audacity 提供 LV2 效果器支持</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>dither</comment>
-        <translation type="vanished">三角形</translation>
-    </message>
-    <message>
-        <source>Command</source>
-        <translation type="vanished">命令</translation>
-    </message>
-    <message>
-        <source>Repeat %s</source>
-        <extracomment>i18n-hint: %s will be the name of the effect which will be
-* repeated if this menu item is chosen</extracomment>
-        <translation type="vanished">重复 %1</translation>
-    </message>
-    <message>
-        <source>
-* %s, because you have assigned the shortcut %s to %s</source>
-        <translation type="vanished">
-* %1, 因为已将 %2 快捷键分配给 %3</translation>
-    </message>
-    <message>
-        <source>There was a problem with your last action. If you think
-this is a bug, please tell us exactly where it occurred.</source>
-        <translation type="vanished">上一个操作有问题，如果您认为这是 BUG，
-请准确告诉我们它发生的位置。</translation>
-    </message>
-    <message>
-        <source>Disallowed</source>
-        <translation type="vanished">不允许</translation>
-    </message>
-    <message>
-        <source>&amp;Undo %s</source>
-        <translation type="vanished">撤消 %1(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Redo %s</source>
-        <translation type="vanished">重做 %1(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Unable to load the "%s" module.
-
-Error: %s</source>
-        <translation type="vanished">无法加载“%1”模块。
-
-错误：%2</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide a version string.
-
-It will not be loaded.</source>
-        <translation type="vanished">模块 "%1" 未包含版本信息。
-
-将不会加载它。</translation>
-    </message>
-    <message>
-        <source>The module "%s" is matched with Audacity version "%s".
-
-It will not be loaded.</source>
-        <translation type="vanished">模块 "%1" 只匹配 Audacity 版本 "%2"。
-
-将不会加载它。</translation>
-    </message>
-    <message>
-        <source>The module "%s" failed to initialize.
-
-It will not be loaded.</source>
-        <translation type="vanished">模块 "%1" 初始化失败。
-
-将不会加载它。</translation>
-    </message>
-    <message>
-        <source>Module "%s" found.</source>
-        <translation type="vanished">找到模块 “%1”。</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide any of the required functions.
-
-It will not be loaded.</source>
-        <translation type="vanished">模块 %1 不提供任何必要的功能。
-
-将不会加载它。</translation>
-    </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <oldsource>Enable these plug-ins?
-</oldsource>
-        <comment>plug-ins</comment>
-        <extracomment>i18n-hint A plug-in is an optional added program for a sound
-effect, or generator, or analyzer</extracomment>
-        <translation type="vanished">
-            <numerusform>启动这些插件吗？
-</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Nyquist Prompt</source>
-        <translation type="vanished">Nyquist 提示符</translation>
-    </message>
-    <message>
-        <source>There was an error initializing the midi i/o layer.
-</source>
-        <translation type="vanished">初始化 MIDI I/O 层时出错.
-</translation>
-    </message>
-    <message>
-        <source>You will not be able to play midi.
-
-</source>
-        <translation type="vanished">您将无法播放 MIDI。
-
-</translation>
-    </message>
-    <message>
-        <source>Error Initializing Midi</source>
-        <translation type="vanished">MIDI 初始化错误</translation>
-    </message>
-    <message>
-        <source>Note Track</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this is a Note track.</extracomment>
-        <translation type="vanished">音符轨</translation>
-    </message>
-    <message>
-        <source>&amp;Seconds</source>
-        <translation type="vanished">秒</translation>
-    </message>
-    <message>
-        <source>&amp;Beats</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation type="vanished">拍</translation>
-    </message>
-    <message>
-        <source>Supports output: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">支持输出：%1
-</translation>
-    </message>
-    <message>
-        <source>Supports input: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">支持输入：%1
-</translation>
-    </message>
-    <message>
-        <source>Opened: %d
-</source>
-        <translation type="vanished">已打开：%1
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI recording device: %d - %s
-</source>
-        <translation type="vanished">选择 MIDI 录制设备：%1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI recording device found for '%s'.
-</source>
-        <translation type="vanished">未找到适用于 '%1' 的 MIDI 录制设备。
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI playback device: %d - %s
-</source>
-        <translation type="vanished">选择 MIDI 播放设备：%1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI playback device found for '%s'.
-</source>
-        <translation type="vanished">未找到适用于 '%1' 的 MIDI 播放设备。
-</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <extracomment>i18n-hint: refers to optional plug-in software libraries</extracomment>
-        <translation type="vanished">库</translation>
-    </message>
-    <message>
-        <source>Preferences for Library</source>
-        <translation type="vanished">库首选项</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="vanished">库</translation>
-    </message>
-    <message>
-        <source>Failed to open the project's database</source>
-        <translation type="vanished">打开项目数据库失败</translation>
-    </message>
-    <message>
-        <source>Unable to add 'inset' function (can't verify blockids)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate inset or blockids.</extracomment>
-        <translation type="vanished">无法添加 'inset' 函数（无法验证 blockids）</translation>
-    </message>
-    <message>
-        <source>[Project %02i] Audacity "%s"</source>
-        <extracomment>i18n-hint: The %02i is the project number, the %s is the project name.</extracomment>
-        <translation type="vanished">［项目 %1］Audacity "%2"</translation>
-    </message>
-    <message>
-        <source>Can't open project file</source>
-        <translation type="vanished">不能打开项目文件</translation>
-    </message>
-    <message>
-        <source>The project's database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="vanished">重新打开项目数据库失败，原因可能为磁盘空间告急。</translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="vanished">关闭(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished">帮助</translation>
-    </message>
-    <message>
-        <source>&amp;Preview</source>
-        <translation type="vanished">预览(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Dry Previe&amp;w</source>
-        <translation type="vanished">干预览(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="vanished">设置(S)</translation>
-    </message>
-    <message>
-        <source>Debu&amp;g</source>
-        <translation type="vanished">调试(&amp;G)</translation>
-    </message>
-    <message>
-        <source>High Contrast</source>
-        <extracomment>i18n-hint: greater difference between foreground and
-background colors</extracomment>
-        <translation type="vanished">高对比度</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/%s.</source>
-        <extracomment>i18n-hint: A theme is a consistent visual style across an application's
-graphical user interface, including choices of colors, and similarity of images
-such as those on button controls.  Audacity can load and save alternative
-themes.</extracomment>
-        <translation type="vanished">主题已写入：
- %1/*/%2。</translation>
-    </message>
-    <message>
-        <source>Audacity could not write file:
-  %s.</source>
-        <translation type="vanished">Audacity 无法写文件：
-  %1。</translation>
-    </message>
-    <message>
-        <source>Audacity could not open file:
-  %s
-for writing.</source>
-        <translation type="vanished">Audacity 无法为写打开文件：
-  %1
-。</translation>
-    </message>
-    <message>
-        <source>Audacity could not write images to file:
-  %s.</source>
-        <translation type="vanished">Audacity 无法写文件到文件：
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find file:
-  %s.
-Theme not loaded.</source>
-        <translation type="vanished">Audacity 无法找到文件：
-  %1.
-主题未载入。</translation>
-    </message>
-    <message>
-        <source>Audacity could not load file:
-  %s.
-Bad png format perhaps?</source>
-        <extracomment>i18n-hint: Do not translate png.  It is the name of a file format.</extracomment>
-        <translation type="vanished">Audacity 无法载入文件：
-  %1.
-也许png格式错误？</translation>
-    </message>
-    <message>
-        <source>Audacity could not read its default theme.
-Please report the problem.</source>
-        <translation type="vanished">Audacity 无法读默认主题.
-请报告这个问题。</translation>
-    </message>
-    <message>
-        <source>Couldn't read from file: %s</source>
-        <translation type="vanished">无法读取文件：%1</translation>
-    </message>
-    <message>
-        <source>None of the expected theme component files
- were found in:
-  %s.</source>
-        <translation type="vanished">%1中找不到期望的任何主题元件文件
-。</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/Components/.</source>
-        <translation type="vanished">主题已写入：
- %1/*/Components/。</translation>
-    </message>
-    <message>
-        <source>Could not create directory:
-  %s</source>
-        <translation type="vanished">无法新建目录：
-  %1</translation>
-    </message>
-    <message>
-        <source>Some required files in:
-  %s
-were already present. Overwrite?</source>
-        <translation type="vanished">一些需要的文件在：
- %1
-已经存在了。覆盖吗？</translation>
-    </message>
-    <message>
-        <source>Audacity could not save file:
-  %s</source>
-        <translation type="vanished">Audacity 无法保存文件：
-  %1</translation>
-    </message>
-    <message>
-        <source>Couldn't write to file: %s</source>
-        <translation type="vanished">无法写入文件：%1</translation>
-    </message>
-    <message>
-        <source>Themes as Cee code written to:
-  %s/*%s.</source>
-        <extracomment>i18n-hint "Cee" means the C computer programming language</extracomment>
-        <translation type="vanished">主题以 Cee 代码写入：
- %1/*%2。</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <extracomment>i18n-hint: user defined</extracomment>
-        <translation type="vanished">自定义</translation>
-    </message>
-    <message>
-        <source>Database error.  Sorry, but we don't have more details.</source>
-        <translation type="vanished">数据库错误。  对不起，但我们没有更多详细信息。</translation>
-    </message>
-    <message>
-        <source>Audio In: %d, Audio Out: %d</source>
-        <translation type="vanished">音频输入：%1，音频输出：%2</translation>
-    </message>
-    <message>
-        <source>VST</source>
-        <extracomment>i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-developed by Steinberg GmbH</extracomment>
-        <translation type="vanished">VST</translation>
-    </message>
-    <message>
-        <source>VST Effects</source>
-        <translation type="vanished">VST 效果器</translation>
-    </message>
-    <message>
-        <source>Adds the ability to use VST effects in Audacity.</source>
-        <translation type="vanished">让 Audacity 可以使用 VST 效果器。</translation>
-    </message>
-    <message>
-        <source>Unable to allocate memory when loading presets file.</source>
-        <translation type="vanished">无法在加载预设文件时分配内存。</translation>
-    </message>
-    <message>
-        <source>Error Loading VST Presets</source>
-        <translation type="vanished">加载 VST 预设错误</translation>
-    </message>
-    <message>
-        <source>Unable to read presets file.</source>
-        <translation type="vanished">无法读取预设文件。</translation>
-    </message>
-    <message>
-        <source>Could not open file: "%s"</source>
-        <translation type="vanished">无法打开文件： "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving VST Presets</source>
-        <translation type="vanished">保存 VST 预设错误</translation>
-    </message>
-    <message>
-        <source>Error writing to file: "%s"</source>
-        <translation type="vanished">写入到文件时出错： "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving Effect Presets</source>
-        <translation type="vanished">保存 VST 预设错误</translation>
-    </message>
-    <message>
-        <source>This parameter file was saved from %s. Continue?</source>
-        <translation type="vanished">此参数文件由%1保存。继续吗？</translation>
-    </message>
-    <message>
-        <source>%s.%i</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Template for clip name generation on copy-paste
-i18n-hint Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>There is not enough room available to paste the selection</source>
-        <translation type="vanished">没有足够的空间来粘贴选区</translation>
-    </message>
-    <message>
-        <source>Show &amp;Log...</source>
-        <translation type="vanished">显示日志(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>More information about this error may be available %s.</source>
-        <translation type="vanished">可以在%1找到关于此错误的更多信息。</translation>
-    </message>
-    <message>
-        <source>here</source>
-        <translation type="vanished">在此</translation>
-    </message>
-    <message>
-        <source>Would you like to send a report to help us fix this issue?</source>
-        <translation type="vanished">要发送报告，帮助我们修复此问题吗？</translation>
-    </message>
-    <message>
-        <source>All reports are anonymous. See %s for more info.</source>
-        <translation type="vanished">所有报告都是匿名的。参见 %1 了解更多信息。</translation>
-    </message>
-    <message>
-        <source>our Privacy Policy</source>
-        <extracomment>i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".</extracomment>
-        <translation type="vanished">我们的隐私政策</translation>
-    </message>
-    <message>
-        <source>Problem details</source>
-        <translation type="vanished">问题详细信息</translation>
-    </message>
-    <message>
-        <source>&amp;Don't send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">取消送出(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">发送(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Backwards</source>
-        <translation type="vanished">后退</translation>
-    </message>
-    <message>
-        <source>&lt;</source>
-        <extracomment>i18n-hint arrowhead meaning backward movement</extracomment>
-        <translation type="vanished">&lt;</translation>
-    </message>
-    <message>
-        <source>Forwards</source>
-        <translation type="vanished">前进</translation>
-    </message>
-    <message>
-        <source>&gt;</source>
-        <extracomment>i18n-hint arrowhead meaning forward movement</extracomment>
-        <translation type="vanished">&gt;</translation>
-    </message>
-    <message>
-        <source>Help on the Internet</source>
-        <translation type="vanished">互联网上的帮助</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">本地</translation>
-    </message>
-    <message>
-        <source>From Internet</source>
-        <translation type="vanished">从互联网</translation>
-    </message>
-    <message>
-        <source>Welcome!</source>
-        <translation type="vanished">欢迎使用！</translation>
-    </message>
-    <message>
-        <source>Playing Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">播放音频</translation>
-    </message>
-    <message>
-        <source>Recording Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">录制音频</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Device</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">录制 － 选择录入设备</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Source</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">录制 － 选择录制源</translation>
-    </message>
-    <message>
-        <source>Recording - Setting the Recording Level</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">录制 － 设置录制电平</translation>
-    </message>
-    <message>
-        <source>Editing and greyed out Menus</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">编辑和变灰菜单</translation>
-    </message>
-    <message>
-        <source>Exporting an Audio File</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">正在导出音频文件</translation>
-    </message>
-    <message>
-        <source>Saving an Audacity Project</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">保存 Audacity 项目</translation>
-    </message>
-    <message>
-        <source>Support for Other Formats</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">对其它格式的支持</translation>
-    </message>
-    <message>
-        <source>Burn to CD</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">烧录到 CD</translation>
-    </message>
-    <message>
-        <source>No Local Help</source>
-        <translation type="vanished">没有本地帮助</translation>
-    </message>
-    <message>
-        <source>Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer.</source>
-        <translation type="vanished">如果您的计算机上安装了[[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg 库]]（可选），则 Audacity 可以导入诸多其它未受保护格式（例如M4A/WMA、便携式录音机的压缩 WAV 文件、视频文件中的音频等）的文件。</translation>
-    </message>
-    <message>
-        <source>You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]].</source>
-        <translation type="vanished">您也可以通过阅读帮助，来了解如何导入[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI 文件]]和[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| 音乐CD]]的曲目。</translation>
-    </message>
-    <message>
-        <source>The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].&lt;br&gt;&lt;br&gt;To always view the Manual online, change "Location of Manual" in Interface Preferences to "From Internet".</source>
-        <translation type="vanished">使用手册好像没有安装。请[[*URL*|在线浏览使用手册]]或[[https://manual.audacityteam.org/man/unzipping_the_manual.html|下载使用手册]].。&lt;br&gt;&lt;br&gt;如果您想总是在线浏览使用手册，请将界面首选项中“使用手册的位置”更改为“从互联网”。</translation>
-    </message>
-    <message>
-        <source>Audacity Log</source>
-        <translation type="vanished">Audacity 日志</translation>
-    </message>
-    <message>
-        <source>&amp;Save...</source>
-        <translation type="vanished">保存(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>Cl&amp;ear</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">清除(&amp;E)</translation>
-    </message>
-    <message>
-        <source>log.txt</source>
-        <translation type="vanished">日志.txt</translation>
-    </message>
-    <message>
-        <source>Save log to:</source>
-        <translation type="vanished">保存日志到：</translation>
-    </message>
-    <message>
-        <source>Couldn't save log to file: %s</source>
-        <translation type="vanished">无法保存日志到文件：%1</translation>
-    </message>
-    <message>
-        <source>Show Log for Details</source>
-        <translation type="vanished">打开日志显示详情</translation>
-    </message>
-    <message>
-        <source>Elapsed Time:</source>
-        <translation type="vanished">已用时间：</translation>
-    </message>
-    <message>
-        <source>Remaining Time:</source>
-        <translation type="vanished">剩余时间：</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to cancel?</source>
-        <translation type="vanished">您确实要取消?</translation>
-    </message>
-    <message>
-        <source>Confirm Cancel</source>
-        <translation type="vanished">确认取消</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to stop?</source>
-        <translation type="vanished">您确实要停止?</translation>
-    </message>
-    <message>
-        <source>Confirm Stop</source>
-        <translation type="vanished">确认停止</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close?</source>
-        <translation type="vanished">您确实要关闭?</translation>
-    </message>
-    <message>
-        <source>Confirm Close</source>
-        <translation type="vanished">确认关闭</translation>
-    </message>
-    <message>
-        <source>The specified filename could not be converted due to Unicode character use.</source>
-        <translation type="vanished">无法转换指定的文件名，因为使用了 Unicode 字符。</translation>
-    </message>
-    <message>
-        <source>Specify New Filename:</source>
-        <translation type="vanished">指定新文件名：</translation>
-    </message>
-    <message>
-        <source>Don't ask me again</source>
-        <translation type="vanished">不再询问</translation>
-    </message>
-    <message>
-        <source>File '%s' already exists, do you really want to overwrite it?</source>
-        <translation type="vanished">文件“%1”已存在，您想覆盖它吗？</translation>
-    </message>
-    <message>
-        <source>Please choose an existing file.</source>
-        <translation type="vanished">请选择一个已存在的文件。</translation>
-    </message>
-    <message>
-        <source>File type:</source>
-        <translation type="vanished">文件类型：</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="vanished">选择一个目录</translation>
-    </message>
-    <message>
-        <source>Panel</source>
-        <translation type="vanished">面板</translation>
-    </message>
-    <message>
-        <source>Dialog</source>
-        <translation type="vanished">对话框</translation>
-    </message>
-    <message>
-        <source>Directory Dialog</source>
-        <translation type="vanished">目录对话框</translation>
-    </message>
-    <message>
-        <source>File Dialog</source>
-        <translation type="vanished">文件对话框</translation>
-    </message>
-    <message>
-        <source>Could not load file: "%s"</source>
-        <translation type="vanished">无法载入文件： "%1"</translation>
-    </message>
-    <message>
-        <source>1st Experimental Command...</source>
-        <translation type="vanished">实验性命令 1...</translation>
-    </message>
-    <message>
-        <source>2nd Experimental Command</source>
-        <translation type="vanished">实验性命令 2...</translation>
-    </message>
-    <message>
-        <source>AUP project files (*.aup)</source>
-        <translation type="vanished">AUP 项目文件（*.aup）</translation>
-    </message>
-    <message>
-        <source>Couldn't import the project:
-
-%s</source>
-        <translation type="vanished">无法导入项目：
-
-%1</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to import an AUP project.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">%1
-3.3.3 版本后的 Audacity 不支持此功能。
-这些立体声轨道已被分离为单声道轨道。
-请在保存前确认一切按预期工作。</translation>
-    </message>
-    <message>
-        <source>This project was saved by Audacity version 1.0 or earlier. The format has
-changed and this version of Audacity is unable to import the project.
-
-Use a version of Audacity prior to v3.0.0 to upgrade the project and then
-you may import it with this version of Audacity.</source>
-        <translation type="vanished">这个项目是由 Audacity 1.0 版本或更早版本保存的。一些格式
-有所变化，这个版本的 Audacity 无法导入该项目。
-
-请使用早于 3.0.0 版本的 Audacity 来升级项目，之后
-可用此版本的 Audacity 进行导入。</translation>
-    </message>
-    <message>
-        <source>Internal error in importer...tag not recognized</source>
-        <translation type="vanished">导入器发生内部错误... 未识别标签</translation>
-    </message>
-    <message>
-        <source>Invalid project 'vpos' attribute.</source>
-        <translation type="vanished">无效的项目 'vpos' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid project 'h' attribute.</source>
-        <translation type="vanished">无效的项目 'h' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid project 'zoom' attribute.</source>
-        <translation type="vanished">无效的项目 'zoom' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel0' attribute.</source>
-        <translation type="vanished">无效的项目 'sel0' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel1' attribute.</source>
-        <translation type="vanished">无效的项目 'sel1' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selLow' attribute.</source>
-        <translation type="vanished">无效的项目 'selLow' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selHigh' attribute.</source>
-        <translation type="vanished">无效的项目 'selHigh' 属性。</translation>
-    </message>
-    <message>
-        <source>Couldn't find the project data folder: "%s"</source>
-        <translation type="vanished">找不到项目数据目录："%1"</translation>
-    </message>
-    <message>
-        <source>MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track.</source>
-        <translation type="vanished">在项目文件内找到了 MIDI 轨道，但本 Audacity 构建未包含 MIDI 支持，将忽略该轨道。</translation>
-    </message>
-    <message>
-        <source>The active project already has a time track and one was encountered in the project being imported, bypassing imported time track.</source>
-        <translation type="vanished">活跃项目已经有一条时间轨道，正在导入的项目也有一条，将跳过已导入的时间轨道。</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'maxsamples' attribute.</source>
-        <translation type="vanished">无效的序列 'maxsamples' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'sampleformat' attribute.</source>
-        <translation type="vanished">无效的序列 'sampleformat' 属性。</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'numsamples' attribute.</source>
-        <translation type="vanished">无效的序列 'numsamples' 属性。</translation>
-    </message>
-    <message>
-        <source>Unable to parse the waveblock 'start' attribute</source>
-        <translation type="vanished">无法解析 waveblock 'start' 属性</translation>
-    </message>
-    <message>
-        <source>Missing project file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">项目文件 %1 缺失
-
-将插入无声片段替代。</translation>
-    </message>
-    <message>
-        <source>Missing or invalid simpleblockfile 'len' attribute.</source>
-        <translation type="vanished">缺少或无效的 simpleblockfile 'len' 属性。</translation>
-    </message>
-    <message>
-        <source>Missing or invalid silentblockfile 'len' attribute.</source>
-        <translation type="vanished">缺少或无效的 silentblockfile 'len' 属性。</translation>
-    </message>
-    <message>
-        <source>Missing alias file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">替身文件 %1 缺失
-
-将插入无声片段替代。</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliasstart' attribute.</source>
-        <translation type="vanished">缺少或无效的 pcmaliasblockfile 'aliasstart' 属性。</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliaslen' attribute.</source>
-        <translation type="vanished">缺少或无效的 pcmaliasblockfile 'aliaslen' 属性。</translation>
-    </message>
-    <message>
-        <source>Error while processing %s
-
-Inserting silence.</source>
-        <translation type="vanished">处理 %1 时发生错误
-
-将插入无声片段。</translation>
-    </message>
-    <message>
-        <source>Failed to open %s</source>
-        <translation type="vanished">打开 %1 失败</translation>
-    </message>
-    <message>
-        <source>Failed to seek to position %lld in %s</source>
-        <translation type="vanished">在 %2 无法定位 %1</translation>
-    </message>
-    <message>
-        <source>Unable to read %lld samples from %s</source>
-        <translation type="vanished">无法从 %2 读取 %1 个样本</translation>
-    </message>
-    <message>
-        <source>Command:</source>
-        <translation type="vanished">命令：</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="vanished">浏览...</translation>
-    </message>
-    <message>
-        <source>Show output</source>
-        <extracomment>i18n-hint: show output on a graph</extracomment>
-        <translation type="vanished">显示输出</translation>
-    </message>
-    <message>
-        <source>Data will be piped to standard in. "%f" uses the file name in the export window.</source>
-        <extracomment>i18n-hint: Some programmer-oriented terminology here:
-"Data" refers to the sound to be exported, "piped" means sent,
-and "standard in" means the default input stream that the external program,
-named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
-in the program as a format string.  Keep %f unchanged.</extracomment>
-        <translation type="vanished">数据会以管道传入标准输入。 "%1"使用文件名在导出窗口.</translation>
-    </message>
-    <message>
-        <source>Program name appears to be missing.</source>
-        <translation type="vanished">程序名似乎不存在。</translation>
-    </message>
-    <message>
-        <source>"%s" couldn't be found.</source>
-        <translation type="vanished">找不到 "%1"。</translation>
-    </message>
-    <message>
-        <source>Unable to locate "%s" in your path.</source>
-        <translation type="vanished">在您提供的文件夹下无法找到 “%1”。</translation>
-    </message>
-    <message>
-        <source>Executables</source>
-        <extracomment>i18n-hint files that can be run as programs</extracomment>
-        <translation type="vanished">可执行</translation>
-    </message>
-    <message>
-        <source>Find path to command</source>
-        <translation type="vanished">查找命令路径</translation>
-    </message>
-    <message>
-        <source>(external program)</source>
-        <translation type="vanished">(外部程序)</translation>
-    </message>
-    <message>
-        <source>Exporting the selected audio using command-line encoder</source>
-        <translation type="vanished">用命令行方式的编码器导出选择的音频</translation>
-    </message>
-    <message>
-        <source>Exporting the audio using command-line encoder</source>
-        <translation type="vanished">用命令行方式的编码器导出音频</translation>
-    </message>
-    <message>
-        <source>Command Output</source>
-        <translation type="vanished">命令行输出</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="vanished">确定(&amp;O)</translation>
-    </message>
-    <message>
-        <source>%.2f kbps</source>
-        <translation type="vanished">%1 kbps</translation>
-    </message>
-    <message>
-        <source>Current Format:</source>
-        <translation type="vanished">当前格式：</translation>
-    </message>
-    <message>
-        <source>Current Codec:</source>
-        <translation type="vanished">当前编码：</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't determine format description for file "%s".</source>
-        <translation type="vanished">FFmpeg：错误 - 不能确定文件“%1”的格式描述。</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate output format context.</source>
-        <translation type="vanished">FFmpeg：错误 - 无法满足输出格式所需的环境(可能缺少编码器，tag等信息) (Can't allocate output format context)</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't add audio stream to output file "%s".</source>
-        <translation type="vanished">FFmpeg：错误 - 无法将音频流添加到输出文件“%1”中。</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't open output file "%s" to write. Error code is %d.</source>
-        <translation type="vanished">FFmpeg：错误 - 无法打开输出文件“%1”以写入。错误代码： %2。</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't write headers to output file "%s". Error code is %d.</source>
-        <translation type="vanished">FFmpeg：错误 - 无法为输出文件“%1”写入文件头。错误代码： %2。</translation>
-    </message>
-    <message>
-        <source>Can't open audio codec "%s" (0x%x)
-
-%s</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">无法打开音频编解码器 "%1" (0x%2)
-
-%3</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.</source>
-        <translation type="vanished">FFmpeg：错误 - 无法分配缓冲区来从音频 FIFO 读取。</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Couldn't write audio frame to output file.</source>
-        <translation type="vanished">FFmpeg : 错误 - 无法向输出文件写入音频帧。</translation>
-    </message>
-    <message>
-        <source>Properly configured FFmpeg is required to proceed.
-You can configure it at Preferences &gt; Libraries.</source>
-        <translation type="vanished">需要正确配置 FFmpeg 才能继续。
-您可以在 首选项 &gt; 库 中配置它。</translation>
-    </message>
-    <message>
-        <source>Configure custom FFmpeg options</source>
-        <translation type="vanished">配置自定义 FFmpeg 选项</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation type="vanished">预设：</translation>
-    </message>
-    <message>
-        <source>Load Preset</source>
-        <translation type="vanished">载人预设</translation>
-    </message>
-    <message>
-        <source>Save Preset</source>
-        <translation type="vanished">保存预设</translation>
-    </message>
-    <message>
-        <source>Delete Preset</source>
-        <translation type="vanished">删除预设</translation>
-    </message>
-    <message>
-        <source>Import Presets</source>
-        <translation type="vanished">导入预设</translation>
-    </message>
-    <message>
-        <source>Export Presets</source>
-        <translation type="vanished">导出预设</translation>
-    </message>
-    <message>
-        <source>Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs.</source>
-        <translation type="vanished">并非所有的格式和编码都是兼容的，并非所有的选项组合与编码都兼容.</translation>
-    </message>
-    <message>
-        <source>Show All Formats</source>
-        <translation type="vanished">显示所有格式</translation>
-    </message>
-    <message>
-        <source>Show All Codecs</source>
-        <translation type="vanished">显示所有编码</translation>
-    </message>
-    <message>
-        <source>General Options</source>
-        <translation type="vanished">通用选项</translation>
-    </message>
-    <message>
-        <source>ISO 639 3-letter language code
-Optional
-empty - automatic</source>
-        <translation type="vanished">ISO 639 3字符语言编码
-可选的
-空 - 自动</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation type="vanished">语言：</translation>
-    </message>
-    <message>
-        <source>Bit Reservoir</source>
-        <translation type="vanished">比特池</translation>
-    </message>
-    <message>
-        <source>Codec tag (FOURCC)
-Optional
-empty - automatic</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">编解码器标签（FOURCC）
-可选
-空 - 自动</translation>
-    </message>
-    <message>
-        <source>Tag:</source>
-        <translation type="vanished">标签：</translation>
-    </message>
-    <message>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</source>
-        <translation type="vanished">比特率（bit/秒）- 影响文件的大小和质量
-有些编码只接受特定的值（128k、192k、256k 等）
-0 - 自动
-建议 - 192000</translation>
-    </message>
-    <message>
-        <source>Bit Rate:</source>
-        <translation type="vanished">比特率：</translation>
-    </message>
-    <message>
-        <source>Overall quality, used differently by different codecs
-Required for vorbis
-0 - automatic
--1 - off (use bitrate instead)</source>
-        <translation type="vanished">总体质量，在不同的编码中使用的不同
-Vorbis 必需
-0 - 自动
--1 - 关（使用比特率代替）</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="vanished">质量：</translation>
-    </message>
-    <message>
-        <source>Sample rate (Hz)
-0 - don't change sample rate</source>
-        <translation type="vanished">采样率 (Hz)
-0 - 不改变采样率</translation>
-    </message>
-    <message>
-        <source>Sample Rate:</source>
-        <translation type="vanished">采样率：</translation>
-    </message>
-    <message>
-        <source>Audio cutoff bandwidth (Hz)
-Optional
-0 - automatic</source>
-        <translation type="vanished">音频裁去带宽 (Hz)
-可选
-0 - 自动</translation>
-    </message>
-    <message>
-        <source>Cutoff:</source>
-        <translation type="vanished">切除：</translation>
-    </message>
-    <message>
-        <source>AAC Profile
-Low Complexity - default
-Most players won't play anything other than LC</source>
-        <translation type="vanished">AAC 配置
-低复杂度 - 默认
-多数播放器只能播放低复杂度</translation>
-    </message>
-    <message>
-        <source>Profile:</source>
-        <translation type="vanished">配置：</translation>
-    </message>
-    <message>
-        <source>Compression level
-Required for FLAC
--1 - automatic
-min - 0 (fast encoding, large output file)
-max - 10 (slow encoding, small output file)</source>
-        <translation type="vanished">压缩级别
-FLAC 必需
--1 - 自动
-最小 - 0（快速编码，输出文件大）
-最大 - 10（慢速编码，输出文件小）</translation>
-    </message>
-    <message>
-        <source>Compression:</source>
-        <translation type="vanished">压缩：</translation>
-    </message>
-    <message>
-        <source>Frame size
-Optional
-0 - default
-min - 16
-max - 65535</source>
-        <translation type="vanished">帧大小
-可选
-0 - 默认
-最小 - 16
-最大 - 65535</translation>
-    </message>
-    <message>
-        <source>Frame:</source>
-        <translation type="vanished">帧：</translation>
-    </message>
-    <message>
-        <source>LPC coefficients precision
-Optional
-0 - default
-min - 1
-max - 15</source>
-        <translation type="vanished">线性预测编码（LPC）系数精度
-可选
-0 - 默认
-最小 - 1
-最大 - 15</translation>
-    </message>
-    <message>
-        <source>Prediction Order Method
-Estimate - fastest, lower compression
-Log search - slowest, best compression
-Full search - default</source>
-        <translation type="vanished">预测序方法
-预估 - 最快，低压缩
-对数搜索 - 最慢，高压缩
-全搜索 - 默认</translation>
-    </message>
-    <message>
-        <source>PdO Method:</source>
-        <translation type="vanished">PdO 方法：</translation>
-    </message>
-    <message>
-        <source>Minimal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">最小预测序
-可选 -1 - 默认
-最小 - 0 
-最大 - 32（用 LPC）或 4（不用 LPC）</translation>
-    </message>
-    <message>
-        <source>Maximal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">最大预测序
-可选 -1 - 默认
-最小 - 0 
-最大 - 32（用 LPC）或 4（不用 LPC）</translation>
-    </message>
-    <message>
-        <source>Minimal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">最小分区序
-可选
--1 - 默认
-最小 - 0
-最大 - 8</translation>
-    </message>
-    <message>
-        <source>Maximal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">最大分区序
-可选
--1 - 默认
-最小 - 0
-最大 - 8</translation>
-    </message>
-    <message>
-        <source>Maximum bit rate of the multiplexed stream
-Optional
-0 - default</source>
-        <translation type="vanished">多路流的最大比特率
-可选
-0 - 默认</translation>
-    </message>
-    <message>
-        <source>Mux Rate:</source>
-        <extracomment>i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
-it has a hard to predict effect on the degree of compression</extracomment>
-        <translation type="vanished">多路复合率：</translation>
-    </message>
-    <message>
-        <source>Packet size
-Optional
-0 - default</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">包大小
-可选
-0 - 默认</translation>
-    </message>
-    <message>
-        <source>Packet Size:</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">包大小：</translation>
-    </message>
-    <message>
-        <source>You can't delete a preset without name</source>
-        <translation type="vanished">不能删除没有名字的预设</translation>
-    </message>
-    <message>
-        <source>Delete preset '%s'?</source>
-        <translation type="vanished">删除预设 '%1'？</translation>
-    </message>
-    <message>
-        <source>Confirm Deletion</source>
-        <translation type="vanished">确认删除</translation>
-    </message>
-    <message>
-        <source>You can't save a preset without a name</source>
-        <translation type="vanished">您不能保存一个没有名字的预设</translation>
-    </message>
-    <message>
-        <source>Select xml file with presets to import</source>
-        <translation type="vanished">选择带预设的 XML 文件导入</translation>
-    </message>
-    <message>
-        <source>No presets to export</source>
-        <translation type="vanished">没有可导出的预设</translation>
-    </message>
-    <message>
-        <source>Select xml file to export presets into</source>
-        <translation type="vanished">选择将预设导出的xml文件</translation>
-    </message>
-    <message>
-        <source>Format %s is not compatible with codec %s.</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">格式 %1 不兼容解码器 %2。</translation>
-    </message>
-    <message>
-        <source>Incompatible format and codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">不兼容的格式和解码器</translation>
-    </message>
-    <message>
-        <source>Failed to guess format</source>
-        <translation type="vanished">猜测格式失败</translation>
-    </message>
-    <message>
-        <source>Failed to find the codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">寻找编码失败</translation>
-    </message>
-    <message>
-        <source>FFmpeg was configured in Preferences and successfully loaded before, 
-but this time Audacity failed to load it at startup. 
-
-You may want to go back to Preferences &gt; Libraries and re-configure it.</source>
-        <translation type="vanished">之前 FFmpeg 已经在偏好设置中配置并成功加载，
-但是这次 Audacity 启动时没有成功加载它。
-
-您可以回到 首选项 &gt; 库 重新配置它。</translation>
-    </message>
-    <message>
-        <source>FFmpeg startup failed</source>
-        <translation type="vanished">FFmpeg 启动失败</translation>
-    </message>
-    <message>
-        <source>Locate FFmpeg</source>
-        <translation type="vanished">定位 FFmpeg</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file '%s' to import and export audio via FFmpeg.</source>
-        <translation type="vanished">Audacity 需要文件 %1 来通过 FFmpeg 导出／导入音频。</translation>
-    </message>
-    <message>
-        <source>Location of '%s':</source>
-        <translation type="vanished">“%1” 的位置：</translation>
-    </message>
-    <message>
-        <source>To find '%s', click here --&gt;</source>
-        <translation type="vanished">要寻找 “%1”，请点击这里→</translation>
-    </message>
-    <message>
-        <source>To get a free copy of FFmpeg, click here --&gt;</source>
-        <translation type="vanished">要获取免费的 FFmpeg 副本，点击这里→</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">下载</translation>
-    </message>
-    <message>
-        <source>Only avformat.dll</source>
-        <translation type="vanished">仅 avformat.dll</translation>
-    </message>
-    <message>
-        <source>Only libavformat.dylib</source>
-        <translation type="vanished">仅 libavformat.dylib</translation>
-    </message>
-    <message>
-        <source>Only libavformat.so</source>
-        <translation type="vanished">仅 libavformat.so</translation>
-    </message>
-    <message>
-        <source>Where is '%s'?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-example, "Where is lame_enc.dll?" - you could translate
-"Where would I find the file '%s'?" instead if you want.</extracomment>
-        <translation type="vanished">'%1' 在哪里？</translation>
-    </message>
-    <message>
-        <source>FFmpeg not found</source>
-        <translation type="vanished">找不到 FFmpeg</translation>
-    </message>
-    <message>
-        <source>Audacity attempted to use FFmpeg to import an audio file,
-but the libraries were not found.
-
-To use FFmpeg import, go to Edit &gt; Preferences &gt; Libraries
-to download or locate the FFmpeg libraries.</source>
-        <translation type="vanished">Audacity 尝试使用 FFmpeg 导入音频文件，
-但未找到库。
-
-要使用 FFmpeg 导入，请转到“编辑”&gt;“首选项”&gt;“库”
-以下载或找到 FFmpeg 库。</translation>
-    </message>
-    <message>
-        <source>Do not show this warning again</source>
-        <translation type="vanished">不再显示这个警告</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export Library</source>
-        <translation type="vanished">FFmpeg 导入/导出库</translation>
-    </message>
-    <message>
-        <source>No compatible FFmpeg library was found</source>
-        <translation type="vanished">没有找到兼容的 FFmpeg 库</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library Version:</source>
-        <translation type="vanished">FFmpeg 库版本：</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library:</source>
-        <translation type="vanished">FFmpeg 库：</translation>
-    </message>
-    <message>
-        <source>Loca&amp;te...</source>
-        <translation type="vanished">定位(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>Dow&amp;nload</source>
-        <translation type="vanished">下载(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Audacity has automatically detected valid FFmpeg libraries.
-Do you still want to locate them manually?</source>
-        <translation type="vanished">Audacity已自动检测到有效的 FFmpeg库.
-您仍想手动定位吗?</translation>
-    </message>
-    <message>
-        <source>Error Saving FFmpeg Presets</source>
-        <translation type="vanished">保存 VST 预设错误</translation>
-    </message>
-    <message>
-        <source>Overwrite preset '%s'?</source>
-        <translation type="vanished">覆盖现有的预设“%1”？</translation>
-    </message>
-    <message>
-        <source>Confirm Overwrite</source>
-        <translation type="vanished">确认覆盖</translation>
-    </message>
-    <message>
-        <source>Please select format before saving a profile</source>
-        <translation type="vanished">请在保存配置前选择格式</translation>
-    </message>
-    <message>
-        <source>Please select codec before saving a profile</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">请在保存配置前选择编码</translation>
-    </message>
-    <message>
-        <source>Preset '%s' does not exist.</source>
-        <translation type="vanished">预设“%1”不存在。</translation>
-    </message>
-    <message>
-        <source>Replace preset '%s'?</source>
-        <translation type="vanished">替换预设“%1”？</translation>
-    </message>
-    <message>
-        <source>FLAC export couldn't open %s</source>
-        <translation type="vanished">FLAC 导出不能打开 %1</translation>
-    </message>
-    <message>
-        <source>List of Files in basic text format</source>
-        <translation type="vanished">基本文本格式的文件列表</translation>
-    </message>
-    <message>
-        <source>Invalid window offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF 文件中的窗口偏移无效。</translation>
-    </message>
-    <message>
-        <source>Invalid duration in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF 文件中的持续时间无效。</translation>
-    </message>
-    <message>
-        <source>MIDI tracks cannot be offset individually, only audio files can be.</source>
-        <translation type="vanished">MIDI 轨道不能单独偏移，只有音频文件才可以。</translation>
-    </message>
-    <message>
-        <source>Invalid track offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">LOF 文件中的轨道偏移无效。</translation>
-    </message>
-    <message>
-        <source>Insane, 320 kbps</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">发狂，320 kbps</translation>
-    </message>
-    <message>
-        <source>Insane</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">发狂</translation>
-    </message>
-    <message>
-        <source>Locate LAME</source>
-        <extracomment>i18n-hint: LAME is the name of an MP3 converter and should not be translated</extracomment>
-        <translation type="vanished">定位 LAME</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file %s to create MP3s.</source>
-        <translation type="vanished">Audacity 需要文件 %1 来创建 MP3。</translation>
-    </message>
-    <message>
-        <source>Location of %s:</source>
-        <translation type="vanished">%1 的位置：</translation>
-    </message>
-    <message>
-        <source>To find %s, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">要寻找 %1，点击这里→</translation>
-    </message>
-    <message>
-        <source>To get a free copy of LAME, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">获取 LAME 的免费副本，点击这里 →</translation>
-    </message>
-    <message>
-        <source>Where is %s?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-* example, "Where is lame_enc.dll?" - you could translate
-* "Where would I find the file %s" instead if you want.</extracomment>
-        <translation type="vanished">%1 的位置？</translation>
-    </message>
-    <message>
-        <source>You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.
-Please download the latest version of 'LAME for Audacity'.</source>
-        <translation type="vanished">试图连接到 lame_enc.dll v%1.%2。此版本与 Audacity %3.%4.%5 不兼容。
-请下载最新版本的 '适用于 Audacity 的 LAME'。</translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) is not supported by the MP3
-file format. </source>
-        <translation type="vanished">MP3 文件格式不支持项目采样率（%1）。 </translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) and bit rate (%d kbps) combination is not
-supported by the MP3 file format. </source>
-        <translation type="vanished">MP3 文件格式不支持项目采样率（%1）和
-比特率（%2 kbps）组合。 </translation>
-    </message>
-    <message>
-        <source>LAME MP3 Export Library</source>
-        <translation type="vanished">LAME MP3 导出库</translation>
-    </message>
-    <message>
-        <source>MP3 Library Version:</source>
-        <translation type="vanished">MP3 库版本：</translation>
-    </message>
-    <message>
-        <source>Error while writing %s file (disk full?).
-Libsndfile says "%s"</source>
-        <extracomment>i18n-hint: %s will be the error message from libsndfile, which
-* is usually something unhelpful (and untranslated) like "system
-* error"</extracomment>
-        <translation type="vanished">写%1 文件时出错 (磁盘满了?).
-Libsndfile %2"</translation>
-    </message>
-    <message>
-        <source>AU (Sun/NeXT)</source>
-        <translation type="vanished">AU (Sun/NeXT)</translation>
-    </message>
-    <message>
-        <source>AVR (Audio Visual Research)</source>
-        <translation type="vanished">AVR (Audio Visual Research)</translation>
-    </message>
-    <message>
-        <source>CAF (Apple Core Audio File)</source>
-        <translation type="vanished">CAF (Apple Core Audio File)</translation>
-    </message>
-    <message>
-        <source>FLAC (FLAC Lossless Audio Codec)</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">FLAC (FLAC 无损音频编码)</translation>
-    </message>
-    <message>
-        <source>HTK (HMM Tool Kit)</source>
-        <translation type="vanished">HTK (HMM Tool Kit)</translation>
-    </message>
-    <message>
-        <source>IFF (Amiga IFF/SVX8/SV16)</source>
-        <translation type="vanished">IFF (Amiga IFF/SVX8/SV16)</translation>
-    </message>
-    <message>
-        <source>MAT4 (GNU Octave 2.0 / Matlab 4.2)</source>
-        <translation type="vanished">MAT4 (GNU Octave 2.0 / Matlab 4.2)</translation>
-    </message>
-    <message>
-        <source>MAT5 (GNU Octave 2.1 / Matlab 5.0)</source>
-        <translation type="vanished">MAT5 (GNU Octave 2.1 / Matlab 5.0)</translation>
-    </message>
-    <message>
-        <source>MPC (Akai MPC 2k)</source>
-        <translation type="vanished">MPC (Akai MPC 2k)</translation>
-    </message>
-    <message>
-        <source>OGG (OGG Container format)</source>
-        <translation type="vanished">OGG (OGG Container format)</translation>
-    </message>
-    <message>
-        <source>PAF (Ensoniq PARIS)</source>
-        <translation type="vanished">PAF (Ensoniq PARIS)</translation>
-    </message>
-    <message>
-        <source>PVF (Portable Voice Format)</source>
-        <translation type="vanished">PVF (Portable Voice Format)</translation>
-    </message>
-    <message>
-        <source>RAW (header-less)</source>
-        <translation type="vanished">RAW (header-less)</translation>
-    </message>
-    <message>
-        <source>RF64 (RIFF 64)</source>
-        <translation type="vanished">RF64 (RIFF 64)</translation>
-    </message>
-    <message>
-        <source>SD2 (Sound Designer II)</source>
-        <translation type="vanished">SD2 (Sound Designer II)</translation>
-    </message>
-    <message>
-        <source>SDS (Midi Sample Dump Standard)</source>
-        <translation type="vanished">SDS (Midi Sample Dump Standard)</translation>
-    </message>
-    <message>
-        <source>SF (Berkeley/IRCAM/CARL)</source>
-        <translation type="vanished">SF (Berkeley/IRCAM/CARL)</translation>
-    </message>
-    <message>
-        <source>VOC (Creative Labs)</source>
-        <translation type="vanished">VOC (Creative Labs)</translation>
-    </message>
-    <message>
-        <source>W64 (SoundFoundry WAVE 64)</source>
-        <translation type="vanished">W64 (SoundFoundry WAVE 64)</translation>
-    </message>
-    <message>
-        <source>WAV (NIST Sphere)</source>
-        <translation type="vanished">WAV (NIST Sphere)</translation>
-    </message>
-    <message>
-        <source>WAVEX (Microsoft)</source>
-        <translation type="vanished">WAVEX (Microsoft)</translation>
-    </message>
-    <message>
-        <source>WVE (Psion Series 3)</source>
-        <translation type="vanished">WVE (Psion Series 3)</translation>
-    </message>
-    <message>
-        <source>XI (FastTracker 2)</source>
-        <translation type="vanished">XI (FastTracker 2)</translation>
-    </message>
-    <message>
-        <source>Signed 8 bit PCM</source>
-        <translation type="vanished">有符号 8 位 PCM</translation>
-    </message>
-    <message>
-        <source>Signed 16 bit PCM</source>
-        <translation type="vanished">有符号 16 位 PCM</translation>
-    </message>
-    <message>
-        <source>Signed 24 bit PCM</source>
-        <translation type="vanished">带符号的 24 位 PCM</translation>
-    </message>
-    <message>
-        <source>Signed 32 bit PCM</source>
-        <translation type="vanished">有符号 32 位 PCM</translation>
-    </message>
-    <message>
-        <source>Unsigned 8 bit PCM</source>
-        <translation type="vanished">无符号 8 位 PCM</translation>
-    </message>
-    <message>
-        <source>64 bit float</source>
-        <translation type="vanished">64 位浮点</translation>
-    </message>
-    <message>
-        <source>U-Law</source>
-        <translation type="vanished">U-Law</translation>
-    </message>
-    <message>
-        <source>A-Law</source>
-        <translation type="vanished">A-Law</translation>
-    </message>
-    <message>
-        <source>IMA ADPCM</source>
-        <translation type="vanished">IMA ADPCM</translation>
-    </message>
-    <message>
-        <source>Microsoft ADPCM</source>
-        <translation type="vanished">Microsoft ADPCM</translation>
-    </message>
-    <message>
-        <source>GSM 6.10</source>
-        <translation type="vanished">GSM 6.10</translation>
-    </message>
-    <message>
-        <source>32kbs G721 ADPCM</source>
-        <translation type="vanished">32kbs G721 ADPCM</translation>
-    </message>
-    <message>
-        <source>24kbs G723 ADPCM</source>
-        <translation type="vanished">24kbs G723 ADPCM</translation>
-    </message>
-    <message>
-        <source>12 bit DWVW</source>
-        <translation type="vanished">12 位 DWVW</translation>
-    </message>
-    <message>
-        <source>16 bit DWVW</source>
-        <translation type="vanished">16 位 DWVW</translation>
-    </message>
-    <message>
-        <source>24 bit DWVW</source>
-        <translation type="vanished">24 位 DWVW</translation>
-    </message>
-    <message>
-        <source>VOX ADPCM</source>
-        <translation type="vanished">VOX ADPCM</translation>
-    </message>
-    <message>
-        <source>16 bit DPCM</source>
-        <translation type="vanished">16 位 DPCM</translation>
-    </message>
-    <message>
-        <source>8 bit DPCM</source>
-        <translation type="vanished">8 位 DPCM</translation>
-    </message>
-    <message>
-        <source>Vorbis</source>
-        <translation type="vanished">Vorbis</translation>
-    </message>
-    <message>
-        <source>&amp;Nyquist Workbench...</source>
-        <translation type="vanished">Nyquist 工作台(&amp;N)...</translation>
-    </message>
-    <message>
-        <source>&amp;Undo	Ctrl+Z</source>
-        <translation type="vanished">撤消(&amp;U)	Ctrl+Z</translation>
-    </message>
-    <message>
-        <source>&amp;Redo	Ctrl+Y</source>
-        <translation type="vanished">重做(&amp;R)	Ctrl+Y</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t	Ctrl+X</source>
-        <translation type="vanished">剪切(&amp;T)	Ctrl+X</translation>
-    </message>
-    <message>
-        <source>&amp;Copy	Ctrl+C</source>
-        <translation type="vanished">复制(&amp;C)	Ctrl+C</translation>
-    </message>
-    <message>
-        <source>&amp;Paste	Ctrl+V</source>
-        <translation type="vanished">粘贴(&amp;P)	Ctrl+V</translation>
-    </message>
-    <message>
-        <source>Cle&amp;ar	Ctrl+L</source>
-        <translation type="vanished">清除(&amp;A)	Ctrl+L</translation>
-    </message>
-    <message>
-        <source>Select A&amp;ll	Ctrl+A</source>
-        <translation type="vanished">全选(&amp;L)	Ctrl+A</translation>
-    </message>
-    <message>
-        <source>&amp;Find...	Ctrl+F</source>
-        <translation type="vanished">查找(&amp;F)...	Ctrl+F</translation>
-    </message>
-    <message>
-        <source>&amp;Matching Paren	F8</source>
-        <translation type="vanished">匹配的括号(&amp;M)	F8</translation>
-    </message>
-    <message>
-        <source>&amp;Top S-expr	F9</source>
-        <translation type="vanished">顶部的 S-expr(&amp;T)	F9</translation>
-    </message>
-    <message>
-        <source>&amp;Higher S-expr	F10</source>
-        <translation type="vanished">更高的 S-expr(&amp;H)	F10</translation>
-    </message>
-    <message>
-        <source>&amp;Previous S-expr	F11</source>
-        <translation type="vanished">上一个 S-expr(&amp;P)	F11</translation>
-    </message>
-    <message>
-        <source>&amp;Next S-expr	F12</source>
-        <translation type="vanished">下一个 S-expr(&amp;N)	F12</translation>
-    </message>
-    <message>
-        <source>&amp;Go to</source>
-        <translation type="vanished">转到(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Select &amp;Font...</source>
-        <translation type="vanished">选择字体(&amp;F)...</translation>
-    </message>
-    <message>
-        <source>Split &amp;Vertically</source>
-        <translation type="vanished">垂直分割(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Split &amp;Horizontally</source>
-        <translation type="vanished">水平分割(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Show S&amp;cript</source>
-        <translation type="vanished">显示脚本(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show &amp;Output</source>
-        <translation type="vanished">显示输出(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Large Icons</source>
-        <translation type="vanished">大图标(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Small Icons</source>
-        <translation type="vanished">小图标(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Toolbar</source>
-        <translation type="vanished">工具栏</translation>
-    </message>
-    <message>
-        <source>&amp;Go	F5</source>
-        <translation type="vanished">转到(&amp;G)	F5</translation>
-    </message>
-    <message>
-        <source>&amp;Stop	F6</source>
-        <translation type="vanished">停止(&amp;S)	F6</translation>
-    </message>
-    <message>
-        <source>&amp;About</source>
-        <translation type="vanished">关于(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Script</source>
-        <translation type="vanished">脚本</translation>
-    </message>
-    <message>
-        <source>Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*</source>
-        <translation type="vanished">Nyquist 脚本 (*.ny)|*.ny|Lisp 脚本 (*.lsp)|*.lsp|所有文件|*</translation>
-    </message>
-    <message>
-        <source>Script was not saved.</source>
-        <translation type="vanished">脚本未保存。</translation>
-    </message>
-    <message>
-        <source>Find dialog</source>
-        <translation type="vanished">查找对话框</translation>
-    </message>
-    <message>
-        <source>Harvey Lubin (logo)</source>
-        <translation type="vanished">Harvey Lubin (LOGO)</translation>
-    </message>
-    <message>
-        <source>Tango Icon Gallery (toolbar icons)</source>
-        <translation type="vanished">Tango 图标库 （工具栏图标）</translation>
-    </message>
-    <message>
-        <source>Leland Lucius</source>
-        <translation type="vanished">Leland Lucius</translation>
-    </message>
-    <message>
-        <source>(C) 2009 by Leland Lucius</source>
-        <translation type="vanished">(C) 2009 by Leland Lucius</translation>
-    </message>
-    <message>
-        <source>External Audacity module which provides a simple IDE for writing effects.</source>
-        <translation type="vanished">外部 Audacity 模块，提供了一个简单的用于编写效果器的 IDE。</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench</source>
-        <translation type="vanished">Nyquist 效果工作台</translation>
-    </message>
-    <message>
-        <source>No matches found</source>
-        <translation type="vanished">未找到匹配项</translation>
-    </message>
-    <message>
-        <source>Code has been modified. Are you sure?</source>
-        <translation type="vanished">代码已被修改。确定吗？</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench - </source>
-        <translation type="vanished">Nyquist 效果工作台 - </translation>
-    </message>
-    <message>
-        <source>New script</source>
-        <translation type="vanished">新建脚本</translation>
-    </message>
-    <message>
-        <source>Open script</source>
-        <translation type="vanished">打开脚本</translation>
-    </message>
-    <message>
-        <source>Save script</source>
-        <translation type="vanished">保存脚本</translation>
-    </message>
-    <message>
-        <source>Save As</source>
-        <translation type="vanished">另存为</translation>
-    </message>
-    <message>
-        <source>Save script as...</source>
-        <translation type="vanished">脚本另存为...</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">复制到剪贴板</translation>
-    </message>
-    <message>
-        <source>Cut to clipboard</source>
-        <translation type="vanished">剪切到剪贴板</translation>
-    </message>
-    <message>
-        <source>Paste from clipboard</source>
-        <translation type="vanished">从剪贴板粘贴</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation type="vanished">全选</translation>
-    </message>
-    <message>
-        <source>Select all text</source>
-        <translation type="vanished">选择所有文本</translation>
-    </message>
-    <message>
-        <source>Undo last change</source>
-        <translation type="vanished">撤消上次更改</translation>
-    </message>
-    <message>
-        <source>Redo previous change</source>
-        <translation type="vanished">重做上一次更改</translation>
-    </message>
-    <message>
-        <source>Find</source>
-        <translation type="vanished">查找</translation>
-    </message>
-    <message>
-        <source>Find text</source>
-        <translation type="vanished">查找文本</translation>
-    </message>
-    <message>
-        <source>Match</source>
-        <translation type="vanished">匹配</translation>
-    </message>
-    <message>
-        <source>Go to matching paren</source>
-        <translation type="vanished">转到匹配的括号</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">顶部</translation>
-    </message>
-    <message>
-        <source>Go to top S-expr</source>
-        <translation type="vanished">转到顶部的 S-expr</translation>
-    </message>
-    <message>
-        <source>Go to higher S-expr</source>
-        <translation type="vanished">转到上层 S-expr</translation>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation type="vanished">上一个</translation>
-    </message>
-    <message>
-        <source>Go to previous S-expr</source>
-        <translation type="vanished">转到上一个 S-expr</translation>
-    </message>
-    <message>
-        <source>Go to next S-expr</source>
-        <translation type="vanished">转到下一个 S-expr</translation>
-    </message>
-    <message>
-        <source>Start</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">开始</translation>
-    </message>
-    <message>
-        <source>Start script</source>
-        <translation type="vanished">启动脚本</translation>
-    </message>
-    <message>
-        <source>Stop script</source>
-        <translation type="vanished">停止脚本</translation>
-    </message>
-    <message>
-        <source>Waiting for audio.com</source>
-        <translation type="vanished">正在等待 audio.con</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. You can cancel this operation.</source>
-        <translation type="vanished">您需要在 audio.com 上执行操作才能继续。您可以取消此操作。</translation>
-    </message>
-    <message>
-        <source>Generating audio preview...</source>
-        <translation type="vanished">正在生成音频预览...</translation>
-    </message>
-    <message>
-        <source>Open trace audio.com</source>
-        <translation type="vanished">打开跟踪 audio.com</translation>
-    </message>
-    <message>
-        <source>Synchronizing project</source>
-        <translation type="vanished">同步项目</translation>
-    </message>
-    <message>
-        <source>Previews can be updated only for Cloud projects</source>
-        <translation type="vanished">仅可更新云项目的预览</translation>
-    </message>
-    <message>
-        <source>Save &amp;To Cloud...</source>
-        <translation type="vanished">保存到云端(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>&amp;Update Cloud Audio Preview</source>
-        <translation type="vanished">更新云端音频预览(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Open Fro&amp;m Cloud...</source>
-        <translation type="vanished">从云端打开​​(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>S&amp;hare Audio...</source>
-        <translation type="vanished">分享音频(&amp;H)...</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">帐户</translation>
-    </message>
-    <message>
-        <source>Export behavior</source>
-        <translation type="vanished">导出行为</translation>
-    </message>
-    <message>
-        <source>S&amp;how 'How would you like to export?' dialog</source>
-        <translation type="vanished">显示“您希望如何导出？”对话框(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Save behavior</source>
-        <translation type="vanished">保存行为</translation>
-    </message>
-    <message>
-        <source>Always &amp;ask</source>
-        <translation type="vanished">始终询问(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Always &amp;save to cloud</source>
-        <translation type="vanished">始终保存到云端(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Always save to the co&amp;mputer</source>
-        <translation type="vanished">始终保存到计算机(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Temporary Cloud files directory</source>
-        <translation type="vanished">临时云端文件目录</translation>
-    </message>
-    <message>
-        <source>&amp;Location:</source>
-        <translation type="vanished">位置(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Browse...</source>
-        <translation type="vanished">浏览(&amp;B)...</translation>
-    </message>
-    <message>
-        <source>days</source>
-        <translation type="vanished">天</translation>
-    </message>
-    <message>
-        <source>&amp;Remove temporary files after:</source>
-        <translation type="vanished">删除临时文件(&amp;R)：</translation>
-    </message>
-    <message>
-        <source>Preferences for Cloud</source>
-        <translation type="vanished">云端首选项设置</translation>
-    </message>
-    <message>
-        <source>Choose a location to place the temporary directory</source>
-        <translation type="vanished">选择存放临时目录的位置</translation>
-    </message>
-    <message>
-        <source>Temporary files directory cannot be on a FAT drive.</source>
-        <translation type="vanished">临时文件目录不能放置在 FAT 文件系统磁盘上。</translation>
-    </message>
-    <message>
-        <source>Cannot set the preference.</source>
-        <translation type="vanished">无法设置首选项设置。</translation>
-    </message>
-    <message>
-        <source>Failed.</source>
-        <translation type="vanished">失败。</translation>
-    </message>
-    <message>
-        <source>Syncing to audio.com... (%d%%)</source>
-        <translation type="vanished">正在同步到 audio.com...(%1%%)</translation>
-    </message>
-    <message>
-        <source>Waiting for space to free up</source>
-        <translation type="vanished">等待空间释放</translation>
-    </message>
-    <message>
-        <source>Once you have made storage space available on audio.com, click Retry.</source>
-        <translation type="vanished">在 audio.com 上释放存储空间后，请单击“重试”。</translation>
-    </message>
-    <message>
-        <source>Share Audio</source>
-        <extracomment>i18n-hint: Share audio button text, keep as short as possible</extracomment>
-        <translation type="vanished">分享音频</translation>
-    </message>
-    <message>
-        <source>&amp;Share Audio Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that opens Share Audio dialog</extracomment>
-        <translation type="vanished">分享音频工具栏(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Account not linked</source>
-        <translation type="vanished">帐户未关联</translation>
-    </message>
-    <message>
-        <source>&amp;Link Account</source>
-        <translation type="vanished">关联账户(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Unlink Account</source>
-        <translation type="vanished">取消帐户链接(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Open from audio.com</source>
-        <translation type="vanished">从 audio.com 打开</translation>
-    </message>
-    <message>
-        <source>Don't show this again</source>
-        <translation type="vanished">不再显示此内容</translation>
-    </message>
-    <message>
-        <source>Save to the Cloud (free)</source>
-        <translation type="vanished">保存到云端（免费）</translation>
-    </message>
-    <message>
-        <source>&amp;Save to Cloud</source>
-        <translation type="vanished">保存到云端(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Files are saved on your device.
-Note: To export MP3 and WAV files, use File &gt; Export Audio instead.</source>
-        <translation type="vanished">文件已保存在您的设备上。
-注意：要导出 MP3 和 WAV 文件，请使用文件 &gt; 导出音频。</translation>
-    </message>
-    <message>
-        <source>Save to &amp;computer</source>
-        <translation type="vanished">保存到计算机(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Remember my choice and don't show again</source>
-        <translation type="vanished">记住我的选择，不再显示</translation>
-    </message>
-    <message>
-        <source>How would you like to export?</source>
-        <extracomment>i18n-hint: A title that is shown on export that allows the user to select
-Cloud or local export.</extracomment>
-        <translation type="vanished">您希望如何导出？</translation>
-    </message>
-    <message>
-        <source>Share to audio.com</source>
-        <translation type="vanished">分享到 audio.com</translation>
-    </message>
-    <message>
-        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation type="vanished">上传未压缩的音频文件并生成可共享的链接。此链接允许其他人以 .wav 或 .mp3 格式下载文件。</translation>
-    </message>
-    <message>
-        <source>&amp;Share to audio.com</source>
-        <translation type="vanished">分享到 audio.com(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation type="vanished">将 MP3、WAV、FLAC 和其他格式导出到您的计算机。</translation>
-    </message>
-    <message>
-        <source>Export to &amp;computer</source>
-        <translation type="vanished">导出到计算机(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Don't show again</source>
-        <translation type="vanished">不再显示(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Project Name</source>
-        <translation type="vanished">项目名称</translation>
-    </message>
-    <message>
-        <source>Cloud saving requires a free audio.com account linked to Audacity. Press "Link account" above to proceed.</source>
-        <translation type="vanished">云端保存需要与 Audacity 关联的免费 audio.com 帐户。按上方的“关联帐户”继续。</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="vanished">私人</translation>
-    </message>
-    <message>
-        <source>Unlisted</source>
-        <translation type="vanished">非公开</translation>
-    </message>
-    <message>
-        <source>Public</source>
-        <translation type="vanished">公开</translation>
-    </message>
-    <message>
-        <source>Save to computer...</source>
-        <translation type="vanished">保存到计算机...</translation>
-    </message>
-    <message>
-        <source>We encountered an issue syncing your file</source>
-        <translation type="vanished">我们在同步您的文件时遇到问题</translation>
-    </message>
-    <message>
-        <source>Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.</source>
-        <translation type="vanished">不用担心，您的更改将保存到临时位置，并在您的互联网连接恢复时同步到您的云副本。</translation>
-    </message>
-    <message>
-        <source>Log in to audio.com to proceed.</source>
-        <translation type="vanished">登录 audio.com 继续。</translation>
-    </message>
-    <message>
-        <source>We were unable to link your account. Please try again.</source>
-        <translation type="vanished">无法关联您的账户。请重试。</translation>
-    </message>
-    <message>
-        <source>&amp;Try again</source>
-        <translation type="vanished">重试(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Account linked successfully!</source>
-        <translation type="vanished">账户关联成功！</translation>
-    </message>
-    <message>
-        <source>Enter token to link your account</source>
-        <translation type="vanished">输入关联账户用的口令</translation>
-    </message>
-    <message>
-        <source>Token</source>
-        <translation type="vanished">口令</translation>
-    </message>
-    <message>
-        <source>C&amp;ontinue</source>
-        <translation type="vanished">继续 (&amp;C)</translation>
-    </message>
-    <message>
-        <source>L&amp;ink audio.com account...</source>
-        <translation type="vanished">链接 audio.com 帐户(&amp;I)...</translation>
-    </message>
-    <message>
-        <source>This project is no longer saved to the Cloud</source>
-        <translation type="vanished">此项目不再保存到云端</translation>
-    </message>
-    <message>
-        <source>This project was removed from audio.com and therefore cannot be saved at this time. </source>
-        <translation type="vanished">该项目已从 audio.com 中删除，因此目前无法保存。</translation>
-    </message>
-    <message>
-        <source>You can either save it to the Cloud as a new project, or save it to your computer.</source>
-        <translation type="vanished">您可以将其作为新项目保存到云端，也可以将其保存到您的计算机。</translation>
-    </message>
-    <message>
-        <source>Save to Cloud</source>
-        <translation type="vanished">保存到云端</translation>
-    </message>
-    <message>
-        <source>Your project storage limit has been reached.</source>
-        <translation type="vanished">您的项目存储已达到限制。</translation>
-    </message>
-    <message>
-        <source>You may need to remove older projects to make space available. For more options, visit audio.com</source>
-        <translation type="vanished">您可能需要删除较旧的项目以腾出空间。如需更多选项，请访问 audio.com</translation>
-    </message>
-    <message>
-        <source>You can also save this project locally to avoid losing changes.</source>
-        <translation type="vanished">您还可以在本地保存该项目以避免丢失更改。</translation>
-    </message>
-    <message>
-        <source>Project version conflict detected</source>
-        <translation type="vanished">检测到项目版本冲突</translation>
-    </message>
-    <message>
-        <source>There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead.</source>
-        <translation type="vanished">Audio.com 上有此 Audacity 项目的较新版本。保存此项目将替换为最新版本。</translation>
-    </message>
-    <message>
-        <source>Save this project</source>
-        <translation type="vanished">保存该项目</translation>
-    </message>
-    <message>
-        <source>Discard and open latest version</source>
-        <translation type="vanished">放弃并打开最新版本</translation>
-    </message>
-    <message>
-        <source>Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead.</source>
-        <translation type="vanished">项目包含未保存的更改。Audio.com 上有此 Audacity 项目的较新版本。放弃更改将改为打开最新版本。</translation>
-    </message>
-    <message>
-        <source>Open local project</source>
-        <translation type="vanished">打开本地项目</translation>
-    </message>
-    <message>
-        <source>Cloud project conflict</source>
-        <translation type="vanished">云端项目冲突</translation>
-    </message>
-    <message>
-        <source>You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open.</source>
-        <translation type="vanished">当已有一个版本打开时，您正试图打开该项目的新活动版本。请选择您希望保持打开的版本。</translation>
-    </message>
-    <message>
-        <source>Keep currently open version</source>
-        <translation type="vanished">保留当前打开的版本</translation>
-    </message>
-    <message>
-        <source>Open new version</source>
-        <translation type="vanished">打开新版本</translation>
-    </message>
-    <message>
-        <source>Open from Cloud</source>
-        <translation type="vanished">从云端打开</translation>
-    </message>
-    <message>
-        <source>less than 1 minute</source>
-        <translation type="vanished">不到 1 分钟</translation>
-    </message>
-    <message numerus="yes">
-        <source>one minutes ago</source>
-        <oldsource>%d minutes ago</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 分钟前</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>one hour ago</source>
-        <oldsource>%d hours ago</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 小时前</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Failed to authorize account</source>
-        <translation type="vanished">账户授权失败</translation>
-    </message>
-    <message>
-        <source>Loading projects list...</source>
-        <translation type="vanished">正在加载项目列表...</translation>
-    </message>
-    <message>
-        <source>Failed to get projects list</source>
-        <translation type="vanished">无法获取项目列表</translation>
-    </message>
-    <message>
-        <source>Cloud saved projects</source>
-        <translation type="vanished">云端保存的项目</translation>
-    </message>
-    <message>
-        <source>Search:</source>
-        <translation type="vanished">搜索：</translation>
-    </message>
-    <message>
-        <source>Prev</source>
-        <translation type="vanished">上一个</translation>
-    </message>
-    <message>
-        <source>View in audio.com</source>
-        <translation type="vanished">在 audio.com 查看</translation>
-    </message>
-    <message>
-        <source>Page %d of %d</source>
-        <translation type="vanished">第 %1 页，共 %2 页</translation>
-    </message>
-    <message>
-        <source>Anyone will be able to listen to this audio.</source>
-        <translation type="vanished">任何人都可以听到这个音频。</translation>
-    </message>
-    <message>
-        <source>Only you and people you share a link with will be able to listen to this audio.</source>
-        <translation type="vanished">只有你和被分享链接的人可以听此音频。</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to cancel?</source>
-        <translation type="vanished">你确定要取消吗？</translation>
-    </message>
-    <message>
-        <source>Cancel upload to Audio.com</source>
-        <translation type="vanished">取消上传到 Audio.com</translation>
-    </message>
-    <message>
-        <source>Uploading audio...</source>
-        <translation type="vanished">正在上传音频...</translation>
-    </message>
-    <message>
-        <source>We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.</source>
-        <translation type="vanished">我们无法上传此文件。请再试一次，确保在上传前关联了 audio.com 账户。</translation>
-    </message>
-    <message>
-        <source>Upload error</source>
-        <translation type="vanished">上传错误</translation>
-    </message>
-    <message>
-        <source>We are unable to prepare this file for uploading.</source>
-        <translation type="vanished">我们无法准备上传用的文件。</translation>
-    </message>
-    <message>
-        <source>Finalizing upload...</source>
-        <translation type="vanished">正在完成上传...</translation>
-    </message>
-    <message>
-        <source>Track Title</source>
-        <translation type="vanished">轨道标题</translation>
-    </message>
-    <message>
-        <source>Sharing audio requires a free %s account linked to Audacity. %%Press "Link account" above to proceed.</source>
-        <extracomment>i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.</extracomment>
-        <translation type="vanished">共享音频需要一个链接到 Audacity 的免费 %1 帐户。%%按上面的“链接账户”继续。</translation>
-    </message>
-    <message>
-        <source>audio.com</source>
-        <translation type="vanished">audio.com</translation>
-    </message>
-    <message>
-        <source>Press "Continue" to upload to audio.com</source>
-        <translation type="vanished">按“继续”上传到 audio.com</translation>
-    </message>
-    <message>
-        <source>Preparing audio...</source>
-        <translation type="vanished">正在准备音频...</translation>
-    </message>
-    <message>
-        <source>You are not authorized to access this project.</source>
-        <translation type="vanished">您无权访问此项目。</translation>
-    </message>
-    <message>
-        <source>You tried to access a project that has expired.</source>
-        <translation type="vanished">您尝试访问已过期的项目。</translation>
-    </message>
-    <message>
-        <source>Audacity had trouble connecting to the server.</source>
-        <translation type="vanished">Audacity 无法连接到服务器。</translation>
-    </message>
-    <message>
-        <source>The project is too large to upload. Please save it to your computer instead.</source>
-        <translation type="vanished">项目太大，无法上传。请将其保存到您的计算机中。</translation>
-    </message>
-    <message>
-        <source>You don't have access to this project.</source>
-        <translation type="vanished">您无权访问此项目。</translation>
-    </message>
-    <message>
-        <source>The project could not be found.</source>
-        <translation type="vanished">找不到该项目。</translation>
-    </message>
-    <message>
-        <source>The server responded with something Audacity could not understand.</source>
-        <translation type="vanished">服务器响应了一些 Audacity 无法理解的内容。</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an internal error.</source>
-        <translation type="vanished">Audacity 遇到内部错误。</translation>
-    </message>
-    <message>
-        <source>Audio.com encountered an internal error.</source>
-        <translation type="vanished">Audio.com 遇到内部错误。</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an unknown error.</source>
-        <translation type="vanished">Audacity 遇到未知错误。</translation>
-    </message>
-    <message>
-        <source>Sync failed</source>
-        <translation type="vanished">同步失败</translation>
-    </message>
-    <message>
-        <source>Error details:
-%s</source>
-        <translation type="vanished">错误详细信息:
-%1</translation>
-    </message>
-    <message>
-        <source>Syncing your project</source>
-        <translation type="vanished">同步你的项目</translation>
-    </message>
-    <message>
-        <source>The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time</source>
-        <translation type="vanished">工作时，项目将在后台同步。您可以随时在 Audacity 的右下角查看同步状态</translation>
-    </message>
-    <message>
-        <source>All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com</source>
-        <translation type="vanished">所有已保存的更改现在都将更新到云端。您可以从 audio.com 上的已上传项目页面管理此文件</translation>
-    </message>
-    <message>
-        <source>Cloud project incomplete</source>
-        <translation type="vanished">云端项目未完成</translation>
-    </message>
-    <message>
-        <source>The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.</source>
-        <translation type="vanished">该项目的最新版本尚未完整上传至 audio.com。您可以加载最新完整版本。</translation>
-    </message>
-    <message>
-        <source>No version of this project has been fully uploaded to audio.com. It cannot be loaded.</source>
-        <translation type="vanished">此项目的任何一个版本都未完整上传至 audio.com。无法加载。</translation>
-    </message>
-    <message>
-        <source>You have canceled this upload to audio.com</source>
-        <translation type="vanished">您已取消此次上传到 audio.com</translation>
-    </message>
-    <message>
-        <source>Retry</source>
-        <translation type="vanished">重试</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. Once you are done with it, click Retry</source>
-        <translation type="vanished">需要在 audio.com 上进行操作后才能继续。完成后请点击“重试”</translation>
-    </message>
-    <message>
-        <source>Exported Allegro (.gro) files save time as:</source>
-        <translation type="vanished">导出的 Allegro (.gro) 文件保存时间为：</translation>
-    </message>
-    <message>
-        <source>Please select only one Note Track at a time.</source>
-        <translation type="vanished">请每次只选择一个音符轨。</translation>
-    </message>
-    <message>
-        <source>Please select a Note Track.</source>
-        <translation type="vanished">请选择一个音符轨。</translation>
-    </message>
-    <message>
-        <source>Export MIDI As:</source>
-        <translation type="vanished">导出 MIDI 为：</translation>
-    </message>
-    <message>
-        <source>MIDI file</source>
-        <translation type="vanished">MIDI 文件</translation>
-    </message>
-    <message>
-        <source>Allegro file</source>
-        <translation type="vanished">Allegro 文件</translation>
-    </message>
-    <message>
-        <source>You have selected a filename with an unrecognized file extension.
-Do you want to continue?</source>
-        <translation type="vanished">您选择了一个未知扩展名的文件
-您想继续吗？</translation>
-    </message>
-    <message>
-        <source>Export MI&amp;DI...</source>
-        <translation type="vanished">导出 MIDI(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>Imported MIDI from '%s'</source>
-        <translation type="vanished">从“%1”中导入的 MIDI</translation>
-    </message>
-    <message>
-        <source>Import MIDI</source>
-        <translation type="vanished">导入 MIDI</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Filename too short.</source>
-        <translation type="vanished">无法打开文件 %1：文件名过短。</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Incorrect filetype.</source>
-        <translation type="vanished">无法打开文件 %1：文件类型错误。</translation>
-    </message>
-    <message>
-        <source>Could not open file %s.</source>
-        <translation type="vanished">无法打开文件 %1。</translation>
-    </message>
-    <message>
-        <source>Select a MIDI file</source>
-        <translation type="vanished">选择一个 MIDI 文件</translation>
-    </message>
-    <message>
-        <source>MIDI and Allegro files</source>
-        <translation type="vanished">MIDI 和 Allegro 文件</translation>
-    </message>
-    <message>
-        <source>MIDI files</source>
-        <translation type="vanished">MIDI 文件</translation>
-    </message>
-    <message>
-        <source>Allegro files</source>
-        <translation type="vanished">Allegro 文件</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI...</source>
-        <translation type="vanished">MIDI(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>No revision identifier was provided</source>
-        <translation type="vanished">未提供修订标识符</translation>
-    </message>
-    <message>
-        <source>%s, system administration</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，系统管理员</translation>
-    </message>
-    <message>
-        <source>%s, co-founder and developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，联合创始人兼开发者</translation>
-    </message>
-    <message>
-        <source>%s, designer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，设计师</translation>
-    </message>
-    <message>
-        <source>%s, developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，开发者</translation>
-    </message>
-    <message>
-        <source>%s, developer and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，开发者与支持</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，文档和支持</translation>
-    </message>
-    <message>
-        <source>%s, QA tester, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，质量保证测试员、文档与支持</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support, French</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，法语文档和支持</translation>
-    </message>
-    <message>
-        <source>%s, quality assurance</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，质量保证</translation>
-    </message>
-    <message>
-        <source>%s, accessibility advisor</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，无障碍顾问</translation>
-    </message>
-    <message>
-        <source>%s, graphic artist</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，图形设计</translation>
-    </message>
-    <message>
-        <source>%s, composer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，作曲</translation>
-    </message>
-    <message>
-        <source>%s, tester</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，测试员</translation>
-    </message>
-    <message>
-        <source>%s, Nyquist plug-ins</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, Nyquist 插件</translation>
-    </message>
-    <message>
-        <source>%s, web developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，Web 开发者</translation>
-    </message>
-    <message>
-        <source>%s, graphics</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，图形</translation>
-    </message>
-    <message>
-        <source>%s, effects presets</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1，效果器预设</translation>
-    </message>
-    <message>
-        <source>%s (incorporating %s, %s, %s, %s and %s)</source>
-        <translation type="vanished">%1 （包含 %2，%3，%4，%5 以及 %6）</translation>
-    </message>
-    <message>
-        <source>About %s</source>
-        <extracomment>i18n-hint: information about the program</extracomment>
-        <translation type="vanished">关于 %1</translation>
-    </message>
-    <message>
-        <source>&lt;h3&gt;</source>
-        <translation type="vanished">&lt;h3&gt;</translation>
-    </message>
-    <message>
-        <source>%s the free, open source, cross-platform software for recording and editing sounds.</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1，免费、开源、跨平台的声音录制编辑软件。</translation>
-    </message>
-    <message>
-        <source>%s Team Members</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 团队成员</translation>
-    </message>
-    <message>
-        <source>Emeritus:</source>
-        <translation type="vanished">名誉成员：</translation>
-    </message>
-    <message>
-        <source>Distinguished %s Team members, not currently active</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">杰出的 %1  团队成员（目前不活跃）</translation>
-    </message>
-    <message>
-        <source>Contributors</source>
-        <translation type="vanished">其他贡献者</translation>
-    </message>
-    <message>
-        <source>Website and Graphics</source>
-        <translation type="vanished">网站和图形</translation>
-    </message>
-    <message>
-        <source>Translators</source>
-        <translation type="vanished">翻译</translation>
-    </message>
-    <message>
-        <source>%s includes code from the following projects:</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 包含以下项目的代码：</translation>
-    </message>
-    <message>
-        <source>Special thanks:</source>
-        <translation type="vanished">特别感谢：</translation>
-    </message>
-    <message>
-        <source>%s website: </source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 网站： </translation>
-    </message>
-    <message>
-        <source>%s software is copyright %s 1999-2024 %s Team.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for first and third %s,
-and a "copyright" symbol for the second</extracomment>
-        <translation type="vanished">%1 软件版权归 %2 1999-2024 %3 团队。</translation>
-    </message>
-    <message>
-        <source>The name %s is a registered trademark.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 名称是注册商标。</translation>
-    </message>
-    <message>
-        <source>Build Information</source>
-        <translation type="vanished">构建信息</translation>
-    </message>
-    <message>
-        <source>The Build</source>
-        <extracomment>i18n-hint: Information about when audacity was compiled follows</extracomment>
-        <translation type="vanished">构建信息</translation>
-    </message>
-    <message>
-        <source>Program build date:</source>
-        <translation type="vanished">程序构建日期：</translation>
-    </message>
-    <message>
-        <source>Commit Id:</source>
-        <translation type="vanished">提交 ID：</translation>
-    </message>
-    <message>
-        <source>Debug build (debug level %d)</source>
-        <translation type="vanished">调试生成（调试级别 %1）</translation>
-    </message>
-    <message>
-        <source>Release build (debug level %d)</source>
-        <translation type="vanished">发布版本（调试级别 %1）</translation>
-    </message>
-    <message>
-        <source>%s, 64 bits</source>
-        <translation type="vanished">%1, 64 位</translation>
-    </message>
-    <message>
-        <source>%s, 32 bits</source>
-        <translation type="vanished">%1, 32 位</translation>
-    </message>
-    <message>
-        <source>Build type:</source>
-        <translation type="vanished">构建类型：</translation>
-    </message>
-    <message>
-        <source>Compiler:</source>
-        <translation type="vanished">编译器：</translation>
-    </message>
-    <message>
-        <source>Installation Prefix:</source>
-        <extracomment>i18n-hint: The directory audacity is installed into (on *nix systems)</extracomment>
-        <translation type="vanished">安装路径前缀：</translation>
-    </message>
-    <message>
-        <source>Cache folder:</source>
-        <translation type="vanished">缓存文件夹：</translation>
-    </message>
-    <message>
-        <source>Settings folder:</source>
-        <translation type="vanished">设置文件夹：</translation>
-    </message>
-    <message>
-        <source>Data folder:</source>
-        <translation type="vanished">数据文件夹：</translation>
-    </message>
-    <message>
-        <source>State folder:</source>
-        <translation type="vanished">状态文件夹：</translation>
-    </message>
-    <message>
-        <source>Core Libraries</source>
-        <extracomment>i18n-hint: Libraries that are essential to audacity</extracomment>
-        <translation type="vanished">核心库</translation>
-    </message>
-    <message>
-        <source>Cross-platform GUI library</source>
-        <translation type="vanished">跨平台 GUI 库</translation>
-    </message>
-    <message>
-        <source>Audio playback and recording</source>
-        <translation type="vanished">音频播放和录制</translation>
-    </message>
-    <message>
-        <source>Sample rate conversion</source>
-        <translation type="vanished">采样率转换</translation>
-    </message>
-    <message>
-        <source>File Format Support</source>
-        <translation type="vanished">文件格式支持</translation>
-    </message>
-    <message>
-        <source>MP3 Import</source>
-        <translation type="vanished">MP3 导入</translation>
-    </message>
-    <message>
-        <source>MP3 Export</source>
-        <extracomment>i18n-hint: LAME is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">MP3 导出</translation>
-    </message>
-    <message>
-        <source>Opus Import and Export</source>
-        <extracomment>i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">Opus 导入与导出</translation>
-    </message>
-    <message>
-        <source>Ogg Vorbis Import and Export</source>
-        <extracomment>i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-* Both are proper nouns and shouldn't be translated</extracomment>
-        <translation type="vanished">Ogg Vorbis 导入／导出</translation>
-    </message>
-    <message>
-        <source>ID3 tag support</source>
-        <translation type="vanished">ID3 标签支持</translation>
-    </message>
-    <message>
-        <source>FLAC import and export</source>
-        <extracomment>i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-* a proper noun and so shouldn't be translated</extracomment>
-        <translation type="vanished">FLAC 导入／导出</translation>
-    </message>
-    <message>
-        <source>MP2 export</source>
-        <translation type="vanished">MP2 导出</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export</source>
-        <translation type="vanished">FFmpeg 导入／导出</translation>
-    </message>
-    <message>
-        <source>Features</source>
-        <translation type="vanished">功能</translation>
-    </message>
-    <message>
-        <source>Plug-in support</source>
-        <translation type="vanished">插件支持</translation>
-    </message>
-    <message>
-        <source>Sound card mixer support</source>
-        <translation type="vanished">声卡混音器支持</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo Change support</source>
-        <translation type="vanished">音高和速度改变支持</translation>
-    </message>
-    <message>
-        <source>Extreme Pitch and Tempo Change support</source>
-        <translation type="vanished">极限音高和速度改变支持</translation>
-    </message>
-    <message>
-        <source>Legal</source>
-        <comment>about dialog</comment>
-        <translation type="vanished">法律信息</translation>
-    </message>
-    <message>
-        <source>GPL License</source>
-        <translation type="vanished">GPL 许可证</translation>
-    </message>
-    <message>
-        <source>PRIVACY POLICY</source>
-        <comment>about dialog</comment>
-        <extracomment>i18n-hint: For "About Audacity...": Title for Privacy Policy section</extracomment>
-        <translation type="vanished">隐私政策</translation>
-    </message>
-    <message>
-        <source>App update checking and error reporting require network access. These features are optional.</source>
-        <translation type="vanished">检查应用程序更新和错误报告需要网络连接，这些功能是可选的。</translation>
-    </message>
-    <message>
-        <source>See %s for more info.</source>
-        <extracomment>i18n-hint: %s will be replaced with "our Privacy Policy"</extracomment>
-        <translation type="vanished">更多信息请参阅%1</translation>
-    </message>
-    <message>
-        <source>Click and drag to define a looping region.</source>
-        <translation type="vanished">点击并拖动以定义循环播放的区域。</translation>
-    </message>
-    <message>
-        <source>Timeline actions disabled during recording</source>
-        <translation type="vanished">录制时，时间轴操作已禁用</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust, double-click to reset</source>
-        <translation type="vanished">单击并拖动以调整，双击以重置</translation>
-    </message>
-    <message>
-        <source>Record/Playhead</source>
-        <extracomment>i18n-hint: This text is a tooltip on the icon (of a pin) representing
-the temporal position in the audio.</extracomment>
-        <translation type="vanished">录制/播放头</translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation type="vanished">时间轴</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">单击并拖动以定位播放</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">点击并拖动以跟随播放</translation>
-    </message>
-    <message>
-        <source>Click &amp; move to Scrub. Click &amp; drag to Seek.</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">点击并移动以跟随播放。点击并拖动以定位播放。</translation>
-    </message>
-    <message>
-        <source>Move to Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">移动以定位播放</translation>
-    </message>
-    <message>
-        <source>Move to Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">移动以跟随播放</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release to stop seeking.</source>
-        <translation type="vanished">拖动以定位播放。释放以停止定位播放。</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release and move to Scrub.</source>
-        <translation type="vanished">拖动以定位播放。释放并移动以跟随播放。</translation>
-    </message>
-    <message>
-        <source>Move to Scrub. Drag to Seek.</source>
-        <translation type="vanished">移动以跟随播放。拖动以定位播放。</translation>
-    </message>
-    <message>
-        <source>Quick-Play disabled</source>
-        <translation type="vanished">快速播放已禁用</translation>
-    </message>
-    <message>
-        <source>Quick-Play enabled</source>
-        <translation type="vanished">快速播放已启用</translation>
-    </message>
-    <message>
-        <source>Timeline Options</source>
-        <translation type="vanished">时间轴选项</translation>
-    </message>
-    <message>
-        <source>Minutes and Seconds</source>
-        <translation type="vanished">分钟和秒</translation>
-    </message>
-    <message>
-        <source>Beats and Measures</source>
-        <translation type="vanished">节拍与小节</translation>
-    </message>
-    <message>
-        <source>Setting a loop region also makes an audio selection</source>
-        <translation type="vanished">设置循环区间时在音频中选中</translation>
-    </message>
-    <message>
-        <source>Clear Loop</source>
-        <extracomment>i18n-hint Clear is a verb</extracomment>
-        <translation type="vanished">清除循环区间</translation>
-    </message>
-    <message>
-        <source>Set Loop To Selection</source>
-        <translation type="vanished">设置选区为循环</translation>
-    </message>
-    <message>
-        <source>Scroll view to playhead</source>
-        <translation type="vanished">滚动视图到播放头</translation>
-    </message>
-    <message>
-        <source>Continuous scrolling</source>
-        <translation type="vanished">连续滚动</translation>
-    </message>
-    <message>
-        <source>Failed to remove %s</source>
-        <translation type="vanished">移除 %1 失败</translation>
-    </message>
-    <message>
-        <source>Failed!</source>
-        <translation type="vanished">失败！</translation>
-    </message>
-    <message>
-        <source>%s could not be found.
-
-It has been removed from the list of recent files.</source>
-        <translation type="vanished">找不到 %1 。
-
-它已经从最近使用文件列表中移除了。</translation>
-    </message>
-    <message>
-        <source>Audacity is starting up...</source>
-        <translation type="vanished">Audacity 正在启动...</translation>
-    </message>
-    <message>
-        <source>SQLite library failed to initialize.  Audacity cannot continue.</source>
-        <translation type="vanished">无法初始化 SQLite 库。  Audacity 将无法继续。</translation>
-    </message>
-    <message>
-        <source>Block size must be within 256 to 100000000
-</source>
-        <translation type="vanished">块大小必须在 256 到 100000000 之间
-</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <extracomment>i18n-hint: "New" is an action (verb) to create a NEW project</extracomment>
-        <translation type="vanished">新建(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">打开(&amp;O)...</translation>
-    </message>
-    <message>
-        <source>Open &amp;Recent...</source>
-        <translation type="vanished">打开最近使用的(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity...</source>
-        <translation type="vanished">关于 Audacity(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>&amp;Preferences...</source>
-        <translation type="vanished">首选项(&amp;P)...</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a safe place to store temporary files.
-Audacity needs a place where automatic cleanup programs won't delete the temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity 找不到安全的地方来存储临时文件。
-Audacity 需要一个自动清理程序不会删除临时文件的地方。
-请在首选项对话框里输入一个适当的目录。</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a place to store temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity 找不到可以存储临时文件的地方。
-请在首选项对话框里输入一个适当的路径。</translation>
-    </message>
-    <message>
-        <source>Audacity is now going to exit. Please launch Audacity again to use the new temporary directory.</source>
-        <translation type="vanished">即将退出 Audacity。请重启 Audacity 以使用新的临时目录。</translation>
-    </message>
-    <message>
-        <source>Running two copies of Audacity simultaneously may cause
-data loss or cause your system to crash.
-
-</source>
-        <translation type="vanished">同时运行两个 Audacity 可能会引起
-数据丢失或系统崩溃
-
-</translation>
-    </message>
-    <message>
-        <source>Audacity was not able to lock the temporary files directory.
-This folder may be in use by another copy of Audacity.
-</source>
-        <translation type="vanished">Audacity 无法锁住临时文件目录。
-这个目录可能正被另一个 Audacity 使用。
-</translation>
-    </message>
-    <message>
-        <source>Do you still want to start Audacity?</source>
-        <translation type="vanished">仍要启动 Audacity 吗？</translation>
-    </message>
-    <message>
-        <source>Error Locking Temporary Folder</source>
-        <translation type="vanished">锁定临时目录时出错</translation>
-    </message>
-    <message>
-        <source>The system has detected that another copy of Audacity is running.
-</source>
-        <translation type="vanished">系统发现另一个 Audacity 正在运行。
-</translation>
-    </message>
-    <message>
-        <source>Use the New or Open commands in the currently running Audacity
-process to open multiple projects simultaneously.
-</source>
-        <translation type="vanished">在当前运行的 Audacity 中使用新建或打开命令
-来同时打开多个项目。
-</translation>
-    </message>
-    <message>
-        <source>Audacity is already running</source>
-        <translation type="vanished">Audacity 已经在运行了</translation>
-    </message>
-    <message>
-        <source>Unable to create shared memory segment.
-
-error code=%d : "%s".</source>
-        <translation type="vanished">无法创建共享内存区。
-
-错误码=%1 : "%2"。</translation>
-    </message>
-    <message>
-        <source>Audacity Startup Failure</source>
-        <translation type="vanished">Audacity 启动失败</translation>
-    </message>
-    <message>
-        <source>Unable to acquire semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">无法获取旗语。
-
-可能是因为资源短缺
-或许需要重启。</translation>
-    </message>
-    <message>
-        <source>Unable to create semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">无法创建旗语。
-
-可能是因为资源短缺
-或许需要重启。</translation>
-    </message>
-    <message>
-        <source>Unable to acquire lock semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">无法获取锁定旗语。
-
-可能是因为资源短缺
-或许需要重启。</translation>
-    </message>
-    <message>
-        <source>Unable to acquire server semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">无法获取服务器旗语。
-
-可能是因为资源短缺
-或许需要重启。</translation>
-    </message>
-    <message>
-        <source>The Audacity IPC server failed to initialize.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">初始化 Audacity IPC 服务器失败。</translation>
-    </message>
-    <message>
-        <source>An unrecoverable error has occurred during startup</source>
-        <translation type="vanished">在启动过程中发生不可恢复的错误</translation>
-    </message>
-    <message>
-        <source>set max disk block size in bytes</source>
-        <extracomment>i18n-hint: This controls the number of bytes that Audacity will
-*           use when writing files to the disk</extracomment>
-        <translation type="vanished">设置最大磁盘块（字节）</translation>
-    </message>
-    <message>
-        <source>replay a journal file</source>
-        <extracomment>i18n-hint: brief help message for Audacity's command-line options
-A journal contains a sequence of user interface interactions to be repeated
-"log," "trail," "trace" have somewhat similar meanings</extracomment>
-        <translation type="vanished">回放用户操作记录文件</translation>
-    </message>
-    <message>
-        <source>this help message</source>
-        <extracomment>i18n-hint: This displays a list of available options</extracomment>
-        <translation type="vanished">此帮助信息</translation>
-    </message>
-    <message>
-        <source>run self diagnostics</source>
-        <extracomment>i18n-hint: This runs a set of automatic tests on Audacity itself</extracomment>
-        <translation type="vanished">运行自检</translation>
-    </message>
-    <message>
-        <source>display Audacity version</source>
-        <extracomment>i18n-hint: This displays the Audacity version</extracomment>
-        <translation type="vanished">显示 Audacity 版本</translation>
-    </message>
-    <message>
-        <source>audio or project file name</source>
-        <extracomment>i18n-hint: This is a list of one or more files that Audacity
-*           should open upon startup</extracomment>
-        <translation type="vanished">音频或者项目的文件名</translation>
-    </message>
-    <message>
-        <source>Handle 'audacity://' url</source>
-        <extracomment>i18n-hint: This option is used to handle custom URLs in Audacity</extracomment>
-        <translation type="vanished">处理 “audacity://” 链接</translation>
-    </message>
-    <message>
-        <source>Audacity project (.aup3) files are not currently 
-associated with Audacity. 
-
-Associate them, so they open on double-click?</source>
-        <translation type="vanished">Audacity 项目文件（.aup3）目前没有
-和 Audacity 关联。
-
-要进行关联以便之后可以双击用 Audacity 打开它们吗？</translation>
-    </message>
-    <message>
-        <source>Audacity Project Files</source>
-        <translation type="vanished">Audacity 项目文件</translation>
-    </message>
-    <message>
-        <source>Audacity Configuration Error</source>
-        <translation type="vanished">Audacity 配置错误</translation>
-    </message>
-    <message>
-        <source>The following configuration file could not be accessed:
-
-	%s
-
-This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. 
-
-You can attempt to correct the issue and then click "Retry" to continue.
-
-If you choose to "Quit Audacity", your project may be left in an unsaved state which will be recovered the next time you open it.</source>
-        <translation type="vanished">无法访问以下配置文件：
-
-	%1
-
-这可能由很多因素导致，但最有可能是磁盘已满，或者你没有此文件的写入权限。
-
-你可以尝试解决问题，然后点击“重试”继续。
-
-如果你选择“退出 Audacity”，你的项目会保留未保存状态，下一次打开时会恢复。</translation>
-    </message>
-    <message>
-        <source>&amp;Quit Audacity</source>
-        <translation type="vanished">退出 Audacity (&amp;Q)</translation>
-    </message>
-    <message>
-        <source>&amp;Retry</source>
-        <translation type="vanished">重试(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Configure Project from Music File</source>
-        <translation type="vanished">由音乐文件配置项目</translation>
-    </message>
-    <message>
-        <source>Automatic Music Configuration</source>
-        <translation type="vanished">自动音乐配置</translation>
-    </message>
-    <message>
-        <source>Audacity detected this file to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity 检测到当前文件的速度为 %1 bpm。
-是否切换到音乐视图并将 %2 bpm 设置为当前项目的速度？</translation>
-    </message>
-    <message>
-        <source>Audacity detected one or more files to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity 检测到一个或多个文件的速度为 %1 bpm。
-是否切换到音乐视图并将 %2 bpm 设置为当前项目的速度？</translation>
-    </message>
-    <message>
-        <source>Music Import</source>
-        <translation type="vanished">音乐导入</translation>
-    </message>
-    <message>
-        <source>Smart clip.
-The entire source clip will be pasted into your project, allowing you to access
-trimmed audio data anytime.</source>
-        <translation type="vanished">智能片段。
-将整个源片段粘贴到项目中，让你可以
-随时使用修剪后的音频数据。</translation>
-    </message>
-    <message>
-        <source>Selected audio only.
-Only the selected portion of the source clip will be pasted.</source>
-        <translation type="vanished">仅选中音频。
-只粘贴源片段的选中部分。</translation>
-    </message>
-    <message>
-        <source>Paste audio</source>
-        <translation type="vanished">粘贴音频</translation>
-    </message>
-    <message>
-        <source>How would you like to paste your audio?</source>
-        <translation type="vanished">你想怎样粘贴音频？</translation>
-    </message>
-    <message>
-        <source>The full smart clip is %s. Larger sizes will take longer to paste.</source>
-        <extracomment>i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.</extracomment>
-        <translation type="vanished">完整的智能片段占用 %1。大小越大，粘贴用时越长。</translation>
-    </message>
-    <message>
-        <source>Remember my choice and don't ask again</source>
-        <translation type="vanished">记住我的选择，不再询问</translation>
-    </message>
-    <message>
-        <source>Automatic Crash Recovery</source>
-        <translation type="vanished">崩溃自动恢复</translation>
-    </message>
-    <message>
-        <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
-
-After recovery, save the projects to ensure changes are written to disk.</source>
-        <translation type="vanished">下列项目在上次 Audacity 运行时没有正确保存，现在可以自动恢复。
-
-恢复后，请保存项目以确保更改写入到磁盘上。</translation>
-    </message>
-    <message>
-        <source>Recoverable &amp;projects</source>
-        <translation type="vanished">可恢复项目(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Discard Selected</source>
-        <translation type="vanished">舍弃选择项目(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Recover Selected</source>
-        <translation type="vanished">恢复选择项目(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <translation type="vanished">跳过(&amp;S)</translation>
-    </message>
-    <message>
-        <source>No projects selected</source>
-        <translation type="vanished">没有选择项目</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to discard the selected projects?
-
-Choosing "Yes" permanently deletes the selected projects immediately.</source>
-        <translation type="vanished">确定要舍弃选择的项目吗？
-
-选择“确定”将会立即永久删除所选项目。</translation>
-    </message>
-    <message>
-        <source>Select Command</source>
-        <translation type="vanished">选择命令</translation>
-    </message>
-    <message>
-        <source>&amp;Command</source>
-        <translation type="vanished">命令(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Parameters</source>
-        <translation type="vanished">编辑参数(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preset</source>
-        <translation type="vanished">使用预设(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Parameters</source>
-        <translation type="vanished">参数(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Details</source>
-        <translation type="vanished">详细信息(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Choose command</source>
-        <translation type="vanished">选择命令</translation>
-    </message>
-    <message>
-        <source>MP3 Conversion</source>
-        <translation type="vanished">MP3 转换</translation>
-    </message>
-    <message>
-        <source>Fade Ends</source>
-        <translation type="vanished">淡入淡出结束</translation>
-    </message>
-    <message>
-        <source>Import Macro</source>
-        <translation type="vanished">导入宏</translation>
-    </message>
-    <message>
-        <source>Macro %s already exists. Would you like to replace it?</source>
-        <translation type="vanished">宏 %1 已存在。确定要替换它吗？</translation>
-    </message>
-    <message>
-        <source>Export Macro</source>
-        <translation type="vanished">导出宏</translation>
-    </message>
-    <message>
-        <source>Effect</source>
-        <translation type="vanished">效果器</translation>
-    </message>
-    <message>
-        <source>Menu Command (With Parameters)</source>
-        <translation type="vanished">菜单命令（带参数）</translation>
-    </message>
-    <message>
-        <source>Menu Command (No Parameters)</source>
-        <translation type="vanished">菜单命令（无参数）</translation>
-    </message>
-    <message>
-        <source>"%s" requires one or more tracks to be selected.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".</extracomment>
-        <translation type="vanished">"%1" 需要选中一个或多个轨道。</translation>
-    </message>
-    <message>
-        <source>Your batch command of %s was not recognized.</source>
-        <translation type="vanished">批处理命令 %1 无法识别。</translation>
-    </message>
-    <message>
-        <source>Applied Macro</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">已应用宏</translation>
-    </message>
-    <message>
-        <source>Apply Macro</source>
-        <translation type="vanished">应用宏</translation>
-    </message>
-    <message>
-        <source>Applied Macro '%s'</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">已应用宏 '%1'</translation>
-    </message>
-    <message>
-        <source>Apply '%s'</source>
-        <translation type="vanished">应用 '%1'</translation>
-    </message>
-    <message>
-        <source>Apply %s with parameter(s)
-
-%s</source>
-        <translation type="vanished">应用 %1 使用参数
-
-%2</translation>
-    </message>
-    <message>
-        <source>Test Mode</source>
-        <translation type="vanished">测试模式</translation>
-    </message>
-    <message>
-        <source>Apply %s</source>
-        <translation type="vanished">应用 %1</translation>
-    </message>
-    <message>
-        <source>Macros Palette</source>
-        <translation type="vanished">宏色板</translation>
-    </message>
-    <message>
-        <source>Manage Macros</source>
-        <translation type="vanished">管理宏</translation>
-    </message>
-    <message>
-        <source>Select Macro</source>
-        <extracomment>i18n-hint: A macro is a sequence of commands that can be applied
-* to one or more audio files.</extracomment>
-        <translation type="vanished">选择宏</translation>
-    </message>
-    <message>
-        <source>Macro</source>
-        <extracomment>i18n-hint: This is the heading for a column in the edit macros dialog</extracomment>
-        <translation type="vanished">宏</translation>
-    </message>
-    <message>
-        <source>Apply Macro to:</source>
-        <translation type="vanished">应用宏至：</translation>
-    </message>
-    <message>
-        <source>Apply macro to project</source>
-        <translation type="vanished">应用宏到项目</translation>
-    </message>
-    <message>
-        <source>&amp;Project</source>
-        <translation type="vanished">项目(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Apply macro to files...</source>
-        <translation type="vanished">应用宏到文件...</translation>
-    </message>
-    <message>
-        <source>&amp;Files...</source>
-        <translation type="vanished">文件(&amp;F)...</translation>
-    </message>
-    <message>
-        <source>&amp;Expand</source>
-        <extracomment>i18n-hint: The Expand button makes the dialog bigger, with more in it</extracomment>
-        <translation type="vanished">扩展(&amp;E)</translation>
-    </message>
-    <message>
-        <source>No macro selected</source>
-        <translation type="vanished">未选择宏</translation>
-    </message>
-    <message>
-        <source>Applying '%s' to current project</source>
-        <translation type="vanished">正在应用 '%1' 到当前项目</translation>
-    </message>
-    <message>
-        <source>Please save and close the current project first.</source>
-        <translation type="vanished">请先保存并关闭当前的项目。</translation>
-    </message>
-    <message>
-        <source>Select file(s) for batch processing...</source>
-        <translation type="vanished">选择进行批处理的文件...</translation>
-    </message>
-    <message>
-        <source>Applying...</source>
-        <translation type="vanished">正在应用...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve</source>
-        <translation type="vanished">移除(&amp;V)</translation>
-    </message>
-    <message>
-        <source>&amp;Rename...</source>
-        <translation type="vanished">重命名(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Re&amp;store</source>
-        <translation type="vanished">恢复(&amp;S)</translation>
-    </message>
-    <message>
-        <source>I&amp;mport...</source>
-        <translation type="vanished">导入(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>E&amp;xport...</source>
-        <translation type="vanished">导出(&amp;X)...</translation>
-    </message>
-    <message>
-        <source>Edit Steps</source>
-        <translation type="vanished">编辑步骤</translation>
-    </message>
-    <message>
-        <source>Num</source>
-        <extracomment>i18n-hint: This is the number of the command in the list</extracomment>
-        <translation type="vanished">命令数</translation>
-    </message>
-    <message>
-        <source>Command  </source>
-        <translation type="vanished">命令 </translation>
-    </message>
-    <message>
-        <source>Parameters</source>
-        <translation type="vanished">参数</translation>
-    </message>
-    <message>
-        <source>&amp;Insert</source>
-        <translation type="vanished">插入(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Edit...</source>
-        <translation type="vanished">编辑(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Move &amp;Up</source>
-        <translation type="vanished">上移(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move &amp;Down</source>
-        <translation type="vanished">下移(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Shrin&amp;k</source>
-        <extracomment>i18n-hint: The Shrink button makes the dialog smaller, with less in it</extracomment>
-        <translation type="vanished">收缩(&amp;K)</translation>
-    </message>
-    <message>
-        <source>- END -</source>
-        <extracomment>i18n-hint: This is the last item in a list.</extracomment>
-        <translation type="vanished">- 结束 -</translation>
-    </message>
-    <message>
-        <source>%s changed</source>
-        <translation type="vanished">%1 已更改</translation>
-    </message>
-    <message>
-        <source>Do you want to save the changes?</source>
-        <translation type="vanished">确定保存变更吗？</translation>
-    </message>
-    <message>
-        <source>Enter name of new macro</source>
-        <translation type="vanished">输入新宏的名称</translation>
-    </message>
-    <message>
-        <source>Name of new macro</source>
-        <translation type="vanished">新宏的名称</translation>
-    </message>
-    <message>
-        <source>Name must not be blank</source>
-        <translation type="vanished">名称不能为空</translation>
-    </message>
-    <message>
-        <source>Names may not contain '%c' and '%c'</source>
-        <extracomment>i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.</extracomment>
-        <translation type="vanished">名称内不能包括 '%1' 和 '%2'</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s?</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of a file.</extracomment>
-        <translation type="vanished">确实要删除 %1 吗？</translation>
-    </message>
-    <message>
-        <source>&amp;Repeat %s</source>
-        <translation type="vanished">重复 %1 操作(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Repeat Last Tool</source>
-        <translation type="vanished">重复上一个工具</translation>
-    </message>
-    <message>
-        <source>&amp;Macro Manager</source>
-        <translation type="vanished">宏管理器 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Apply Macro</source>
-        <translation type="vanished">应用宏(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Palette...</source>
-        <translation type="vanished">调色板...</translation>
-    </message>
-    <message>
-        <source>Script&amp;ables I</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">脚本 I (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Scripta&amp;bles II</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">脚本 II (&amp;B)</translation>
-    </message>
-    <message>
-        <source>Disk Block Size (KB):</source>
-        <translation type="vanished">磁盘块大小 (KB)：</translation>
-    </message>
-    <message>
-        <source>Number of Edits:</source>
-        <translation type="vanished">编辑次数：</translation>
-    </message>
-    <message>
-        <source>Test Data Size (MB):</source>
-        <translation type="vanished">测试数据大小 (MB)：</translation>
-    </message>
-    <message>
-        <source>Random Seed:</source>
-        <extracomment>i18n-hint: A "seed" is a number that initializes a
-pseudorandom number generating algorithm</extracomment>
-        <translation type="vanished">随机种子：</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each block file</source>
-        <translation type="vanished">显示有关每个块文件的详细信息</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each editing operation</source>
-        <translation type="vanished">显示有关每个编辑操作的详细信息</translation>
-    </message>
-    <message>
-        <source>Run</source>
-        <translation type="vanished">运行</translation>
-    </message>
-    <message>
-        <source>benchmark.txt</source>
-        <extracomment>i18n-hint: Benchmark means a software speed test;
-leave untranslated file extension .txt</extracomment>
-        <translation type="vanished">性能测试.txt</translation>
-    </message>
-    <message>
-        <source>Export Benchmark Data as:</source>
-        <translation type="vanished">将性能测试数据导出为：</translation>
-    </message>
-    <message>
-        <source>Block size should be in the range 1 - 1024 KB.</source>
-        <translation type="vanished">块大小应在范围 1 到 1024 KB 之间。</translation>
-    </message>
-    <message>
-        <source>Number of edits should be in the range 1 - 10000.</source>
-        <translation type="vanished">编辑次数应在 1 到 10000 次以内。</translation>
-    </message>
-    <message>
-        <source>Test data size should be in the range 1 - 2000 MB.</source>
-        <translation type="vanished">测试数据大小应在 1 到 2000 MB 之间。</translation>
-    </message>
-    <message>
-        <source>Using %lld chunks of %lld samples each, for a total of %.1f MB.
-</source>
-        <translation type="vanished">每个使用 %1 块 %2 样本，总共占 %3 MB。
-</translation>
-    </message>
-    <message>
-        <source>Preparing...
-</source>
-        <translation type="vanished">准备中...
-</translation>
-    </message>
-    <message>
-        <source>Expected len %lld, track len %lld.
-</source>
-        <translation type="vanished">预期长度 %1，轨道长度 %2。
-</translation>
-    </message>
-    <message>
-        <source>Performing %d edits...
-</source>
-        <translation type="vanished">正在进行 %1 次编辑...
-</translation>
-    </message>
-    <message>
-        <source>Cut: %lld - %lld 
-</source>
-        <translation type="vanished">剪切：%1 - %2 
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-</source>
-        <translation type="vanished">试验 %1
-</translation>
-    </message>
-    <message>
-        <source>Cut (%lld, %lld) failed.
-</source>
-        <translation type="vanished">剪切（%1, %2）失败。
-</translation>
-    </message>
-    <message>
-        <source>Paste: %lld
-</source>
-        <translation type="vanished">粘贴：%1
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-Failed on Paste.
-</source>
-        <translation type="vanished">试验 %1
-粘贴失败。
-</translation>
-    </message>
-    <message>
-        <source>Time to perform %d edits: %ld ms
-</source>
-        <translation type="vanished">进行 %1 次编辑的时间：%2 ms
-</translation>
-    </message>
-    <message>
-        <source>Checking file pointer leaks:
-</source>
-        <translation type="vanished">检查文件指针泄露：
-</translation>
-    </message>
-    <message>
-        <source>Track # blocks: %ld
-</source>
-        <translation type="vanished">轨道 # 块：%1
-</translation>
-    </message>
-    <message>
-        <source>Disk # blocks: 
-</source>
-        <translation type="vanished">磁盘 # 块：
-</translation>
-    </message>
-    <message>
-        <source>Doing correctness check...
-</source>
-        <translation type="vanished">正在进行正确性检查...
-</translation>
-    </message>
-    <message>
-        <source>Bad: chunk %lld sample %lld
-</source>
-        <translation type="vanished">错误：块 %1 样本 %2
-</translation>
-    </message>
-    <message>
-        <source>Passed correctness check!
-</source>
-        <translation type="vanished">已通过正确性检查！
-</translation>
-    </message>
-    <message>
-        <source>Errors in %d/%lld chunks
-</source>
-        <translation type="vanished">%1/%2 块发生错误
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data: %ld ms
-</source>
-        <translation type="vanished">检查所有数据的时间：%1 ms
-</translation>
-    </message>
-    <message>
-        <source>Reading data again...
-</source>
-        <translation type="vanished">再次读取数据...
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data (2): %ld ms
-</source>
-        <translation type="vanished">检查所有数据的时间（2）：%1 ms
-</translation>
-    </message>
-    <message>
-        <source>At 44100 Hz, %d bytes per sample, the estimated number of
- simultaneous tracks that could be played at once: %.1f
-</source>
-        <translation type="vanished">在 44100 Hz，每个样本 %1 字节，预估可以同时播放的
-同步音轨的数量为：%2
-</translation>
-    </message>
-    <message>
-        <source>TEST FAILED!!!
-</source>
-        <translation type="vanished">测试失败！！！
-</translation>
-    </message>
-    <message>
-        <source>Benchmark completed successfully.
-</source>
-        <translation type="vanished">性能测试成功完成。
-</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Cmd + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">选择为 %1 的音频来使用 (例如，Cmd + A 来选择全部) 并重试。</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">选择为 %1 的音频来使用 (例如，Ctrl + A 来选择全部) 并重试。</translation>
-    </message>
-    <message>
-        <source>No Audio Selected</source>
-        <translation type="vanished">没有选择音频</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use.
-
-1. Select audio that represents noise and use %s to get your 'noise profile'.
-
-2. When you have got your noise profile, select the audio you want to change
-and use %s to change that audio.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.</extracomment>
-        <translation type="vanished">选择 %1 的音频以使用。
-
-1. 选择代表噪音的音频并使用 %2 以得到您的“噪音资料”。
-
-2. 当您得到了噪音资料，选择您希望变更的音频
-并使用 %3 以变更音频。</translation>
-    </message>
-    <message>
-        <source>You can only do this when playing and recording are
-stopped. (Pausing is not sufficient.)</source>
-        <translation type="vanished">您只能在没有播放和录制时进行此操作。
-（暂停播放和录制不足以进行此操作。）</translation>
-    </message>
-    <message>
-        <source>You must first select some stereo audio to perform this
-action. (You cannot use this with mono.)</source>
-        <translation type="vanished">您必须先选择立体声音频以进行此操作
-（您不能用单声道音频）</translation>
-    </message>
-    <message>
-        <source>You must first select some audio to perform this action.
-(Selecting other kinds of track won't work.)</source>
-        <translation type="vanished">您必须先选择一些音频才能使用它
-（选择其他类型的轨道不行）</translation>
-    </message>
-    <message>
-        <source>Audacity Support Data</source>
-        <translation type="vanished">Audacity 支持数据</translation>
-    </message>
-    <message>
-        <source>Report generated to:</source>
-        <translation type="vanished">报告已生成到：</translation>
-    </message>
-    <message>
-        <source>Removing Dependencies</source>
-        <translation type="vanished">正在移除依赖</translation>
-    </message>
-    <message>
-        <source>Copying audio data into project...</source>
-        <translation type="vanished">正在复制音频数据进入项目...</translation>
-    </message>
-    <message>
-        <source>Project Depends on Other Audio Files</source>
-        <translation type="vanished">项目依赖其它音频文件</translation>
-    </message>
-    <message>
-        <source>Copying these files into your project will remove this dependency.
-This is safer, but needs more disk space.</source>
-        <translation type="vanished">把以下文件复制到您的项目会去除此依赖关系。
-这样更安全，但需要更多的磁盘空间。</translation>
-    </message>
-    <message>
-        <source>
-
-Files shown as MISSING have been moved or deleted and cannot be copied.
-Restore them to their original location to be able to copy into project.</source>
-        <translation type="vanished">
-
-标签为丢失 (MISSING) 的文件无法复制，可能被移动或删除了。
-请把这些文件回复到原有位置从而能被复制到项目。</translation>
-    </message>
-    <message>
-        <source>Project Dependencies</source>
-        <translation type="vanished">项目依赖</translation>
-    </message>
-    <message>
-        <source>Audio File</source>
-        <translation type="vanished">音频文件</translation>
-    </message>
-    <message>
-        <source>Disk Space</source>
-        <translation type="vanished">磁盘空间</translation>
-    </message>
-    <message>
-        <source>Copy Selected Files</source>
-        <translation type="vanished">复制所选文件</translation>
-    </message>
-    <message>
-        <source>Cancel Save</source>
-        <translation type="vanished">取消保存</translation>
-    </message>
-    <message>
-        <source>Save Without Copying</source>
-        <translation type="vanished">保存但不复制</translation>
-    </message>
-    <message>
-        <source>Do Not Copy</source>
-        <translation type="vanished">不要复制</translation>
-    </message>
-    <message>
-        <source>Copy All Files (Safer)</source>
-        <translation type="vanished">复制全部文件 [更安全]</translation>
-    </message>
-    <message>
-        <source>Whenever a project depends on other files:</source>
-        <translation type="vanished">当项目依赖其他文件时：</translation>
-    </message>
-    <message>
-        <source>Ask me</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">询问我</translation>
-    </message>
-    <message>
-        <source>Always copy all files (safest)</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">总是复制全部文件 [最安全]</translation>
-    </message>
-    <message>
-        <source>Never copy any files</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">总不复制任何文件</translation>
-    </message>
-    <message>
-        <source>MISSING %s</source>
-        <translation type="vanished">丢失的 %1</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Names to Clipboard</source>
-        <translation type="vanished">复制名称到剪贴板(&amp;C)</translation>
-    </message>
-    <message>
-        <source>"%s", "%s", "%s"
-</source>
-        <translation type="vanished">"%1", "%2", "%3"
-</translation>
-    </message>
-    <message>
-        <source>Missing</source>
-        <translation type="vanished">丢失</translation>
-    </message>
-    <message>
-        <source>If you proceed, your project will not be saved to disk. Is this what you want?</source>
-        <translation type="vanished">如果您继续，您的项目将不会保存到磁盘上，您希望这样的吗？</translation>
-    </message>
-    <message>
-        <source>Your project is self-contained; it does not depend on any external audio files. 
-
-Some older Audacity projects may not be self-contained, and care 
-is needed to keep their external dependencies in the right place.
-New projects will be self-contained and are less risky.</source>
-        <translation type="vanished">您的项目现在是自包含的；它不依赖于任何外部音频文件。
-
-一些旧的 Audacity 项目也许是非自包含的，
-并且需要您关注以使其外部依赖保持在正确位置。
-新项目将是自包含的并且风险更低。</translation>
-    </message>
-    <message>
-        <source>Dependency Check</source>
-        <translation type="vanished">依赖性检查</translation>
-    </message>
-    <message>
-        <source>Dropouts</source>
-        <extracomment>i18n-hint:  A name given to a track, appearing as its menu button.
-The translation should be short or else it will not display well.
-At most, about 11 Latin characters.
-Dropout is a loss of a short sequence of audio sample data from the
-recording</extracomment>
-        <translation type="vanished">丢失</translation>
-    </message>
-    <message>
-        <source>Recorded audio was lost at the labeled locations. Possible causes:
-
-Other applications are competing with Audacity for processor time
-
-You are saving directly to a slow external storage device
-</source>
-        <translation type="vanished">录制的音频在标记的位置丢失，可能的原因：
-
-其他应用程序在争夺 Audacity 的处理时间
-
-您在直接保存至一个缓慢的外部储存设备
-</translation>
-    </message>
-    <message>
-        <source>Turn off dropout detection</source>
-        <translation type="vanished">关闭丢失侦测</translation>
-    </message>
-    <message>
-        <source>Frequency Analysis</source>
-        <translation type="vanished">频率分析</translation>
-    </message>
-    <message>
-        <source>Spectrum</source>
-        <translation type="vanished">频谱</translation>
-    </message>
-    <message>
-        <source>Standard Autocorrelation</source>
-        <translation type="vanished">标准自相关 (Standard Autocorrelation)</translation>
-    </message>
-    <message>
-        <source>Cuberoot Autocorrelation</source>
-        <translation type="vanished">立方根自相关 (Cuberoot Autocorrelation)</translation>
-    </message>
-    <message>
-        <source>Enhanced Autocorrelation</source>
-        <translation type="vanished">増强自相关 (Enhanced Autocorrelation)</translation>
-    </message>
-    <message>
-        <source>Cepstrum</source>
-        <extracomment>i18n-hint: This is a technical term, derived from the word
-* "spectrum".  Do not translate it unless you are sure you
-* know the correct technical word in your language.</extracomment>
-        <translation type="vanished">对数逆谱</translation>
-    </message>
-    <message>
-        <source>%s window</source>
-        <extracomment>i18n-hint: This refers to a "window function",
-* such as Hann or Rectangular, used in the
-* Frequency analyze dialog box.</extracomment>
-        <translation type="vanished">%1 窗口</translation>
-    </message>
-    <message>
-        <source>Linear frequency</source>
-        <translation type="vanished">线性频率</translation>
-    </message>
-    <message>
-        <source>Log frequency</source>
-        <translation type="vanished">对数频率</translation>
-    </message>
-    <message>
-        <source>Scroll</source>
-        <translation type="vanished">滚动</translation>
-    </message>
-    <message>
-        <source>Cursor:</source>
-        <translation type="vanished">光标位置：</translation>
-    </message>
-    <message>
-        <source>Peak:</source>
-        <translation type="vanished">峰值：</translation>
-    </message>
-    <message>
-        <source>&amp;Grids</source>
-        <translation type="vanished">网格(&amp;G)</translation>
-    </message>
-    <message>
-        <source>&amp;Algorithm:</source>
-        <translation type="vanished">算法(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>&amp;Size:</source>
-        <translation type="vanished">大小(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>&amp;Export...</source>
-        <translation type="vanished">导出(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>&amp;Function:</source>
-        <translation type="vanished">函数(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>&amp;Axis:</source>
-        <translation type="vanished">轴(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>&amp;Replot...</source>
-        <translation type="vanished">重绘(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Not enough data selected.</source>
-        <translation type="vanished">没有选择足够的数据。</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %d dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %.1f dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 秒 (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %.3f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 秒 (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>spectrum.txt</source>
-        <translation type="vanished">频谱.txt</translation>
-    </message>
-    <message>
-        <source>Export Spectral Data As:</source>
-        <translation type="vanished">将频谱数据导出为：</translation>
-    </message>
-    <message>
-        <source>Frequency (Hz)	Level (dB)</source>
-        <translation type="vanished">频率 (Hz)	电平 (dB)</translation>
-    </message>
-    <message>
-        <source>Lag (seconds)	Frequency (Hz)	Level</source>
-        <translation type="vanished">延迟 (秒)	频率 (Hz)	电平</translation>
-    </message>
-    <message>
-        <source>Plot Spectrum...</source>
-        <translation type="vanished">绘制频谱...</translation>
-    </message>
-    <message>
-        <source>Save %s</source>
-        <translation type="vanished">保存 %1</translation>
-    </message>
-    <message>
-        <source>Unable to save %s</source>
-        <translation type="vanished">不能保存 %1</translation>
-    </message>
-    <message>
-        <source>&amp;Manage History</source>
-        <translation type="vanished">管理历史记录(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Used Space</source>
-        <translation type="vanished">已用空间</translation>
-    </message>
-    <message>
-        <source>&amp;Total space used</source>
-        <translation type="vanished">总使用空间(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Undo levels available</source>
-        <translation type="vanished">可撤销层级(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Levels to discard</source>
-        <translation type="vanished">要放弃层级(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Discard</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">丢弃(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Clip&amp;board space used</source>
-        <translation type="vanished">已用剪贴板空间(&amp;B)</translation>
-    </message>
-    <message>
-        <source>D&amp;iscard</source>
-        <translation type="vanished">丢弃(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Compact</source>
-        <translation type="vanished">压缩(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Compacting actually freed %s of disk space.</source>
-        <translation type="vanished">压缩实际节省 %1 磁盘空间。</translation>
-    </message>
-    <message>
-        <source>&amp;History</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the various editing steps
-that have been taken.</extracomment>
-        <translation type="vanished">历史 (&amp;H)</translation>
-    </message>
-    <message>
-        <source>New Plugins</source>
-        <translation type="vanished">新插件</translation>
-    </message>
-    <message>
-        <source>Incompatible plugin(s) found</source>
-        <translation type="vanished">已找到不兼容插件</translation>
-    </message>
-    <message>
-        <source>&amp;Manage Plugins</source>
-        <translation type="vanished">管理插件 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using "Manage Plugins". Otherwise, select "Continue".</source>
-        <translation type="vanished">Audacity发现了%1个无法加载的不兼容插件。我们已经禁用了这些插件以避免延迟或崩溃。如果你依然想要尝试使用这些插件，可以在“管理插件”选项中启用它们。否则，请点击“继续”。</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes.</source>
-        <translation type="vanished">Audacity发现了%1个无法加载的不兼容插件。我们已经禁用了这些插件以避免延迟或崩溃。如果你依然想要尝试使用这些插件，可以在“管理插件”选项中启用它们。否则，请点击“继续”。</translation>
-    </message>
-    <message>
-        <source>Journal recording failed</source>
-        <translation type="vanished">录制操作记录失败</translation>
-    </message>
-    <message>
-        <source>Edit Labels</source>
-        <translation type="vanished">编辑标签</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">开始时间</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">结束时间</translation>
-    </message>
-    <message>
-        <source>Low Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">低频</translation>
-    </message>
-    <message>
-        <source>High Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">高频</translation>
-    </message>
-    <message>
-        <source>New...</source>
-        <translation type="vanished">新建...</translation>
-    </message>
-    <message>
-        <source>Press F2 or double click to edit cell contents.</source>
-        <translation type="vanished">按 F2 或双击来编辑单元格内容。</translation>
-    </message>
-    <message>
-        <source>Select a text file containing labels</source>
-        <translation type="vanished">选择一个包含标签的文本文件</translation>
-    </message>
-    <message>
-        <source>No labels to export.</source>
-        <translation type="vanished">没有标签可导出。</translation>
-    </message>
-    <message>
-        <source>Export Labels As:</source>
-        <translation type="vanished">将标签导出为：</translation>
-    </message>
-    <message>
-        <source>New Label Track</source>
-        <translation type="vanished">新建标签轨</translation>
-    </message>
-    <message>
-        <source>Enter track name</source>
-        <translation type="vanished">输入轨道名称</translation>
-    </message>
-    <message>
-        <source>Exported Label Style:</source>
-        <translation type="vanished">导出标签样式：</translation>
-    </message>
-    <message>
-        <source>Audacity First Run</source>
-        <extracomment>i18n-hint: Title on a dialog indicating that this is the first
-* time Audacity has been run.</extracomment>
-        <translation type="vanished">Audacity 首次运行</translation>
-    </message>
-    <message>
-        <source>Choose Language for Audacity to use:</source>
-        <translation type="vanished">选择 Audacity 使用的语言：</translation>
-    </message>
-    <message>
-        <source>The language you have chosen, %s (%s), is not the same as the system language, %s (%s).</source>
-        <extracomment>i18n-hint: The %s's are replaced by translated and untranslated
-* versions of language names.</extracomment>
-        <translation type="vanished">选择的语言 - %1 (%2) - 和系统语言 %3 (%4) 不同。</translation>
-    </message>
-    <message>
-        <source>Error Converting Legacy Project File</source>
-        <translation type="vanished">转换历史版本项目文件失败</translation>
-    </message>
-    <message>
-        <source>Converted a 1.0 project file to the new format.
-The old file has been saved as '%s'</source>
-        <translation type="vanished">已将 Audacity 1.0 格式的项目文件转换成新格式。
-原文件将另存为 '%1'</translation>
-    </message>
-    <message>
-        <source>Opening Audacity Project</source>
-        <translation type="vanished">打开 Audacity 项目</translation>
-    </message>
-    <message>
-        <source>The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command.</source>
-        <translation type="vanished">以下命令的快捷键已被删除，因为它们的默认快捷键已被更新或改变，并且与您分配的另外的命令的快捷键相同。</translation>
-    </message>
-    <message>
-        <source>Shortcuts have been removed</source>
-        <translation type="vanished">快捷键已被移除</translation>
-    </message>
-    <message>
-        <source>Audacity Mixer%s</source>
-        <translation type="vanished">Audacity 混音器 %1</translation>
-    </message>
-    <message>
-        <source>Velocity</source>
-        <extracomment>i18n-hint: title of the MIDI Velocity slider
-i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks</extracomment>
-        <translation type="vanished">速度</translation>
-    </message>
-    <message>
-        <source>Musical Instrument</source>
-        <translation type="vanished">乐器</translation>
-    </message>
-    <message>
-        <source>Mute</source>
-        <extracomment>i18n-hint: This is on a button that will silence this track.</extracomment>
-        <translation type="vanished">静音</translation>
-    </message>
-    <message>
-        <source>Solo</source>
-        <extracomment>i18n-hint: This is on a button that will silence all the other tracks.</extracomment>
-        <translation type="vanished">独奏</translation>
-    </message>
-    <message>
-        <source>Signal Level Meter</source>
-        <translation type="vanished">信号电平指示</translation>
-    </message>
-    <message>
-        <source>Moved gain slider</source>
-        <translation type="vanished">已移动音量增强滑杆</translation>
-    </message>
-    <message>
-        <source>Moved velocity slider</source>
-        <translation type="vanished">已移动速度滑杆</translation>
-    </message>
-    <message>
-        <source>Moved pan slider</source>
-        <translation type="vanished">已移动左右声道平衡滑杆</translation>
-    </message>
-    <message>
-        <source>&amp;Mixer</source>
-        <translation type="vanished">混音器 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Effect or Command at %s failed to register:
-%s</source>
-        <translation type="vanished">效果器或命令于 %1 注册失败：
-%2</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="vanished">禁用</translation>
-    </message>
-    <message>
-        <source>Enable</source>
-        <translation type="vanished">启用</translation>
-    </message>
-    <message>
-        <source>Generator</source>
-        <translation type="vanished">生成器</translation>
-    </message>
-    <message>
-        <source>Analyzer</source>
-        <translation type="vanished">分析</translation>
-    </message>
-    <message>
-        <source>Tool</source>
-        <translation type="vanished">工具</translation>
-    </message>
-    <message>
-        <source>Manage Plugins</source>
-        <translation type="vanished">管理插件</translation>
-    </message>
-    <message>
-        <source>Native Audacity</source>
-        <translation type="vanished">原生 Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Show:</source>
-        <translation type="vanished">显示(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="vanished">类型(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>C&amp;ategory:</source>
-        <translation type="vanished">类别(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>Searc&amp;h:</source>
-        <translation type="vanished">搜索(&amp;H)：</translation>
-    </message>
-    <message>
-        <source>Plugin</source>
-        <translation type="vanished">插件</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan</source>
-        <translation type="vanished">重新扫描​​(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Get more effects...</source>
-        <translation type="vanished">获得更多效果器(&amp;G)…</translation>
-    </message>
-    <message>
-        <source>Searching for plugins</source>
-        <translation type="vanished">搜索插件</translation>
-    </message>
-    <message>
-        <source>Actual Rate: %d</source>
-        <translation type="vanished">实际采样率： %1</translation>
-    </message>
-    <message>
-        <source>Error opening sound device.
-Try changing the audio host, playback device and the project sample rate.</source>
-        <translation type="vanished">打开声音设备出错。
-请检查音频主机、播放设备的以及项目采样率。</translation>
-    </message>
-    <message>
-        <source>Mismatched Sampling Rates</source>
-        <translation type="vanished">采样率不匹配</translation>
-    </message>
-    <message>
-        <source>Too few tracks are selected for recording at this sample rate.
-(Audacity requires two channels at the same sample rate for
-each stereo track)</source>
-        <translation type="vanished">选择了对于当前采样率过少的轨道
-（Audacity 对于每个立体声轨
-需要两个同样频率的声道）</translation>
-    </message>
-    <message>
-        <source>Too Few Compatible Tracks Selected</source>
-        <translation type="vanished">选择了过少的兼容轨道</translation>
-    </message>
-    <message>
-        <source>%s.%d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>Recorded Audio</source>
-        <translation type="vanished">录制的音频</translation>
-    </message>
-    <message>
-        <source>Project check read faulty Sequence tags.</source>
-        <extracomment>i18n-hint: The audacity project file is XML and has 'tags' in it,
-rather like html tags &lt;something&gt;some stuff&lt;/something&gt;.
-This error message is about the tags that hold the sequence information.
-The error message is confusing to users in English, and could just say
-"Found problems with &lt;sequence&gt; when checking project file."</extracomment>
-        <translation type="vanished">项目检查读取到错误的序列标签。</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no changes</source>
-        <translation type="vanished">不保存修改，立即关闭项目</translation>
-    </message>
-    <message>
-        <source>Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you "Close project immediately" on further error alerts.</source>
-        <translation type="vanished">继续打开，执行修复并记录修复日志，同时检查其它错误。这将按现状保存项目，除非您在未来错误警告时选择"立即关闭项目"。</translation>
-    </message>
-    <message>
-        <source>Warning - Problems Reading Sequence Tags</source>
-        <translation type="vanished">警告 - 在读取序列标签时出现问题</translation>
-    </message>
-    <message>
-        <source>Inspecting project file data</source>
-        <translation type="vanished">正在检查项目文件数据</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing external audio file(s) 
-('aliased files'). There is no way for Audacity 
-to recover these files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence. 
-
-If you choose the third option, this will save the 
-project in its current state, unless you "Close 
-project immediately" on further error alerts.</source>
-        <translation type="vanished">文件夹“%1”的项目检查
-检测到 %2 个丢失的外置音频文件（替身文件）。
-Audacity 无法自动恢复这些文件。
-
-如果您选择了下方的第一个或第二个选项，
-您可以试着找到这些丢失的文件并
-将其复位到上次存放的目录。 
-
-注意，如果您选择第二个选项，
-波形可能不会显示为静音。 
-
-如果您选择第三个选项，
-将以当前的状态保存项目，
-除非您在后续的错误警告出现时“立即关闭项目”。</translation>
-    </message>
-    <message>
-        <source>Treat missing audio as silence (this session only)</source>
-        <translation type="vanished">暂时用静音替换丢失的数据 [只限本次编辑操作期间]</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately).</source>
-        <translation type="vanished">将丢失的音频数据替换为静音 [立即永久替换]。</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Aliased File(s)</source>
-        <translation type="vanished">警告 - 缺失替身文件</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing alias (.auf) blockfile(s). 
-Audacity can fully regenerate these files 
-from the current audio in the project.</source>
-        <translation type="vanished">文件夹“%1”的项目检查
-检测到 %2 个丢失的替身 (.auf) 块文件。
-Audacity 可以从当前项目的音频中
-完全重新生成这些文件。</translation>
-    </message>
-    <message>
-        <source>Regenerate alias summary files (safe and recommended)</source>
-        <translation type="vanished">重新生成替身概要文件 [安全，推荐使用]</translation>
-    </message>
-    <message>
-        <source>Fill in silence for missing display data (this session only)</source>
-        <translation type="vanished">对于缺失的显示数据以静音填充 [只限本次编辑操作期间]</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no further changes</source>
-        <translation type="vanished">不保存进一步的修改，立即关闭项目</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Alias Summary File(s)</source>
-        <translation type="vanished">警告 - 缺失替身概要文件</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing audio data (.au) blockfile(s), 
-probably due to a bug, system crash, or accidental 
-deletion. There is no way for Audacity to recover 
-these missing files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence.</source>
-        <translation type="vanished">文件夹“%1”的项目检查
-检测到 %2 个丢失的音频数据 (.au) 块文件 ， 
-可能是由于 bug，系统崩溃或误删引起的。
-Audacity 无法自动恢复这些丢失的文件。 
-
-如果您选择了下方的第一个或第二个选项，
-您可以试着找到这些丢失的文件并
-将其复位到上次存放的目录。 
-
-注意，如果您选择第二个选项，
-波形可能不会显示为静音。</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately)</source>
-        <translation type="vanished">用静音替换丢失的数据 [永久替换，立即生效]</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Audio Data Block File(s)</source>
-        <translation type="vanished">警告 - 音频数据块文件丢失</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-found %d orphan block file(s). These files are 
-unused by this project, but might belong to other projects. 
-They are doing no harm and are small.</source>
-        <translation type="vanished">对 "%1" 文件夹进行项目检查
-找到 %2 个孤立块文件。这些文件
-没有被项目使用，但可能属于其它项目。
-它们很小，不会造成任何危害。</translation>
-    </message>
-    <message>
-        <source>Continue without deleting; ignore the extra files this session</source>
-        <translation type="vanished">继续打开项目但不删除孤立块；在本次编辑操作中忽略它们</translation>
-    </message>
-    <message>
-        <source>Delete orphan files (permanent immediately)</source>
-        <translation type="vanished">删除孤立文件 [永久删除，立即生效]</translation>
-    </message>
-    <message>
-        <source>Warning - Orphan Block File(s)</source>
-        <translation type="vanished">警告 - 孤立的块文件</translation>
-    </message>
-    <message>
-        <source>Cleaning up unused directories in project data</source>
-        <translation type="vanished">正在清理项目数据中未用的目录</translation>
-    </message>
-    <message>
-        <source>Project check found file inconsistencies during automatic recovery.
-
-Select 'Help &gt; Diagnostics &gt; Show Log...' to see details.</source>
-        <translation type="vanished">在自动恢复时，项目检查发现有文件不一致。
-
-选择 帮助 &gt; 诊断 &gt; 显示日志... 以查看详情。</translation>
-    </message>
-    <message>
-        <source>Warning: Problems in Automatic Recovery</source>
-        <translation type="vanished">警告：自动恢复时发生问题</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-As a result, some realtime effects may be missing.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to open a project created by Audacity version prior to 3.4.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">%1
-3.3.3 版本后的 Audacity 不支持此功能。
-这些立体声轨道已被分离为单声道轨道。
-因此可能缺失一些实时效果器。
-请在保存前确认一切按预期工作。</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot.</source>
-        <translation type="vanished">此项目在上次 Audacity 运行时未正确保存。
-
-现已恢复至上次快照状态。</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot, but you must save it
-to preserve its contents.</source>
-        <translation type="vanished">此项目在上次 Audacity 运行时未正确保存。
-
-现已恢复至上次快照状态，但您必须手动保存
-以留存其内容。</translation>
-    </message>
-    <message>
-        <source>Project Recovered</source>
-        <translation type="vanished">项目已恢复</translation>
-    </message>
-    <message>
-        <source>Projects cannot be saved to FAT drives.</source>
-        <translation type="vanished">项目不能保存到 FAT 文件系统磁盘。</translation>
-    </message>
-    <message>
-        <source>Insufficient Disk Space</source>
-        <translation type="vanished">磁盘空间不足</translation>
-    </message>
-    <message>
-        <source>The project size exceeds the available free space on the target disk.
-
-Please select a different disk with more free space.</source>
-        <translation type="vanished">项目文件大小超过了目标磁盘的可用空间。
-
-请选择可用空间更多的其他磁盘。</translation>
-    </message>
-    <message>
-        <source>The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem.</source>
-        <translation type="vanished">项目大小超过了 FAT32 格式化文件系统的 4GB 最大（单文件）大小。</translation>
-    </message>
-    <message>
-        <source>Saved %s</source>
-        <translation type="vanished">%1已保存</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the file name provided would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">因为输入的文件名可能覆盖另一个项目，此项目没有被保存。
-请选择一个原始文件名并重试。</translation>
-    </message>
-    <message>
-        <source>%sSave Project "%s" As...</source>
-        <translation type="vanished">%1将项目 "%2" 另存为...</translation>
-    </message>
-    <message>
-        <source>   Do you want to overwrite the project:
-"%s"?
-
-   If you select "Yes" the project
-"%s"
-   will be irreversibly overwritten.</source>
-        <extracomment>i18n-hint: In each case, %s is the name
-of the file being overwritten.</extracomment>
-        <translation type="vanished">   确定要覆盖项目：
-"%1" 吗？
-
-   如果选择 "是"，项目
-"%2"
-   将不可逆地被覆盖。</translation>
-    </message>
-    <message>
-        <source>Overwrite Project Warning</source>
-        <extracomment>i18n-hint: Heading: A warning that a project is about to be overwritten.</extracomment>
-        <translation type="vanished">覆盖项目警告</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the selected project is open in another window.
-Please try again and select an original name.</source>
-        <translation type="vanished">未保存项目，因为所选项目已在另一个窗口中打开。
-请重试并选择原始名称。</translation>
-    </message>
-    <message>
-        <source>%sSave Copy of Project "%s" As...</source>
-        <translation type="vanished">%1另存项目 "%2" 副本为...</translation>
-    </message>
-    <message>
-        <source>Saving a copy must not overwrite an existing saved project.
-Please try again and select an original name.</source>
-        <translation type="vanished">保存的副本不能覆盖一个现存的项目。
-请选择一个新的文件名并重试。</translation>
-    </message>
-    <message>
-        <source>Error Saving Copy of Project</source>
-        <translation type="vanished">保存项目副本错误</translation>
-    </message>
-    <message>
-        <source>Select one or more files</source>
-        <translation type="vanished">选择一个或多个音频文件</translation>
-    </message>
-    <message>
-        <source>%s is already open in another window.</source>
-        <translation type="vanished">%1 已经在另一个窗口中打开了。</translation>
-    </message>
-    <message>
-        <source>Error Opening Project</source>
-        <translation type="vanished">打开项目时出错</translation>
-    </message>
-    <message>
-        <source>You are trying to open an automatically created backup file.
-Doing this may result in severe data loss.
-
-Please open the actual Audacity project file instead.</source>
-        <translation type="vanished">正在尝试打开一个自动创建的备份文件。
-这样做可能导致严重的数据丢失。
-
-请打开实际的 Audacity 项目文件。</translation>
-    </message>
-    <message>
-        <source>Warning - Backup File Detected</source>
-        <translation type="vanished">警告 - 发现备份文件</translation>
-    </message>
-    <message>
-        <source>Error Opening File</source>
-        <translation type="vanished">打开文件错误</translation>
-    </message>
-    <message>
-        <source>File may be invalid or corrupted: 
-%s</source>
-        <translation type="vanished">文件可能无效或已被破坏： 
-%1</translation>
-    </message>
-    <message>
-        <source>Error Opening File or Project</source>
-        <translation type="vanished">打开文件或项目出错</translation>
-    </message>
-    <message>
-        <source>Project resides on FAT formatted drive.
-Copy it to another drive to open it.</source>
-        <translation type="vanished">项目驻留在 FAT 文件系统格式化的磁盘上。
-请复制到另一个磁盘后再打开它。</translation>
-    </message>
-    <message>
-        <source>A channel of a stereo track was missing.</source>
-        <translation type="vanished">双轨轨道的一个通道丢失。</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample rates per channel.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">该项目包含的双轨轨道中，各通道的采样率不同。</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample formats in channels.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">该项目包含的双轨轨道中，各通道的采样格式不同。</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with non-aligned content.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">该项目包含的双轨轨道中，有未对齐的内容。</translation>
-    </message>
-    <message>
-        <source>Project was recovered</source>
-        <translation type="vanished">项目已恢复</translation>
-    </message>
-    <message>
-        <source>Recover</source>
-        <translation type="vanished">恢复</translation>
-    </message>
-    <message>
-        <source>%s %d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Name default name assigned to a clip on track import</extracomment>
-        <translation type="vanished">%1 %2</translation>
-    </message>
-    <message>
-        <source>Imported '%s'</source>
-        <translation type="vanished">已导入 "%1"</translation>
-    </message>
-    <message>
-        <source>Select stream(s) to import</source>
-        <translation type="vanished">选择要导入的流</translation>
-    </message>
-    <message>
-        <source>Music Information Retrieval</source>
-        <translation type="vanished">音乐信息检索</translation>
-    </message>
-    <message>
-        <source>Analyzing imported audio</source>
-        <translation type="vanished">正在分析导入的音频</translation>
-    </message>
-    <message>
-        <source>Failed to import project</source>
-        <translation type="vanished">导入项目失败</translation>
-    </message>
-    <message>
-        <source>Error Importing</source>
-        <translation type="vanished">导入时出错</translation>
-    </message>
-    <message>
-        <source>Cannot import AUP3 format.  Use File &gt; Open instead</source>
-        <translation type="vanished">无法导入 AUP3 格式。请使用 文件 &gt; 打开 代替</translation>
-    </message>
-    <message>
-        <source>Compact Project</source>
-        <translation type="vanished">压缩项目</translation>
-    </message>
-    <message>
-        <source>Compacting this project will free up disk space by removing unused bytes within the file.
-
-There is %s of free disk space and this project is currently using %s.
-
-If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.
-
-Do you want to continue?</source>
-        <translation type="vanished">压缩项目会移除文件内未使用过的字节来节约磁盘空间。
-
-现在有 %1 可用磁盘空间，本项目当前占用 %2。
-
-如果执行，将会丢弃当前的撤销/重做历史记录和剪贴板内容，并节约大约 %3 的磁盘空间。
-
-确定要继续吗？</translation>
-    </message>
-    <message>
-        <source>Compacted project file</source>
-        <translation type="vanished">已压缩项目文件</translation>
-    </message>
-    <message>
-        <source>Compact</source>
-        <translation type="vanished">压缩</translation>
-    </message>
-    <message>
-        <source>[Project %02i] </source>
-        <translation type="vanished">[项目 %1] </translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity version %s</source>
-        <translation type="vanished">欢迎使用 Audacity 版本 %1</translation>
-    </message>
-    <message>
-        <source>%sSave changes to %s?</source>
-        <extracomment>i18n-hint: The first %s numbers the project, the second %s is the project name.</extracomment>
-        <translation type="vanished">%1保存修改到%2？</translation>
-    </message>
-    <message>
-        <source>Save project before closing?</source>
-        <translation type="vanished">在关闭之前保存修改？</translation>
-    </message>
-    <message>
-        <source>Disk space remaining for recording: %s</source>
-        <translation type="vanished">磁盘空间还够录制：%1</translation>
-    </message>
-    <message>
-        <source>Less than 1 minute</source>
-        <translation type="vanished">不到 1 分钟</translation>
-    </message>
-    <message numerus="yes">
-        <source>%d hour</source>
-        <oldsource>%d hours</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 小时</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%d minute</source>
-        <oldsource>%d minutes</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 分钟</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%s and %s.</source>
-        <extracomment>i18n-hint: A time in hours and minutes. Only translate the "and".</extracomment>
-        <translation type="vanished">%1 %2。</translation>
-    </message>
-    <message>
-        <source>Horizontal Scrollbar</source>
-        <translation type="vanished">水平滚动条</translation>
-    </message>
-    <message>
-        <source>Vertical Scrollbar</source>
-        <translation type="vanished">垂直滚动条</translation>
-    </message>
-    <message>
-        <source>No Effect</source>
-        <translation type="vanished">无效果器</translation>
-    </message>
-    <message>
-        <source>Get more effects...</source>
-        <translation type="vanished">获取更多效果器...</translation>
-    </message>
-    <message>
-        <source>Analyze</source>
-        <translation type="vanished">分析</translation>
-    </message>
-    <message>
-        <source>%s (missing)</source>
-        <translation type="vanished">%1 (丢失)</translation>
-    </message>
-    <message>
-        <source>Effect %d</source>
-        <extracomment>i18n-hint: argument - position of the effect in the effect stack</extracomment>
-        <translation type="vanished">效果器 %1</translation>
-    </message>
-    <message>
-        <source>Power</source>
-        <translation type="vanished">开关</translation>
-    </message>
-    <message>
-        <source>Replace effect</source>
-        <translation type="vanished">替换效果器</translation>
-    </message>
-    <message>
-        <source>Removed %s from %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">删除 %1 从 %2</translation>
-    </message>
-    <message>
-        <source>Remove %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">删除 %1</translation>
-    </message>
-    <message>
-        <source>Replaced %s with %s</source>
-        <extracomment>i18n-hint: undo history,
-first and second parameters - realtime effect names</extracomment>
-        <translation type="vanished">替换 %1 以 %2</translation>
-    </message>
-    <message>
-        <source>Replace %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">替换 ·%1</translation>
-    </message>
-    <message>
-        <source>Moved %s up in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">上移 %1 于 %2</translation>
-    </message>
-    <message>
-        <source>Moved %s down in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">下移 %1 于 %2</translation>
-    </message>
-    <message>
-        <source>Change effect order</source>
-        <translation type="vanished">改变效果器顺序</translation>
-    </message>
-    <message>
-        <source>This plugin could not be loaded.
-It may have been deleted.</source>
-        <translation type="vanished">无法加载此插件。
-可能已被删除。</translation>
-    </message>
-    <message>
-        <source>Plugin Error</source>
-        <translation type="vanished">插件错误</translation>
-    </message>
-    <message>
-        <source>Added %s to %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">已添加 %1 到 %2</translation>
-    </message>
-    <message>
-        <source>Add %s</source>
-        <extracomment>i18n-hint: undo history record</extracomment>
-        <translation type="vanished">添加 %1</translation>
-    </message>
-    <message>
-        <source>Realtime effects for %s</source>
-        <extracomment>i18n-hint: argument - track name</extracomment>
-        <translation type="vanished">%1的实时效果器</translation>
-    </message>
-    <message>
-        <source>Realtime Effects</source>
-        <translation type="vanished">实时效果器</translation>
-    </message>
-    <message>
-        <source>Master Effects</source>
-        <translation type="vanished">主效果器</translation>
-    </message>
-    <message>
-        <source>Applies to all tracks</source>
-        <translation type="vanished">适用于所有轨道</translation>
-    </message>
-    <message>
-        <source>Sound Activated Record</source>
-        <translation type="vanished">声控录音</translation>
-    </message>
-    <message>
-        <source>Activation level (dB):</source>
-        <translation type="vanished">激活电平(dB)：</translation>
-    </message>
-    <message>
-        <source>Spectral Data Control Panel</source>
-        <translation type="vanished">频谱数据控制面板</translation>
-    </message>
-    <message>
-        <source>Brush Tool</source>
-        <translation type="vanished">画笔工具</translation>
-    </message>
-    <message>
-        <source>Spectral Brush</source>
-        <translation type="vanished">频谱笔刷</translation>
-    </message>
-    <message>
-        <source>Brush radius</source>
-        <translation type="vanished">笔刷半径</translation>
-    </message>
-    <message>
-        <source>Custom brush size</source>
-        <translation type="vanished">更改笔刷大小</translation>
-    </message>
-    <message>
-        <source>Auto-select overtones (beta)</source>
-        <translation type="vanished">自动选择泛音（beta）</translation>
-    </message>
-    <message>
-        <source>Enable smart selection</source>
-        <translation type="vanished">启用智能选择</translation>
-    </message>
-    <message>
-        <source>Select the fundamental frequency
-and release the mouse</source>
-        <translation type="vanished">选择基频
-并松开鼠标</translation>
-    </message>
-    <message>
-        <source>Spectra&amp;l Selection Panel</source>
-        <translation type="vanished">频谱选择面板(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Applied effect to selection</source>
-        <translation type="vanished">已将效果器应用于选区</translation>
-    </message>
-    <message>
-        <source>Artist Name</source>
-        <translation type="vanished">艺术家名字</translation>
-    </message>
-    <message>
-        <source>Album Title</source>
-        <translation type="vanished">专辑标题</translation>
-    </message>
-    <message>
-        <source>Track Number</source>
-        <translation type="vanished">轨道编号</translation>
-    </message>
-    <message>
-        <source>Genre</source>
-        <translation type="vanished">流派</translation>
-    </message>
-    <message>
-        <source>Use arrow keys (or ENTER key after editing) to navigate fields.</source>
-        <translation type="vanished">使用鼠标指针（或编辑完后按回车键）切换到下一条目。</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation type="vanished">添加(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation type="vanished">移除(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Genres</source>
-        <translation type="vanished">流派</translation>
-    </message>
-    <message>
-        <source>E&amp;dit...</source>
-        <translation type="vanished">编辑(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>Rese&amp;t...</source>
-        <translation type="vanished">重置(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>Template</source>
-        <translation type="vanished">模板</translation>
-    </message>
-    <message>
-        <source>&amp;Load...</source>
-        <translation type="vanished">载入(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>Set De&amp;fault</source>
-        <translation type="vanished">设置默认(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Edit Genres</source>
-        <translation type="vanished">编辑流派</translation>
-    </message>
-    <message>
-        <source>Unable to save genre file.</source>
-        <translation type="vanished">不能保存流派文件。</translation>
-    </message>
-    <message>
-        <source>Reset Genres</source>
-        <translation type="vanished">重置流派</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to reset the genre list to defaults?</source>
-        <translation type="vanished">您确定要重置流派列表为默认值？</translation>
-    </message>
-    <message>
-        <source>Unable to open genre file.</source>
-        <translation type="vanished">不能打开流派文件。</translation>
-    </message>
-    <message>
-        <source>Load Metadata As:</source>
-        <translation type="vanished">载入元数据为：</translation>
-    </message>
-    <message>
-        <source>Error Loading Metadata</source>
-        <translation type="vanished">无法加载元数据</translation>
-    </message>
-    <message>
-        <source>Save Metadata As:</source>
-        <translation type="vanished">保存元数据为：</translation>
-    </message>
-    <message>
-        <source>Error Saving Tags File</source>
-        <translation type="vanished">保存标签文件时出错</translation>
-    </message>
-    <message>
-        <source>Edit Metadata Tags</source>
-        <translation type="vanished">编辑元数据标签</translation>
-    </message>
-    <message>
-        <source>Metadata Tags</source>
-        <translation type="vanished">元数据标签</translation>
-    </message>
-    <message>
-        <source>&amp;Metadata Editor</source>
-        <translation type="vanished">元数据编辑器(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record</source>
-        <translation type="vanished">Audacity 定时录音</translation>
-    </message>
-    <message>
-        <source>Save Timer Recording As</source>
-        <translation type="vanished">保存定时录音为</translation>
-    </message>
-    <message>
-        <source>The selected file name could not be used
-for Timer Recording because it would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">当前定时录音的文件名不可用
-因为输入的文件名可能覆盖另一个项目。
-请选择一个新文件名并重试。</translation>
-    </message>
-    <message>
-        <source>Error Saving Timer Recording Project</source>
-        <translation type="vanished">保存定时录音项目错误</translation>
-    </message>
-    <message>
-        <source>Duration is zero. Nothing will be recorded.</source>
-        <translation type="vanished">持续时间为零。将不进行录制。</translation>
-    </message>
-    <message>
-        <source>Error in Duration</source>
-        <translation type="vanished">持续时间错误</translation>
-    </message>
-    <message>
-        <source>Automatic Save path is invalid.</source>
-        <translation type="vanished">自动保存路径无效。</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Save</source>
-        <translation type="vanished">自动保存错误</translation>
-    </message>
-    <message>
-        <source>Automatic Export path is invalid.</source>
-        <translation type="vanished">自动导出路径无效。</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Export</source>
-        <translation type="vanished">自动导出错误</translation>
-    </message>
-    <message>
-        <source>You may not have enough free disk space to complete this Timer Recording, based on your current settings.
-
-Do you wish to continue?
-
-Planned recording duration:   %s
-Recording time remaining on disk:   %s</source>
-        <translation type="vanished">基于当前的设置，您也许没有足够的空闲磁盘空间来完成本次定时录音。
-
-您想要继续吗？
-
-计划录制时长：%1
-磁盘剩余录制时长：%2</translation>
-    </message>
-    <message>
-        <source>Timer Recording Disk Space Warning</source>
-        <translation type="vanished">定时录音磁盘空间警告</translation>
-    </message>
-    <message>
-        <source>Current Project</source>
-        <translation type="vanished">当前项目</translation>
-    </message>
-    <message>
-        <source>Recording start:</source>
-        <translation type="vanished">开始录制：</translation>
-    </message>
-    <message>
-        <source>Recording end:</source>
-        <translation type="vanished">录制结束：</translation>
-    </message>
-    <message>
-        <source>Automatic Save enabled:</source>
-        <translation type="vanished">自动保存已启用：</translation>
-    </message>
-    <message>
-        <source>Automatic Export enabled:</source>
-        <translation type="vanished">自动导出已启用：</translation>
-    </message>
-    <message>
-        <source>Action after Timer Recording:</source>
-        <translation type="vanished">定时录音完成后动作：</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record Progress</source>
-        <translation type="vanished">Audacity 定时录制进度</translation>
-    </message>
-    <message>
-        <source>All audio is muted.</source>
-        <translation type="vanished">所有的音频已静音。</translation>
-    </message>
-    <message>
-        <source>Timer Recording stopped.</source>
-        <translation type="vanished">定时录音停止。</translation>
-    </message>
-    <message>
-        <source>Timer Recording completed.</source>
-        <translation type="vanished">定时录音完成。</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording saved: %s</source>
-        <translation type="vanished">%1
-
-录音已保存：%2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error saving recording.</source>
-        <translation type="vanished">%1
-
-保存录音错误。</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording exported: %s</source>
-        <translation type="vanished">%1
-
-录音已导出：%2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error exporting recording.</source>
-        <translation type="vanished">%1
-
-导出录音错误。</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled due to the error(s) noted above.</source>
-        <translation type="vanished">%1
-
-"%2" 由于以上记录的错误而取消。</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled as the recording was stopped.</source>
-        <translation type="vanished">%1
-
-"%2" 因为录制停止而取消。</translation>
-    </message>
-    <message>
-        <source>Timer Recording</source>
-        <translation type="vanished">定时录音</translation>
-    </message>
-    <message>
-        <source>099 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099 时 060 分 060 秒</translation>
-    </message>
-    <message>
-        <source>099 days 024 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for days, hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099 天 024 时 060 分 060 秒</translation>
-    </message>
-    <message>
-        <source>Start Date and Time</source>
-        <extracomment>i18n-hint: This string is used to configure the controls for times when the recording is
-* started and stopped. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-* displayed is minutes, and the 's' indicates that the third number displayed is seconds.</extracomment>
-        <translation type="vanished">开始日期和时间</translation>
-    </message>
-    <message>
-        <source>Start Date</source>
-        <translation type="vanished">开始日期</translation>
-    </message>
-    <message>
-        <source>End Date and Time</source>
-        <translation type="vanished">结束日期和时间</translation>
-    </message>
-    <message>
-        <source>End Date</source>
-        <translation type="vanished">结束日期</translation>
-    </message>
-    <message>
-        <source>Automatic Save</source>
-        <translation type="vanished">自动保存</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Automatic Save?</source>
-        <translation type="vanished">启用自动保存(&amp;A)？</translation>
-    </message>
-    <message>
-        <source>Save Project As:</source>
-        <translation type="vanished">项目另存为：</translation>
-    </message>
-    <message>
-        <source>Select...</source>
-        <translation type="vanished">选择...</translation>
-    </message>
-    <message>
-        <source>Automatic Export</source>
-        <translation type="vanished">自动导出</translation>
-    </message>
-    <message>
-        <source>Enable Automatic &amp;Export?</source>
-        <translation type="vanished">开启自动导出(&amp;E)？</translation>
-    </message>
-    <message>
-        <source>Export Project As:</source>
-        <translation type="vanished">导出项目为：</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="vanished">选项</translation>
-    </message>
-    <message>
-        <source>After Recording completes:</source>
-        <translation type="vanished">录制完成后：</translation>
-    </message>
-    <message>
-        <source>Exit Audacity</source>
-        <translation type="vanished">退出 Audacity</translation>
-    </message>
-    <message>
-        <source>Restart system</source>
-        <translation type="vanished">重启系统</translation>
-    </message>
-    <message>
-        <source>Shutdown system</source>
-        <translation type="vanished">关机系统</translation>
-    </message>
-    <message>
-        <source>Waiting to start recording at:</source>
-        <translation type="vanished">等待录制开始于：</translation>
-    </message>
-    <message>
-        <source>Recording duration:</source>
-        <translation type="vanished">录制持续时间：</translation>
-    </message>
-    <message>
-        <source>Scheduled to stop at:</source>
-        <translation type="vanished">计划停止于：</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting for Start</source>
-        <translation type="vanished">Audacity 定时录音 － 等待开始</translation>
-    </message>
-    <message>
-        <source>Recording will commence in:</source>
-        <extracomment>i18n-hint: "in" means after a duration of time,
-which is shown below this string</extracomment>
-        <translation type="vanished">录制将开始于：</translation>
-    </message>
-    <message>
-        <source>%s in:</source>
-        <extracomment>i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
-or "Shutdown system", and
-"in" means after a duration of time, shown below this string</extracomment>
-        <translation type="vanished">“%1”前仍有：</translation>
-    </message>
-    <message>
-        <source>Recording Saved:</source>
-        <translation type="vanished">录音已保存：</translation>
-    </message>
-    <message>
-        <source>Recording Exported:</source>
-        <translation type="vanished">录音已导出：</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting</source>
-        <translation type="vanished">Audacity 定时录音 － 等待中</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used with more than one open project.
-
-Please close any additional projects and try again.</source>
-        <translation type="vanished">定时录音不能与多个打开的项目一起使用。请关闭任何其他项目，然后重试。</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used while you have unsaved changes.
-
-Please save or close this project and try again.</source>
-        <translation type="vanished">在保存更改时，无法使用定时录音。请保存或关闭此项目，然后重试。</translation>
-    </message>
-    <message>
-        <source>&amp;Timer Record...</source>
-        <translation type="vanished">定时录音(&amp;T)...</translation>
-    </message>
-    <message>
-        <source>Export Audio</source>
-        <translation type="vanished">导出音频</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Metadata...</source>
-        <translation type="vanished">编辑元数据(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="vanished">确定(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Exported Tags</source>
-        <translation type="vanished">导出标签</translation>
-    </message>
-    <message>
-        <source>Track Panel</source>
-        <translation type="vanished">轨道面板</translation>
-    </message>
-    <message>
-        <source>(Esc to cancel)</source>
-        <extracomment>i18n-hint Esc is a key on the keyboard</extracomment>
-        <translation type="vanished">（按 Esc 取消）</translation>
-    </message>
-    <message>
-        <source>TrackView</source>
-        <translation type="vanished">轨道视图</translation>
-    </message>
-    <message>
-        <source> Muted</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is muted. (The mute button is on.)</extracomment>
-        <translation type="vanished"> 已设为静音</translation>
-    </message>
-    <message>
-        <source> Soloed</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is soloed. (The Solo button is on.)</extracomment>
-        <translation type="vanished"> 已设为独奏</translation>
-    </message>
-    <message>
-        <source> Selected</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is selected.</extracomment>
-        <translation type="vanished"> 已选择</translation>
-    </message>
-    <message>
-        <source> Sync Locked</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is shown with a sync-locked icon.
-The absence of a dash between Sync and Locked is deliberate -
-if present, Jaws reads it as "dash".</extracomment>
-        <translation type="vanished"> 已同步锁定</translation>
-    </message>
-    <message>
-        <source>Track %d</source>
-        <extracomment>i18n-hint: The %d is replaced by the number of the track.</extracomment>
-        <translation type="vanished">轨道 %1</translation>
-    </message>
-    <message>
-        <source> Mute On</source>
-        <translation type="vanished"> 静音打开</translation>
-    </message>
-    <message>
-        <source> Solo On</source>
-        <translation type="vanished"> 独奏打开</translation>
-    </message>
-    <message>
-        <source> Select On</source>
-        <translation type="vanished"> 选择打开</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust relative size of stereo tracks, double-click to make heights equal</source>
-        <translation type="vanished">单击并拖动以调整立体声轨道的相对大小，双击以使高度相等</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize the track.</source>
-        <translation type="vanished">单击并拖动调整轨道的大小。</translation>
-    </message>
-    <message>
-        <source>Removed audio track(s)</source>
-        <translation type="vanished">删除音轨</translation>
-    </message>
-    <message>
-        <source>Remove Track</source>
-        <translation type="vanished">删除轨道</translation>
-    </message>
-    <message>
-        <source>Removed track '%s'.</source>
-        <translation type="vanished">已删除音轨“%1”。</translation>
-    </message>
-    <message>
-        <source>Track Remove</source>
-        <translation type="vanished">删除轨道</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Top</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">已移动 "%1" 至顶部</translation>
-    </message>
-    <message>
-        <source>Move Track to Top</source>
-        <translation type="vanished">移动轨道至顶部</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Bottom</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">已移动 "%1" 至底部</translation>
-    </message>
-    <message>
-        <source>Move Track to Bottom</source>
-        <translation type="vanished">移动轨道至底部</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">已向上移动 "%1"</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Down</source>
-        <translation type="vanished">已向下移动 "%1"</translation>
-    </message>
-    <message>
-        <source>Move Track Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">轨道上移</translation>
-    </message>
-    <message>
-        <source>Move Track Down</source>
-        <translation type="vanished">轨道下移</translation>
-    </message>
-    <message>
-        <source>Playing</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">正在播放</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">录音</translation>
-    </message>
-    <message>
-        <source>Selection is too small to use voice key.</source>
-        <extracomment>i18n-hint: Voice key is an experimental/incomplete feature that
-is used to navigate in vocal recordings, to move forwards and
-backwards by words.  So 'key' is being used in the sense of an index.
-This error message means that you've selected too short
-a region of audio to be able to use this feature.</extracomment>
-        <translation type="vanished">选区太短，无法使用语音关键。</translation>
-    </message>
-    <message>
-        <source>Calibration Results
-</source>
-        <translation type="vanished">校准结果
-</translation>
-    </message>
-    <message>
-        <source>Energy                  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <extracomment>i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'</extracomment>
-        <translation type="vanished">能量                  -- 均值： %1.4f  标准差： (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Sign Changes        -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">符号改变      -- 均值： %1.4f  标准差： (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Direction Changes  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">方向改变  -- 均值： %1.4f  标准差： (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Calibration Complete</source>
-        <translation type="vanished">校准完成</translation>
-    </message>
-    <message>
-        <source>What's new in Audacity %s</source>
-        <translation type="vanished">Audacity %1 版本的新功能</translation>
-    </message>
-    <message>
-        <source>Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!&lt;/p&gt;</source>
-        <translation type="vanished">观看[[%1|发行视频]]或阅读[[https://support.audacityteam.org/additional-resources/changelog|更新日志]]了解更多信息！&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Get free plugins &amp; sounds</source>
-        <translation type="vanished">获取免费插件和声音</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;查看我们的 [[%1|Muse Hub 应用程序]] 为 Audacity 用户提供各种音频插件&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity!</source>
-        <translation type="vanished">欢迎使用 Audacity!</translation>
-    </message>
-    <message>
-        <source>View tutorials</source>
-        <translation type="vanished">查看教程</translation>
-    </message>
-    <message>
-        <source>Visit our forum</source>
-        <translation type="vanished">访问我们的论坛</translation>
-    </message>
-    <message>
-        <source>Don't show this again at start up</source>
-        <translation type="vanished">启动时不再显示</translation>
-    </message>
-    <message>
-        <source>%s: %s</source>
-        <extracomment>i18n-hint: An item name followed by a value, with appropriate separating punctuation</extracomment>
-        <translation type="vanished">%1：%2</translation>
-    </message>
-    <message>
-        <source>FAIL</source>
-        <translation type="vanished">失败</translation>
-    </message>
-    <message>
-        <source>Batch Command</source>
-        <translation type="vanished">批处理命令</translation>
-    </message>
-    <message>
-        <source>%s is not a parameter accepted by %s</source>
-        <translation type="vanished">%1 不是被 %2 所接受的参数</translation>
-    </message>
-    <message>
-        <source>Invalid value for parameter '%s': should be %s</source>
-        <translation type="vanished">参数“%1”的值无效：应为 %2</translation>
-    </message>
-    <message>
-        <source>Compare Audio</source>
-        <translation type="vanished">比较音频</translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="vanished">阈值：</translation>
-    </message>
-    <message>
-        <source>Compare Audio...</source>
-        <translation type="vanished">比较音频...</translation>
-    </message>
-    <message>
-        <source>Compares a range on two tracks.</source>
-        <translation type="vanished">比较两个音轨上的一段范围。</translation>
-    </message>
-    <message>
-        <source>Demo</source>
-        <translation type="vanished">演示</translation>
-    </message>
-    <message>
-        <source>Delay time (seconds):</source>
-        <translation type="vanished">延迟时间（秒）：</translation>
-    </message>
-    <message>
-        <source>Decay factor:</source>
-        <translation type="vanished">衰減系数：</translation>
-    </message>
-    <message>
-        <source>Does the demo action.</source>
-        <translation type="vanished">进行演示操作。</translation>
-    </message>
-    <message>
-        <source>Drag</source>
-        <translation type="vanished">拖动</translation>
-    </message>
-    <message>
-        <source>Track 0</source>
-        <translation type="vanished">轨道 0</translation>
-    </message>
-    <message>
-        <source>Track 1</source>
-        <translation type="vanished">轨道 
-1</translation>
-    </message>
-    <message>
-        <source>Id:</source>
-        <extracomment>i18n-hint abbreviates "Identity" or "Identifier"</extracomment>
-        <translation type="vanished">Id：</translation>
-    </message>
-    <message>
-        <source>Window Name:</source>
-        <translation type="vanished">窗口名称：</translation>
-    </message>
-    <message>
-        <source>From X:</source>
-        <translation type="vanished">从 X：</translation>
-    </message>
-    <message>
-        <source>From Y:</source>
-        <translation type="vanished">从 Y：</translation>
-    </message>
-    <message>
-        <source>To X:</source>
-        <translation type="vanished">至 X：</translation>
-    </message>
-    <message>
-        <source>To Y:</source>
-        <translation type="vanished">至 Y：</translation>
-    </message>
-    <message>
-        <source>Relative To:</source>
-        <translation type="vanished">关联至：</translation>
-    </message>
-    <message>
-        <source>Move Mouse...</source>
-        <translation type="vanished">移动鼠标...</translation>
-    </message>
-    <message>
-        <source>Drags mouse from one place to another.</source>
-        <translation type="vanished">从一处拖动鼠标至另一处。</translation>
-    </message>
-    <message>
-        <source>Get Info</source>
-        <translation type="vanished">获取信息</translation>
-    </message>
-    <message>
-        <source>Commands</source>
-        <translation type="vanished">命令</translation>
-    </message>
-    <message>
-        <source>Menus</source>
-        <translation type="vanished">菜单</translation>
-    </message>
-    <message>
-        <source>Clips</source>
-        <translation type="vanished">片段</translation>
-    </message>
-    <message>
-        <source>Envelopes</source>
-        <translation type="vanished">包络</translation>
-    </message>
-    <message>
-        <source>Boxes</source>
-        <translation type="vanished">盒子</translation>
-    </message>
-    <message>
-        <source>JSON</source>
-        <extracomment>i18n-hint JavaScript Object Notation</extracomment>
-        <translation type="vanished">JSON</translation>
-    </message>
-    <message>
-        <source>LISP</source>
-        <extracomment>i18n-hint name of a computer programming language</extracomment>
-        <translation type="vanished">LISP</translation>
-    </message>
-    <message>
-        <source>Brief</source>
-        <translation type="vanished">简约</translation>
-    </message>
-    <message>
-        <source>Get Info...</source>
-        <translation type="vanished">获取更多信息...</translation>
-    </message>
-    <message>
-        <source>Gets information in JSON format.</source>
-        <translation type="vanished">获取 JSON 格式中的信息。</translation>
-    </message>
-    <message>
-        <source>Get Track Info</source>
-        <translation type="vanished">获取轨道信息</translation>
-    </message>
-    <message>
-        <source>Types:</source>
-        <translation type="vanished">类型：</translation>
-    </message>
-    <message>
-        <source>Gets track values as JSON.</source>
-        <translation type="vanished">以 JSON 的形式获取轨道值。</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation type="vanished">注释</translation>
-    </message>
-    <message>
-        <source>_</source>
-        <translation type="vanished">_</translation>
-    </message>
-    <message>
-        <source>Help...</source>
-        <translation type="vanished">帮助...</translation>
-    </message>
-    <message>
-        <source>Gives help on a command.</source>
-        <translation type="vanished">给出一个命令的帮助。</translation>
-    </message>
-    <message>
-        <source>For comments in a macro.</source>
-        <translation type="vanished">用于宏中的注释。</translation>
-    </message>
-    <message>
-        <source>Import2</source>
-        <translation type="vanished">导入2</translation>
-    </message>
-    <message>
-        <source>File Name:</source>
-        <translation type="vanished">文件名称：</translation>
-    </message>
-    <message>
-        <source>Export2</source>
-        <translation type="vanished">导出2</translation>
-    </message>
-    <message>
-        <source>Number of Channels:</source>
-        <translation type="vanished">轨道数量：</translation>
-    </message>
-    <message>
-        <source>Import...</source>
-        <translation type="vanished">导入...</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="vanished">导出...</translation>
-    </message>
-    <message>
-        <source>Imports from a file.</source>
-        <translation type="vanished">从一个文件导入。</translation>
-    </message>
-    <message>
-        <source>Exports to a file.</source>
-        <translation type="vanished">导出至文件。</translation>
-    </message>
-    <message>
-        <source>Builtin Commands</source>
-        <translation type="vanished">内置命令</translation>
-    </message>
-    <message>
-        <source>Provides builtin commands to Audacity</source>
-        <translation type="vanished">提供 Audacity 内置的命令</translation>
-    </message>
-    <message>
-        <source>Unknown built-in command name</source>
-        <translation type="vanished">未知内置命令名称</translation>
-    </message>
-    <message>
-        <source>Text:</source>
-        <translation type="vanished">文本：</translation>
-    </message>
-    <message>
-        <source>Message...</source>
-        <translation type="vanished">消息...</translation>
-    </message>
-    <message>
-        <source>Echos a message.</source>
-        <translation type="vanished">回显一条消息。</translation>
-    </message>
-    <message>
-        <source>Open Project2</source>
-        <translation type="vanished">打开项目2</translation>
-    </message>
-    <message>
-        <source>Add to History</source>
-        <translation type="vanished">添加到历史</translation>
-    </message>
-    <message>
-        <source>Save Project2</source>
-        <translation type="vanished">保存项目2</translation>
-    </message>
-    <message>
-        <source>Save Copy</source>
-        <translation type="vanished">保存副本</translation>
-    </message>
-    <message>
-        <source>Save Log</source>
-        <translation type="vanished">保存日志</translation>
-    </message>
-    <message>
-        <source>Clear Log</source>
-        <translation type="vanished">清空日志</translation>
-    </message>
-    <message>
-        <source>Open Project...</source>
-        <translation type="vanished">打开项目...</translation>
-    </message>
-    <message>
-        <source>Save Project...</source>
-        <translation type="vanished">保存项目...</translation>
-    </message>
-    <message>
-        <source>Opens a project.</source>
-        <translation type="vanished">打开一个项目。</translation>
-    </message>
-    <message>
-        <source>Saves a project.</source>
-        <translation type="vanished">保存一个项目。</translation>
-    </message>
-    <message>
-        <source>Saves a copy of current project.</source>
-        <translation type="vanished">保存当前项目副本。</translation>
-    </message>
-    <message>
-        <source>Saves the log contents.</source>
-        <translation type="vanished">保存日至内容。</translation>
-    </message>
-    <message>
-        <source>Clears the log contents.</source>
-        <translation type="vanished">清空日志内容。</translation>
-    </message>
-    <message>
-        <source>Get Preference</source>
-        <translation type="vanished">获取首选项</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation type="vanished">名称：</translation>
-    </message>
-    <message>
-        <source>Set Preference</source>
-        <translation type="vanished">设置首选项</translation>
-    </message>
-    <message>
-        <source>Value:</source>
-        <translation type="vanished">值：</translation>
-    </message>
-    <message>
-        <source>Reload</source>
-        <translation type="vanished">重新加载</translation>
-    </message>
-    <message>
-        <source>Get Preference...</source>
-        <translation type="vanished">获取首选项...</translation>
-    </message>
-    <message>
-        <source>Set Preference...</source>
-        <translation type="vanished">设置首选项...</translation>
-    </message>
-    <message>
-        <source>Gets the value of a single preference.</source>
-        <translation type="vanished">获取单个首选项设置的值。</translation>
-    </message>
-    <message>
-        <source>Sets the value of a single preference.</source>
-        <translation type="vanished">设置单个首选项设置的值。</translation>
-    </message>
-    <message>
-        <source>Select Time</source>
-        <translation type="vanished">选择时间</translation>
-    </message>
-    <message>
-        <source>Project Start</source>
-        <translation type="vanished">项目起点</translation>
-    </message>
-    <message>
-        <source>Project End</source>
-        <translation type="vanished">项目终点</translation>
-    </message>
-    <message>
-        <source>Selection Start</source>
-        <translation type="vanished">选区起点</translation>
-    </message>
-    <message>
-        <source>Selection End</source>
-        <translation type="vanished">选区终点</translation>
-    </message>
-    <message>
-        <source>Start Time:</source>
-        <translation type="vanished">开始时间：</translation>
-    </message>
-    <message>
-        <source>End Time:</source>
-        <translation type="vanished">结束时间：</translation>
-    </message>
-    <message>
-        <source>Select Frequencies</source>
-        <translation type="vanished">选择频率</translation>
-    </message>
-    <message>
-        <source>High:</source>
-        <translation type="vanished">高：</translation>
-    </message>
-    <message>
-        <source>Low:</source>
-        <translation type="vanished">低：</translation>
-    </message>
-    <message>
-        <source>Select Tracks</source>
-        <translation type="vanished">选择轨道</translation>
-    </message>
-    <message>
-        <source>Set</source>
-        <extracomment>i18n-hint verb, imperative</extracomment>
-        <translation type="vanished">设置</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="vanished">添加</translation>
-    </message>
-    <message>
-        <source>First Track:</source>
-        <translation type="vanished">第一轨：</translation>
-    </message>
-    <message>
-        <source>Track Count:</source>
-        <translation type="vanished">轨道数量：</translation>
-    </message>
-    <message>
-        <source>Mode:</source>
-        <translation type="vanished">模式：</translation>
-    </message>
-    <message>
-        <source>Select Time...</source>
-        <translation type="vanished">选择时间...</translation>
-    </message>
-    <message>
-        <source>Select Frequencies...</source>
-        <translation type="vanished">选择频率...</translation>
-    </message>
-    <message>
-        <source>Select Tracks...</source>
-        <translation type="vanished">选择轨道...</translation>
-    </message>
-    <message>
-        <source>Selects a time range.</source>
-        <translation type="vanished">选择一个时间范围。</translation>
-    </message>
-    <message>
-        <source>Selects a frequency range.</source>
-        <translation type="vanished">选择一个频率范围。</translation>
-    </message>
-    <message>
-        <source>Selects a range of tracks.</source>
-        <translation type="vanished">选择一个轨道范围。</translation>
-    </message>
-    <message>
-        <source>Selects Audio.</source>
-        <translation type="vanished">选择音频。</translation>
-    </message>
-    <message>
-        <source>Set Clip</source>
-        <translation type="vanished">设置片段</translation>
-    </message>
-    <message>
-        <source>Color 0</source>
-        <translation type="vanished">颜色 0</translation>
-    </message>
-    <message>
-        <source>Color 1</source>
-        <translation type="vanished">颜色 1</translation>
-    </message>
-    <message>
-        <source>Color 2</source>
-        <translation type="vanished">颜色 2</translation>
-    </message>
-    <message>
-        <source>Color 3</source>
-        <translation type="vanished">颜色 3</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation type="vanished">在：</translation>
-    </message>
-    <message>
-        <source>Start:</source>
-        <translation type="vanished">开始：</translation>
-    </message>
-    <message>
-        <source>Set Clip...</source>
-        <translation type="vanished">设置片段...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a clip.</source>
-        <translation type="vanished">设置片段的各个值。</translation>
-    </message>
-    <message>
-        <source>Set Envelope</source>
-        <translation type="vanished">设置包络</translation>
-    </message>
-    <message>
-        <source>Time:</source>
-        <translation type="vanished">时间：</translation>
-    </message>
-    <message>
-        <source>Edited Envelope</source>
-        <translation type="vanished">已编辑包络</translation>
-    </message>
-    <message>
-        <source>Envelope</source>
-        <extracomment>i18n-hint: The envelope is a curve that controls the audio loudness.</extracomment>
-        <translation type="vanished">包络线</translation>
-    </message>
-    <message>
-        <source>Set Envelope...</source>
-        <translation type="vanished">设置包络...</translation>
-    </message>
-    <message>
-        <source>Sets an envelope point position.</source>
-        <translation type="vanished">设置包络点位。</translation>
-    </message>
-    <message>
-        <source>Set Label</source>
-        <translation type="vanished">设置标签</translation>
-    </message>
-    <message>
-        <source>Label Index</source>
-        <translation type="vanished">标签索引</translation>
-    </message>
-    <message>
-        <source>End:</source>
-        <translation type="vanished">末尾：</translation>
-    </message>
-    <message>
-        <source>Selected</source>
-        <translation type="vanished">已选</translation>
-    </message>
-    <message>
-        <source>Edited Label</source>
-        <translation type="vanished">已编辑标签</translation>
-    </message>
-    <message>
-        <source>Set Label...</source>
-        <translation type="vanished">设置标签...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a label.</source>
-        <translation type="vanished">设置标签的各个值。</translation>
-    </message>
-    <message>
-        <source>Set Project</source>
-        <translation type="vanished">设置项目</translation>
-    </message>
-    <message>
-        <source>Rate:</source>
-        <translation type="vanished">率：</translation>
-    </message>
-    <message>
-        <source>Resize:</source>
-        <translation type="vanished">缩放：</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation type="vanished">X：</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation type="vanished">Y：</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation type="vanished">宽度：</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation type="vanished">高度：</translation>
-    </message>
-    <message>
-        <source>Set Project...</source>
-        <translation type="vanished">设置项目...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a project.</source>
-        <translation type="vanished">设置项目的各个值。</translation>
-    </message>
-    <message>
-        <source>Set Track Status</source>
-        <translation type="vanished">设置轨道状态</translation>
-    </message>
-    <message>
-        <source>Unnamed</source>
-        <translation type="vanished">未命名</translation>
-    </message>
-    <message>
-        <source>Focused</source>
-        <translation type="vanished">已聚焦</translation>
-    </message>
-    <message>
-        <source>Set Track Audio</source>
-        <translation type="vanished">设置轨道音频</translation>
-    </message>
-    <message>
-        <source>Gain:</source>
-        <translation type="vanished">增强：</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals</source>
-        <translation type="vanished">设置轨道外观</translation>
-    </message>
-    <message>
-        <source>Times 2</source>
-        <translation type="vanished">时间 2</translation>
-    </message>
-    <message>
-        <source>HalfWave</source>
-        <translation type="vanished">半波</translation>
-    </message>
-    <message>
-        <source>Display:</source>
-        <translation type="vanished">显示：</translation>
-    </message>
-    <message>
-        <source>Scale:</source>
-        <translation type="vanished">缩放：</translation>
-    </message>
-    <message>
-        <source>VZoom:</source>
-        <translation type="vanished">V 缩放：</translation>
-    </message>
-    <message>
-        <source>VZoom Top:</source>
-        <translation type="vanished">V 缩放顶：</translation>
-    </message>
-    <message>
-        <source>VZoom Bottom:</source>
-        <translation type="vanished">V 缩放底：</translation>
-    </message>
-    <message>
-        <source>Use Spectral Prefs</source>
-        <translation type="vanished">使用频谱首选项</translation>
-    </message>
-    <message>
-        <source>Spectral Select</source>
-        <translation type="vanished">频谱选择</translation>
-    </message>
-    <message>
-        <source>Sche&amp;me:</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint Scheme refers to a color scheme for spectrogram colors</extracomment>
-        <translation type="vanished">方案(&amp;M)：</translation>
-    </message>
-    <message>
-        <source>Set Track</source>
-        <translation type="vanished">设置轨道</translation>
-    </message>
-    <message>
-        <source>Set Track Status...</source>
-        <translation type="vanished">设置轨道状态...</translation>
-    </message>
-    <message>
-        <source>Set Track Audio...</source>
-        <translation type="vanished">设置轨道音频...</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals...</source>
-        <translation type="vanished">设置轨道外观…</translation>
-    </message>
-    <message>
-        <source>Set Track...</source>
-        <translation type="vanished">设置轨道...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a track.</source>
-        <translation type="vanished">设置轨道的各个值。</translation>
-    </message>
-    <message>
-        <source>Long Message</source>
-        <translation type="vanished">长消息</translation>
-    </message>
-    <message>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation type="vanished">增加或减小选中音频的音量</translation>
-    </message>
-    <message>
-        <source>&amp;Amplification (dB):</source>
-        <translation type="vanished">增益 (dB) (&amp;A)：</translation>
-    </message>
-    <message>
-        <source>Amplification dB</source>
-        <translation type="vanished">增益 分贝</translation>
-    </message>
-    <message>
-        <source>&amp;New Peak Amplitude (dB):</source>
-        <translation type="vanished">新峰值振幅 (dB) (&amp;N)：</translation>
-    </message>
-    <message>
-        <source>Allo&amp;w clipping</source>
-        <translation type="vanished">允许截幅失真(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified "control" track reaches a particular level</source>
-        <translation type="vanished">无论指定的“控制”轨道是否达到了特定的电平，都自动减少（回避）一个或多个轨道的音量</translation>
-    </message>
-    <message>
-        <source>db</source>
-        <translation type="vanished">分贝</translation>
-    </message>
-    <message>
-        <source>Duck &amp;amount:</source>
-        <translation type="vanished">回避量(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ximum pause:</source>
-        <translation type="vanished">最大停顿(&amp;X)：</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;down length:</source>
-        <translation type="vanished">向外渐弱长度(&amp;D):</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;up length:</source>
-        <translation type="vanished">向外渐强长度(&amp;U):</translation>
-    </message>
-    <message>
-        <source>Inner fade d&amp;own length:</source>
-        <translation type="vanished">向内渐弱长度(&amp;O):</translation>
-    </message>
-    <message>
-        <source>Inner &amp;fade up length:</source>
-        <translation type="vanished">向内渐强长度(&amp;F):</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold:</source>
-        <translation type="vanished">阈值(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Preview not available</source>
-        <translation type="vanished">不提供预览</translation>
-    </message>
-    <message>
-        <source>Export Effect Parameters</source>
-        <translation type="vanished">导出效果器参数</translation>
-    </message>
-    <message>
-        <source>Import Effect Parameters</source>
-        <translation type="vanished">导入效果器参数</translation>
-    </message>
-    <message>
-        <source>%s: is not a valid presets file.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1 不是一个有效的预设文件。
-</translation>
-    </message>
-    <message>
-        <source>%s: is for a different Effect, Generator or Analyzer.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1: 用于不同的效果器，生成器或分析器。
-</translation>
-    </message>
-    <message>
-        <source>Tone controls</source>
-        <translation type="vanished">音调控制</translation>
-    </message>
-    <message>
-        <source>Bass (dB):</source>
-        <translation type="vanished">低音（dB）：</translation>
-    </message>
-    <message>
-        <source>Ba&amp;ss (dB):</source>
-        <translation type="vanished">低音（dB）：</translation>
-    </message>
-    <message>
-        <source>Bass</source>
-        <translation type="vanished">低音</translation>
-    </message>
-    <message>
-        <source>&amp;Treble (dB):</source>
-        <translation type="vanished">高音（dB）(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Treble</source>
-        <translation type="vanished">高音</translation>
-    </message>
-    <message>
-        <source>&amp;Volume (dB):</source>
-        <translation type="vanished">音量（dB）(&amp;V)：</translation>
-    </message>
-    <message>
-        <source>&amp;Link Volume control to Tone controls</source>
-        <translation type="vanished">将音量控件链接到音调控件(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Change Pitch</source>
-        <translation type="vanished">改变音高</translation>
-    </message>
-    <message>
-        <source>Estimated Start Pitch: %s%d (%.3f Hz)</source>
-        <translation type="vanished">开始音调：%1%2 (%3 Hz)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">从</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">从(&amp;F)</translation>
-    </message>
-    <message>
-        <source>from Octave</source>
-        <translation type="vanished">从八音度</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">到</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">到(&amp;T)</translation>
-    </message>
-    <message>
-        <source>to Octave</source>
-        <translation type="vanished">到八音度</translation>
-    </message>
-    <message>
-        <source>Semitones (half-steps)</source>
-        <translation type="vanished">半音阶(半音)</translation>
-    </message>
-    <message>
-        <source>&amp;Semitones (half-steps):</source>
-        <translation type="vanished">半音阶(半音) (&amp;S)：</translation>
-    </message>
-    <message>
-        <source>from (Hz)</source>
-        <translation type="vanished">从 (Hz)</translation>
-    </message>
-    <message>
-        <source>f&amp;rom</source>
-        <translation type="vanished">自(&amp;R)</translation>
-    </message>
-    <message>
-        <source>to (Hz)</source>
-        <translation type="vanished">到 (Hz)</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <translation type="vanished">到(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Percent C&amp;hange:</source>
-        <translation type="vanished">改变百分比(&amp;H)：</translation>
-    </message>
-    <message>
-        <source>Percent Change</source>
-        <translation type="vanished">改变百分比</translation>
-    </message>
-    <message>
-        <source>&amp;Use high quality stretching (slow)</source>
-        <translation type="vanished">使用高品质拉伸（慢）(&amp;U)</translation>
-    </message>
-    <message>
-        <source>33⅓</source>
-        <translation type="vanished">33⅓</translation>
-    </message>
-    <message>
-        <source>45</source>
-        <translation type="vanished">45</translation>
-    </message>
-    <message>
-        <source>78</source>
-        <translation type="vanished">78</translation>
-    </message>
-    <message>
-        <source>&amp;Speed Multiplier:</source>
-        <translation type="vanished">速率倍数(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Standard Vinyl rpm:</source>
-        <extracomment>i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
-"vinyl" refers to old-fashioned phonograph records</extracomment>
-        <translation type="vanished">标准黑胶唱片转速（RPM）：</translation>
-    </message>
-    <message>
-        <source>From rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">从（RPM）</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">从(&amp;F)</translation>
-    </message>
-    <message>
-        <source>To rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">到（RPM）</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">到(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Selection Length</source>
-        <translation type="vanished">选区长度</translation>
-    </message>
-    <message>
-        <source>C&amp;urrent Length:</source>
-        <translation type="vanished">当前长度(&amp;U)：</translation>
-    </message>
-    <message>
-        <source>Current length of selection.</source>
-        <translation type="vanished">当前选区长度。</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">从</translation>
-    </message>
-    <message>
-        <source>&amp;New Length:</source>
-        <translation type="vanished">新长度(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">到</translation>
-    </message>
-    <message>
-        <source>Beats per minute</source>
-        <translation type="vanished">每分钟的节拍数</translation>
-    </message>
-    <message>
-        <source>Beats per minute, from</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">每分钟的节拍数，从</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">从(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Beats per minute, to</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">每分钟的节拍数，到</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">到(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Length (seconds)</source>
-        <translation type="vanished">长度（秒）</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">从</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">到(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Length in seconds from %s, to</source>
-        <translation type="vanished">长度（秒）从 %1 至</translation>
-    </message>
-    <message>
-        <source>Click Removal</source>
-        <translation type="vanished">消除咔嚓声</translation>
-    </message>
-    <message>
-        <source>Click Removal is designed to remove clicks on audio tracks</source>
-        <translation type="vanished">咔嚓声移除工具用于移除音频中的咔嚓声</translation>
-    </message>
-    <message>
-        <source>Selection must be larger than %d samples.</source>
-        <translation type="vanished">选区必须大于 %1 个采样点。</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (lower is more sensitive):</source>
-        <translation type="vanished">阈值（越低越敏感）(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Max &amp;Spike Width (higher is more sensitive):</source>
-        <translation type="vanished">最大尖脉冲宽度 (越高越敏感) (&amp;S):</translation>
-    </message>
-    <message>
-        <source>Max Spike Width</source>
-        <translation type="vanished">最大尖脉冲宽度</translation>
-    </message>
-    <message>
-        <source>Reduces "dynamic range", or differences between loud and quiet parts.</source>
-        <translation type="vanished">减少“动态范围”，或者响亮部分和安静部分之间的差异。</translation>
-    </message>
-    <message>
-        <source>Contrast Analyzer, for measuring RMS volume differences between two selections of audio.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">对照分析器，用于测量两个音频选区间的方均根音量差别。</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">结束</translation>
-    </message>
-    <message>
-        <source>Volume    </source>
-        <translation type="vanished">音量    </translation>
-    </message>
-    <message>
-        <source>&amp;Foreground:</source>
-        <translation type="vanished">前景(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>Foreground start time</source>
-        <translation type="vanished">前景开始时间</translation>
-    </message>
-    <message>
-        <source>Foreground end time</source>
-        <translation type="vanished">前景结束时间</translation>
-    </message>
-    <message>
-        <source>&amp;Measure selection</source>
-        <translation type="vanished">测量选区(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Background:</source>
-        <translation type="vanished">背景(&amp;B)：</translation>
-    </message>
-    <message>
-        <source>Background start time</source>
-        <translation type="vanished">背景开始时间</translation>
-    </message>
-    <message>
-        <source>Background end time</source>
-        <translation type="vanished">背景结束时间</translation>
-    </message>
-    <message>
-        <source>Mea&amp;sure selection</source>
-        <translation type="vanished">测量选区(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Result</source>
-        <translation type="vanished">结果</translation>
-    </message>
-    <message>
-        <source>Co&amp;ntrast Result:</source>
-        <translation type="vanished">对照结果(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>R&amp;eset</source>
-        <translation type="vanished">重置(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Difference:</source>
-        <translation type="vanished">差别(&amp;D)：</translation>
-    </message>
-    <message>
-        <source>RMS = %s.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">方均根 = %1.</translation>
-    </message>
-    <message>
-        <source>%s dB</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>zero</source>
-        <translation type="vanished">零</translation>
-    </message>
-    <message>
-        <source>indeterminate</source>
-        <translation type="vanished">不确定</translation>
-    </message>
-    <message>
-        <source>%.2f dB RMS</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-* RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">%1 dB 方均根</translation>
-    </message>
-    <message>
-        <source>Infinite dB difference</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">无限 分贝 差距</translation>
-    </message>
-    <message>
-        <source>Difference is indeterminate.</source>
-        <translation type="vanished">差异不确定。</translation>
-    </message>
-    <message>
-        <source>Difference = %.2f RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">差异 = %1 方均根 dB。</translation>
-    </message>
-    <message>
-        <source>Difference = infinite RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">差异 = 无穷大 方均根 dB。</translation>
-    </message>
-    <message>
-        <source>Foreground level too high</source>
-        <translation type="vanished">前景水平过高</translation>
-    </message>
-    <message>
-        <source>Background level too high</source>
-        <translation type="vanished">背景水平过高</translation>
-    </message>
-    <message>
-        <source>Background higher than foreground</source>
-        <translation type="vanished">背景高于前景</translation>
-    </message>
-    <message>
-        <source>WCAG2 Pass</source>
-        <extracomment>i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/</extracomment>
-        <translation type="vanished">WCAG2 通过</translation>
-    </message>
-    <message>
-        <source>WCAG2 Fail</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG2 失败</translation>
-    </message>
-    <message>
-        <source>Current difference</source>
-        <extracomment>i18n-hint: i.e. difference in loudness at the moment.</extracomment>
-        <translation type="vanished">当前差别</translation>
-    </message>
-    <message>
-        <source>Measured foreground level</source>
-        <translation type="vanished">已测量的前景电平</translation>
-    </message>
-    <message>
-        <source>%.2f dB</source>
-        <extracomment>i18n-hint: short form of 'decibels'</extracomment>
-        <translation type="vanished">%1 分贝</translation>
-    </message>
-    <message>
-        <source>No foreground measured</source>
-        <translation type="vanished">没有测量前景</translation>
-    </message>
-    <message>
-        <source>Foreground not yet measured</source>
-        <translation type="vanished">前景未测量</translation>
-    </message>
-    <message>
-        <source>Measured background level</source>
-        <translation type="vanished">已测量的背景电平</translation>
-    </message>
-    <message>
-        <source>No background measured</source>
-        <translation type="vanished">没有测量背景</translation>
-    </message>
-    <message>
-        <source>Background not yet measured</source>
-        <translation type="vanished">背景未测量</translation>
-    </message>
-    <message>
-        <source>Export Contrast Result As:</source>
-        <translation type="vanished">将对照结果导出为：</translation>
-    </message>
-    <message>
-        <source>WCAG 2.0 Success Criteria 1.4.7 Contrast Results</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG 2.0 Success Criteria 1.4.7 对照结果</translation>
-    </message>
-    <message>
-        <source>Filename = %s.</source>
-        <translation type="vanished">文件名 = %1。</translation>
-    </message>
-    <message>
-        <source>Foreground</source>
-        <translation type="vanished">前景</translation>
-    </message>
-    <message>
-        <source>Time started = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">开始时间= %1 时, %2 分, %3 秒.</translation>
-    </message>
-    <message>
-        <source>Time ended = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">结束时间= %1 时, %2 分, %3 秒.</translation>
-    </message>
-    <message>
-        <source>Background</source>
-        <translation type="vanished">背景</translation>
-    </message>
-    <message>
-        <source>Results</source>
-        <translation type="vanished">结果</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Pass</source>
-        <translation type="vanished">WCAG 2.0 的 Success Criteria 1.4.7 ： 通过</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Fail</source>
-        <translation type="vanished">WCAG 2.0 的 Success Criteria 1.4.7 ： 失败</translation>
-    </message>
-    <message>
-        <source>Data gathered</source>
-        <translation type="vanished">数据已收集</translation>
-    </message>
-    <message>
-        <source>%d %s %02d %02dh %02dm %02ds</source>
-        <extracomment>i18n-hint: day of month, month, year, hour, minute, second</extracomment>
-        <translation type="vanished">%1 %2 %3 %4 时 %5 分 %6 秒</translation>
-    </message>
-    <message>
-        <source>Contrast Analysis (WCAG 2 compliance)</source>
-        <translation type="vanished">对照分析(符合WCAG 2)</translation>
-    </message>
-    <message>
-        <source>Contrast...</source>
-        <translation type="vanished">对照...</translation>
-    </message>
-    <message>
-        <source>Upper Threshold</source>
-        <translation type="vanished">上限</translation>
-    </message>
-    <message>
-        <source>Noise Floor</source>
-        <translation type="vanished">本底噪音</translation>
-    </message>
-    <message>
-        <source>Parameter 1</source>
-        <translation type="vanished">参数 1</translation>
-    </message>
-    <message>
-        <source>Parameter 2</source>
-        <translation type="vanished">参数 2</translation>
-    </message>
-    <message>
-        <source>Number of repeats</source>
-        <translation type="vanished">重复次数</translation>
-    </message>
-    <message>
-        <source>Distortion type:</source>
-        <translation type="vanished">失真类型：</translation>
-    </message>
-    <message>
-        <source>DC blocking filter</source>
-        <translation type="vanished">DC 阻断滤波器</translation>
-    </message>
-    <message>
-        <source>Threshold controls</source>
-        <translation type="vanished">阈值控制</translation>
-    </message>
-    <message>
-        <source>Parameter controls</source>
-        <translation type="vanished">参数控制</translation>
-    </message>
-    <message>
-        <source>Clipping level</source>
-        <translation type="vanished">截幅等级</translation>
-    </message>
-    <message>
-        <source>Drive</source>
-        <translation type="vanished">驱动</translation>
-    </message>
-    <message>
-        <source>Make-up Gain</source>
-        <translation type="vanished">增益补偿</translation>
-    </message>
-    <message>
-        <source>Clipping threshold</source>
-        <translation type="vanished">截幅阈值</translation>
-    </message>
-    <message>
-        <source>Hardness</source>
-        <translation type="vanished">硬度</translation>
-    </message>
-    <message>
-        <source>Distortion amount</source>
-        <translation type="vanished">变形量</translation>
-    </message>
-    <message>
-        <source>Output level</source>
-        <translation type="vanished">输出水平</translation>
-    </message>
-    <message>
-        <source>Repeat processing</source>
-        <translation type="vanished">重复处理</translation>
-    </message>
-    <message>
-        <source>Harmonic brightness</source>
-        <translation type="vanished">谐波的亮度</translation>
-    </message>
-    <message>
-        <source>Levelling fine adjustment</source>
-        <translation type="vanished">水平微调</translation>
-    </message>
-    <message>
-        <source>Degree of Levelling</source>
-        <translation type="vanished">调平度</translation>
-    </message>
-    <message>
-        <source>dB Limit</source>
-        <translation type="vanished">分贝限制</translation>
-    </message>
-    <message>
-        <source>Wet level</source>
-        <translation type="vanished">湿等级</translation>
-    </message>
-    <message>
-        <source>Residual level</source>
-        <translation type="vanished">剩余等级</translation>
-    </message>
-    <message>
-        <source>(Not Used):</source>
-        <translation type="vanished">（未使用）：</translation>
-    </message>
-    <message>
-        <source>(-100 to 0 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">（-100 ~ 0 dB）：</translation>
-    </message>
-    <message>
-        <source>(-80 to -20 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">（-80 ~ -20 dB）：</translation>
-    </message>
-    <message>
-        <source>(0 to 100):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">（0 ~ 100）：</translation>
-    </message>
-    <message>
-        <source>(0 to 5):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">（0 ~ 5）：</translation>
-    </message>
-    <message>
-        <source>DTMF sequence empty.
-Check ALL settings for this effect.</source>
-        <translation type="vanished">空的 DTMF 序列
-检查此效果器的“所有”设置。</translation>
-    </message>
-    <message>
-        <source>DTMF &amp;sequence:</source>
-        <translation type="vanished">DTMF 序列(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>&amp;Amplitude (0-1):</source>
-        <translation type="vanished">振幅（0 至 1）：</translation>
-    </message>
-    <message>
-        <source>&amp;Duration:</source>
-        <translation type="vanished">长度(&amp;D)：</translation>
-    </message>
-    <message>
-        <source>&amp;Tone/silence ratio:</source>
-        <translation type="vanished">音/静音比率(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Duty cycle:</source>
-        <translation type="vanished">占空比：</translation>
-    </message>
-    <message>
-        <source>%.1f %%</source>
-        <translation type="vanished">%1 %%</translation>
-    </message>
-    <message>
-        <source>Tone duration:</source>
-        <translation type="vanished">音的持续时间：</translation>
-    </message>
-    <message>
-        <source>Silence duration:</source>
-        <translation type="vanished">空白持续时间：</translation>
-    </message>
-    <message>
-        <source>%0.f ms</source>
-        <extracomment>i18n-hint milliseconds</extracomment>
-        <translation type="vanished">%0.f ms</translation>
-    </message>
-    <message>
-        <source>I&amp;nput</source>
-        <translation type="vanished">输入 (&amp;N)</translation>
-    </message>
-    <message>
-        <source>Show input</source>
-        <extracomment>i18n-hint: show input on a graph</extracomment>
-        <translation type="vanished">显示输入</translation>
-    </message>
-    <message>
-        <source>O&amp;utput</source>
-        <translation type="vanished">输出 (&amp;U)</translation>
-    </message>
-    <message>
-        <source>A&amp;ctual compression</source>
-        <translation type="vanished">实际压缩​​(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show actual compression</source>
-        <extracomment>i18n-hint: show actual compression on a graph</extracomment>
-        <translation type="vanished">显示实际压缩</translation>
-    </message>
-    <message>
-        <source>Tar&amp;get compression</source>
-        <translation type="vanished">目标压缩(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Show target compression</source>
-        <extracomment>i18n-hint: show target compression on a graph</extracomment>
-        <translation type="vanished">显示目标压缩</translation>
-    </message>
-    <message>
-        <source>Compression curve</source>
-        <translation type="vanished">压缩曲线</translation>
-    </message>
-    <message>
-        <source>Smoothing</source>
-        <translation type="vanished">平滑</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (dB)</source>
-        <translation type="vanished">阙值 (dB)(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up gain (dB)</source>
-        <translation type="vanished">补偿增益 (dB)(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up target (dB)</source>
-        <translation type="vanished">补偿目标(dB)(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Knee &amp;width (dB)</source>
-        <translation type="vanished">拐点宽度 (dB)(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Rati&amp;o:</source>
-        <translation type="vanished">比率(&amp;O)：</translation>
-    </message>
-    <message>
-        <source>&amp;Lookahead (ms)</source>
-        <translation type="vanished">超前(毫秒)(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k (ms)</source>
-        <translation type="vanished">攻击(毫秒)(&amp;K)</translation>
-    </message>
-    <message>
-        <source>&amp;Release (ms)</source>
-        <translation type="vanished">释放(毫秒)(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Actual Compression</source>
-        <translation type="vanished">实际压缩</translation>
-    </message>
-    <message>
-        <source>Target Compression</source>
-        <translation type="vanished">目标压缩</translation>
-    </message>
-    <message>
-        <source>awaiting playback</source>
-        <translation type="vanished">等待播放</translation>
-    </message>
-    <message>
-        <source>&amp;Delay time (seconds):</source>
-        <translation type="vanished">延迟时间（秒）(&amp;D)：</translation>
-    </message>
-    <message>
-        <source>D&amp;ecay factor:</source>
-        <translation type="vanished">衰減系数(&amp;E)：</translation>
-    </message>
-    <message>
-        <source>Applied command: %s</source>
-        <translation type="vanished">已应用命令：%1</translation>
-    </message>
-    <message>
-        <source>Select Preset</source>
-        <translation type="vanished">选择预设</translation>
-    </message>
-    <message>
-        <source>&amp;Preset:</source>
-        <translation type="vanished">预设(&amp;P)：</translation>
-    </message>
-    <message>
-        <source>User Presets</source>
-        <translation type="vanished">用户预设</translation>
-    </message>
-    <message>
-        <source>Factory Presets</source>
-        <translation type="vanished">出厂预设</translation>
-    </message>
-    <message>
-        <source>Current Settings</source>
-        <translation type="vanished">当前设置</translation>
-    </message>
-    <message>
-        <source>Factory Defaults</source>
-        <translation type="vanished">出厂设置</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following effect failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">尝试初始化下列效果器时失败：
-
-%1
-
-更多信息有可能可在 帮助 &gt; 诊断 &gt; 显示日志 中获取到</translation>
-    </message>
-    <message>
-        <source>Effect failed to initialize</source>
-        <translation type="vanished">效果器初始化失败</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following command failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">尝试初始化下列命令时失败：
-
-%1
-
-更多信息有可能可在 帮助 &gt; 诊断 &gt; 显示日志 中获取到</translation>
-    </message>
-    <message>
-        <source>Command failed to initialize</source>
-        <translation type="vanished">命令初始化失败</translation>
-    </message>
-    <message>
-        <source>Previewing</source>
-        <translation type="vanished">预览中</translation>
-    </message>
-    <message>
-        <source>Manage presets and options</source>
-        <translation type="vanished">管理预设及选项</translation>
-    </message>
-    <message>
-        <source>Presets &amp;&amp; settings</source>
-        <translation type="vanished">预设和设置</translation>
-    </message>
-    <message>
-        <source>Preview effect</source>
-        <translation type="vanished">预览效果器</translation>
-    </message>
-    <message>
-        <source>&amp;Apply</source>
-        <translation type="vanished">应用(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Save Preset...</source>
-        <translation type="vanished">保存预设...</translation>
-    </message>
-    <message>
-        <source>Defaults</source>
-        <translation type="vanished">默认</translation>
-    </message>
-    <message>
-        <source>Options...</source>
-        <translation type="vanished">选项...</translation>
-    </message>
-    <message>
-        <source>Type: %s</source>
-        <translation type="vanished">类型：%1</translation>
-    </message>
-    <message>
-        <source>Name: %s</source>
-        <translation type="vanished">名称：%1</translation>
-    </message>
-    <message>
-        <source>Version: %s</source>
-        <translation type="vanished">版本：%1</translation>
-    </message>
-    <message>
-        <source>Vendor: %s</source>
-        <translation type="vanished">供应商：%1</translation>
-    </message>
-    <message>
-        <source>Description: %s</source>
-        <translation type="vanished">描述：%1</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="vanished">关于</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete "%s"?</source>
-        <translation type="vanished">您确定要删除 "%1" ？</translation>
-    </message>
-    <message>
-        <source>Preset name:</source>
-        <translation type="vanished">预设名称：</translation>
-    </message>
-    <message>
-        <source>You must specify a name</source>
-        <translation type="vanished">您必须指定一个名称</translation>
-    </message>
-    <message>
-        <source>Preset already exists.
-
-Replace?</source>
-        <translation type="vanished">预设已经存在。
-
-是否替换？</translation>
-    </message>
-    <message>
-        <source>Effect Unavailable</source>
-        <translation type="vanished">效果器不可用</translation>
-    </message>
-    <message>
-        <source>Benchmark times:
-Original: %s
-Default Segmented: %s
-Default Threaded: %s
-SSE: %s
-SSE Threaded: %s
-</source>
-        <translation type="vanished">性能测试次數：
-原始： %1
-默认分段(Segmented)： %2
-默认线程： %3
-SSE： %4
-SSE 线程： %5
-</translation>
-    </message>
-    <message>
-        <source>%d Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>%g kHz</source>
-        <translation type="vanished">%1 kHz</translation>
-    </message>
-    <message>
-        <source>%gk</source>
-        <extracomment>i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.</extracomment>
-        <translation type="vanished">%1k</translation>
-    </message>
-    <message>
-        <source>%d dB</source>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>Error Loading EQ Curves</source>
-        <translation type="vanished">导入均衡器曲线出错</translation>
-    </message>
-    <message>
-        <source>Manage Curves List</source>
-        <translation type="vanished">管理曲线列表</translation>
-    </message>
-    <message>
-        <source>Manage Curves</source>
-        <translation type="vanished">管理曲线</translation>
-    </message>
-    <message>
-        <source>&amp;Curves</source>
-        <translation type="vanished">曲线(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Curve Name</source>
-        <translation type="vanished">曲线名称</translation>
-    </message>
-    <message>
-        <source>D&amp;elete...</source>
-        <translation type="vanished">删除(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>&amp;Get More...</source>
-        <translation type="vanished">获取更多(&amp;G)...</translation>
-    </message>
-    <message>
-        <source>De&amp;faults</source>
-        <translation type="vanished">默认(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Rename 'unnamed' to save a new entry.
-'OK' saves all changes, 'Cancel' doesn't.</source>
-        <translation type="vanished">将“未命名”重命名以便保存为新条目。
-选择“确认”保存所有改变，反之选择“取消”。</translation>
-    </message>
-    <message>
-        <source>'unnamed' always stays at the bottom of the list</source>
-        <translation type="vanished">“未命名”总是在列表最下方</translation>
-    </message>
-    <message>
-        <source>'unnamed' is special</source>
-        <translation type="vanished">“未命名”是系统特别保留的名字</translation>
-    </message>
-    <message>
-        <source>Rename '%s' to...</source>
-        <translation type="vanished">将“%1”改名为...</translation>
-    </message>
-    <message>
-        <source>Rename...</source>
-        <translation type="vanished">重命名...</translation>
-    </message>
-    <message>
-        <source>Rename '%s'</source>
-        <translation type="vanished">重命名“%1”</translation>
-    </message>
-    <message>
-        <source>Name is the same as the original one</source>
-        <translation type="vanished">新名字和原来的名字相同</translation>
-    </message>
-    <message>
-        <source>Same name</source>
-        <translation type="vanished">名字相同</translation>
-    </message>
-    <message>
-        <source>Overwrite existing curve '%s'?</source>
-        <translation type="vanished">是否覆盖现有曲线“%1”？</translation>
-    </message>
-    <message>
-        <source>Curve exists</source>
-        <translation type="vanished">曲线已存在</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve.</source>
-        <translation type="vanished">您不能删除“未命名”曲线。</translation>
-    </message>
-    <message>
-        <source>Can't delete 'unnamed'</source>
-        <translation type="vanished">无法删除“未命名”</translation>
-    </message>
-    <message>
-        <source>Delete '%s'?</source>
-        <translation type="vanished">删除“%1”？</translation>
-    </message>
-    <message>
-        <source>Delete %d items?</source>
-        <translation type="vanished">删除 %1 个项目？</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve, it is special.</source>
-        <translation type="vanished">您不能删除“未命名”曲线，因为这是系统特别保留的名字。</translation>
-    </message>
-    <message>
-        <source>Choose an EQ curve file</source>
-        <translation type="vanished">选择一个均衡曲线文件</translation>
-    </message>
-    <message>
-        <source>Export EQ curves as...</source>
-        <translation type="vanished">导出均衡曲线为...</translation>
-    </message>
-    <message>
-        <source>You cannot export 'unnamed' curve, it is special.</source>
-        <translation type="vanished">您不能导出“未命名”曲线，它是专用的。</translation>
-    </message>
-    <message>
-        <source>Cannot Export 'unnamed'</source>
-        <translation type="vanished">您不能导出“未命名”</translation>
-    </message>
-    <message>
-        <source>%d curves exported to %s</source>
-        <translation type="vanished">已导出 %1 条曲线到 %2</translation>
-    </message>
-    <message>
-        <source>Curves exported</source>
-        <translation type="vanished">已导出的曲线</translation>
-    </message>
-    <message>
-        <source>No curves exported</source>
-        <translation type="vanished">没有导出任何曲线</translation>
-    </message>
-    <message>
-        <source>To use this filter curve in a macro, please choose a new name for it.
-Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one.</source>
-        <translation type="vanished">为了在宏中使用这个过滤曲线，请为其选择一个新名称。
-点击“保存/管理曲线...”按钮并重命名“未命名”曲线，再使用它。</translation>
-    </message>
-    <message>
-        <source>Filter Curve EQ needs a different name</source>
-        <translation type="vanished">过滤曲线 EQ 需要一个不同的名字</translation>
-    </message>
-    <message>
-        <source>+ dB</source>
-        <translation type="vanished">+ 分贝</translation>
-    </message>
-    <message>
-        <source>Max dB</source>
-        <translation type="vanished">最大 分贝</translation>
-    </message>
-    <message>
-        <source>Min dB</source>
-        <translation type="vanished">最小 分贝</translation>
-    </message>
-    <message>
-        <source>- dB</source>
-        <translation type="vanished">- 分贝</translation>
-    </message>
-    <message>
-        <source>&amp;EQ Type:</source>
-        <translation type="vanished">均衡类型(&amp;E)：</translation>
-    </message>
-    <message>
-        <source>Draw Curves</source>
-        <translation type="vanished">绘制曲线</translation>
-    </message>
-    <message>
-        <source>&amp;Draw</source>
-        <translation type="vanished">绘制(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Graphic</source>
-        <translation type="vanished">图形(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Interpolation type</source>
-        <translation type="vanished">插值类型</translation>
-    </message>
-    <message>
-        <source>Linear Frequency Scale</source>
-        <translation type="vanished">线性频率缩放</translation>
-    </message>
-    <message>
-        <source>Li&amp;near Frequency Scale</source>
-        <translation type="vanished">线性频率缩放(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Length of &amp;Filter:</source>
-        <translation type="vanished">过滤长度(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>Length of Filter</source>
-        <translation type="vanished">过滤长度</translation>
-    </message>
-    <message>
-        <source>&amp;Select Curve:</source>
-        <translation type="vanished">选择曲线(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Select Curve</source>
-        <translation type="vanished">选择曲线</translation>
-    </message>
-    <message>
-        <source>S&amp;ave/Manage Curves...</source>
-        <translation type="vanished">保存/管理曲线(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>Fla&amp;tten</source>
-        <translation type="vanished">变平坦(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Invert</source>
-        <translation type="vanished">反相(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Show grid lines</source>
-        <translation type="vanished">显示网格线</translation>
-    </message>
-    <message>
-        <source>Show g&amp;rid lines</source>
-        <translation type="vanished">显示网格线(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Requested curve not found, using 'unnamed'</source>
-        <translation type="vanished">请求的曲线图没有找到，正在使用“未命名”</translation>
-    </message>
-    <message>
-        <source>Curve not found</source>
-        <translation type="vanished">曲线图没有找到</translation>
-    </message>
-    <message>
-        <source>%lld of %lld</source>
-        <comment>find clipping</comment>
-        <extracomment>i18n-hint: Two numbers are substituted; the second is the
-size of a set, the first is the size of a subset, and not
-understood as an ordinal (i.e., not meaning "first", or
-"second", etc.)</extracomment>
-        <translation type="vanished">%1，共 %2</translation>
-    </message>
-    <message>
-        <source>&amp;Start threshold (samples):</source>
-        <translation type="vanished">开始阈值(样本数) (&amp;S)：</translation>
-    </message>
-    <message>
-        <source>St&amp;op threshold (samples):</source>
-        <translation type="vanished">停止阈值(样本数) (&amp;O)：</translation>
-    </message>
-    <message>
-        <source>%3d dB</source>
-        <extracomment>i18n-hint: usually leave this as is as dB doesn't get translated</extracomment>
-        <translation type="vanished">%1 分贝</translation>
-    </message>
-    <message>
-        <source>%.2f secs</source>
-        <translation type="vanished">%1 秒</translation>
-    </message>
-    <message>
-        <source>%.1f secs</source>
-        <translation type="vanished">%1 秒</translation>
-    </message>
-    <message>
-        <source>%.0f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1：1</translation>
-    </message>
-    <message>
-        <source>%.1f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1：1</translation>
-    </message>
-    <message>
-        <source>Ratio %.0f to 1</source>
-        <translation type="vanished">比率： %1：1</translation>
-    </message>
-    <message>
-        <source>Ratio %.1f to 1</source>
-        <translation type="vanished">比率： %1：1</translation>
-    </message>
-    <message>
-        <source>&amp;Noise Floor:</source>
-        <translation type="vanished">噪声基底(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>&amp;Ratio:</source>
-        <translation type="vanished">比率(&amp;R)：</translation>
-    </message>
-    <message>
-        <source>&amp;Attack Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">上升时间(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>Attack Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">上升时间</translation>
-    </message>
-    <message>
-        <source>R&amp;elease Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">释放时间(&amp;E)：</translation>
-    </message>
-    <message>
-        <source>Release Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">释放时间</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke-up gain for 0 dB after compressing</source>
-        <extracomment>i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.</extracomment>
-        <translation type="vanished">压缩后增长到 0 dB(&amp;K)</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress based on Peaks</source>
-        <extracomment>i18n-hint: "Compress" here means reduce variations of sound volume,
-NOT related to file-size compression; Peaks means extremes in volume</extracomment>
-        <translation type="vanished">基于峰值压缩(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Threshold %d dB</source>
-        <translation type="vanished">阈值： %1 dB</translation>
-    </message>
-    <message>
-        <source>Noise Floor %d dB</source>
-        <translation type="vanished">本底噪音 %1 分贝</translation>
-    </message>
-    <message>
-        <source>Attack Time %.2f secs</source>
-        <translation type="vanished">触发时间 %1 秒</translation>
-    </message>
-    <message>
-        <source>Release Time %.1f secs</source>
-        <translation type="vanished">释放时间 %1 秒</translation>
-    </message>
-    <message>
-        <source>perceived loudness</source>
-        <translation type="vanished">感知响度</translation>
-    </message>
-    <message>
-        <source>Normalizing Loudness...
-</source>
-        <translation type="vanished">标准化响度…
-</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize</source>
-        <translation type="vanished">标准化(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Loudness LUFS</source>
-        <extracomment>i18n-hint: LUFS is a particular method for measuring loudnesss</extracomment>
-        <translation type="vanished">LUFS 响度</translation>
-    </message>
-    <message>
-        <source>LUFS</source>
-        <translation type="vanished">LUFS</translation>
-    </message>
-    <message>
-        <source>RMS dB</source>
-        <translation type="vanished">RMS dB</translation>
-    </message>
-    <message>
-        <source>Normalize &amp;stereo channels independently</source>
-        <translation type="vanished">分别标准化立体声的双声道(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Treat mono as dual-mono (recommended)</source>
-        <translation type="vanished">将单声道视为双声道 (推荐) (&amp;T)</translation>
-    </message>
-    <message>
-        <source>(Maximum 0dB)</source>
-        <translation type="vanished">（最大 0 分贝）</translation>
-    </message>
-    <message>
-        <source>White</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "white noise" having a uniform spectrum</extracomment>
-        <translation type="vanished">白噪声</translation>
-    </message>
-    <message>
-        <source>Pink</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "pink noise" having a spectrum with more power
-in low frequencies</extracomment>
-        <translation type="vanished">粉红噪声</translation>
-    </message>
-    <message>
-        <source>Brownian</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: a kind of noise spectrum also known as "red" or "brown"</extracomment>
-        <translation type="vanished">布朗噪声</translation>
-    </message>
-    <message>
-        <source>&amp;Noise type:</source>
-        <translation type="vanished">噪声类型(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>Old</source>
-        <translation type="vanished">旧的</translation>
-    </message>
-    <message>
-        <source>Noise Reduction</source>
-        <translation type="vanished">降噪</translation>
-    </message>
-    <message>
-        <source>Steps per block are too few for the window types.</source>
-        <translation type="vanished">相对于当前窗口类型每个块的音级过少。</translation>
-    </message>
-    <message>
-        <source>Steps per block cannot exceed the window size.</source>
-        <translation type="vanished">每个块的音级不能超出窗口大小。</translation>
-    </message>
-    <message>
-        <source>Median method is not implemented for more than four steps per window.</source>
-        <translation type="vanished">每窗口大于4个音级时无法应用中等模式。</translation>
-    </message>
-    <message>
-        <source>Warning: window types are not the same as for profiling.</source>
-        <translation type="vanished">警告：窗口类型和样本所需的不一致。</translation>
-    </message>
-    <message>
-        <source>&amp;Noise reduction (dB):</source>
-        <translation type="vanished">降噪强度 (dB)(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>&amp;Sensitivity:</source>
-        <translation type="vanished">灵敏度(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k time (secs):</source>
-        <translation type="vanished">触发时间（秒）(&amp;K)：</translation>
-    </message>
-    <message>
-        <source>Attack time</source>
-        <translation type="vanished">触发时间</translation>
-    </message>
-    <message>
-        <source>R&amp;elease time (secs):</source>
-        <translation type="vanished">释放时间（秒）(&amp;E)：</translation>
-    </message>
-    <message>
-        <source>Release time</source>
-        <translation type="vanished">释放时间</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency smoothing (bands):</source>
-        <translation type="vanished">频率平滑（频带）(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>Sensiti&amp;vity (dB):</source>
-        <translation type="vanished">灵敏度（dB）(&amp;V)：</translation>
-    </message>
-    <message>
-        <source>Old Sensitivity</source>
-        <translation type="vanished">旧灵敏度</translation>
-    </message>
-    <message>
-        <source>Select a few seconds of just noise so Audacity knows what to filter out,
-then click Get Noise Profile:</source>
-        <translation type="vanished">选择几秒只有噪声的音频让Audacity知道过滤什么，
-然后点击获得噪声特征：</translation>
-    </message>
-    <message>
-        <source>&amp;Get Noise Profile</source>
-        <translation type="vanished">取得噪声特征(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Select all of the audio you want filtered, choose how much noise you want
-filtered out, and then click 'OK' to reduce noise.
-</source>
-        <translation type="vanished">请选择所有要过滤的音频，再选择需要过滤掉多少噪音，
-然后点击“确定”来降噪。 
-</translation>
-    </message>
-    <message>
-        <source>Noise:</source>
-        <translation type="vanished">噪声：</translation>
-    </message>
-    <message>
-        <source>Re&amp;duce</source>
-        <extracomment>i18n-hint: Translate differently from "Residue" !</extracomment>
-        <translation type="vanished">去除(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Isolate</source>
-        <translation type="vanished">隔离(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Resid&amp;ue</source>
-        <extracomment>i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !</extracomment>
-        <translation type="vanished">保留噪音(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Advanced Settings</source>
-        <translation type="vanished">高级设置</translation>
-    </message>
-    <message>
-        <source>&amp;Window types:</source>
-        <translation type="vanished">窗口类型(&amp;W)：</translation>
-    </message>
-    <message>
-        <source>Window si&amp;ze:</source>
-        <translation type="vanished">窗口大小(&amp;Z)：</translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="vanished">8</translation>
-    </message>
-    <message>
-        <source>16</source>
-        <translation type="vanished">16</translation>
-    </message>
-    <message>
-        <source>32</source>
-        <translation type="vanished">32</translation>
-    </message>
-    <message>
-        <source>64</source>
-        <translation type="vanished">64</translation>
-    </message>
-    <message>
-        <source>128</source>
-        <translation type="vanished">128</translation>
-    </message>
-    <message>
-        <source>256</source>
-        <translation type="vanished">256</translation>
-    </message>
-    <message>
-        <source>512</source>
-        <translation type="vanished">512</translation>
-    </message>
-    <message>
-        <source>1024</source>
-        <translation type="vanished">1024</translation>
-    </message>
-    <message>
-        <source>2048 (default)</source>
-        <translation type="vanished">2048（默认）</translation>
-    </message>
-    <message>
-        <source>4096</source>
-        <translation type="vanished">4096</translation>
-    </message>
-    <message>
-        <source>8192</source>
-        <translation type="vanished">8192</translation>
-    </message>
-    <message>
-        <source>16384</source>
-        <translation type="vanished">16384</translation>
-    </message>
-    <message>
-        <source>S&amp;teps per window:</source>
-        <translation type="vanished">每窗口的音级(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>4 (default)</source>
-        <translation type="vanished">4（默认）</translation>
-    </message>
-    <message>
-        <source>Discrimination &amp;method:</source>
-        <translation type="vanished">辨别方法(&amp;M)：</translation>
-    </message>
-    <message>
-        <source>Removing DC offset and Normalizing...
-</source>
-        <translation type="vanished">移除 DC 偏移并标准化…
-</translation>
-    </message>
-    <message>
-        <source>Removing DC offset...
-</source>
-        <translation type="vanished">移除 DC 偏移...
-</translation>
-    </message>
-    <message>
-        <source>Normalizing without removing DC offset...
-</source>
-        <translation type="vanished">标准化不移除 DC 偏移…
-</translation>
-    </message>
-    <message>
-        <source>Not doing anything...
-</source>
-        <translation type="vanished">未在做任何事...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="vanished">移除 DC 偏移量(垂直居中于 0.0) (&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize peak amplitude to   </source>
-        <translation type="vanished">标准化峰值振幅至(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Peak amplitude dB</source>
-        <translation type="vanished">峰值振幅（dB）</translation>
-    </message>
-    <message>
-        <source>N&amp;ormalize stereo channels independently</source>
-        <translation type="vanished">分别标准化立体声的两个声道(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Paulstretch is only for an extreme time-stretch or "stasis" effect</source>
-        <translation type="vanished">Paulstretch 仅用于极端的时间拉伸或“静止”效果</translation>
-    </message>
-    <message>
-        <source>&amp;Stretch Factor:</source>
-        <extracomment>i18n-hint: This is how many times longer the sound will be, e.g. applying
-* the effect to a 1-second sample, with the default Stretch Factor of 10.0
-* will give an (approximately) 10 second sound</extracomment>
-        <translation type="vanished">拉伸系数(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>&amp;Time Resolution (seconds):</source>
-        <translation type="vanished">时间分辨率(秒)(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Audio selection too short to preview.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">音频选区太短，无法预览。
-
-尝试增加音频选区至少 %1 秒，
-或减少“时间分辨率”至小于 %2 秒。</translation>
-    </message>
-    <message>
-        <source>Unable to Preview.
-
-For the current audio selection, the maximum
-'Time Resolution' is %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">无法预览。
-
-当前音频选区的
-“时间分辨率” 上限是 %1 秒。</translation>
-    </message>
-    <message>
-        <source>The 'Time Resolution' is too long for the selection.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">选择的时间分辨率太长。
-尝试增加音频选择至少 %1 秒，
-或减少“时间分辨率”至小于 %2 秒。</translation>
-    </message>
-    <message>
-        <source>&amp;Stages:</source>
-        <translation type="vanished">阶段(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Stages</source>
-        <translation type="vanished">阶段</translation>
-    </message>
-    <message>
-        <source>&amp;Dry/Wet:</source>
-        <translation type="vanished">干/湿比(&amp;D)：</translation>
-    </message>
-    <message>
-        <source>Dry Wet</source>
-        <translation type="vanished">干湿</translation>
-    </message>
-    <message>
-        <source>LFO Freq&amp;uency (Hz):</source>
-        <translation type="vanished">低频振荡频率（Hz）：</translation>
-    </message>
-    <message>
-        <source>LFO frequency in hertz</source>
-        <translation type="vanished">低频振荡频率（Hz）</translation>
-    </message>
-    <message>
-        <source>LFO Sta&amp;rt Phase (deg.):</source>
-        <translation type="vanished">低频振荡开始相位（度）：</translation>
-    </message>
-    <message>
-        <source>LFO start phase in degrees</source>
-        <translation type="vanished">低频振荡开始相位（度）</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h:</source>
-        <translation type="vanished">深度(&amp;H)：</translation>
-    </message>
-    <message>
-        <source>Depth in percent</source>
-        <translation type="vanished">深度百分比</translation>
-    </message>
-    <message>
-        <source>Feedbac&amp;k (%):</source>
-        <translation type="vanished">反馈 (%)：</translation>
-    </message>
-    <message>
-        <source>Feedback in percent</source>
-        <translation type="vanished">反馈百分比</translation>
-    </message>
-    <message>
-        <source>&amp;Output gain (dB):</source>
-        <translation type="vanished">输出增益 (分贝)：</translation>
-    </message>
-    <message>
-        <source>Output gain (dB)</source>
-        <translation type="vanished">输出增益 (分贝)</translation>
-    </message>
-    <message>
-        <source>%s - %s</source>
-        <extracomment>i18n-hint: First %s is an effect name, second is a track name</extracomment>
-        <translation type="vanished">%1 - %2</translation>
-    </message>
-    <message>
-        <source>Repair works by using audio data outside the selection region.
-
-Please select a region that has audio touching at least one side of it.
-
-The more surrounding audio, the better it performs.</source>
-        <translation type="vanished">修复是通过使用选区外的数据起作用的。
-
-请选择一个至少一侧邻接音频的选区。
-
-周围的音频越多，修复效果越好。</translation>
-    </message>
-    <message>
-        <source>&amp;Number of repeats to add:</source>
-        <translation type="vanished">要添加的重复次数(&amp;N):</translation>
-    </message>
-    <message>
-        <source>Current selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">当前选区长度：dd:hh:mm:ss</translation>
-    </message>
-    <message>
-        <source>New selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">新选区长度：dd:hh:mm:ss</translation>
-    </message>
-    <message>
-        <source>Current selection length: %s</source>
-        <translation type="vanished">当前选区长度： %1</translation>
-    </message>
-    <message>
-        <source>New selection length: %s</source>
-        <translation type="vanished">新选区的长度：%1</translation>
-    </message>
-    <message>
-        <source>Warning: No repeats.</source>
-        <translation type="vanished">警告：没有重复。</translation>
-    </message>
-    <message>
-        <source>Adds ambience or a "hall effect"</source>
-        <translation type="vanished">添加氛围效果或者“大厅效果器”</translation>
-    </message>
-    <message>
-        <source>&amp;Room Size (%):</source>
-        <translation type="vanished">房间大小(%) (&amp;R)：</translation>
-    </message>
-    <message>
-        <source>&amp;Pre-delay (ms):</source>
-        <translation type="vanished">预延迟 (ms)(&amp;P)：</translation>
-    </message>
-    <message>
-        <source>Rever&amp;berance (%):</source>
-        <translation type="vanished">混响感(%) (&amp;B)：</translation>
-    </message>
-    <message>
-        <source>Da&amp;mping (%):</source>
-        <translation type="vanished">消声(%) (&amp;M)：</translation>
-    </message>
-    <message>
-        <source>Tone &amp;Low (%):</source>
-        <translation type="vanished">低音调(%) (L)：</translation>
-    </message>
-    <message>
-        <source>Tone &amp;High (%):</source>
-        <translation type="vanished">高音调(%) (&amp;H)：</translation>
-    </message>
-    <message>
-        <source>Wet &amp;Gain (dB):</source>
-        <translation type="vanished">湿增益(分贝) (&amp;G)：</translation>
-    </message>
-    <message>
-        <source>Dr&amp;y Gain (dB):</source>
-        <translation type="vanished">干增益(分贝) (&amp;Y)：</translation>
-    </message>
-    <message>
-        <source>Stereo Wid&amp;th (%):</source>
-        <translation type="vanished">立体声宽度(%) (&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Wet O&amp;nly</source>
-        <translation type="vanished">仅湿(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Filter Type:</source>
-        <translation type="vanished">滤波类型(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>O&amp;rder:</source>
-        <extracomment>i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.</extracomment>
-        <translation type="vanished">阶数（复杂度）(&amp;R)：</translation>
-    </message>
-    <message>
-        <source>&amp;Passband Ripple:</source>
-        <translation type="vanished">通带涟波(&amp;P)：</translation>
-    </message>
-    <message>
-        <source>Passband Ripple (dB)</source>
-        <translation type="vanished">通带涟波(dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Subtype:</source>
-        <translation type="vanished">子类型(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Cutoff (Hz)</source>
-        <translation type="vanished">切除(Hz)</translation>
-    </message>
-    <message>
-        <source>C&amp;utoff:</source>
-        <translation type="vanished">切除(&amp;U)：</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation:</source>
-        <translation type="vanished">最小阻带衰减 (Stopband Attenuation)(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation (dB)</source>
-        <translation type="vanished">最小阻带衰减 (Stopband Attenuation) (dB)(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Align MIDI to Audio</source>
-        <translation type="vanished">MIDI与音频对齐</translation>
-    </message>
-    <message>
-        <source>Frame Period:</source>
-        <translation type="vanished">帧周期：</translation>
-    </message>
-    <message>
-        <source>Frame Period</source>
-        <translation type="vanished">帧周期</translation>
-    </message>
-    <message>
-        <source>Window Size:</source>
-        <translation type="vanished">窗口大小：</translation>
-    </message>
-    <message>
-        <source>Window Size</source>
-        <translation type="vanished">窗口大小</translation>
-    </message>
-    <message>
-        <source>Force Final Alignment</source>
-        <translation type="vanished">强制终点对齐</translation>
-    </message>
-    <message>
-        <source>Ignore Silence at Beginnings and Endings</source>
-        <translation type="vanished">忽略开始和结束位置的静音</translation>
-    </message>
-    <message>
-        <source>Silence Threshold:</source>
-        <translation type="vanished">静音阈值：</translation>
-    </message>
-    <message>
-        <source>Silence Threshold</source>
-        <translation type="vanished">静音阈值</translation>
-    </message>
-    <message>
-        <source>Presmooth Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">预平滑时间：</translation>
-    </message>
-    <message>
-        <source>Presmooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">预平滑时间</translation>
-    </message>
-    <message>
-        <source>Line Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">行时间：</translation>
-    </message>
-    <message>
-        <source>Line Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">行 时间</translation>
-    </message>
-    <message>
-        <source>Smooth Time:</source>
-        <translation type="vanished">平滑时间：</translation>
-    </message>
-    <message>
-        <source>Smooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">平滑时间</translation>
-    </message>
-    <message>
-        <source>Use Defaults</source>
-        <translation type="vanished">使用默认设置</translation>
-    </message>
-    <message>
-        <source>Restore Defaults</source>
-        <translation type="vanished">恢复默认设置</translation>
-    </message>
-    <message>
-        <source>%.3f</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>generator</comment>
-        <extracomment>i18n-hint: noun</extracomment>
-        <translation type="vanished">使静音</translation>
-    </message>
-    <message>
-        <source>Stereo To Mono</source>
-        <translation type="vanished">立体声转单声道</translation>
-    </message>
-    <message>
-        <source>Converts stereo tracks to mono</source>
-        <translation type="vanished">将立体声轨转换为单声道</translation>
-    </message>
-    <message>
-        <source>Mixing down to mono</source>
-        <translation type="vanished">混合为单声道</translation>
-    </message>
-    <message>
-        <source>Sliding Stretch</source>
-        <translation type="vanished">滑动拉伸</translation>
-    </message>
-    <message>
-        <source>Initial Tempo Change (%)</source>
-        <translation type="vanished">起始速度改变（%）</translation>
-    </message>
-    <message>
-        <source>Final Tempo Change (%)</source>
-        <translation type="vanished">终点速度改变（%）</translation>
-    </message>
-    <message>
-        <source>Initial Pitch Shift</source>
-        <translation type="vanished">开始音调变化</translation>
-    </message>
-    <message>
-        <source>(&amp;semitones) [-12 to 12]:</source>
-        <translation type="vanished">(半音阶)[-12 到 12] (&amp;S):</translation>
-    </message>
-    <message>
-        <source>(%) [-50 to 100]:</source>
-        <translation type="vanished">(%) [-50到100]：</translation>
-    </message>
-    <message>
-        <source>Final Pitch Shift</source>
-        <translation type="vanished">终点音调变化</translation>
-    </message>
-    <message>
-        <source>(s&amp;emitones) [-12 to 12]:</source>
-        <translation type="vanished">(半音阶)[-12 到 12] (&amp;E):</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>waveform</comment>
-        <translation type="vanished">三角形</translation>
-    </message>
-    <message>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation type="vanished">产生四种类型之一的升序或降序</translation>
-    </message>
-    <message>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation type="vanished">产生四种类型之一的恒定频率音调</translation>
-    </message>
-    <message>
-        <source>&amp;Waveform:</source>
-        <translation type="vanished">波形(&amp;W)：</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency (Hz):</source>
-        <translation type="vanished">频率(Hz) (&amp;F)：</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz Start</source>
-        <translation type="vanished">开始频率 Hz</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz End</source>
-        <translation type="vanished">结束频率 Hz</translation>
-    </message>
-    <message>
-        <source>Amplitude Start</source>
-        <translation type="vanished">开始振幅</translation>
-    </message>
-    <message>
-        <source>Amplitude End</source>
-        <translation type="vanished">结束振幅</translation>
-    </message>
-    <message>
-        <source>I&amp;nterpolation:</source>
-        <translation type="vanished">内插算法(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>Truncate Silence</source>
-        <translation type="vanished">截去静音</translation>
-    </message>
-    <message>
-        <source>When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group.</source>
-        <translation type="vanished">当独立截断时，每个同步锁定的轨道组中只能有一个选定的音轨。</translation>
-    </message>
-    <message>
-        <source>Detect Silence</source>
-        <translation type="vanished">检测静音</translation>
-    </message>
-    <message>
-        <source>Tr&amp;uncate to:</source>
-        <translation type="vanished">截断到(&amp;U)：</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress to:</source>
-        <translation type="vanished">压缩到(&amp;O)：</translation>
-    </message>
-    <message>
-        <source>Trunc&amp;ate tracks independently</source>
-        <translation type="vanished">分别截断轨道(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Save VST Preset As:</source>
-        <translation type="vanished">保存 VST 预设为：</translation>
-    </message>
-    <message>
-        <source>Standard VST bank file</source>
-        <translation type="vanished">标准 VST 库文件</translation>
-    </message>
-    <message>
-        <source>Standard VST program file</source>
-        <translation type="vanished">标准 VST 程序文件</translation>
-    </message>
-    <message>
-        <source>Audacity VST preset file</source>
-        <translation type="vanished">Audacity VST 预设文件</translation>
-    </message>
-    <message>
-        <source>Unrecognized file extension.</source>
-        <translation type="vanished">未识别文件扩展名。</translation>
-    </message>
-    <message>
-        <source>Load VST Preset:</source>
-        <translation type="vanished">加载 VST 预设：</translation>
-    </message>
-    <message>
-        <source>VST preset files</source>
-        <translation type="vanished">VST 预设文件</translation>
-    </message>
-    <message>
-        <source>Unable to load presets file.</source>
-        <translation type="vanished">无法加载预设文件。</translation>
-    </message>
-    <message>
-        <source>VST Effect Options</source>
-        <translation type="vanished">VST 效果器选项</translation>
-    </message>
-    <message>
-        <source>Buffer Size</source>
-        <translation type="vanished">缓冲大小</translation>
-    </message>
-    <message>
-        <source>The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time.</source>
-        <translation type="vanished">缓冲区大小会控制在每次迭代中发送给效果器的样本数量。较小的值将导致处理变慢，并且某些效果器需要 8192 个或更少的样本才能正常工作。但是，大多数效果器都可以接受大的缓冲区，使用它们将会大大减少处理时间。</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to 1048576 samples):</source>
-        <translation type="vanished">缓冲大小（8 到 1048576 个采样）(&amp;B)：</translation>
-    </message>
-    <message>
-        <source>Latency Compensation</source>
-        <translation type="vanished">延迟补偿</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects.</source>
-        <translation type="vanished">作为其处理过程的一部分，某些 VST 效果器必须延迟将音频返回 Audacity 的时间。 当不补偿此延迟时，您会注意到音频中已经插入了小的静音片段。 启用此选项将提供该补偿，但可能不适用于所有 VST 效果器。</translation>
-    </message>
-    <message>
-        <source>Enable &amp;compensation</source>
-        <translation type="vanished">启用补偿(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Graphical Mode</source>
-        <translation type="vanished">图形化模式</translation>
-    </message>
-    <message>
-        <source>Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">大部分 VST 效果器都有用于设置参数值的图形界面。也可以使用基本的纯文本方法。 重新打开效果器以使其生效。</translation>
-    </message>
-    <message>
-        <source>Enable &amp;graphical interface</source>
-        <translation type="vanished">启用图形化界面(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Save VST3 Preset As:</source>
-        <translation type="vanished">将 VST3 预设另存为：</translation>
-    </message>
-    <message>
-        <source>VST3 preset file</source>
-        <translation type="vanished">VST3 预设文件</translation>
-    </message>
-    <message>
-        <source>Load VST3 preset:</source>
-        <translation type="vanished">加载 VST3 预设：</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects.</source>
-        <translation type="vanished">作为其处理过程的一部分，某些 VST3 效果器必须延迟将音频返回 Audacity 的时间。 当不补偿此延迟时，您会注意到音频中已经插入了小的静音片段。 启用此选项将提供该补偿，但可能不适用于所有 VST3 效果器。</translation>
-    </message>
-    <message>
-        <source>Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">大部分 VST3 效果器都有用于设置参数值的图形界面。也可以使用基本的纯文本方法。重新打开效果器以使其生效。</translation>
-    </message>
-    <message>
-        <source>Rapid tone quality variations, like that guitar sound so popular in the 1970's</source>
-        <translation type="vanished">快速音调变奏，类似于70年代流行的吉他声</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h (%):</source>
-        <translation type="vanished">深度 (%)：</translation>
-    </message>
-    <message>
-        <source>Reso&amp;nance:</source>
-        <translation type="vanished">共鸣：</translation>
-    </message>
-    <message>
-        <source>Resonance</source>
-        <translation type="vanished">共鸣</translation>
-    </message>
-    <message>
-        <source>Wah Frequency Offse&amp;t (%):</source>
-        <translation type="vanished">哇哇频率偏移 (%)：</translation>
-    </message>
-    <message>
-        <source>Wah frequency offset in percent</source>
-        <translation type="vanished">哇哇频率偏移 (%)</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Preset As %s:</source>
-        <translation type="vanished">导出 Audio Unit 预设为 %1:</translation>
-    </message>
-    <message>
-        <source>Standard Audio Unit preset file</source>
-        <translation type="vanished">标准 Audio Unit 预设文件</translation>
-    </message>
-    <message>
-        <source>Could not export "%s" preset
-
-%s</source>
-        <translation type="vanished">无法导出 "%1" 预设:
-
-%2</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Presets</source>
-        <translation type="vanished">导出 Audio Unit 预设</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Preset As %s:</source>
-        <translation type="vanished">导入 Audio Unit 预设为 %1:</translation>
-    </message>
-    <message>
-        <source>Could not import "%s" preset
-
-%s</source>
-        <translation type="vanished">无法导入 "%1" 预设:
-%2</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Presets</source>
-        <translation type="vanished">导入 Audio Unit 预设</translation>
-    </message>
-    <message>
-        <source>Audio Unit Effect Options</source>
-        <translation type="vanished">Audio Unit 效果器选项</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects.</source>
-        <translation type="vanished">作为其处理的一部分过程，某些 Audio Unit 效果器必须延迟将音频返回 Audacity 的时间。 当不补偿此延迟时，您会注意到音频中已经插入了小的静音片段。 启用此选项将提供该补偿，但可能不适用于所有 Audio Unit 效果器。</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="vanished">用户界面</translation>
-    </message>
-    <message>
-        <source>Select "Full" to use the graphical interface if supplied by the Audio Unit. Select "Generic" to use the system supplied generic interface. Select "Basic" for a basic text-only interface. Reopen the effect for this to take effect.</source>
-        <translation type="vanished">选择“完整”以使用由 Audio Unit 提供的图形界面。选择“通用”以使用系统提供的通用界面。选择“基础”以使用仅含文本的基础界面。重新打开效果器以使其生效。</translation>
-    </message>
-    <message>
-        <source>Select &amp;interface</source>
-        <translation type="vanished">选择接口(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="vanished">完整</translation>
-    </message>
-    <message>
-        <source>Generic</source>
-        <translation type="vanished">常规</translation>
-    </message>
-    <message>
-        <source>Basic</source>
-        <translation type="vanished">基本</translation>
-    </message>
-    <message>
-        <source>%s:</source>
-        <extracomment>i18n-hint: An item name introducing a value, which is not part of the string but
-appears in a following text box window; translate with appropriate punctuation</extracomment>
-        <translation type="vanished">%1:</translation>
-    </message>
-    <message>
-        <source>Effect Output</source>
-        <translation type="vanished">效果器输出</translation>
-    </message>
-    <message>
-        <source>LADSPA Effect Options</source>
-        <translation type="vanished">LADSPA 效果器选项</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects.</source>
-        <translation type="vanished">作为其处理的一部分过程，某些 LADSPA 效果器必须延迟将音频返回 Audacity 的时间。 当不补偿此延迟时，您会注意到音频中已经插入了小的静音片段。 启用此选项将提供该补偿，但可能不适用于所有 LADSPA 效果器。</translation>
-    </message>
-    <message>
-        <source>Couldn't instantiate effect</source>
-        <translation type="vanished">无法实例化效果器</translation>
-    </message>
-    <message>
-        <source>LV2 Effect Settings</source>
-        <translation type="vanished">LV2 效果器设置</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to %d) samples:</source>
-        <translation type="vanished">缓冲大小 (8 到 %1 个采样) (&amp;B):</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects.</source>
-        <translation type="vanished">作为其处理中的一部分过程，某些 LV2 效果器必须延迟将音频返回 Audacity 的时间。 当不补偿此延迟时，您会注意到音频中已经插入了小的静音片段。 启用此选项将提供该补偿，但可能不适用于所有 LV2 效果器。</translation>
-    </message>
-    <message>
-        <source>LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">LV2 效果器可有用于设置参数值的图形界面。也可以使用基本的纯文本方法。 重新打开效果器以使其生效。</translation>
-    </message>
-    <message>
-        <source>Applying Nyquist Effect...</source>
-        <translation type="vanished">正在应用奈奎斯特效果器…</translation>
-    </message>
-    <message>
-        <source>Enable track spectrogram view before
-applying 'Spectral' effects.</source>
-        <translation type="vanished">在应用“频谱”效果之前，请启用轨道频谱图视图。</translation>
-    </message>
-    <message>
-        <source>To use 'Spectral effects', enable 'Spectral Selection'
-in the track Spectrogram settings and select the
-frequency range for the effect to act on.</source>
-        <translation type="vanished">要使用“光谱效应”，请在轨道光谱图设置中启用“光谱选择”，并选择要作用的效果器的频率范围。</translation>
-    </message>
-    <message>
-        <source>error: File "%s" specified in header but not found in plug-in path.
-</source>
-        <translation type="vanished">错误：在头部指定的文件“%1”未在插件路径下找到。
-</translation>
-    </message>
-    <message>
-        <source>Nyquist Error</source>
-        <translation type="vanished">Nyquist 错误</translation>
-    </message>
-    <message>
-        <source>Debug Output: </source>
-        <translation type="vanished">调试输出： </translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return audio from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">“;type tool”效果不能从奈奎斯特返回音频。
-</translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return labels from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">“;type tool”效果不能从奈奎斯特返回标签。
-</translation>
-    </message>
-    <message>
-        <source>Nyquist returned the value: %d</source>
-        <translation type="vanished">Nyquist 返回的值：%1</translation>
-    </message>
-    <message>
-        <source>Your code looks like SAL syntax, but there is no 'return' statement.
-For SAL, use a return statement such as:
-	return *track* * 0.1
-or for LISP, begin with an open parenthesis such as:
-	(mult *track* 0.1)
- .</source>
-        <translation type="vanished">代码看起来像是 SAL 语法，但是缺少 return 语句。要么当成 SAL 语句加上类似下句的 SAL return 语句
-	return s * 0.1
-要么作为 LISP 语句在开始位置加上符合 LISP 语法的圆括号，例如
-	(mult s 0.1)
-.</translation>
-    </message>
-    <message>
-        <source>Error in Nyquist code</source>
-        <translation type="vanished">Nyquist 代码错误</translation>
-    </message>
-    <message>
-        <source>Could not determine language</source>
-        <extracomment>i18n-hint: refers to programming "languages"</extracomment>
-        <translation type="vanished">无法确定语言</translation>
-    </message>
-    <message>
-        <source>"%s" is not a valid file path.</source>
-        <translation type="vanished">"%1" 不是一个有效的文件路径。</translation>
-    </message>
-    <message>
-        <source>Mismatched quotes in
-%s</source>
-        <extracomment>i18n-hint: Warning that there is one quotation mark rather than a pair.</extracomment>
-        <translation type="vanished">引号不匹配在
-%1</translation>
-    </message>
-    <message>
-        <source>Enter Nyquist Command: </source>
-        <translation type="vanished">输入 Nyquist 命令： </translation>
-    </message>
-    <message>
-        <source>&amp;Load</source>
-        <translation type="vanished">加载(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Current program has been modified.
-Discard changes?</source>
-        <translation type="vanished">当前程序已被修改。
-要丢弃这些更改吗？</translation>
-    </message>
-    <message>
-        <source>File could not be loaded</source>
-        <translation type="vanished">无法加载文件</translation>
-    </message>
-    <message>
-        <source>File could not be saved</source>
-        <translation type="vanished">无法保存文件</translation>
-    </message>
-    <message>
-        <source>Value range:
-%s to %s</source>
-        <translation type="vanished">值范围：
-%1 到 %2</translation>
-    </message>
-    <message>
-        <source>Value Error</source>
-        <translation type="vanished">值错误</translation>
-    </message>
-    <message>
-        <source>Save file as</source>
-        <translation type="vanished">保存文件为</translation>
-    </message>
-    <message>
-        <source>Vamp Effects</source>
-        <translation type="vanished">Vamp 效果器</translation>
-    </message>
-    <message>
-        <source>Provides Vamp Effects support to Audacity</source>
-        <translation type="vanished">为 Audacity 提供 Vamp 效果器支持</translation>
-    </message>
-    <message>
-        <source>Sorry, failed to load Vamp Plug-in.</source>
-        <translation type="vanished">抱歉，载入 Vamp 插件失败。</translation>
-    </message>
-    <message>
-        <source>Sorry, Vamp Plug-in failed to initialize.</source>
-        <translation type="vanished">抱歉，Vamp 插件初始化失败。</translation>
-    </message>
-    <message>
-        <source>Plugin Settings</source>
-        <translation type="vanished">插件设定</translation>
-    </message>
-    <message>
-        <source>Program</source>
-        <translation type="vanished">程序</translation>
-    </message>
-    <message>
-        <source>Vamp</source>
-        <extracomment>i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-It is not an abbreviation for anything.  See http://vamp-plugins.org</extracomment>
-        <translation type="vanished">Vamp</translation>
-    </message>
-    <message>
-        <source>Entire &amp;Project</source>
-        <translation type="vanished">整个项目(&amp;P)</translation>
-    </message>
-    <message>
-        <source>M&amp;ultiple Files</source>
-        <translation type="vanished">多个文件(&amp;u)</translation>
-    </message>
-    <message>
-        <source>Curren&amp;t Selection</source>
-        <translation type="vanished">当前选区(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Using Label/Track Name</source>
-        <translation type="vanished">使用标签/轨道名</translation>
-    </message>
-    <message>
-        <source>Numbering before Label/Track Name</source>
-        <translation type="vanished">在标签/轨道名前编号</translation>
-    </message>
-    <message>
-        <source>Numbering after File name prefix</source>
-        <translation type="vanished">在文件名前缀之后用数字编号</translation>
-    </message>
-    <message>
-        <source>Export Range:</source>
-        <translation type="vanished">导出区间：</translation>
-    </message>
-    <message>
-        <source>Export entire project</source>
-        <translation type="vanished">导出完整项目</translation>
-    </message>
-    <message>
-        <source>Export multiple files</source>
-        <translation type="vanished">导出多个文件</translation>
-    </message>
-    <message>
-        <source>Export current selection</source>
-        <translation type="vanished">导出当前选区</translation>
-    </message>
-    <message>
-        <source>Split files based on:</source>
-        <translation type="vanished">分割文件，基于：</translation>
-    </message>
-    <message>
-        <source>Include audio before first label</source>
-        <translation type="vanished">包含在第一个标签之前的音频</translation>
-    </message>
-    <message>
-        <source>Name files:</source>
-        <translation type="vanished">命名文件：</translation>
-    </message>
-    <message>
-        <source>File name prefix:</source>
-        <translation type="vanished">文件名前缀：</translation>
-    </message>
-    <message>
-        <source>Overwrite existing files</source>
-        <translation type="vanished">覆盖现有的文件</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="vanished">导出(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Successfully exported the following %lld file(s).</source>
-        <translation type="vanished">成功导出下列 %1 个文件。</translation>
-    </message>
-    <message>
-        <source>Something went wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">导出下列 %1 个文件后出现错误。</translation>
-    </message>
-    <message>
-        <source>Export canceled after exporting the following %lld file(s).</source>
-        <translation type="vanished">导出下列 %1 个文件后取消了导出操作。</translation>
-    </message>
-    <message>
-        <source>Export stopped after exporting the following %lld file(s).</source>
-        <translation type="vanished">导出下列 %1 个文件后终止了导出操作。</translation>
-    </message>
-    <message>
-        <source>Something went really wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">导出下列 %1 个文件之后出现严重错误。</translation>
-    </message>
-    <message>
-        <source>A file named "%s" already exists. Replace?</source>
-        <translation type="vanished">一个名叫"%1"的文件已经存在。替换吗？</translation>
-    </message>
-    <message>
-        <source>All selected audio is muted.</source>
-        <translation type="vanished">所有选择的音频已静音。</translation>
-    </message>
-    <message>
-        <source>Continue to export remaining files?</source>
-        <translation type="vanished">是否继续导出剩余文件？</translation>
-    </message>
-    <message>
-        <source>Custom Sample Rate</source>
-        <translation type="vanished">自定义采样率</translation>
-    </message>
-    <message>
-        <source>File &amp;Name:</source>
-        <translation type="vanished">文件名(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>Fo&amp;lder:</source>
-        <translation type="vanished">文件夹(&amp;L)：</translation>
-    </message>
-    <message>
-        <source>&amp;Format:</source>
-        <translation type="vanished">格式(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>M&amp;ono</source>
-        <translation type="vanished">单声道(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation type="vanished">立体声(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Custom mappin&amp;g</source>
-        <extracomment>i18n-hint refers to custom channel mapping configuration</extracomment>
-        <translation type="vanished">自定义映射​​(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Configure custom mapping</source>
-        <extracomment>i18n-hint accessibility hint, refers to export channel configuration</extracomment>
-        <translation type="vanished">配置自定义映射</translation>
-    </message>
-    <message>
-        <source>Configure</source>
-        <translation type="vanished">配置</translation>
-    </message>
-    <message>
-        <source>Sample &amp;Rate</source>
-        <translation type="vanished">采样率(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Choose a location to save the exported files</source>
-        <translation type="vanished">选择保存导出文件的位置</translation>
-    </message>
-    <message>
-        <source>Advanced Mixing Options</source>
-        <translation type="vanished">高级混音选项</translation>
-    </message>
-    <message>
-        <source>%d Hz (custom)</source>
-        <translation type="vanished">%1 Hz（自定义）</translation>
-    </message>
-    <message>
-        <source>Other...</source>
-        <translation type="vanished">其它...</translation>
-    </message>
-    <message>
-        <source>%s - L</source>
-        <extracomment>i18n-hint: track name and L abbreviating Left channel</extracomment>
-        <translation type="vanished">%1 - L</translation>
-    </message>
-    <message>
-        <source>%s - R</source>
-        <extracomment>i18n-hint: track name and R abbreviating Right channel</extracomment>
-        <translation type="vanished">%1 - R</translation>
-    </message>
-    <message>
-        <source>Output Channels: %2d</source>
-        <translation type="vanished">输出声道： %1</translation>
-    </message>
-    <message>
-        <source>Mixer Panel</source>
-        <translation type="vanished">混音器面板</translation>
-    </message>
-    <message>
-        <source>Channel: %2d</source>
-        <translation type="vanished">通道： %1</translation>
-    </message>
-    <message>
-        <source>No format specific options</source>
-        <translation type="vanished">无格式指定选项</translation>
-    </message>
-    <message>
-        <source>Import Raw</source>
-        <extracomment>i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.</extracomment>
-        <translation type="vanished">导入原始数据</translation>
-    </message>
-    <message>
-        <source>Import Raw Data</source>
-        <translation type="vanished">导入原始数据</translation>
-    </message>
-    <message>
-        <source>No endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">没有尾端(endianness)</translation>
-    </message>
-    <message>
-        <source>Little-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">小尾端(little-endian)</translation>
-    </message>
-    <message>
-        <source>Big-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">大尾端(big-endian)</translation>
-    </message>
-    <message>
-        <source>Default endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">默认尾端(endianness)</translation>
-    </message>
-    <message>
-        <source>1 Channel (Mono)</source>
-        <translation type="vanished">1 声道(单声道)</translation>
-    </message>
-    <message>
-        <source>2 Channels (Stereo)</source>
-        <translation type="vanished">2声道(立体声)</translation>
-    </message>
-    <message>
-        <source>%d Channels</source>
-        <translation type="vanished">%1 声道</translation>
-    </message>
-    <message>
-        <source>Encoding:</source>
-        <translation type="vanished">编码：</translation>
-    </message>
-    <message>
-        <source>Byte order:</source>
-        <translation type="vanished">字节序：</translation>
-    </message>
-    <message>
-        <source>Channels:</source>
-        <translation type="vanished">声道：</translation>
-    </message>
-    <message>
-        <source>Start offset:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">开始偏移：</translation>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="vanished">字节</translation>
-    </message>
-    <message>
-        <source>Amount to import:</source>
-        <translation type="vanished">总计要导入：</translation>
-    </message>
-    <message>
-        <source>Sample rate:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">采样率：</translation>
-    </message>
-    <message>
-        <source>Detect</source>
-        <extracomment>i18n-hint: Guess format of raw file</extracomment>
-        <translation type="vanished">检测</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="vanished">导入(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Bad data size. Could not import audio</source>
-        <translation type="vanished">错误的数据大小。无法导入音频</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s, %d of %d clip %s</source>
-        <oldsource>%s %s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First %s is replaced with the noun "start" or "end"
-identifying one end of a clip,
-second string is the name of that clip,
-first number gives the position of that clip in a sequence
-of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2, %3 of %4 个片段 %5</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>start</source>
-        <translation type="vanished">起点</translation>
-    </message>
-    <message>
-        <source>end</source>
-        <translation type="vanished">终点</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s and %s %s, %d and %d of %d clip %s</source>
-        <oldsource>%s %s and %s %s, %d and %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First and third %s are each replaced with the noun "start"
-or with "end", identifying and end of a clip,
-second and fourth strings are the names of those clips,
-first and second numbers give the position of those clips in
-a sequence of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2 和 %3 %4, %5 和 %6 of %7 个片段 %8</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip %s</source>
-        <oldsource>%s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-first string is the name of a clip,
-first number gives the position of that clip
-in a sequence of clips,
-last number counts all clips,
-last string names a track</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 of %3 个片段 %4</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Moved clips to the right</source>
-        <translation type="vanished">将片段移至右侧</translation>
-    </message>
-    <message>
-        <source>Moved clips to the left</source>
-        <translation type="vanished">将片段移至左侧</translation>
-    </message>
-    <message>
-        <source>Move audio clips</source>
-        <translation type="vanished">移动音频片段</translation>
-    </message>
-    <message>
-        <source>clip not moved</source>
-        <translation type="vanished">片段未移动</translation>
-    </message>
-    <message>
-        <source>Audi&amp;o Clips</source>
-        <translation type="vanished">音频片段(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary to Cursor</source>
-        <translation type="vanished">上一个片段边界到光标位置</translation>
-    </message>
-    <message>
-        <source>Cursor to Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">光标位置到下一个片段边界</translation>
-    </message>
-    <message>
-        <source>Previo&amp;us Clip</source>
-        <translation type="vanished">上一个片段(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Select Previous Clip</source>
-        <translation type="vanished">选择上一个片段</translation>
-    </message>
-    <message>
-        <source>N&amp;ext Clip</source>
-        <translation type="vanished">下一个片段(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Select Next Clip</source>
-        <translation type="vanished">选择下一个片段</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary</source>
-        <translation type="vanished">上一个片段边界(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Cursor to Prev Clip Boundary</source>
-        <translation type="vanished">光标位置到上一个片段边界</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">下一个片段边界(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Cursor to Next Clip Boundary</source>
-        <translation type="vanished">光标位置到下一个片段边界</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Left</source>
-        <translation type="vanished">向左平移时间(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Right</source>
-        <translation type="vanished">向右平移时间(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Pasted text from the clipboard</source>
-        <translation type="vanished">从剪贴板粘贴文字</translation>
-    </message>
-    <message>
-        <source>Pasted from the clipboard</source>
-        <translation type="vanished">从剪贴板粘贴</translation>
-    </message>
-    <message>
-        <source>Nothing to undo</source>
-        <translation type="vanished">没有可撤消的操作</translation>
-    </message>
-    <message>
-        <source>Nothing to redo</source>
-        <translation type="vanished">没有可重做的操作</translation>
-    </message>
-    <message>
-        <source>Cut to the clipboard</source>
-        <translation type="vanished">剪切到剪贴板</translation>
-    </message>
-    <message>
-        <source>Deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">删除 %1 秒 (在 t=%2)</translation>
-    </message>
-    <message>
-        <source>Paste clip</source>
-        <translation type="vanished">粘贴片段</translation>
-    </message>
-    <message>
-        <source>Pasting clip contents, please wait</source>
-        <translation type="vanished">正在粘贴片段内容，请稍候</translation>
-    </message>
-    <message>
-        <source>The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again.</source>
-        <translation type="vanished">您尝试粘贴的内容将跨多个轨道，超出您当前可用的轨道数。请添加更多轨道，然后重试。</translation>
-    </message>
-    <message>
-        <source>There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again.</source>
-        <translation type="vanished">所选曲目数量不足，无法容纳您复制的内容。请选择其他曲目并重试。</translation>
-    </message>
-    <message>
-        <source>Duplicated</source>
-        <translation type="vanished">已复制</translation>
-    </message>
-    <message>
-        <source>Split-cut to the clipboard</source>
-        <translation type="vanished">分离并剪切到剪贴板</translation>
-    </message>
-    <message>
-        <source>Split Cut</source>
-        <translation type="vanished">分离并剪切</translation>
-    </message>
-    <message>
-        <source>Split-deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">分离并删除 %1 秒 (在 t=%2)</translation>
-    </message>
-    <message>
-        <source>Split Delete</source>
-        <translation type="vanished">分离并删除</translation>
-    </message>
-    <message>
-        <source>Silenced selected tracks for %.2f seconds at %.2f</source>
-        <translation type="vanished">使选定轨道静音%1 秒，(在 %2 )</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>command</comment>
-        <extracomment>i18n-hint: verb</extracomment>
-        <translation type="vanished">使静音</translation>
-    </message>
-    <message>
-        <source>Trim selected audio tracks from %.2f seconds to %.2f seconds</source>
-        <translation type="vanished">修剪选择的音频音轨从 %1 秒到 %2 秒</translation>
-    </message>
-    <message>
-        <source>Trim Audio</source>
-        <translation type="vanished">修剪音频</translation>
-    </message>
-    <message>
-        <source>Split to new track</source>
-        <translation type="vanished">分离到新轨道</translation>
-    </message>
-    <message>
-        <source>Split New</source>
-        <translation type="vanished">分离并新建</translation>
-    </message>
-    <message>
-        <source>Joined %.2f seconds at t=%.2f</source>
-        <translation type="vanished">已连接 %1 秒 (位置 t=%2)</translation>
-    </message>
-    <message>
-        <source>Join</source>
-        <translation type="vanished">连接</translation>
-    </message>
-    <message>
-        <source>Detached %.2f seconds at t=%.2f</source>
-        <translation type="vanished">分离%1 秒，于 t=%2</translation>
-    </message>
-    <message>
-        <source>Detach</source>
-        <translation type="vanished">分离</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">剪切(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="vanished">删除(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">复制(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Duplic&amp;ate</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">创建副本(&amp;A)</translation>
-    </message>
-    <message>
-        <source>R&amp;emove Special</source>
-        <translation type="vanished">特殊移除(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Cut</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut</extracomment>
-        <translation type="vanished">分离并剪切(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Split D&amp;elete</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE</extracomment>
-        <translation type="vanished">分离并删除(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Silence Audi&amp;o</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">置为静音(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Tri&amp;m Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">修剪音频(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit</source>
-        <extracomment>i18n-hint: (verb) It's an item on a menu.</extracomment>
-        <translation type="vanished">分离(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Split Ne&amp;w</source>
-        <translation type="vanished">分离并新建(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Join</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">连接(&amp;J)</translation>
-    </message>
-    <message>
-        <source>Detac&amp;h at Silences</source>
-        <translation type="vanished">静音处分离(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Pre&amp;ferences</source>
-        <translation type="vanished">首选项(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Key</source>
-        <translation type="vanished">删除键(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Delete Key&amp;2</source>
-        <translation type="vanished">删除键 &amp;2</translation>
-    </message>
-    <message>
-        <source>Ext&amp;ra</source>
-        <translation type="vanished">额外(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Full Screen</source>
-        <translation type="vanished">启用全屏 (&amp;F)</translation>
-    </message>
-    <message>
-        <source>Cannot proceed to export.</source>
-        <translation type="vanished">无法进行导出。</translation>
-    </message>
-    <message>
-        <source>Cannot create directory '%s'. 
-File already exists that is not a directory</source>
-        <translation type="vanished">无法创建目录“%1”。
-非目录文件已存在</translation>
-    </message>
-    <message>
-        <source>labels.txt</source>
-        <extracomment>i18n-hint: filename containing exported text from label tracks</extracomment>
-        <translation type="vanished">标签.txt</translation>
-    </message>
-    <message>
-        <source>There are no label tracks to export.</source>
-        <translation type="vanished">没有标签轨，无法导出。</translation>
-    </message>
-    <message>
-        <source>Imported labels from '%s'</source>
-        <translation type="vanished">从“%1”导入的标签</translation>
-    </message>
-    <message>
-        <source>Import Labels</source>
-        <translation type="vanished">导入标签</translation>
-    </message>
-    <message>
-        <source>&amp;Dangerous Reset...</source>
-        <translation type="vanished">危险重置(&amp;D)..</translation>
-    </message>
-    <message>
-        <source>Open Recent</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Mac OS X only</extracomment>
-        <translation type="vanished">打开最近访问的文件</translation>
-    </message>
-    <message>
-        <source>Recent &amp;Files</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Windows and Linux</extracomment>
-        <translation type="vanished">最近的文件(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Save Project</source>
-        <translation type="vanished">保存项目(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Save Project &amp;As...</source>
-        <translation type="vanished">项目另存为(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Project...</source>
-        <translation type="vanished">备份项目(&amp;B)...</translation>
-    </message>
-    <message>
-        <source>&amp;Export Audio...</source>
-        <translation type="vanished">导出音频(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Other</source>
-        <translation type="vanished">导出其他​​(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Export &amp;Labels...</source>
-        <translation type="vanished">导出标签(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>&amp;Audio...</source>
-        <translation type="vanished">音频(&amp;A)...</translation>
-    </message>
-    <message>
-        <source>&amp;Labels...</source>
-        <translation type="vanished">标签(&amp;L)...</translation>
-    </message>
-    <message>
-        <source>&amp;Raw Data...</source>
-        <translation type="vanished">原始数据(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <extracomment>i18n-hint: (verb) It's item on a menu.</extracomment>
-        <translation type="vanished">退出(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Export as MP&amp;3</source>
-        <translation type="vanished">导出为 MP&amp;3</translation>
-    </message>
-    <message>
-        <source>Export as &amp;WAV</source>
-        <translation type="vanished">导出为 WAV(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Export as &amp;OGG</source>
-        <translation type="vanished">导出为 OGG(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Export as FLAC</source>
-        <translation type="vanished">导出为 FLAC</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Selected Audio...</source>
-        <translation type="vanished">导出选择的音频(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Do you have these problems?</source>
-        <translation type="vanished">您是否遇到这些问题？</translation>
-    </message>
-    <message>
-        <source>Fix</source>
-        <translation type="vanished">修复</translation>
-    </message>
-    <message>
-        <source>Quick Fixes</source>
-        <translation type="vanished">快速修复</translation>
-    </message>
-    <message>
-        <source>Nothing to do</source>
-        <translation type="vanished">待机</translation>
-    </message>
-    <message>
-        <source>No quick, easily fixed problems were found</source>
-        <translation type="vanished">未发现可简单解决的问题</translation>
-    </message>
-    <message>
-        <source>Clocks on the Tracks</source>
-        <translation type="vanished">轨道时钟</translation>
-    </message>
-    <message>
-        <source>Can't select precisely</source>
-        <translation type="vanished">无法精确选择</translation>
-    </message>
-    <message>
-        <source>Recording stops and starts</source>
-        <translation type="vanished">录制停止和开始</translation>
-    </message>
-    <message>
-        <source>Fixed</source>
-        <translation type="vanished">已解决</translation>
-    </message>
-    <message>
-        <source>Audio Device Info</source>
-        <translation type="vanished">音频设备信息</translation>
-    </message>
-    <message>
-        <source>&amp;Quick Help...</source>
-        <translation type="vanished">快速帮助(&amp;Q)...</translation>
-    </message>
-    <message>
-        <source>&amp;Manual...</source>
-        <translation type="vanished">使用手册(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>Au&amp;dio Device Info...</source>
-        <translation type="vanished">音频设备信息(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>&amp;Generate Support Data...</source>
-        <translation type="vanished">生成支持数据(&amp;G)...</translation>
-    </message>
-    <message>
-        <source>&amp;Check for Updates...</source>
-        <translation type="vanished">检查更新(&amp;C)...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity</source>
-        <translation type="vanished">关于 Audacity(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Added label</source>
-        <translation type="vanished">已添加标签</translation>
-    </message>
-    <message>
-        <source>Paste Text to New Label</source>
-        <translation type="vanished">粘贴文本至新标签</translation>
-    </message>
-    <message>
-        <source>Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
-regions.</extracomment>
-        <translation type="vanished">将标签的音频区域剪切到剪贴板</translation>
-    </message>
-    <message>
-        <source>Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">剪切标签的音频</translation>
-    </message>
-    <message>
-        <source>Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just deleted the labeled audio regions</extracomment>
-        <translation type="vanished">已经删除标签的音频区域</translation>
-    </message>
-    <message>
-        <source>Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">删除标签的音频</translation>
-    </message>
-    <message>
-        <source>Split Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) Audacity has just split cut the labeled audio
-regions</extracomment>
-        <translation type="vanished">分离并剪切已标签的音频到剪贴板</translation>
-    </message>
-    <message>
-        <source>Split Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut on the labels</extracomment>
-        <translation type="vanished">分离并剪切已标签的音频</translation>
-    </message>
-    <message>
-        <source>Split Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just done a special kind of DELETE on
-the labeled audio regions</extracomment>
-        <translation type="vanished">分离并删除已标签的音频选区</translation>
-    </message>
-    <message>
-        <source>Split Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE on labeled audio
-regions</extracomment>
-        <translation type="vanished">分离并删除已标签的音频</translation>
-    </message>
-    <message>
-        <source>Silenced labeled audio regions</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">静音标签的音频选区</translation>
-    </message>
-    <message>
-        <source>Silence Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">静音标签的音频</translation>
-    </message>
-    <message>
-        <source>Copied labeled audio regions to clipboard</source>
-        <translation type="vanished">将标签的音频区域复制到剪贴板</translation>
-    </message>
-    <message>
-        <source>Copy Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">复制标签的音频</translation>
-    </message>
-    <message>
-        <source>Split labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just split the labeled
-audio (a point or a region)</extracomment>
-        <translation type="vanished">分离标签的音频（点或者区域）</translation>
-    </message>
-    <message>
-        <source>Split Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">分离标签的音频</translation>
-    </message>
-    <message>
-        <source>Joined labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) Audacity has just joined the labeled audio (points or
-regions)</extracomment>
-        <translation type="vanished">合并标签的音频(点或者选区)</translation>
-    </message>
-    <message>
-        <source>Join Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">合并标签的音频</translation>
-    </message>
-    <message>
-        <source>Detached labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-This message appears in history and tells you about something
-Audacity has done.</extracomment>
-        <translation type="vanished">分离标签的音频选区</translation>
-    </message>
-    <message>
-        <source>Detach Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">分离标签的音频</translation>
-    </message>
-    <message>
-        <source>Created new label track</source>
-        <translation type="vanished">新建标签轨</translation>
-    </message>
-    <message>
-        <source>New Track</source>
-        <translation type="vanished">新轨道</translation>
-    </message>
-    <message>
-        <source>&amp;Labels</source>
-        <translation type="vanished">标签(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Label &amp;Editor</source>
-        <translation type="vanished">标签编辑器 (&amp;E)</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Selection</source>
-        <translation type="vanished">为选区添加标签(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Playback Position</source>
-        <translation type="vanished">在播放位置添加标签(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Paste Te&amp;xt to New Label</source>
-        <translation type="vanished">粘贴文本至新标签(&amp;X)</translation>
-    </message>
-    <message>
-        <source>&amp;Typing Creates New Labels</source>
-        <translation type="vanished">输入时创建新标签 (&amp;T)</translation>
-    </message>
-    <message>
-        <source>La&amp;beled Audio</source>
-        <translation type="vanished">已标签音频(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Cut</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">剪切(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Label Cut</source>
-        <translation type="vanished">标签剪切</translation>
-    </message>
-    <message>
-        <source>Label Delete</source>
-        <translation type="vanished">标签删除</translation>
-    </message>
-    <message>
-        <source>&amp;Split Cut</source>
-        <extracomment>i18n-hint: (verb) A special way to cut out a piece of audio</extracomment>
-        <translation type="vanished">分离并剪切(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Label Split Cut</source>
-        <translation type="vanished">分离并剪切标签</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit Delete</source>
-        <translation type="vanished">分离并删除(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Label Split Delete</source>
-        <translation type="vanished">分离并删除标签</translation>
-    </message>
-    <message>
-        <source>Silence &amp;Audio</source>
-        <translation type="vanished">置为静音(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Label Silence</source>
-        <translation type="vanished">标签静音</translation>
-    </message>
-    <message>
-        <source>Co&amp;py</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">复制(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Label Copy</source>
-        <translation type="vanished">标签复制</translation>
-    </message>
-    <message>
-        <source>Spli&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">分离(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Label Split</source>
-        <translation type="vanished">标签分离</translation>
-    </message>
-    <message>
-        <source>Label Join</source>
-        <translation type="vanished">标签合并</translation>
-    </message>
-    <message>
-        <source>&amp;Label Track</source>
-        <translation type="vanished">标签轨(&amp;L)</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="vanished">...</translation>
-    </message>
-    <message>
-        <source>Uncategorized</source>
-        <translation type="vanished">未分类</translation>
-    </message>
-    <message>
-        <source>Move Backward Through Active Windows</source>
-        <translation type="vanished">切换到上个活动窗口</translation>
-    </message>
-    <message>
-        <source>Move Forward Through Active Windows</source>
-        <translation type="vanished">切换到下个活动窗口</translation>
-    </message>
-    <message>
-        <source>Foc&amp;us</source>
-        <translation type="vanished">聚焦(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move &amp;Backward from Toolbars to Tracks</source>
-        <translation type="vanished">从工具栏到轨道后移(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Move F&amp;orward from Toolbars to Tracks</source>
-        <translation type="vanished">从轨道到工具栏前移(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Previous Track</source>
-        <translation type="vanished">移动焦点到上一轨</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Next Track</source>
-        <translation type="vanished">移动焦点到下一轨</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;First Track</source>
-        <translation type="vanished">将焦点移到第一个音轨</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Last Track</source>
-        <translation type="vanished">将焦点移到最后一个音轨</translation>
-    </message>
-    <message>
-        <source>Move Focus to P&amp;revious and Select</source>
-        <translation type="vanished">移动焦点到上一轨并选中</translation>
-    </message>
-    <message>
-        <source>Move Focus to N&amp;ext and Select</source>
-        <translation type="vanished">移动焦点到下一轨并选中</translation>
-    </message>
-    <message>
-        <source>&amp;Toggle Focused Track</source>
-        <translation type="vanished">选择/取消 轨道(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Toggle Focuse&amp;d Track</source>
-        <translation type="vanished">选择/取消 轨道(&amp;D)</translation>
-    </message>
-    <message>
-        <source>A journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Audacity 将在下次启动后开始录制操作记录。</translation>
-    </message>
-    <message>
-        <source>No journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Audacity 在下次启动后不会录制操作记录。</translation>
-    </message>
-    <message>
-        <source>Plugin Manager</source>
-        <translation type="vanished">插件管理器</translation>
-    </message>
-    <message>
-        <source>Repeat Last Generator</source>
-        <translation type="vanished">重复上一个生成器</translation>
-    </message>
-    <message>
-        <source>Effe&amp;ct</source>
-        <translation type="vanished">效果器(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Add Realtime Effects</source>
-        <translation type="vanished">添加实时效果器</translation>
-    </message>
-    <message>
-        <source>Get AI effects...</source>
-        <translation type="vanished">获得 AI 效果器…</translation>
-    </message>
-    <message>
-        <source>Repeat Last Effect</source>
-        <translation type="vanished">重复上次使用的效果器</translation>
-    </message>
-    <message>
-        <source>Repeat Last Analyzer</source>
-        <translation type="vanished">重复上一个分析器</translation>
-    </message>
-    <message>
-        <source>T&amp;ools</source>
-        <translation type="vanished">工具(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Reset &amp;Configuration</source>
-        <translation type="vanished">重置配置(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Run Benchmark...</source>
-        <translation type="vanished">运行性能测试(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Simulate Recording Errors</source>
-        <translation type="vanished">模拟录音错误</translation>
-    </message>
-    <message>
-        <source>Detect Upstream Dropouts</source>
-        <translation type="vanished">侦测上流丢失</translation>
-    </message>
-    <message>
-        <source>Write Journal</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">保存操作记录</translation>
-    </message>
-    <message>
-        <source>Set Left Selection Boundary</source>
-        <translation type="vanished">设置选区左边界</translation>
-    </message>
-    <message>
-        <source>Set Right Selection Boundary</source>
-        <translation type="vanished">设置选区右边界</translation>
-    </message>
-    <message>
-        <source>Zero-crossing search regions intersect stretched clip(s).</source>
-        <translation type="vanished">零交叉搜索区域与拉伸的片段相交。</translation>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation type="vanished">全部(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;None</source>
-        <translation type="vanished">全不(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Select None</source>
-        <translation type="vanished">空置选择</translation>
-    </message>
-    <message>
-        <source>In All &amp;Tracks</source>
-        <translation type="vanished">所有轨道(&amp;T)</translation>
-    </message>
-    <message>
-        <source>In All &amp;Sync-Locked Tracks</source>
-        <translation type="vanished">所有同步锁定轨道(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Select Sync-Locked</source>
-        <translation type="vanished">选择同步锁定</translation>
-    </message>
-    <message>
-        <source>R&amp;egion</source>
-        <translation type="vanished">范围(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Left at Playback Position</source>
-        <translation type="vanished">在播放位置左端(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Set Selection Left at Play Position</source>
-        <translation type="vanished">设置选区于播放位置左端</translation>
-    </message>
-    <message>
-        <source>&amp;Right at Playback Position</source>
-        <translation type="vanished">在播放位置右端(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Set Selection Right at Play Position</source>
-        <translation type="vanished">设置选区于播放位置右端</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start to Cursor</source>
-        <translation type="vanished">音轨起点到光标位置(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Select Track Start to Cursor</source>
-        <translation type="vanished">选择轨道起点至光标位置</translation>
-    </message>
-    <message>
-        <source>Cursor to Track &amp;End</source>
-        <translation type="vanished">光标位置到音轨终点(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Track End</source>
-        <translation type="vanished">选择光标位置到轨道终点</translation>
-    </message>
-    <message>
-        <source>Track Start to En&amp;d</source>
-        <translation type="vanished">轨道起点至终点(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Select Track Start to End</source>
-        <translation type="vanished">选择轨道起点至终点</translation>
-    </message>
-    <message>
-        <source>S&amp;tore Selection</source>
-        <translation type="vanished">储存选区(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Retrieve Selectio&amp;n</source>
-        <translation type="vanished">恢复选区(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Cursor to Stored &amp;Cursor Position</source>
-        <translation type="vanished">恢复光标至储存位置(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Stored</source>
-        <translation type="vanished">选择光标位置至储存位置</translation>
-    </message>
-    <message>
-        <source>Store Cursor Pos&amp;ition</source>
-        <translation type="vanished">存储光标位置(&amp;I)</translation>
-    </message>
-    <message>
-        <source>At &amp;Zero Crossings</source>
-        <translation type="vanished">寻找过零点(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Select Zero Crossing</source>
-        <translation type="vanished">选择过零点</translation>
-    </message>
-    <message>
-        <source>&amp;Selection</source>
-        <translation type="vanished">选区(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Off</source>
-        <translation type="vanished">关闭吸附(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Nearest</source>
-        <translation type="vanished">吸附到最近(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Prior</source>
-        <translation type="vanished">吸附到更主要(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Selection to &amp;Start</source>
-        <translation type="vanished">选择至起点(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Selection to En&amp;d</source>
-        <translation type="vanished">选择至终点(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Left</source>
-        <translation type="vanished">选区向左扩展(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Right</source>
-        <translation type="vanished">选区向右扩展(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Le&amp;ft Selection</source>
-        <translation type="vanished">设置或扩展选区左端(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Rig&amp;ht Selection</source>
-        <translation type="vanished">设置或扩展选区右端(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Selection Contract L&amp;eft</source>
-        <translation type="vanished">选区向左收缩(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Selection Contract R&amp;ight</source>
-        <translation type="vanished">选区向右收缩(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor to</source>
-        <translation type="vanished">光标位置到(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Selection Star&amp;t</source>
-        <translation type="vanished">选区起点(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection Start</source>
-        <translation type="vanished">光标位置至选区起点</translation>
-    </message>
-    <message>
-        <source>Selection En&amp;d</source>
-        <translation type="vanished">选区终点(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection End</source>
-        <translation type="vanished">光标位置至选区终点</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start</source>
-        <translation type="vanished">到音轨起点(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Cursor to Track Start</source>
-        <translation type="vanished">光标位置到轨道起点</translation>
-    </message>
-    <message>
-        <source>Track &amp;End</source>
-        <translation type="vanished">到音轨终点(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Cursor to Track End</source>
-        <translation type="vanished">光标位置到轨道终点</translation>
-    </message>
-    <message>
-        <source>&amp;Project Start</source>
-        <translation type="vanished">项目起点(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Cursor to Project Start</source>
-        <translation type="vanished">光标位置到项目起点</translation>
-    </message>
-    <message>
-        <source>Project E&amp;nd</source>
-        <translation type="vanished">项目终点(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Cursor to Project End</source>
-        <translation type="vanished">光标位置到项目终点</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor</source>
-        <translation type="vanished">光标位置(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Left</source>
-        <translation type="vanished">光标左移(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Right</source>
-        <translation type="vanished">光标右移(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Cursor Sh&amp;ort Jump Left</source>
-        <translation type="vanished">光标小左跳(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Cursor Shor&amp;t Jump Right</source>
-        <translation type="vanished">光标小右跳(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Cursor Long J&amp;ump Left</source>
-        <translation type="vanished">光标大左跳(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Cursor Long Ju&amp;mp Right</source>
-        <translation type="vanished">光标大右跳(&amp;M)</translation>
-    </message>
-    <message>
-        <source>See&amp;k</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">定位播放(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Left During Playback</source>
-        <translation type="vanished">播放时稍向左定位(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Right During Playback</source>
-        <translation type="vanished">播放时稍向右定位(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Long Seek Le&amp;ft During Playback</source>
-        <translation type="vanished">播放时向左定位(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Long Seek Rig&amp;ht During Playback</source>
-        <translation type="vanished">播放时稍右定位(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Tim&amp;eline</source>
-        <translation type="vanished">时间轴 (&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Toolbars</source>
-        <translation type="vanished">工具栏(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Reset Toolb&amp;ars</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">重置工具栏(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Mix</source>
-        <translation type="vanished">混音</translation>
-    </message>
-    <message>
-        <source>Rendered all audio in track '%s'</source>
-        <translation type="vanished">已渲染轨道 "%1" 的所有音频</translation>
-    </message>
-    <message>
-        <source>Render</source>
-        <extracomment>i18n-hint: Convert the audio into a more usable form, so apply
-* panning and amplification and write to some external file.</extracomment>
-        <translation type="vanished">渲染</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new stereo track</source>
-        <translation type="vanished">已经将 %1 个轨道混音并渲染至一个新的立体声轨</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new mono track</source>
-        <translation type="vanished">已经将 %1 个轨道混音并渲染至一个新的单声道轨</translation>
-    </message>
-    <message>
-        <source>Panned audio track(s)</source>
-        <extracomment>i18n-hint: One or more audio tracks have been panned</extracomment>
-        <translation type="vanished">已平衡音轨声道</translation>
-    </message>
-    <message>
-        <source>Pan Track</source>
-        <translation type="vanished">声道平衡音轨</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Zero</source>
-        <translation type="vanished">从零点开始(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Cursor/Selection Start</source>
-        <translation type="vanished">从光标位置/选区起点开始(&amp;C）</translation>
-    </message>
-    <message>
-        <source>Start to Selection &amp;End</source>
-        <translation type="vanished">从选区终点开始(&amp;E)</translation>
-    </message>
-    <message>
-        <source>End to Cu&amp;rsor/Selection Start</source>
-        <translation type="vanished">从光标位置/选区终点结束(&amp;R)</translation>
-    </message>
-    <message>
-        <source>End to Selection En&amp;d</source>
-        <translation type="vanished">从选区终点结束(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to zero</source>
-        <extracomment>i18n-hint: In this and similar messages describing editing actions,
-the starting or ending points of tracks are re-"aligned" to other
-times, and the time selection may be "moved" too.  The first
-noun -- "start" in this example -- is the object of a verb (not of
-an implied preposition "from").</extracomment>
-        <translation type="vanished">已对齐或移动起点至零</translation>
-    </message>
-    <message>
-        <source>Aligned start to zero</source>
-        <translation type="vanished">已对齐起点至零</translation>
-    </message>
-    <message>
-        <source>Align/Move Start</source>
-        <extracomment>i18n-hint: This and similar messages give shorter descriptions of
-the aligning and moving editing actions</extracomment>
-        <translation type="vanished">对齐或移动起点</translation>
-    </message>
-    <message>
-        <source>Align Start</source>
-        <translation type="vanished">对齐起点</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to cursor/selection start</source>
-        <translation type="vanished">已对齐或移动起点至光标处或选区起点</translation>
-    </message>
-    <message>
-        <source>Aligned start to cursor/selection start</source>
-        <translation type="vanished">已对齐起点至光标处或选区起点</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to selection end</source>
-        <translation type="vanished">已对齐或移动起点至选区终点</translation>
-    </message>
-    <message>
-        <source>Aligned start to selection end</source>
-        <translation type="vanished">已对齐起点至选区终点</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to cursor/selection start</source>
-        <translation type="vanished">已对齐或移动终点至光标处或选区起点</translation>
-    </message>
-    <message>
-        <source>Aligned end to cursor/selection start</source>
-        <translation type="vanished">已对齐终点至光标处或选区起点</translation>
-    </message>
-    <message>
-        <source>Align/Move End</source>
-        <translation type="vanished">对齐或移动终点</translation>
-    </message>
-    <message>
-        <source>Align End</source>
-        <translation type="vanished">对齐终点</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to selection end</source>
-        <translation type="vanished">已对齐或移动终点至选区终点</translation>
-    </message>
-    <message>
-        <source>Aligned end to selection end</source>
-        <translation type="vanished">已对齐终点至选区终点</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to end</source>
-        <translation type="vanished">已对齐或移动终点至终点</translation>
-    </message>
-    <message>
-        <source>Aligned end to end</source>
-        <translation type="vanished">已对齐终点至终点</translation>
-    </message>
-    <message>
-        <source>Align/Move End to End</source>
-        <translation type="vanished">对齐或移动终点至终点</translation>
-    </message>
-    <message>
-        <source>Align End to End</source>
-        <translation type="vanished">对齐终点至终点</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved together</source>
-        <translation type="vanished">已整体对齐或移动</translation>
-    </message>
-    <message>
-        <source>Aligned together</source>
-        <translation type="vanished">已整体对齐</translation>
-    </message>
-    <message>
-        <source>Align/Move Together</source>
-        <translation type="vanished">已整体对齐或移动</translation>
-    </message>
-    <message>
-        <source>Align Together</source>
-        <translation type="vanished">整体对齐</translation>
-    </message>
-    <message>
-        <source>Synchronize MIDI with Audio</source>
-        <translation type="vanished">MIDI 与音频同步</translation>
-    </message>
-    <message>
-        <source>Synchronizing MIDI and Audio Tracks</source>
-        <translation type="vanished">MIDI 与音轨同步</translation>
-    </message>
-    <message>
-        <source>Adjusted gain</source>
-        <translation type="vanished">调整过的音量增强</translation>
-    </message>
-    <message>
-        <source>Adjusted Pan</source>
-        <translation type="vanished">已调整的左右平衡</translation>
-    </message>
-    <message>
-        <source>The entered value is invalid</source>
-        <translation type="vanished">输入的值无效</translation>
-    </message>
-    <message>
-        <source>Resampling track %d</source>
-        <translation type="vanished">重采样轨道 %1</translation>
-    </message>
-    <message>
-        <source>Resampled audio track(s)</source>
-        <translation type="vanished">重采样音轨</translation>
-    </message>
-    <message>
-        <source>Resample Track</source>
-        <translation type="vanished">重采样轨道</translation>
-    </message>
-    <message>
-        <source>Please select at least one audio track and one MIDI track.</source>
-        <translation type="vanished">请选择至少一个音轨和一个音符轨。</translation>
-    </message>
-    <message>
-        <source>Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">对齐完成：MIDI 从 %1 至 %2 秒，音频 从 %3 至 %4 秒。</translation>
-    </message>
-    <message>
-        <source>Sync MIDI with Audio</source>
-        <translation type="vanished">MIDI 与音频同步</translation>
-    </message>
-    <message>
-        <source>Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">对齐出错：输入太短 - MIDI 从 %1 至 %2 秒，音频 从 %3 至 %4 秒。</translation>
-    </message>
-    <message>
-        <source>Internal error reported by alignment process.</source>
-        <translation type="vanished">校准过程报告的内部错误。</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by time</source>
-        <translation type="vanished">按时间排序的轨道</translation>
-    </message>
-    <message>
-        <source>Sort by Time</source>
-        <translation type="vanished">按照时间排序</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by name</source>
-        <translation type="vanished">按名字排序的轨道</translation>
-    </message>
-    <message>
-        <source>Sort by Name</source>
-        <translation type="vanished">按照名称排序</translation>
-    </message>
-    <message>
-        <source>Can't delete track with active audio</source>
-        <translation type="vanished">不能删除活动音频轨道</translation>
-    </message>
-    <message>
-        <source>Add &amp;New</source>
-        <translation type="vanished">增加新轨道(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x</source>
-        <translation type="vanished">混音(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Mix Stereo Down to &amp;Mono</source>
-        <translation type="vanished">混合立体声至单声道(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x and Render</source>
-        <translation type="vanished">混音并渲染(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Mix and Render to Ne&amp;w Track</source>
-        <translation type="vanished">混音并渲染到新轨道(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Resample...</source>
-        <translation type="vanished">重采样(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve Tracks</source>
-        <translation type="vanished">删除轨道(&amp;V)</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute</source>
-        <translation type="vanished">静音/取消静音</translation>
-    </message>
-    <message>
-        <source>&amp;Mute All Tracks</source>
-        <translation type="vanished">所有轨道静音(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Unmute All Tracks</source>
-        <translation type="vanished">取消所有音轨的静音(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Mut&amp;e Tracks</source>
-        <translation type="vanished">静音所有轨道(&amp;E)</translation>
-    </message>
-    <message>
-        <source>U&amp;nmute Tracks</source>
-        <translation type="vanished">取消静音所有轨道(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Pan</source>
-        <translation type="vanished">左右声道平衡(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Left</source>
-        <translation type="vanished">左(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Pan Left</source>
-        <translation type="vanished">左平衡</translation>
-    </message>
-    <message>
-        <source>&amp;Right</source>
-        <translation type="vanished">右(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Pan Right</source>
-        <translation type="vanished">右平衡</translation>
-    </message>
-    <message>
-        <source>&amp;Center</source>
-        <translation type="vanished">中心(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Pan Center</source>
-        <translation type="vanished">平移中心</translation>
-    </message>
-    <message>
-        <source>&amp;Align Tracks</source>
-        <translation type="vanished">对齐轨道(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Align End to End</source>
-        <translation type="vanished">两端对齐(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Align &amp;Together</source>
-        <translation type="vanished">整体对齐(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Move Selection with Tracks</source>
-        <translation type="vanished">移动选区和轨道(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Move Sele&amp;ction and Tracks</source>
-        <translation type="vanished">移动选区和轨道(&amp;C)</translation>
-    </message>
-    <message>
-        <source>S&amp;ort Tracks</source>
-        <translation type="vanished">排序音轨(&amp;O)</translation>
-    </message>
-    <message>
-        <source>By &amp;Start Time</source>
-        <translation type="vanished">按开始时间(&amp;S)</translation>
-    </message>
-    <message>
-        <source>By &amp;Name</source>
-        <translation type="vanished">按名称(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Keep tracks synchronized (Sync-&amp;Lock)</source>
-        <translation type="vanished">保持轨道同步（同步与锁定）(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Track</source>
-        <translation type="vanished">轨道(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Change P&amp;an on Focused Track...</source>
-        <translation type="vanished">改变选中音轨的左右声道平衡(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Left on Focused Track</source>
-        <translation type="vanished">选中音轨的左右声道平衡左移(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Right on Focused Track</source>
-        <translation type="vanished">选中音轨的左右声道平衡右移(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Change Gai&amp;n on Focused Track...</source>
-        <translation type="vanished">改变选中音轨的声强加强(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Gain on Focused Track</source>
-        <translation type="vanished">增加选中音轨的声强加强(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Gain on Focused Track</source>
-        <translation type="vanished">减少选中音轨的声强加强(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Op&amp;en Menu on Focused Track...</source>
-        <translation type="vanished">打开选中音轨上的菜单(&amp;E)</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute Focused Track</source>
-        <translation type="vanished">静音/取消 选中音轨(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Solo/Unsolo Focused Track</source>
-        <translation type="vanished">独奏/取消 选中音轨(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Delete Fo&amp;cused Track</source>
-        <translation type="vanished">删除焦点音轨(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track U&amp;p</source>
-        <translation type="vanished">上移焦点(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track Do&amp;wn</source>
-        <translation type="vanished">下移焦点(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to T&amp;op</source>
-        <translation type="vanished">将焦点移到轨道顶部(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to &amp;Bottom</source>
-        <translation type="vanished">将焦点移到轨道底部(&amp;B)</translation>
-    </message>
-    <message>
-        <source>no label track</source>
-        <translation type="vanished">无标签轨</translation>
-    </message>
-    <message>
-        <source>no label track at or below focused track</source>
-        <translation type="vanished">无标签轨在选中轨道上下</translation>
-    </message>
-    <message>
-        <source>%s %d of %d</source>
-        <extracomment>i18n-hint:
-String is replaced by the name of a label,
-first number gives the position of that label in a sequence
-of labels,
-and the last number is the total number of labels in the sequence.</extracomment>
-        <translation type="vanished">%1 第 %2 个，共 %3 个</translation>
-    </message>
-    <message>
-        <source>no labels in label track</source>
-        <translation type="vanished">标签轨中无标签</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;In</source>
-        <extracomment>i18n-hint Sets a starting point for looping play</extracomment>
-        <translation type="vanished">设置循环起点(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;Out</source>
-        <extracomment>i18n-hint Sets an ending point for looping play</extracomment>
-        <translation type="vanished">设置循环终点(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Please select in a mono track.</source>
-        <translation type="vanished">请选择一个单声道音轨。</translation>
-    </message>
-    <message>
-        <source>Please select in a stereo track or two mono tracks.</source>
-        <translation type="vanished">请选择一个立体声轨或两个单声道轨。</translation>
-    </message>
-    <message>
-        <source>Please select at least %d channels.</source>
-        <translation type="vanished">请选择至少 %1 个声道。</translation>
-    </message>
-    <message>
-        <source>Tra&amp;nsport</source>
-        <extracomment>i18n-hint: 'Transport' is the name given to the set of controls that
-play, record, pause etc.</extracomment>
-        <translation type="vanished">播录(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Pl&amp;aying</source>
-        <translation type="vanished">正在播放(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay/Stop</source>
-        <extracomment>i18n-hint: (verb) Start or Stop audio playback</extracomment>
-        <translation type="vanished">播放/停止(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Play/Stop and &amp;Set Cursor</source>
-        <translation type="vanished">播放/停止并设置光标位置(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Play &amp;Once/Stop</source>
-        <translation type="vanished">播放一次/停止(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation type="vanished">暂停(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Recording</source>
-        <translation type="vanished">录制(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Append Record</source>
-        <translation type="vanished">追加录音(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Record &amp;New Track</source>
-        <translation type="vanished">录制新轨道(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Punch and Rol&amp;l Record</source>
-        <translation type="vanished">插卷录制(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Looping</source>
-        <translation type="vanished">循环播放(&amp;L)</translation>
-    </message>
-    <message>
-        <source>&amp;Clear Loop</source>
-        <translation type="vanished">清除循环区间(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Set Loop to Selection</source>
-        <translation type="vanished">设置所选区为循环(&amp;S)</translation>
-    </message>
-    <message>
-        <source>R&amp;escan Audio Devices</source>
-        <translation type="vanished">重新扫描音频设备(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Transport &amp;Options</source>
-        <translation type="vanished">播录选项</translation>
-    </message>
-    <message>
-        <source>Set sound activation le&amp;vel...</source>
-        <translation type="vanished">设置声音激活电平(&amp;V)...</translation>
-    </message>
-    <message>
-        <source>Enable sound a&amp;ctivated recording</source>
-        <translation type="vanished">启用声音激活录音(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks during recording</source>
-        <translation type="vanished">录音时聆听其他音轨(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Enable audible input &amp;monitoring</source>
-        <translation type="vanished">启用声音输入监控(&amp;M)</translation>
-    </message>
-    <message>
-        <source>A&amp;utomated Recording Level Adjustment (on/off)</source>
-        <translation type="vanished">录制电平自动调节（开/关） (&amp;U)</translation>
-    </message>
-    <message>
-        <source>T&amp;ransport</source>
-        <translation type="vanished">播录(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay Once</source>
-        <extracomment>i18n-hint: (verb) Start playing audio</extracomment>
-        <translation type="vanished">播放一次(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Sto&amp;p</source>
-        <extracomment>i18n-hint: (verb) Stop playing audio</extracomment>
-        <translation type="vanished">停止(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Play &amp;One Second</source>
-        <translation type="vanished">播放一秒 (&amp;O)</translation>
-    </message>
-    <message>
-        <source>Play to &amp;Selection</source>
-        <translation type="vanished">播放至选区(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Play &amp;Before Selection Start</source>
-        <translation type="vanished">播放至选区起点前(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Play Af&amp;ter Selection Start</source>
-        <translation type="vanished">从选区起点后播放(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Play Be&amp;fore Selection End</source>
-        <translation type="vanished">播放至选区终点前(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Play Aft&amp;er Selection End</source>
-        <translation type="vanished">从选区终点后播放(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Play Before a&amp;nd After Selection Start</source>
-        <translation type="vanished">播放选区起点前后(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Play Before an&amp;d After Selection End</source>
-        <translation type="vanished">播放选区终点前后(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview</source>
-        <translation type="vanished">播放剪切预览(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move to Pre&amp;vious Label</source>
-        <translation type="vanished">移至上一个标签(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Move to Ne&amp;xt Label</source>
-        <translation type="vanished">移至下一个标签(&amp;X)</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom</source>
-        <translation type="vanished">缩放(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;In</source>
-        <translation type="vanished">放大(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Normal</source>
-        <translation type="vanished">缩放到正常大小(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Out</source>
-        <translation type="vanished">缩小(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom to Selection</source>
-        <translation type="vanished">缩放至选区大小(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Toggle</source>
-        <translation type="vanished">缩放开关(&amp;T)</translation>
-    </message>
-    <message>
-        <source>T&amp;rack Size</source>
-        <translation type="vanished">轨道大小(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Fit to Width</source>
-        <translation type="vanished">适应宽度(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Fit to &amp;Height</source>
-        <translation type="vanished">贴合高度(&amp;H)</translation>
-    </message>
-    <message>
-        <source>&amp;Collapse All Tracks</source>
-        <translation type="vanished">叠起所有轨道(&amp;C)</translation>
-    </message>
-    <message>
-        <source>E&amp;xpand Collapsed Tracks</source>
-        <translation type="vanished">展开所有轨道(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Sk&amp;ip to</source>
-        <translation type="vanished">跳到​​(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Selection Sta&amp;rt</source>
-        <translation type="vanished">选区起点(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Skip to Selection Start</source>
-        <translation type="vanished">跳至选区起点</translation>
-    </message>
-    <message>
-        <source>Skip to Selection End</source>
-        <translation type="vanished">跳至选区终点</translation>
-    </message>
-    <message>
-        <source>Enable E&amp;xtra Menus</source>
-        <translation type="vanished">启用额外菜单(&amp;X)</translation>
-    </message>
-    <message>
-        <source>&amp;Show Clipping in Waveform</source>
-        <translation type="vanished">在波形中显示片段(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show &amp;RMS in Waveform</source>
-        <translation type="vanished">以波形显示 ​​RMS(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Preferences for Application</source>
-        <translation type="vanished">应用首选项</translation>
-    </message>
-    <message>
-        <source>Update notifications</source>
-        <extracomment>i18n-hint: Title for the update notifications panel in the preferences dialog.</extracomment>
-        <translation type="vanished">更新通知</translation>
-    </message>
-    <message>
-        <source>&amp;Check for updates</source>
-        <comment>application preferences</comment>
-        <extracomment>i18n-hint: Check-box title that configures periodic updates checking.</extracomment>
-        <translation type="vanished">检查更新 (&amp;C)</translation>
-    </message>
-    <message>
-        <source>App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.</source>
-        <translation type="vanished">检查应用更新需要访问网络。为了保护你的隐私，Audacity 不会收集任何个人信息。</translation>
-    </message>
-    <message>
-        <source>Batch</source>
-        <translation type="vanished">批处理</translation>
-    </message>
-    <message>
-        <source>Preferences for Batch</source>
-        <translation type="vanished">批处理首选项</translation>
-    </message>
-    <message>
-        <source>Behaviors</source>
-        <translation type="vanished">行为</translation>
-    </message>
-    <message>
-        <source>&amp;Don't apply effects in batch mode</source>
-        <translation type="vanished">不要在批处理模式应用效果器(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Audio Settings</source>
-        <translation type="vanished">音频设置</translation>
-    </message>
-    <message>
-        <source>%i Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>device</comment>
-        <extracomment>i18n-hint Software interface to audio devices</extracomment>
-        <translation type="vanished">接口</translation>
-    </message>
-    <message>
-        <source>&amp;Host:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">主机(&amp;H)：</translation>
-    </message>
-    <message>
-        <source>Using:</source>
-        <translation type="vanished">使用：</translation>
-    </message>
-    <message>
-        <source>&amp;Device:</source>
-        <translation type="vanished">设备(&amp;D)：</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <comment>preference</comment>
-        <extracomment>i18n-hint: modifier as in "Recording preferences", not progressive verb</extracomment>
-        <translation type="vanished">录音</translation>
-    </message>
-    <message>
-        <source>De&amp;vice:</source>
-        <translation type="vanished">设备(&amp;V)：</translation>
-    </message>
-    <message>
-        <source>Cha&amp;nnels:</source>
-        <translation type="vanished">声道数(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>&amp;Project Sample Rate:</source>
-        <translation type="vanished">项目采样率 (&amp;P)：</translation>
-    </message>
-    <message>
-        <source>Sample Rate used when recording new tracks, mixing down tracks and for playback in this project.</source>
-        <translation type="vanished">在本项目中录制新音轨、混合音轨以及播放时使用的采样率。</translation>
-    </message>
-    <message>
-        <source>D&amp;efault Sample Rate:</source>
-        <translation type="vanished">默认采样率(&amp;E)：</translation>
-    </message>
-    <message>
-        <source>Default Sample &amp;Format:</source>
-        <translation type="vanished">默认采样格式(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>Latency</source>
-        <translation type="vanished">延迟</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer length:</source>
-        <translation type="vanished">缓冲大小(&amp;B)：</translation>
-    </message>
-    <message>
-        <source>&amp;Latency compensation:</source>
-        <translation type="vanished">延迟补偿(&amp;L):</translation>
-    </message>
-    <message>
-        <source>No audio interfaces</source>
-        <translation type="vanished">没有音频卡</translation>
-    </message>
-    <message>
-        <source>No devices found</source>
-        <translation type="vanished">没找到设备</translation>
-    </message>
-    <message>
-        <source>1 (Mono)</source>
-        <translation type="vanished">1（单声道）</translation>
-    </message>
-    <message>
-        <source>2 (Stereo)</source>
-        <translation type="vanished">2（立体声）</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <extracomment>i18n-hint:  Directories, also called directories, in computer file systems</extracomment>
-        <translation type="vanished">目录</translation>
-    </message>
-    <message>
-        <source>Preferences for Directories</source>
-        <translation type="vanished">目录首选项</translation>
-    </message>
-    <message>
-        <source>Default directories</source>
-        <translation type="vanished">默认目录</translation>
-    </message>
-    <message>
-        <source>Leave a field empty to go to the last directory used for that operation.
-Fill in a field to always go to that directory for that operation.</source>
-        <translation type="vanished">如要转到操作上一次使用的目录，请将字段留空。
-如要转到操作经常使用的目录，请填充字段。</translation>
-    </message>
-    <message>
-        <source>O&amp;pen:</source>
-        <translation type="vanished">打开(&amp;P)：</translation>
-    </message>
-    <message>
-        <source>S&amp;ave:</source>
-        <translation type="vanished">保存(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>B&amp;rowse...</source>
-        <translation type="vanished">浏览(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>&amp;Import:</source>
-        <translation type="vanished">导入(&amp;I)：</translation>
-    </message>
-    <message>
-        <source>Br&amp;owse...</source>
-        <translation type="vanished">浏览(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>&amp;Export:</source>
-        <translation type="vanished">导出(&amp;E)：</translation>
-    </message>
-    <message>
-        <source>Bro&amp;wse...</source>
-        <translation type="vanished">浏览(&amp;W)...</translation>
-    </message>
-    <message>
-        <source>&amp;Macro output:</source>
-        <translation type="vanished">宏输出(&amp;M):</translation>
-    </message>
-    <message>
-        <source>Temporary files directory</source>
-        <translation type="vanished">临时文件目录</translation>
-    </message>
-    <message>
-        <source>Brow&amp;se...</source>
-        <translation type="vanished">浏览(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>&amp;Free Space:</source>
-        <translation type="vanished">可用空间(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>unavailable - above location doesn't exist</source>
-        <translation type="vanished">不可用 - 上面的位置不存在</translation>
-    </message>
-    <message>
-        <source>Choose a location</source>
-        <translation type="vanished">选择位置</translation>
-    </message>
-    <message>
-        <source>
-Directory %s does not exist. Create it?</source>
-        <translation type="vanished">
-目录 %1 不存在。是否创建它？</translation>
-    </message>
-    <message>
-        <source>Directory creation failed.</source>
-        <translation type="vanished">目录创建失败。</translation>
-    </message>
-    <message>
-        <source>
-%s</source>
-        <translation type="vanished">
-%1</translation>
-    </message>
-    <message>
-        <source>Directory %s is not suitable (at risk of being cleaned out)</source>
-        <translation type="vanished">目录 %1 是不合适的（有被清理的可能）</translation>
-    </message>
-    <message>
-        <source>'Temporary Directory' cannot be set.</source>
-        <translation type="vanished">无法设置“临时目录”。</translation>
-    </message>
-    <message>
-        <source>'Temporary files' directory cannot be set.</source>
-        <translation type="vanished">无法设置“临时文件”目录。</translation>
-    </message>
-    <message>
-        <source>Directory %s is not writable</source>
-        <translation type="vanished">目录%1不可写</translation>
-    </message>
-    <message>
-        <source>Temp Directory Update</source>
-        <translation type="vanished">临时目录更新</translation>
-    </message>
-    <message>
-        <source>'Open' directory cannot be set.</source>
-        <translation type="vanished">无法设置“打开”目录。</translation>
-    </message>
-    <message>
-        <source>'Save' directory cannot be set.</source>
-        <translation type="vanished">无法设置“保存”目录。</translation>
-    </message>
-    <message>
-        <source>'Import' directory cannot be set.</source>
-        <translation type="vanished">无法设置“导入”目录。</translation>
-    </message>
-    <message>
-        <source>'Export' directory cannot be set.</source>
-        <translation type="vanished">无法设置“导出”目录。</translation>
-    </message>
-    <message>
-        <source>'Macro Output' directory cannot be set.</source>
-        <translation type="vanished">无法设置“宏输出”目录。</translation>
-    </message>
-    <message>
-        <source>Preferences for Effects</source>
-        <translation type="vanished">效果器首选项</translation>
-    </message>
-    <message>
-        <source>Sort by effect name</source>
-        <translation type="vanished">按效果器名排序</translation>
-    </message>
-    <message>
-        <source>Sort by publisher and effect name</source>
-        <translation type="vanished">按发布者与效果器名排序</translation>
-    </message>
-    <message>
-        <source>Sort by type and effect name</source>
-        <translation type="vanished">按类型与效果器名排序</translation>
-    </message>
-    <message>
-        <source>Group by publisher</source>
-        <translation type="vanished">按发布者分组</translation>
-    </message>
-    <message>
-        <source>Group by type</source>
-        <translation type="vanished">按类型分组</translation>
-    </message>
-    <message>
-        <source>Group by category</source>
-        <translation type="vanished">按类别分组</translation>
-    </message>
-    <message>
-        <source>Group by type and publisher</source>
-        <translation type="vanished">按类型与发布者分组</translation>
-    </message>
-    <message>
-        <source>Effect Options</source>
-        <translation type="vanished">效果器选项</translation>
-    </message>
-    <message>
-        <source>Effect menu &amp;organization:</source>
-        <translation type="vanished">效果器菜单组织(&amp;O)：</translation>
-    </message>
-    <message>
-        <source>Realtime effect o&amp;rganization:</source>
-        <translation type="vanished">实时效果器组织(&amp;R)：</translation>
-    </message>
-    <message>
-        <source>Instruction Set</source>
-        <translation type="vanished">指令集</translation>
-    </message>
-    <message>
-        <source>&amp;Use SSE/SSE2/.../AVX</source>
-        <translation type="vanished">使用 SSE/SSE2/.../AVX(&amp;U)</translation>
-    </message>
-    <message>
-        <source>%s plugin locations</source>
-        <extracomment>i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-* First argument is replaced with plugin type (e.g. "LV2 plugin locations")</extracomment>
-        <translation type="vanished">%1 插件位置</translation>
-    </message>
-    <message>
-        <source>&amp;Skip effects scanning at startup</source>
-        <translation type="vanished">启动时跳过效果器扫描(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Open Plugin &amp;Manager</source>
-        <translation type="vanished">打开插件管理器 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Extended Import</source>
-        <extracomment>i18n-hint:  Title of dialog governing "Extended", or "advanced,"
-* audio file import options</extracomment>
-        <translation type="vanished">扩展导入</translation>
-    </message>
-    <message>
-        <source>Preferences for ExtImport</source>
-        <translation type="vanished">扩展导入首选项设置</translation>
-    </message>
-    <message>
-        <source>A&amp;ttempt to use filter in OpenFile dialog first</source>
-        <translation type="vanished">首先在文件打开对话框尝试使用过滤器</translation>
-    </message>
-    <message>
-        <source>Rules to choose import filters</source>
-        <translation type="vanished">用于选择导入过滤器的规则</translation>
-    </message>
-    <message>
-        <source>File extensions</source>
-        <translation type="vanished">文件扩展名</translation>
-    </message>
-    <message>
-        <source>Mime-types</source>
-        <translation type="vanished">MIME 类型</translation>
-    </message>
-    <message>
-        <source>Importer order</source>
-        <translation type="vanished">导入器顺序</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;up</source>
-        <translation type="vanished">上移规则(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;down</source>
-        <translation type="vanished">下移规则(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Move f&amp;ilter up</source>
-        <translation type="vanished">上移过滤器(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Move &amp;filter down</source>
-        <translation type="vanished">下移过滤器(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Add new rule</source>
-        <translation type="vanished">新建规则(&amp;A)</translation>
-    </message>
-    <message>
-        <source>De&amp;lete selected rule</source>
-        <translation type="vanished">删除选中的规则(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Unused filters:</source>
-        <translation type="vanished">未用到的过滤器：</translation>
-    </message>
-    <message>
-        <source>There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?</source>
-        <translation type="vanished">其中一个项目中有空格字符（空格、换行符、制表符或换行符）。它们可能会破坏模式匹配。除非您知道自己在做什么，否则建议修剪空格。您想让 Audacity 为您修剪空格吗？</translation>
-    </message>
-    <message>
-        <source>Spaces detected</source>
-        <translation type="vanished">已检测到的空间</translation>
-    </message>
-    <message>
-        <source>Do you really want to delete selected rule?</source>
-        <translation type="vanished">您确实要删除选中的规则？</translation>
-    </message>
-    <message>
-        <source>Rule deletion confirmation</source>
-        <translation type="vanished">确认删除规则</translation>
-    </message>
-    <message>
-        <source>Ext Import</source>
-        <translation type="vanished">扩展导入</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>GUI</comment>
-        <extracomment>i18n-hint: refers to Audacity's user interface settings</extracomment>
-        <translation type="vanished">接口</translation>
-    </message>
-    <message>
-        <source>Preferences for GUI</source>
-        <translation type="vanished">GUI 首选项设置</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation type="vanished">显示</translation>
-    </message>
-    <message>
-        <source>&amp;Language:</source>
-        <translation type="vanished">语言(&amp;L)：</translation>
-    </message>
-    <message>
-        <source>Th&amp;eme:</source>
-        <translation type="vanished">主题(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Meter dB &amp;range:</source>
-        <translation type="vanished">仪表 dB 范围(&amp;R)：</translation>
-    </message>
-    <message>
-        <source>Show 'How to Get &amp;Help' at launch</source>
-        <translation type="vanished">启动时显示“如何获得帮助(&amp;H)”</translation>
-    </message>
-    <message>
-        <source>Show e&amp;xtra menus</source>
-        <translation type="vanished">显示额外菜单(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Show alternative &amp;styling (Mac vs PC)</source>
-        <translation type="vanished">显示替代的风格（Mac vs PC）</translation>
-    </message>
-    <message>
-        <source>&amp;Beep on completion of longer activities</source>
-        <translation type="vanished">在一个较长的动作完成时发出声音(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Re&amp;tain labels if selection snaps to a label</source>
-        <translation type="vanished">如果选区自动吸附到标签边缘，则保留标签(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Use mostly Left-to-Right layouts in RTL languages</source>
-        <extracomment>i18n-hint: RTL stands for 'Right to Left'</extracomment>
-        <translation type="vanished">在从右向左书写的语言中使用大多数从左向右的布局</translation>
-    </message>
-    <message>
-        <source>Never use comma as decimal point</source>
-        <translation type="vanished">从不使用逗号作为小数点</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="vanished">GUI</translation>
-    </message>
-    <message>
-        <source>Language "%s" is unknown</source>
-        <translation type="vanished">语言“%1”未知</translation>
-    </message>
-    <message>
-        <source>Import / Export</source>
-        <translation type="vanished">导入/导出</translation>
-    </message>
-    <message>
-        <source>Preferences for ImportExport</source>
-        <translation type="vanished">导入导出的首选项设置</translation>
-    </message>
-    <message>
-        <source>S&amp;witch view to Beats and Measures and align with musical grid</source>
-        <translation type="vanished">切换到节拍与小节视图并与音乐网格对齐(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Ask me each time</source>
-        <translation type="vanished">每次都询问 (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Do &amp;nothing</source>
-        <translation type="vanished">什么都不做 (&amp;N)</translation>
-    </message>
-    <message>
-        <source>Music Imports</source>
-        <translation type="vanished">音乐导入</translation>
-    </message>
-    <message>
-        <source>When Audacity detects music in file imported on empty project</source>
-        <translation type="vanished">当 Audacity 检测到导入空项目的音乐文件时</translation>
-    </message>
-    <message>
-        <source>IMPORT EXPORT</source>
-        <translation type="vanished">导入 导出</translation>
-    </message>
-    <message>
-        <source>Preferences for KeyConfig</source>
-        <translation type="vanished">按键组合首选项</translation>
-    </message>
-    <message>
-        <source>Keyboard preferences currently unavailable.</source>
-        <translation type="vanished">键盘首选项当前不可用。</translation>
-    </message>
-    <message>
-        <source>Open a new project to modify keyboard shortcuts.</source>
-        <translation type="vanished">修改键盘快捷键需要打开新项目。</translation>
-    </message>
-    <message>
-        <source>&amp;Hotkey:</source>
-        <translation type="vanished">热键(&amp;H)：</translation>
-    </message>
-    <message>
-        <source>&amp;Tree</source>
-        <translation type="vanished">树形(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Name</source>
-        <translation type="vanished">名称(&amp;N)</translation>
-    </message>
-    <message>
-        <source>&amp;Key</source>
-        <translation type="vanished">关键字(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Key Bindings</source>
-        <translation type="vanished">键绑定</translation>
-    </message>
-    <message>
-        <source>View by:</source>
-        <translation type="vanished">浏览模式：</translation>
-    </message>
-    <message>
-        <source>View by tree</source>
-        <translation type="vanished">以树形查看</translation>
-    </message>
-    <message>
-        <source>View by name</source>
-        <translation type="vanished">按名称查看</translation>
-    </message>
-    <message>
-        <source>View by key</source>
-        <translation type="vanished">以关键字方式查看</translation>
-    </message>
-    <message>
-        <source>Bindings</source>
-        <translation type="vanished">绑定</translation>
-    </message>
-    <message>
-        <source>Short cut</source>
-        <translation type="vanished">快捷键</translation>
-    </message>
-    <message>
-        <source>&amp;Set</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">设置(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Note: Pressing Cmd+Q will quit. All other keys are valid.</source>
-        <translation type="vanished">注意： 按 Cmd+Q 将退出。其它所有按键均可用。</translation>
-    </message>
-    <message>
-        <source>&amp;Import...</source>
-        <translation type="vanished">导入(&amp;I)...</translation>
-    </message>
-    <message>
-        <source>&amp;Defaults</source>
-        <translation type="vanished">默认(&amp;D)</translation>
-    </message>
-    <message>
-        <source>
-   *   "%s"  (because the shortcut '%s' is used by "%s")
-</source>
-        <translation type="vanished">
-   *   "%1"  （因为快捷键 '%2' 已被 "%3" 使用）
-</translation>
-    </message>
-    <message>
-        <source>Select an XML file containing Audacity keyboard shortcuts...</source>
-        <translation type="vanished">选择包含Audacity键盘快捷键定义的XML文件...</translation>
-    </message>
-    <message>
-        <source>Error Importing Keyboard Shortcuts</source>
-        <translation type="vanished">导入键盘快捷键出错</translation>
-    </message>
-    <message>
-        <source>The file with the shortcuts contains illegal shortcut duplicates for "%s" and "%s".
-Nothing is imported.</source>
-        <translation type="vanished">带有快捷方式的文件包含 "%1" 和 "%2"的非法快捷方式重复项。
-将不会导入任何内容。</translation>
-    </message>
-    <message>
-        <source>Loaded %d keyboard shortcuts
-</source>
-        <translation type="vanished">已读取%1键盘快捷键
-</translation>
-    </message>
-    <message>
-        <source>
-The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:
-</source>
-        <translation type="vanished">
-导入的文件中未提及以下命令，但由于与其他新的快捷键冲突，而删除了它们的快捷键设置:
-</translation>
-    </message>
-    <message>
-        <source>Loading Keyboard Shortcuts</source>
-        <translation type="vanished">加载键盘快捷键中</translation>
-    </message>
-    <message>
-        <source>Export Keyboard Shortcuts As:</source>
-        <translation type="vanished">导出键盘快捷键为：</translation>
-    </message>
-    <message>
-        <source>Error Exporting Keyboard Shortcuts</source>
-        <translation type="vanished">导出键盘快捷键出错</translation>
-    </message>
-    <message>
-        <source>You may not assign a key to this entry</source>
-        <translation type="vanished">此项未设置键</translation>
-    </message>
-    <message>
-        <source>You must select a binding before assigning a shortcut</source>
-        <translation type="vanished">您必须先选择一个组合键然后才能指定快捷键</translation>
-    </message>
-    <message>
-        <source>
-
-	 and
-
-	</source>
-        <translation type="vanished">
-
-	 以及
-
-	</translation>
-    </message>
-    <message>
-        <source>The keyboard shortcut '%s' is already assigned to:
-
-	%s
-
-
-Click OK to assign the shortcut to
-
-	%s
-
-instead. Otherwise, click Cancel.</source>
-        <translation type="vanished">键盘快捷键 '%1' 已分配给：
-
-	“%2”
-
-
-单击确定将此快捷键分配给
-
-	%3
-
-。否则点取消。</translation>
-    </message>
-    <message>
-        <source>Key Config</source>
-        <translation type="vanished">按键组合</translation>
-    </message>
-    <message>
-        <source>MIDI Devices</source>
-        <extracomment>i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"</extracomment>
-        <translation type="vanished">MIDI 设备</translation>
-    </message>
-    <message>
-        <source>Preferences for MidiIO</source>
-        <translation type="vanished">MidiIO 首选项设置</translation>
-    </message>
-    <message>
-        <source>No MIDI interfaces</source>
-        <translation type="vanished">没有 MIDI 卡</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>MIDI</comment>
-        <extracomment>i18n-hint Software interface to MIDI</extracomment>
-        <translation type="vanished">接口</translation>
-    </message>
-    <message>
-        <source>Using: PortMidi</source>
-        <translation type="vanished">正在使用：PortMidi</translation>
-    </message>
-    <message>
-        <source>MIDI Synth L&amp;atency (ms):</source>
-        <translation type="vanished">MIDI 合成器延迟 (ms)：</translation>
-    </message>
-    <message>
-        <source>The MIDI Synthesizer Latency must be an integer</source>
-        <translation type="vanished">MIDI合成器的延迟必须是整数</translation>
-    </message>
-    <message>
-        <source>Midi IO</source>
-        <translation type="vanished">MIDI IO</translation>
-    </message>
-    <message>
-        <source>Modules</source>
-        <extracomment>i18n-hint: Modules are optional extensions to Audacity that add NEW features.</extracomment>
-        <translation type="vanished">模块</translation>
-    </message>
-    <message>
-        <source>Preferences for Module</source>
-        <translation type="vanished">模块首选项设置</translation>
-    </message>
-    <message>
-        <source>Modules are optional components of Audacity that enable some functionality, such as importing and exporting. 
-It is generally not necessary to change these settings.</source>
-        <translation type="vanished">模块是 Audacity 的可选组件，可以启用某些功能，例如导入与导出。
-一般没必要修改这些设置。</translation>
-    </message>
-    <message>
-        <source>Changes to these settings only take effect when restarting Audacity.
-</source>
-        <translation type="vanished">这些设置只会在重启 Audacity 时生效。
-</translation>
-    </message>
-    <message>
-        <source>Always ask</source>
-        <translation type="vanished">总是询问</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="vanished">失败</translation>
-    </message>
-    <message>
-        <source>No choice made</source>
-        <translation type="vanished">不作出选择</translation>
-    </message>
-    <message>
-        <source>Error: No modules were found. This may indicate a faulty installation.</source>
-        <translation type="vanished">错误：未找到模块。这可能暗示着安装出错。</translation>
-    </message>
-    <message>
-        <source>Module</source>
-        <translation type="vanished">模块</translation>
-    </message>
-    <message>
-        <source>Preferences for Playback</source>
-        <translation type="vanished">播放首选项</translation>
-    </message>
-    <message>
-        <source>Effects Preview</source>
-        <translation type="vanished">效果器预览</translation>
-    </message>
-    <message>
-        <source>&amp;Length:</source>
-        <translation type="vanished">长度(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Cut Preview</source>
-        <extracomment>i18n-hint: (noun) this is a preview of the cut</extracomment>
-        <translation type="vanished">剪切预览</translation>
-    </message>
-    <message>
-        <source>&amp;Before cut region:</source>
-        <translation type="vanished">剪切区域前预览(&amp;B)：</translation>
-    </message>
-    <message>
-        <source>&amp;After cut region:</source>
-        <translation type="vanished">剪切区域后预览(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>Seek Time when playing</source>
-        <translation type="vanished">播放时的寻找时间</translation>
-    </message>
-    <message>
-        <source>&amp;Short period:</source>
-        <translation type="vanished">短时间段(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Lo&amp;ng period:</source>
-        <translation type="vanished">长时间段(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>&amp;Micro-fades</source>
-        <translation type="vanished">微渐变</translation>
-    </message>
-    <message>
-        <source>Always scrub un&amp;pinned</source>
-        <translation type="vanished">总是不固定跟随播放(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Audacity Preferences</source>
-        <translation type="vanished">Audacity 首选项</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="vanished">分类</translation>
-    </message>
-    <message>
-        <source>Preferences:</source>
-        <translation type="vanished">首选项：</translation>
-    </message>
-    <message>
-        <source>Preferences for Quality</source>
-        <translation type="vanished">质量首选项</translation>
-    </message>
-    <message>
-        <source>Real-time Conversion</source>
-        <translation type="vanished">实时转换</translation>
-    </message>
-    <message>
-        <source>Sample Rate Con&amp;verter:</source>
-        <translation type="vanished">采样率转换器(&amp;V)：</translation>
-    </message>
-    <message>
-        <source>&amp;Dither:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">抖动(&amp;D)：</translation>
-    </message>
-    <message>
-        <source>High-quality Conversion</source>
-        <translation type="vanished">高质量转换</translation>
-    </message>
-    <message>
-        <source>Sample Rate Conver&amp;ter:</source>
-        <translation type="vanished">采样率转换器(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Dit&amp;her:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">抖动(&amp;H)：</translation>
-    </message>
-    <message>
-        <source>Preferences for Recording</source>
-        <translation type="vanished">录制首选项</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks while recording (overdub)</source>
-        <translation type="vanished">录音时听到其他音轨（配音）(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Use &amp;hardware to play other tracks</source>
-        <translation type="vanished">使用硬件播放其他轨道(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Audible input &amp;monitoring</source>
-        <translation type="vanished">声音输入监控(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Record on a new track</source>
-        <translation type="vanished">在新的轨道上录制</translation>
-    </message>
-    <message>
-        <source>Detect dropouts</source>
-        <extracomment>i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording</extracomment>
-        <translation type="vanished">侦测丢失</translation>
-    </message>
-    <message>
-        <source>Sound Activated Recording</source>
-        <translation type="vanished">声控录音</translation>
-    </message>
-    <message>
-        <source>&amp;Enable</source>
-        <translation type="vanished">启用(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Le&amp;vel (dB):</source>
-        <translation type="vanished">电平 (dB)(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Name newly recorded tracks</source>
-        <extracomment>i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">命名新录制的轨道</translation>
-    </message>
-    <message>
-        <source>With:</source>
-        <extracomment>i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">使用：</translation>
-    </message>
-    <message>
-        <source>Custom Track &amp;Name</source>
-        <translation type="vanished">自定义轨道名(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Custom name text</source>
-        <translation type="vanished">定制 FFmpeg 导出</translation>
-    </message>
-    <message>
-        <source>Recorded_Audio</source>
-        <translation type="vanished">录制的音频</translation>
-    </message>
-    <message>
-        <source>&amp;Track Number</source>
-        <translation type="vanished">轨道编号</translation>
-    </message>
-    <message>
-        <source>System &amp;Date</source>
-        <translation type="vanished">系统日期(&amp;D)</translation>
-    </message>
-    <message>
-        <source>System T&amp;ime</source>
-        <translation type="vanished">系统时间(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment</source>
-        <translation type="vanished">自动录制电平调节</translation>
-    </message>
-    <message>
-        <source>Enable Automated Recording Level Adjustment.</source>
-        <translation type="vanished">启用自动录制电平调节。</translation>
-    </message>
-    <message>
-        <source>Target Peak:</source>
-        <extracomment>i18n-hint: Desired maximum (peak) volume for sound</extracomment>
-        <translation type="vanished">目标峰值：</translation>
-    </message>
-    <message>
-        <source>Within:</source>
-        <translation type="vanished">在..内：</translation>
-    </message>
-    <message>
-        <source>Analysis Time:</source>
-        <translation type="vanished">分析时间：</translation>
-    </message>
-    <message>
-        <source>milliseconds (time of one analysis)</source>
-        <translation type="vanished">毫秒（一次分析的时间）</translation>
-    </message>
-    <message>
-        <source>Number of consecutive analysis:</source>
-        <translation type="vanished">连续分析次数：</translation>
-    </message>
-    <message>
-        <source>0 means endless</source>
-        <translation type="vanished">0 表示无限</translation>
-    </message>
-    <message>
-        <source>Punch and Roll Recording</source>
-        <translation type="vanished">插卷录制</translation>
-    </message>
-    <message>
-        <source>Pre-ro&amp;ll:</source>
-        <translation type="vanished">预卷(&amp;L)：</translation>
-    </message>
-    <message>
-        <source>Cross&amp;fade:</source>
-        <translation type="vanished">交叉渐变(&amp;F)：</translation>
-    </message>
-    <message>
-        <source>Color (Roseus)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme</extracomment>
-        <translation type="vanished">彩色（玫瑰）</translation>
-    </message>
-    <message>
-        <source>Color (classic)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Classic color scheme(from theme) for spectrograms</extracomment>
-        <translation type="vanished">彩色（经典）</translation>
-    </message>
-    <message>
-        <source>Grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">灰度</translation>
-    </message>
-    <message>
-        <source>Inverse grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Inverse grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">反转灰度</translation>
-    </message>
-    <message>
-        <source>Pitch (EAC)</source>
-        <extracomment>i18n-hint: EAC abbreviates "Enhanced Autocorrelation"</extracomment>
-        <translation type="vanished">音高 (EAC)</translation>
-    </message>
-    <message>
-        <source>Maximum frequency must be 100 Hz or above</source>
-        <translation type="vanished">最高频率必须不低于100Hz</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be at least 0 Hz</source>
-        <translation type="vanished">最低频率必须至少是 0 Hz</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be less than maximum frequency</source>
-        <translation type="vanished">最低频率必须小于最高频率</translation>
-    </message>
-    <message>
-        <source>The range must be at least 1 dB</source>
-        <translation type="vanished">范围必须至少是 1 dB</translation>
-    </message>
-    <message>
-        <source>The frequency gain cannot be negative</source>
-        <translation type="vanished">频率增益不能为负</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be no more than 60 dB/dec</source>
-        <translation type="vanished">频率增益必须小于 60 dB/dec</translation>
-    </message>
-    <message>
-        <source>Spectrogram Settings</source>
-        <translation type="vanished">频谱图设置</translation>
-    </message>
-    <message>
-        <source>Spectrograms</source>
-        <translation type="vanished">频谱图</translation>
-    </message>
-    <message>
-        <source>Preferences for Spectrum</source>
-        <translation type="vanished">频谱首选项</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preferences</source>
-        <extracomment>i18n-hint: use is a verb</extracomment>
-        <translation type="vanished">使用首选项(&amp;U)</translation>
-    </message>
-    <message>
-        <source>S&amp;cale:</source>
-        <translation type="vanished">比例(&amp;C):</translation>
-    </message>
-    <message>
-        <source>Mi&amp;n Frequency (Hz):</source>
-        <translation type="vanished">最低频率 (Hz)(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>Ma&amp;x Frequency (Hz):</source>
-        <translation type="vanished">最高频率 (Hz)(&amp;X)：</translation>
-    </message>
-    <message>
-        <source>&amp;Gain (dB):</source>
-        <translation type="vanished">增益 (dB)(&amp;G)：</translation>
-    </message>
-    <message>
-        <source>&amp;Range (dB):</source>
-        <translation type="vanished">范围 (dB)(&amp;R)：</translation>
-    </message>
-    <message>
-        <source>High &amp;boost (dB/dec):</source>
-        <translation type="vanished">高频提升（dB/dec）(&amp;B)：</translation>
-    </message>
-    <message>
-        <source>A&amp;lgorithm:</source>
-        <translation type="vanished">算法(&amp;L):</translation>
-    </message>
-    <message>
-        <source>Window &amp;size:</source>
-        <translation type="vanished">窗口大小(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>2048</source>
-        <translation type="vanished">2048</translation>
-    </message>
-    <message>
-        <source>Window &amp;type:</source>
-        <translation type="vanished">窗口类型(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>&amp;Zero padding factor:</source>
-        <translation type="vanished">零填充因子(&amp;Z):</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble Spectral Selection</source>
-        <translation type="vanished">启用频谱选区(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Show a grid along the &amp;Y-axis</source>
-        <translation type="vanished">显示沿Y轴的网格(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>FFT Find Notes</source>
-        <extracomment>i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated</extracomment>
-        <translation type="vanished">FFT(快速傅立叶变换)寻找音符</translation>
-    </message>
-    <message>
-        <source>Minimum Amplitude (dB):</source>
-        <translation type="vanished">最小振幅 (dB)：</translation>
-    </message>
-    <message>
-        <source>Max. Number of Notes (1..128):</source>
-        <translation type="vanished">最大音符数(1..128)：</translation>
-    </message>
-    <message>
-        <source>&amp;Find Notes</source>
-        <translation type="vanished">寻找音符(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Quantize Notes</source>
-        <translation type="vanished">量化音符(&amp;Q)</translation>
-    </message>
-    <message>
-        <source>Global settings</source>
-        <translation type="vanished">全局设置</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble spectral selection</source>
-        <translation type="vanished">启用频谱选区(&amp;B)</translation>
-    </message>
-    <message>
-        <source>The maximum frequency must be an integer</source>
-        <translation type="vanished">最高频率值必须是整数</translation>
-    </message>
-    <message>
-        <source>The minimum frequency must be an integer</source>
-        <translation type="vanished">最低频率值必须是整数</translation>
-    </message>
-    <message>
-        <source>The gain must be an integer</source>
-        <translation type="vanished">增益必须是一个整数</translation>
-    </message>
-    <message>
-        <source>The range must be a positive integer</source>
-        <translation type="vanished">范围必须是一个正整数</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be an integer</source>
-        <translation type="vanished">频率增益必须是一个整数</translation>
-    </message>
-    <message>
-        <source>The minimum amplitude (dB) must be an integer</source>
-        <translation type="vanished">最小振幅(dB)必须是整数</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be an integer</source>
-        <translation type="vanished">最大音符数必须是整数</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be in the range 1..128</source>
-        <translation type="vanished">最大音符数必须在1~128直接</translation>
-    </message>
-    <message>
-        <source>Preferences for Theme</source>
-        <translation type="vanished">主题首选项</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="vanished">信息</translation>
-    </message>
-    <message>
-        <source>Themability is an experimental feature.
-
-To try it out, click "Save Theme Cache" then find and modify the images and colors in
-ImageCacheVxx.png using an image editor such as the Gimp.
-
-Click "Load Theme Cache" to load the changed images and colors back into Audacity.</source>
-        <translation type="vanished">Themability 是一项试验性功能。
-
-要试用该功能，请单击 “保存主题缓存”，然后使用图像编辑器（如 Gimp）在
-ImageCacheVxx.png 中的图像和颜色。
-
-单击 “加载主题缓存”，将更改后的图像和颜色加载回 Audacity。</translation>
-    </message>
-    <message>
-        <source>Saving and loading individual theme files uses a separate file for each image, but is
-otherwise the same idea.</source>
-        <translation type="vanished">保存和读取单个主题文件时为每个图片使用单独的文件。</translation>
-    </message>
-    <message>
-        <source>Theme Cache - Images &amp;&amp; Color</source>
-        <extracomment>i18n-hint: &amp;&amp; in here is an escape character to get a single &amp; on screen,
-* so keep it as is</extracomment>
-        <translation type="vanished">主题缓存 - 图片和颜色</translation>
-    </message>
-    <message>
-        <source>Save Theme Cache</source>
-        <translation type="vanished">保存主题缓存</translation>
-    </message>
-    <message>
-        <source>Load Theme Cache</source>
-        <translation type="vanished">载入主题缓存</translation>
-    </message>
-    <message>
-        <source>Individual Theme Files</source>
-        <translation type="vanished">独立的主题文件</translation>
-    </message>
-    <message>
-        <source>Save Files</source>
-        <translation type="vanished">保存文件</translation>
-    </message>
-    <message>
-        <source>Load Files</source>
-        <translation type="vanished">载入文件</translation>
-    </message>
-    <message>
-        <source>Tracks Behaviors</source>
-        <extracomment>i18n-hint: i.e. the behaviors of tracks</extracomment>
-        <translation type="vanished">音轨行为</translation>
-    </message>
-    <message>
-        <source>Preferences for TracksBehaviors</source>
-        <translation type="vanished">轨道首选项</translation>
-    </message>
-    <message>
-        <source>Ask me each time.
-Show dialog each time audio is pasted.</source>
-        <translation type="vanished">每次都问我。
-每次粘贴音频时显示对话框。</translation>
-    </message>
-    <message>
-        <source>&amp;Select all audio, if selection required</source>
-        <translation type="vanished">如果需要选择，则选择所有音频(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Enable cut &amp;lines</source>
-        <extracomment>i18n-hint: Cut-lines are lines that can expand to show the cut audio.</extracomment>
-        <translation type="vanished">打开剪切线(&amp;:)</translation>
-    </message>
-    <message>
-        <source>Editing a clip can &amp;move other clips</source>
-        <translation type="vanished">编辑一段会移动 其它片段(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Always paste audio as new clips</source>
-        <translation type="vanished">始终将音频粘贴为新片段(&amp;A)</translation>
-    </message>
-    <message>
-        <source>"Move track focus" c&amp;ycles repeatedly through tracks</source>
-        <translation type="vanished">“移动轨道焦点”在轨道间循环(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>&amp;Type to create a label</source>
-        <translation type="vanished">键入以创建标签(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Use dialog for the &amp;name of a new label</source>
-        <translation type="vanished">使用新标签名的对话框</translation>
-    </message>
-    <message>
-        <source>Solo &amp;Button:</source>
-        <translation type="vanished">独奏按钮(&amp;B)：</translation>
-    </message>
-    <message>
-        <source>Pasted audio</source>
-        <translation type="vanished">粘贴音频</translation>
-    </message>
-    <message>
-        <source>Paste audio from other Audacity project as</source>
-        <translation type="vanished">将其他 Audacity 项目中的音频粘贴为</translation>
-    </message>
-    <message>
-        <source>Connect dots</source>
-        <translation type="vanished">连接点图</translation>
-    </message>
-    <message>
-        <source>Stem plot</source>
-        <translation type="vanished">杆状图</translation>
-    </message>
-    <message>
-        <source>Preferences for Tracks</source>
-        <translation type="vanished">轨道首选项</translation>
-    </message>
-    <message>
-        <source>Auto-&amp;fit track height</source>
-        <translation type="vanished">自动贴合轨道高度(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Use &amp;half-wave display when collapsed</source>
-        <translation type="vanished">折叠时使用半波显示(&amp;H)</translation>
-    </message>
-    <message>
-        <source>&amp;Pinned Recording/Playback head</source>
-        <translation type="vanished">固定录音/播放头(&amp;P)</translation>
-    </message>
-    <message>
-        <source>A&amp;uto-scroll if head unpinned</source>
-        <translation type="vanished">如果顶部未固定则自动滚动(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Pinned &amp;head position</source>
-        <translation type="vanished">固定的头部位置(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Default &amp;view mode:</source>
-        <translation type="vanished">默认视图模式(&amp;V)：</translation>
-    </message>
-    <message>
-        <source>Default Waveform scale:</source>
-        <translation type="vanished">默认波形比例:</translation>
-    </message>
-    <message>
-        <source>Display &amp;samples:</source>
-        <translation type="vanished">波形细节样式(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>Default audio track &amp;name:</source>
-        <translation type="vanished">默认音轨名称(&amp;N)：</translation>
-    </message>
-    <message>
-        <source>Zoom Toggle</source>
-        <translation type="vanished">缩放开关</translation>
-    </message>
-    <message>
-        <source>Preset 1:</source>
-        <translation type="vanished">预设 1：</translation>
-    </message>
-    <message>
-        <source>Preset 2:</source>
-        <translation type="vanished">预设 2：</translation>
-    </message>
-    <message>
-        <source>Waveforms</source>
-        <extracomment>i18n-hint: A waveform is a visual representation of vibration</extracomment>
-        <translation type="vanished">波形</translation>
-    </message>
-    <message>
-        <source>Preferences for Waveforms</source>
-        <translation type="vanished">波形首选项</translation>
-    </message>
-    <message>
-        <source>Waveform dB &amp;range:</source>
-        <translation type="vanished">波形分贝范围(&amp;R):</translation>
-    </message>
-    <message>
-        <source>Audio Setup</source>
-        <extracomment>i18n-hint: Audio setup button text, keep as short as possible</extracomment>
-        <translation type="vanished">音频设置</translation>
-    </message>
-    <message>
-        <source>&amp;Host</source>
-        <extracomment>i18n-hint: Audio setup menu</extracomment>
-        <translation type="vanished">音频主机(&amp;H)</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Device</source>
-        <translation type="vanished">播放设备(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Device</source>
-        <translation type="vanished">录音设备(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Recording &amp;Channels</source>
-        <translation type="vanished">录音通道(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Settings...</source>
-        <translation type="vanished">音频设置(&amp;A)</translation>
-    </message>
-    <message>
-        <source>1 (Mono) Recording Channel</source>
-        <translation type="vanished">1 (单声道) 录制声道</translation>
-    </message>
-    <message>
-        <source>2 (Stereo) Recording Channels</source>
-        <translation type="vanished">2 (立体声) 录制声道</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Setup Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages the audio devices</extracomment>
-        <translation type="vanished">音频设置工具栏(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Stopped</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">已停止</translation>
-    </message>
-    <message>
-        <source>Transport</source>
-        <translation type="vanished">播录</translation>
-    </message>
-    <message>
-        <source>Skip to Start</source>
-        <translation type="vanished">跳至开始位置</translation>
-    </message>
-    <message>
-        <source>Skip to End</source>
-        <translation type="vanished">跳至结束位置</translation>
-    </message>
-    <message>
-        <source>Play Once</source>
-        <translation type="vanished">播放一次</translation>
-    </message>
-    <message>
-        <source>Record New Track</source>
-        <translation type="vanished">录制新轨道</translation>
-    </message>
-    <message>
-        <source>Append Record</source>
-        <translation type="vanished">追加录音</translation>
-    </message>
-    <message>
-        <source>Select to End</source>
-        <translation type="vanished">选择至终点</translation>
-    </message>
-    <message>
-        <source>Select to Start</source>
-        <translation type="vanished">选择至起点</translation>
-    </message>
-    <message>
-        <source>%s Paused.</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused.</extracomment>
-        <translation type="vanished">%1 已暂停。</translation>
-    </message>
-    <message>
-        <source>%s.</source>
-        <translation type="vanished">%1.</translation>
-    </message>
-    <message>
-        <source>&amp;Transport Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-with the big buttons on it (play record etc)</extracomment>
-        <translation type="vanished">播录工具栏(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Playback Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for playback.</extracomment>
-        <translation type="vanished">播放设备</translation>
-    </message>
-    <message>
-        <source>Recording Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for recording.</extracomment>
-        <translation type="vanished">录制设备</translation>
-    </message>
-    <message>
-        <source>Audio Host</source>
-        <translation type="vanished">音频主机平台</translation>
-    </message>
-    <message>
-        <source>Recording Channels</source>
-        <translation type="vanished">录制省道数</translation>
-    </message>
-    <message>
-        <source>Select Recording Device</source>
-        <translation type="vanished">选择录制设备</translation>
-    </message>
-    <message>
-        <source>Select Playback Device</source>
-        <translation type="vanished">选择播放设备</translation>
-    </message>
-    <message>
-        <source>Select Audio Host</source>
-        <translation type="vanished">选择音频主机平台</translation>
-    </message>
-    <message>
-        <source>Select Recording Channels</source>
-        <translation type="vanished">选择录制声道</translation>
-    </message>
-    <message>
-        <source>Device information is not available.</source>
-        <translation type="vanished">设备信息不可用。</translation>
-    </message>
-    <message>
-        <source>&amp;Device Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages devices</extracomment>
-        <translation type="vanished">设备工具栏(&amp;D)</translation>
-    </message>
-    <message>
-        <source>De&amp;vice</source>
-        <translation type="vanished">设备(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Change &amp;Recording Device...</source>
-        <translation type="vanished">改变录制设备(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Change &amp;Playback Device...</source>
-        <translation type="vanished">改变播放设备(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Change Audio &amp;Host...</source>
-        <translation type="vanished">改变音频主机(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Change Recording Cha&amp;nnels...</source>
-        <translation type="vanished">改变录制声道数(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation type="vanished">放大</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation type="vanished">缩小</translation>
-    </message>
-    <message>
-        <source>Fit selection to width</source>
-        <translation type="vanished">选区填充窗口宽度</translation>
-    </message>
-    <message>
-        <source>Fit project to width</source>
-        <translation type="vanished">项目填充窗口宽度</translation>
-    </message>
-    <message>
-        <source>Trim audio outside selection</source>
-        <translation type="vanished">修剪选定外的音频</translation>
-    </message>
-    <message>
-        <source>Silence audio selection</source>
-        <translation type="vanished">静音音频选区</translation>
-    </message>
-    <message>
-        <source>Sync-Lock Tracks</source>
-        <translation type="vanished">同步锁定轨道</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar for editing</extracomment>
-        <translation type="vanished">编辑工具栏(&amp;E)</translation>
-    </message>
-    <message>
-        <source> Monitoring </source>
-        <translation type="vanished"> 监视中 </translation>
-    </message>
-    <message>
-        <source> Active </source>
-        <translation type="vanished"> 活动 </translation>
-    </message>
-    <message>
-        <source> Peak %2.f dB</source>
-        <translation type="vanished"> 峰值 %2.f dB</translation>
-    </message>
-    <message>
-        <source> Peak %.2f </source>
-        <translation type="vanished"> 峰值 %1 </translation>
-    </message>
-    <message>
-        <source> Clipped </source>
-        <translation type="vanished"> 已修剪的 </translation>
-    </message>
-    <message>
-        <source>Record Meter</source>
-        <translation type="vanished">录制指示</translation>
-    </message>
-    <message>
-        <source>Recording Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.</extracomment>
-        <translation type="vanished">录制电平</translation>
-    </message>
-    <message>
-        <source>Meter-Record</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">指示-录制</translation>
-    </message>
-    <message>
-        <source>Playback Meter</source>
-        <translation type="vanished">播放指示</translation>
-    </message>
-    <message>
-        <source>Playback Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.</extracomment>
-        <translation type="vanished">播放电平</translation>
-    </message>
-    <message>
-        <source>Meter-Play</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">指示-播放</translation>
-    </message>
-    <message>
-        <source>Recording Meter</source>
-        <translation type="vanished">录制指示</translation>
-    </message>
-    <message>
-        <source>Combined Meter</source>
-        <translation type="vanished">综合指示</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Meter Toolbar</source>
-        <translation type="vanished">录音仪表栏(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Meter Toolbar</source>
-        <translation type="vanished">播放仪表栏(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Mi&amp;xer</source>
-        <translation type="vanished">混音器工具栏(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Volume...</source>
-        <translation type="vanished">调整播放音量(&amp;J)</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Volume</source>
-        <translation type="vanished">增加播放音量(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Volume</source>
-        <translation type="vanished">减少播放音量(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Adj&amp;ust Recording Volume...</source>
-        <translation type="vanished">调整录制音量(&amp;U)</translation>
-    </message>
-    <message>
-        <source>I&amp;ncrease Recording Volume</source>
-        <translation type="vanished">增加录制音量(&amp;N)</translation>
-    </message>
-    <message>
-        <source>D&amp;ecrease Recording Volume</source>
-        <translation type="vanished">减小录制音量(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">长度</translation>
-    </message>
-    <message>
-        <source>Center</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">中央</translation>
-    </message>
-    <message>
-        <source>Selection Toolbar Setup</source>
-        <translation type="vanished">选择工具栏设置</translation>
-    </message>
-    <message>
-        <source>Start and End of Selection</source>
-        <translation type="vanished">选区的起点和终点</translation>
-    </message>
-    <message>
-        <source>Start and Length of Selection</source>
-        <translation type="vanished">选区的起点和长度</translation>
-    </message>
-    <message>
-        <source>Length and End of Selection</source>
-        <translation type="vanished">选区的长度和终点</translation>
-    </message>
-    <message>
-        <source>Length and Center of Selection</source>
-        <translation type="vanished">选区的长度和中心</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">选择工具栏(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Snap to combo box</source>
-        <extracomment>i18n-hint: combo box is the type of the control/widget</extracomment>
-        <translation type="vanished">吸附至组合框</translation>
-    </message>
-    <message>
-        <source>&amp;Snapping Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">吸附工具栏(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Spectral Selection</source>
-        <translation type="vanished">频谱选区</translation>
-    </message>
-    <message>
-        <source>Center frequency and Width</source>
-        <translation type="vanished">中心频率及频宽</translation>
-    </message>
-    <message>
-        <source>Low and High Frequencies</source>
-        <translation type="vanished">高低频率</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="vanished">显示</translation>
-    </message>
-    <message>
-        <source>Center Frequency</source>
-        <translation type="vanished">中心频率</translation>
-    </message>
-    <message>
-        <source>Bandwidth</source>
-        <translation type="vanished">带宽</translation>
-    </message>
-    <message>
-        <source>Spe&amp;ctral Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a frequency range of audio</extracomment>
-        <translation type="vanished">频谱选择工具栏(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Time Signature</source>
-        <translation type="vanished">拍号</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature</source>
-        <translation type="vanished">上拍号</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature</source>
-        <translation type="vanished">下拍号</translation>
-    </message>
-    <message>
-        <source>Tempo Changed</source>
-        <translation type="vanished">速度已改变</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature Changed</source>
-        <translation type="vanished">上拍号已修改</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature Changed</source>
-        <translation type="vanished">下拍号已修改</translation>
-    </message>
-    <message>
-        <source>Time Signature Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">节拍工具栏</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation type="vanished">时间</translation>
-    </message>
-    <message>
-        <source>Audio Position</source>
-        <translation type="vanished">音频位置</translation>
-    </message>
-    <message>
-        <source>&amp;Time Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for viewing actual time of the cursor</extracomment>
-        <translation type="vanished">时间工具栏(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Audacity %s Toolbar</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of the kind of toolbar.</extracomment>
-        <translation type="vanished">Audacity %1工具栏</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize toolbar</source>
-        <translation type="vanished">点击并拖动以缩放工具栏</translation>
-    </message>
-    <message>
-        <source>ToolDock</source>
-        <translation type="vanished">工具停靠</translation>
-    </message>
-    <message>
-        <source>Selection Tool</source>
-        <translation type="vanished">选择工具</translation>
-    </message>
-    <message>
-        <source>Envelope Tool</source>
-        <translation type="vanished">包络工具</translation>
-    </message>
-    <message>
-        <source>Draw Tool</source>
-        <translation type="vanished">绘制工具</translation>
-    </message>
-    <message>
-        <source>Multi-Tool</source>
-        <translation type="vanished">多功能工具</translation>
-    </message>
-    <message>
-        <source>T&amp;ools Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows a toolbar
-that has some tools in it</extracomment>
-        <translation type="vanished">工具工具栏(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Tool</source>
-        <translation type="vanished">选择工具(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Envelope Tool</source>
-        <translation type="vanished">包络工具(&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Draw Tool</source>
-        <translation type="vanished">绘制工具(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Multi Tool</source>
-        <translation type="vanished">多功能工具(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Previous Tool</source>
-        <translation type="vanished">上一个工具(&amp;P)</translation>
-    </message>
-    <message>
-        <source>&amp;Next Tool</source>
-        <translation type="vanished">下一个工具(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed</source>
-        <translation type="vanished">以指定速度播放</translation>
-    </message>
-    <message>
-        <source>Play at selected speed</source>
-        <translation type="vanished">以选定的速度播放</translation>
-    </message>
-    <message>
-        <source>Playback Speed</source>
-        <translation type="vanished">重放速度</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed Once</source>
-        <translation type="vanished">以指定速度播放一次</translation>
-    </message>
-    <message>
-        <source>Pla&amp;y-at-Speed Toolbar</source>
-        <translation type="vanished">指定速度播放工具栏(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>&amp;Play-at-Speed</source>
-        <extracomment>i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.</extracomment>
-        <translation type="vanished">以指定速度播放(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed &amp;Once</source>
-        <translation type="vanished">以指定速度播放一次(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview-at-Speed</source>
-        <translation type="vanished">以指定速度播放剪切预览(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Speed...</source>
-        <translation type="vanished">调整播放速度(&amp;J)</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Speed</source>
-        <translation type="vanished">增加播放速度(&amp;I)</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Speed</source>
-        <translation type="vanished">减少播放速度(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Drag label. Hold shift and drag to move all labels on the same track.</source>
-        <translation type="vanished">拖动标签。按住 Shift 键并拖动以移动同一轨道上的所有标签。</translation>
-    </message>
-    <message>
-        <source>Drag one or more label boundaries.</source>
-        <translation type="vanished">拖动一个或多个标签边界。</translation>
-    </message>
-    <message>
-        <source>Drag label boundary.</source>
-        <translation type="vanished">拖动标签边界。</translation>
-    </message>
-    <message>
-        <source>Modified Label</source>
-        <translation type="vanished">已修改的标签</translation>
-    </message>
-    <message>
-        <source>Label Edit</source>
-        <translation type="vanished">标签编辑</translation>
-    </message>
-    <message>
-        <source>Click to edit label text</source>
-        <translation type="vanished">点击编辑标签文本</translation>
-    </message>
-    <message>
-        <source>&amp;Font...</source>
-        <translation type="vanished">字体(&amp;F)...</translation>
-    </message>
-    <message>
-        <source>Label Track Font</source>
-        <extracomment>i18n-hint: (noun) This is the font for the label track.</extracomment>
-        <translation type="vanished">标签轨的字体</translation>
-    </message>
-    <message>
-        <source>Face name</source>
-        <extracomment>i18n-hint: (noun) The name of the typeface</extracomment>
-        <translation type="vanished">字体名</translation>
-    </message>
-    <message>
-        <source>Face size</source>
-        <extracomment>i18n-hint: (noun) The size of the typeface</extracomment>
-        <translation type="vanished">字体大小</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t Label text</source>
-        <translation type="vanished">剪切标签文本(&amp;T)</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Label text</source>
-        <translation type="vanished">复制标签文本(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Label</source>
-        <translation type="vanished">删除标签(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Label...</source>
-        <translation type="vanished">编辑标签(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Deleted Label</source>
-        <translation type="vanished">已删除标签</translation>
-    </message>
-    <message>
-        <source>Edited labels</source>
-        <translation type="vanished">编辑标签</translation>
-    </message>
-    <message>
-        <source>New label</source>
-        <translation type="vanished">新标签</translation>
-    </message>
-    <message>
-        <source>Up &amp;Octave</source>
-        <translation type="vanished">提高八倍音阶(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Down Octa&amp;ve</source>
-        <translation type="vanished">降低八倍音阶(&amp;V)</translation>
-    </message>
-    <message>
-        <source>MIDI Device Info</source>
-        <translation type="vanished">MIDI 设备信息</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI Device Info...</source>
-        <translation type="vanished">MIDI 设备信息(&amp;D)...</translation>
-    </message>
-    <message>
-        <source>Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.</source>
-        <translation type="vanished">单击在垂直方向放大。按住Shift键单击缩小。拖拽指定一个缩放区域。</translation>
-    </message>
-    <message>
-        <source>Zoom Reset</source>
-        <translation type="vanished">缩放重置</translation>
-    </message>
-    <message>
-        <source>Shift-Right-Click</source>
-        <translation type="vanished">Shift-右键</translation>
-    </message>
-    <message>
-        <source>Left-Click/Left-Drag</source>
-        <translation type="vanished">左键单击/左键拖拽</translation>
-    </message>
-    <message>
-        <source>Shift-Left-Click</source>
-        <translation type="vanished">Shift 键-左击</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch selected region.</source>
-        <translation type="vanished">单击并拖动以伸展选中的音频。</translation>
-    </message>
-    <message>
-        <source>Stretch Note Track</source>
-        <extracomment>i18n-hint: (noun) The track that is used for MIDI notes which can be
-dragged to change their duration.</extracomment>
-        <translation type="vanished">伸展音符轨</translation>
-    </message>
-    <message>
-        <source>Stretch</source>
-        <extracomment>i18n-hint: In the history list, indicates a MIDI note has
-been dragged to change its duration (stretch it). Using either past
-or present tense is fine here.  If unsure, go for whichever is
-shorter.</extracomment>
-        <translation type="vanished">拉伸</translation>
-    </message>
-    <message>
-        <source>Click to open clip context menu.</source>
-        <translation type="vanished">点击打开片段的上下文菜单</translation>
-    </message>
-    <message>
-        <source>Reset Clip Pitch</source>
-        <translation type="vanished">重设片段音高</translation>
-    </message>
-    <message>
-        <source>Not enough space</source>
-        <translation type="vanished">没有足够的空间</translation>
-    </message>
-    <message>
-        <source>There is not enough space to expand the clip to its original speed.</source>
-        <translation type="vanished">没有足够的空间将片段扩展到原来的速度。</translation>
-    </message>
-    <message>
-        <source>Reset Clip Speed</source>
-        <translation type="vanished">重置片段速度</translation>
-    </message>
-    <message>
-        <source>Click to reset clip pitch.</source>
-        <translation type="vanished">点击重置片段音高。</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Cmd + click to reset.</source>
-        <translation type="vanished">点击更改片段音高，Cmd + 点击以重置。</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Ctrl + click to reset.</source>
-        <translation type="vanished">点击更改片段音高，Ctrl + 点击以重置。</translation>
-    </message>
-    <message>
-        <source>Click to reset clip speed.</source>
-        <translation type="vanished">点击重置片段速度。</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Cmd + click to reset.</source>
-        <translation type="vanished">点击更改片段速度，Cmd + 点击以重置。</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Ctrl + click to reset.</source>
-        <translation type="vanished">点击更改片段速度，Ctrl + 点击以重置。</translation>
-    </message>
-    <message>
-        <source>Left-Click to expand, Right-Click to remove</source>
-        <translation type="vanished">左键单击扩展，右键单击删除</translation>
-    </message>
-    <message>
-        <source>Expanded Cut Line</source>
-        <translation type="vanished">已展开的剪切线</translation>
-    </message>
-    <message>
-        <source>Expand</source>
-        <translation type="vanished">扩展</translation>
-    </message>
-    <message>
-        <source>Removed Cut Line</source>
-        <translation type="vanished">已移除剪切线</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed</source>
-        <translation type="vanished">音高与速度</translation>
-    </message>
-    <message>
-        <source>Clip Pitch</source>
-        <translation type="vanished">片段音高</translation>
-    </message>
-    <message>
-        <source>se&amp;mitones:</source>
-        <translation type="vanished">半音 (&amp;M):</translation>
-    </message>
-    <message>
-        <source>&amp;cents:</source>
-        <translation type="vanished">音分(&amp;C)：</translation>
-    </message>
-    <message>
-        <source>Clip Speed</source>
-        <translation type="vanished">片段速度</translation>
-    </message>
-    <message>
-        <source>&amp;speed %: </source>
-        <translation type="vanished">速度 %(&amp;S)：</translation>
-    </message>
-    <message>
-        <source>&amp;Optimize for Voice</source>
-        <translation type="vanished">优化语音(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Changed Speed</source>
-        <translation type="vanished">修改速度</translation>
-    </message>
-    <message>
-        <source>Changed Pitch</source>
-        <translation type="vanished">修改音高</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the samples</source>
-        <translation type="vanished">单击并拖动编辑采样</translation>
-    </message>
-    <message>
-        <source>To use Draw, zoom in further until you can see the individual samples.</source>
-        <translation type="vanished">如果需要使用“绘制”工具，请“放大”波形至能看清楚单个采样点。</translation>
-    </message>
-    <message>
-        <source>Moved Samples</source>
-        <translation type="vanished">已移动采样点</translation>
-    </message>
-    <message>
-        <source>Sample Edit</source>
-        <translation type="vanished">采样编辑</translation>
-    </message>
-    <message>
-        <source>Zoom to Fit</source>
-        <translation type="vanished">放大至适合</translation>
-    </message>
-    <message>
-        <source>Reset Zoom</source>
-        <translation type="vanished">重置缩放</translation>
-    </message>
-    <message>
-        <source>&amp;Spectrogram</source>
-        <translation type="vanished">频谱图(&amp;S)</translation>
-    </message>
-    <message>
-        <source>To change Spectrogram Settings, stop any
- playing or recording first.</source>
-        <translation type="vanished">要更改频谱图设置，请先停止
-任何播放或录音。</translation>
-    </message>
-    <message>
-        <source>Stop the Audio First</source>
-        <translation type="vanished">先停止音频</translation>
-    </message>
-    <message>
-        <source>S&amp;pectrogram Settings...</source>
-        <translation type="vanished">频谱图设置(&amp;P)...</translation>
-    </message>
-    <message>
-        <source>S&amp;pectral</source>
-        <translation type="vanished">频谱(&amp;P)</translation>
-    </message>
-    <message>
-        <source>To&amp;ggle Spectral Selection</source>
-        <translation type="vanished">开关频谱选区(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Next &amp;Higher Peak Frequency</source>
-        <translation type="vanished">下一个更高的峰值频率(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Next &amp;Lower Peak Frequency</source>
-        <translation type="vanished">下一个更低的峰值频率(&amp;L)</translation>
-    </message>
-    <message>
-        <source>Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">拖动以指定缩放区域。右键单击以显示菜单。Ctrl+ 滚动以缩放。</translation>
-    </message>
-    <message>
-        <source>Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">右击打开菜单。Ctrl+ 滚动可缩放。</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust sizes of sub-views, double-click to split evenly</source>
-        <translation type="vanished">单击并拖动以调整子视图的大小，双击以均匀拆分</translation>
-    </message>
-    <message>
-        <source>Click and drag to rearrange sub-views</source>
-        <translation type="vanished">单击并拖动以重新排列子视图</translation>
-    </message>
-    <message>
-        <source>Rearrange sub-views</source>
-        <translation type="vanished">重新安排子视图</translation>
-    </message>
-    <message>
-        <source>Close sub-view</source>
-        <translation type="vanished">关闭子视图</translation>
-    </message>
-    <message>
-        <source>Mute/Unmute Track</source>
-        <translation type="vanished">静音/取消静音轨道</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip</source>
-        <oldsource>%s, %d of %d clips</oldsource>
-        <extracomment>i18n-hint:
-string is the name of a clip
-first number is the position of that clip in a sequence of clips,
-second number counts the clips</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 of %3 个片段</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Adjust left trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished">调整左微调 %1 秒</translation>
-    </message>
-    <message>
-        <source>Trim by %.02fs</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown</extracomment>
-        <translation type="vanished">按 %1 修剪</translation>
-    </message>
-    <message>
-        <source>Adjust right trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished">调整右微调 %1 秒</translation>
-    </message>
-    <message>
-        <source>Click and drag to move clip boundary in time</source>
-        <translation type="vanished">点击并拖动以移动片段边界时间</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch clip</source>
-        <translation type="vanished">点击并拖动以拉伸片段</translation>
-    </message>
-    <message>
-        <source>Split Clip</source>
-        <translation type="vanished">分割片段</translation>
-    </message>
-    <message>
-        <source>Join Clips</source>
-        <translation type="vanished">加入片段</translation>
-    </message>
-    <message>
-        <source>Rename Clip...</source>
-        <translation type="vanished">重命名片段…</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed...</source>
-        <translation type="vanished">音高与速度…</translation>
-    </message>
-    <message>
-        <source>Render Pitch and Speed</source>
-        <translation type="vanished">渲染音高与速度</translation>
-    </message>
-    <message>
-        <source>Changed Clip Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">剪辑速度更改为 %1%%</translation>
-    </message>
-    <message>
-        <source>Changed Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">速度改为 %1%%</translation>
-    </message>
-    <message>
-        <source>Set Wave Clip Name</source>
-        <translation type="vanished">设置波形片段名称</translation>
-    </message>
-    <message>
-        <source>Click and drag to select text</source>
-        <translation type="vanished">单击并拖动以选择文本</translation>
-    </message>
-    <message>
-        <source>Modified Clip Name</source>
-        <translation type="vanished">修改片段名称</translation>
-    </message>
-    <message>
-        <source>Clip Name Edit</source>
-        <translation type="vanished">编辑片段名称</translation>
-    </message>
-    <message>
-        <source>Rendered time-stretched audio</source>
-        <translation type="vanished">渲染时间被拉伸的音频</translation>
-    </message>
-    <message>
-        <source>Pitch Shift</source>
-        <translation type="vanished">变调</translation>
-    </message>
-    <message>
-        <source>Changed Pitch Shift</source>
-        <translation type="vanished">更改音调</translation>
-    </message>
-    <message>
-        <source>&amp;Rename Clip...</source>
-        <translation type="vanished">重命名片段(&amp;R)…</translation>
-    </message>
-    <message>
-        <source>&amp;Pitch and Speed...</source>
-        <translation type="vanished">音高和速度(&amp;P)…</translation>
-    </message>
-    <message>
-        <source>Render Pitch and &amp;Speed</source>
-        <translation type="vanished">渲染音调和速度(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Up</source>
-        <translation type="vanished">音高提升(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Down</source>
-        <translation type="vanished">音高降低(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Format</source>
-        <translation type="vanished">格式(&amp;F)</translation>
-    </message>
-    <message>
-        <source>Changing sample format</source>
-        <translation type="vanished">正在更改采样格式</translation>
-    </message>
-    <message>
-        <source>Processing...   0%%</source>
-        <translation type="vanished">正在处理...   0%%</translation>
-    </message>
-    <message>
-        <source>Processing...   %i%%</source>
-        <translation type="vanished">正在处理...   %1%%</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s</source>
-        <extracomment>i18n-hint: The strings name a track and a format</extracomment>
-        <translation type="vanished">已将“%1”改变为 %2</translation>
-    </message>
-    <message>
-        <source>Format Change</source>
-        <translation type="vanished">格式更改</translation>
-    </message>
-    <message>
-        <source>Rat&amp;e</source>
-        <translation type="vanished">采样率(&amp;E)</translation>
-    </message>
-    <message>
-        <source>8000 Hz</source>
-        <translation type="vanished">8000 Hz</translation>
-    </message>
-    <message>
-        <source>11025 Hz</source>
-        <translation type="vanished">11025 Hz</translation>
-    </message>
-    <message>
-        <source>16000 Hz</source>
-        <translation type="vanished">16000Hz</translation>
-    </message>
-    <message>
-        <source>22050 Hz</source>
-        <translation type="vanished">22050 Hz</translation>
-    </message>
-    <message>
-        <source>44100 Hz</source>
-        <translation type="vanished">44100 Hz</translation>
-    </message>
-    <message>
-        <source>48000 Hz</source>
-        <translation type="vanished">48000 Hz</translation>
-    </message>
-    <message>
-        <source>88200 Hz</source>
-        <translation type="vanished">88200 Hz</translation>
-    </message>
-    <message>
-        <source>96000 Hz</source>
-        <translation type="vanished">96000 Hz</translation>
-    </message>
-    <message>
-        <source>176400 Hz</source>
-        <translation type="vanished">176400 Hz</translation>
-    </message>
-    <message>
-        <source>192000 Hz</source>
-        <translation type="vanished">192000 Hz</translation>
-    </message>
-    <message>
-        <source>352800 Hz</source>
-        <translation type="vanished">352800 Hz</translation>
-    </message>
-    <message>
-        <source>384000 Hz</source>
-        <translation type="vanished">384000 Hz</translation>
-    </message>
-    <message>
-        <source>&amp;Other...</source>
-        <translation type="vanished">其他(&amp;O)...</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s Hz</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">已将“%1”改变为 %2 Hz</translation>
-    </message>
-    <message>
-        <source>Rate Change</source>
-        <translation type="vanished">改变采样率</translation>
-    </message>
-    <message>
-        <source>Set Rate</source>
-        <translation type="vanished">设定采样率</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke Stereo Track</source>
-        <translation type="vanished">制作立体声轨(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Swap Stereo &amp;Channels</source>
-        <translation type="vanished">交换立体声的两个声道(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Stereo Track</source>
-        <translation type="vanished">分离立体声轨(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mo&amp;no</source>
-        <translation type="vanished">分离立体声到单声道(&amp;N)</translation>
-    </message>
-    <message>
-        <source>The tracks you are attempting to merge to stereo contain clips at
-different positions, or otherwise mismatching clips. Merging them
-will render the tracks.
-
-This causes any realtime effects to be applied to the waveform and
-hidden data to be removed. Additionally, the entire track will
-become one large clip.
-
-Do you wish to continue?</source>
-        <translation type="vanished">您正尝试合并为立体声的轨道包含位置不同的片段，或其他不匹配的片段。合并它们将会渲染这些轨道。
-
-这将导致任何实时效果器被应用到波形上，并且隐藏的数据将被移除。此外，整个轨道将变成一个大的片段。
-
-您希望继续吗？</translation>
-    </message>
-    <message>
-        <source>Combine mono to stereo</source>
-        <translation type="vanished">将单声道合并为立体声</translation>
-    </message>
-    <message>
-        <source>Made '%s' a stereo track</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">已将“%1”改变为立体声轨</translation>
-    </message>
-    <message>
-        <source>Make Stereo</source>
-        <translation type="vanished">制作立体声</translation>
-    </message>
-    <message>
-        <source>Swapped Channels in '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">已交换的声道在 '%1'</translation>
-    </message>
-    <message>
-        <source>Swap Channels</source>
-        <translation type="vanished">交换声道</translation>
-    </message>
-    <message>
-        <source>Split stereo track '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">分离立体声轨“%1”</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mono '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">分离立体声到单声道“%1”</translation>
-    </message>
-    <message>
-        <source>Split to Mono</source>
-        <translation type="vanished">分离为单声道</translation>
-    </message>
-    <message>
-        <source>Created new audio track</source>
-        <translation type="vanished">新建音轨</translation>
-    </message>
-    <message>
-        <source>Created new stereo audio track</source>
-        <translation type="vanished">新建立体声轨</translation>
-    </message>
-    <message>
-        <source>&amp;Mono Track</source>
-        <translation type="vanished">单声道轨(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo Track</source>
-        <translation type="vanished">立体声轨(&amp;S)</translation>
-    </message>
-    <message>
-        <source>%+.1f dB</source>
-        <extracomment>i18n-hint dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.0f%% Left</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% 左</translation>
-    </message>
-    <message>
-        <source>%.0f%% Right</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% 右</translation>
-    </message>
-    <message>
-        <source>Half Wave</source>
-        <translation type="vanished">半波</translation>
-    </message>
-    <message>
-        <source>Wa&amp;veform</source>
-        <translation type="vanished">波形(&amp;V)</translation>
-    </message>
-    <message>
-        <source>&amp;Wave Color</source>
-        <translation type="vanished">波形颜色(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Instrument %i</source>
-        <translation type="vanished">乐器 %1</translation>
-    </message>
-    <message>
-        <source>WaveColor Change</source>
-        <translation type="vanished">波形颜色改变</translation>
-    </message>
-    <message>
-        <source>Change Speed Limits</source>
-        <translation type="vanished">更改速度限制</translation>
-    </message>
-    <message>
-        <source>Change speed limit (%) to:</source>
-        <translation type="vanished">更改速度限制 (%) 到：</translation>
-    </message>
-    <message>
-        <source>Lower Speed Limit</source>
-        <translation type="vanished">最低速度限制</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit</source>
-        <translation type="vanished">最高速度限制</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit must be greater than the Lower Speed Limit</source>
-        <translation type="vanished">速度上限必须大于速度下限</translation>
-    </message>
-    <message>
-        <source>Invalid Limits</source>
-        <translation type="vanished">无效限制</translation>
-    </message>
-    <message>
-        <source>Set range to '%ld' - '%ld'</source>
-        <translation type="vanished">将范围设置为 '%1' - '%2'</translation>
-    </message>
-    <message>
-        <source>Set Range</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">设定范围</translation>
-    </message>
-    <message>
-        <source>Set time track display to linear</source>
-        <translation type="vanished">设置时间轨显示为线性</translation>
-    </message>
-    <message>
-        <source>Set Display</source>
-        <translation type="vanished">设置显示</translation>
-    </message>
-    <message>
-        <source>Set time track display to logarithmic</source>
-        <translation type="vanished">设置时间轨显示为对数</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to linear</source>
-        <translation type="vanished">设置时间轨插值为线性</translation>
-    </message>
-    <message>
-        <source>Set Interpolation</source>
-        <translation type="vanished">设置插值</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to logarithmic</source>
-        <translation type="vanished">设置音轨时间插值为对数</translation>
-    </message>
-    <message>
-        <source>&amp;Linear scale</source>
-        <translation type="vanished">线性缩放(&amp;L)</translation>
-    </message>
-    <message>
-        <source>L&amp;ogarithmic scale</source>
-        <translation type="vanished">对数缩放(&amp;O)</translation>
-    </message>
-    <message>
-        <source>&amp;Range...</source>
-        <translation type="vanished">范围(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Logarithmic &amp;Interpolation</source>
-        <translation type="vanished">对数插值(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Created new time track</source>
-        <translation type="vanished">新建时间轨</translation>
-    </message>
-    <message>
-        <source>&amp;Time Track</source>
-        <translation type="vanished">时间轨(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Right-click for menu.</source>
-        <translation type="vanished">右击以打开菜单。</translation>
-    </message>
-    <message>
-        <source>Drag clips to reposition them. Hold Shift and drag to move all clips on the same track.</source>
-        <extracomment>i18n-hint Appears on hovering mouse over clip affordance</extracomment>
-        <translation type="vanished">拖动片段以重新定位它们。按住 Shift 键并拖动以移动同一轨道上的所有片段。</translation>
-    </message>
-    <message>
-        <source>Add Mono Track</source>
-        <translation type="vanished">新增单声道音轨</translation>
-    </message>
-    <message>
-        <source>Add Stereo Track</source>
-        <translation type="vanished">新增立体声音轨</translation>
-    </message>
-    <message>
-        <source>Add Label Track</source>
-        <translation type="vanished">添加标签轨道</translation>
-    </message>
-    <message>
-        <source>Export Audio...</source>
-        <translation type="vanished">导出音频…</translation>
-    </message>
-    <message>
-        <source>Erased selected area</source>
-        <translation type="vanished">清除所选区域</translation>
-    </message>
-    <message>
-        <source>Selected area using Brush Tool</source>
-        <translation type="vanished">使用画笔工具选择区域</translation>
-    </message>
-    <message>
-        <source>Brush tool selection</source>
-        <translation type="vanished">画笔工具选择</translation>
-    </message>
-    <message>
-        <source>Re&amp;name Track...</source>
-        <translation type="vanished">重命名轨道(&amp;N)…</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Up</source>
-        <translation type="vanished">音轨上移(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Down</source>
-        <translation type="vanished">音轨下移(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Top</source>
-        <translation type="vanished">移动轨道到顶部(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Bottom</source>
-        <translation type="vanished">移动轨道到底部(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Set Track Name</source>
-        <translation type="vanished">设置轨道名</translation>
-    </message>
-    <message>
-        <source>Renamed '%s' to '%s'</source>
-        <translation type="vanished">将“%1”改名为“%2”</translation>
-    </message>
-    <message>
-        <source>Name Change</source>
-        <translation type="vanished">更改名称</translation>
-    </message>
-    <message>
-        <source>Click and drag to warp playback time</source>
-        <translation type="vanished">单击并拖动以扭曲播放时间</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the amplitude envelope</source>
-        <translation type="vanished">单击并拖动编辑振幅包络线</translation>
-    </message>
-    <message>
-        <source>Adjusted envelope.</source>
-        <extracomment>i18n-hint: (verb) Audacity has just adjusted the envelope .</extracomment>
-        <translation type="vanished">已调整的包络。</translation>
-    </message>
-    <message>
-        <source>&amp;Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">跟随播放(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="vanished">定位播放</translation>
-    </message>
-    <message>
-        <source>Scrub &amp;Ruler</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">跟随播放标尺(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Playing at Speed</source>
-        <translation type="vanished">以指定速度播放</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Seek</source>
-        <translation type="vanished">移动鼠标指针以定位播放</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Scrub</source>
-        <translation type="vanished">移动鼠标指针以跟随播放</translation>
-    </message>
-    <message>
-        <source>Scru&amp;bbing</source>
-        <translation type="vanished">跟随播放(&amp;B)</translation>
-    </message>
-    <message>
-        <source>Scrub Bac&amp;kwards</source>
-        <translation type="vanished">向后滑动(&amp;K)</translation>
-    </message>
-    <message>
-        <source>Scrub For&amp;wards</source>
-        <translation type="vanished">向前滑动​​(&amp;W)</translation>
-    </message>
-    <message>
-        <source>Click and drag to move left selection boundary.</source>
-        <translation type="vanished">单击并拖动选区的左边界。</translation>
-    </message>
-    <message>
-        <source>Click and drag to move right selection boundary.</source>
-        <translation type="vanished">单击并拖动选区的右边界。</translation>
-    </message>
-    <message>
-        <source>Click and drag to move bottom selection frequency.</source>
-        <translation type="vanished">点击并拖动以调整选区底部频率。</translation>
-    </message>
-    <message>
-        <source>Click and drag to move top selection frequency.</source>
-        <translation type="vanished">点击并拖动以调整选区顶部频率。</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency to a spectral peak.</source>
-        <translation type="vanished">点击并移动以调整选区中心频率至某个频谱峰值处。</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency.</source>
-        <translation type="vanished">点击并拖动以调整选区中心频率。</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust frequency bandwidth.</source>
-        <translation type="vanished">点击并拖动以调整频宽。</translation>
-    </message>
-    <message>
-        <source>Edit, Preferences...</source>
-        <extracomment>i18n-hint: These are the names of a menu and a command in that menu</extracomment>
-        <translation type="vanished">编辑，首选项...</translation>
-    </message>
-    <message>
-        <source>Multi-Tool Mode: %s for Mouse and Keyboard Preferences.</source>
-        <extracomment>i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac</extracomment>
-        <translation type="vanished">多功能工具：按 %1 打开鼠标及键盘首选项。</translation>
-    </message>
-    <message>
-        <source>Click and drag to set frequency bandwidth.</source>
-        <translation type="vanished">点击并拖动以设置频宽。</translation>
-    </message>
-    <message>
-        <source>Click and drag to select audio</source>
-        <translation type="vanished">单击并拖动选择音频</translation>
-    </message>
-    <message>
-        <source>(snapping)</source>
-        <extracomment>i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries</extracomment>
-        <translation type="vanished">（吸附）</translation>
-    </message>
-    <message>
-        <source>Click and drag to move a track in time</source>
-        <translation type="vanished">单击并拖动在时间范围内的轨道</translation>
-    </message>
-    <message>
-        <source>Could not shift between tracks</source>
-        <translation type="vanished">不能在多个轨道间平移</translation>
-    </message>
-    <message>
-        <source>Moved clips to another track</source>
-        <translation type="vanished">已将片段移至另一轨道</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips right %.02f seconds</source>
-        <translation type="vanished">已使轨道或片段右移了 %1 秒</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips left %.02f seconds</source>
-        <translation type="vanished">已使轨道或片段左移了 %1 秒</translation>
-    </message>
-    <message>
-        <source>Move Clip</source>
-        <translation type="vanished">移动片段</translation>
-    </message>
-    <message>
-        <source>Collapse</source>
-        <translation type="vanished">折叠</translation>
-    </message>
-    <message>
-        <source>Delete Track</source>
-        <translation type="vanished">删除轨道</translation>
-    </message>
-    <message>
-        <source>Open menu...</source>
-        <translation type="vanished">打开菜单...</translation>
-    </message>
-    <message>
-        <source>Command+Click</source>
-        <extracomment>i18n-hint: Command names a modifier key on Macintosh keyboards</extracomment>
-        <translation type="vanished">Command+单击</translation>
-    </message>
-    <message>
-        <source>Ctrl+Click</source>
-        <extracomment>i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards</extracomment>
-        <translation type="vanished">Ctrl+单击</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track. Drag up or down to change track order.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">%1 以选择或取消选择轨道。向上或向下拖动以更改轨道顺序。</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">%1 以选择或取消选择轨道。</translation>
-    </message>
-    <message>
-        <source>Moved '%s' up</source>
-        <extracomment>i18n-hint: will substitute name of track for %s</extracomment>
-        <translation type="vanished">已向上移动“%1”</translation>
-    </message>
-    <message>
-        <source>Moved '%s' down</source>
-        <translation type="vanished">已向下移动“%1”</translation>
-    </message>
-    <message>
-        <source>Move Track</source>
-        <translation type="vanished">移动轨道</translation>
-    </message>
-    <message>
-        <source>Click to Zoom In, Shift-Click to Zoom Out</source>
-        <translation type="vanished">单击放大，按住Shift键单击缩小</translation>
-    </message>
-    <message>
-        <source>Drag to Zoom Into Region, Right-Click to Zoom Out</source>
-        <translation type="vanished">拖入放大区域，右击缩小</translation>
-    </message>
-    <message>
-        <source>Left=Zoom In, Right=Zoom Out, Middle=Normal</source>
-        <translation type="vanished">鼠标左键=放大， 右键=缩小， 中键=正常</translation>
-    </message>
-    <message>
-        <source>No Updates Available</source>
-        <extracomment>i18n-hint: Title of the dialog no updates available.</extracomment>
-        <translation type="vanished">没有可用的更新</translation>
-    </message>
-    <message>
-        <source>Check for Updates</source>
-        <translation type="vanished">检查更新</translation>
-    </message>
-    <message>
-        <source>If you want to change your preference for automatic updates checking, you can find it in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Application'.</extracomment>
-        <translation type="vanished">如果您想更改自动更新检查的首选项，可以在 %1 中找到。</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Application</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
-i18n-hint: a page in the Preferences dialog; use same name</extracomment>
-        <translation type="vanished">首选项 &gt; 应用程序</translation>
-    </message>
-    <message>
-        <source>Error checking for update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">检查更新时出错</translation>
-    </message>
-    <message>
-        <source>Unable to connect to Audacity update server.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">无法连接到 Audacity 的更新服务器。</translation>
-    </message>
-    <message>
-        <source>Update data was corrupted.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">更新数据已损坏。</translation>
-    </message>
-    <message>
-        <source>Error downloading update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">下载更新时出错</translation>
-    </message>
-    <message>
-        <source>Can't open the Audacity download link.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">无法打开 Audacity 下载链接。</translation>
-    </message>
-    <message>
-        <source>Audacity update</source>
-        <translation type="vanished">Audacity 更新</translation>
-    </message>
-    <message>
-        <source>Downloading %s</source>
-        <translation type="vanished">正在下载 %1</translation>
-    </message>
-    <message>
-        <source>App update checking</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">App 正在检查更新</translation>
-    </message>
-    <message>
-        <source>To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.</source>
-        <extracomment>i18n-hint: The first paragraph of app update notice dialog.</extracomment>
-        <translation type="vanished">如果您想了解最新信息，只要有新版本的 Audacity 可供下载，您就会收到应用内通知。</translation>
-    </message>
-    <message>
-        <source>In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.</source>
-        <extracomment>i18n-hint: The second paragraph of app update notice dialog</extracomment>
-        <translation type="vanished">为了保护您的隐私，Audacity 不会收集任何个人信息。不过，应用程序更新检查确实需要网络访问。</translation>
-    </message>
-    <message>
-        <source>You can turn off app update checking at any time in %s.</source>
-        <extracomment>i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences &gt; Application" link</extracomment>
-        <translation type="vanished">您可以随时在%1 中关闭应用程序更新检查。</translation>
-    </message>
-    <message>
-        <source>App updates</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">应用更新</translation>
-    </message>
-    <message>
-        <source>Update Audacity</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">更新 Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">跳过(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Install update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">安装更新(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Audacity %s is available!</source>
-        <comment>update dialog</comment>
-        <extracomment>i18n-hint Substitution of version number for %s.</extracomment>
-        <translation type="vanished">Audacity %1 可用！</translation>
-    </message>
-    <message>
-        <source>Changelog</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">更新日志</translation>
-    </message>
-    <message>
-        <source>Read more on GitHub</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">在 GitHub 上阅读更多内容</translation>
-    </message>
-    <message>
-        <source>(disabled)</source>
-        <translation type="vanished">(已禁用)</translation>
-    </message>
-    <message>
-        <source>Press</source>
-        <translation type="vanished">按</translation>
-    </message>
-    <message>
-        <source>Button</source>
-        <translation type="vanished">按钮</translation>
-    </message>
-    <message>
-        <source>pressed</source>
-        <extracomment>i18n-hint: whether a button is pressed or not pressed</extracomment>
-        <translation type="vanished">按钮按下</translation>
-    </message>
-    <message>
-        <source>not pressed</source>
-        <translation type="vanished">按钮未按下</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Left, in the Pan slider
-i18n-hint: One-letter abbreviation for Left, in VU Meter</extracomment>
-        <translation type="vanished">左</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Right, in the Pan slider
-i18n-hint: One-letter abbreviation for Right, in VU Meter</extracomment>
-        <translation type="vanished">右</translation>
-    </message>
-    <message>
-        <source>%.3fx</source>
-        <extracomment>i18n-hint: "x" suggests a multiplicative factor</extracomment>
-        <translation type="vanished">%1x</translation>
-    </message>
-    <message>
-        <source>&amp;Clear</source>
-        <translation type="vanished">清除(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Grabber</source>
-        <extracomment>i18n-hint: A 'Grabber' is a region you can click and drag on
-It's used to drag a track around (when in multi-tool mode) rather
-than requiring that you use the drag tool.  It's shown as a series
-of horizontal bumps</extracomment>
-        <translation type="vanished">获取器</translation>
-    </message>
-    <message>
-        <source>Empty</source>
-        <translation type="vanished">空</translation>
-    </message>
-    <message>
-        <source>Menu</source>
-        <translation type="vanished">菜单</translation>
-    </message>
-    <message>
-        <source>Meter</source>
-        <extracomment>i18n-hint: Noun (the meter is used for playback or record level monitoring)</extracomment>
-        <translation type="vanished">指示表</translation>
-    </message>
-    <message>
-        <source>Disable Silent Monitoring</source>
-        <translation type="vanished">禁用静默监听</translation>
-    </message>
-    <message>
-        <source>Enable Silent Monitoring</source>
-        <translation type="vanished">启用静默监听</translation>
-    </message>
-    <message>
-        <source>Recording Meter Options</source>
-        <translation type="vanished">录制仪表选项</translation>
-    </message>
-    <message>
-        <source>Playback Meter Options</source>
-        <translation type="vanished">播放仪表选项</translation>
-    </message>
-    <message>
-        <source>Refresh Rate</source>
-        <translation type="vanished">刷新率</translation>
-    </message>
-    <message>
-        <source>Higher refresh rates make the meter show more frequent
-changes. A rate of 30 per second or less should prevent
-the meter affecting audio quality on slower machines.</source>
-        <translation type="vanished">更高的刷新率让指示器改变更频繁。
-如果系统速度不够快的话，可以指定 每秒30次 以下
-的刷新率，以免影响音频质量。</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]</source>
-        <translation type="vanished">指示表的每秒刷新率 [1-100]</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]: </source>
-        <translation type="vanished">指示表的每秒刷新率 [1-100]： </translation>
-    </message>
-    <message>
-        <source>Meter Style</source>
-        <translation type="vanished">指示表风格</translation>
-    </message>
-    <message>
-        <source>Meter Type</source>
-        <translation type="vanished">指示表类型</translation>
-    </message>
-    <message>
-        <source>Orientation</source>
-        <translation type="vanished">方向</translation>
-    </message>
-    <message>
-        <source>Missing Plugins</source>
-        <translation type="vanished">缺失插件</translation>
-    </message>
-    <message>
-        <source>This project contains some realtime effect plugins that cannot be found on this system.</source>
-        <translation type="vanished">此项目包含一些在系统中找不到的实时效果器插件</translation>
-    </message>
-    <message>
-        <source>The project may sound different than intended. %s</source>
-        <extracomment>i18n-hint: %s will be replaced with "Learn more"</extracomment>
-        <translation type="vanished">该项目可能听起来与预期不同。 %1</translation>
-    </message>
-    <message>
-        <source>Learn more</source>
-        <translation type="vanished">了解更多</translation>
-    </message>
-    <message>
-        <source>(Use context menu to change format.)</source>
-        <translation type="vanished">（使用上下文菜单改变格式。）</translation>
-    </message>
-    <message>
-        <source>%s (%s)</source>
-        <translation type="vanished">%1 (%2)</translation>
-    </message>
-    <message>
-        <source>Unable to write files to directory: %s.</source>
-        <extracomment>i18n-hint: %s is replaced with a directory path.</extracomment>
-        <translation type="vanished">无法将文件写入目录： %1。</translation>
-    </message>
-    <message>
-        <source>Please check that the directory exists, has the necessary permissions, and the drive isn't full.</source>
-        <extracomment>i18n-hint: This message describes the error in the Error dialog.</extracomment>
-        <translation type="vanished">请检查目录是否存在、是否具有必要的权限并且驱动器未满。</translation>
-    </message>
-    <message>
-        <source>You can change the directory in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Directories'.</extracomment>
-        <translation type="vanished">您可以更改 %1 中的目录。</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Directories</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.</extracomment>
-        <translation type="vanished">首选项 &gt; 目录</translation>
-    </message>
-    <message>
-        <source>Don't show this warning again</source>
-        <translation type="vanished">下次不再显示此警告</translation>
-    </message>
-    <message>
-        <source>NaN</source>
-        <translation type="vanished">NaN</translation>
-    </message>
-    <message>
-        <source>Infinity</source>
-        <translation type="vanished">无穷</translation>
-    </message>
-    <message>
-        <source>-Infinity</source>
-        <translation type="vanished">-无穷</translation>
-    </message>
-    <message>
-        <source>Validation error</source>
-        <translation type="vanished">验证错误</translation>
-    </message>
-    <message>
-        <source>Empty value</source>
-        <translation type="vanished">空值</translation>
-    </message>
-    <message>
-        <source>Malformed number</source>
-        <translation type="vanished">无法识别数字</translation>
-    </message>
-    <message>
-        <source>Not in range %d to %d</source>
-        <translation type="vanished">不在允许范围 %1 到 %2 内</translation>
-    </message>
-    <message>
-        <source>Value overflow</source>
-        <translation type="vanished">值溢出</translation>
-    </message>
-    <message>
-        <source>Too many decimal digits</source>
-        <translation type="vanished">太多小数位</translation>
-    </message>
-    <message>
-        <source>Value not in range: %s to %s</source>
-        <translation type="vanished">值不在 %1 到 %2 内</translation>
-    </message>
-    <message>
-        <source>Value must not be less than %s</source>
-        <translation type="vanished">值不能小于 %1</translation>
-    </message>
-    <message>
-        <source>Value must not be greater than %s</source>
-        <translation type="vanished">值不能大于 %1</translation>
-    </message>
-    <message>
-        <source>Shelf Filter</source>
-        <translation type="vanished">搁架滤波器</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Multi Tool</source>
-        <translation type="vanished">频谱编辑多功能工具</translation>
-    </message>
-    <message>
-        <source>~aNotch filter parameters cannot be applied.~%~
-                      Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'.</source>
-        <translation type="vanished">~a点阻滤波器参数无法应用。~%~
-                      尝试增加低频率限制~%~
-                      或缩短滤波器“宽度”。</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Parametric EQ</source>
-        <translation type="vanished">频谱编辑参量 EQ</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Shelves</source>
-        <translation type="vanished">频谱编辑搁架</translation>
-    </message>
-    <message>
-        <source>Studio Fade Out</source>
-        <translation type="vanished">录音室淡出</translation>
-    </message>
-    <message>
-        <source>Adjustable Fade</source>
-        <translation type="vanished">可调整的渐变</translation>
-    </message>
-    <message>
-        <source>Beat Finder</source>
-        <translation type="vanished">节拍寻找</translation>
-    </message>
-    <message>
-        <source>Clip Fix</source>
-        <translation type="vanished">削波失真修复</translation>
-    </message>
-    <message>
-        <source>Crossfade Clips</source>
-        <translation type="vanished">交叉渐变片段</translation>
-    </message>
-    <message>
-        <source>Crossfade Tracks</source>
-        <translation type="vanished">交叉渐变轨道</translation>
-    </message>
-    <message>
-        <source>Regular Interval Labels</source>
-        <translation type="vanished">常规间隔标签</translation>
-    </message>
-    <message>
-        <source>Error: There is insufficient space to create labels.~%</source>
-        <translation type="vanished">错误：空间不足，无法创建标签。~%</translation>
-    </message>
-    <message>
-        <source>High-Pass Filter</source>
-        <translation type="vanished">高通滤波器</translation>
-    </message>
-    <message>
-        <source>Label Sounds</source>
-        <extracomment>i18n-hint: Name of effect that labels sounds</extracomment>
-        <translation type="vanished">标示声音</translation>
-    </message>
-    <message>
-        <source>No sounds found.~%~
-                 Try lowering 'Threshold level (dB)'.</source>
-        <translation type="vanished">未找到声音。~%~
-                 尝试降低“阈值级别 (dB)”。</translation>
-    </message>
-    <message>
-        <source>Legacy Limiter</source>
-        <translation type="vanished">传统限制器</translation>
-    </message>
-    <message>
-        <source>Low-Pass Filter</source>
-        <translation type="vanished">低通滤波器</translation>
-    </message>
-    <message>
-        <source>Noise Gate</source>
-        <translation type="vanished">噪声门</translation>
-    </message>
-    <message>
-        <source>Don't Link Stereo</source>
-        <translation type="vanished">不要链接立体声</translation>
-    </message>
-    <message>
-        <source>Notch Filter</source>
-        <translation type="vanished">陷波滤波器</translation>
-    </message>
-    <message>
-        <source>Nyquist Plugin Installer</source>
-        <translation type="vanished">Nyquist 插件安装程序</translation>
-    </message>
-    <message>
-        <source>Files already installed ('Allow Overwriting' disabled):</source>
-        <translation type="vanished">已安装的文件（"允许文件被覆盖" 已禁用）：</translation>
-    </message>
-    <message>
-        <source>Rhythm Track</source>
-        <translation type="vanished">节奏轨道</translation>
-    </message>
-    <message>
-        <source>Set 'Number of bars' to zero to enable the 'Rhythm track duration'.</source>
-        <translation type="vanished">设置“小节数”为零以启用“节奏轨道持续时长”。</translation>
-    </message>
-    <message>
-        <source>Used if 'Number of bars' = 0</source>
-        <translation type="vanished">如果“条数”= 0，则使用</translation>
-    </message>
-    <message>
-        <source>Set either 'Number of bars' or~%~
-                    'Rhythm track duration' to greater than zero.</source>
-        <translation type="vanished">将“小节数”或~%~
-                    “节奏轨道时长”设置为大于零。</translation>
-    </message>
-    <message>
-        <source>Risset Drum</source>
-        <translation type="vanished">Risset 鼓</translation>
-    </message>
-    <message>
-        <source>Error.~%"~a" cannot be written.</source>
-        <translation type="vanished">错误。~%无法写入 "~a"。</translation>
-    </message>
-    <message>
-        <source>Sample Data Import</source>
-        <translation type="vanished">样本数据导入</translation>
-    </message>
-    <message>
-        <source>Error~%~
-                        '~a' could not be opened.~%~
-                        Check that file exists.</source>
-        <translation type="vanished">错误~%~
-                        无法打开 "~a"。~%~
-                        检查文件是否存在。</translation>
-    </message>
-    <message>
-        <source>Error:~%~
-              The file must contain only plain ASCII text.~%~
-              (Invalid byte '~a' at byte number: ~a)</source>
-        <translation type="vanished">错误：~%~
-              文件必须仅有纯 ASCII 文本。~%~
-              （无效的字节“~a”在位置 ~a ）</translation>
-    </message>
-    <message>
-        <source>Error~%~
-              Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value.</source>
-        <translation type="vanished">错误：~%~
-              数据必须是纯 ASCII 文本的数字。~%~
-              “~a”不是一个数字值。</translation>
-    </message>
-    <message>
-        <source>Spectral Delete</source>
-        <translation type="vanished">频谱删除</translation>
-    </message>
-    <message>
-        <source>Volume and Compression</source>
-        <extracomment>Effects menu group name; audio dynamics compression, not data compression</extracomment>
-        <translation type="vanished">音量与压缩</translation>
-    </message>
-    <message>
-        <source>Fading</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">淡入淡出</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo</source>
-        <translation type="vanished">音高与速度</translation>
-    </message>
-    <message>
-        <source>EQ and Filters</source>
-        <translation type="vanished">均衡器与过滤器</translation>
-    </message>
-    <message>
-        <source>Noise Removal and Repair</source>
-        <translation type="vanished">噪音移除与修复</translation>
-    </message>
-    <message>
-        <source>Delay and Reverb</source>
-        <translation type="vanished">延迟与混响</translation>
-    </message>
-    <message>
-        <source>Distortion and Modulation</source>
-        <translation type="vanished">破音与变调</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">特殊</translation>
-    </message>
-    <message>
-        <source>Vocal Reduction and Isolation</source>
-        <translation type="vanished">人声消除和隔离</translation>
-    </message>
-    <message>
-        <source>Vocal Remover</source>
-        <translation type="vanished">去除人声</translation>
-    </message>
-    <message>
-        <source>Spectral Tools</source>
-        <translation type="vanished">频谱工具</translation>
-    </message>
-    <message>
-        <source>Legacy</source>
-        <translation type="vanished">传统</translation>
     </message>
 </context>
 </TS>
