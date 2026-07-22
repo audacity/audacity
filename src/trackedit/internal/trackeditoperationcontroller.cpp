@@ -87,7 +87,7 @@ bool TrackeditOperationController::changeTrackTitle(const trackedit::TrackId tra
 bool TrackeditOperationController::changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle)
 {
     if (clipsInteraction()->changeClipTitle(clipKey, newTitle)) {
-        projectHistory()->pushHistoryState("Clip Title", "Changed Clip Title");
+        projectHistory()->pushHistoryState("Clip Title", "Changed clip title");
         return true;
     }
     return false;
@@ -895,7 +895,7 @@ bool TrackeditOperationController::addLabelToSelection()
 bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
 {
     if (labelsInteraction()->changeLabelTitle(labelKey, title)) {
-        projectHistory()->pushHistoryState("Label title changed", "Change label title");
+        projectHistory()->pushHistoryState("Label title changed", "Changed label title");
         return true;
     }
     return false;
