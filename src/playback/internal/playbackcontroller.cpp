@@ -257,34 +257,33 @@ void PlaybackController::togglePlayPauseAction()
         return;
     }
 
-    togglePlay(PlayingBehaviour::Pause, false /* ignoreSelection */);
+    togglePlay(TogglePlayMode::PlayPause);
 }
 
 void PlaybackController::togglePlayStopAction()
 {
-    togglePlay(PlayingBehaviour::Stop, false /* ignoreSelection */);
+    togglePlay(TogglePlayMode::PlayStop);
 }
 
 void PlaybackController::togglePlayFromCursorAction()
 {
-    togglePlay(PlayingBehaviour::Pause, true /* ignoreSelection */);
+    togglePlay(TogglePlayMode::PlayFromCursor);
 }
 
-void PlaybackController::togglePlay(PlayingBehaviour playingBehaviour, bool ignoreSelection)
+void PlaybackController::togglePlay(TogglePlayMode mode)
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
         return;
     }
 
+    const bool ignoreSelection = mode == TogglePlayMode::PlayFromCursor;
+
     if (isPlaying()) {
-        switch (playingBehaviour) {
-        case PlayingBehaviour::Pause:
-            doPause();
-            break;
-        case PlayingBehaviour::Stop:
+        if (mode == TogglePlayMode::PlayStop) {
             stopSeekAndUpdatePlaybackRegion();
-            break;
+        } else {
+            doPause();
         }
 
         return;
