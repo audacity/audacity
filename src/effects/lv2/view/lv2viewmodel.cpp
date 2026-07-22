@@ -23,6 +23,7 @@
 #include "suil/suil.h"
 
 #include "global/defer.h"
+#include "global/translation.h"
 #include "log.h"
 
 #include <dlfcn.h>
@@ -233,7 +234,8 @@ bool Lv2ViewModel::buildFancy()
 
     // No usable UI found
     if (ui == nullptr) {
-        m_unsupportedUiReason = "No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)";
+        m_unsupportedUiReason
+            = muse::trc("effects/lv2", "No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -253,7 +255,7 @@ bool Lv2ViewModel::buildFancy()
     m_isX11Window = strcmp(uiTypeUri, LV2_UI__X11UI) == 0;
 
     if (isGtkUI) {
-        m_unsupportedUiReason = "GTK UIs are not supported";
+        m_unsupportedUiReason = muse::trc("effects/lv2", "GTK UIs are not supported");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -281,7 +283,9 @@ bool Lv2ViewModel::buildFancy()
                                            uiBinaryPath.get(), featurePointers.data()));
 
     if (!m_suilInstance || suil_instance_get_widget(m_suilInstance.get()) == nullptr) {
-        m_unsupportedUiReason = usesX11(uiTypeUri) ? "X11 UI refusing to be externalized" : "Unknown reason (please report)";
+        m_unsupportedUiReason = usesX11(uiTypeUri)
+                                ? muse::trc("effects/lv2", "X11 UI refusing to be externalized")
+                                : muse::trc("effects/lv2", "Unknown reason (please report)");
         emit unsupportedUiReasonChanged();
         return false;
     }
@@ -295,7 +299,7 @@ bool Lv2ViewModel::buildFancy()
     if (auto idleUi = tryCreateLv2IdleUi(*m_suilInstance, isExternalUi)) {
         m_pluginUi = std::move(idleUi);
     } else {
-        m_unsupportedUiReason = "Idle UI creation failed";
+        m_unsupportedUiReason = muse::trc("effects/lv2", "Idle UI creation failed");
         emit unsupportedUiReasonChanged();
         return false;
     }

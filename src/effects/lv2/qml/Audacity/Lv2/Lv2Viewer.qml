@@ -84,7 +84,7 @@ Rectangle {
         width: visible ? 300 : 0
         height: visible ? 100 : 0
         anchors.centerIn: parent
-        text: "No available UI:\n" + prv.viewModel.unsupportedUiReason
+        text: qsTrc("effects/lv2", "No available UI:\n%1").arg(prv.viewModel.unsupportedUiReason)
         color: ui.theme.fontPrimaryColor
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
