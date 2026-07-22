@@ -120,7 +120,7 @@ RowLayout {
                         height: row.height
                         value: symbol
 
-                        isSelected: model.index === root.model.currentEditedFieldIndex
+                        isSelected: model.index !== -1 && model.index === root.model.currentEditedFieldIndex
 
                         isEditable: editable
 
