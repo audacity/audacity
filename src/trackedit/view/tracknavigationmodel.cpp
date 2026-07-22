@@ -79,13 +79,13 @@ void TrackNavigationModel::load()
         if (tracks.empty()) {
             addDefaultNavigation();
         } else {
-            removeDefaultNavigation();
+            disableDefaultNavigation();
         }
     });
 
     prj->trackAdded().onReceive(this, [this](const Track& track) {
         if (m_trackItemPanels.isEmpty()) {
-            removeDefaultNavigation();
+            disableDefaultNavigation();
         }
         const int pos = m_trackItemPanels.size();
         addPanels(track.id, pos);
@@ -122,7 +122,7 @@ void TrackNavigationModel::load()
 
     prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
         if (m_trackItemPanels.isEmpty()) {
-            removeDefaultNavigation();
+            disableDefaultNavigation();
         }
         addPanels(track.id, pos);
         resetPanelOrder();
@@ -251,11 +251,10 @@ void TrackNavigationModel::addDefaultNavigation()
         accessible->setRole(muse::ui::MUAccessible::Information);
         accessible->setName(muse::qtrc("trackedit", "Tracks: Empty"));
         accessible->componentComplete();
-    } else {
-        m_defaultPanel->setSection(m_section);
     }
 
-    navigationController()->setDefaultNavigationControl(m_defaultControl);
+    m_defaultPanel->setEnabled(true);
+    m_defaultControl->setEnabled(true);
 
     navigationController()->requestActivateByName(
         m_section->name().toStdString(),
@@ -263,14 +262,14 @@ void TrackNavigationModel::addDefaultNavigation()
         m_defaultControl->name().toStdString());
 }
 
-void TrackNavigationModel::removeDefaultNavigation()
+void TrackNavigationModel::disableDefaultNavigation()
 {
     if (!m_defaultPanel) {
         return;
     }
 
-    navigationController()->setDefaultNavigationControl(nullptr);
-    m_defaultPanel->setSection(nullptr);
+    m_defaultPanel->setEnabled(false);
+    m_defaultControl->setEnabled(false);
 }
 
 void TrackNavigationModel::handleArrowKeyFallback(muse::ui::NavigationEvent* event)
@@ -293,11 +292,9 @@ void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 
 void TrackNavigationModel::cleanup()
 {
-    removeDefaultNavigation();
+    disableDefaultNavigation();
 
     clearPanels();
-
-    navigationController()->resetNavigation();
 }
 
 void TrackNavigationModel::clearPanels()
