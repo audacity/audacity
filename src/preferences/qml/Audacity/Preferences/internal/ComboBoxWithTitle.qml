@@ -32,6 +32,9 @@ Column {
 
     property real columnWidth: 208
 
+    property real titleHeight: -1
+    readonly property alias titleImplicitHeight: titleLabel.implicitHeight
+
     property alias currentIndex: comboBox.currentIndex
     property alias currentValue: comboBox.currentValue
     property alias textRole: comboBox.textRole
@@ -53,8 +56,10 @@ Column {
         id: titleLabel
 
         width: root.columnWidth
+        height: root.titleHeight >= 0 ? root.titleHeight : implicitHeight
 
         horizontalAlignment: Qt.AlignLeft
+        verticalAlignment: Text.AlignTop
         wrapMode: Text.WordWrap
         maximumLineCount: 2
     }

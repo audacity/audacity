@@ -44,11 +44,17 @@ BaseSection {
     }
 
     Row {
+        id: sampleRateFormatRow
         spacing: root.spacing
 
+        property real sharedTitleHeight: Math.max(sampleRateCombo.titleImplicitHeight, sampleFormatCombo.titleImplicitHeight)
+
         ComboBoxWithTitle {
+            id: sampleRateCombo
+
             title: qsTrc("preferences", "Default sample rate")
             columnWidth: root.columnWidth
+            titleHeight: sampleRateFormatRow.sharedTitleHeight
 
             enabled: !playbackState.isPlaying
 
@@ -66,8 +72,11 @@ BaseSection {
         }
 
         ComboBoxWithTitle {
+            id: sampleFormatCombo
+
             title: qsTrc("preferences", "Default sample format")
             columnWidth: root.columnWidth
+            titleHeight: sampleRateFormatRow.sharedTitleHeight
 
             enabled: !playbackState.isPlaying
 
