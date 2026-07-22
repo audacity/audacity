@@ -114,7 +114,7 @@ private:
 
     void togglePlayAction();
     void playSelectionAction();
-    void doPlay(bool ignoreSelection);
+    void doPlay(bool clearPlaybackRegion);
     void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
     void rewindToStartAction();
