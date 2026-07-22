@@ -264,7 +264,7 @@ void PlaybackController::togglePlayAction()
         } else if (isShiftPressed) {
             //! NOTE: set the current position as start position
             doSeek(playbackPosition(), false);
-            doPlay(true /* ignoreSelection */);
+            doPlay(true /* clearPlaybackRegion */);
         } else {
             doResume();
         }
@@ -273,17 +273,17 @@ void PlaybackController::togglePlayAction()
             doSeek(0.0, false);
         }
 
-        doPlay(isShiftPressed /* ignoreSelection */);
+        doPlay(isShiftPressed /* clearPlaybackRegion */);
     }
 }
 
-void PlaybackController::doPlay(bool ignoreSelection)
+void PlaybackController::doPlay(bool clearPlaybackRegion)
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    if (!ignoreSelection) {
+    if (!clearPlaybackRegion) {
         //! NOTE: a time selection must not constrain playback;
         //! play from the cursor (lastPlaybackSeekTime) to the project end
         const muse::secs_t end = totalPlayTime();
@@ -295,6 +295,7 @@ void PlaybackController::doPlay(bool ignoreSelection)
             updatePlaybackRegion();
         }
     } else {
+        //! NOTE: no playback region; play from the cursor with no defined end
         doChangePlaybackRegion({});
         doSeek(lastPlaybackSeekTime(), false);
     }
