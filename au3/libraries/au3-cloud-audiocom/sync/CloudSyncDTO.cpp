@@ -926,6 +926,27 @@ wxString SafeName(wxString name)
 }
 } // namespace
 
+LocalFilePath::LocalFilePath(std::string path)
+    : mPath{std::move(path)}
+{
+#if defined(__WXMSW__)
+    if (mPath.rfind("\\\\?\\", 0) == 0) {
+        mPath.erase(0, 4);
+    }
+    std::replace(mPath.begin(), mPath.end(), '\\', '/');
+#endif
+}
+
+const std::string& LocalFilePath::Get() const noexcept
+{
+    return mPath;
+}
+
+bool LocalFilePath::IsEmpty() const noexcept
+{
+    return mPath.empty();
+}
+
 wxString
 MakeSafeFilePath(const wxString& rootDir, const wxString& fileName, const wxString& fileExtension)
 {

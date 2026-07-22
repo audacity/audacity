@@ -269,6 +269,19 @@ std::optional<AppTaskPollResponse> DeserializeAppTaskPollResponse(const std::str
 
 std::string Serialize(NetworkStats stats);
 
+class CLOUD_AUDIOCOM_API LocalFilePath final
+{
+public:
+    LocalFilePath() = default;
+    LocalFilePath(std::string path);
+
+    const std::string& Get() const noexcept;
+    bool IsEmpty() const noexcept;
+
+private:
+    std::string mPath;
+};
+
 CLOUD_AUDIOCOM_API wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);
 

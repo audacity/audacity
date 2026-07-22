@@ -494,7 +494,7 @@ CloudSyncService::GetProjectState(const std::string& projectId)
         return ProjectState::NotAvaliable;
     }
 
-    if (!wxFileExists(ToWXString(projectInfo->LocalPath))) {
+    if (!wxFileExists(ToWXString(projectInfo->LocalPath.Get()))) {
         return ProjectState::NotAvaliable;
     }
 
@@ -567,7 +567,7 @@ void CloudSyncService::SyncCloudSnapshot(
                         ? sync::MakeSafeProjectPath(
         CloudProjectsSavePath.Read(),
         audacity::ToWXString(projectInfo.Name))
-                        : audacity::ToWXString(localProjectInfo->LocalPath);
+                        : audacity::ToWXString(localProjectInfo->LocalPath.Get());
 
     const auto utf8Path = audacity::ToUTF8(wxPath);
 

@@ -235,7 +235,7 @@ std::string RemoteProjectSnapshot::AttachOriginalDB()
     // that has AudacityProject schema installed, even if it's a detached
     // or was deleted from the disk before
     auto attachStmt = db->CreateStatement("ATTACH DATABASE ? AS ?");
-    auto result     = attachStmt->Prepare(projectData->LocalPath, dbName).Run();
+    auto result     = attachStmt->Prepare(projectData->LocalPath.Get(), dbName).Run();
 
     if (!result.IsOk()) {
         return {};
