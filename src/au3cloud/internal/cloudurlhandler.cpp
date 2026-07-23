@@ -32,6 +32,10 @@ void CloudUrlHandler::handle(const QString& url)
         return;
     }
 
+    if (tryHandleGenerateAudioLink(parsed)) {
+        return;
+    }
+
     LOGW() << "Unhandled audacity:// URL: " << url;
 }
 
@@ -54,6 +58,26 @@ bool CloudUrlHandler::tryHandleProjectLink(const QUrl& parsed)
     data.setArg<QString>(0, projectId);
     data.setArg<QString>(1, snapshotId);
     dispatcher()->dispatch("cloud-file-open", data);
+
+    return true;
+}
+
+bool CloudUrlHandler::tryHandleGenerateAudioLink(const QUrl& parsed)
+{
+    if (parsed.host() != QStringLiteral("generate-audio")) {
+        return false;
+    }
+
+    const QUrlQuery query(parsed);
+    const QString projectId = query.queryItemValue(QStringLiteral("projectId"));
+    if (projectId.isEmpty()) {
+        return false;
+    }
+
+    muse::actions::ActionQuery action("audacity://cloud/update-audio-preview");
+    action.addParam("id", muse::Val(projectId));
+
+    dispatcher()->dispatch(action);
 
     return true;
 }

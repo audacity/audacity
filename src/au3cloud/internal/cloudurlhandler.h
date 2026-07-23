@@ -14,6 +14,7 @@ namespace au::au3cloud {
 //! Audio.com:
 //! "audacity://open?projectId=<id>[&snapshotId=<id>]"
 //! "audacity://open?audioId=<id>"
+//! "audacity://generate-audio?projectId=<id>"
 class CloudUrlHandler : public muse::Contextable
 {
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
@@ -26,5 +27,6 @@ public:
 private:
     bool tryHandleProjectLink(const QUrl& parsedUrl);
     bool tryHandleAudioLink(const QUrl& parsedUrl);
+    bool tryHandleGenerateAudioLink(const QUrl& parsedUrl);
 };
 }
