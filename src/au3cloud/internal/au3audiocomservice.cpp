@@ -430,7 +430,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project"));
     }
 
-    //auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
     if (!project->isCloudProject()) {
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError,
                                                          muse::trc("cloud", "Project is not saved to the cloud"));
@@ -449,6 +448,19 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
     }
 
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    if (auto oldProgress = std::exchange(m_audioPreviewProgress, progress)) {
+        oldProgress->cancel();
+    }
+
+    std::weak_ptr<muse::Progress> weakProgress = progress;
+    progress->finished().onReceive(this, [this, weakProgress](const auto&) {
+        muse::async::Async::call(this, [this, weakProgress]() {
+            if (weakProgress.lock() == m_audioPreviewProgress) {
+                m_audioPreviewProgress.reset();
+            }
+        });
+    });
 
     auto cancellationContext = CancellationContext::Create();
     progress->canceled().onNotify(this, [cancellationContext]() {

@@ -4,6 +4,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
+#include "framework/global/iapplication.h"
 
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
@@ -35,6 +36,7 @@ namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable,
     public muse::Contextable
 {
+    muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
@@ -69,7 +71,8 @@ public:
     bool closeOpenedProject(bool quitApp = false) override;
     bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
     bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
-    muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate) override;
+    muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate,
+                                 std::function<void()> onSuccess = nullptr) override;
 
     const ProjectBeingDownloaded& projectBeingDownloaded() const override;
     muse::async::Notification projectBeingDownloadedChanged() const override;
@@ -130,6 +133,11 @@ private:
 
     void shareAudio();
     void openCloudAudioFile(const muse::actions::ActionQuery& query);
+
+    void updateCloudAudioPreview(const muse::actions::ActionQuery& query);
+    void downloadCloudProject(const std::string& projectId, const muse::io::path_t& localPath,
+                              std::function<void(IAudacityProjectPtr)> onSuccess);
+    bool dispatchAudioPreviewToWindowWithProject(const muse::io::path_t& projectPath, const std::string& projectId);
 
     void openCustomFFmpegOptions();
     void openMetadataDialog();
