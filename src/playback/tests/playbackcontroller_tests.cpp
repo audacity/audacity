@@ -925,6 +925,35 @@ TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)
 }
 
 /**
+ * @brief Play selection availability depends on selection and playback state
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_CanReceiveAction)
+{
+    const muse::actions::ActionCode code = "action://playback/play-selection";
+
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] Without a selection the action is unavailable
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+    EXPECT_FALSE(m_controller->canReceiveAction(code));
+
+    //! [THEN] With a selection it is available
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    EXPECT_TRUE(m_controller->canReceiveAction(code));
+
+    //! [THEN] While playing it is available even without a selection (it stops playback)
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    EXPECT_TRUE(m_controller->canReceiveAction(code));
+}
+
+/**
  * @brief Play selection without a selection stops active playback
  */
 TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_NoSelection_Stops)

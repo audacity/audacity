@@ -255,12 +255,21 @@ void PlaybackUiActions::init()
     m_controller->isPlayingChanged().onNotify(this, [this]() {
         ActionCodeList codes= {
             PLAYBACK_PLAY_QUERY.toString(),
+            PLAYBACK_PLAY_SELECTION_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),
             PLAYBACK_REWIND_START_QUERY.toString(),
             PLAYBACK_REWIND_END_QUERY.toString()
         };
 
         m_actionEnabledChanged.send(codes);
+    });
+
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](muse::secs_t) {
+        m_actionEnabledChanged.send({ PLAYBACK_PLAY_SELECTION_QUERY.toString() });
+    });
+
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](muse::secs_t) {
+        m_actionEnabledChanged.send({ PLAYBACK_PLAY_SELECTION_QUERY.toString() });
     });
 
     audioDevicesProvider()->apiChanged().onNotify(this, [this]() {
