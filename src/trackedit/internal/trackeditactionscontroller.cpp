@@ -101,6 +101,7 @@ static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
 static const ActionCode GROUP_CLIPS_CODE("group-clips");
 static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
+static const ActionCode RENAME_ITEM_CODE("rename-item");
 
 static const ActionCode SELECT_ALL("select-all");
 static const ActionCode SELECT_CLEAR("clear-selection");
@@ -341,6 +342,11 @@ void TrackeditActionsController::init()
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
         notifyActionEnabledChanged(GROUP_CLIPS_CODE);
         notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+        notifyActionEnabledChanged(RENAME_ITEM_CODE);
+    });
+
+    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList&) {
+        notifyActionEnabledChanged(RENAME_ITEM_CODE);
     });
 }
 
@@ -2122,6 +2128,8 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return clipsForInteraction().size() > 1 && !selectionController()->isSelectionGrouped();
     } else if (actionCode == UNGROUP_CLIPS_CODE) {
         return clipsForInteraction().size() > 1 && selectionController()->selectionContainsGroup();
+    } else if (actionCode == RENAME_ITEM_CODE) {
+        return clipsForInteraction().size() + labelsForInteraction().size() == 1;
     }
 
     return true;

@@ -45,6 +45,7 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/ieffectsmenuprovider.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/iselectioncontroller.h"
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
@@ -72,6 +73,7 @@ public:
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
     muse::ContextInject<effects::IEffectsMenuProvider> effectsMenuProvider = { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory = { this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController = { this };
 
     //! TODO AU4
     // muse::ContextInject<workspace::IWorkspaceManager> workspacesManager = { this };
@@ -86,6 +88,8 @@ public:
 private:
     void setupConnections();
     void onEffectsChanged();
+
+    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
 
     // effects::IEffectMenuItemFactory
     muse::uicomponents::MenuItem* makeMenuSeparator() override { return makeSeparator(); }
@@ -137,6 +141,7 @@ private:
     void setItemIsChecked(const QString& itemId, bool checked);
 
     void updateUndoRedoItems();
+    void updateRenameItemsState();
 
     std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
 
