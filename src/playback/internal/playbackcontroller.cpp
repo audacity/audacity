@@ -795,8 +795,14 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAYBACK_PLAY_QUERY.toString() || code == PLAYBACK_PLAY_SELECTION_QUERY.toString()) {
+    if (code == PLAYBACK_PLAY_QUERY.toString()) {
         return !recordController()->isRecording();
+    }
+
+    if (code == PLAYBACK_PLAY_SELECTION_QUERY.toString()) {
+        //! NOTE: when playback is active the action stops it, so it stays available without a selection
+        return !recordController()->isRecording()
+               && (!isStopped() || !selectionController()->timeSelectionIsEmpty());
     }
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
