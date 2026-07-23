@@ -243,9 +243,13 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     m_startOffset = options.startOffset;
 
     AudacityProject& project = projectRef();
-    const double projectRate = ProjectRate::Get(project).GetRate();
-    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy, projectRate,
-                                           0.0 /* leadInTime */, nullptr /* crossfadeData */, options.streamStartTime);
+
+    au::audio::IAudioEngine::StartStreamOptions engineOptions;
+    engineOptions.isDefaultPolicy = options.isDefaultPolicy;
+    engineOptions.sampleRate = ProjectRate::Get(project).GetRate();
+    engineOptions.streamStartTime = options.streamStartTime;
+
+    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
     bool success = token != 0;
     if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);

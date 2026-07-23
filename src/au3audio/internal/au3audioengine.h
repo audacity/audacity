@@ -22,8 +22,7 @@ public:
     bool isCapturing() const override;
 
     int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, AudacityProject& project,
-                    bool isDefaultPlayTrackPolicy, double audioStreamSampleRate, double leadInTime = 0.0,
-                    std::vector<std::vector<float> >* crossfadeData = nullptr, std::optional<double> pStartTime = std::nullopt) override;
+                    const StartStreamOptions& options) override;
 
     void stopStream() override;
     void pauseStream(bool pause) override;

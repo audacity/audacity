@@ -18,14 +18,11 @@ namespace au::audio {
 class AudioEngineMock : public IAudioEngine
 {
 public:
-    using CrossfadeData = std::vector<std::vector<float> >*;
-
     MOCK_METHOD(bool, isBusy, (), (const, override));
     MOCK_METHOD(bool, isCapturing, (), (const, override));
 
     MOCK_METHOD(int, startStream, (const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
-                                   AudacityProject & project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
-                                   double leadInTime, CrossfadeData crossfadeData, std::optional<double> pStartTime), (override));
+                                   AudacityProject & project, const StartStreamOptions& options), (override));
     MOCK_METHOD(void, stopStream, (), (override));
     MOCK_METHOD(void, pauseStream, (bool pause), (override));
     MOCK_METHOD(void, seekStream, (double time), (override));

@@ -67,27 +67,24 @@ bool Au3AudioEngine::isCapturing() const
 
 int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
                                 const double mixerEndTime,
-                                AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate,
-                                const double leadInTime,
-                                std::vector<std::vector<float> >* crossfadeData,
-                                const std::optional<double> pStartTime)
+                                AudacityProject& project, const StartStreamOptions& options)
 {
-    AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
-    options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
-    options.rate = audioStreamSampleRate;
-    options.leadInTime = leadInTime;
-    if (crossfadeData) {
-        options.pCrossfadeData = crossfadeData;
+    AudioIOStartStreamOptions au3Options = ProjectAudioIO::GetDefaultOptions(project, options.isDefaultPolicy);
+    au3Options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
+    au3Options.rate = options.sampleRate;
+    au3Options.leadInTime = options.leadInTime;
+    if (options.crossfadeData) {
+        au3Options.pCrossfadeData = options.crossfadeData;
     }
-    if (pStartTime.has_value()) {
+    if (options.streamStartTime.has_value()) {
         // Override the default (play-region start, set by the DefaultOptions
         // scope above via GetDefaultOptions): begin producing audio here
         // instead. The policy factory reads this from the same options object,
         // so an active loop region resumes at this position too.
-        options.pStartTime = *pStartTime;
+        au3Options.pStartTime = *options.streamStartTime;
     }
     auto& audioIO = *AudioIO::Get();
-    const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, options);
+    const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, au3Options);
     if (token > 0) {
         LOGI() << "PortAudio latency report (ms): outputLatency=" << audioIO.GetHardwarePlaybackLatencyMs() <<
             ", inputLatency=" << audioIO.GetHardwareCaptureLatencyMs();
