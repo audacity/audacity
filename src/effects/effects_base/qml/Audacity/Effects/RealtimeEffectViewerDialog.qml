@@ -113,6 +113,10 @@ EffectStyledDialogView {
             instanceId: root.instanceId
             effectState: root.effectState // TODO: check if this is really needed !?
             title: root.title
+
+            onVendorUiFailed: {
+                Qt.callLater(viewerModel.notifyVendorUiFailed)
+            }
         }
     }
 

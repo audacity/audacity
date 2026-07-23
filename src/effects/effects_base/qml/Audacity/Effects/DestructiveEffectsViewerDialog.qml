@@ -149,6 +149,10 @@ EffectStyledDialogView {
         Lv2Viewer {
             instanceId: root.instanceId
             title: root.title
+
+            onVendorUiFailed: {
+                Qt.callLater(viewerModel.notifyVendorUiFailed)
+            }
         }
     }
 

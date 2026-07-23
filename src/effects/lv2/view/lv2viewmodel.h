@@ -53,6 +53,7 @@ signals:
     void titleChanged();
     void externalUiClosed();
     void unsupportedUiReasonChanged();
+    void vendorUiFailed();
 
 private:
     friend class Lv2UiHandler;
