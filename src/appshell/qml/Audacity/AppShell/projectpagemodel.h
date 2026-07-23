@@ -14,6 +14,7 @@
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 
 #include <QtQml/qqmlregistration.h>
 
@@ -25,6 +26,7 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
@@ -53,6 +55,8 @@ private:
     void updatePlaybackMeterVisibility();
     void applyWorkspaceMeterPosition();
     void storeMeterPositionToWorkspace();
+    void applyWorkspaceRulerMode();
+    void storeRulerModeToWorkspace();
 
     bool m_inited = false;
 };
