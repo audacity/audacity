@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "../iwavepainter.h"
 
 #include "project/iaudacityproject.h"
@@ -17,6 +19,9 @@ void drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metr
 void drawCenterLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style, int y);
 void drawClippedSamples(const au::projectscene::SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
                         const au::projectscene::IWavePainter::Style& style);
+size_t displayedChannelCount(const au::au3::Au3WaveTrack& track);
+size_t paintChannelIndex(const au::au3::Au3WaveClip& clip, size_t displayIndex);
+std::vector<double> channelHeights(double totalHeight, double channelHeightRatio, size_t displayedChannels);
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics, bool dB,
                          float dBRange, float zoomMax, float zoomMin);
 std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
