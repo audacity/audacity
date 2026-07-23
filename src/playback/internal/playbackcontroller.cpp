@@ -284,8 +284,7 @@ void PlaybackController::doPlay(bool clearPlaybackRegion)
     }
 
     if (!clearPlaybackRegion) {
-        //! NOTE: a time selection must not constrain playback;
-        //! play from the cursor (lastPlaybackSeekTime) to the project end
+        //! NOTE: play from the cursor to the project end
         const muse::secs_t end = totalPlayTime();
         const muse::secs_t start = lastPlaybackSeekTime();
         if (end > start) {
