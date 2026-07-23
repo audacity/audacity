@@ -82,7 +82,7 @@ public:
     bool isNewlyCreated() const override;
     bool isImported() const override;
     bool isCloudProject() const override;
-    const std::optional<CloudProjectRecord>& cloudRecord() const override;
+    const std::optional<CloudProjectRecord> cloudRecord() const override;
 
     muse::String title() const override;
 
@@ -123,7 +123,6 @@ private:
     muse::async::Notification m_aboutCloseEnd;
 
     muse::io::path_t m_path;
-    std::optional<CloudProjectRecord> m_cloudRecord;
     muse::async::Notification m_pathChanged;
     muse::async::Notification m_displayNameChanged;
     muse::async::Notification m_needSaveNotification;

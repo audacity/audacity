@@ -268,9 +268,6 @@ void Audacity4Project::setPath(const io::path_t& path)
     }
 
     m_path = path;
-
-    m_cloudRecord = cloudProjectsProvider()->projectRecordForPath(m_path);
-
     m_pathChanged.notify();
 }
 
@@ -286,12 +283,12 @@ bool Audacity4Project::isImported() const
 
 bool Audacity4Project::isCloudProject() const
 {
-    return m_cloudRecord.has_value();
+    return cloudProjectsProvider()->projectRecordForPath(m_path).has_value();
 }
 
-const std::optional<CloudProjectRecord>& Audacity4Project::cloudRecord() const
+const std::optional<CloudProjectRecord> Audacity4Project::cloudRecord() const
 {
-    return m_cloudRecord;
+    return cloudProjectsProvider()->projectRecordForPath(m_path);
 }
 
 String Audacity4Project::title() const
