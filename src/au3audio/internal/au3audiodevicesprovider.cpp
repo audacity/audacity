@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "framework/global/containers.h"
+#include "framework/global/defer.h"
 #include "framework/global/settings.h"
 #include "framework/global/realfn.h"
 
@@ -265,9 +266,15 @@ void Au3AudioDevicesProvider::withMonitoringRestored(const std::function<void()>
 
     audioEngine()->stopMonitoring();
 
-    ++m_monitoringRestoreDepth;
-    change();
-    --m_monitoringRestoreDepth;
+    {
+        // A throwing change must not leave the depth wedged, which would make
+        // every later scope look nested and never restore monitoring again.
+        ++m_monitoringRestoreDepth;
+        DEFER {
+            --m_monitoringRestoreDepth;
+        };
+        change();
+    }
 
     if (wasMonitoring) {
         if (const auto currentProject = globalContext()->currentProject()) {

@@ -5,6 +5,8 @@
 #include "playbackuiactions.h"
 #include "../playbacktypes.h"
 
+#include "framework/global/defer.h"
+
 #include <algorithm>
 
 using namespace muse;
@@ -787,9 +789,15 @@ void PlaybackController::rescanAudioDevices()
 
 void PlaybackController::withSingleStreamRestart(const std::function<void()>& changes)
 {
-    ++m_streamRestartDepth;
-    changes();
-    --m_streamRestartDepth;
+    {
+        // A throwing change must not leave the depth wedged, which would make
+        // every later change batch forever without ever resuming the stream.
+        ++m_streamRestartDepth;
+        DEFER {
+            --m_streamRestartDepth;
+        };
+        changes();
+    }
 
     if (m_streamRestartDepth == 0 && m_batchResumeState) {
         const StreamResumeState resumeState = *m_batchResumeState;
