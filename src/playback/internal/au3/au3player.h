@@ -76,8 +76,7 @@ private:
 
     TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
-    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {},
-                           std::optional<double> pStartTime = std::nullopt);
+    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
     void updateStreamState();
     void updatePlaybackState();

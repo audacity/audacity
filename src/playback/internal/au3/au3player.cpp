@@ -193,8 +193,9 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
 
             ret = doPlayTracks(Au3TrackList::Get(project), tcp0, tcp1, opts);
         } else {
-            const std::optional<double> pStartTimeOverride
-                = startTime.has_value() ? std::make_optional(startTime->to_double()) : std::nullopt;
+            if (startTime.has_value()) {
+                opts.streamStartTime = startTime->to_double();
+            }
             double mixerEndTime = t1;
             if (newDefault) {
                 mixerEndTime = latestEnd;
@@ -202,13 +203,13 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
                 // at options.pStartTime. Mirrors au3: a start at/past the region
                 // end extends playback to the project end instead of opening a
                 // stream that would stop immediately.
-                const std::optional<double> streamStartTime = pStartTimeOverride.has_value() ? pStartTimeOverride : pStartTime;
+                const std::optional<double> streamStartTime = opts.streamStartTime.has_value() ? opts.streamStartTime : pStartTime;
                 if (streamStartTime && *streamStartTime >= t1) {
                     t1 = latestEnd;
                 }
             }
             opts.mixerEndTime = mixerEndTime;
-            ret = doPlayTracks(TrackList::Get(project), t0, t1, opts, pStartTimeOverride);
+            ret = doPlayTracks(TrackList::Get(project), t0, t1, opts);
         }
 
         //! NOTE: only flip to Running when a stream was actually started.
@@ -230,8 +231,7 @@ muse::Ret Au3Player::playTracks(TrackList& trackList, double startTime, double e
     return ret;
 }
 
-muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options,
-                                  std::optional<double> pStartTime)
+muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
 {
     TransportSequences seqs = makeTransportTracks(trackList, options.selectedOnly);
 
@@ -245,7 +245,7 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     AudacityProject& project = projectRef();
     const double projectRate = ProjectRate::Get(project).GetRate();
     int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy, projectRate,
-                                           0.0 /* leadInTime */, nullptr /* crossfadeData */, pStartTime);
+                                           0.0 /* leadInTime */, nullptr /* crossfadeData */, options.streamStartTime);
     bool success = token != 0;
     if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);

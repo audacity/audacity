@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/types/secs.h" // IWYU pragma: export
 
 #include "audio/audiotypes.h"
@@ -40,6 +42,9 @@ struct PlayTracksOptions {
     double mixerEndTime = -1.0;  // Time at which mixer stops producing, maybe > endTime, if not set then == endTime
     double startOffset = 0.0;
     bool isDefaultPolicy = true;
+    //! When set, the stream starts producing audio at this position instead of
+    //! the play-region start (au3's pStartTime); the region itself is unchanged.
+    std::optional<double> streamStartTime;
 };
 
 class DitherTypePrefs
