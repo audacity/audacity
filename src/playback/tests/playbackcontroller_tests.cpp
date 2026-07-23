@@ -416,7 +416,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
  * @details User pressed Shift+Space while playing
  *          Playback should pause (not stop)
  */
-TEST_F(PlaybackControllerTests, PlayUpdate_WhenPlaying_Pauses)
+TEST_F(PlaybackControllerTests, PlayFromCursor_WhenPlaying_Pauses)
 {
     //! [GIVEN] Playback is running
     ON_CALL(*m_player, playbackStatus())
