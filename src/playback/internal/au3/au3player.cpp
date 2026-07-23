@@ -193,16 +193,21 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
 
             ret = doPlayTracks(Au3TrackList::Get(project), tcp0, tcp1, opts);
         } else {
+            const std::optional<double> pStartTimeOverride
+                = startTime.has_value() ? std::make_optional(startTime->to_double()) : std::nullopt;
             double mixerEndTime = t1;
             if (newDefault) {
                 mixerEndTime = latestEnd;
-                if (pStartTime && *pStartTime >= t1) {
+                // The stream starts producing at the override when given, else
+                // at options.pStartTime. Mirrors au3: a start at/past the region
+                // end extends playback to the project end instead of opening a
+                // stream that would stop immediately.
+                const std::optional<double> streamStartTime = pStartTimeOverride.has_value() ? pStartTimeOverride : pStartTime;
+                if (streamStartTime && *streamStartTime >= t1) {
                     t1 = latestEnd;
                 }
             }
             opts.mixerEndTime = mixerEndTime;
-            const std::optional<double> pStartTimeOverride
-                = startTime.has_value() ? std::make_optional(startTime->to_double()) : std::nullopt;
             ret = doPlayTracks(TrackList::Get(project), t0, t1, opts, pStartTimeOverride);
         }
 
