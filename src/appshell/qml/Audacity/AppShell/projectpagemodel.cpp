@@ -13,6 +13,7 @@ using namespace au::appshell;
 using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
+static const QString PLAYBACK_METER_POSITION_KEY("playbackToolbar/playbackMeterPosition");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -34,13 +35,38 @@ void ProjectPageModel::init()
         });
 
         playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+            storeMeterPositionToWorkspace();
             updatePlaybackMeterVisibility();
+        });
+
+        uiState()->uiItemStateChanged(PLAYBACK_METER_POSITION_KEY).onNotify(this, [this]() {
+            applyWorkspaceMeterPosition();
         });
 
         m_inited = true;
     }
 
+    applyWorkspaceMeterPosition();
     updatePlaybackMeterVisibility();
+}
+
+void ProjectPageModel::applyWorkspaceMeterPosition()
+{
+    const QString value = uiState()->uiItemState(PLAYBACK_METER_POSITION_KEY);
+    const auto position = value == "1"
+                          ? playback::PlaybackMeterPosition::MeterPosition::SideBar
+                          : playback::PlaybackMeterPosition::MeterPosition::TopBar;
+    if (position != playbackConfiguration()->playbackMeterPosition()) {
+        playbackConfiguration()->setPlaybackMeterPosition(position);
+    }
+}
+
+void ProjectPageModel::storeMeterPositionToWorkspace()
+{
+    const QString value = QString::number(static_cast<int>(playbackConfiguration()->playbackMeterPosition()));
+    if (uiState()->uiItemState(PLAYBACK_METER_POSITION_KEY) != value) {
+        uiState()->setUiItemState(PLAYBACK_METER_POSITION_KEY, value);
+    }
 }
 
 void ProjectPageModel::updatePlaybackMeterVisibility()

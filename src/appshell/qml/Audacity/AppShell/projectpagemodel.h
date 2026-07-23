@@ -51,6 +51,8 @@ private:
     void toggleDock(const QString& name);
 
     void updatePlaybackMeterVisibility();
+    void applyWorkspaceMeterPosition();
+    void storeMeterPositionToWorkspace();
 
     bool m_inited = false;
 };
