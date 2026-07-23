@@ -22,5 +22,9 @@ public:
     muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
     bool vendorUiSupported(const EffectId& effectId) const override;
+    void markVendorUiFailed(const EffectId& effectId) override;
+
+private:
+    std::set<EffectId> m_vendorUiFailed;
 };
 }
