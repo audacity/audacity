@@ -57,6 +57,8 @@ public:
                                                           std::function<bool()> projectSaveCallback = nullptr,
                                                           UploadMode uploadMode = UploadMode::NormalUpdate) = 0;
 
+    virtual muse::RetVal<muse::ProgressPtr> updateAudioPreview(au::project::IAudacityProjectPtr project) = 0;
+
     virtual muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                              const std::string& snapshotId = {}, bool forceOverwrite = false) = 0;
     virtual muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;

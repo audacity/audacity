@@ -63,6 +63,8 @@ public:
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                                   std::function<bool()> projectSaveCallback, UploadMode uploadMode) override;
 
+    muse::RetVal<muse::ProgressPtr> updateAudioPreview(au::project::IAudacityProjectPtr project) override;
+
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                      const std::string& snapshotId = {}, bool forceOverwrite = false) override;
 
