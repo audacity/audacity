@@ -32,6 +32,9 @@ public:
     void setMultiSelectionCopy(bool newValue) override;
     bool isMultiSelectionCopy() const override;
 
+    void setRangeSelectionCopy(bool newValue) override;
+    bool isRangeSelectionCopy() const override;
+
     std::vector<muse::io::path_t> systemClipboardFilePaths() const override;
     void clearSystemClipboard() override;
 

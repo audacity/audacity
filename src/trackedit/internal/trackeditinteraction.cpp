@@ -111,9 +111,10 @@ bool TrackeditInteraction::cutClipIntoClipboard(const ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::cutClipIntoClipboard, clipKey);
 }
 
-bool TrackeditInteraction::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
+bool TrackeditInteraction::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips,
+                                                    bool isRangeSelection)
 {
-    return withPlaybackStop(&ITrackeditInteraction::cutItemDataIntoClipboard, tracksIds, begin, end, moveClips);
+    return withPlaybackStop(&ITrackeditInteraction::cutItemDataIntoClipboard, tracksIds, begin, end, moveClips, isRangeSelection);
 }
 
 bool TrackeditInteraction::copyClipIntoClipboard(const trackedit::ClipKey& clipKey)

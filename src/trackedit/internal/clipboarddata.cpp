@@ -19,6 +19,7 @@ void ClipboardData::clearTrackData()
 {
     m_tracksData.clear();
     m_isMultiSelectionCopy = false;
+    m_isRangeSelectionCopy = false;
 }
 
 bool ClipboardData::trackDataEmpty() const
@@ -39,4 +40,14 @@ void ClipboardData::setMultiSelectionCopy(bool val)
 bool ClipboardData::isMultiSelectionCopy() const
 {
     return m_isMultiSelectionCopy;
+}
+
+void ClipboardData::setRangeSelectionCopy(bool val)
+{
+    m_isRangeSelectionCopy = val;
+}
+
+bool ClipboardData::isRangeSelectionCopy() const
+{
+    return m_isRangeSelectionCopy;
 }

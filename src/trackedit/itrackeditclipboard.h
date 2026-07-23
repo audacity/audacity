@@ -28,6 +28,9 @@ public:
     virtual void setMultiSelectionCopy(bool newValue) = 0;
     virtual bool isMultiSelectionCopy() const = 0;
 
+    virtual void setRangeSelectionCopy(bool newValue) = 0;
+    virtual bool isRangeSelectionCopy() const = 0;
+
     virtual std::vector<muse::io::path_t> systemClipboardFilePaths() const = 0;
     virtual void clearSystemClipboard() = 0;
 };

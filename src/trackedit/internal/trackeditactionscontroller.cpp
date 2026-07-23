@@ -582,7 +582,7 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         trackeditInteraction()->clearClipboard();
-        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
+        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true, true /*isRangeSelection*/);
 
         selectionController()->resetDataSelection();
         return;
@@ -593,7 +593,8 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
     if (selectedStartTime.has_value() && selectedEndTime.has_value()) {
         trackeditInteraction()->clearClipboard();
-        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime.value(), selectedEndTime.value(), true);
+        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime.value(), selectedEndTime.value(), true,
+                                                         false /*isRangeSelection*/);
 
         selectionController()->resetSelectedClips();
         selectionController()->resetSelectedLabels();
@@ -1119,7 +1120,8 @@ void TrackeditActionsController::rangeSelectionCut(const ActionData& args)
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
     trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->cutItemDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime, moveClips);
+    trackeditInteraction()->cutItemDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime, moveClips,
+                                                     true /*isRangeSelection*/);
 
     selectionController()->resetDataSelection();
 }

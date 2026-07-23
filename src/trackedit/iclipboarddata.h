@@ -23,5 +23,8 @@ public:
 
     virtual void setMultiSelectionCopy(bool val) = 0;
     virtual bool isMultiSelectionCopy() const = 0;
+
+    virtual void setRangeSelectionCopy(bool val) = 0;
+    virtual bool isRangeSelectionCopy() const = 0;
 };
 }
