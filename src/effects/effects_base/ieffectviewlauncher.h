@@ -20,6 +20,8 @@ public:
     virtual void hideRealtimeEffect(const RealtimeEffectStatePtr& state) const = 0;
 
     virtual bool vendorUiSupported(const EffectId&) const { return true; }
+
+    virtual void markVendorUiFailed(const EffectId&) {}
 };
 
 using IEffectViewLauncherPtr = std::shared_ptr<IEffectViewLauncher>;

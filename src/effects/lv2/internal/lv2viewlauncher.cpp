@@ -38,6 +38,10 @@ bool Lv2ViewLauncher::vendorUiSupported(const EffectId& effectId) const
 {
     using namespace LV2Symbols;
 
+    if (m_vendorUiFailed.count(effectId)) {
+        return false;
+    }
+
     const auto* effect = dynamic_cast<const LV2EffectBase*>(effectsProvider()->effect(effectId));
     if (!effect) {
         return false;
@@ -62,4 +66,9 @@ bool Lv2ViewLauncher::vendorUiSupported(const EffectId& effectId) const
     }
 
     return false;
+}
+
+void Lv2ViewLauncher::markVendorUiFailed(const EffectId& effectId)
+{
+    m_vendorUiFailed.insert(effectId);
 }

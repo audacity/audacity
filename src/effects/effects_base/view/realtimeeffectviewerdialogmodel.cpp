@@ -114,7 +114,6 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     }
 
     m_effectState = reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this();
-    m_vendorUiFailed = false;
     const auto effectId = m_effectState->GetID().ToStdString();
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
@@ -199,10 +198,16 @@ void RealtimeEffectViewerDialogModel::refreshUIMode()
 
 void RealtimeEffectViewerDialogModel::notifyVendorUiFailed()
 {
-    if (m_vendorUiFailed) {
+    if (!m_effectState) {
         return;
     }
-    m_vendorUiFailed = true;
+
+    const EffectId effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(prop_effectFamily());
+    if (!launcher) {
+        return;
+    }
+    launcher->markVendorUiFailed(effectId);
     emit viewerComponentTypeChanged();
 }
 
@@ -223,7 +228,7 @@ ViewerComponentType RealtimeEffectViewerDialogModel::viewerComponentType() const
     }
 
     // For external plugins (VST3, LV2), check if we should use generated UI
-    const bool shouldUseVendorUI = useVendorUI() && vendorUiSupported() && !m_vendorUiFailed;
+    const bool shouldUseVendorUI = useVendorUI() && vendorUiSupported();
     if (!shouldUseVendorUI) {
         return ViewerComponentType::Generated;
     }

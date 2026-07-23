@@ -62,7 +62,6 @@ private:
     QString m_title;
     int m_instanceId = -1;
     EffectId m_effectId;
-    bool m_vendorUiFailed = false;
 
     std::shared_ptr<EffectSettings> m_initialSettings;
 };

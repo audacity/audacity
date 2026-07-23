@@ -94,6 +94,5 @@ private:
     RealtimeEffectStatePtr m_effectState;
     muse::uicomponents::DialogView* m_dialogView = nullptr;
     muse::ui::NavigationPanel* m_navigationPanel = nullptr;
-    bool m_vendorUiFailed = false;
 };
 }

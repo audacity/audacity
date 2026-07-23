@@ -36,7 +36,6 @@ void DestructiveEffectViewerDialogModel::setInstanceId(int newInstanceId)
         return;
     }
     m_instanceId = newInstanceId;
-    m_vendorUiFailed = false;
     emit instanceIdChanged();
 
     m_effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
@@ -82,10 +81,11 @@ void DestructiveEffectViewerDialogModel::refreshUIMode()
 
 void DestructiveEffectViewerDialogModel::notifyVendorUiFailed()
 {
-    if (m_vendorUiFailed) {
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectFamily());
+    if (!launcher) {
         return;
     }
-    m_vendorUiFailed = true;
+    launcher->markVendorUiFailed(m_effectId);
     emit viewerComponentTypeChanged();
 }
 
@@ -119,7 +119,7 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
     }
 
     // For external plugins (VST3, LV2), check if we should use generated UI
-    const bool shouldUseVendorUI = useVendorUI() && vendorUiSupported() && !m_vendorUiFailed;
+    const bool shouldUseVendorUI = useVendorUI() && vendorUiSupported();
     if (!shouldUseVendorUI) {
         return ViewerComponentType::Generated;
     }
