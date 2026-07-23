@@ -35,6 +35,6 @@ public:
 private:
     EffectSettingsAccessPtr sessionSettings(EffectInstance* instance) const;
 
-    mutable std::map<EffectInstance*, EffectSettingsAccessPtr> m_sessionSettings;
+    std::map<EffectInstance*, EffectSettingsAccessPtr> m_sessionSettings;
 };
 }
