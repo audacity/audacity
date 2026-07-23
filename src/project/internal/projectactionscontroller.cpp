@@ -601,12 +601,17 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         return make_ret(Ret::Code::UnknownError, std::string { "Cloud projects path is not set" });
     }
 
-    io::path_t projectFilePath = cloudProjectsProvider()->makeSafeFilePath(cloudProjectsPath, cloudInfo.name.toStdString(),
-                                                                           au::project::AUP4);
-
     IAudacityProjectPtr project = currentProject();
     if (!project) {
         return make_ret(Ret::Code::UnknownError, std::string { "No project opened" });
+    }
+
+    io::path_t projectFilePath;
+    if (cloudSaveMode != CloudSaveMode::CreateNew && project->isCloudProject()) {
+        projectFilePath = project->path();
+    } else {
+        projectFilePath = cloudProjectsProvider()->makeSafeFilePath(cloudProjectsPath, cloudInfo.name.toStdString(),
+                                                                    au::project::AUP4);
     }
 
     auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
@@ -936,7 +941,12 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         return make_ret(Ret::Code::Ok);
     }
 
-    //! Step 5. Open project in the current window
+    //! Step 5. Check, if the project is a known cloud project, then open it through the cloud flow
+    if (const auto record = cloudProjectsProvider()->projectRecordForPath(actualPath)) {
+        return openCloudProject(actualPath, muse::String::fromStdString(record->projectId));
+    }
+
+    //! Step 6. Open project in the current window
     return doOpenProject(actualPath);
 }
 

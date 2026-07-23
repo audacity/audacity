@@ -3,6 +3,8 @@
 */
 #include "cloudprojectsprovider.h"
 
+#include "framework/global/io/dir.h"
+
 #include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 #include "au3-cloud-audiocom/sync/CloudSyncDTO.h"
 #include "au3-string-utils/CodeConversions.h"
@@ -20,7 +22,7 @@ std::optional<CloudProjectRecord> toCloudProjectRecord(
     CloudProjectRecord record;
     record.projectId = data->ProjectId;
     record.snapshotId = data->SnapshotId;
-    record.localPath = muse::io::path_t(data->LocalPath);
+    record.localPath = muse::io::path_t(data->LocalPath.Get());
     return record;
 }
 }
@@ -43,5 +45,5 @@ muse::io::path_t CloudProjectsProvider::makeSafeFilePath(const muse::io::path_t&
     namespace sync = audacity::cloud::audiocom::sync;
     const wxString path = sync::MakeSafeFilePath(audacity::ToWXString(rootDir.toStdString()), audacity::ToWXString(fileName),
                                                  audacity::ToWXString(fileExtension));
-    return muse::io::path_t(audacity::ToUTF8(path));
+    return muse::io::Dir::fromNativeSeparators(muse::io::path_t(audacity::ToUTF8(path)));
 }

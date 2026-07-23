@@ -21,6 +21,8 @@
 
 #include "NetworkUtils.h"
 
+#include "sync/CloudSyncDTO.h"
+
 #include "au3-concurrency/concurrency/CancellationContext.h"
 
 class AudacityProject;
@@ -47,7 +49,7 @@ struct ProjectSyncResult final
 
     StatusCode Status { StatusCode::Failed };
     ResponseResult Result;
-    std::string ProjectPath;
+    LocalFilePath ProjectPath;
     TransferStats Stats;
 }; // struct ProjectSyncResult
 
@@ -63,7 +65,7 @@ struct DownloadAudioResult final
 
     StatusCode Status { StatusCode::Failed };
     ResponseResult Result;
-    std::string AudioPath;
+    LocalFilePath AudioPath;
     std::string Title;
     std::string Format;
 }; // struct DownloadAudioResult

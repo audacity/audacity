@@ -161,7 +161,7 @@ CloudProjectsDatabase::GetProjectData(std::string_view projectId) const
 }
 
 std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
-    const std::string& projectFilePath) const
+    const LocalFilePath& projectFilePath) const
 {
     auto connection = GetConnection();
 
@@ -176,7 +176,7 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
         return {};
     }
 
-    return DoGetProjectData(statement->Prepare(projectFilePath).Run());
+    return DoGetProjectData(statement->Prepare(projectFilePath.Get()).Run());
 }
 
 std::vector<DBProjectData>
@@ -356,7 +356,7 @@ bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
                   ->Prepare(
         projectData.ProjectId, projectData.SnapshotId,
         projectData.SavesCount, projectData.LastAudioPreview,
-        projectData.LocalPath, projectData.LastModified,
+        projectData.LocalPath.Get(), projectData.LastModified,
         projectData.LastRead, projectData.SyncStatus,
         projectData.FirstSyncDialogShown)
                   .Run();
@@ -373,7 +373,7 @@ bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
     }
 
     auto missingProjects = listMissingProjects->Prepare(
-        projectData.ProjectId, projectData.LocalPath).Run();
+        projectData.ProjectId, projectData.LocalPath.Get()).Run();
 
     for (auto row : missingProjects) {
         std::string missingProjectId;
@@ -866,9 +866,11 @@ CloudProjectsDatabase::DoGetProjectData(const sqlite::Row& row) const
         return {};
     }
 
-    if (!row.Get(4, data.LocalPath)) {
+    std::string localPath;
+    if (!row.Get(4, localPath)) {
         return {};
     }
+    data.LocalPath = std::move(localPath);
 
     if (!row.Get(5, data.LastModified)) {
         return {};

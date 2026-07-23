@@ -26,7 +26,7 @@ struct DBProjectData final
     std::string SnapshotId;
     int64_t SavesCount       = 0;
     int64_t LastAudioPreview = 0;
-    std::string LocalPath;
+    LocalFilePath LocalPath;
     int64_t LastModified = 0;
     int64_t LastRead     = 0;
 
@@ -91,7 +91,7 @@ public:
     std::optional<DBProjectData>
     GetProjectData(std::string_view projectId) const;
     std::optional<DBProjectData>
-    GetProjectDataForPath(const std::string& projectPath) const;
+    GetProjectDataForPath(const LocalFilePath& projectPath) const;
 
     std::vector<DBProjectData> GetCloudProjects() const;
 

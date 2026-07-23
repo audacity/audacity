@@ -238,7 +238,7 @@ AudacityProject* OpenProjectFromCloud(
     }
 
     auto project = ProjectManager::OpenProject(
-        GetPotentialTarget(), audacity::ToWXString(result.ProjectPath), true,
+        GetPotentialTarget(), audacity::ToWXString(result.ProjectPath.Get()), true,
         false);
 
     if (project != nullptr && mode == CloudSyncService::SyncMode::ForceNew) {
