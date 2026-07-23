@@ -31,7 +31,8 @@ public:
         : muse::Contextable(ctx) {}
 
     void init() override;
-    muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr) override;
+    muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
+                         au::project::IAudacityProjectPtr project = nullptr) override;
 
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
@@ -51,8 +52,6 @@ public:
     void setValue(int id, const OptionValue&) override;
 
     OptionsEditorUPtr optionsEditor() const;
-
-    std::vector<bool> prepareChannelMask() const;
 
 private:
     double m_t0 {};
