@@ -27,6 +27,7 @@
 #include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/projectconfiguration.h"
+#include "internal/projectcreator.h"
 #include "internal/projectuiactions.h"
 #include "internal/thumbnailcreator.h"
 #include "internal/projectautosaver.h"
@@ -141,6 +142,7 @@ void ProjectContext::registerExports()
     m_thumbnailCreator = std::make_shared<ThumbnailCreator>();
     m_tagsAccessor = std::make_shared<Au3Metadata>(iocContext());
 
+    ioc()->registerExport<IProjectCreator>(mname, std::make_shared<ProjectCreator>(iocContext()));
     ioc()->registerExport<IProjectFilesController>(mname, m_actionsController);
     ioc()->registerExport<muse::mi::IProjectProvider>(mname, std::make_shared<ProjectProvider>(iocContext()));
     ioc()->registerExport<IOpenSaveProjectScenario>(mname, new OpenSaveProjectScenario(iocContext()));
