@@ -63,7 +63,11 @@ MenuItemList SelectionContextMenuModel::makeItems()
         makeMenu(muse::TranslatableString("selection", "Paste and…"), pasteAndItems, "menu-paste-and"),
         makeMenu(muse::TranslatableString("selection", "Delete and…"), deleteAndItems, "menu-delete-and"),
         makeSeparator(),
-        makeMenuItem("split")
+        makeMenuItem("split"),
+        makeMenuItem("disjoin",
+                     muse::TranslatableString("selection", "Split at silences")),
+        makeMenuItem("join",
+                     muse::TranslatableString("selection", "Join"))
     };
 
     return items;

@@ -47,6 +47,9 @@ MenuItemList MultiClipContextMenuModel::makeItems()
         makeMenu(muse::TranslatableString("multiclip", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("multiclip", "Delete and…"), deleteAndItems, "menu-delete-and"),
         makeSeparator(),
+        makeMenuItem("join",
+                     muse::TranslatableString("multiclip", "Join")),
+        makeSeparator(),
         makeMenuItem("group-clips"),
         makeMenuItem("ungroup-clips"),
     };

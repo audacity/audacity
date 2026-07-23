@@ -84,7 +84,7 @@ void ClipContextMenuModel::load()
         makeMenu(muse::TranslatableString("clip", "Delete and…"), deleteAndItems, "menu-delete-and"),
         makeSeparator(),
         makeItemWithArg("split"),
-        makeItemWithArg("clip-export"),
+        makeItemWithArg("disjoin", muse::TranslatableString("clip", "Split at silences")),
         makeSeparator(),
         enableStretchItem,
         makeItemWithArg("clip-pitch-speed-open"),
