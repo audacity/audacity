@@ -433,17 +433,12 @@ void TrackNavigationController::navigateToLastTrack()
 
 void TrackNavigationController::navigateToNextItem()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("play-position-increase");
+    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        // dispatcher()->dispatch("play-position-increase");
         return;
     }
 
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
-
-    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        commandDispatcher()->dispatch(muse::ui::RIGHT_COMMAND);
-        return;
-    }
 
     for (size_t i = 0; i < itemsKeys.size(); ++i) {
         if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
@@ -461,17 +456,12 @@ void TrackNavigationController::navigateToNextItem()
 
 void TrackNavigationController::navigateToPrevItem()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("play-position-decrease");
+    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        // dispatcher()->dispatch("play-position-decrease");
         return;
     }
 
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
-
-    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        commandDispatcher()->dispatch(muse::ui::LEFT_COMMAND);
-        return;
-    }
 
     for (size_t i = 0; i < itemsKeys.size(); ++i) {
         if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {

@@ -190,7 +190,7 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
             return;
         }
 
-        handleArrowKeyFallback(event);
+        // handleArrowKeyFallback(event);
     });
 
     muse::ui::NavigationPanel* itemsPanel = new muse::ui::NavigationPanel(this);
@@ -202,7 +202,7 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 
     connect(itemsPanel, &muse::ui::NavigationPanel::navigationEvent, this,
             [this](muse::ui::NavigationEvent* event) {
-        handleArrowKeyFallback(event);
+        // handleArrowKeyFallback(event);
     });
 
     m_trackItemPanels.append(trackPanel);
