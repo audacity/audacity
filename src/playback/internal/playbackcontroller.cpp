@@ -148,7 +148,7 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
                  selectionController()->dataSelectedEndTime() };
     }
 
-    return PlaybackRegion();
+    return {};
 }
 
 bool PlaybackController::isSelectionPlaybackRegionChanged() const
@@ -181,7 +181,7 @@ PlaybackStatus PlaybackController::playbackStatus() const
     return player()->playbackStatus();
 }
 
-void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
+void PlaybackController::seek(const muse::secs_t secs, const bool applyIfPlaying)
 {
     IF_ASSERT_FAILED(player()) {
         return;
@@ -270,7 +270,7 @@ void PlaybackController::togglePlayFromCursorAction()
     togglePlay(TogglePlayMode::PlayFromCursor);
 }
 
-void PlaybackController::togglePlay(TogglePlayMode mode)
+void PlaybackController::togglePlay(const TogglePlayMode mode)
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
@@ -314,14 +314,14 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
     }
 }
 
-void PlaybackController::doPlay(bool ignoreSelection)
+void PlaybackController::doPlay(const bool ignoreSelection)
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
 
     if (!ignoreSelection) {
-        PlaybackRegion selectionRegion = selectionPlaybackRegion();
+        const PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
             doChangePlaybackRegion(selectionRegion);
         } else {
