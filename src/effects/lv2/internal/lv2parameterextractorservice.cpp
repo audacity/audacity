@@ -196,7 +196,7 @@ bool Lv2ParameterExtractorService::setParameterValue(EffectInstance* instance, c
 
     float value = static_cast<float>(fullRangeValue) / displayFactor(port, *lookup->instance);
     if (port.mToggle) {
-        value = value > 0.5f ? 1.0f : 0.0f;
+        value = value > 0.0f ? 1.0f : 0.0f;
     } else {
         if (port.mHasLo) {
             value = std::max(value, port.mMin);

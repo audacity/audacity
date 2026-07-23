@@ -17,6 +17,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2uiselect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2uiselect.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2types.h

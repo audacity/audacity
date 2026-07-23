@@ -5,6 +5,8 @@
 #include "lv2idleuifactory.h"
 #include "ilv2idleui.h"
 
+#include "effects/lv2/internal/lv2uiselect.h"
+
 #include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "playback/iaudiooutput.h"
@@ -96,39 +98,31 @@ bool usesX11(const char* pluginTypeUri)
 {
     return !strcmp(pluginTypeUri, LV2_UI__X11UI);
 }
-
-unsigned uiIsSupported(const char* hostTypeUri,
-                       const char* pluginTypeUri)
-{
-    if (!strcmp(hostTypeUri, pluginTypeUri)
-        ||
-        // We give X11 UIs a chance to be run externally.
-        usesX11(pluginTypeUri)) {
-        return 1;
-    }
-    return 0;
-}
 }
 
 void Lv2ViewModel::doInit()
 {
     IF_ASSERT_FAILED(instanceId() >= 0) {
+        emit vendorUiFailed();
         return;
     }
 
     m_instance = std::dynamic_pointer_cast<LV2Instance>(instancesRegister()->instanceById(instanceId()));
     IF_ASSERT_FAILED(m_instance) {
+        emit vendorUiFailed();
         return;
     }
 
     const EffectSettings* settings = instancesRegister()->settingsById(instanceId());
     IF_ASSERT_FAILED(settings) {
+        emit vendorUiFailed();
         return;
     }
 
     const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
     const LV2Effect* const effect = dynamic_cast<LV2Effect*>(effectsProvider()->effect(id));
     IF_ASSERT_FAILED(effect) {
+        emit vendorUiFailed();
         return;
     }
 
@@ -140,6 +134,7 @@ void Lv2ViewModel::doInit()
     const auto sampleRate = playback()->audioOutput()->sampleRate();
     m_wrapper = m_instance->MakeWrapper(*settings, sampleRate, nullptr);
     IF_ASSERT_FAILED(m_wrapper) {
+        emit vendorUiFailed();
         return;
     }
 
@@ -148,7 +143,7 @@ void Lv2ViewModel::doInit()
         return;
     }
 
-    startUiTimer(true);
+    startUiTimer();
     if (isRealtimeInstance()) {
         startSettingsTimer();
     }
@@ -195,51 +190,17 @@ void Lv2ViewModel::startSettingsTimer()
 bool Lv2ViewModel::buildFancy()
 {
     using namespace LV2Symbols;
-    // Set the native UI type
-    const char* const hostNativeType = LV2_UI__Qt6UI;
 
-    // Determine if the plugin has a supported UI
-    const LilvUI* ui = nullptr;
-    const LilvNode* uiType = nullptr;
-    using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
-
-    LilvUIsPtr uis{ lilv_plugin_get_uis(m_lilvPlugin) };
-    if (uis) {
-        if (LilvNodePtr ui_host_uri{ lilv_new_uri(gWorld, hostNativeType) }) {
-            LILV_FOREACH(uis, iter, uis.get()) {
-                ui = lilv_uis_get(uis.get(), iter);
-                if (lilv_ui_is_supported(ui,
-                                         uiIsSupported, ui_host_uri.get(), &uiType)) {
-                    break;
-                }
-                if (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3)) {
-                    uiType = node_Gtk;
-                    break;
-                }
-                ui = nullptr;
-            }
-        }
-    }
-
-    // Check for other supported UIs
-    if (!ui && uis) {
-        LILV_FOREACH(uis, iter, uis.get()) {
-            ui = lilv_uis_get(uis.get(), iter);
-            if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld)) {
-                uiType = node_ExternalUI;
-                break;
-            }
-            ui = nullptr;
-        }
-    }
-
-    // No usable UI found
-    if (ui == nullptr) {
+    const Lv2UiSelection selection = selectPluginUi(*m_lilvPlugin);
+    if (!selection.isValid()) {
         m_unsupportedUiReason
             = muse::trc("effects/lv2", "No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)");
         emit unsupportedUiReasonChanged();
         return false;
     }
+
+    const LilvUI* ui = selection.ui;
+    const LilvNode* uiType = selection.type;
 
     const auto uinode = lilv_ui_get_uri(ui);
     lilv_world_load_resource(gWorld, uinode);
@@ -251,15 +212,7 @@ bool Lv2ViewModel::buildFancy()
 
     const char* const uiTypeUri = lilv_node_as_uri(uiType);
     const auto isExternalUi = strcmp(uiTypeUri, lilv_node_as_string(node_ExternalUI)) == 0;
-    const bool isGtkUI
-        = strcmp(uiTypeUri, LV2_UI__GtkUI) == 0 || strcmp(uiTypeUri, LV2_UI__Gtk3UI) == 0 || strcmp(uiTypeUri, LV2_UI__Gtk4UI) == 0;
     m_isX11Window = strcmp(uiTypeUri, LV2_UI__X11UI) == 0;
-
-    if (isGtkUI) {
-        m_unsupportedUiReason = muse::trc("effects/lv2", "GTK UIs are not supported");
-        emit unsupportedUiReasonChanged();
-        return false;
-    }
 
     const char* const containerTypeUri
         = isExternalUi ? LV2_EXTERNAL_UI__Widget
@@ -317,7 +270,7 @@ bool Lv2ViewModel::buildFancy()
     return true;
 }
 
-void Lv2ViewModel::startUiTimer(bool fancy)
+void Lv2ViewModel::startUiTimer()
 {
     const auto& mySettings = GetSettings(m_settingsAccess->Get());
     const LV2Wrapper* const pMaster = m_instance->GetMaster();
@@ -345,18 +298,14 @@ void Lv2ViewModel::startUiTimer(bool fancy)
         }
     }
 
-    if (fancy) {
-        assert(m_suilInstance);
-        size_t index = 0;
-        for (auto& port : m_ports->mControlPorts) {
-            constexpr uint32_t floatFormat = 0;
-            if (port->mIsInput) {
-                suil_instance_port_event(m_suilInstance.get(), port->mIndex, sizeof(float), floatFormat, &values[index]);
-            }
-            ++index;
+    assert(m_suilInstance);
+    size_t index = 0;
+    for (auto& port : m_ports->mControlPorts) {
+        constexpr uint32_t floatFormat = 0;
+        if (port->mIsInput) {
+            suil_instance_port_event(m_suilInstance.get(), port->mIndex, sizeof(float), floatFormat, &values[index]);
         }
-    } else {
-        // TODO
+        ++index;
     }
 
     connect(&m_uiTimer, &QTimer::timeout, this, &Lv2ViewModel::onIdle);

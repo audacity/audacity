@@ -73,7 +73,7 @@ private:
     using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 
     bool buildFancy();
-    void startUiTimer(bool fancy);
+    void startUiTimer();
     void startSettingsTimer();
     void onIdle();
     void makeDirty();
