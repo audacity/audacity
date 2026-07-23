@@ -144,6 +144,7 @@ void Lv2ViewModel::doInit()
     }
 
     if (!buildFancy()) {
+        emit vendorUiFailed();
         return;
     }
 

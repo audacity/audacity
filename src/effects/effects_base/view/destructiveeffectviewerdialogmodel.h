@@ -37,6 +37,7 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void refreshUIMode();
+    Q_INVOKABLE void notifyVendorUiFailed();
 
     Q_INVOKABLE void rollbackSettings();
 
@@ -61,6 +62,7 @@ private:
     QString m_title;
     int m_instanceId = -1;
     EffectId m_effectId;
+    bool m_vendorUiFailed = false;
 
     std::shared_ptr<EffectSettings> m_initialSettings;
 };

@@ -49,6 +49,7 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Contextable
 public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void refreshUIMode();
+    Q_INVOKABLE void notifyVendorUiFailed();
 
     RealtimeEffectViewerDialogModel(QObject* parent = nullptr);
     ~RealtimeEffectViewerDialogModel() override;
@@ -93,5 +94,6 @@ private:
     RealtimeEffectStatePtr m_effectState;
     muse::uicomponents::DialogView* m_dialogView = nullptr;
     muse::ui::NavigationPanel* m_navigationPanel = nullptr;
+    bool m_vendorUiFailed = false;
 };
 }
