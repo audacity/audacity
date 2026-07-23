@@ -39,6 +39,7 @@ static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-f
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
 static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
+static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("audacity://cloud/update-audio-preview");
 
 namespace {
 au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
@@ -80,6 +81,7 @@ void ProjectActionsController::init()
 
     dispatcher()->reg(this, "file-share-audio", this, &ProjectActionsController::shareAudio);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_FILE_URI, this, &ProjectActionsController::openCloudAudioFile);
+    dispatcher()->reg(this, UPDATE_AUDIO_PREVIEW_ACTION, this, &ProjectActionsController::updateCloudAudioPreview);
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
@@ -162,6 +164,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "continue-last-session",
             "clear-recent",
             "audacity://cloud/open-audio-file",
+            "audacity://cloud/update-audio-preview",
             "plugin-manager",
             "project-show-in-folder",
         };
@@ -586,7 +589,8 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
     return saveProject(SaveMode::Save);
 }
 
-muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode)
+muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode,
+                                                       std::function<void()> onSuccess)
 {
     if (!audioComService()->enabled()) {
         return make_ret(Ret::Code::NotSupported, std::string { "Cloud support is not available" });
@@ -624,10 +628,13 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
     }
 
     if (!progress) {
+        if (onSuccess) {
+            onSuccess();
+        }
         return make_ok();
     }
 
-    progress->finished().onReceive(this, [this, projectFilePath](const ProgressResult& result) {
+    progress->finished().onReceive(this, [this, projectFilePath, onSuccess](const ProgressResult& result) {
         if (!result.ret.success()) {
             handleCloudSaveError(result.ret);
             return;
@@ -648,6 +655,10 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
                 platformInteractive()->openUrl(url);
             }
         });
+
+        if (onSuccess) {
+            onSuccess();
+        }
     });
 
     const bool dismissible = false;
@@ -1338,6 +1349,198 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
     });
 
     interactive()->showProgress(muse::trc("cloud", "Downloading audio from cloud…"), *progress);
+}
+
+void ProjectActionsController::updateCloudAudioPreview(const muse::actions::ActionQuery& query)
+{
+    const std::string projectId = query.param("id").toString();
+
+    auto project = currentProject();
+
+    bool isCurrentProject = false;
+    if (project) {
+        isCurrentProject = projectId.empty()
+                           ? project->isCloudProject()
+                           : project->cloudRecord() && project->cloudRecord()->projectId == projectId;
+    }
+
+    if (!isCurrentProject) {
+        if (projectId.empty()) {
+            return;
+        }
+
+        muse::io::path_t localPath;
+        if (const auto record = cloudProjectsProvider()->projectRecordForId(projectId); record&& !record->localPath.empty()) {
+            localPath = record->localPath;
+        }
+
+        if (localPath.empty()) {
+            return;
+        }
+
+        if (dispatchAudioPreviewToWindowWithProject(localPath, projectId)) {
+            return;
+        }
+
+        downloadCloudProject(projectId, localPath, [this](IAudacityProjectPtr downloaded) {
+            auto [ret, progress] = audioComService()->updateAudioPreview(downloaded);
+            if (!ret) {
+                downloaded->close();
+                interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
+                return;
+            }
+
+            if (!progress) {
+                downloaded->close();
+                return;
+            }
+
+            progress->finished().onReceive(this, [this, downloaded](const ProgressResult& result) {
+                downloaded->close();
+                if (result.ret.success()) {
+                    toastService()->showSuccess(trc("cloud", "Cloud audio preview updated"),
+                                                trc("cloud", "The audio preview has been uploaded to audio.com"));
+                    return;
+                }
+
+                if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)) {
+                    interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
+                }
+            });
+        });
+        return;
+    }
+
+    if (project->hasUnsavedChanges()) {
+        const IInteractive::Result result = interactive()->warningSync(
+            trc("cloud", "The project must be saved before updating the audio preview"),
+            trc("cloud", "Save your changes to continue, or cancel the update."),
+            { IInteractive::Button::Cancel, IInteractive::Button::Save },
+            IInteractive::Button::Save,
+            { IInteractive::Option::WithIcon },
+            trc("cloud", "Unsaved changes"));
+
+        if (result.standardButton() != IInteractive::Button::Save) {
+            return;
+        }
+    }
+
+    saveProjectToCloud(CloudProjectInfo { project->displayName() }, CloudSaveMode::NormalUpdate, [this, project]() {
+        auto [ret, progress] = audioComService()->updateAudioPreview(project);
+        if (!ret) {
+            interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
+            return;
+        }
+
+        if (!progress) {
+            return;
+        }
+
+        progress->finished().onReceive(this, [this](const ProgressResult& result) {
+            if (result.ret.success()) {
+                toastService()->showSuccess(trc("cloud", "Cloud audio preview updated"),
+                                            trc("cloud", "The audio preview has been uploaded to audio.com"));
+                return;
+            }
+
+            if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)) {
+                interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
+            }
+        });
+
+        const bool dismissible = false;
+        const bool showProgressInfo = true;
+        toastService()->showWithProgress(
+            trc("cloud", "Updating cloud audio preview…"),
+            {},
+            progress,
+            muse::ui::IconCode::Code::CLOUD,
+            dismissible,
+        {
+            { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
+            { trc("global", "Stop"), au::toast::ToastActionCode::Custom }
+        },
+            showProgressInfo
+            ).onResolve(this, [progress = progress](const au::toast::ToastActionCode& actionCode) {
+            if (actionCode == au::toast::ToastActionCode::Custom) {
+                progress->cancel();
+            }
+        });
+    });
+}
+
+void ProjectActionsController::downloadCloudProject(const std::string& projectId, const muse::io::path_t& localPath,
+                                                    std::function<void(IAudacityProjectPtr)> onSuccess)
+{
+    auto [ret, progress] = audioComService()->openCloudProject(localPath, projectId);
+    if (!ret) {
+        interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
+        return;
+    }
+
+    if (!progress) {
+        return;
+    }
+
+    progress->finished().onReceive(this, [this, localPath, onSuccess](const ProgressResult& result) {
+        if (!result.ret) {
+            if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)
+                && result.ret.code() != static_cast<int>(au::au3cloud::Err::OpenProjectCancelled)) {
+                interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
+            }
+            return;
+        }
+
+        const muse::io::path_t projectPath = !result.val.isNull() ? result.val.toPath() : localPath;
+
+        const RetVal<IAudacityProjectPtr> loaded = loadProject(projectPath);
+        if (!loaded.ret) {
+            interactive()->error(trc("cloud", "Generate audio preview"), loaded.ret.text());
+            return;
+        }
+
+        if (onSuccess) {
+            onSuccess(loaded.val);
+        }
+    });
+
+    interactive()->showProgress(trc("project", "Syncing project from cloud…"), *progress);
+}
+
+bool ProjectActionsController::dispatchAudioPreviewToWindowWithProject(const muse::io::path_t& projectPath, const std::string& projectId)
+{
+    for (const auto& ctx : application()->contexts()) {
+        if (ctx == iocContext()) {
+            continue;
+        }
+
+        auto ctxGlobalContext = muse::modularity::ioc(ctx)->resolve<au::context::IGlobalContext>("project");
+        if (!ctxGlobalContext) {
+            continue;
+        }
+
+        auto project = ctxGlobalContext->currentProject();
+        if (!project || project->path() != projectPath) {
+            continue;
+        }
+
+        auto ctxDispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("project");
+        IF_ASSERT_FAILED(ctxDispatcher) {
+            return false;
+        }
+
+        if (auto window = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("project")) {
+            window->requestShowOnFront();
+        }
+
+        muse::actions::ActionQuery action(UPDATE_AUDIO_PREVIEW_ACTION);
+        action.addParam("id", Val(projectId));
+        ctxDispatcher->dispatch(action);
+
+        return true;
+    }
+
+    return false;
 }
 
 void ProjectActionsController::exportAudio()

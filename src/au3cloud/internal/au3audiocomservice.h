@@ -122,5 +122,6 @@ private:
 
     muse::ValCh<bool> m_syncingInProgressChangedChannel;
     muse::ProgressPtr m_syncInProgress;
+    muse::ProgressPtr m_audioPreviewProgress;
 };
 }
