@@ -54,7 +54,6 @@ EffectStyledDialogView {
             // "Object %p destroyed while one of its QML signal handlers is in progress."
             Qt.callLater(() => {
                 prv.shouldRollbackOnClose = !accept
-                root.activateParentOnClose = false
                 accept ? root.accept() : root.reject()
             })
         }
