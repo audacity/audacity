@@ -249,11 +249,22 @@ void PlaybackController::onPlaybackPositionChanged()
 
 void PlaybackController::togglePlayPauseAction()
 {
-    //! NOTE: while recording this pauses the recorder, so that the play/pause button
-    //! stays a single action. During the record lead-in we are still playing back,
-    //! so the regular playback path applies.
+    //! NOTE: while recording this pauses the recorder, so the play/pause button stays a
+    //! single action.
     if (recordController()->isRecording() && !recordController()->isLeadInRecording()) {
         dispatcher()->dispatch(RECORD_PAUSE_QUERY);
+        return;
+    }
+
+    //! NOTE: during the lead-in pre-roll the audio is driven by the record stream, not by
+    //! the player, so its status is not Running and togglePlay() can't see it as playing.
+    //! Toggle the shared stream directly: pause it, or resume it if already paused.
+    if (recordController()->isLeadInRecording()) {
+        if (isPaused()) {
+            doResume();
+        } else {
+            doPause();
+        }
         return;
     }
 

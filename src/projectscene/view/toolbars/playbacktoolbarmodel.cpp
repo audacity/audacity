@@ -169,6 +169,7 @@ void PlaybackToolBarModel::updatePlayState()
     }
 
     bool isPlaying = playbackController()->isPlaying();
+    bool isPaused = playbackController()->isPaused();
     bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
 
@@ -178,7 +179,12 @@ void PlaybackToolBarModel::updatePlayState()
 
     // During lead-in, show as playing (green background) since audio is playing back
     bool showAsPlaying = isPlaying || isLeadIn;
-    if (showAsPlaying || (isRecording && !isLeadIn)) {
+
+    //! NOTE: during lead-in the pre-roll runs on the record stream, so isPlaying() is
+    //! false; pick the glyph from the paused state — play glyph while paused, pause
+    //! glyph while running — while keeping the active (green) background either way.
+    bool leadInPaused = isLeadIn && isPaused;
+    if ((showAsPlaying && !leadInPaused) || (isRecording && !isLeadIn)) {
         action.iconCode = IconCode::Code::PAUSE_FILL;
     }
     item->setAction(action);

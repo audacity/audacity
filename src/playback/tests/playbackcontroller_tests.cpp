@@ -832,6 +832,48 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_PausesTheRecorder)
     togglePlayPause();
 }
 
+TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadIn_PausesThePlayback)
+{
+    //! [GIVEN] The record lead-in pre-roll is playing back. The audio is driven by the
+    //! record stream, not the player, so the player status is not Running.
+    setRecording(true, true /* isLeadIn */);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] The shared stream is paused, the recorder is not touched
+    EXPECT_CALL(*m_player, pause())
+    .Times(1);
+
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button during lead-in
+    togglePlayPause();
+}
+
+TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadInWhenPaused_ResumesThePlayback)
+{
+    //! [GIVEN] The lead-in pre-roll has been paused (player status is Paused, but the
+    //! recorder is still in lead-in)
+    setRecording(true, true /* isLeadIn */);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    //! [THEN] The shared stream resumes, the recorder is not touched
+    EXPECT_CALL(*m_player, resume())
+    .Times(1);
+
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button to resume the lead-in
+    togglePlayPause();
+}
+
 TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopButNotPlayPause)
 {
     //! [GIVEN] Recording is running
