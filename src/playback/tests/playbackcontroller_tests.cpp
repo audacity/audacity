@@ -925,6 +925,29 @@ TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)
 }
 
 /**
+ * @brief Play selection without a selection stops active playback
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_NoSelection_Stops)
+{
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] No time selection
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Player is stopped and not restarted
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
  * @brief Play selection does nothing while recording
  */
 TEST_F(PlaybackControllerTests, PlaySelection_WhileRecording_DoesNothing)
