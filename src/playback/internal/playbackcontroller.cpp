@@ -313,14 +313,14 @@ void PlaybackController::playSelectionAction()
         return;
     }
 
-    const PlaybackRegion selection = selectionPlaybackRegion();
-    if (!selection.isValid()) {
-        return;
-    }
-
     if (!isStopped()) {
         //! NOTE: just stop, without seek
         player()->stop();
+    }
+
+    const PlaybackRegion selection = selectionPlaybackRegion();
+    if (!selection.isValid()) {
+        return;
     }
 
     doChangePlaybackRegion(selection);
