@@ -132,6 +132,8 @@ bool CommonAudioApiConfigurationModel::apply()
     emit defaultSampleFormatChanged();
     emit asioUseDeviceSampleRateChanged();
 
+    // Nothing above can fail today; returning false would keep the Preferences
+    // dialog open (PreferencesDialog.qml closes only when every page applied).
     return true;
 }
 
@@ -266,15 +268,16 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
     if (m_pendingApi) {
         // Preview the device the backend will fall back to when the new API is
         // applied: the current one when the new API also has it, else the first
-        // available one (mirrors Au3AudioDevicesProvider::updateInputOutputDevices()).
+        // available one, else no device at all — never a device of the old API
+        // (mirrors Au3AudioDevicesProvider::updateInputOutputDevices()).
         const std::vector<std::string> outputs = audioDevicesProvider()->outputDevices(*m_pendingApi);
-        if (!outputs.empty() && !muse::contains(outputs, audioDevicesProvider()->currentOutputDevice())) {
-            m_pendingOutputDevice = outputs.front();
+        if (!muse::contains(outputs, audioDevicesProvider()->currentOutputDevice())) {
+            m_pendingOutputDevice = outputs.empty() ? std::string() : outputs.front();
         }
 
         const std::vector<std::string> inputs = audioDevicesProvider()->inputDevices(*m_pendingApi);
-        if (!inputs.empty() && !muse::contains(inputs, audioDevicesProvider()->currentInputDevice())) {
-            m_pendingInputDevice = inputs.front();
+        if (!muse::contains(inputs, audioDevicesProvider()->currentInputDevice())) {
+            m_pendingInputDevice = inputs.empty() ? std::string() : inputs.front();
         }
     }
 

@@ -213,6 +213,29 @@ TEST_F(CommonAudioApiConfigurationModelTests, ApiEdit_PreviewsTheNewApisDevices_
 }
 
 /**
+ * @brief An API without devices previews empty selections, not old-API devices.
+ * @details The applied devices belong to the old API and cannot survive the
+ *          switch, so the dialog must not keep showing them.
+ */
+TEST_F(CommonAudioApiConfigurationModelTests, ApiEdit_NewApiHasNoDevices_PreviewsBlankDevices)
+{
+    //! [GIVEN] The other API has no devices at all
+    ON_CALL(*m_provider, outputDevices(An<const std::string&>()))
+    .WillByDefault(Return(std::vector<std::string> {}));
+    ON_CALL(*m_provider, inputDevices(An<const std::string&>()))
+    .WillByDefault(Return(std::vector<std::string> {}));
+
+    //! [WHEN] The user selects it
+    m_model->setCurrentAudioApiIndex(1);
+
+    //! [THEN] The device lists and selections are empty
+    EXPECT_TRUE(m_model->outputDeviceList().isEmpty());
+    EXPECT_TRUE(m_model->inputDeviceList().isEmpty());
+    EXPECT_EQ(m_model->currentOutputDeviceId(), "");
+    EXPECT_EQ(m_model->currentInputDeviceId(), "");
+}
+
+/**
  * @brief OK after an API edit applies the API before the device chosen under it.
  */
 TEST_F(CommonAudioApiConfigurationModelTests, Apply_AfterApiEdit_AppliesApiBeforeDevices)
