@@ -205,8 +205,6 @@ void PlaybackToolBarModel::updateStopState()
         return;
     }
 
-    //! NOTE: the action never changes; PlaybackController decides whether it stops
-    //! the player or the recorder.
     const UiAction action = uiActionsRegister()->action(PLAYBACK_STOP_QUERY.toString());
     item->setAction(action);
     const QColor iconColor = themeColor(FONT_PRIMARY_COLOR);
