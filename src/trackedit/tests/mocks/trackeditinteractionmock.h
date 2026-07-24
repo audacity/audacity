@@ -35,7 +35,7 @@ public:
     MOCK_METHOD(void, clearClipboard, (), (override));
     MOCK_METHOD(muse::Ret, pasteFromClipboard, (secs_t, bool, bool), (override));
     MOCK_METHOD(bool, cutClipIntoClipboard, (const ClipKey&), (override));
-    MOCK_METHOD(bool, cutItemDataIntoClipboard, (const TrackIdList&, secs_t, secs_t, bool), (override));
+    MOCK_METHOD(bool, cutItemDataIntoClipboard, (const TrackIdList&, secs_t, secs_t, bool, bool), (override));
     MOCK_METHOD(bool, copyClipIntoClipboard, (const ClipKey&), (override));
     MOCK_METHOD(bool, copyNonContinuousTrackDataIntoClipboard, (const TrackId, const TrackItemKeyList&, secs_t), (override));
     MOCK_METHOD(bool, copyContinuousTrackDataIntoClipboard, (const TrackId, secs_t, secs_t), (override));

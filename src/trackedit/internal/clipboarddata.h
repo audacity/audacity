@@ -18,8 +18,12 @@ public:
     void setMultiSelectionCopy(bool val) override;
     bool isMultiSelectionCopy() const override;
 
+    void setRangeSelectionCopy(bool val) override;
+    bool isRangeSelectionCopy() const override;
+
 private:
     std::vector<ITrackDataPtr> m_tracksData;
     bool m_isMultiSelectionCopy = false;
+    bool m_isRangeSelectionCopy = false;
 };
 }

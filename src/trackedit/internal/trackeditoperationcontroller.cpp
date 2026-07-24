@@ -187,7 +187,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
         for (const ITrackDataPtr& data : trackData) {
             pastedDataEndTime = std::max(pastedDataEndTime, data->endTime());
         }
-        recreateRangeSelection = !clipboard()->isMultiSelectionCopy();
+        recreateRangeSelection = clipboard()->isRangeSelectionCopy();
 
         ret = tracksInteraction()->paste(trackData, begin, moveClips, moveAllTracks,
                                          clipboard()->isMultiSelectionCopy(), modifiedState);
@@ -222,7 +222,8 @@ bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
     return true;
 }
 
-bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
+bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips,
+                                                            bool isRangeSelection)
 {
     clipboard()->clearSystemClipboard();
     std::vector<ITrackDataPtr> tracksData;
@@ -236,6 +237,7 @@ bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& t
     for (auto& trackData : tracksData) {
         clipboard()->addTrackData(std::move(trackData));
     }
+    clipboard()->setRangeSelectionCopy(isRangeSelection);
     projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
     return true;
 }
@@ -274,6 +276,7 @@ bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const Tr
         return false;
     }
     clipboard()->addTrackData(std::move(data));
+    clipboard()->setRangeSelectionCopy(true);
     return true;
 }
 
@@ -522,6 +525,7 @@ bool TrackeditOperationController::splitCutSelectedOnTracks(const TrackIdList tr
     for (auto& trackData : tracksData) {
         clipboard()->addTrackData(std::move(trackData));
     }
+    clipboard()->setRangeSelectionCopy(true);
     projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
     return true;
 }

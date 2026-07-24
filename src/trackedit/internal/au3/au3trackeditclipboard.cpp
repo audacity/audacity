@@ -96,6 +96,16 @@ bool Au3TrackeditClipboard::isMultiSelectionCopy() const
     return clipboardData()->isMultiSelectionCopy();
 }
 
+void Au3TrackeditClipboard::setRangeSelectionCopy(bool newValue)
+{
+    clipboardData()->setRangeSelectionCopy(newValue);
+}
+
+bool Au3TrackeditClipboard::isRangeSelectionCopy() const
+{
+    return clipboardData()->isRangeSelectionCopy();
+}
+
 std::vector<muse::io::path_t> Au3TrackeditClipboard::systemClipboardFilePaths() const
 {
     const QClipboard* cb = QGuiApplication::clipboard();
