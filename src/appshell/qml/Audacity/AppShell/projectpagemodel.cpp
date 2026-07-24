@@ -13,8 +13,6 @@ using namespace au::appshell;
 using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
-static const QString PLAYBACK_METER_POSITION_KEY("playbackToolbar/playbackMeterPosition");
-static const QString TIMELINE_RULER_MODE_KEY("projectscene/timelineRulerMode");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -35,67 +33,14 @@ void ProjectPageModel::init()
             updatePlaybackMeterVisibility();
         });
 
-        playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
-            storeMeterPositionToWorkspace();
+        playbackUiState()->playbackMeterPositionChanged().onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
-        });
-
-        uiState()->uiItemStateChanged(PLAYBACK_METER_POSITION_KEY).onNotify(this, [this]() {
-            applyWorkspaceMeterPosition();
-        });
-
-        projectSceneConfiguration()->timelineRulerModeChanged().onNotify(this, [this]() {
-            storeRulerModeToWorkspace();
-        });
-
-        uiState()->uiItemStateChanged(TIMELINE_RULER_MODE_KEY).onNotify(this, [this]() {
-            applyWorkspaceRulerMode();
         });
 
         m_inited = true;
     }
 
-    applyWorkspaceMeterPosition();
-    applyWorkspaceRulerMode();
     updatePlaybackMeterVisibility();
-}
-
-void ProjectPageModel::applyWorkspaceMeterPosition()
-{
-    const QString value = uiState()->uiItemState(PLAYBACK_METER_POSITION_KEY);
-    const auto position = value == "1"
-                          ? playback::PlaybackMeterPosition::MeterPosition::SideBar
-                          : playback::PlaybackMeterPosition::MeterPosition::TopBar;
-    if (position != playbackConfiguration()->playbackMeterPosition()) {
-        playbackConfiguration()->setPlaybackMeterPosition(position);
-    }
-}
-
-void ProjectPageModel::storeMeterPositionToWorkspace()
-{
-    const QString value = QString::number(static_cast<int>(playbackConfiguration()->playbackMeterPosition()));
-    if (uiState()->uiItemState(PLAYBACK_METER_POSITION_KEY) != value) {
-        uiState()->setUiItemState(PLAYBACK_METER_POSITION_KEY, value);
-    }
-}
-
-void ProjectPageModel::applyWorkspaceRulerMode()
-{
-    const QString value = uiState()->uiItemState(TIMELINE_RULER_MODE_KEY);
-    const auto mode = value == "1"
-                      ? projectscene::TimelineRulerMode::BEATS_AND_MEASURES
-                      : projectscene::TimelineRulerMode::MINUTES_AND_SECONDS;
-    if (mode != projectSceneConfiguration()->timelineRulerMode()) {
-        projectSceneConfiguration()->setTimelineRulerMode(mode);
-    }
-}
-
-void ProjectPageModel::storeRulerModeToWorkspace()
-{
-    const QString value = QString::number(static_cast<int>(projectSceneConfiguration()->timelineRulerMode()));
-    if (uiState()->uiItemState(TIMELINE_RULER_MODE_KEY) != value) {
-        uiState()->setUiItemState(TIMELINE_RULER_MODE_KEY, value);
-    }
 }
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
@@ -109,7 +54,7 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
 
     if (it != toolConfig.items.end()) {
         const bool meterPanelVisible = it->show
-                                       && (playbackConfiguration()->playbackMeterPosition()
+                                       && (playbackUiState()->playbackMeterPosition()
                                            == playback::PlaybackMeterPosition::MeterPosition::SideBar);
         muse::async::Async::call(this, [this, meterPanelVisible]() {
             dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(playbackMeterPanelName(), meterPanelVisible));

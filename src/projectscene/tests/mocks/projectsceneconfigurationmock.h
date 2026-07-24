@@ -29,10 +29,6 @@ public:
     MOCK_METHOD(int, mouseZoomPrecision, (), (const, override));
     MOCK_METHOD(void, setMouseZoomPrecision, (int precision), (override));
 
-    MOCK_METHOD(TimelineRulerMode, timelineRulerMode, (), (const, override));
-    MOCK_METHOD(void, setTimelineRulerMode, (const TimelineRulerMode mode), (override));
-    MOCK_METHOD(muse::async::Notification, timelineRulerModeChanged, (), (const, override));
-
     MOCK_METHOD(bool, isEffectsPanelVisible, (), (const, override));
     MOCK_METHOD(void, setIsEffectsPanelVisible, (bool visible), (override));
     MOCK_METHOD(muse::async::Notification, isEffectsPanelVisibleChanged, (), (const, override));

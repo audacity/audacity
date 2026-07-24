@@ -20,6 +20,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectpaneltrackselection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectpaneltrackselection.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneuistate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuistate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuistate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectviewstate.cpp

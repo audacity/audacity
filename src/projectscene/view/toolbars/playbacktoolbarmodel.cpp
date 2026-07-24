@@ -101,7 +101,7 @@ void PlaybackToolBarModel::load()
             setupProjectConnections(*context()->currentProject());
         }
 
-        configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+        playbackUiState()->playbackMeterPositionChanged().onNotify(this, [this]() {
             reload();
         });
 
@@ -354,7 +354,7 @@ void PlaybackToolBarModel::updateActions()
         }
 
         if (citem.action == PLAYBACK_LEVEL_QUERY.toString()) {
-            if (configuration()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
+            if (playbackUiState()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
                 // Skip playback meter item if it is set to be displayed in the sidebar
                 continue;
             }

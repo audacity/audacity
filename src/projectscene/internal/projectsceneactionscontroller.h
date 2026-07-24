@@ -14,12 +14,14 @@
 #include "context/iglobalcontext.h"
 #include "../iprojectsceneactionscontroller.h"
 #include "../iprojectsceneconfiguration.h"
+#include "../iprojectsceneuistate.h"
 
 namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
     public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::ContextInject<IProjectSceneUiState> projectSceneUiState { this };
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };

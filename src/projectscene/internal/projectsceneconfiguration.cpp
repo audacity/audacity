@@ -21,7 +21,6 @@ static const std::string moduleName("projectscene");
 static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
 static const muse::Settings::Key IS_RMS_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/rmsInWaveformVisible");
 static const muse::Settings::Key IS_CLIPPING_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/clippingInWaveformVisible");
-static const muse::Settings::Key TIMELINE_RULER_MODE(moduleName, "projectscene/timelineRulerMode");
 static const muse::Settings::Key EFFECTS_PANEL_VISIBILITY(moduleName, "projectscene/effectsPanelVisible");
 
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
@@ -59,12 +58,6 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY));
     muse::settings()->valueChanged(IS_CLIPPING_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val&) {
         m_isClippingInWaveformVisibleChanged.send(isClippingInWaveformVisible());
-    });
-
-    muse::settings()->setDefaultValue(TIMELINE_RULER_MODE,
-                                      muse::Val(static_cast<int>(TimelineRulerMode::MINUTES_AND_SECONDS)));
-    muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val&) {
-        m_timelineRulerModeChanged.notify();
     });
 
     muse::settings()->setDefaultValue(EFFECTS_PANEL_VISIBILITY, muse::Val(true));
@@ -181,22 +174,6 @@ int ProjectSceneConfiguration::mouseZoomPrecision() const
 void ProjectSceneConfiguration::setMouseZoomPrecision(int precision)
 {
     muse::settings()->setSharedValue(MOUSE_ZOOM_PRECISION, muse::Val(precision));
-}
-
-TimelineRulerMode ProjectSceneConfiguration::timelineRulerMode() const
-{
-    return muse::settings()->value(TIMELINE_RULER_MODE)
-           .toEnum<TimelineRulerMode>();
-}
-
-void ProjectSceneConfiguration::setTimelineRulerMode(const TimelineRulerMode mode)
-{
-    muse::settings()->setSharedValue(TIMELINE_RULER_MODE, muse::Val(static_cast<int>(mode)));
-}
-
-muse::async::Notification ProjectSceneConfiguration::timelineRulerModeChanged() const
-{
-    return m_timelineRulerModeChanged;
 }
 
 bool ProjectSceneConfiguration::isEffectsPanelVisible() const

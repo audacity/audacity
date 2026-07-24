@@ -24,10 +24,6 @@ public:
     MOCK_METHOD(void, setPlaybackMeterType, (PlaybackMeterType::MeterType type), (override));
     MOCK_METHOD(muse::async::Notification, playbackMeterTypeChanged, (), (const, override));
 
-    MOCK_METHOD(PlaybackMeterPosition::MeterPosition, playbackMeterPosition, (), (const, override));
-    MOCK_METHOD(void, setPlaybackMeterPosition, (PlaybackMeterPosition::MeterPosition position), (override));
-    MOCK_METHOD(muse::async::Notification, playbackMeterPositionChanged, (), (const, override));
-
     MOCK_METHOD(PlaybackMeterDbRange::DbRange, playbackMeterDbRange, (), (const, override));
     MOCK_METHOD(void, setPlaybackMeterDbRange, (PlaybackMeterDbRange::DbRange range), (override));
     MOCK_METHOD(muse::async::Notification, playbackMeterDbRangeChanged, (), (const, override));

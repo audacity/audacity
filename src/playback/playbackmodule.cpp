@@ -11,6 +11,7 @@
 #include "internal/playbackcontroller.h"
 #include "internal/playbackmetercontroller.h"
 #include "internal/playbackuiactions.h"
+#include "internal/playbackuistate.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
 
@@ -105,8 +106,10 @@ void PlaybackContext::registerExports()
     m_controller = std::make_shared<PlaybackController>(iocContext());
     m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
     m_playback = std::make_shared<Au3Playback>(iocContext());
+    m_uiState = std::make_shared<PlaybackUiState>(iocContext());
 
     ioc()->registerExport<IPlaybackController>(mname, m_controller);
+    ioc()->registerExport<IPlaybackUiState>(mname, m_uiState);
     ioc()->registerExport<playback::IPlayback>(mname, m_playback);
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));
 }
@@ -123,6 +126,7 @@ void PlaybackContext::onInit(const IApplication::RunMode& mode)
 
     m_uiActions->init();
     m_controller->init();
+    m_uiState->init();
 
     auto ar = ioc()->resolve<IUiActionsRegister>(mname);
     if (ar) {

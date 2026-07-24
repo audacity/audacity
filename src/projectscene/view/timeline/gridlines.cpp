@@ -9,7 +9,7 @@
 using namespace au::projectscene;
 
 GridLines::GridLines(QQuickItem* parent)
-    : QQuickPaintedItem(parent)
+    : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -34,7 +34,7 @@ void GridLines::paint(QPainter* painter)
     drawGridLines(painter);
 
     // draw zebra highlighting (only for beats and measures)
-    if (configuration()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES) {
+    if (projectSceneUiState()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES) {
         drawZebraHighlighting(painter);
     }
 }

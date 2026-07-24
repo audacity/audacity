@@ -23,10 +23,6 @@ public:
     void setPlaybackMeterType(PlaybackMeterType::MeterType type) override;
     muse::async::Notification playbackMeterTypeChanged() const override;
 
-    PlaybackMeterPosition::MeterPosition playbackMeterPosition() const override;
-    void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) override;
-    muse::async::Notification playbackMeterPositionChanged() const override;
-
     PlaybackMeterDbRange::DbRange playbackMeterDbRange() const override;
     void setPlaybackMeterDbRange(PlaybackMeterDbRange::DbRange range) override;
     muse::async::Notification playbackMeterDbRangeChanged() const override;
@@ -61,7 +57,6 @@ private:
     muse::async::Notification m_playbackTimeItemFormatChanged;
     muse::async::Notification m_playbackMeterStyleChanged;
     muse::async::Notification m_playbackMeterTypeChanged;
-    muse::async::Notification m_playbackMeterPositionChanged;
     muse::async::Notification m_playbackMeterDbRangeChanged;
     muse::async::Notification m_playbackHorizontalMeterSizeChanged;
     muse::async::Notification m_playbackQualityChanged;
