@@ -9,7 +9,7 @@
 #include "playbacktypes.h"
 
 namespace au::playback {
-class IPlaybackUiState : MODULE_EXPORT_INTERFACE
+class IPlaybackUiState : MODULE_CONTEXT_INTERFACE
 {
     INTERFACE_ID(IPlaybackUiState)
 

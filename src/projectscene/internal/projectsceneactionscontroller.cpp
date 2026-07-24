@@ -30,10 +30,7 @@ void ProjectSceneActionsController::init()
 {
     dispatcher()->reg(this, MINUTES_SECONDS_RULER, this, &ProjectSceneActionsController::toggleMinutesSecondsRuler);
     dispatcher()->reg(this, BEATS_MEASURES_RULER, this, &ProjectSceneActionsController::toggleBeatsMeasuresRuler);
-    projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this]() {
-        notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
-        notifyActionCheckedChanged(BEATS_MEASURES_RULER);
-    });
+
     dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
     dispatcher()->reg(this, RMS_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleRMSInWaveform);
     dispatcher()->reg(this, CLIPPING_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleClippingInWaveform);
@@ -46,6 +43,11 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
+
+    projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this]() {
+        notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
+        notifyActionCheckedChanged(BEATS_MEASURES_RULER);
+    });
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -55,24 +57,12 @@ void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode&
 
 void ProjectSceneActionsController::toggleMinutesSecondsRuler()
 {
-    if (projectSceneUiState()->timelineRulerMode() == TimelineRulerMode::MINUTES_AND_SECONDS) {
-        return;
-    }
-
     projectSceneUiState()->setTimelineRulerMode(TimelineRulerMode::MINUTES_AND_SECONDS);
-    notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
-    notifyActionCheckedChanged(BEATS_MEASURES_RULER);
 }
 
 void ProjectSceneActionsController::toggleBeatsMeasuresRuler()
 {
-    if (projectSceneUiState()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES) {
-        return;
-    }
-
     projectSceneUiState()->setTimelineRulerMode(TimelineRulerMode::BEATS_AND_MEASURES);
-    notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
-    notifyActionCheckedChanged(BEATS_MEASURES_RULER);
 }
 
 void ProjectSceneActionsController::toggleVerticalRulers()
