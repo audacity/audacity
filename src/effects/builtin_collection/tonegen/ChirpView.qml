@@ -299,15 +299,6 @@ BuiltinEffectBase {
                 Layout.fillHeight: false
                 Layout.columnSpan: 2
 
-                border: Border {
-                    color: ui.theme.strokeColor
-                    width: 1
-                }
-
-                arrowSpacing: -2
-                backgroundColor: ui.theme.backgroundSecondaryColor
-                textColor: ui.theme.fontPrimaryColor
-
                 value: chirp.duration
                 mode: TimecodeModeSelector.Duration
                 currentFormatStr: chirp.durationFormat
