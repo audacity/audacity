@@ -263,8 +263,7 @@ NyqControl* findControl(std::vector<NyqControl>& controls, const String& varName
 }
 } // anonymous namespace
 
-ParameterInfoList NyquistParameterExtractorService::extractParameters(EffectInstance* instance,
-                                                                      [[maybe_unused]] EffectSettingsAccessPtr settingsAccess) const
+ParameterInfoList NyquistParameterExtractorService::extractParameters(EffectInstance* instance) const
 {
     NyquistBase* nyquist = getNyquistBase(instance);
     if (!nyquist) {
@@ -311,8 +310,7 @@ double NyquistParameterExtractorService::getParameterValue(EffectInstance* insta
     return ctrl->val;
 }
 
-bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId,
-                                                         double fullRangeValue, EffectSettingsAccessPtr settingsAccess)
+bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId, double fullRangeValue)
 {
     NyquistBase* nyquist = getNyquistBase(instance);
     if (!nyquist) {
@@ -339,6 +337,9 @@ bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instanc
 
     // Sync mControls back to EffectSettings for preset saving
     // This ensures that when SaveUserPreset() is called, it has the updated control values
+    // Sync mControls back to EffectSettings for preset saving
+    // This ensures that when SaveUserPreset() is called, it has the updated control values
+    EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instance->id());
     if (settingsAccess) {
         settingsAccess->ModifySettings([&](EffectSettings& settings) {
             NyquistBase::GetSettings(settings).controls = nyquist->mControls;
@@ -350,7 +351,7 @@ bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instanc
 }
 
 bool NyquistParameterExtractorService::setParameterStringValue(EffectInstance* instance, const String& parameterId,
-                                                               const String& stringValue, EffectSettingsAccessPtr settingsAccess)
+                                                               const String& stringValue)
 {
     NyquistBase* nyquist = getNyquistBase(instance);
     if (!nyquist) {
@@ -371,6 +372,7 @@ bool NyquistParameterExtractorService::setParameterStringValue(EffectInstance* i
     ctrl->valStr = au3::wxFromString(stringValue);
 
     // Sync mControls back to EffectSettings for preset saving
+    EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instance->id());
     if (settingsAccess) {
         settingsAccess->ModifySettings([&](EffectSettings& settings) {
             NyquistBase::GetSettings(settings).controls = nyquist->mControls;
@@ -448,8 +450,7 @@ muse::String NyquistParameterExtractorService::getPromptCommandText(EffectInstan
     return String::fromStdString(au3::wxToStdString(nyquist->mInputCmd));
 }
 
-bool NyquistParameterExtractorService::setPromptCommandText(EffectInstance* instance, const String& commandText,
-                                                            [[maybe_unused]] EffectSettingsAccessPtr settingsAccess)
+bool NyquistParameterExtractorService::setPromptCommandText(EffectInstance* instance, const String& commandText)
 {
     NyquistBase* nyquist = getNyquistBase(instance);
     if (!nyquist || !nyquist->mIsPrompt) {

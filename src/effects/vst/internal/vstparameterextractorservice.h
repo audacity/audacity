@@ -4,6 +4,8 @@
 #pragma once
 
 #include "effects/effects_base/iparameterextractorservice.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "au3-vst3/VST3ParameterExtraction.h" // Need full definition for std::unordered_map value type
 
@@ -16,27 +18,28 @@ namespace au::effects {
 //! Maintains a parameter cache for O(1) lookups after initial extraction.
 class VstParameterExtractorService : public IParameterExtractorService
 {
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+
 public:
     EffectFamily family() const override { return EffectFamily::VST3; }
 
-    ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess = nullptr) const override;
+    ParameterInfoList extractParameters(EffectInstance* instance) const override;
 
     ParameterInfo getParameter(EffectInstance* instance, const muse::String& parameterId) const override;
 
     double getParameterValue(EffectInstance* instance, const muse::String& parameterId) const override;
 
-    bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
-                           EffectSettingsAccessPtr settingsAccess = nullptr) override;
+    bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue) override;
 
     muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const override;
 
-    void beginParameterGesture(EffectInstance* instance, const muse::String& parameterId, EffectSettingsAccessPtr settingsAccess) override;
+    void beginParameterGesture(EffectInstance* instance, const muse::String& parameterId) override;
 
     void endParameterGesture(EffectInstance* instance, const muse::String& parameterId) override;
 
     void onInstanceDestroyed(EffectInstance* instance) override;
 
-    void beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) override;
+    void beginParameterEditing(EffectInstance* instance) override;
 
     void endParameterEditing(EffectInstance* instance) override;
 

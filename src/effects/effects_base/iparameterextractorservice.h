@@ -19,8 +19,7 @@ public:
 
     //! Extract all parameters from an effect instance
     //! @param instance The effect instance
-    //! @param settingsAccess Optional settings access to apply stored settings before extraction
-    virtual ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess = nullptr) const = 0;
+    virtual ParameterInfoList extractParameters(EffectInstance* instance) const = 0;
 
     //! Get a single parameter by ID
     //! @return ParameterInfo for the parameter, or invalid ParameterInfo if not found
@@ -33,20 +32,16 @@ public:
     //! @param instance The effect instance
     //! @param parameterId The parameter identifier
     //! @param fullRangeValue Value in plain/"Full Range" units (implementation converts to plugin-specific format)
-    //! @param settingsAccess Optional settings access to persist the change
-    virtual bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
-                                   EffectSettingsAccessPtr settingsAccess = nullptr) = 0;
+    virtual bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue) = 0;
 
     //! Set the string value of a parameter (for file paths, text, etc.)
     //! @param instance The effect instance
     //! @param parameterId The parameter identifier
     //! @param stringValue The new string value (e.g., file path)
-    //! @param settingsAccess Optional settings access to persist the change
     //! @return true if successful, false if parameter doesn't support string values
     virtual bool setParameterStringValue([[maybe_unused]] EffectInstance* instance,
                                          [[maybe_unused]] const muse::String& parameterId,
-                                         [[maybe_unused]] const muse::String& stringValue,
-                                         [[maybe_unused]] EffectSettingsAccessPtr settingsAccess = nullptr)
+                                         [[maybe_unused]] const muse::String& stringValue)
     {
         // Default implementation: not supported
         return false;
@@ -59,10 +54,8 @@ public:
     //! Called when interactive editing of a parameter begins
     //! @param instance The effect instance
     //! @param parameterId The parameter being edited
-    //! @param settingsAccess Settings access for this editing session
     virtual void beginParameterGesture([[maybe_unused]] EffectInstance* instance,
-                                       [[maybe_unused]] const muse::String& parameterId,
-                                       [[maybe_unused]] EffectSettingsAccessPtr settingsAccess)
+                                       [[maybe_unused]] const muse::String& parameterId)
     {
     }
 
@@ -84,17 +77,14 @@ public:
 
     //! Begin parameter editing session
     //! Called before showing UI to set up parameter change tracking
-    //! Sets up the ComponentHandler to track parameter changes with the given settings access
+    //! Sets up the ComponentHandler to track parameter changes for the given instance
     //! @param instance The effect instance
-    //! @param settingsAccess Settings access to use for parameter changes during the session
-    virtual void beginParameterEditing([[maybe_unused]] EffectInstance* instance,
-                                       [[maybe_unused]] EffectSettingsAccessPtr settingsAccess)
+    virtual void beginParameterEditing([[maybe_unused]] EffectInstance* instance)
     {
     }
 
     //! End parameter editing session
     //! Called when closing UI to clean up parameter change tracking
-    //! Clears the ComponentHandler's settings access pointer
     //! @param instance The effect instance
     virtual void endParameterEditing([[maybe_unused]] EffectInstance* instance)
     {

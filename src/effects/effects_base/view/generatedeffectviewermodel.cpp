@@ -116,8 +116,7 @@ void GeneratedEffectViewerModel::doInit()
     if (instance) {
         IParameterExtractorService* extractor = getParameterExtractor();
         if (extractor) {
-            EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId());
-            extractor->beginParameterEditing(instance, settingsAccess);
+            extractor->beginParameterEditing(instance);
         }
     }
 
