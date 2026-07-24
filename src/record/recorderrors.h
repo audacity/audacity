@@ -19,6 +19,7 @@ enum class Err {
     RecordingStopError,
     MismatchedSamplingRatesError,
     TooFewCompatibleTracksSelected,
+    NoRecordingDevice,
 
     LeadInRecordingNoValidClipAtCursor,
     LeadInRecordingNoTracksSelected,
@@ -41,6 +42,10 @@ inline muse::Ret make_ret(Err e)
                                                                muse::trc("record",
                                                                          "Too few tracks are selected for recording at this sample rate.\n"
                                                                          "(Audacity requires two channels at the same sample rate foreach stereo track)"));
+    case Err::NoRecordingDevice: return muse::Ret(retCode,
+                                                  muse::trc("record",
+                                                            "No recording device available.\n"
+                                                            "Please connect an input device and rescan."));
     case Err::LeadInRecordingNoValidClipAtCursor: return muse::Ret(retCode,
                                                                    muse::trc("record",
                                                                              "Please select a time within a clip."));

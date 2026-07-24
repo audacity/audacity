@@ -5,16 +5,21 @@
 #ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 #define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
 #include "audio/iaudiodevicesprovider.h"
 #include "audio/iaudioengine.h"
+#include "au3audio/iau3devicemanager.h"
+#include "au3audio/isystemaudiodeviceslistener.h"
 
 namespace au::au3audio {
-class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Contextable
+class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<IAu3DeviceManager> deviceManager;
+    muse::GlobalInject<ISystemAudioDevicesListener> systemAudioDevicesListener;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
 
@@ -25,14 +30,20 @@ public:
     void init();
 
     std::vector<std::string> outputDevices() const override;
-    std::string currentOutputDevice() const override;
-    void setOutputDevice(const std::string& device) override;
+    std::optional<std::string> currentOutputDevice() const override;
+    void setOutputDevice(const std::optional<std::string>& device) override;
     muse::async::Notification outputDeviceChanged() const override;
+    std::string systemDefaultOutputDevice() const override;
 
     std::vector<std::string> inputDevices() const override;
-    std::string currentInputDevice() const override;
-    void setInputDevice(const std::string& device) override;
+    std::optional<std::string> currentInputDevice() const override;
+    void setInputDevice(const std::optional<std::string>& device) override;
     muse::async::Notification inputDeviceChanged() const override;
+    std::string systemDefaultInputDevice() const override;
+    bool hasRecordingDevices() const override;
+
+    muse::async::Channel<std::string> usedOutputDeviceChanged() const override;
+    muse::async::Channel<std::string> usedInputDeviceChanged() const override;
 
     void handleDeviceChange() override;
 
@@ -82,15 +93,21 @@ private:
     void initInputChannels();
 
     void updateInputOutputDevices();
-    void setupInputDevice(const std::string& newDevice);
+    void revalidateInputOutputDevices();
+    void setupInputDevice();
+    void onSystemDevicesChanged();
 
-    std::string defaultOutputDevice();
-    std::string defaultInputDevice();
+    std::string effectiveOutputDevice() const;
+    std::string effectiveInputDevice() const;
 
     std::vector<std::string> m_audioApis;
     std::vector<std::string> m_outputDevices;
     std::vector<std::string> m_inputDevices;
     int m_inputChannelsAvailable = 0;
+    bool m_pendingSystemDevicesChange = false;
+
+    muse::async::Channel<std::string> m_usedOutputDeviceChanged;
+    muse::async::Channel<std::string> m_usedInputDeviceChanged;
 
     muse::async::Notification m_audioOutputDeviceChanged;
     muse::async::Notification m_audioInputDeviceChanged;

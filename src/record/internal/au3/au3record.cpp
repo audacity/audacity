@@ -197,7 +197,7 @@ void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
 
-    audioEngine()->updateRequested().onNotify(this, [this]() {
+    audioEngine()->recordingUpdateRequested().onNotify(this, [this]() {
         if (m_recordData.empty()) {
             return;
         }
@@ -289,7 +289,7 @@ void Au3Record::init()
         m_recordPosition.set(origClip->GetPlayEndTime());
     });
 
-    audioEngine()->finished().onNotify(this, [this]() {
+    audioEngine()->recordingFinished().onNotify(this, [this]() {
         if (m_recordData.empty()) {
             return;
         }
@@ -305,7 +305,7 @@ void Au3Record::init()
         rebuildRecordingClipKeys();
     });
 
-    audioEngine()->commitRequested().onNotify(this, [this]() {
+    audioEngine()->recordingCommitRequested().onNotify(this, [this]() {
         if (m_recordData.empty()) {
             return;
         }
@@ -355,6 +355,10 @@ muse::Ret Au3Record::start()
     // bool bPreferNewTrack = false;
     // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
     const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
+
+    if (!audioDevicesProvider()->hasRecordingDevices()) {
+        return make_ret(Err::NoRecordingDevice);
+    }
 
     Au3Project& project = projectRef();
 

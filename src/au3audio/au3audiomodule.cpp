@@ -7,6 +7,17 @@
 
 #include "internal/au3audioengine.h"
 #include "internal/au3audiodevicesprovider.h"
+#include "internal/au3devicemanager.h"
+
+#if defined(Q_OS_MAC)
+#include "internal/platform/macos/macossystemaudiodeviceslistener.h"
+#elif defined(Q_OS_WIN)
+#include "internal/platform/windows/windowssystemaudiodeviceslistener.h"
+#elif defined(AU_AU3AUDIO_HAS_UDEV)
+#include "internal/platform/linux/linuxsystemaudiodeviceslistener.h"
+#else
+#include "internal/platform/stub/stubsystemaudiodeviceslistener.h"
+#endif
 
 using namespace au::au3audio;
 using namespace muse::modularity;
@@ -21,17 +32,32 @@ std::string Au3AudioModule::moduleName() const
 void Au3AudioModule::registerExports()
 {
     m_audioEngine = std::make_shared<Au3AudioEngine>();
+    m_deviceManager = std::make_shared<Au3DeviceManager>();
+
+#if defined(Q_OS_MAC)
+    m_systemAudioDevicesListener = std::make_shared<MacosSystemAudioDevicesListener>();
+#elif defined(Q_OS_WIN)
+    m_systemAudioDevicesListener = std::make_shared<WindowsSystemAudioDevicesListener>();
+#elif defined(AU_AU3AUDIO_HAS_UDEV)
+    m_systemAudioDevicesListener = std::make_shared<LinuxSystemAudioDevicesListener>();
+#else
+    m_systemAudioDevicesListener = std::make_shared<StubSystemAudioDevicesListener>();
+#endif
 
     globalIoc()->registerExport<audio::IAudioEngine>(mname, m_audioEngine);
+    globalIoc()->registerExport<IAu3DeviceManager>(mname, m_deviceManager);
+    globalIoc()->registerExport<ISystemAudioDevicesListener>(mname, m_systemAudioDevicesListener);
 }
 
 void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
 {
     m_audioEngine->init();
+    m_systemAudioDevicesListener->startListening();
 }
 
 void Au3AudioModule::onDeinit()
 {
+    m_systemAudioDevicesListener->stopListening();
     m_audioEngine->deinit();
 }
 

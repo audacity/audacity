@@ -55,6 +55,7 @@ apt_packages_standard=(
   #libportmidi-dev
   libpulse-dev
   libsndfile1-dev
+  libudev-dev # system audio device change detection
   make
   wget
   )

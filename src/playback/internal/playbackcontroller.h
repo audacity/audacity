@@ -18,6 +18,7 @@
 #include "playback/iplaybackcontroller.h"
 #include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
+#include "toast/itoastservice.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::playback {
@@ -28,6 +29,7 @@ class PlaybackController : public IPlaybackController, public muse::actions::Act
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
     muse::GlobalInject<muse::IApplication> application;
+    muse::GlobalInject<toast::IToastService> toastService;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
