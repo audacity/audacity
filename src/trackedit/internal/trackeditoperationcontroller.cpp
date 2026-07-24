@@ -525,6 +525,7 @@ bool TrackeditOperationController::splitCutSelectedOnTracks(const TrackIdList tr
     for (auto& trackData : tracksData) {
         clipboard()->addTrackData(std::move(trackData));
     }
+    clipboard()->setRangeSelectionCopy(true);
     projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
     return true;
 }
