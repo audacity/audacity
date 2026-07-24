@@ -12,6 +12,7 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_PLAY_SELECTION_QUERY("action://playback/play-selection");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
@@ -32,6 +33,7 @@ static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_PLAY_SELECTION_QUERY, this, &PlaybackController::playSelectionAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
@@ -262,7 +264,7 @@ void PlaybackController::togglePlayAction()
         } else if (isShiftPressed) {
             //! NOTE: set the current position as start position
             doSeek(playbackPosition(), false);
-            doPlay(true /* ignoreSelection */);
+            doPlay(true /* clearPlaybackRegion */);
         } else {
             doResume();
         }
@@ -271,36 +273,57 @@ void PlaybackController::togglePlayAction()
             doSeek(0.0, false);
         }
 
-        doPlay(isShiftPressed /* ignoreSelection */);
+        doPlay(isShiftPressed /* clearPlaybackRegion */);
     }
 }
 
-void PlaybackController::doPlay(bool ignoreSelection)
+void PlaybackController::doPlay(bool clearPlaybackRegion)
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    if (!ignoreSelection) {
-        PlaybackRegion selectionRegion = selectionPlaybackRegion();
-        if (selectionRegion.isValid()) {
-            doChangePlaybackRegion(selectionRegion);
+    if (!clearPlaybackRegion) {
+        //! NOTE: play from the cursor to the project end
+        const muse::secs_t end = totalPlayTime();
+        const muse::secs_t start = lastPlaybackSeekTime();
+        if (end > start) {
+            doChangePlaybackRegion({ start, end });
         } else {
-            //! NOTE: no selection — fall back to the user's cursor (lastPlaybackSeekTime)
-            //! and the project end.
-            const muse::secs_t end = totalPlayTime();
-            const muse::secs_t start = lastPlaybackSeekTime();
-            if (end > start) {
-                doChangePlaybackRegion({ start, end });
-            } else {
-                LOGW() << "playback region is not valid";
-                updatePlaybackRegion();
-            }
+            LOGW() << "playback region is not valid";
+            updatePlaybackRegion();
         }
     } else {
+        //! NOTE: no playback region; play from the cursor with no defined end
         doChangePlaybackRegion({});
         doSeek(lastPlaybackSeekTime(), false);
     }
+
+    if (!isPlaybackStartPositionValid()) {
+        return;
+    }
+
+    player()->play();
+}
+
+void PlaybackController::playSelectionAction()
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return;
+    }
+
+    if (!isStopped()) {
+        //! NOTE: just stop, without seek
+        player()->stop();
+    }
+
+    const PlaybackRegion selection = selectionPlaybackRegion();
+    if (!selection.isValid()) {
+        return;
+    }
+
+    doChangePlaybackRegion(selection);
 
     if (!isPlaybackStartPositionValid()) {
         return;
@@ -774,6 +797,12 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
 
     if (code == PLAYBACK_PLAY_QUERY.toString()) {
         return !recordController()->isRecording();
+    }
+
+    if (code == PLAYBACK_PLAY_SELECTION_QUERY.toString()) {
+        //! NOTE: when playback is active the action stops it, so it stays available without a selection
+        return !recordController()->isRecording()
+               && (!isStopped() || !selectionController()->timeSelectionIsEmpty());
     }
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
