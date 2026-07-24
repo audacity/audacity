@@ -24,7 +24,6 @@ import QtQuick 2.15
 import Muse.UiComponents
 
 import Audacity.UiComponents 1.0
-import Audacity.Playback 1.0
 import Audacity.AppShell
 
 BaseSection {
@@ -34,14 +33,6 @@ BaseSection {
     spacing: 16
 
     property var apiModel: null
-
-    PlaybackStateModel {
-        id: playbackState
-    }
-
-    Component.onCompleted: {
-        playbackState.init()
-    }
 
     Row {
         width: parent.width
@@ -54,8 +45,6 @@ BaseSection {
                 title: qsTrc("preferences", "Buffer length")
 
                 currentValue: apiModel.bufferLength
-
-                enabled: !playbackState.isPlaying
 
                 columnWidth: root.columnWidth
                 spacing: root.columnSpacing
@@ -94,7 +83,7 @@ BaseSection {
                 IncrementalPropertyControl {
                     currentValue: apiModel.latencyCompensation
 
-                    enabled: !playbackState.isPlaying && !apiModel.automaticCompensationEnabled
+                    enabled: !apiModel.automaticCompensationEnabled
                     implicitWidth: 100
 
                     //: Abbreviation of "milliseconds"

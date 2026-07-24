@@ -31,15 +31,25 @@ public:
     virtual bool isBusy() const = 0;
     virtual bool isCapturing() const = 0;
 
+    struct StartStreamOptions {
+        bool isDefaultPolicy = true;
+        double sampleRate = 0.0;
+        double leadInTime = 0.0;
+        std::vector<std::vector<float> >* crossfadeData = nullptr;
+        //! When set, the stream starts producing audio here instead of at the
+        //! play-region start (au3's pStartTime); the region itself is unchanged.
+        std::optional<double> streamStartTime;
+    };
+
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
-                            AudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate, double leadInTime = 0.0,
-                            std::vector<std::vector<float> >* crossfadeData = nullptr) = 0;
+                            AudacityProject& project, const StartStreamOptions& options) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
     virtual void seekStream(double time) = 0;
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+    virtual bool isMonitoring() const = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;

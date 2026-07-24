@@ -4,6 +4,8 @@
 #ifndef AU_PLAYBACK_IPLAYBACKCONTROLLER_H
 #define AU_PLAYBACK_IPLAYBACKCONTROLLER_H
 
+#include <functional>
+
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
@@ -46,6 +48,20 @@ public:
 
     virtual void stop() = 0;
     virtual void stopSeekAndUpdatePlaybackRegion() = 0;
+
+    // audio device/configuration changes (need both player and recorder state to
+    // decide whether/where to resume — applied via a stream restart)
+    virtual void setAudioApi(const std::string& api) = 0;
+    virtual void setAudioOutputDevice(const std::string& device) = 0;
+    virtual void setAudioInputDevice(const std::string& device) = 0;
+    virtual void setInputChannels(int channels) = 0;
+    virtual void setBufferLength(double duration) = 0;
+    virtual void setLatencyCompensation(double value) = 0;
+
+    //! Groups several of the setters above (e.g. the Preferences dialog
+    //! applying its edits on OK) so a running stream is stopped and resumed
+    //! once around the whole batch instead of once per changed value.
+    virtual void withSingleStreamRestart(const std::function<void()>& changes) = 0;
 
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
 

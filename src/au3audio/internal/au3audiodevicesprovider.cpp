@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "framework/global/containers.h"
+#include "framework/global/defer.h"
 #include "framework/global/settings.h"
 #include "framework/global/realfn.h"
 
@@ -96,7 +97,12 @@ void Au3AudioDevicesProvider::init()
                                       muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
 
     muse::settings()->valueChanged(AUDIO_HOST).onReceive(nullptr, [this](const muse::Val& val) {
-        updateInputOutputDevices();
+        // The host switch cascades into an output- and an input-device change,
+        // each funneling through handleDeviceChange(); scope them so monitoring
+        // is restored once at the end, not on the half-switched configuration.
+        withMonitoringRestored([this]() {
+            updateInputOutputDevices();
+        });
         m_audioApiChanged.notify();
     });
 
@@ -157,6 +163,21 @@ std::vector<std::string> Au3AudioDevicesProvider::outputDevices() const
     return m_outputDevices;
 }
 
+std::vector<std::string> Au3AudioDevicesProvider::outputDevices(const std::string& api) const
+{
+    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+
+    std::vector<std::string> devices;
+    for (const auto& device : outMaps) {
+        if (device.hostString != api) {
+            continue;
+        }
+        devices.push_back(MakeDeviceSourceString(&device, outMaps));
+    }
+
+    return devices;
+}
+
 std::string Au3AudioDevicesProvider::currentOutputDevice() const
 {
     return muse::settings()->value(PLAYBACK_DEVICE).toString();
@@ -183,6 +204,21 @@ std::vector<std::string> Au3AudioDevicesProvider::inputDevices() const
     return m_inputDevices;
 }
 
+std::vector<std::string> Au3AudioDevicesProvider::inputDevices(const std::string& api) const
+{
+    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+
+    std::vector<std::string> devices;
+    for (const auto& device : inMaps) {
+        if (device.hostString != api) {
+            continue;
+        }
+        devices.push_back(MakeDeviceSourceString(&device, inMaps));
+    }
+
+    return devices;
+}
+
 std::string Au3AudioDevicesProvider::currentInputDevice() const
 {
     return muse::settings()->value(RECORDING_DEVICE).toString();
@@ -206,9 +242,46 @@ async::Notification Au3AudioDevicesProvider::inputDeviceChanged() const
 
 void Au3AudioDevicesProvider::handleDeviceChange()
 {
-    if (audioEngine()) {
-        audioEngine()->stopMonitoring();
+    if (!audioEngine()) {
+        return;
+    }
+
+    withMonitoringRestored([this]() {
+        if (audioEngine()->isBusy()) {
+            audioEngine()->stopStream();
+        }
         audioEngine()->handleDeviceChange();
+    });
+}
+
+void Au3AudioDevicesProvider::withMonitoringRestored(const std::function<void()>& change)
+{
+    if (!audioEngine()) {
+        change();
+        return;
+    }
+
+    const bool outermost = m_monitoringRestoreDepth == 0;
+    const bool wasMonitoring = outermost && audioEngine()->isMonitoring();
+
+    audioEngine()->stopMonitoring();
+
+    {
+        // A throwing change must not leave the depth wedged, which would make
+        // every later scope look nested and never restore monitoring again.
+        ++m_monitoringRestoreDepth;
+        DEFER {
+            --m_monitoringRestoreDepth;
+        };
+        change();
+    }
+
+    if (wasMonitoring) {
+        if (const auto currentProject = globalContext()->currentProject()) {
+            if (Au3Project* project = reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr())) {
+                audioEngine()->startMonitoring(*project);
+            }
+        }
     }
 }
 
@@ -237,9 +310,33 @@ int Au3AudioDevicesProvider::inputChannelsAvailable() const
     return m_inputChannelsAvailable;
 }
 
+int Au3AudioDevicesProvider::inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const
+{
+    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+
+    for (const auto& device : inMaps) {
+        if (device.hostString != api) {
+            continue;
+        }
+        if (MakeDeviceSourceString(&device, inMaps) == inputDevice) {
+            return device.numChannels;
+        }
+    }
+
+    return 0;
+}
+
 void Au3AudioDevicesProvider::setInputChannels(const int count)
 {
+    if (count == inputChannelsSelected()) {
+        return;
+    }
+
     muse::settings()->setLocalValue(INPUT_CHANNELS, muse::Val(count));
+
+    // The capture channel count can't be changed on an open stream, so tear it
+    // down just like an input-device change does (via setupInputDevice()).
+    handleDeviceChange();
 }
 
 double Au3AudioDevicesProvider::bufferLength() const
@@ -252,7 +349,13 @@ void Au3AudioDevicesProvider::setBufferLength(double newBufferLength)
     if (!muse::RealIsEqualOrMore(newBufferLength, 0.0)) {
         newBufferLength = muse::settings()->defaultValue(LATENCY_DURATION).toDouble();
     }
-    muse::settings()->setLocalValue(LATENCY_DURATION, muse::Val(newBufferLength));
+    // The buffer length is consumed when a stream is opened, so an active
+    // input-monitoring stream must be reopened for the new value to take
+    // effect (playback/recording restarts are handled a level up, by
+    // PlaybackController::withStreamRestart()).
+    withMonitoringRestored([newBufferLength]() {
+        muse::settings()->setLocalValue(LATENCY_DURATION, muse::Val(newBufferLength));
+    });
 }
 
 bool Au3AudioDevicesProvider::automaticCompensationEnabled() const
@@ -327,11 +430,24 @@ uint64_t Au3AudioDevicesProvider::defaultSampleRate() const
 
 void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
 {
-    settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
+    if (newRate == defaultSampleRate()) {
+        return;
+    }
+
+    // A playing/recording stream keeps the rate it was opened with (the new
+    // rate takes effect on the next stream), but an idle input-monitoring
+    // stream must be reopened for the meters to follow the new rate.
+    withMonitoringRestored([newRate]() {
+        settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
+    });
 }
 
 void Au3AudioDevicesProvider::setDefaultSampleFormat(const std::string& format)
 {
+    if (format == defaultSampleFormat()) {
+        return;
+    }
+
     for (const auto& symbol : QualitySettings::SampleFormatSetting.GetSymbols()) {
         if (format == symbol.Msgid().translated().toStdString()) {
             settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_FORMAT, muse::Val(symbol.Internal().ToStdString()));
@@ -425,43 +541,16 @@ void Au3AudioDevicesProvider::initHosts()
 
 void Au3AudioDevicesProvider::initInputChannels()
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    const std::string host = currentApi();
-    const std::string inputDevice = currentInputDevice();
-
-    for (const auto& device : inMaps) {
-        if (device.hostString != host) {
-            continue;
-        }
-        const auto deviceName = MakeDeviceSourceString(&device, inMaps);
-        if (deviceName == inputDevice) {
-            m_inputChannelsAvailable = device.numChannels;
-            break;
-        }
+    const int available = inputChannelsAvailable(currentApi(), currentInputDevice());
+    if (available > 0) {
+        m_inputChannelsAvailable = available;
     }
 }
 
 void Au3AudioDevicesProvider::updateInputOutputDevices()
 {
-    const std::vector<DeviceSourceMap>& inputDevices = DeviceManager::Instance()->GetInputDeviceMaps();
-    const std::vector<DeviceSourceMap>& outputDevices = DeviceManager::Instance()->GetOutputDeviceMaps();
-
-    m_inputDevices.clear();
-    m_outputDevices.clear();
-
-    for (const auto& device : inputDevices) {
-        if (device.hostString != currentApi()) {
-            continue;
-        }
-        m_inputDevices.push_back(MakeDeviceSourceString(&device, inputDevices));
-    }
-
-    for (const auto& device : outputDevices) {
-        if (device.hostString != currentApi()) {
-            continue;
-        }
-        m_outputDevices.push_back(MakeDeviceSourceString(&device, outputDevices));
-    }
+    m_inputDevices = inputDevices(currentApi());
+    m_outputDevices = outputDevices(currentApi());
 
     setInputDevice(defaultInputDevice());
     setOutputDevice(defaultOutputDevice());
@@ -512,11 +601,16 @@ std::string Au3AudioDevicesProvider::defaultInputDevice()
 
 void Au3AudioDevicesProvider::rescan()
 {
-    DeviceManager::Instance()->Rescan();
+    // DeviceManager::Rescan() tears down input monitoring at the PortAudio
+    // level; scope the whole rescan so monitoring is captured beforehand and
+    // restored once the device lists are rebuilt.
+    withMonitoringRestored([this]() {
+        DeviceManager::Instance()->Rescan();
 
-    initHosts();
-    updateInputOutputDevices();
-    initInputChannels();
+        initHosts();
+        updateInputOutputDevices();
+        initInputChannels();
+    });
 
     m_audioApiChanged.notify();
     m_audioOutputDeviceChanged.notify();

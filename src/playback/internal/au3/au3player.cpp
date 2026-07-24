@@ -85,9 +85,12 @@ bool Au3Player::isBusy() const
     return audioEngine()->isBusy();
 }
 
-void Au3Player::play()
+void Au3Player::play(std::optional<muse::secs_t> startTime)
 {
     if (m_playbackStatus.val == PlaybackStatus::Paused) {
+        if (startTime.has_value()) {
+            LOGW() << "startTime is not taken into account when resuming a paused stream";
+        }
         audioEngine()->pauseStream(false);
         m_playbackStatus.set(PlaybackStatus::Running);
         return;
@@ -190,10 +193,18 @@ void Au3Player::play()
 
             ret = doPlayTracks(Au3TrackList::Get(project), tcp0, tcp1, opts);
         } else {
+            if (startTime.has_value()) {
+                opts.streamStartTime = startTime->to_double();
+            }
             double mixerEndTime = t1;
             if (newDefault) {
                 mixerEndTime = latestEnd;
-                if (pStartTime && *pStartTime >= t1) {
+                // The stream starts producing at the override when given, else
+                // at options.pStartTime. Mirrors au3: a start at/past the region
+                // end extends playback to the project end instead of opening a
+                // stream that would stop immediately.
+                const std::optional<double> streamStartTime = opts.streamStartTime.has_value() ? opts.streamStartTime : pStartTime;
+                if (streamStartTime && *streamStartTime >= t1) {
                     t1 = latestEnd;
                 }
             }
@@ -232,8 +243,13 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     m_startOffset = options.startOffset;
 
     AudacityProject& project = projectRef();
-    const double projectRate = ProjectRate::Get(project).GetRate();
-    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy, projectRate);
+
+    au::audio::IAudioEngine::StartStreamOptions engineOptions;
+    engineOptions.isDefaultPolicy = options.isDefaultPolicy;
+    engineOptions.sampleRate = ProjectRate::Get(project).GetRate();
+    engineOptions.streamStartTime = options.streamStartTime;
+
+    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
     bool success = token != 0;
     if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);

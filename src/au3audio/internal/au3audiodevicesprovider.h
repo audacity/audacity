@@ -5,6 +5,8 @@
 #ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 #define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
+#include <functional>
+
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
@@ -14,6 +16,8 @@
 namespace au::au3audio {
 class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Contextable
 {
+    friend class Au3AudioDevicesProviderTests;
+
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
@@ -25,11 +29,13 @@ public:
     void init();
 
     std::vector<std::string> outputDevices() const override;
+    std::vector<std::string> outputDevices(const std::string& api) const override;
     std::string currentOutputDevice() const override;
     void setOutputDevice(const std::string& device) override;
     muse::async::Notification outputDeviceChanged() const override;
 
     std::vector<std::string> inputDevices() const override;
+    std::vector<std::string> inputDevices(const std::string& api) const override;
     std::string currentInputDevice() const override;
     void setInputDevice(const std::string& device) override;
     muse::async::Notification inputDeviceChanged() const override;
@@ -42,6 +48,7 @@ public:
     muse::async::Notification apiChanged() const override;
 
     int inputChannelsAvailable() const override;
+    int inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const override;
     int inputChannelsSelected() const override;
     void setInputChannels(const int count) override;
     muse::async::Notification inputChannelsAvailableChanged() const override;
@@ -81,6 +88,13 @@ private:
     void initHosts();
     void initInputChannels();
 
+    // Stops input monitoring around `change` and, when it was on beforehand,
+    // restarts it once the change is done. Scopes nest: a composite change (a
+    // host switch cascades into output- and input-device changes) restores
+    // monitoring only once, at the outermost scope, so no monitor stream is
+    // opened on a half-switched configuration.
+    void withMonitoringRestored(const std::function<void()>& change);
+
     void updateInputOutputDevices();
     void setupInputDevice(const std::string& newDevice);
 
@@ -91,6 +105,7 @@ private:
     std::vector<std::string> m_outputDevices;
     std::vector<std::string> m_inputDevices;
     int m_inputChannelsAvailable = 0;
+    int m_monitoringRestoreDepth = 0;
 
     muse::async::Notification m_audioOutputDeviceChanged;
     muse::async::Notification m_audioInputDeviceChanged;
