@@ -28,7 +28,8 @@ public:
     MOCK_METHOD(bool, isNewlyCreated, (), (const, override));
     MOCK_METHOD(bool, isImported, (), (const, override));
     MOCK_METHOD(bool, isCloudProject, (), (const, override));
-    MOCK_METHOD((const std::optional<CloudProjectRecord>&), cloudRecord, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, isCloudProjectChanged, (), (const, override));
+    MOCK_METHOD((const std::optional<CloudProjectRecord>), cloudRecord, (), (const, override));
 
     MOCK_METHOD(muse::String, title, (), (const, override));
 

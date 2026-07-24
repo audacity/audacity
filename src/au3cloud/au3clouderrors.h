@@ -66,6 +66,9 @@ enum class Err {
     OpenProjectCancelled,
     CloudProjectNotFullySynced,
     CloudProjectNeverSynced,
+
+    // audio preview
+    AudioPreviewUpToDate,
 };
 
 inline muse::Ret make_ret(Err e)

@@ -38,6 +38,11 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::uploadProject(au::projec
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::updateAudioPreview(au::project::IAudacityProjectPtr)
+{
+    return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
+}
+
 muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::shareAudio(const std::string&)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);

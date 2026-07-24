@@ -22,6 +22,8 @@
 #ifndef AU_PROJECT_IPROJECTFILESCONTROLLER_H
 #define AU_PROJECT_IPROJECTFILESCONTROLLER_H
 
+#include <functional>
+
 #include "modularity/imoduleinterface.h"
 #include "types/ret.h"
 #include "io/path.h"
@@ -44,7 +46,8 @@ public:
     virtual bool closeOpenedProject(bool quitApp = false) = 0;
     virtual bool saveProject(const muse::io::path_t& path = muse::io::path_t()) = 0;
     virtual bool saveProjectLocally(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
-    virtual muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate) = 0;
+    virtual muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate,
+                                         std::function<void()> onSuccess = nullptr) = 0;
 
     virtual const ProjectBeingDownloaded& projectBeingDownloaded() const = 0;
     virtual muse::async::Notification projectBeingDownloadedChanged() const = 0;
