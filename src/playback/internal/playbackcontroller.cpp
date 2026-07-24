@@ -116,6 +116,15 @@ Notification PlaybackController::isPlayAllowedChanged() const
 
 bool PlaybackController::isPlaying() const
 {
+    //! NOTE: while recording (including the lead-in pre-roll) the audio is driven by the
+    //! record stream, not the player. Report not-playing so every caller sees the same
+    //! state as on the normal record path, where the player stays stopped throughout.
+    //! Otherwise pausing/resuming the lead-in leaves the player "running" and, e.g., the
+    //! record button gets disabled mid-recording.
+    if (recordController()->isRecording()) {
+        return false;
+    }
+
     return player()->playbackStatus() == PlaybackStatus::Running;
 }
 

@@ -874,6 +874,20 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadInWhenPaused_ResumesTh
     togglePlayPause();
 }
 
+TEST_F(PlaybackControllerTests, IsPlaying_WhileRecording_ReportsFalse)
+{
+    //! [GIVEN] Recording is running while the player is left "running" (e.g. after
+    //! resuming a lead-in through the shared stream)
+    setRecording(true);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [THEN] The controller reports not-playing, matching the normal record path where
+    //! the player stays stopped (so the record button etc. are not treated as playback)
+    EXPECT_FALSE(m_controller->isPlaying());
+}
+
 TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopButNotPlayPause)
 {
     //! [GIVEN] Recording is running
