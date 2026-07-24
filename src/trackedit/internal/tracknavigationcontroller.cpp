@@ -157,8 +157,13 @@ muse::async::Channel<au::trackedit::TrackId, bool> TrackNavigationController::fo
     return m_focusedTrackChanged;
 }
 
-void TrackNavigationController::setFocusedItem(const TrackItemKey& key, bool highlight)
+void TrackNavigationController::setFocusedItem(const TrackItemKey& itemKey, bool highlight)
 {
+    TrackItemKey key = itemKey;
+    if (key.trackId == INVALID_TRACK) {
+        key.trackId = m_focusedItemKey.trackId;
+    }
+
     if (m_focusedItemKey == key) {
         return;
     }
