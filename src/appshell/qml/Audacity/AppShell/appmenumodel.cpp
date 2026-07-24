@@ -617,8 +617,10 @@ MenuItemList AppMenuModel::makeZoomItems()
         makeMenuItem("zoom-toggle"),
         makeSeparator(),
         makeMenuItem("zoom-to-fit-project"),
-        makeMenuItem("collapse-all-tracks"),
-        makeMenuItem("expand-all-tracks")
+        makeMenuItem("fit-v"),
+        makeSeparator(),
+        makeMenuItem("decrease-all-track-heights"),
+        makeMenuItem("increase-all-track-heights")
     };
 
     return items;

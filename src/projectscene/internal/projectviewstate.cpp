@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <algorithm>
+#include <limits>
 #include <memory>
 
 #include <QEvent>
@@ -31,6 +33,9 @@ constexpr int TRACK_DEFAULT_HEIGHT = 116;
 constexpr int TRACK_LABEL_DEFAULT_HEIGHT = 86;
 constexpr int TRACK_MIN_HEIGHT = 44;
 constexpr int TRACK_COLLAPSE_HEIGHT = 72;
+constexpr int TRACK_HEIGHT_STEP = 8;
+constexpr int TRACK_AUTO_FIT_MIN_HEIGHT = 110;
+constexpr int TRACK_AUTO_FIT_MAX_HEIGHT = 300;
 
 namespace {
 constexpr int numDecimals(float value)
@@ -214,9 +219,11 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         }
 
         prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
-            recomputeTotalTrackHeight();
-            m_verticalRulerWidth.set(calculateVerticalRulerWidth());
             m_tracks.erase(track.id);
+            if (!applyAutoFitTrackHeightsIfEnabled()) {
+                recomputeTotalTrackHeight();
+            }
+            m_verticalRulerWidth.set(calculateVerticalRulerWidth());
         });
 
         updateItemsBoundaries(false);
@@ -225,14 +232,22 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         });
 
         prj->trackAdded().onReceive(this, [this](const trackedit::Track&) {
-            recomputeTotalTrackHeight();
+            if (!applyAutoFitTrackHeightsIfEnabled()) {
+                recomputeTotalTrackHeight();
+            }
             updateItemsBoundaries(false);
         });
 
         prj->trackInserted().onReceive(this, [this](const trackedit::Track&, int) {
-            recomputeTotalTrackHeight();
+            if (!applyAutoFitTrackHeightsIfEnabled()) {
+                recomputeTotalTrackHeight();
+            }
             updateItemsBoundaries(false);
         });
+
+        if (!applyAutoFitTrackHeightsIfEnabled()) {
+            recomputeTotalTrackHeight();
+        }
 
         for (const auto& trackId : prj->trackIdList()) {
             const auto prj = globalContext()->currentProject();
@@ -459,33 +474,22 @@ muse::ValCh<double> ProjectViewState::channelHeightRatio(const trackedit::TrackI
 
 void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
 {
-    TrackData* d = nullptr;
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        d = &it->second;
-    } else {
-        d = &makeTrackData(trackId);
+    if (delta == 0) {
+        return;
     }
 
-    int oldHeight = d->height.val;
-    int newHeight = std::max(oldHeight + delta, TRACK_MIN_HEIGHT);
-
-    d->height.set(newHeight);
-    d->collapsed.set(newHeight < TRACK_COLLAPSE_HEIGHT);
-
-    recomputeTotalTrackHeight();
-
-    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (prj) {
-        au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
-        if (au3Project) {
-            auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
-            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
-        }
-    }
+    disengageAutoFitTrackHeights();
+    const int oldHeight = trackHeight(trackId).val;
+    setTrackHeightInternal(trackId, oldHeight + delta, true);
 }
 
 void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
+{
+    disengageAutoFitTrackHeights();
+    setTrackHeightInternal(trackId, height, true);
+}
+
+bool ProjectViewState::setTrackHeightInternal(const trackedit::TrackId& trackId, int height, bool recomputeTotalHeight)
 {
     TrackData* d = nullptr;
     auto it = m_tracks.find(trackId);
@@ -496,19 +500,139 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
     }
 
     int newHeight = std::max(height, TRACK_MIN_HEIGHT);
-    d->height.set(newHeight);
-    d->collapsed.set(height < TRACK_COLLAPSE_HEIGHT);
+    const bool collapsed = newHeight <= TRACK_COLLAPSE_HEIGHT;
+    const bool changed = d->height.val != newHeight || d->collapsed.val != collapsed;
 
-    recomputeTotalTrackHeight();
+    d->height.set(newHeight);
+    d->collapsed.set(collapsed);
+
+    if (recomputeTotalHeight) {
+        recomputeTotalTrackHeight();
+    }
 
     const project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
         if (au3Project) {
             auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
-            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+            if (track) {
+                au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+            }
         }
     }
+
+    return changed;
+}
+
+void ProjectViewState::decreaseAllTrackHeights()
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    disengageAutoFitTrackHeights();
+
+    for (const trackedit::TrackId& trackId : prj->trackIdList()) {
+        setTrackHeightInternal(trackId, trackHeight(trackId).val - TRACK_HEIGHT_STEP, false);
+    }
+
+    recomputeTotalTrackHeight();
+}
+
+void ProjectViewState::increaseAllTrackHeights()
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    disengageAutoFitTrackHeights();
+
+    const int maxTrackHeight = m_tracksViewportHeight > 0 ? std::max(TRACK_MIN_HEIGHT, m_tracksViewportHeight)
+                               : std::numeric_limits<int>::max();
+
+    for (const trackedit::TrackId& trackId : prj->trackIdList()) {
+        const int oldHeight = trackHeight(trackId).val;
+        const int expandedHeight = oldHeight > std::numeric_limits<int>::max() - TRACK_HEIGHT_STEP
+                                   ? std::numeric_limits<int>::max()
+                                   : oldHeight + TRACK_HEIGHT_STEP;
+        setTrackHeightInternal(trackId, std::min(expandedHeight, maxTrackHeight), false);
+    }
+
+    recomputeTotalTrackHeight();
+}
+
+void ProjectViewState::decreaseTrackHeight(const trackedit::TrackId& trackId)
+{
+    disengageAutoFitTrackHeights();
+    setTrackHeightInternal(trackId, trackHeight(trackId).val - TRACK_HEIGHT_STEP, true);
+}
+
+void ProjectViewState::increaseTrackHeight(const trackedit::TrackId& trackId)
+{
+    disengageAutoFitTrackHeights();
+
+    const int oldHeight = trackHeight(trackId).val;
+    const int expandedHeight = oldHeight > std::numeric_limits<int>::max() - TRACK_HEIGHT_STEP
+                               ? std::numeric_limits<int>::max()
+                               : oldHeight + TRACK_HEIGHT_STEP;
+    const int maxTrackHeight = m_tracksViewportHeight > 0 ? std::max(TRACK_MIN_HEIGHT, m_tracksViewportHeight)
+                               : std::numeric_limits<int>::max();
+
+    setTrackHeightInternal(trackId, std::min(expandedHeight, maxTrackHeight), true);
+}
+
+void ProjectViewState::autoFitTrackHeights()
+{
+    m_autoFitTrackHeightsEnabled = true;
+    applyAutoFitTrackHeights();
+}
+
+void ProjectViewState::setTracksViewportHeight(int height)
+{
+    const int newHeight = std::max(0, height);
+    if (m_tracksViewportHeight == newHeight) {
+        return;
+    }
+
+    m_tracksViewportHeight = newHeight;
+    applyAutoFitTrackHeightsIfEnabled();
+}
+
+bool ProjectViewState::applyAutoFitTrackHeightsIfEnabled()
+{
+    return m_autoFitTrackHeightsEnabled && applyAutoFitTrackHeights();
+}
+
+bool ProjectViewState::applyAutoFitTrackHeights()
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj || m_tracksViewportHeight <= 0) {
+        return false;
+    }
+
+    const trackedit::TrackIdList tracks = prj->trackIdList();
+    if (tracks.empty()) {
+        m_totalTracksHeight.set(0);
+        return true;
+    }
+
+    const int targetHeight = std::clamp(m_tracksViewportHeight / static_cast<int>(tracks.size()),
+                                        TRACK_AUTO_FIT_MIN_HEIGHT, TRACK_AUTO_FIT_MAX_HEIGHT);
+
+    for (const trackedit::TrackId& trackId : tracks) {
+        setTrackHeightInternal(trackId, targetHeight, false);
+    }
+
+    recomputeTotalTrackHeight();
+
+    return true;
+}
+
+void ProjectViewState::disengageAutoFitTrackHeights()
+{
+    m_autoFitTrackHeightsEnabled = false;
 }
 
 au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const

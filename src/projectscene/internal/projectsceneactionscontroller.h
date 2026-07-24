@@ -12,6 +12,7 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "context/iglobalcontext.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "../iprojectsceneactionscontroller.h"
 #include "../iprojectsceneconfiguration.h"
 
@@ -24,6 +25,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)
@@ -49,12 +51,18 @@ private:
     void togglePlaybackOnRulerClickEnabled();
     void toggleAutomation();
     void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
+    void decreaseAllTrackHeights();
+    void increaseAllTrackHeights();
+    void autoFitTrackHeights();
+    void decreaseTrackHeight(const muse::actions::ActionData& args);
+    void increaseTrackHeight(const muse::actions::ActionData& args);
 
     void changeFontForLabels();
 
     void openClipPitchAndSpeedEdit(const muse::actions::ActionData& args);
 
     void openLabelEditor();
+    trackedit::TrackId trackIdFromArgsOrFocus(const muse::actions::ActionData& args) const;
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;

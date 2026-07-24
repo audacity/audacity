@@ -43,6 +43,7 @@ public:
     bool keyboardMoveActive() const;
 
     Q_INVOKABLE void changeTracksVerticalOffset(int deltaY);
+    Q_INVOKABLE void setTracksViewportHeight(int height);
     Q_INVOKABLE void setMouseY(double y);
 
     Q_INVOKABLE void insureVerticallyVisible(int viewContentY, int viewHeight, int itemY, int itemHeight);

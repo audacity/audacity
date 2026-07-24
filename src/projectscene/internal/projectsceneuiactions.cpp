@@ -71,6 +71,36 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom toggle"),
              IconCode::Code::ZOOM_TOGGLE
              ),
+    UiAction("fit-v",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Auto-fit height"),
+             TranslatableString("action", "Auto-fit height")
+             ),
+    UiAction("decrease-all-track-heights",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Decrease all track heights"),
+             TranslatableString("action", "Decrease all track heights")
+             ),
+    UiAction("increase-all-track-heights",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Increase all track heights"),
+             TranslatableString("action", "Increase all track heights")
+             ),
+    UiAction("decrease-track-height",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Decrease track height"),
+             TranslatableString("action", "Decrease track height")
+             ),
+    UiAction("increase-track-height",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Increase track height"),
+             TranslatableString("action", "Increase track height")
+             ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
