@@ -82,6 +82,7 @@ public:
     bool isNewlyCreated() const override;
     bool isImported() const override;
     bool isCloudProject() const override;
+    muse::async::Notification isCloudProjectChanged() const override;
     const std::optional<CloudProjectRecord> cloudRecord() const override;
 
     muse::String title() const override;
@@ -124,11 +125,13 @@ private:
 
     muse::io::path_t m_path;
     muse::async::Notification m_pathChanged;
+    muse::async::Notification m_isCloudProjectChanged;
     muse::async::Notification m_displayNameChanged;
     muse::async::Notification m_needSaveNotification;
 
     bool m_isNewlyCreated = false; /// true if the file has never been saved yet
     bool m_isImported = false;
+    bool m_isCloudProject = false;
     bool m_needAutoSave = false;
 
     std::shared_ptr<au::au3::IAu3Project> m_au3Project;
