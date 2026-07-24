@@ -40,7 +40,7 @@ Rectangle {
     color: ui.theme.backgroundQuarternaryColor
     radius: 3
     border.color: ui.theme.strokeColor
-    border.width: 1
+    border.width: ui.theme.borderWidth
 
     RowLayout {
         id: layout
