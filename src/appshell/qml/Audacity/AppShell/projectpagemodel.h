@@ -13,7 +13,7 @@
 #include "framework/ui/iuistate.h"
 
 #include "context/iglobalcontext.h"
-#include "playback/iplaybackconfiguration.h"
+#include "playback/iplaybackuistate.h"
 
 #include <QtQml/qqmlregistration.h>
 
@@ -24,12 +24,12 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     QML_ELEMENT
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
-    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
     muse::ContextInject<muse::ui::IUiState> uiState { this };
+    muse::ContextInject<playback::IPlaybackUiState> playbackUiState { this };
 
 public:
     explicit ProjectPageModel(QObject* parent = nullptr);

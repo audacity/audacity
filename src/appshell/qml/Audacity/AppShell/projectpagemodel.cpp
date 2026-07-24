@@ -33,7 +33,7 @@ void ProjectPageModel::init()
             updatePlaybackMeterVisibility();
         });
 
-        playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+        playbackUiState()->playbackMeterPositionChanged().onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
         });
 
@@ -54,7 +54,7 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
 
     if (it != toolConfig.items.end()) {
         const bool meterPanelVisible = it->show
-                                       && (playbackConfiguration()->playbackMeterPosition()
+                                       && (playbackUiState()->playbackMeterPosition()
                                            == playback::PlaybackMeterPosition::MeterPosition::SideBar);
         muse::async::Async::call(this, [this, meterPanelVisible]() {
             dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(playbackMeterPanelName(), meterPanelVisible));

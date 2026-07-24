@@ -22,6 +22,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackplaybackcontrol.h
 
     #internals
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackuistate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.cpp

@@ -19,13 +19,19 @@ constexpr int LABEL_OFFSET = 2;
 using namespace au::projectscene;
 
 TimelineRuler::TimelineRuler(QQuickItem* parent)
-    : QQuickPaintedItem(parent)
+    : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
-    setFormatter(configuration()->timelineRulerMode());
-
     uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
-    configuration()->timelineRulerModeChanged().onNotify(this, [this](){
-        setFormatter(configuration()->timelineRulerMode());
+}
+
+void TimelineRuler::componentComplete()
+{
+    QQuickPaintedItem::componentComplete();
+
+    setFormatter(projectSceneUiState()->timelineRulerMode());
+
+    projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this](){
+        setFormatter(projectSceneUiState()->timelineRulerMode());
         update();
     });
 }

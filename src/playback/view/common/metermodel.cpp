@@ -34,7 +34,7 @@ void MeterModel::init()
         emit positionChanged();
     });
 
-    configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+    playbackUiState()->playbackMeterPositionChanged().onNotify(this, [this]() {
         emit meterPositionChanged();
     });
 
@@ -128,12 +128,12 @@ void MeterModel::setMeterPosition(PlaybackMeterPosition::MeterPosition position)
         return;
     }
 
-    configuration()->setPlaybackMeterPosition(position);
+    playbackUiState()->setPlaybackMeterPosition(position);
 }
 
 PlaybackMeterPosition::MeterPosition MeterModel::meterPosition() const
 {
-    return configuration()->playbackMeterPosition();
+    return playbackUiState()->playbackMeterPosition();
 }
 
 void MeterModel::setMeterSize(int size)

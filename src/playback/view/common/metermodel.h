@@ -7,6 +7,7 @@
 #include "modularity/ioc.h"
 
 #include "playback/iplaybackconfiguration.h"
+#include "playback/iplaybackuistate.h"
 #include "playback/iplaybackmetercontroller.h"
 #include "playback/iplayback.h"
 #include "record/irecord.h"
@@ -34,6 +35,7 @@ class MeterModel : public QObject, public muse::async::Asyncable, public muse::C
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
 
     muse::GlobalInject<IPlaybackConfiguration> configuration;
+    muse::ContextInject<IPlaybackUiState> playbackUiState { this };
 
     muse::GlobalInject<IPlaybackMeterController> meterController;
 

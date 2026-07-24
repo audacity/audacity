@@ -31,10 +31,6 @@ public:
     virtual void setPlaybackMeterType(PlaybackMeterType::MeterType type) = 0;
     virtual muse::async::Notification playbackMeterTypeChanged() const = 0;
 
-    virtual PlaybackMeterPosition::MeterPosition playbackMeterPosition() const = 0;
-    virtual void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) = 0;
-    virtual muse::async::Notification playbackMeterPositionChanged() const = 0;
-
     virtual PlaybackMeterDbRange::DbRange playbackMeterDbRange() const = 0;
     virtual void setPlaybackMeterDbRange(PlaybackMeterDbRange::DbRange range) = 0;
     virtual muse::async::Notification playbackMeterDbRangeChanged() const = 0;

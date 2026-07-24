@@ -8,14 +8,14 @@
 class QPainter;
 
 namespace au::projectscene {
-class GridLines : public QQuickPaintedItem
+class GridLines : public QQuickPaintedItem, public muse::Contextable
 {
     Q_OBJECT
 
     Q_PROPERTY(TimelineRuler * timelineRuler READ timelineRuler WRITE setTimelineRuler NOTIFY timelineRulerChanged FINAL)
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiconfiguration;
-    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::ContextInject<IProjectSceneUiState> projectSceneUiState { this };
 
 public:
     explicit GridLines(QQuickItem* parent = nullptr);

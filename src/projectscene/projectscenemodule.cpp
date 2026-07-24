@@ -12,6 +12,7 @@
 
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
+#include "internal/projectsceneuistate.h"
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
 #include "internal/realtimeeffectpaneltrackselection.h"
@@ -235,8 +236,10 @@ void ProjectSceneContext::registerExports()
     m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>(iocContext());
     m_uiActions = std::make_shared<ProjectSceneUiActions>(iocContext(), m_projectSceneActionsController);
     m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>(iocContext());
+    m_uiState = std::make_shared<ProjectSceneUiState>(iocContext());
 
     ioc()->registerExport<IProjectSceneActionsController>(mname, m_projectSceneActionsController);
+    ioc()->registerExport<IProjectSceneUiState>(mname, m_uiState);
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(mname, m_realtimeEffectPanelTrackSelection);
     ioc()->registerExport<IWavePainter>(mname, std::make_shared<WavePainterProxy>(iocContext()));
     ioc()->registerExport<IConnectingDotsPainter>(mname, std::make_shared<ConnectingDotsPainter>(iocContext()));
@@ -253,6 +256,7 @@ void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)
     m_uiActions->init();
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
+    m_uiState->init();
 
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
     if (ar) {

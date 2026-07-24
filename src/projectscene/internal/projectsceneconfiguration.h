@@ -33,10 +33,6 @@ public:
     int mouseZoomPrecision() const override;
     void setMouseZoomPrecision(int precision) override;
 
-    TimelineRulerMode timelineRulerMode() const override;
-    void setTimelineRulerMode(const TimelineRulerMode mode) override;
-    muse::async::Notification timelineRulerModeChanged() const override;
-
     bool isEffectsPanelVisible() const override;
     void setIsEffectsPanelVisible(bool visible) override;
     muse::async::Notification isEffectsPanelVisibleChanged() const override;
@@ -91,7 +87,6 @@ private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
     muse::async::Channel<bool> m_isClippingInWaveformVisibleChanged;
-    muse::async::Notification m_timelineRulerModeChanged;
     muse::async::Notification m_effectsPanelVisible;
     muse::async::Channel<ClipStyles::Style> m_clipStyleChanged;
     muse::async::Notification m_asymmetricStereoHeightsChanged;

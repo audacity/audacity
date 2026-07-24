@@ -14,7 +14,6 @@ static const std::string moduleName("playback");
 static const muse::Settings::Key PLAYBACK_TIME_ITEM_FORMAT(moduleName, "playbackToolbar/playbackTimeItemFormat");
 static const muse::Settings::Key PLAYBACK_METER_STYLE(moduleName, "playbackToolbar/playbackMeterStyle");
 static const muse::Settings::Key PLAYBACK_METER_TYPE(moduleName, "playbackToolbar/playbackMeterType");
-static const muse::Settings::Key PLAYBACK_METER_POSITION(moduleName, "playbackToolbar/playbackMeterPosition");
 static const muse::Settings::Key PLAYBACK_METER_DB_RANGE(moduleName, "playbackToolbar/playbackMeterDbRange");
 static const muse::Settings::Key PLAYBACK_HORIZONTAL_METER_SIZE(moduleName, "playbackToolbar/playbackHorizontalMeterSize");
 
@@ -83,22 +82,6 @@ muse::async::Notification PlaybackConfiguration::playbackMeterTypeChanged() cons
     return m_playbackMeterTypeChanged;
 }
 
-PlaybackMeterPosition::MeterPosition PlaybackConfiguration::playbackMeterPosition() const
-{
-    return muse::settings()->value(PLAYBACK_METER_POSITION)
-           .toEnum<PlaybackMeterPosition::MeterPosition>();
-}
-
-void PlaybackConfiguration::setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position)
-{
-    muse::settings()->setSharedValue(PLAYBACK_METER_POSITION, muse::Val(static_cast<int>(position)));
-}
-
-muse::async::Notification PlaybackConfiguration::playbackMeterPositionChanged() const
-{
-    return m_playbackMeterPositionChanged;
-}
-
 PlaybackMeterDbRange::DbRange PlaybackConfiguration::playbackMeterDbRange() const
 {
     return muse::settings()->value(PLAYBACK_METER_DB_RANGE)
@@ -148,12 +131,6 @@ void PlaybackConfiguration::init()
                                       muse::Val(static_cast<int>(PlaybackMeterType::MeterType::DbLog)));
     muse::settings()->valueChanged(PLAYBACK_METER_TYPE).onReceive(nullptr, [this](const muse::Val&) {
         m_playbackMeterTypeChanged.notify();
-    });
-
-    muse::settings()->setDefaultValue(PLAYBACK_METER_POSITION,
-                                      muse::Val(static_cast<int>(PlaybackMeterPosition::MeterPosition::TopBar)));
-    muse::settings()->valueChanged(PLAYBACK_METER_POSITION).onReceive(nullptr, [this](const muse::Val&) {
-        m_playbackMeterPositionChanged.notify();
     });
 
     muse::settings()->setDefaultValue(PLAYBACK_METER_DB_RANGE,

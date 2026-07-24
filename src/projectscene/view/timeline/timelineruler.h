@@ -8,6 +8,8 @@
 #include "ui/iuiconfiguration.h"
 #include "async/asyncable.h"
 
+#include "iprojectsceneuistate.h"
+
 #include "timeformat.h"
 #include "beatsmeasuresformat.h"
 #include "timelinecontext.h"
@@ -25,14 +27,14 @@ struct TickInfo {
 
 using Ticks = QVector<TickInfo>;
 
-class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable
+class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiconfiguration;
-    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::ContextInject<IProjectSceneUiState> projectSceneUiState { this };
 
 signals:
     void offsetChanged();
@@ -48,6 +50,7 @@ public:
 
     void setFormatter(const TimelineRulerMode mode);
 
+    void componentComplete() override;
     void paint(QPainter* painter) override;
 
     TimelineContext* timelineContext() const;
