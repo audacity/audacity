@@ -47,7 +47,7 @@ FocusScope {
     Rectangle {
         id: background
         anchors.fill: parent
-        color: ui.theme.backgroundSecondaryColor
+        color: ui.theme.backgroundTertiaryColor
     }
 
     StyledTextLabel {
