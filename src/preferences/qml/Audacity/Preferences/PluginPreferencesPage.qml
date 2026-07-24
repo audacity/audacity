@@ -11,6 +11,14 @@ import "internal"
 PreferencesPage {
     id: root
 
+    function apply() {
+        return pluginPreferencesModel.applyAudacityPluginPreferences()
+    }
+
+    function reset() {
+        pluginPreferencesModel.resetAudacityPluginPreferences()
+    }
+
     PluginPreferencesModel {
         id: pluginPreferencesModel
     }
@@ -37,6 +45,18 @@ PreferencesPage {
                     root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
                 }
             }
+        }
+
+        StyledTextLabel {
+            width: parent.width
+            visible: pluginPreferencesModel.audacityPluginError.length > 0
+            Accessible.ignored: !visible
+
+            horizontalAlignment: Text.AlignLeft
+            textFormat: Text.PlainText
+            wrapMode: Text.WordWrap
+            color: ui.theme.extra["error_text_color"]
+            text: pluginPreferencesModel.audacityPluginError
         }
 
         SeparatorLine {
@@ -106,6 +126,25 @@ PreferencesPage {
                 if (activeFocus) {
                     root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
                 }
+            }
+        }
+
+        SeparatorLine {
+            visible: audacityPluginSection.visible
+        }
+
+        AudacityPluginPreferencesSection {
+            id: audacityPluginSection
+
+            visible: pluginPreferencesModel.audacityPlugins.length > 0
+            preferencesModel: pluginPreferencesModel
+            plugins: pluginPreferencesModel.audacityPlugins
+
+            navigation.section: root.navigationSection
+            navigation.order: vst3Section.navigation.order + 1
+
+            onEnsureContentVisibleRequested: function (contentRect) {
+                root.ensureContentVisibleRequested(contentRect)
             }
         }
     }

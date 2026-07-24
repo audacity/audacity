@@ -26,6 +26,7 @@ endif()
 add_subdirectory(shared)
 
 add_subdirectory(au3wrap)
+add_subdirectory(audacityplugin)
 
 add_subdirectory(audio)
 if (AU_BUILD_CLOUD_AUDIOCOM)

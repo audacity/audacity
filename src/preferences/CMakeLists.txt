@@ -5,6 +5,6 @@ target_sources(preferences PRIVATE
     preferencesmodule.h
 )
 
-target_link_libraries(preferences PRIVATE importer)
+target_link_libraries(preferences PRIVATE importer audacityplugin)
 
 add_subdirectory(qml/Audacity/Preferences)

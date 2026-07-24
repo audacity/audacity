@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "$id": "https://audacityteam.org/schemas/audacityplugin/v0/plugin.schema.json",
+  "title": "Audacity Plugin API v0 manifest [DRAFT]",
+  "description": "Manifest for one .audacity4-plugin bundle.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "api",
+    "id",
+    "display_name",
+    "vendor",
+    "version",
+    "entry"
+  ],
+  "properties": {
+    "schema_version": {
+      "description": "The manifest schema version",
+      "type": "integer",
+      "const": 1
+    },
+    "api": {
+      "$ref": "#/$defs/api_version"
+    },
+    "id": {
+      "description": "Stable, lowercase reverse-DNS plugin identifier.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 253,
+      "pattern": "^[a-z](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\\.[a-z](?:[a-z0-9-]{0,61}[a-z0-9])?)+$"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vendor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "description": "Display version",
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "entry": {
+      "description": "Platform-keyed entry paths. A host requires its current platform key. The same path may be used for both macOS keys when it names a universal binary. If the current key is missing, the bundle is invalid for that platform.",
+      "$ref": "#/$defs/platform_entries"
+    }
+  },
+  "$defs": {
+    "api_version": {
+      "description": "The exact binary ABI required. Revisions will be compatible once major is 1, currently exact match is required.",
+      "type": "object",
+      "required": [
+        "major",
+        "revision"
+      ],
+      "properties": {
+        "major": {
+          "type": "integer",
+          "const": 0
+        },
+        "revision": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    },
+    "bundle_binary_path": {
+      "description": "Path to the entry binary. The host resolves it inside the bundle.",
+      "type": "string",
+      "minLength": 1
+    },
+    "platform_entries": {
+      "description": "At least one supported platform key is required. A host additionally requires the key matching its current platform. One universal macOS binary path may be repeated under both macOS keys.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/bundle_binary_path"
+      },
+      "minProperties": 1,
+      "properties": {
+        "windows-x86_64": {
+          "$ref": "#/$defs/bundle_binary_path"
+        },
+        "windows-arm64": {
+          "$ref": "#/$defs/bundle_binary_path"
+        },
+        "macos-x86_64": {
+          "$ref": "#/$defs/bundle_binary_path"
+        },
+        "macos-arm64": {
+          "$ref": "#/$defs/bundle_binary_path"
+        },
+        "linux-x86_64": {
+          "$ref": "#/$defs/bundle_binary_path"
+        },
+        "linux-arm64": {
+          "$ref": "#/$defs/bundle_binary_path"
+        }
+      }
+    }
+  }
+}

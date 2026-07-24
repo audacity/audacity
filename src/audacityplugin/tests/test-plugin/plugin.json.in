@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "api": { "major": 0, "revision": 1 },
+  "id": "org.audacityteam.audacityplugin-test",
+  "display_name": "Audacity Plugin API v0 Test Gain",
+  "vendor": "Audacity",
+  "version": "1",
+  "description": "Small external test plugin for the Plugin API v0 loading and streaming path.",
+  "entry": {
+    "windows-x86_64": "@AUP_TEST_PLUGIN_BINARY_NAME@",
+    "windows-arm64": "@AUP_TEST_PLUGIN_BINARY_NAME@",
+    "macos-x86_64": "@AUP_TEST_PLUGIN_BINARY_NAME@",
+    "macos-arm64": "@AUP_TEST_PLUGIN_BINARY_NAME@",
+    "linux-x86_64": "@AUP_TEST_PLUGIN_BINARY_NAME@",
+    "linux-arm64": "@AUP_TEST_PLUGIN_BINARY_NAME@"
+  }
+}
