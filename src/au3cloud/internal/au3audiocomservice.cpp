@@ -544,10 +544,16 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
 
             const auto syncState
                 = audacity::cloud::audiocom::sync::DeserializeProjectSyncState(response->readAll<std::string>());
-            if (!syncState || syncState->MixdownUrls.UploadUrl.empty()) {
+            if (!syncState) {
                 self->filesystem()->remove(tempPath);
                 progress->finish(muse::make_ret(muse::Ret::Code::UnknownError,
                                                 muse::trc("cloud", "Failed to get audio preview upload URLs")));
+                return;
+            }
+
+            if (syncState->MixdownUrls.UploadUrl.empty()) {
+                self->filesystem()->remove(tempPath);
+                progress->finish(make_ret(Err::AudioPreviewUpToDate));
                 return;
             }
 

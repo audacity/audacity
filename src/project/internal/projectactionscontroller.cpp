@@ -1409,6 +1409,12 @@ void ProjectActionsController::updateCloudAudioPreview(const muse::actions::Acti
                     return;
                 }
 
+                if (result.ret.code() == static_cast<int>(au::au3cloud::Err::AudioPreviewUpToDate)) {
+                    interactive()->info(trc("cloud", "Audio preview is up to date"),
+                                        trc("cloud", "The audio preview already matches the latest saved version of this project."));
+                    return;
+                }
+
                 if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)) {
                     interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
                 }
@@ -1446,6 +1452,12 @@ void ProjectActionsController::updateCloudAudioPreview(const muse::actions::Acti
             if (result.ret.success()) {
                 toastService()->showSuccess(trc("cloud", "Cloud audio preview updated"),
                                             trc("cloud", "The audio preview has been uploaded to audio.com"));
+                return;
+            }
+
+            if (result.ret.code() == static_cast<int>(au::au3cloud::Err::AudioPreviewUpToDate)) {
+                interactive()->info(trc("cloud", "Audio preview is up to date"),
+                                    trc("cloud", "The audio preview already matches the latest saved version of this project."));
                 return;
             }
 
