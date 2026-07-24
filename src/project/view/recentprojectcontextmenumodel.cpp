@@ -14,6 +14,7 @@ using namespace au::project;
 namespace {
 constexpr const char* OPEN_PROJECT_ACTION = "file-open";
 constexpr const char* OPEN_PROJECT_PAGE_ACTION = "audacity://cloud/open-project-page";
+constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "audacity://cloud/update-audio-preview-for-project";
 constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
 
@@ -34,6 +35,7 @@ void RecentProjectContextMenuModel::load()
     muse::uicomponents::MenuItemList items = { openItem };
     if (isCloudProject) {
         items.append(makeMenuItem(OPEN_PROJECT_PAGE_ACTION));
+        items.append(makeMenuItem(UPDATE_AUDIO_PREVIEW_ACTION));
     }
 
     if (!m_path.isEmpty()) {
@@ -67,6 +69,17 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
         query.addParam("path", muse::Val(muse::io::path_t(m_path.toStdString())));
+        dispatch(query);
+        return;
+    }
+
+    if (itemId == UPDATE_AUDIO_PREVIEW_ACTION) {
+        if (m_cloudProjectId.isEmpty()) {
+            return;
+        }
+
+        muse::actions::ActionQuery query(UPDATE_AUDIO_PREVIEW_ACTION);
+        query.addParam("id", muse::Val(m_cloudProjectId));
         dispatch(query);
         return;
     }
