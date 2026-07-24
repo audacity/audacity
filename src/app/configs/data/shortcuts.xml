@@ -366,8 +366,8 @@
         <seq>S</seq>
     </SC>
     <SC>
-        <key>preferences</key>
-        <seq>Ctrl+,</seq>
+        <key>preference-dialog</key>
+        <seq>Ctrl+P</seq>
     </SC>
     <SC>
         <key>delete-leave-gap</key>
