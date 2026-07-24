@@ -11,6 +11,7 @@ using namespace au::project;
 
 namespace {
 const muse::actions::ActionCode UPDATE_AUDIO_PREVIEW_ACTION_CODE("audacity://cloud/update-audio-preview");
+const muse::actions::ActionCode UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION_CODE("audacity://cloud/update-audio-preview-for-project");
 }
 
 const UiActionList ProjectUiActions::m_actions = {
@@ -598,6 +599,12 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Update cloud audio preview"),
              TranslatableString("action", "Update cloud audio preview")
+             ),
+    UiAction(UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION_CODE,
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Update audio preview"),
+             TranslatableString("action", "Update audio preview")
              ),
 
     UiAction("project-properties",

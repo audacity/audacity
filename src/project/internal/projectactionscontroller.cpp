@@ -40,6 +40,7 @@ static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialo
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
 static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
 static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("audacity://cloud/update-audio-preview");
+static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("audacity://cloud/update-audio-preview-for-project");
 
 namespace {
 au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
@@ -82,6 +83,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-share-audio", this, &ProjectActionsController::shareAudio);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_FILE_URI, this, &ProjectActionsController::openCloudAudioFile);
     dispatcher()->reg(this, UPDATE_AUDIO_PREVIEW_ACTION, this, &ProjectActionsController::updateCloudAudioPreview);
+    dispatcher()->reg(this, UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION, this, &ProjectActionsController::updateCloudAudioPreview);
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
@@ -164,12 +166,16 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "continue-last-session",
             "clear-recent",
             "audacity://cloud/open-audio-file",
-            "audacity://cloud/update-audio-preview",
+            "audacity://cloud/update-audio-preview-for-project",
             "plugin-manager",
             "project-show-in-folder",
         };
 
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
+    }
+
+    if (code == "audacity://cloud/update-audio-preview") {
+        return currentProject()->isCloudProject();
     }
 
     const bool recording = recordController()->isRecording();
@@ -1533,7 +1539,7 @@ bool ProjectActionsController::dispatchAudioPreviewToWindowWithProject(const mus
             window->requestShowOnFront();
         }
 
-        muse::actions::ActionQuery action(UPDATE_AUDIO_PREVIEW_ACTION);
+        muse::actions::ActionQuery action(UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION);
         action.addParam("id", Val(projectId));
         ctxDispatcher->dispatch(action);
 
