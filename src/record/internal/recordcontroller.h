@@ -39,6 +39,8 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
+    friend class RecordControllerTests;
+
 public:
     RecordController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
@@ -84,6 +86,7 @@ private:
     void pause();
     void stop();
     void leadInRecording();
+    void stopPlaybackIfPaused();
     void toggleMicMetering();
     void toggleInputMonitoring();
 
