@@ -315,7 +315,7 @@ void PlaybackController::playSelectionAction()
 
     if (!isStopped()) {
         //! NOTE: just stop, without seek
-        player()->stop();
+        stop();
     }
 
     const PlaybackRegion selection = selectionPlaybackRegion();
