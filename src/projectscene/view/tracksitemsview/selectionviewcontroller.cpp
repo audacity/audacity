@@ -439,15 +439,6 @@ void SelectionViewController::resetDataSelection()
     frequencySelectionController()->resetFrequencySelection();
 }
 
-bool SelectionViewController::isLeftSelection(double time) const
-{
-    if (!isProjectOpened()) {
-        return false;
-    }
-
-    return m_selectionStartTime > time;
-}
-
 IProjectViewStatePtr SelectionViewController::viewState() const
 {
     IAudacityProjectPtr prj = globalContext()->currentProject();
