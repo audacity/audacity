@@ -11,7 +11,9 @@ using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/toggle-play-stop");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY("action://playback/toggle-play-from-cursor");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
@@ -24,6 +26,9 @@ static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playbac
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
+static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
+static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
+
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
@@ -31,7 +36,9 @@ static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_QUERY, this, &PlaybackController::togglePlayStopAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY, this, &PlaybackController::togglePlayFromCursorAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
@@ -109,6 +116,15 @@ Notification PlaybackController::isPlayAllowedChanged() const
 
 bool PlaybackController::isPlaying() const
 {
+    //! NOTE: while recording (including the lead-in pre-roll) the audio is driven by the
+    //! record stream, not the player. Report not-playing so every caller sees the same
+    //! state as on the normal record path, where the player stays stopped throughout.
+    //! Otherwise pausing/resuming the lead-in leaves the player "running" and, e.g., the
+    //! record button gets disabled mid-recording.
+    if (recordController()->isRecording()) {
+        return false;
+    }
+
     return player()->playbackStatus() == PlaybackStatus::Running;
 }
 
@@ -141,7 +157,7 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
                  selectionController()->dataSelectedEndTime() };
     }
 
-    return PlaybackRegion();
+    return {};
 }
 
 bool PlaybackController::isSelectionPlaybackRegionChanged() const
@@ -174,7 +190,7 @@ PlaybackStatus PlaybackController::playbackStatus() const
     return player()->playbackStatus();
 }
 
-void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
+void PlaybackController::seek(const muse::secs_t secs, const bool applyIfPlaying)
 {
     IF_ASSERT_FAILED(player()) {
         return;
@@ -240,49 +256,92 @@ void PlaybackController::onPlaybackPositionChanged()
     }
 }
 
-void PlaybackController::togglePlayAction()
+void PlaybackController::togglePlayPauseAction()
+{
+    //! NOTE: while recording this pauses the recorder, so the play/pause button stays a
+    //! single action.
+    if (recordController()->isRecording() && !recordController()->isLeadInRecording()) {
+        dispatcher()->dispatch(RECORD_PAUSE_QUERY);
+        return;
+    }
+
+    //! NOTE: during the lead-in pre-roll the audio is driven by the record stream, not by
+    //! the player, so its status is not Running and togglePlay() can't see it as playing.
+    //! Toggle the shared stream directly: pause it, or resume it if already paused.
+    if (recordController()->isLeadInRecording()) {
+        if (isPaused()) {
+            doResume();
+        } else {
+            doPause();
+        }
+        return;
+    }
+
+    togglePlay(TogglePlayMode::PlayPause);
+}
+
+void PlaybackController::togglePlayStopAction()
+{
+    togglePlay(TogglePlayMode::PlayStop);
+}
+
+void PlaybackController::togglePlayFromCursorAction()
+{
+    togglePlay(TogglePlayMode::PlayFromCursor);
+}
+
+void PlaybackController::togglePlay(const TogglePlayMode mode)
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
         return;
     }
 
-    const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+    const bool ignoreSelection = mode == TogglePlayMode::PlayFromCursor;
+
     if (isPlaying()) {
-        if (isShiftPressed) {
+        if (mode == TogglePlayMode::PlayStop) {
             stopSeekAndUpdatePlaybackRegion();
         } else {
             doPause();
         }
-    } else if (isPaused()) {
+
+        return;
+    }
+
+    if (isPaused()) {
         if (isSelectionPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
             doPlay(false);
-        } else if (isShiftPressed) {
+        } else if (ignoreSelection) {
             //! NOTE: set the current position as start position
             doSeek(playbackPosition(), false);
             doPlay(true /* ignoreSelection */);
         } else {
             doResume();
         }
-    } else {
+
+        return;
+    }
+
+    if (isStopped()) {
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             doSeek(0.0, false);
         }
 
-        doPlay(isShiftPressed /* ignoreSelection */);
+        doPlay(ignoreSelection);
     }
 }
 
-void PlaybackController::doPlay(bool ignoreSelection)
+void PlaybackController::doPlay(const bool ignoreSelection)
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
 
     if (!ignoreSelection) {
-        PlaybackRegion selectionRegion = selectionPlaybackRegion();
+        const PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
             doChangePlaybackRegion(selectionRegion);
         } else {
@@ -452,6 +511,13 @@ void PlaybackController::doPause()
 
 void PlaybackController::stopAction()
 {
+    //! NOTE: the stop button is a single action; the controller decides whether it
+    //! stops the recorder or the player.
+    if (recordController()->isRecording()) {
+        dispatcher()->dispatch(RECORD_STOP_QUERY);
+        return;
+    }
+
     stopSeekAndUpdatePlaybackRegion();
 }
 
@@ -772,7 +838,10 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAYBACK_PLAY_QUERY.toString()) {
+    //! NOTE: togglePlayPause stays available while recording, where it pauses the
+    //! recorder. Starting or restarting playback outright must not be possible.
+    if (code == PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString()
+        || code == PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString()) {
         return !recordController()->isRecording();
     }
 

@@ -14,7 +14,9 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/toggle-play-stop");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY("action://playback/toggle-play-from-cursor");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
@@ -29,11 +31,25 @@ static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 
 const UiActionList PlaybackUiActions::m_mainActions = {
-    UiAction(PLAYBACK_PLAY_QUERY.toString(),
+    UiAction(PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Play"),
-             TranslatableString("action", "Play"),
+             TranslatableString("action", "Play/Pause"),
+             TranslatableString("action", "Toggles between Play and Pause states"),
+             IconCode::Code::PLAY_FILL
+             ),
+    UiAction(PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Play/Stop"),
+             TranslatableString("action", "Toggles between Play and Stop states"),
+             IconCode::Code::PLAY_FILL
+             ),
+    UiAction(PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Play from cursor"),
+             TranslatableString("action", "Play from cursor, moving forward the last playback start position"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PAUSE_QUERY.toString(),
@@ -245,8 +261,10 @@ void PlaybackUiActions::init()
     });
 
     m_controller->isPlayingChanged().onNotify(this, [this]() {
-        ActionCodeList codes= {
-            PLAYBACK_PLAY_QUERY.toString(),
+        const ActionCodeList codes= {
+            PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(),
+            PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(),
+            PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),
             PLAYBACK_REWIND_START_QUERY.toString(),
             PLAYBACK_REWIND_END_QUERY.toString()

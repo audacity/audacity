@@ -4,7 +4,7 @@
 #pragma once
 
 #include "framework/global/async/asyncable.h"
-#include "framework/global/iapplication.h"
+#include "framework/global/modularity/ioc.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
@@ -27,7 +27,6 @@ class PlaybackController : public IPlaybackController, public muse::actions::Act
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
-    muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
@@ -112,7 +111,17 @@ private:
     void seekListSelection();
     void seekRangeSelection();
 
-    void togglePlayAction();
+    enum class TogglePlayMode {
+        PlayPause,      //!< pause while playing; resume/replay when not
+        PlayStop,       //!< stop while playing; play when not
+        PlayFromCursor  //!< pause while playing; play from the cursor, ignoring the selection, when not
+    };
+
+    void togglePlay(TogglePlayMode mode);
+
+    void togglePlayPauseAction();
+    void togglePlayStopAction();
+    void togglePlayFromCursorAction();
     void doPlay(bool ignoreSelection);
     void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);

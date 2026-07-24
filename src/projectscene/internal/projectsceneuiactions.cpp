@@ -352,7 +352,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
     static ToolConfig config;
     if (!config.isValid()) {
         config.items = {
-            { "action://playback/play", true },
+            { "action://playback/toggle-play-pause", true },
             { "action://playback/stop", true },
             { "action://record/start", true },
             { "action://playback/rewind-start", true },
