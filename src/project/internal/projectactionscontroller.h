@@ -146,6 +146,7 @@ private:
     muse::Ret ensureAuthorization();
 
     void listenTrackeditProjectChanges();
+    void listenCloudProjectChanges();
 
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;
