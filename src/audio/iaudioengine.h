@@ -41,8 +41,7 @@ public:
         std::optional<double> streamStartTime;
     };
 
-    virtual int startStream(const TransportSequences& sequences, double startTime, double endTime,
-                            double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
+    virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
                             AudacityProject& project, const StartStreamOptions& options) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
