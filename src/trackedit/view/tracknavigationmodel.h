@@ -21,8 +21,11 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<ITrackNavigationController> tracksNavigationController{ this };
 
-    Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackItemPanels READ trackItemPanels NOTIFY trackItemPanelsChanged)
-    Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY viewItemPanelsChanged)
+    //! NOTE: three panels per track, in the tab order:
+    //! the track itself, the controls of its header, its clips/labels
+    Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackItemPanels READ trackItemPanels NOTIFY panelsChanged)
+    Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackHeaderPanels READ trackHeaderPanels NOTIFY panelsChanged)
+    Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY panelsChanged)
 
 public:
     explicit TrackNavigationModel(QObject* parent = nullptr);
@@ -32,21 +35,38 @@ public:
     Q_INVOKABLE void moveFocusTo(const QVariant& trackId);
 
     QList<muse::ui::NavigationPanel*> trackItemPanels() const;
+    QList<muse::ui::NavigationPanel*> trackHeaderPanels() const;
     QList<muse::ui::NavigationPanel*> viewItemPanels() const;
 
 signals:
-    void trackItemPanelsChanged();
-    void viewItemPanelsChanged();
+    void panelsChanged();
 
 private:
+    struct TrackPanels
+    {
+        TrackId trackId = INVALID_TRACK;
+
+        muse::ui::NavigationPanel* track = nullptr;
+        muse::ui::NavigationPanel* header = nullptr;
+        muse::ui::NavigationPanel* items = nullptr;
+    };
+
     void load();
     void cleanup();
     void clearPanels();
 
+    muse::ui::NavigationPanel* makePanel(const QString& name, int order);
     void addPanels(const TrackId& trackId, int pos);
+    void removePanels(const TrackId& trackId);
     void resetPanelOrder();
+    void deletePanels(const TrackPanels& panels);
+    int indexOfTrack(const TrackId& trackId) const;
+    QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
+    void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);
+
     void addDefaultNavigation();
     void disableDefaultNavigation();
+
     void handleArrowKeyFallback(muse::ui::NavigationEvent* event);
 
     void activateNavigation(const TrackId& trackId, bool highlight = false);
@@ -57,7 +77,8 @@ private:
     muse::ui::NavigationPanel* m_defaultPanel = nullptr;
     muse::ui::NavigationControl* m_defaultControl = nullptr;
 
-    QList<muse::ui::NavigationPanel*> m_trackItemPanels;
-    QList<muse::ui::NavigationPanel*> m_viewItemPanels;
+    QList<TrackPanels> m_panels;
+
+    int m_lastActivePanelOrder = -1;
 };
 }

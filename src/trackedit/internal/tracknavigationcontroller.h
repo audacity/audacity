@@ -71,6 +71,8 @@ private:
     void navigateToNextPanel();
     void navigateToPrevPanel();
 
+    bool navigateToAdjacentItem(bool next);
+
     void navigateToPrevTrack();
     void navigateToNextTrack();
     void navigateToFirstTrack();

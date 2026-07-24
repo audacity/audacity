@@ -27,7 +27,7 @@ TrackItem {
                 }
             }
 
-            navigation.panel: root.navigation.panel
+            navigation.panel: root.headerNavigationPanel
             navigation.order: root.extraControlsNavigationStart
             navigation.enabled: !root.collapsed
 

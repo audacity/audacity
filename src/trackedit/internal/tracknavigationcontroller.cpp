@@ -317,46 +317,52 @@ bool TrackNavigationController::isLastTrack(const TrackId& trackId) const
 
 void TrackNavigationController::navigateToNextPanel()
 {
-    bool isTrackPanel = m_focusedItemKey.itemId == INVALID_TRACK_ITEM;
-
-    if (isTrackPanel) {
-        if (isTrackItemsEmpty(m_focusedItemKey.trackId)) {
-            commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
-        } else {
-            navigateToFirstItem();
-        }
+    if (navigateToAdjacentItem(true /*next*/)) {
         return;
     }
 
-    if (isLastTrack(m_focusedItemKey.trackId)) {
-        commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
-        return;
-    }
-
-    navigateToNextTrack();
+    commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
 }
 
 void TrackNavigationController::navigateToPrevPanel()
 {
-    bool isTrackPanel = m_focusedItemKey.itemId == INVALID_TRACK_ITEM;
-
-    if (!isTrackPanel) {
-        setFocusedTrack(m_focusedItemKey.trackId, true /*highlight*/);
+    if (navigateToAdjacentItem(false /*next*/)) {
         return;
     }
 
-    m_focusedItemKey.itemId = INVALID_TRACK_ITEM;
+    commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
+}
 
-    if (isFirstTrack(m_focusedItemKey.trackId)) {
-        commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
-        return;
+bool TrackNavigationController::navigateToAdjacentItem(bool next)
+{
+    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        return false;
     }
 
-    navigateToPrevTrack();
+    const TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
-    if (!isTrackItemsEmpty(m_focusedItemKey.trackId)) {
-        navigateToLastItem();
+    for (size_t i = 0; i < itemsKeys.size(); ++i) {
+        if (itemsKeys.at(i).itemId != m_focusedItemKey.itemId) {
+            continue;
+        }
+
+        if (next) {
+            if (i + 1 >= itemsKeys.size()) {
+                return false;
+            }
+            setFocusedItem(itemsKeys.at(i + 1), true /*highlight*/);
+        } else {
+            if (i == 0) {
+                return false;
+            }
+            setFocusedItem(itemsKeys.at(i - 1), true /*highlight*/);
+        }
+
+        m_savedItemStartTime = std::nullopt;
+        return true;
     }
+
+    return false;
 }
 
 void TrackNavigationController::navigateToPrevTrack()

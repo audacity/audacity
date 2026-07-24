@@ -56,7 +56,7 @@ TrackItem {
 
                     value: Boolean(root.item) ? root.item.pan : 0
 
-                    navigation.panel: root.navigation.panel
+                    navigation.panel: root.headerNavigationPanel
                     navigation.order: root.extraControlsNavigationStart
                     navigation.enabled: !root.collapsed
                     navigation.accessible.name: qsTrc("projectscene", "Pan")
@@ -73,7 +73,7 @@ TrackItem {
 
                     value: Boolean(root.item) ? root.item.volumeLevel : 0
 
-                    navigation.panel: root.navigation.panel
+                    navigation.panel: root.headerNavigationPanel
                     navigation.order: panKnob.navigation.order + 1
                     navigation.enabled: !root.collapsed
                     navigation.accessible.name: qsTrc("projectscene", "Track volume")
@@ -111,7 +111,7 @@ TrackItem {
                     }
                 }
 
-                navigation.panel: root.navigation.panel
+                navigation.panel: root.headerNavigationPanel
                 navigation.order: root.headerTrailingControlsNavigationEnd + 1
                 navigation.enabled: topRow.visible
 
@@ -244,7 +244,7 @@ TrackItem {
                 icon: IconCode.MUTE
                 checked: Boolean(root.item) ? root.item.muted : false
 
-                navigation.panel: root.navigation.panel
+                navigation.panel: root.headerNavigationPanel
                 navigation.order: root.headerTrailingControlsNavigationStart
                 navigation.accessible.name: qsTrc("projectscene", "Mute")
                 navigation.accessible.role: MUAccessible.CheckBox
@@ -265,7 +265,7 @@ TrackItem {
                 icon: IconCode.SOLO
                 checked: Boolean(root.item) ? root.item.solo : false
 
-                navigation.panel: root.navigation.panel
+                navigation.panel: root.headerNavigationPanel
                 navigation.order: muteButton.navigation.order + 1
                 navigation.accessible.name: qsTrc("projectscene", "Solo")
                 navigation.accessible.role: MUAccessible.CheckBox

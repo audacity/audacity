@@ -333,7 +333,8 @@ DockPage {
                     width: parent.width
                     height: parent.height - trackstitleBarItem.height
 
-                    navPanels: tracksNavModel.trackItemPanels
+                    navigationPanels: tracksNavModel.trackItemPanels
+                    headerNavigationPanels: tracksNavModel.trackHeaderPanels
                     effectColumnNavigationPanel: trackstitleBarItem.closeEffectsNavigation
                     effectsSectionWidth: tracksPanel.effectsSectionWidth
 
