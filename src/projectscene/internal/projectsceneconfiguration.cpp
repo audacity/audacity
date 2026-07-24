@@ -72,7 +72,7 @@ void ProjectSceneConfiguration::init()
         m_effectsPanelVisible.notify();
     });
 
-    muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
+    muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(2));
 
     muse::settings()->setDefaultValue(CLIP_STYLE, muse::Val(ClipStyles::Style::COLORFUL));
     muse::settings()->valueChanged(CLIP_STYLE).onReceive(nullptr, [this](const muse::Val& val) {
