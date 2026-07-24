@@ -7,7 +7,8 @@ set(BUILD_NUMBER "" CACHE STRING "Build number")
 
 if (NOT BUILD_NUMBER)
     # less than 2147483647 to fit in Int32 for WiX packaging tool
-    string(TIMESTAMP BUILD_NUMBER %y%j%H%M)
+    string(TIMESTAMP BUILD_NUMBER %y%m%d%H%M)
+    string(SUBSTRING ${BUILD_NUMBER} 0 9 BUILD_NUMBER)
 endif()
 
 file(MAKE_DIRECTORY ${ARTIFACTS_DIR})
