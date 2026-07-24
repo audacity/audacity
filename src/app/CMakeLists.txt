@@ -274,6 +274,80 @@ endif()
 
 add_dependencies(audacity builtin-workspaces)
 
+if (OS_IS_MAC AND AU_BUILD_SPEECH_SWIFT_EFFECT)
+    set(SPEECH_SWIFT_WORKER_NAME audacity-speech-swift-worker)
+
+    if (AU_SPEECH_SWIFT_WORKER_PATH)
+        if (NOT EXISTS "${AU_SPEECH_SWIFT_WORKER_PATH}")
+            message(FATAL_ERROR
+                "AU_SPEECH_SWIFT_WORKER_PATH does not exist: ${AU_SPEECH_SWIFT_WORKER_PATH}")
+        endif()
+        set(SPEECH_SWIFT_WORKER_FILE "${AU_SPEECH_SWIFT_WORKER_PATH}")
+    else()
+        find_program(AU_SWIFT_EXECUTABLE swift REQUIRED)
+        set(SPEECH_SWIFT_WORKER_PACKAGE_DIR
+            "${PROJECT_SOURCE_DIR}/src/effects/builtin_collection/deepfilternet3/worker")
+        set(SPEECH_SWIFT_WORKER_BUILD_DIR
+            "${PROJECT_BINARY_DIR}/speech-swift-worker/build")
+        set(SPEECH_SWIFT_WORKER_FILE
+            "${PROJECT_BINARY_DIR}/speech-swift-worker/bin/${SPEECH_SWIFT_WORKER_NAME}")
+
+        file(GLOB_RECURSE SPEECH_SWIFT_WORKER_SOURCES CONFIGURE_DEPENDS
+            "${SPEECH_SWIFT_WORKER_PACKAGE_DIR}/Sources/*.swift"
+        )
+        set(SPEECH_SWIFT_WORKER_DEPENDS
+            ${SPEECH_SWIFT_WORKER_SOURCES}
+            "${SPEECH_SWIFT_WORKER_PACKAGE_DIR}/Package.swift"
+            "${PROJECT_SOURCE_DIR}/buildscripts/cmake/BuildSpeechSwiftWorker.cmake"
+        )
+        if (EXISTS "${SPEECH_SWIFT_WORKER_PACKAGE_DIR}/Package.resolved")
+            list(APPEND SPEECH_SWIFT_WORKER_DEPENDS
+                "${SPEECH_SWIFT_WORKER_PACKAGE_DIR}/Package.resolved")
+        endif()
+        if (AU_SPEECH_SWIFT_PACKAGE_PATH)
+            file(GLOB_RECURSE SPEECH_SWIFT_LOCAL_SOURCES CONFIGURE_DEPENDS
+                "${AU_SPEECH_SWIFT_PACKAGE_PATH}/Sources/AudioCommon/*.swift"
+                "${AU_SPEECH_SWIFT_PACKAGE_PATH}/Sources/MLXCommon/*.swift"
+                "${AU_SPEECH_SWIFT_PACKAGE_PATH}/Sources/SpeechEnhancement/*.swift"
+            )
+            list(APPEND SPEECH_SWIFT_WORKER_DEPENDS
+                ${SPEECH_SWIFT_LOCAL_SOURCES}
+                "${AU_SPEECH_SWIFT_PACKAGE_PATH}/Package.swift")
+        endif()
+
+        add_custom_command(
+            OUTPUT "${SPEECH_SWIFT_WORKER_FILE}"
+            COMMAND "${CMAKE_COMMAND}"
+                "-DWORKER_PACKAGE_DIR=${SPEECH_SWIFT_WORKER_PACKAGE_DIR}"
+                "-DWORKER_BUILD_DIR=${SPEECH_SWIFT_WORKER_BUILD_DIR}"
+                "-DWORKER_OUTPUT_FILE=${SPEECH_SWIFT_WORKER_FILE}"
+                "-DSWIFT_EXECUTABLE=${AU_SWIFT_EXECUTABLE}"
+                "-DSPEECH_SWIFT_PACKAGE_PATH=${AU_SPEECH_SWIFT_PACKAGE_PATH}"
+                -P "${PROJECT_SOURCE_DIR}/buildscripts/cmake/BuildSpeechSwiftWorker.cmake"
+            DEPENDS ${SPEECH_SWIFT_WORKER_DEPENDS}
+            COMMENT "Building speech-swift DeepFilterNet3 worker"
+            VERBATIM
+            USES_TERMINAL
+        )
+        add_custom_target(speech-swift-worker DEPENDS "${SPEECH_SWIFT_WORKER_FILE}")
+    endif()
+
+    add_custom_target(speech-swift-worker-bundle
+        COMMAND "${CMAKE_COMMAND}" -E make_directory
+            "$<TARGET_BUNDLE_DIR:audacity>/Contents/Helpers"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${SPEECH_SWIFT_WORKER_FILE}"
+            "$<TARGET_BUNDLE_DIR:audacity>/Contents/Helpers/${SPEECH_SWIFT_WORKER_NAME}"
+        DEPENDS "${SPEECH_SWIFT_WORKER_FILE}"
+        COMMENT "Bundling speech-swift DeepFilterNet3 worker"
+        VERBATIM
+    )
+    if (TARGET speech-swift-worker)
+        add_dependencies(speech-swift-worker-bundle speech-swift-worker)
+    endif()
+    add_dependencies(audacity speech-swift-worker-bundle)
+endif()
+
 ###########################################
 # INSTALL
 ###########################################
