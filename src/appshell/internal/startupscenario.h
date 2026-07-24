@@ -78,8 +78,10 @@ public:
     bool startupCompleted() const override;
 
 private:
-    void onStartupPageOpened(StartupModeType modeType);
     void showStartupDialogsIfNeed(StartupModeType modeType);
+    void importStartupMediaFiles();
+    void runStartupMode(StartupModeType modeType);
+    void openStartupUrl();
 
     StartupModeType resolveStartupModeType() const;
     muse::Uri startupPageUri(StartupModeType modeType) const;
@@ -98,6 +100,7 @@ private:
     bool m_removeMediaFilesAfterImport = false;
     QString m_startupUrl;
     bool m_startupCompleted = false;
+    bool m_startupProcessing = false;
     QTimer m_updateCheckTimer;
 };
 }

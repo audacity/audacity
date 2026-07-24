@@ -9,6 +9,7 @@
 #include <csignal>
 
 #include "appfactory.h"
+#include "appshell/internal/fileopeneventbuffer.h"
 #include "commandlineparser.h"
 #include "log.h"
 
@@ -203,6 +204,7 @@ int main(int argc, char** argv)
 
         QApplication* guiApp = new QApplication(argcFinal, argvFinal);
         guiApp->setQuitOnLastWindowClosed(false);
+        au::appshell::FileOpenEventBuffer::install(guiApp);
         qApplication = guiApp;
     }
 

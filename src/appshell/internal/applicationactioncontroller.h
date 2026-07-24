@@ -92,6 +92,8 @@ public:
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
+    void onFileOpenUrl(const QUrl& url);
+
     void setupConnections();
 
     bool quit(const muse::io::path_t& installerPath = "");

@@ -26,6 +26,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "framework/global/defer.h"
 #include "framework/global/log.h"
 #include "framework/global/types/uri.h"
 
@@ -136,7 +137,7 @@ void StartupScenario::runAfterSplashScreen()
 {
     TRACEFUNC;
 
-    if (m_startupCompleted) {
+    if (m_startupCompleted || m_startupProcessing) {
         return;
     }
 
@@ -152,18 +153,34 @@ void StartupScenario::runAfterSplashScreen()
 
     muse::async::Channel<muse::Uri> opened = interactive()->opened();
     opened.onReceive(this, [this, opened, modeType](const muse::Uri&) {
-        if (m_startupCompleted) {
+        if (m_startupCompleted || m_startupProcessing) {
             return;
         }
 
-        m_startupCompleted = true;
+        m_startupProcessing = true;
+        DEFER {
+            m_startupProcessing = false;
+            m_startupCompleted = true;
+        };
 
         muse::async::Channel<muse::Uri> mut = opened;
         mut.disconnect(this);
 
         effectsProviderInitializer()->callAfterSplashScreen();
 
-        onStartupPageOpened(modeType);
+        showStartupDialogsIfNeed(modeType);
+
+        if (!m_startupMediaFiles.empty()) {
+            importStartupMediaFiles();
+            return;
+        }
+
+        if (!m_startupUrl.isEmpty()) {
+            openStartupUrl();
+            return;
+        }
+
+        runStartupMode(modeType);
     });
 
     interactive()->open(startupUri);
@@ -191,28 +208,32 @@ StartupModeType StartupScenario::resolveStartupModeType() const
     return configuration()->startupModeType();
 }
 
-void StartupScenario::onStartupPageOpened(StartupModeType modeType)
+void StartupScenario::importStartupMediaFiles()
 {
-    TRACEFUNC;
-
-    showStartupDialogsIfNeed(modeType);
-
-    if (!m_startupMediaFiles.empty()) {
-        QStringList files;
-        for (const auto& file : m_startupMediaFiles) {
-            files << file.toQString();
-        }
-
-        dispatcher()->dispatch("project-import-startup-media",
-                               ActionData::make_arg2<QStringList, bool>(files, m_removeMediaFilesAfterImport));
-        return;
+    QStringList files;
+    for (const auto& file : m_startupMediaFiles) {
+        files << file.toQString();
     }
 
-    if (!m_startupUrl.isEmpty()) {
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(m_startupUrl));
-        return;
-    }
+    dispatcher()->dispatch("project-import-startup-media",
+                           ActionData::make_arg2<QStringList, bool>(files, m_removeMediaFilesAfterImport));
+}
 
+void StartupScenario::openStartupUrl()
+{
+    const QString url = m_startupUrl;
+    m_startupUrl.clear();
+
+    //! NOTE Deferred so the dispatch runs outside of async queue processing,
+    //! otherwise dialogs opened synchronously by the handler (e.g. sign-in)
+    //! would not receive async messages
+    QTimer::singleShot(0, [this, url]() {
+        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(url));
+    });
+}
+
+void StartupScenario::runStartupMode(StartupModeType modeType)
+{
     switch (modeType) {
     case StartupModeType::StartEmpty:
         break;
