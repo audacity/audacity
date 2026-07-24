@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/actions/actionable.h"
 
@@ -64,6 +66,14 @@ private:
 
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
+
+    struct ContiguousClipsSpan {
+        TrackId trackId = INVALID_TRACK;
+        secs_t begin = 0.0;
+        secs_t end = 0.0;
+    };
+    std::optional<ContiguousClipsSpan> contiguousSelectedClipsSpan() const;
+    bool rangeSelectionCoversMultipleClips() const;
 
     bool isFocusedItemLabel() const;
     LabelKeyList labelsForInteraction() const;

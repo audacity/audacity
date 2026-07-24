@@ -2,8 +2,9 @@
 * Audacity: A Digital Audio Editor
 */
 #include "trackeditactionscontroller.h"
-#include "project/internal/audacityproject.h"
-#include "trackediterrors.h"
+
+#include <algorithm>
+#include <limits>
 
 #include "global/translation.h"
 #include "global/defer.h"
@@ -341,6 +342,11 @@ void TrackeditActionsController::init()
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
         notifyActionEnabledChanged(GROUP_CLIPS_CODE);
         notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+        notifyActionEnabledChanged(JOIN_CODE);
+    });
+
+    selectionController()->clipsIntersectingRangeSelectionChanged().onReceive(this, [this](const trackedit::ClipKeyList&) {
+        notifyActionEnabledChanged(JOIN_CODE);
     });
 }
 
@@ -828,12 +834,82 @@ void TrackeditActionsController::doGlobalSplitIntoNewTrack()
 
 void TrackeditActionsController::doGlobalJoin()
 {
-    auto selectedTracks = selectionController()->selectedTracks();
-    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
-    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        dispatcher()->dispatch(MERGE_SELECTED_ON_TRACK,
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        return;
+    }
+
+    const std::optional<ContiguousClipsSpan> span = contiguousSelectedClipsSpan();
+    if (!span) {
+        return;
+    }
 
     dispatcher()->dispatch(MERGE_SELECTED_ON_TRACK,
-                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(TrackIdList { span->trackId }, span->begin, span->end));
+}
+
+std::optional<TrackeditActionsController::ContiguousClipsSpan> TrackeditActionsController::contiguousSelectedClipsSpan() const
+{
+    const ClipKeyList clipKeys = selectionController()->selectedClips();
+    if (clipKeys.size() < 2) {
+        return std::nullopt;
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return std::nullopt;
+    }
+
+    const TrackId trackId = clipKeys.front().trackId;
+    for (const ClipKey& key : clipKeys) {
+        if (key.trackId != trackId) {
+            return std::nullopt;
+        }
+    }
+
+    const muse::async::NotifyList<Clip> trackClips = prj->clipList(trackId);
+
+    size_t selectedCount = 0;
+    double begin = std::numeric_limits<double>::max();
+    double end = std::numeric_limits<double>::lowest();
+    for (const Clip& clip : trackClips) {
+        if (muse::contains(clipKeys, clip.key)) {
+            ++selectedCount;
+            begin = std::min(begin, clip.startTime);
+            end = std::max(end, clip.endTime);
+        }
+    }
+
+    if (selectedCount != clipKeys.size()) {
+        return std::nullopt;
+    }
+
+    for (const Clip& clip : trackClips) {
+        if (!muse::contains(clipKeys, clip.key) && clip.startTime < end && clip.endTime > begin) {
+            return std::nullopt;
+        }
+    }
+
+    return ContiguousClipsSpan { trackId, begin, end };
+}
+
+bool TrackeditActionsController::rangeSelectionCoversMultipleClips() const
+{
+    ClipKeyList clips = selectionController()->clipsIntersectingRangeSelection();
+    std::sort(clips.begin(), clips.end());
+
+    for (size_t i = 1; i < clips.size(); ++i) {
+        if (clips[i].trackId == clips[i - 1].trackId) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void TrackeditActionsController::doGlobalDisjoin()
@@ -2122,6 +2198,11 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return clipsForInteraction().size() > 1 && !selectionController()->isSelectionGrouped();
     } else if (actionCode == UNGROUP_CLIPS_CODE) {
         return clipsForInteraction().size() > 1 && selectionController()->selectionContainsGroup();
+    } else if (actionCode == JOIN_CODE) {
+        if (!selectionController()->timeSelectionIsEmpty()) {
+            return rangeSelectionCoversMultipleClips();
+        }
+        return contiguousSelectedClipsSpan().has_value();
     }
 
     return true;
