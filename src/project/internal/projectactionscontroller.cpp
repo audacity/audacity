@@ -109,9 +109,11 @@ void ProjectActionsController::init()
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         listenTrackeditProjectChanges();
+        listenCloudProjectChanges();
     });
 
     listenTrackeditProjectChanges();
+    listenCloudProjectChanges();
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_actionEnabledChanged.send(prohibitedActionsWhileRecording());
@@ -130,6 +132,20 @@ void ProjectActionsController::listenTrackeditProjectChanges()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     m_actionEnabledChanged.send({ "file-share-audio" });
+}
+
+void ProjectActionsController::listenCloudProjectChanges()
+{
+    IAudacityProjectPtr prj = currentProject();
+    if (!prj) {
+        return;
+    }
+
+    prj->isCloudProjectChanged().onNotify(this, [this]() {
+        m_actionEnabledChanged.send({ UPDATE_AUDIO_PREVIEW_ACTION.toString() });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    m_actionEnabledChanged.send({ UPDATE_AUDIO_PREVIEW_ACTION.toString() });
 }
 
 muse::async::Channel<muse::actions::ActionCodeList> ProjectActionsController::actionEnabledChanged() const
