@@ -21,6 +21,15 @@ EffectStyledDialogView {
     title: viewerModel.title
     navigationSection.name: title
 
+    openPolicies: DialogView.OpenOnContentReady
+    isContentReady: {
+        if (viewerModel.viewerComponentType !== ViewerComponentType.Generated) {
+            return true
+        }
+
+        return viewerLoader.item ? viewerLoader.item.isContentReady : false
+    }
+
     contentWidth: Math.max(viewerLoader.width + prv.viewMargins * 2, prv.minimumWidth)
     contentHeight: {
         let height = 0
