@@ -664,6 +664,14 @@
         <seq>End</seq>
     </SC>
     <SC>
+        <key>curs-page-up</key>
+        <seq>PgUp</seq>
+    </SC>
+    <SC>
+        <key>curs-page-down</key>
+        <seq>PgDown</seq>
+    </SC>
+    <SC>
         <key>play-position-decrease</key>
         <seq>Left</seq>
     </SC>

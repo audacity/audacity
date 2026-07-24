@@ -68,6 +68,13 @@ private:
     void snapCurrentPosition();
     void applySingleStep(Direction direction);
 
+    void seekTo(muse::secs_t pos);
+
+    void cursorToProjectStart();
+    void cursorToProjectEnd();
+    void cursorPageUp();
+    void cursorPageDown();
+
     muse::secs_t stepFromTime(muse::secs_t from, Direction direction) const;
 
     context::IPlaybackStatePtr playbackState() const;
