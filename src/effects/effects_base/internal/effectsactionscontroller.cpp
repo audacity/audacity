@@ -79,7 +79,7 @@ void EffectsActionsController::registerActions()
 
 void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuery& q)
 {
-    muse::String effectId = muse::String::fromStdString(q.param("effectId").toString());
+    const EffectId effectId = effectIdFromAction(q);
     IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
@@ -159,7 +159,7 @@ void EffectsActionsController::deletePreset(const ActionQuery& q)
         return;
     }
 
-    EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
+    EffectId effectId = effectIdFromAction(q);
     PresetId presetId = q.param("presetId").toString();
     presetsScenario()->deletePreset(effectId, presetId);
 }
@@ -190,7 +190,7 @@ void EffectsActionsController::toggleVendorUI(const ActionQuery& q)
         return;
     }
 
-    const EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
+    const EffectId effectId = effectIdFromAction(q);
     const EffectUIMode currentMode = configuration()->effectUIMode(effectId);
     const EffectUIMode newMode = (currentMode == EffectUIMode::VendorUI) ? EffectUIMode::FallbackUI : EffectUIMode::VendorUI;
     configuration()->setEffectUIMode(effectId, newMode);
