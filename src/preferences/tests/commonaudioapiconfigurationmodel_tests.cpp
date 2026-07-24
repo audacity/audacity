@@ -153,7 +153,9 @@ TEST_F(CommonAudioApiConfigurationModelTests, Apply_PushesOnlyTheEditedValues_In
  */
 TEST_F(CommonAudioApiConfigurationModelTests, Apply_WithoutEdits_PushesNothing)
 {
-    //! [THEN] No setter is called at all
+    //! [THEN] No setter is called at all, and the stream restart scope itself
+    //! is skipped — even an empty batch must not reach the controller
+    EXPECT_CALL(*m_controller, withSingleStreamRestart(_)).Times(0);
     EXPECT_CALL(*m_controller, setAudioApi(_)).Times(0);
     EXPECT_CALL(*m_controller, setAudioOutputDevice(_)).Times(0);
     EXPECT_CALL(*m_controller, setAudioInputDevice(_)).Times(0);
@@ -294,7 +296,9 @@ TEST_F(CommonAudioApiConfigurationModelTests, Apply_NonStreamSettings_GoDirectly
     m_model->defaultSampleFormatSelected("16-bit");
     m_model->setAutomaticCompensationEnabled(true);
 
-    //! [THEN] They are pushed to the provider, not through the stream restart
+    //! [THEN] They are pushed to the provider, not through the stream restart —
+    //! the restart scope itself is skipped, so the stream is never interrupted
+    EXPECT_CALL(*m_controller, withSingleStreamRestart(_)).Times(0);
     EXPECT_CALL(*m_provider, setDefaultSampleRate(48000)).Times(1);
     EXPECT_CALL(*m_provider, setDefaultSampleFormat("16-bit")).Times(1);
     EXPECT_CALL(*m_provider, setAutomaticCompensationEnabled(true)).Times(1);
