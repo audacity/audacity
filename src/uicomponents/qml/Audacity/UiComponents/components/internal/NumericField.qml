@@ -20,6 +20,8 @@ ListItemBlank {
     width: isEditable ? 12 : (value === " " ? 1 : symbolField.implicitWidth)
     height: 28
 
+    background.border.width: 0
+
     mouseArea.enabled: isEditable
 
     opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
