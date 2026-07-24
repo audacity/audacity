@@ -90,13 +90,7 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
         const muse::ui::INavigationPanel* activePanel = navigationController()->activePanel();
         const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
 
-        for (const TrackPanels& panels : m_panels) {
-            if (panels.track == activePanel) {
-                const muse::ui::INavigationControl* firstControl = findFirstEnabledControl(activePanel);
-                tracksNavigationController()->setIsNavigationActive(firstControl == activeControl);
-                break;
-            }
-        }
+        updateNavigationActive(activePanel);
 
         syncFocusedItem(activePanel, activeControl);
     });
@@ -200,8 +194,6 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
             }
             return;
         }
-
-        // handleArrowKeyFallback(event);
     });
 
     muse::ui::NavigationPanel* headerPanel = makePanel(makeTrackHeaderPanelName(trackId), orderBase + 1);
@@ -222,8 +214,6 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
             }
             return;
         }
-
-        // handleArrowKeyFallback(event);
     });
 
     m_panels.insert(pos, { trackId, trackPanel, headerPanel, itemsPanel });
@@ -314,6 +304,28 @@ void TrackNavigationModel::disableDefaultNavigation()
     m_defaultControl->setEnabled(false);
 }
 
+void TrackNavigationModel::updateNavigationActive(const muse::ui::INavigationPanel* activePanel)
+{
+    //! NOTE: only the header controls panel is navigated as a usual panel (general navigation):
+    //! Left/Right move between the controls and the trigger (Space) presses the focused control.
+    //! The track panel and the clips/labels panel belong to the project: Left/Right move the play
+    //! cursor, Up/Down navigate the tracks, the trigger starts the playback.
+    bool navigationActive = false;
+    for (const TrackPanels& panels : m_panels) {
+        if (panels.header == activePanel) {
+            navigationActive = true;
+            break;
+        }
+
+        if (panels.track == activePanel || panels.items == activePanel) {
+            navigationActive = false;
+            break;
+        }
+    }
+
+    tracksNavigationController()->setIsNavigationActive(navigationActive);
+}
+
 void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* activePanel,
                                            const muse::ui::INavigationControl* activeControl)
 {
@@ -335,19 +347,6 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
 
             tracksNavigationController()->setFocusedItem({ panels.trackId, INVALID_TRACK_ITEM });
             return;
-        }
-    }
-}
-
-void TrackNavigationModel::handleArrowKeyFallback(muse::ui::NavigationEvent* event)
-{
-    if (!tracksNavigationController()->isNavigationEnabled()) {
-        if (event->type() == muse::ui::NavigationEvent::Right) {
-            event->setAccepted(true);
-            dispatcher()->dispatch("play-position-increase");
-        } else if (event->type() == muse::ui::NavigationEvent::Left) {
-            event->setAccepted(true);
-            dispatcher()->dispatch("play-position-decrease");
         }
     }
 }

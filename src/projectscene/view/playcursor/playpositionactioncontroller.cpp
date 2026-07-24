@@ -44,8 +44,8 @@ au::projectscene::PlayPositionActionController::PlayPositionActionController(QOb
 
 void PlayPositionActionController::init()
 {
-    // dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
-    // dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
+    dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
+    dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
     dispatcher()->reg(this, SEL_EXT_LEFT, this, &PlayPositionActionController::selectionExtendLeft);
     dispatcher()->reg(this, SEL_EXT_RIGHT, this, &PlayPositionActionController::selectionExtendRight);
     dispatcher()->reg(this, SEL_CNTR_LEFT, this, &PlayPositionActionController::selectionContractLeft);

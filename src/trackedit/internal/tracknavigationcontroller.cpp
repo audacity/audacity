@@ -30,8 +30,6 @@ static const muse::actions::ActionCode TRACK_VIEW_RANGE_SELECTION_CODE("track-vi
 static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_PREV_CODE("track-view-extend-track-selection-prev");
 static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_NEXT_CODE("track-view-extend-track-selection-next");
 
-static const muse::actions::ActionCode TRACK_VIEW_NEXT_ITEM_CODE("track-view-next-item");
-static const muse::actions::ActionCode TRACK_VIEW_PREV_ITEM_CODE("track-view-prev-item");
 static const muse::actions::ActionCode TRACK_VIEW_ABOVE_ITEM_CODE("track-view-above-item");
 static const muse::actions::ActionCode TRACK_VIEW_BELOW_ITEM_CODE("track-view-below-item");
 
@@ -47,8 +45,6 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, TRACK_VIEW_FIRST_TRACK_CODE, this, &TrackNavigationController::navigateToFirstTrack);
     dispatcher()->reg(this, TRACK_VIEW_LAST_TRACK_CODE, this, &TrackNavigationController::navigateToLastTrack);
 
-    dispatcher()->reg(this, TRACK_VIEW_NEXT_ITEM_CODE, this, &TrackNavigationController::navigateToNextItem);
-    dispatcher()->reg(this, TRACK_VIEW_PREV_ITEM_CODE, this, &TrackNavigationController::navigateToPrevItem);
     dispatcher()->reg(this, TRACK_VIEW_ABOVE_ITEM_CODE, this, &TrackNavigationController::navigateToAboveItem);
     dispatcher()->reg(this, TRACK_VIEW_BELOW_ITEM_CODE, this, &TrackNavigationController::navigateToBelowItem);
 
@@ -435,52 +431,6 @@ void TrackNavigationController::navigateToLastTrack()
     if (!trackList.empty()) {
         setFocusedTrack(trackList.back().id, true /*highlight*/);
     }
-}
-
-void TrackNavigationController::navigateToNextItem()
-{
-    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        // dispatcher()->dispatch("play-position-increase");
-        return;
-    }
-
-    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
-
-    for (size_t i = 0; i < itemsKeys.size(); ++i) {
-        if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
-            if (++i >= itemsKeys.size()) {
-                setFocusedItem(itemsKeys.front(), true /*highlight*/);
-            } else {
-                setFocusedItem(itemsKeys[i], true /*highlight*/);
-            }
-            break;
-        }
-    }
-
-    m_savedItemStartTime = std::nullopt;
-}
-
-void TrackNavigationController::navigateToPrevItem()
-{
-    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        // dispatcher()->dispatch("play-position-decrease");
-        return;
-    }
-
-    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
-
-    for (size_t i = 0; i < itemsKeys.size(); ++i) {
-        if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
-            if (i == 0) {
-                setFocusedItem(itemsKeys.back(), true /*highlight*/);
-            } else {
-                setFocusedItem(itemsKeys.at(i - 1), true /*highlight*/);
-            }
-            break;
-        }
-    }
-
-    m_savedItemStartTime = std::nullopt;
 }
 
 double TrackNavigationController::itemStartTime(const TrackItemKey& key) const

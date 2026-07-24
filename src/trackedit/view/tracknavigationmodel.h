@@ -62,12 +62,11 @@ private:
     void deletePanels(const TrackPanels& panels);
     int indexOfTrack(const TrackId& trackId) const;
     QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
+    void updateNavigationActive(const muse::ui::INavigationPanel* activePanel);
     void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);
 
     void addDefaultNavigation();
     void disableDefaultNavigation();
-
-    void handleArrowKeyFallback(muse::ui::NavigationEvent* event);
 
     void activateNavigation(const TrackId& trackId, bool highlight = false);
     void activateNavigation(const TrackItemKey& itemKey, bool highlight = false);

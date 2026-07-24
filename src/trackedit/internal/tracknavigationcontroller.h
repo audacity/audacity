@@ -78,8 +78,6 @@ private:
     void navigateToFirstTrack();
     void navigateToLastTrack();
 
-    void navigateToNextItem();
-    void navigateToPrevItem();
     void navigateToAboveItem();
     void navigateToBelowItem();
     void navigateToFirstItem();

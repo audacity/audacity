@@ -441,19 +441,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Previous panel")
              ),
 
-    UiAction("track-view-next-item",
-             au::context::UiCtxProjectFocused,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Next item"),
-             TranslatableString("action", "Next item")
-             ),
-    UiAction("track-view-prev-item",
-             au::context::UiCtxProjectFocused,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Previous item"),
-             TranslatableString("action", "Previous item")
-             ),
-
     UiAction("track-view-above-item",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,
