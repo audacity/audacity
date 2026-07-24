@@ -77,6 +77,15 @@ bool TracksViewStateModel::snapEnabled() const
     return false;
 }
 
+bool TracksViewStateModel::isItemEditInProgress() const
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        return !muse::RealIsEqual(vs->itemEditStartTimeOffset(), -1.0);
+    }
+    return false;
+}
+
 au::trackedit::TrackId TracksViewStateModel::trackAtPosition(double x, double y) const
 {
     UNUSED(x);
