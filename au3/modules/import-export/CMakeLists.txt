@@ -11,6 +11,7 @@ set( MODULES
    mod-pcm
    mod-cl
    mod-lof
+   mod-cvsd
    mod-aup
 )
 
