@@ -45,7 +45,7 @@ NumericView {
     textColor: appearance === Timecode.Appearance.Themed ? ui.theme.fontPrimaryColor : ui.theme.fontSecondaryColor
     border: Border {
         color: ui.theme.strokeColor
-        width: root.appearance === Timecode.Appearance.Embedded ? 0 : 1
+        width: root.appearance === Timecode.Appearance.Embedded ? 0 : ui.theme.borderWidth
     }
     arrowSpacing: -2
 
