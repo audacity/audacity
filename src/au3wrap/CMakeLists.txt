@@ -143,6 +143,10 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-mp2/ExportMP2.cpp
     ${IMPORT_EXPORT_MODULE}/mod-mp2/ExportMP2.h
 
+    ${IMPORT_EXPORT_MODULE}/mod-cvsd/ExportCVSD.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-cvsd/ExportCVSD.h
+    ${IMPORT_EXPORT_MODULE}/mod-cvsd/CVSD.h
+
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.h

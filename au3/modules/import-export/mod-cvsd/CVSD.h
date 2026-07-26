@@ -1,5 +1,6 @@
-// #ifndef AUDACITY_CVSD_H
-// #define AUDACITY_CVSD_H
+#ifndef AUDACITY_CVSD_H
+#define AUDACITY_CVSD_H
+
 #include "au3-math/SampleFormat.h"
 
 struct CVSD_CONFIG {
@@ -45,4 +46,4 @@ struct CVSD_CONFIG {
 
 };
 
-// #endif //AUDACITY_CVSD_H
+#endif //AUDACITY_CVSD_H
