@@ -11,7 +11,7 @@
 #include "mod-flac/ExportFLAC.h"
 #include "mod-opus/ExportOpus.h"
 #include "mod-mp2/ExportMP2.h"
-#include "mod-cvsd/ExportCVSD.cpp"
+#include "mod-cvsd/ExportCVSD.h"
 
 #include "RegisterExportPlugins.h"
 

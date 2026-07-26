@@ -7,6 +7,27 @@
 #ifndef AUDACITY_EXPORTCVSD_H
 #define AUDACITY_EXPORTCVSD_H
 
+class ExportOptionCVSDEditor final : public ExportOptionsEditor
+{
+public:
+
+    ExportOptionCVSDEditor() = default;
+
+    std::string GetName() const override;
+    int GetOptionsCount() const override;
+    bool GetOption(int, ExportOption& option) const override;
+    bool GetValue(ExportOptionID, ExportValue& value) const override;
+    bool SetValue(ExportOptionID, const ExportValue& value) override;
+
+    SampleRateList GetSampleRateList() const override;
+
+    void Load(const audacity::BasicSettings& config) override;
+    void Store(audacity::BasicSettings& config) const override;
+
+private:
+    int mQualityUnscaled = 0;
+};
+
 class ExportCVSD final : public ExportPlugin
 {
 public:

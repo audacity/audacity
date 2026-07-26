@@ -86,6 +86,61 @@ FormatInfo ExportCVSD::GetFormatInfo(int) const
     };
 };
 
+// Todo: change this
+enum : int {
+    CLOptionIDCommand = 0,
+    CLOptionIDShowOutput
+};
+
+const std::vector<ExportOption> CLOptions {
+        { CLOptionIDCommand, {}, std::string() },
+        { CLOptionIDShowOutput, {}, false }
+};
+
+std::string ExportOptionCVSDEditor::GetName() const
+{
+    return "CVSD";
+}
+
+int ExportOptionCVSDEditor::GetOptionsCount() const
+{
+    return 1;
+}
+
+bool ExportOptionCVSDEditor::GetOption(int, ExportOption& option) const
+{
+    return false;
+}
+
+bool ExportOptionCVSDEditor::GetValue(ExportOptionID, ExportValue& value) const
+{
+    value = mQualityUnscaled;
+    return true;
+}
+
+bool ExportOptionCVSDEditor::SetValue(ExportOptionID, const ExportValue& value)
+{
+    if (auto num = std::get_if<int>(&value)) {
+        mQualityUnscaled = *num;
+        return true;
+    }
+    return false;
+}
+
+ExportOptionCVSDEditor::SampleRateList ExportOptionCVSDEditor::GetSampleRateList() const
+{
+    return {44000};
+}
+
+void ExportOptionCVSDEditor::Load(const audacity::BasicSettings& config)
+{
+}
+
+void ExportOptionCVSDEditor::Store(audacity::BasicSettings& config) const
+{
+}
+
+
 std::unique_ptr<ExportProcessor> ExportCVSD::CreateProcessor(int format) const
 {
     return std::make_unique<ExportCVSDProcessor>();
@@ -156,5 +211,5 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
 
 std::unique_ptr<ExportOptionsEditor> ExportCVSD::CreateOptionsEditor(int formatIndex, ExportOptionsEditor::Listener* listener) const
 {
-    return nullptr;
+    return std::make_unique<ExportOptionCVSDEditor>();
 }
