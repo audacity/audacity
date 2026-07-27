@@ -212,9 +212,9 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
     connect(itemsPanel, &muse::ui::NavigationPanel::navigationEvent, this,
             [this, itemsPanel](muse::ui::NavigationEvent* event) {
         if (event->type() == muse::ui::NavigationEvent::AboutActive) {
-            //! NOTE: muse activates the first control of a panel it enters. When the clips/labels
+            //! NOTE: navigation system activates the first control of a panel it enters. When the clips/labels
             //! panel is entered while navigating backwards (Shift+Tab), the navigation should
-            //! instead land on the last item, so ask muse to activate it explicitly
+            //! instead land on the last item, so ask navigation system to activate it explicitly
             const bool backwards = itemsPanel->index().order() < m_lastActivePanelOrder;
             if (backwards) {
                 if (const muse::ui::INavigationControl* last = findLastEnabledControl(itemsPanel)) {

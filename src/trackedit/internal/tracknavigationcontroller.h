@@ -10,7 +10,6 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/icommanddispatcher.h"
-#include "framework/ui/inavigationcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -28,7 +27,6 @@ class TrackNavigationController : public ITrackNavigationController, public muse
 {
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
-    muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };

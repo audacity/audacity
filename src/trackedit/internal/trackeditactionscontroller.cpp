@@ -687,7 +687,7 @@ void TrackeditActionsController::doGlobalDelete()
 void TrackeditActionsController::doGlobalCancel()
 {
     trackeditInteraction()->notifyAboutCancelDragEdit();
-    trackNavigationController()->setIsNavigationActive(false);
+    navigationController()->setIsHighlight(false);
 }
 
 void TrackeditActionsController::doGlobalDeleteLeaveGap()

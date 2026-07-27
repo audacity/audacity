@@ -167,8 +167,8 @@ public:
         m_navigationChanged.notify();
     }
 
-    //! NOTE Send the AboutActive event muse sends before it activates a panel, and return
-    //! the control name the model asked to activate (empty when it leaves muse's default)
+    //! NOTE Send the AboutActive event navigation system sends before it activates a panel, and return
+    //! the control name the model asked to activate (empty when it leaves navigation system's default)
     static QString requestedControlName(muse::ui::NavigationPanel* panel)
     {
         auto event = muse::ui::INavigation::Event::make(muse::ui::INavigation::Event::AboutActive);
@@ -375,7 +375,7 @@ TEST_F(TrackNavigationModelTests, NavigationOnTrackPanelFocusesTrackWithoutItem)
 
 /**
  * Entering the clips/labels panel while navigating backwards (Shift+Tab, i.e. from a
- * higher panel) asks muse to activate the last item instead of its default first one.
+ * higher panel) asks navigation system to activate the last item instead of its default first one.
  */
 TEST_F(TrackNavigationModelTests, BackwardsIntoItemsPanelRequestsLastItem)
 {
@@ -411,7 +411,7 @@ TEST_F(TrackNavigationModelTests, ForwardsIntoItemsPanelKeepsFirstItem)
     fireNavigationChanged(m_model->trackHeaderPanels().at(0), nullptr);
 
     //! [WHEN] The navigation enters the clips panel (Tab)
-    //! [THEN] The model does not override the control, muse keeps its first-item default
+    //! [THEN] The model does not override the control, navigation system keeps its first-item default
     EXPECT_TRUE(requestedControlName(itemsPanel).isEmpty());
 }
 }

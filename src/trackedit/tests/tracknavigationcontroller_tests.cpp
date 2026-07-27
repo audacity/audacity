@@ -9,7 +9,6 @@
 #include "framework/ui/navigationcommands.h"
 #include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "mocks/navigationcontrollermock.h"
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/trackeditprojectmock.h"
@@ -24,10 +23,10 @@ namespace au::trackedit {
 /*******************************************************************************
  * TRACK NAVIGATION CONTROLLER TESTS
  *
- * Verifies arrow key behavior based on navigation highlight state:
- * - When highlight is off (default): arrows move the playhead
- * - When highlight is on (after Tab): arrows navigate clips
- * - Escape dismisses highlight, returning arrows to playhead movement
+ * Verifies the Tab / Shift+Tab panel navigation of the track view:
+ * - on a clip it steps to the adjacent clip of the same track
+ * - on the edge clip (or a track without a focused clip) it hands over to the
+ *   framework panel navigation (NEXT_PANEL_COMMAND / PREV_PANEL_COMMAND)
  ******************************************************************************/
 
 class TrackNavigationControllerTests : public ::testing::Test
@@ -37,7 +36,6 @@ public:
     {
         m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
-        m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_trackeditInteraction = std::make_shared<NiceMock<TrackeditInteractionMock> >();
@@ -56,7 +54,6 @@ public:
                 return resolve(muse::rcommand::make_response(request, muse::make_ok()));
             });
         });
-        m_controller->navigationController.set(m_navigationController);
         m_controller->globalContext.set(m_globalContext);
         m_controller->selectionController.set(m_selectionController);
         m_controller->trackeditInteraction.set(m_trackeditInteraction);
@@ -99,11 +96,44 @@ public:
         it->second(code, muse::actions::ActionData());
     }
 
+    static Clip makeClip(const TrackId& trackId, const TrackItemId& itemId, double startTime)
+    {
+        Clip clip;
+        clip.key = { trackId, itemId };
+        clip.startTime = startTime;
+        return clip;
+    }
+
+    void setupTrackWithClips(const TrackId& trackId, const std::vector<Clip>& clips)
+    {
+        Track track;
+        track.id = trackId;
+        track.type = TrackType::Mono;
+
+        ON_CALL(*m_trackeditProject, track(trackId))
+        .WillByDefault(Return(track));
+        ON_CALL(*m_trackeditProject, clipList(trackId))
+        .WillByDefault([clips](const TrackId&) {
+            muse::async::NotifyList<Clip> list;
+            for (const Clip& clip : clips) {
+                list.push_back(clip);
+            }
+            return list;
+        });
+    }
+
+    //! NOTE Matcher for a framework panel-navigation command dispatch
+    static auto isPanelCommand(const muse::rcommand::Command& command)
+    {
+        return ::testing::Truly([command](const muse::rcommand::Request& request) {
+            return request.query.uri() == command;
+        });
+    }
+
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackNavigationController> m_controller;
     std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
-    std::shared_ptr<muse::ui::NavigationControllerMock> m_navigationController;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
@@ -113,141 +143,109 @@ public:
 };
 
 /**
- * Test 1: When project just opened (no highlight), right arrow should move playhead
+ * Tab, while a clip is focused, steps to the next clip of the same track without
+ * handing over to framework panel navigation.
  */
-TEST_F(TrackNavigationControllerTests, RightArrowMovesPlayheadWhenNoHighlight)
+TEST_F(TrackNavigationControllerTests, TabOnClipStepsToNextClip)
 {
-    //! [GIVEN] Navigation highlight is off (default after opening project)
-    ON_CALL(*m_navigationController, isHighlight())
-    .WillByDefault(Return(false));
+    //! [GIVEN] A track with two clips, focus on the first clip
+    setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
-    //! [GIVEN] Controller is initialized
     initController();
+    m_controller->setFocusedItem({ 1, 100 });
 
-    //! [EXPECT] Playhead move action is dispatched
-    EXPECT_CALL(*m_dispatcher, dispatch(muse::actions::ActionCode("play-position-increase"))).Times(1);
+    //! [EXPECT] Framework panel navigation is NOT dispatched
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(0);
 
-    //! [WHEN] Right arrow is pressed (track-view-next-item is dispatched by shortcut system)
-    invokeAction("track-view-next-item");
+    //! [WHEN] Tab is pressed
+    invokeAction("track-view-next-panel");
+
+    //! [THEN] Focus moves to the next clip
+    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 200 }));
 }
 
 /**
- * Test 2: When project just opened (no highlight), left arrow should move playhead
+ * Tab, while the last clip of a track is focused, hands over to the framework
+ * panel navigation and leaves the focus untouched.
  */
-TEST_F(TrackNavigationControllerTests, LeftArrowMovesPlayheadWhenNoHighlight)
+TEST_F(TrackNavigationControllerTests, TabOnLastClipHandsOverToNextPanel)
 {
-    //! [GIVEN] Navigation highlight is off
-    ON_CALL(*m_navigationController, isHighlight())
-    .WillByDefault(Return(false));
+    //! [GIVEN] A track with two clips, focus on the last clip
+    setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
-    //! [GIVEN] Controller is initialized
     initController();
+    m_controller->setFocusedItem({ 1, 200 });
 
-    //! [EXPECT] Playhead move action is dispatched
-    EXPECT_CALL(*m_dispatcher, dispatch(muse::actions::ActionCode("play-position-decrease"))).Times(1);
+    //! [EXPECT] Framework panel navigation is dispatched
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
 
-    //! [WHEN] Left arrow is pressed
-    invokeAction("track-view-prev-item");
+    //! [WHEN] Tab is pressed
+    invokeAction("track-view-next-panel");
+
+    //! [THEN] Focus stays on the last clip
+    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 200 }));
 }
 
 /**
- * Test 3: When navigation is highlighted, right arrow should navigate to next clip (not move playhead)
- */
-TEST_F(TrackNavigationControllerTests, RightArrowNavigatesClipsWhenHighlighted)
-{
-    //! [GIVEN] Navigation highlight is on (user pressed Tab)
-    ON_CALL(*m_navigationController, isHighlight())
-    .WillByDefault(Return(true));
-
-    //! [GIVEN] There is a track with two clips, focus is on the first clip
-    Track track;
-    track.id = 1;
-    track.type = TrackType::Mono;
-
-    Clip clip1;
-    clip1.key = { 1, 100 };
-    clip1.startTime = 0.0;
-    Clip clip2;
-    clip2.key = { 1, 200 };
-    clip2.startTime = 2.0;
-
-    ON_CALL(*m_trackeditProject, track(1))
-    .WillByDefault(Return(track));
-    ON_CALL(*m_trackeditProject, clipList(1))
-    .WillByDefault([clip1, clip2](const TrackId&) {
-        muse::async::NotifyList<Clip> list;
-        list.push_back(clip1);
-        list.push_back(clip2);
-        return list;
-    });
-
-    //! [GIVEN] Controller is initialized with focus on the first clip
-    initController();
-    m_controller->setFocusedItem(clip1.key);
-
-    //! [EXPECT] Playhead move is NOT dispatched
-    EXPECT_CALL(*m_dispatcher, dispatch(muse::actions::ActionCode("play-position-increase"))).Times(0);
-
-    //! [WHEN] Right arrow is pressed
-    invokeAction("track-view-next-item");
-}
-
-/**
- * Test 4: When project just opened, Tab should trigger panel navigation
+ * Tab, while a track (no clip) is focused, hands over to the framework panel
+ * navigation.
  */
 TEST_F(TrackNavigationControllerTests, TabNavigatesToNextPanelWhenNoItems)
 {
-    //! [GIVEN] There is one track with no clips
-    Track track;
-    track.id = 1;
-    track.type = TrackType::Mono;
+    //! [GIVEN] One track with no clips, focus on the track (no item)
+    setupTrackWithClips(1, {});
 
-    ON_CALL(*m_trackeditProject, trackList())
-    .WillByDefault(Return(std::vector<Track>({ track })));
-    ON_CALL(*m_trackeditProject, track(1))
-    .WillByDefault(Return(track));
-    ON_CALL(*m_trackeditProject, clipList(1))
-    .WillByDefault(Return(muse::async::NotifyList<Clip> {}));
-
-    //! [GIVEN] Controller is initialized with focus on the track (no item)
     initController();
     m_controller->setFocusedTrack(1);
 
     //! [EXPECT] Framework panel navigation is dispatched
-    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Truly([](const muse::rcommand::Request& request) {
-        return request.query.uri() == muse::ui::NEXT_PANEL_COMMAND;
-    }))).Times(1);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
 
-    //! [WHEN] Tab is pressed (track-view-next-panel is dispatched by shortcut system)
+    //! [WHEN] Tab is pressed
     invokeAction("track-view-next-panel");
 }
 
 /**
- * Test 5: Pressing Escape dismisses highlight, then arrow moves playhead
+ * Shift+Tab, while a clip is focused, steps to the previous clip of the same
+ * track without handing over to framework panel navigation.
  */
-TEST_F(TrackNavigationControllerTests, EscapeDismissesHighlightThenArrowMovesPlayhead)
+TEST_F(TrackNavigationControllerTests, ShiftTabOnClipStepsToPrevClip)
 {
-    //! [GIVEN] Navigation highlight is initially on
-    bool isHighlighted = true;
-    ON_CALL(*m_navigationController, isHighlight())
-    .WillByDefault([&isHighlighted]() { return isHighlighted; });
+    //! [GIVEN] A track with two clips, focus on the last clip
+    setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
-    //! [GIVEN] Controller is initialized
     initController();
+    m_controller->setFocusedItem({ 1, 200 });
 
-    //! [EXPECT] Escape sets highlight to false
-    EXPECT_CALL(*m_navigationController, setIsHighlight(false)).Times(1);
+    //! [EXPECT] Framework panel navigation is NOT dispatched
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(0);
 
-    //! [WHEN] Escape is pressed (nav-escape is dispatched)
-    invokeAction("nav-escape");
+    //! [WHEN] Shift+Tab is pressed
+    invokeAction("track-view-prev-panel");
 
-    //! [THEN] Simulate highlight being turned off
-    isHighlighted = false;
+    //! [THEN] Focus moves to the previous clip
+    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 100 }));
+}
 
-    //! [EXPECT] Now arrow dispatches playhead move
-    EXPECT_CALL(*m_dispatcher, dispatch(muse::actions::ActionCode("play-position-increase"))).Times(1);
+/**
+ * Shift+Tab, while the first clip of a track is focused, hands over to the
+ * framework panel navigation and leaves the focus untouched.
+ */
+TEST_F(TrackNavigationControllerTests, ShiftTabOnFirstClipHandsOverToPrevPanel)
+{
+    //! [GIVEN] A track with two clips, focus on the first clip
+    setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
-    //! [WHEN] Right arrow is pressed after Escape
-    invokeAction("track-view-next-item");
+    initController();
+    m_controller->setFocusedItem({ 1, 100 });
+
+    //! [EXPECT] Framework panel navigation is dispatched
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(1);
+
+    //! [WHEN] Shift+Tab is pressed
+    invokeAction("track-view-prev-panel");
+
+    //! [THEN] Focus stays on the first clip
+    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 100 }));
 }
 }

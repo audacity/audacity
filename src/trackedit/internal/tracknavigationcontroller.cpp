@@ -61,11 +61,6 @@ void TrackNavigationController::init()
         m_selectionStart = std::nullopt;
     });
 
-    dispatcher()->reg(this, "nav-escape", [this] {
-        m_savedItemStartTime = std::nullopt;
-        navigationController()->setIsHighlight(false);
-    });
-
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
         if (trackIds.size() == 1) {
             // The idea here is that range selection also supports the base track to be selected using the mouse.
