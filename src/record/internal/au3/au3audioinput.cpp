@@ -29,7 +29,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
             return;
         }
 
-        m_inputChannelsCount = audioDevicesProvider()->inputChannelsSelected();
+        m_inputChannelsCount = audioDriverController()->configuration().inputChannels;
         m_focusedTrackChannels = getFocusedTrackChannels();
 
         initMeter();
@@ -56,9 +56,11 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
 
-        audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
-            m_inputChannelsCount = audioDevicesProvider()->inputChannelsSelected();
-            updateAudioEngineMonitoring();
+        audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
+            if (delta.contains(audio::AudioConfigurationField::InputChannels)) {
+                m_inputChannelsCount = audioDriverController()->configuration().inputChannels;
+                updateAudioEngineMonitoring();
+            }
         }, muse::async::Asyncable::Mode::SetReplace);
 
         trackNavigationController()->focusedTrackChanged().onReceive(this,
