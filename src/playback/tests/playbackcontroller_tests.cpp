@@ -60,6 +60,10 @@ public:
 
         m_player = std::make_shared<PlayerMock>();
 
+        //! NOTE: use a persistent channel so tests can inject playback position events
+        ON_CALL(*m_player, playbackPositionChanged())
+        .WillByDefault(Return(m_playbackPositionChanged));
+
         EXPECT_CALL(*m_playback, player(_))
         .WillOnce(Return(m_player));
 
@@ -89,6 +93,11 @@ public:
     void togglePlay()
     {
         m_controller->togglePlayAction();
+    }
+
+    void playSelection()
+    {
+        m_controller->playSelectionAction();
     }
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
@@ -134,6 +143,8 @@ public:
 
     std::shared_ptr<PlaybackMock> m_playback;
     std::shared_ptr<PlayerMock> m_player;
+
+    muse::async::Channel<muse::secs_t> m_playbackPositionChanged;
 };
 
 /**
@@ -156,9 +167,9 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     EXPECT_CALL(*m_player, playbackPosition())
     .WillRepeatedly(Return(currentPosition));
 
-    //! [GIVEN] No time selection
+    //! [GIVEN] The selection is never consulted for playback
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillOnce(Return(true));
+    .Times(0);
 
     //! [GIVEN] No loop region active
     EXPECT_CALL(*m_player, isLoopRegionActive())
@@ -210,26 +221,36 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
 
 /**
  * @brief Toggle play when there is selection
- * @details User made a selection and clicked play
- *          Playback should be started from selection's start
+ * @details User made a selection, placed the playhead before it and clicked play
+ *          A time selection must not constrain playback: it should start from
+ *          the playhead and flow through the selection to the project end
  */
-TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
+TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_PlaysFromPlayheadThroughSelection)
 {
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [GIVEN] There is selection from 10 to 20 secs
-    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillOnce(Return(false));
-    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
-    .WillOnce(Return(selectionRegion.end));
+    //! [GIVEN] Playhead is at 5 secs
+    const secs_t playheadPosition = 5.0;
+    EXPECT_CALL(*m_player, seek(playheadPosition, false))
+    .Times(1);
+    seek(playheadPosition);
 
-    //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
+    //! [GIVEN] There is selection from 10 to 20 secs
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(secs_t(10.0)));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] The selection is never consulted for playback
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .Times(0);
+
+    //! [THEN] Playback region is {playhead, totalPlayTime}, not the selection
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { playheadPosition, secs_t(100.0) }))
     .Times(1);
 
     //! [THEN] Player should start playing
@@ -262,9 +283,9 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     ON_CALL(*m_selectionController, rightMostSelectedItemEndTime())
     .WillByDefault(Return(std::optional<secs_t>(secs_t(20.0))));
 
-    //! [GIVEN] No time selection
+    //! [GIVEN] The selection is never consulted for playback
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillOnce(Return(true));
+    .Times(0);
 
     //! [THEN] The clip selection is ignored: playback region falls back to
     //! {lastPlaybackSeekTime, totalPlayTime}
@@ -476,16 +497,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 
     //! [THEN] Expect that playbeck should run from selection start position
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillOnce(Return(false));
-    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
-    .WillOnce(Return(selectionRegion.end));
-
-    //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
-    .WillRepeatedly(Return());
 
     //! [THEN] Player should stop playing
     EXPECT_CALL(*m_player, stop())
@@ -500,37 +511,36 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 
     //! [WHEN] Second: toggle play
     togglePlay();
+
+    //! [THEN] Playback restarted from the new selection start
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), selectionRegion.start);
 }
 
 /**
- * @brief Toggle play when there is selection wich start time is more than total time
- * @details User made a selection and clicked play
+ * @brief Toggle play when the playback region start time is more than total time
+ * @details The playback region was set past the project end
  *          Playback shouldn't be started
  */
-TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_StartTimeIsMoreThanTotalTime)
+TEST_F(PlaybackControllerTests, TogglePlay_StartTimeIsMoreThanTotalTime)
 {
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [GIVEN] There is selection from 10 to 20 secs
-    PlaybackRegion selectionRegion = { secs_t(1000.0), secs_t(2000.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillOnce(Return(false));
-    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
-    .WillOnce(Return(selectionRegion.end));
+    //! [GIVEN] The playback region is past the project end (totalTime = 100)
+    PlaybackRegion region = { secs_t(1000.0), secs_t(2000.0) };
 
-    //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
-    .Times(1);
+    //! [THEN] The region is forwarded to the player (once by the region change,
+    //! once by the invalid-region fallback in doPlay)
+    EXPECT_CALL(*m_player, setPlaybackRegion(region))
+    .Times(2);
 
-    //! [THEN] Player should start playing
+    //! [THEN] Player shouldn't start playing
     EXPECT_CALL(*m_player, play())
     .Times(0);
 
-    //! [WHEN] Toggle play
+    //! [WHEN] Change the playback region and toggle play
+    changePlaybackRegion(region.start, region.end);
     togglePlay();
 }
 
@@ -754,9 +764,9 @@ TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd
     EXPECT_CALL(*m_player, playbackPosition())
     .WillRepeatedly(Return(recordEnd));
 
-    //! [GIVEN] No selection
+    //! [GIVEN] The selection is never consulted for playback
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillOnce(Return(true));
+    .Times(0);
 
     //! [THEN] Playback region is {cursor, totalPlayTime}
     EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { recordEnd, secs_t(100.0) }))
@@ -768,5 +778,262 @@ TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd
 
     //! [WHEN] User presses Space
     togglePlay();
+}
+
+/**
+ * @brief Playback does not stop when passing a former selection end
+ * @details Playback runs with region {5, 100} (playhead to project end).
+ *          Reaching a position in the middle (e.g. the end of a time selection
+ *          at 20s) must not stop the player.
+ */
+TEST_F(PlaybackControllerTests, PlaybackPosition_InsideRegion_DoesNotStop)
+{
+    //! [GIVEN] Playback is running with region {5, 100}
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(5.0), secs_t(100.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] Playback position is at 20s (inside the region)
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] Player is not stopped
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+
+    //! [WHEN] Playback position changed
+    m_playbackPositionChanged.send(secs_t(20.0));
+}
+
+/**
+ * @brief Playback stops at the end of the playback region / project
+ */
+TEST_F(PlaybackControllerTests, PlaybackPosition_OnRegionEnd_Stops)
+{
+    //! [GIVEN] The playback region is {5, 100}
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    changePlaybackRegion(5.0, 100.0);
+
+    //! [GIVEN] Playback is running with that region
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(5.0), secs_t(100.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] Playback position reached the region end
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(100.0)));
+
+    //! [THEN] Player is stopped
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+
+    //! [WHEN] Playback position changed
+    m_playbackPositionChanged.send(secs_t(100.0));
+}
+
+/**
+ * @brief Loop playback is not stopped at the loop region end
+ */
+TEST_F(PlaybackControllerTests, PlaybackPosition_OnLoopRegionEnd_DoesNotStop)
+{
+    //! [GIVEN] Playback is running with an active loop region {10, 20}
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(10.0), secs_t(20.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+
+    //! [GIVEN] Playback position reached the loop region end
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] Player is not stopped (the loop wraps around)
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+
+    //! [WHEN] Playback position changed
+    m_playbackPositionChanged.send(secs_t(20.0));
+}
+
+/**
+ * @brief Play selection plays exactly the selected time range
+ * @details User triggered the "play-selection" action with a selection of 10-20 secs
+ *          Playback region should be the selection, so playback starts at 10s
+ *          and stops at 20s (via the end-of-region check)
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WithSelection)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionRegion.start));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionRegion.end));
+
+    //! [THEN] The playback region is the selection
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
+    .Times(1);
+
+    //! [THEN] Player should start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Play selection
+    playSelection();
+
+    //! [THEN] The playback cursor is at the selection start
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), selectionRegion.start);
+}
+
+/**
+ * @brief Play selection does nothing without a time selection
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] No time selection
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Nothing happens
+    EXPECT_CALL(*m_player, setPlaybackRegion(_))
+    .Times(0);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
+ * @brief Play selection availability depends on selection and playback state
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_CanReceiveAction)
+{
+    const muse::actions::ActionCode code = "action://playback/play-selection";
+
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] Without a selection the action is unavailable
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+    EXPECT_FALSE(m_controller->canReceiveAction(code));
+
+    //! [THEN] With a selection it is available
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    EXPECT_TRUE(m_controller->canReceiveAction(code));
+
+    //! [THEN] While playing it is available even without a selection (it stops playback)
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    EXPECT_TRUE(m_controller->canReceiveAction(code));
+}
+
+/**
+ * @brief Play selection without a selection stops active playback
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_NoSelection_Stops)
+{
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] No time selection
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Player is stopped and not restarted
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
+ * @brief Play selection does nothing while recording
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhileRecording_DoesNothing)
+{
+    //! [GIVEN] Recording is in progress
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(secs_t(10.0)));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] The action is not available and nothing happens
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/play-selection"));
+
+    EXPECT_CALL(*m_player, setPlaybackRegion(_))
+    .Times(0);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
+ * @brief Play selection while playing restarts playback from the selection
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
+{
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(secs_t(10.0)));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(secs_t(20.0)));
+
+    //! [THEN] Player is stopped, then restarted
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Play selection
+    playSelection();
+
+    //! [THEN] The playback cursor is at the selection start
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
 }
 }
