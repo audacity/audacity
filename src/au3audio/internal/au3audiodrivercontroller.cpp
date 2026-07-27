@@ -443,6 +443,25 @@ AudioStreamRestorer Au3AudioDriverController::suspend(const AudioStreamDescripto
     return suspender ? suspender->suspendForAudioConfiguration(stream.kind) : nullptr;
 }
 
+AudioStreamRestorer Au3AudioDriverController::suspendOrForceStop(const AudioStreamDescriptor& stream) const
+{
+    if (auto restoreStream = suspend(stream)) {
+        return restoreStream;
+    }
+    // No context resolves the stream's owner (e.g. its window is closing), so
+    // no transport can suspend and later restore it. Force-stop the stream at
+    // the engine level instead: an orphaned stream must not make the audio
+    // settings unchangeable. There is no transport state to restore afterwards.
+    if (!audioEngine()) {
+        return {};
+    }
+    audioEngine()->stopStream();
+    if (audioEngine()->currentStream()) {
+        return {};
+    }
+    return [] { return true; };
+}
+
 void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& value,
                                                    const AudioConfigurationDelta& delta,
                                                    const muse::modularity::ContextPtr& requester)
@@ -579,7 +598,7 @@ ApplyResult Au3AudioDriverController::apply(const muse::modularity::ContextPtr& 
             }
         }
         if (streamNeedsSuspension(delta, after.defaultSampleRate, requester, stream)) {
-            restoreStream = suspend(*stream);
+            restoreStream = suspendOrForceStop(*stream);
             if (!restoreStream) {
                 return { ApplyStatus::OwnerUnavailable };
             }
@@ -628,7 +647,7 @@ ApplyResult Au3AudioDriverController::rescan()
     try {
         stream = audioEngine() ? audioEngine()->currentStream() : std::nullopt;
         if (stream) {
-            restoreStream = suspend(*stream);
+            restoreStream = suspendOrForceStop(*stream);
             if (!restoreStream) {
                 return { ApplyStatus::OwnerUnavailable };
             }
@@ -738,7 +757,7 @@ ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingC
         stream = audioEngine() ? audioEngine()->currentStream() : std::nullopt;
         // The ASIO panel requires a closed driver even without a routing change.
         if (stream) {
-            restoreStream = suspend(*stream);
+            restoreStream = suspendOrForceStop(*stream);
             if (!restoreStream) {
                 return { ApplyStatus::OwnerUnavailable };
             }

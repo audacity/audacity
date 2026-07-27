@@ -181,11 +181,29 @@ TEST_F(Au3AudioDriverControllerTests, Apply_RequesterScopedChangeDoesNotSuspendA
     EXPECT_EQ(m_ownerSuspension.suspendCalls, 0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_UnresolvedStreamOwnerFailsBeforeWritingSettings)
+TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamIsForceStoppedInsteadOfWedgingSettings)
 {
-    auto unresolved = stream();
-    unresolved.ownerProject = reinterpret_cast<AudacityProject*>(0x1234);
-    ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(unresolved));
+    auto orphan = stream();
+    orphan.ownerProject = reinterpret_cast<AudacityProject*>(0x1234);
+    EXPECT_CALL(*m_audioEngine, currentStream())
+    .WillOnce(Return(orphan))
+    .WillRepeatedly(Return(std::optional<audio::AudioStreamDescriptor>()));
+    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+    audio::AudioConfigurationChange change;
+    change.bufferLength = 50.0;
+
+    const auto result = m_controller.apply(m_requesterContext, change);
+
+    EXPECT_EQ(result.status, audio::ApplyStatus::Applied);
+    EXPECT_EQ(m_controller.configuration().bufferLength, 50.0);
+    EXPECT_EQ(m_ownerSuspension.suspendCalls, 0);
+}
+
+TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamThatSurvivesStopFailsBeforeWritingSettings)
+{
+    auto orphan = stream();
+    orphan.ownerProject = reinterpret_cast<AudacityProject*>(0x1234);
+    ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(orphan));
     audio::AudioConfigurationChange change;
     change.bufferLength = 50.0;
 

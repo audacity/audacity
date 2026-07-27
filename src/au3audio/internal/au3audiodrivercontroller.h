@@ -61,6 +61,7 @@ private:
     AudacityProject* projectForContext(const muse::modularity::ContextPtr& context) const;
     muse::modularity::ContextPtr contextForProject(const AudacityProject* project) const;
     audio::AudioStreamRestorer suspend(const audio::AudioStreamDescriptor& stream) const;
+    audio::AudioStreamRestorer suspendOrForceStop(const audio::AudioStreamDescriptor& stream) const;
     void writeConfiguration(const audio::AudioConfiguration& value,
                             const audio::AudioConfigurationDelta& delta,
                             const muse::modularity::ContextPtr& requester);
