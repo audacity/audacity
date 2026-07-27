@@ -835,6 +835,9 @@
         <seq>P</seq>
     </SC>
     <SC>
+        <key>action://playback/toggle-play-pause</key>
+    </SC>
+    <SC>
         <key>action://record/start</key>
         <seq>R</seq>
     </SC>
@@ -874,8 +877,11 @@
         <key>s-w-playthrough</key>
     </SC>
     <SC>
-        <key>action://playback/play</key>
+        <key>action://playback/toggle-play-stop</key>
         <seq>Space</seq>
+    </SC>
+    <SC>
+        <key>action://playback/toggle-play-from-cursor</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>

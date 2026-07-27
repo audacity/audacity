@@ -6,7 +6,6 @@
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "global/tests/mocks/applicationmock.h"
 #include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
@@ -35,9 +34,6 @@ public:
     void SetUp() override
     {
         m_controller = new PlaybackController(muse::modularity::globalCtx());
-
-        m_application = std::make_shared<muse::ApplicationMock>();
-        m_controller->application.set(m_application);
 
         m_globalContext = std::make_shared<context::GlobalContextMock>();
         m_controller->globalContext.set(m_globalContext);
@@ -90,9 +86,22 @@ public:
         delete m_controller;
     }
 
-    void togglePlay()
+    //! NOTE: toolbar Play/Pause button — play/pause
+    void togglePlayPause()
     {
-        m_controller->togglePlayAction();
+        m_controller->togglePlayPauseAction();
+    }
+
+    //! NOTE: Spacebar — play/stop
+    void togglePlayStop()
+    {
+        m_controller->togglePlayStopAction();
+    }
+
+    //! NOTE: Shift+Spacebar — play from cursor, ignoring selection (pause while playing)
+    void togglePlayFromCursor()
+    {
+        m_controller->togglePlayFromCursorAction();
     }
 
     void playSelection()
@@ -133,7 +142,6 @@ public:
 
     PlaybackController* m_controller = nullptr;
 
-    std::shared_ptr<ApplicationMock> m_application;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<actions::IActionsDispatcher> m_dispatcher;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
@@ -189,7 +197,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -216,7 +224,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -258,7 +266,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_PlaysFromPlayheadThroug
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -301,7 +309,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -314,10 +322,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
-
-    //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] No checking selection
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
@@ -334,7 +338,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayFromCursor();
 }
 
 /**
@@ -353,7 +357,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayPause();
 }
 
 TEST_F(PlaybackControllerTests, Pause_WhenSeekTargetChangedDuringPlayback_StopsPlayback)
@@ -404,16 +408,12 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Running));
 
-    //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
-
     //! [THEN] Player should stop playing
     EXPECT_CALL(*m_player, stop())
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -432,7 +432,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -445,10 +445,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     //! [GIVEN] Playback is paused
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Paused));
-
-    //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] Expect that playbeck should run from current position
     secs_t currentPosition = 10.0;
@@ -466,7 +462,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayFromCursor();
 }
 
 /**
@@ -476,41 +472,34 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
  */
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 {
-    //! [GIVEN] Play with Shift modifier
-    EXPECT_CALL(*m_application, keyboardModifiers())
-    .WillOnce(Return(Qt::ShiftModifier))
-    .WillRepeatedly(Return(Qt::NoModifier));
-
-    //! [GIVEN] User started playback
+    //! [GIVEN] User started playback, then paused it
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
-    togglePlay();
+    togglePlayStop();
 
-    //! [GIVEN] And paused it
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Running));
-    togglePlay();
+    togglePlayPause();
 
     //! [GIVEN] In paused state
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Paused));
 
-    //! [THEN] Expect that playbeck should run from selection start position
+    //! [THEN] Expect that playback should restart from the new selection start
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
 
-    //! [THEN] Player should stop playing
+    //! [THEN] Player should stop, then start playing
     EXPECT_CALL(*m_player, stop())
     .Times(1);
 
-    //! [THEN] Player should start playing
     EXPECT_CALL(*m_player, play())
     .Times(1);
 
-    //! [WHEN] Fitst: user changed selection
+    //! [WHEN] First: user changed selection
     changePlaybackRegion(selectionRegion.start, selectionRegion.end);
 
-    //! [WHEN] Second: toggle play
-    togglePlay();
+    //! [WHEN] Second: press Space
+    togglePlayStop();
 
     //! [THEN] Playback restarted from the new selection start
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), selectionRegion.start);
@@ -541,7 +530,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_StartTimeIsMoreThanTotalTime)
 
     //! [WHEN] Change the playback region and toggle play
     changePlaybackRegion(region.start, region.end);
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -777,7 +766,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd
     .Times(1);
 
     //! [WHEN] User presses Space
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
