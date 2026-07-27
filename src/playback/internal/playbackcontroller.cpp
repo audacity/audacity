@@ -27,6 +27,9 @@ static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playbac
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
+static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
+static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
+
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
@@ -115,6 +118,15 @@ Notification PlaybackController::isPlayAllowedChanged() const
 
 bool PlaybackController::isPlaying() const
 {
+    //! NOTE: while recording (including the lead-in pre-roll) the audio is driven by the
+    //! record stream, not the player. Report not-playing so every caller sees the same
+    //! state as on the normal record path, where the player stays stopped throughout.
+    //! Otherwise pausing/resuming the lead-in leaves the player "running" and, e.g., the
+    //! record button gets disabled mid-recording.
+    if (recordController()->isRecording()) {
+        return false;
+    }
+
     return player()->playbackStatus() == PlaybackStatus::Running;
 }
 
@@ -248,7 +260,21 @@ void PlaybackController::onPlaybackPositionChanged()
 
 void PlaybackController::togglePlayPauseAction()
 {
-    togglePlay(TogglePlayMode::PlayPause);
+    //! NOTE: while recording, the play/pause button pauses the recorder so it stays a
+    //! single action.
+    if (!recordController()->isRecording()) {
+        togglePlay(TogglePlayMode::PlayPause);
+        return;
+    }
+
+    if (recordController()->isLeadInRecording()) {
+        //! NOTE: during the lead-in pre-roll the audio is driven by the record stream, not by
+        //! the player, so its status is not Running and togglePlay() can't see it as playing.
+        //! Toggle the shared stream directly: pause it, or resume it if already paused.
+        isPaused() ? doResume() : doPause();
+    } else {
+        dispatcher()->dispatch(RECORD_PAUSE_QUERY);
+    }
 }
 
 void PlaybackController::togglePlayStopAction()
@@ -503,6 +529,13 @@ void PlaybackController::doPause()
 
 void PlaybackController::stopAction()
 {
+    //! NOTE: the stop button is a single action; the controller decides whether it
+    //! stops the recorder or the player.
+    if (recordController()->isRecording()) {
+        dispatcher()->dispatch(RECORD_STOP_QUERY);
+        return;
+    }
+
     stopSeekAndUpdatePlaybackRegion();
 }
 
