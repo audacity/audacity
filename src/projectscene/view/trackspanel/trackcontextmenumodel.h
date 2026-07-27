@@ -10,6 +10,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::projectscene {
 class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
@@ -22,6 +23,7 @@ class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
@@ -37,6 +39,7 @@ public:
 signals:
     void trackIdChanged();
     void trackRenameRequested();
+    void openRequested();
 
 private:
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;

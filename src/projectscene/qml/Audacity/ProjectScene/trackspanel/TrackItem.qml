@@ -93,6 +93,10 @@ ListItemBlank {
         trackId: root.item ? root.item.trackId : -1
 
         onTrackRenameRequested: title.edit()
+
+        onOpenRequested: {
+            menuButton.toggleMenu(menuButton)
+        }
     }
 
     function init() {

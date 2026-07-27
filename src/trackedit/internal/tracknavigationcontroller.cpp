@@ -780,7 +780,7 @@ void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks
 
 void TrackNavigationController::openContextMenuForFocusedItem()
 {
-    if (!isFocusedItemValid()) {
+    if (m_focusedItemKey.trackId == INVALID_TRACK) {
         return;
     }
 
