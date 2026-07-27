@@ -733,7 +733,7 @@ Rectangle {
             target: timeline.context
 
             function onFrameTimeChanged() {
-                if (emptyAreaGuidelineHandler.hovered && !mainMouseArea.pressed && root.interactionState === TracksItemsView.State.Idle) {
+                if (emptyAreaGuidelineHandler.hovered && !mainMouseArea.pressed && !tracksViewState.isItemEditInProgress()) {
                     emptyAreaGuidelineHandler.processHover()
                 }
             }
