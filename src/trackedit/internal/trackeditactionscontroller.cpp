@@ -2232,6 +2232,16 @@ void TrackeditActionsController::moveFocusedItemDown()
 
 void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset)
 {
+    const TrackItemKey focusedItem = trackNavigationController()->focusedItem();
+    const bool trackFocused = focusedItem.trackId != INVALID_TRACK && focusedItem.itemId == INVALID_TRACK_ITEM;
+    if (trackFocused) {
+        if (trackPositionOffset != 0) {
+            const TrackMoveDirection direction = trackPositionOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down;
+            trackeditInteraction()->moveTracks({ focusedItem.trackId }, direction);
+        }
+        return;
+    }
+
     constexpr bool completed = false;
 
     if (!labelsForInteraction().empty()) {
