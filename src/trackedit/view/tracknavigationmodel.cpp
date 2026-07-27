@@ -198,6 +198,15 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 
     muse::ui::NavigationPanel* headerPanel = makePanel(makeTrackHeaderPanelName(trackId), orderBase + 1);
 
+    connect(headerPanel, &muse::ui::NavigationPanel::navigationEvent, this,
+            [this, trackId](muse::ui::NavigationEvent* event) {
+        if (event->type() == muse::ui::NavigationEvent::Escape) {
+            //! NOTE: Escape from a track header control returns the focus to the track container
+            event->setAccepted(true);
+            activateNavigation(trackId, true /*highlight*/);
+        }
+    });
+
     muse::ui::NavigationPanel* itemsPanel = makePanel(makeTrackItemsPanelName(trackId), orderBase + 2);
 
     connect(itemsPanel, &muse::ui::NavigationPanel::navigationEvent, this,

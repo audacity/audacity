@@ -519,7 +519,6 @@ void ApplicationActionController::doGlobalCancel()
     }
 
     dispatcher()->dispatch("nav-escape");
-    commandDispatcher()->dispatch(muse::ui::ESCAPE_COMMAND);
 }
 
 void ApplicationActionController::doGlobalTrigger()
