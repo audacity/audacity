@@ -30,6 +30,42 @@
 using namespace au::appshell;
 using namespace muse::ui;
 
+namespace {
+QString audioConfigurationFailureMessage(au::audio::ApplyStatus status)
+{
+    switch (status) {
+    case au::audio::ApplyStatus::Busy:
+        return muse::qtrc("preferences", "Audio settings are already being changed.");
+    case au::audio::ApplyStatus::InvalidConfiguration:
+        return muse::qtrc("preferences", "The default audio settings are invalid.");
+    case au::audio::ApplyStatus::OwnerUnavailable:
+        return muse::qtrc("preferences", "The active audio stream could not be stopped.");
+    case au::audio::ApplyStatus::InvalidRouting:
+    case au::audio::ApplyStatus::NoUsableAudioApi:
+    case au::audio::ApplyStatus::NoAsioDevice:
+    case au::audio::ApplyStatus::InternalError:
+        return muse::qtrc("preferences", "An internal error occurred while resetting the audio settings.");
+    case au::audio::ApplyStatus::Applied:
+    case au::audio::ApplyStatus::NoChange:
+        return {};
+    }
+    return {};
+}
+
+QString audioConfigurationMessage(const au::audio::ApplyResult& result,
+                                  QString message,
+                                  const QString& restorationFailure)
+{
+    if (result.streamRestorationFailed) {
+        if (!message.isEmpty()) {
+            message += " ";
+        }
+        message += restorationFailure;
+    }
+    return message;
+}
+}
+
 PreferencesModel::PreferencesModel(QObject* parent)
     : QAbstractItemModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
@@ -135,7 +171,9 @@ QString PreferencesModel::currentPageId() const
 
 void PreferencesModel::load(const QString& currentPageId)
 {
+    m_context = iocContext();
     configuration()->startEditSettings();
+    m_editing = true;
 
     beginResetModel();
 
@@ -201,19 +239,53 @@ void PreferencesModel::resetFactorySettings()
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
     QCoreApplication::processEvents();
     configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS);
+    const auto result = audioDriverController()->reload(m_context);
+    if (!result.succeeded() && interactive()) {
+        const auto message = audioConfigurationMessage(
+            result,
+            audioConfigurationFailureMessage(result.status),
+            muse::qtrc("preferences", "The previous audio state could not be restored."));
+        interactive()->error(
+            muse::qtrc("preferences", "Unable to reset audio settings")
+                .toStdString(),
+            message.toStdString());
+    } else {
+        const auto notice = audioConfigurationMessage(
+            result,
+            {},
+            muse::qtrc(
+                "preferences",
+                "The audio stream could not be restored after resetting the audio settings."));
+        if (!notice.isEmpty() && interactive()) {
+            interactive()->warning(
+                muse::qtrc("preferences", "Audio settings").toStdString(),
+                notice.toStdString());
+        }
+    }
     configuration()->startEditSettings();
     QGuiApplication::restoreOverrideCursor();
 }
 
 void PreferencesModel::apply()
 {
+    if (!m_editing) {
+        return;
+    }
+
     configuration()->setPreferencesDialogLastOpenedPageId(m_currentPageId);
     configuration()->applySettings();
+    m_editing = false;
 }
 
 void PreferencesModel::cancel()
 {
+    if (!m_editing) {
+        return;
+    }
+
     configuration()->rollbackSettings();
+    audioDriverController()->reload(m_context);
+    m_editing = false;
 }
 
 void PreferencesModel::selectRow(const QModelIndex& rowIndex)

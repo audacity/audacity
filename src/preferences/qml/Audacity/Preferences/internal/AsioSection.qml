@@ -6,7 +6,6 @@ import QtQuick
 import Muse.UiComponents
 
 import Audacity.UiComponents
-import Audacity.Playback
 
 BaseSection {
     id: root
@@ -17,14 +16,6 @@ BaseSection {
 
     property var apiModel: null
 
-    PlaybackStateModel {
-        id: playbackState
-    }
-
-    Component.onCompleted: {
-        playbackState.init()
-    }
-
     Row {
         width: parent.width
         spacing: root.spacing
@@ -34,8 +25,6 @@ BaseSection {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTrc("preferences", "Use device sample rate")
-
-            enabled: !playbackState.isPlaying
 
             checked: apiModel.asioUseDeviceSampleRate
 
@@ -51,8 +40,6 @@ BaseSection {
 
         FlatButton {
             text: qsTrc("preferences", "Driver settings")
-
-            enabled: !playbackState.isPlaying
 
             navigation.name: "AsioDriverSettingsButton"
             navigation.panel: root.navigation
