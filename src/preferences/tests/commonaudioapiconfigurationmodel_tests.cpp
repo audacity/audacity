@@ -34,9 +34,9 @@ public:
 
         ON_CALL(*m_controller, configuration()).WillByDefault([this]() { return m_applied; });
         ON_CALL(*m_controller, configurationChanged())
-            .WillByDefault(Return(m_configurationChanged));
+        .WillByDefault(Return(m_configurationChanged));
         ON_CALL(*m_controller, audioDeviceListChanged())
-            .WillByDefault(Return(m_deviceListChanged));
+        .WillByDefault(Return(m_deviceListChanged));
         ON_CALL(*m_controller, apis())
         .WillByDefault(Return(std::vector<std::string> { "Core Audio", "JACK" }));
         ON_CALL(*m_controller, outputDevices())
@@ -175,7 +175,7 @@ TEST_F(CommonAudioApiConfigurationModelTests, EditingBackToAppliedStateProducesA
 }
 
 TEST_F(CommonAudioApiConfigurationModelTests,
-    ExternalChangeDoesNotDiscardPendingEdit)
+       ExternalChangeDoesNotDiscardPendingEdit)
 {
     m_model->outputDeviceSelected("Headphones");
     m_applied.outputDevice = "External Output";
@@ -186,12 +186,12 @@ TEST_F(CommonAudioApiConfigurationModelTests,
 
     EXPECT_EQ(m_model->currentOutputDeviceId(), "Headphones");
     EXPECT_CALL(*m_controller, apply(_, _))
-        .WillOnce([](const muse::modularity::ContextPtr&,
-                      const audio::AudioConfigurationChange& change) {
-            EXPECT_EQ(change.outputDevice,
-                std::optional<std::string>("Headphones"));
-            return audio::ApplyResult { audio::ApplyStatus::Applied };
-        });
+    .WillOnce([](const muse::modularity::ContextPtr&,
+                 const audio::AudioConfigurationChange& change) {
+        EXPECT_EQ(change.outputDevice,
+                  std::optional<std::string>("Headphones"));
+        return audio::ApplyResult { audio::ApplyStatus::Applied };
+    });
     EXPECT_TRUE(m_model->apply());
 }
 
@@ -203,11 +203,11 @@ TEST_F(CommonAudioApiConfigurationModelTests, ResetDiscardsPendingEdits)
 
     EXPECT_EQ(m_model->currentOutputDeviceId(), "Built-in Output");
     EXPECT_CALL(*m_controller, apply(_, _))
-        .WillOnce([](const muse::modularity::ContextPtr&,
-                      const audio::AudioConfigurationChange& change) {
-            EXPECT_FALSE(change.outputDevice);
-            return audio::ApplyResult { audio::ApplyStatus::NoChange };
-        });
+    .WillOnce([](const muse::modularity::ContextPtr&,
+                 const audio::AudioConfigurationChange& change) {
+        EXPECT_FALSE(change.outputDevice);
+        return audio::ApplyResult { audio::ApplyStatus::NoChange };
+    });
     EXPECT_TRUE(m_model->apply());
 }
 
@@ -229,7 +229,7 @@ TEST_F(CommonAudioApiConfigurationModelTests, RestoreFailureIsAnAppliedResult)
 {
     m_model->bufferLengthSelected("50");
     EXPECT_CALL(*m_controller, apply(_, _))
-        .WillOnce(Return(audio::ApplyResult {
+    .WillOnce(Return(audio::ApplyResult {
             audio::ApplyStatus::Applied,
             true }));
 

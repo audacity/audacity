@@ -135,9 +135,9 @@ void Au3AudioDriverController::init()
     const auto availableChannels = inputChannelsAvailable(api, inputDevice);
     const auto inputChannels
         = availableChannels > 0
-        ? std::clamp(settings()->value(INPUT_CHANNELS).toInt(), 1,
-              availableChannels)
-        : 0;
+          ? std::clamp(settings()->value(INPUT_CHANNELS).toInt(), 1,
+                       availableChannels)
+          : 0;
     settings()->setLocalValue(INPUT_CHANNELS, muse::Val(inputChannels));
     m_configuration = configurationFromSettings();
 }
@@ -244,7 +244,7 @@ std::vector<std::string> Au3AudioDriverController::inputDevices(const std::strin
 int Au3AudioDriverController::inputChannelsAvailable() const
 {
     return inputChannelsAvailable(m_configuration.api,
-        m_configuration.inputDevice);
+                                  m_configuration.inputDevice);
 }
 
 int Au3AudioDriverController::inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const
@@ -341,23 +341,37 @@ std::optional<AudioConfiguration> Au3AudioDriverController::normalizedConfigurat
 }
 
 AudioConfigurationDelta Au3AudioDriverController::makeDelta(const AudioConfiguration& before,
-                                                             const AudioConfiguration& after) const
+                                                            const AudioConfiguration& after) const
 {
     AudioConfigurationDelta delta;
     const auto add = [&delta](AudioConfigurationField field) { delta.fields |= fieldMask(field); };
-    if (before.api != after.api) add(AudioConfigurationField::Api);
-    if (before.outputDevice != after.outputDevice) add(AudioConfigurationField::OutputDevice);
-    if (before.inputDevice != after.inputDevice) add(AudioConfigurationField::InputDevice);
-    if (before.inputChannels != after.inputChannels) add(AudioConfigurationField::InputChannels);
-    if (!muse::RealIsEqual(before.bufferLength, after.bufferLength)) add(AudioConfigurationField::BufferLength);
+    if (before.api != after.api) {
+        add(AudioConfigurationField::Api);
+    }
+    if (before.outputDevice != after.outputDevice) {
+        add(AudioConfigurationField::OutputDevice);
+    }
+    if (before.inputDevice != after.inputDevice) {
+        add(AudioConfigurationField::InputDevice);
+    }
+    if (before.inputChannels != after.inputChannels) {
+        add(AudioConfigurationField::InputChannels);
+    }
+    if (!muse::RealIsEqual(before.bufferLength, after.bufferLength)) {
+        add(AudioConfigurationField::BufferLength);
+    }
     if (before.automaticLatencyCompensation != after.automaticLatencyCompensation) {
         add(AudioConfigurationField::AutomaticLatencyCompensation);
     }
     if (!muse::RealIsEqual(before.latencyCompensation, after.latencyCompensation)) {
         add(AudioConfigurationField::LatencyCompensation);
     }
-    if (before.defaultSampleRate != after.defaultSampleRate) add(AudioConfigurationField::DefaultSampleRate);
-    if (before.defaultSampleFormat != after.defaultSampleFormat) add(AudioConfigurationField::DefaultSampleFormat);
+    if (before.defaultSampleRate != after.defaultSampleRate) {
+        add(AudioConfigurationField::DefaultSampleRate);
+    }
+    if (before.defaultSampleFormat != after.defaultSampleFormat) {
+        add(AudioConfigurationField::DefaultSampleFormat);
+    }
     if (before.asioUseDeviceSampleRate != after.asioUseDeviceSampleRate) {
         add(AudioConfigurationField::AsioUseDeviceSampleRate);
     }
@@ -426,11 +440,11 @@ AudacityProject* Au3AudioDriverController::projectForContext(
     }
     const auto globalContext
         = muse::modularity::ioc(context)->resolve<au::context::IGlobalContext>(
-            "au3audio");
+              "au3audio");
     const auto project
         = globalContext ? globalContext->currentProject() : nullptr;
     return project ? reinterpret_cast<AudacityProject*>(project->au3ProjectPtr())
-                   : nullptr;
+           : nullptr;
 }
 
 AudioStreamRestorer Au3AudioDriverController::suspend(const AudioStreamDescriptor& stream) const
@@ -463,8 +477,8 @@ AudioStreamRestorer Au3AudioDriverController::suspendOrForceStop(const AudioStre
 }
 
 void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& value,
-                                                   const AudioConfigurationDelta& delta,
-                                                   const muse::modularity::ContextPtr& requester)
+                                                  const AudioConfigurationDelta& delta,
+                                                  const muse::modularity::ContextPtr& requester)
 {
     if (delta.contains(AudioConfigurationField::Api)) {
         settings()->setLocalValue(AUDIO_HOST, muse::Val(value.api));
@@ -545,7 +559,7 @@ bool Au3AudioDriverController::rollbackAndRestore(const AudioConfiguration& befo
 }
 
 void Au3AudioDriverController::publish(const AudioConfigurationDelta& delta,
-    bool deviceListChanged) noexcept
+                                       bool deviceListChanged) noexcept
 {
     // Notification failures cannot roll back committed configuration.
     if (!delta.empty()) {
@@ -611,14 +625,14 @@ ApplyResult Au3AudioDriverController::apply(const muse::modularity::ContextPtr& 
         }
     } catch (const std::exception& exception) {
         const bool restored = rollbackAndRestore(before, after, requester,
-            requesterProjectRate, deviceChange, writeStarted,
-            restoreStream);
+                                                 requesterProjectRate, deviceChange, writeStarted,
+                                                 restoreStream);
         LOGE() << "Failed to apply audio configuration: " << exception.what();
         return { ApplyStatus::InternalError, !restored };
     } catch (...) {
         const bool restored = rollbackAndRestore(before, after, requester, requesterProjectRate,
-            deviceChange, writeStarted,
-            restoreStream);
+                                                 deviceChange, writeStarted,
+                                                 restoreStream);
         LOGE() << "Failed to apply audio configuration";
         return { ApplyStatus::InternalError, !restored };
     }
@@ -679,12 +693,12 @@ ApplyResult Au3AudioDriverController::rescan()
         return { ApplyStatus::Applied, !restored };
     } catch (const std::exception& exception) {
         const bool restored = rollbackAndRestore(before, attempted, {}, {}, true,
-            writeStarted, restoreStream);
+                                                 writeStarted, restoreStream);
         LOGE() << "Failed to rescan audio devices: " << exception.what();
         return { ApplyStatus::InternalError, !restored };
     } catch (...) {
         const bool restored = rollbackAndRestore(before, attempted, {}, {}, true,
-            writeStarted, restoreStream);
+                                                 writeStarted, restoreStream);
         LOGE() << "Failed to rescan audio devices";
         return { ApplyStatus::InternalError, !restored };
     }
@@ -710,7 +724,7 @@ ApplyResult Au3AudioDriverController::reload(const muse::modularity::ContextPtr&
         try {
             const auto currentSettings = configurationFromSettings();
             writeConfiguration(m_configuration,
-                makeDelta(currentSettings, m_configuration), {});
+                               makeDelta(currentSettings, m_configuration), {});
         } catch (...) {
         }
     }
@@ -775,7 +789,7 @@ ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingC
         const auto afterPanel = normalizedConfiguration(after, {});
         if (!afterPanel) {
             throw std::runtime_error(
-                "The ASIO control panel left no usable audio configuration");
+                      "The ASIO control panel left no usable audio configuration");
         }
         attempted = *afterPanel;
         const auto capabilityDelta = makeDelta(after, attempted);
@@ -790,12 +804,12 @@ ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingC
         totalDelta = makeDelta(before, attempted);
     } catch (const std::exception& exception) {
         const bool restored = rollbackAndRestore(before, attempted, {}, {},
-            deviceStateChanged, writeStarted, restoreStream);
+                                                 deviceStateChanged, writeStarted, restoreStream);
         LOGE() << "Failed to open ASIO settings: " << exception.what();
         return { ApplyStatus::InternalError, !restored };
     } catch (...) {
         const bool restored = rollbackAndRestore(before, attempted, {}, {},
-            deviceStateChanged, writeStarted, restoreStream);
+                                                 deviceStateChanged, writeStarted, restoreStream);
         LOGE() << "Failed to open ASIO settings";
         return { ApplyStatus::InternalError, !restored };
     }

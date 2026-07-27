@@ -34,8 +34,7 @@ public:
     std::vector<uint64_t> sampleRates() const override;
     std::vector<std::string> sampleFormats() const override;
 
-    audio::ApplyResult apply(const muse::modularity::ContextPtr& requester,
-                             const audio::AudioConfigurationChange& change) override;
+    audio::ApplyResult apply(const muse::modularity::ContextPtr& requester, const audio::AudioConfigurationChange& change) override;
     audio::ApplyResult rescan() override;
     audio::ApplyResult reload(const muse::modularity::ContextPtr& requester) override;
     audio::ApplyResult openAsioDriverSettings(const audio::AudioRoutingChange& routing) override;
@@ -50,28 +49,20 @@ private:
     void refreshInputDeviceSettings(const std::string& api, const std::string& inputDevice);
 
     std::optional<audio::AudioConfiguration> normalizedConfiguration(
-        const audio::AudioConfiguration& current,
-        const audio::AudioConfigurationChange& change) const;
-    audio::AudioConfigurationDelta makeDelta(const audio::AudioConfiguration& before,
-                                              const audio::AudioConfiguration& after) const;
-    bool streamNeedsSuspension(const audio::AudioConfigurationDelta& delta,
-                               uint64_t defaultSampleRate,
+        const audio::AudioConfiguration& current, const audio::AudioConfigurationChange& change) const;
+    audio::AudioConfigurationDelta makeDelta(const audio::AudioConfiguration& before, const audio::AudioConfiguration& after) const;
+    bool streamNeedsSuspension(const audio::AudioConfigurationDelta& delta, uint64_t defaultSampleRate,
                                const muse::modularity::ContextPtr& requester,
                                const std::optional<audio::AudioStreamDescriptor>& stream) const;
     AudacityProject* projectForContext(const muse::modularity::ContextPtr& context) const;
     muse::modularity::ContextPtr contextForProject(const AudacityProject* project) const;
     audio::AudioStreamRestorer suspend(const audio::AudioStreamDescriptor& stream) const;
     audio::AudioStreamRestorer suspendOrForceStop(const audio::AudioStreamDescriptor& stream) const;
-    void writeConfiguration(const audio::AudioConfiguration& value,
-                            const audio::AudioConfigurationDelta& delta,
+    void writeConfiguration(const audio::AudioConfiguration& value, const audio::AudioConfigurationDelta& delta,
                             const muse::modularity::ContextPtr& requester);
-    bool rollbackAndRestore(const audio::AudioConfiguration& before,
-                            const audio::AudioConfiguration& attempted,
-                            const muse::modularity::ContextPtr& requester,
-                            std::optional<double> requesterProjectRate,
-                            bool refreshDeviceState,
-                            bool writeStarted,
-                            const audio::AudioStreamRestorer& restoreStream) noexcept;
+    bool rollbackAndRestore(const audio::AudioConfiguration& before, const audio::AudioConfiguration& attempted,
+                            const muse::modularity::ContextPtr& requester, std::optional<double> requesterProjectRate,
+                            bool refreshDeviceState, bool writeStarted, const audio::AudioStreamRestorer& restoreStream) noexcept;
     void publish(const audio::AudioConfigurationDelta& delta, bool deviceListChanged = false) noexcept;
     audio::AudioConfiguration m_configuration;
     bool m_applying = false;

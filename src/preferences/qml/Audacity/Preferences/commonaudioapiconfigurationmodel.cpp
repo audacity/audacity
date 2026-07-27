@@ -102,16 +102,26 @@ void CommonAudioApiConfigurationModel::load()
             || delta.contains(audio::AudioConfigurationField::InputChannels)) {
             notifyDeviceContextChanged();
         }
-        if (delta.contains(audio::AudioConfigurationField::BufferLength)) emit bufferLengthChanged();
-        if (delta.contains(audio::AudioConfigurationField::AutomaticLatencyCompensation)) emit automaticCompensationEnabledChanged();
-        if (delta.contains(audio::AudioConfigurationField::LatencyCompensation)) emit latencyCompensationChanged();
+        if (delta.contains(audio::AudioConfigurationField::BufferLength)) {
+            emit bufferLengthChanged();
+        }
+        if (delta.contains(audio::AudioConfigurationField::AutomaticLatencyCompensation)) {
+            emit automaticCompensationEnabledChanged();
+        }
+        if (delta.contains(audio::AudioConfigurationField::LatencyCompensation)) {
+            emit latencyCompensationChanged();
+        }
         if (delta.contains(audio::AudioConfigurationField::DefaultSampleRate)) {
             setOtherSampleRate(!muse::contains(audioDriverController()->sampleRates(), defaultSampleRateValue()));
             emit defaultSampleRateChanged();
             emit defaultSampleRateValueChanged();
         }
-        if (delta.contains(audio::AudioConfigurationField::DefaultSampleFormat)) emit defaultSampleFormatChanged();
-        if (delta.contains(audio::AudioConfigurationField::AsioUseDeviceSampleRate)) emit asioUseDeviceSampleRateChanged();
+        if (delta.contains(audio::AudioConfigurationField::DefaultSampleFormat)) {
+            emit defaultSampleFormatChanged();
+        }
+        if (delta.contains(audio::AudioConfigurationField::AsioUseDeviceSampleRate)) {
+            emit asioUseDeviceSampleRateChanged();
+        }
     });
     audioDriverController()->audioDeviceListChanged().onNotify(this, [this]() {
         notifyDeviceContextChanged();

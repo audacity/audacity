@@ -247,7 +247,7 @@ void PreferencesModel::resetFactorySettings()
             muse::qtrc("preferences", "The previous audio state could not be restored."));
         interactive()->error(
             muse::qtrc("preferences", "Unable to reset audio settings")
-                .toStdString(),
+            .toStdString(),
             message.toStdString());
     } else {
         const auto notice = audioConfigurationMessage(

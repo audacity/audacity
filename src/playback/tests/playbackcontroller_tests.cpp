@@ -1218,10 +1218,10 @@ TEST_F(PlaybackControllerTests, SuspendPlaybackStopsStreamDuringTeardown)
 {
     const audio::AudioStreamDescriptor playbackStream { audio::AudioStreamKind::Playback, nullptr, 44100.0 };
     ON_CALL(*m_player, playbackStatus())
-        .WillByDefault(Return(PlaybackStatus::Stopped));
+    .WillByDefault(Return(PlaybackStatus::Stopped));
     EXPECT_CALL(*m_audioEngine, currentStream())
-        .WillOnce(Return(playbackStream))
-        .WillOnce(Return(std::nullopt));
+    .WillOnce(Return(playbackStream))
+    .WillOnce(Return(std::nullopt));
     EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
 
     EXPECT_NE(suspend(audio::AudioStreamKind::Playback), nullptr);

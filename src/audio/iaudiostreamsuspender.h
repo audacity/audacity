@@ -10,7 +10,7 @@
 #include "audioconfigurationtypes.h"
 
 namespace au::audio {
-using AudioStreamRestorer = std::function<bool()>;
+using AudioStreamRestorer = std::function<bool ()>;
 
 class IAudioStreamSuspender : MODULE_EXPORT_INTERFACE
 {

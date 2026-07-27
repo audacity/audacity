@@ -33,8 +33,7 @@ public:
     virtual std::vector<uint64_t> sampleRates() const = 0;
     virtual std::vector<std::string> sampleFormats() const = 0;
 
-    virtual ApplyResult apply(const muse::modularity::ContextPtr& requester,
-                              const AudioConfigurationChange& change) = 0;
+    virtual ApplyResult apply(const muse::modularity::ContextPtr& requester, const AudioConfigurationChange& change) = 0;
     virtual ApplyResult rescan() = 0;
     virtual ApplyResult reload(const muse::modularity::ContextPtr& requester) = 0;
     virtual ApplyResult openAsioDriverSettings(const AudioRoutingChange& routing) = 0;

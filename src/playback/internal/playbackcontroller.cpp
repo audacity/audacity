@@ -659,9 +659,9 @@ AudioStreamRestorer PlaybackController::suspendForAudioConfiguration(AudioStream
             return {};
         }
         return [this, au3Project]() {
-            audioEngine()->startMonitoring(*au3Project);
-            return audioEngine()->isMonitoring();
-        };
+                audioEngine()->startMonitoring(*au3Project);
+                return audioEngine()->isMonitoring();
+            };
     }
 
     case AudioStreamKind::Playback:

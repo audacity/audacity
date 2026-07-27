@@ -25,9 +25,8 @@
 
 namespace au::playback {
 class PlaybackUiActions;
-class PlaybackController : public IPlaybackController, public audio::IAudioStreamSuspender,
-    public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Contextable
+class PlaybackController : public IPlaybackController, public audio::IAudioStreamSuspender, public muse::actions::Actionable,
+    public muse::async::Asyncable, public muse::Contextable
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
@@ -166,8 +165,7 @@ private:
     void setAudioInputDevice(const muse::actions::ActionQuery& q);
     void setInputChannels(const muse::actions::ActionQuery& q);
     void rescanAudioDevices();
-    void handleAudioConfigurationResult(const audio::ApplyResult& result,
-                                        const muse::actions::ActionCode& actionCode);
+    void handleAudioConfigurationResult(const audio::ApplyResult& result, const muse::actions::ActionCode& actionCode);
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
     void subscribeOnAudioParamsChanges();
