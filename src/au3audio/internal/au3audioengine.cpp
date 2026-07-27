@@ -1,5 +1,6 @@
 #include "au3audioengine.h"
 
+#include "framework/global/log.h"
 #include "framework/global/realfn.h"
 
 #include "au3-audio-io/AudioIO.h"
@@ -65,6 +66,35 @@ bool Au3AudioEngine::isCapturing() const
     return AudioIO::Get()->IsCapturing();
 }
 
+bool Au3AudioEngine::isMonitoring() const
+{
+    return AudioIO::Get()->IsMonitoring();
+}
+
+std::optional<au::audio::AudioStreamDescriptor> Au3AudioEngine::currentStream() const
+{
+    const auto audioIO = AudioIO::Get();
+    if (!audioIO->IsBusy() && !audioIO->IsStreamActive()) {
+        return std::nullopt;
+    }
+
+    const auto owner = audioIO->GetOwningProject();
+
+    au::audio::AudioStreamKind kind = au::audio::AudioStreamKind::Playback;
+    if (audioIO->IsMonitoring()) {
+        kind = au::audio::AudioStreamKind::Monitoring;
+    } else if (audioIO->GetNumCaptureChannels() > 0) {
+        // Recording lead-in has capture channels before IsCapturing() becomes true.
+        kind = au::audio::AudioStreamKind::Recording;
+    }
+
+    return au::audio::AudioStreamDescriptor {
+        kind,
+        owner.get(),
+        audioIO->GetPlaybackSampleRate(),
+    };
+}
+
 int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
                                 const double mixerEndTime,
                                 AudacityProject& project, const StartStreamOptions& options)
@@ -77,10 +107,6 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
         au3Options.pCrossfadeData = options.crossfadeData;
     }
     if (options.streamStartTime.has_value()) {
-        // Override the default (play-region start, set by the DefaultOptions
-        // scope above via GetDefaultOptions): begin producing audio here
-        // instead. The policy factory reads this from the same options object,
-        // so an active loop region resumes at this position too.
         au3Options.pStartTime = *options.streamStartTime;
     }
     auto& audioIO = *AudioIO::Get();

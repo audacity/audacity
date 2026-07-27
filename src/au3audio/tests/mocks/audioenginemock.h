@@ -7,11 +7,7 @@
 
 #include "audio/iaudioengine.h"
 
-// recordingClipChanged() returns Channel<Au3TrackId, Au3ClipId>, and Au3TrackId
-// is an alias for ::TrackId. au3types.h only forward-declares it, but gmock has
-// to instantiate the channel's value storage for the mocked method, which needs
-// the complete type. Pull in its definition. (Without it, stricter/older
-// libstdc++ — e.g. GCC 11 on CI — fails with "incomplete type 'class TrackId'".)
+// gmock needs the complete TrackId type used by recordingClipChanged().
 #include "au3-track/Track.h"
 
 namespace au::audio {
@@ -20,6 +16,8 @@ class AudioEngineMock : public IAudioEngine
 public:
     MOCK_METHOD(bool, isBusy, (), (const, override));
     MOCK_METHOD(bool, isCapturing, (), (const, override));
+    MOCK_METHOD(bool, isMonitoring, (), (const, override));
+    MOCK_METHOD(std::optional<AudioStreamDescriptor>, currentStream, (), (const, override));
 
     MOCK_METHOD(int, startStream, (const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
                                    AudacityProject & project, const StartStreamOptions& options), (override));
@@ -29,8 +27,6 @@ public:
 
     MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
-    MOCK_METHOD(bool, isMonitoring, (), (const, override));
-
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));
     MOCK_METHOD(float, getInputVolume, (), (const, override));
     MOCK_METHOD(void, setPlaybackVolume, (float newPlaybackVolume), (override));

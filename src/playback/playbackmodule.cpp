@@ -109,6 +109,7 @@ void PlaybackContext::registerExports()
     m_uiState = std::make_shared<PlaybackUiState>(iocContext());
 
     ioc()->registerExport<IPlaybackController>(mname, m_controller);
+    ioc()->registerExport<audio::IAudioStreamSuspender>(mname, m_controller);
     ioc()->registerExport<IPlaybackUiState>(mname, m_uiState);
     ioc()->registerExport<playback::IPlayback>(mname, m_playback);
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));

@@ -5,17 +5,22 @@
 #include <gmock/gmock.h>
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
+#include "audio/tests/mocks/audiodrivercontrollermock.h"
+#include "au3audio/tests/mocks/audioenginemock.h"
 #include "context/tests/mocks/globalcontextmock.h"
+#include "interactive/tests/mocks/interactivemock.h"
 #include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "record/tests/mocks/recordcontrollermock.h"
+#include "record/tests/mocks/recordmock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "../internal/playbackcontroller.h"
 
 using ::testing::_;
+using ::testing::NiceMock;
 using ::testing::Property;
 using ::testing::Return;
 using ::testing::ReturnRef;
@@ -42,8 +47,20 @@ public:
         m_dispatcher = std::make_shared<actions::ActionsDispatcherMock>();
         m_controller->dispatcher.set(m_dispatcher);
 
+        m_interactive = std::make_shared<NiceMock<InteractiveMock> >();
+        m_controller->interactive.set(m_interactive);
+
         m_recordController = std::make_shared<record::RecordControllerMock>();
         m_controller->recordController.set(m_recordController);
+
+        m_record = std::make_shared<NiceMock<record::RecordMock> >();
+        m_controller->record.set(m_record);
+
+        m_audioDriverController = std::make_shared<NiceMock<audio::AudioDriverControllerMock> >();
+        m_controller->audioDriverController.set(m_audioDriverController);
+
+        m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
+        m_controller->audioEngine.set(m_audioEngine);
 
         m_selectionController = std::make_shared<trackedit::SelectionControllerMock>();
         m_controller->selectionController.set(m_selectionController);
@@ -155,11 +172,44 @@ public:
         m_controller->pauseAction();
     }
 
+    audio::AudioStreamRestorer suspend(audio::AudioStreamKind kind)
+    {
+        return m_controller->suspendForAudioConfiguration(kind);
+    }
+
+    void changeAudioApi(int index)
+    {
+        muse::actions::ActionQuery q("action://playback/change-api");
+        q.addParam("api_index", muse::Val(index));
+        m_controller->setAudioApi(q);
+    }
+
+    void changeInputDevice(int index)
+    {
+        muse::actions::ActionQuery q("action://playback/change-recording-device");
+        q.addParam("device_index", muse::Val(index));
+        m_controller->setAudioInputDevice(q);
+    }
+
+    void playFromCurrentState()
+    {
+        m_controller->doPlay(false);
+    }
+
+    void rescanAudioDevices()
+    {
+        m_controller->rescanAudioDevices();
+    }
+
     PlaybackController* m_controller = nullptr;
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<actions::ActionsDispatcherMock> m_dispatcher;
+    std::shared_ptr<InteractiveMock> m_interactive;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
+    std::shared_ptr<record::RecordMock> m_record;
+    std::shared_ptr<audio::AudioDriverControllerMock> m_audioDriverController;
+    std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
@@ -1076,6 +1126,170 @@ TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
 
     //! [THEN] The playback cursor is at the selection start
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
+TEST_F(PlaybackControllerTests, SuspendPlayback_RestoresAtInterruptedPosition)
+{
+    PlaybackStatus status = PlaybackStatus::Running;
+    ON_CALL(*m_player, playbackStatus()).WillByDefault([&status]() { return status; });
+    ON_CALL(*m_player, playbackPosition()).WillByDefault(Return(secs_t(30.0)));
+
+    EXPECT_CALL(*m_player, stop()).WillOnce([&status]() { status = PlaybackStatus::Stopped; });
+    auto restoreStream = suspend(audio::AudioStreamKind::Playback);
+
+    ASSERT_TRUE(restoreStream);
+    EXPECT_EQ(status, PlaybackStatus::Stopped);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0))))
+    .WillOnce([&status](std::optional<secs_t>) { status = PlaybackStatus::Running; });
+    EXPECT_TRUE(restoreStream());
+    EXPECT_EQ(status, PlaybackStatus::Running);
+}
+
+TEST_F(PlaybackControllerTests, SuspendRunningPlayback_TransportStateTakesPrecedenceOverPhysicalKind)
+{
+    PlaybackStatus status = PlaybackStatus::Running;
+    ON_CALL(*m_player, playbackStatus()).WillByDefault([&status]() { return status; });
+    ON_CALL(*m_player, playbackPosition()).WillByDefault(Return(secs_t(30.0)));
+
+    EXPECT_CALL(*m_player, stop()).WillOnce([&status]() { status = PlaybackStatus::Stopped; });
+    EXPECT_CALL(*m_record, stop()).Times(0);
+    auto restoreStream = suspend(audio::AudioStreamKind::Recording);
+
+    ASSERT_TRUE(restoreStream);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0))))
+    .WillOnce([&status](std::optional<secs_t>) { status = PlaybackStatus::Running; });
+    EXPECT_TRUE(restoreStream());
+    EXPECT_EQ(status, PlaybackStatus::Running);
+}
+
+TEST_F(PlaybackControllerTests, SuspendPausedPlayback_NextPlayUsesDurablePausePosition)
+{
+    PlaybackStatus status = PlaybackStatus::Paused;
+    ON_CALL(*m_player, playbackStatus()).WillByDefault([&status]() { return status; });
+    ON_CALL(*m_player, playbackPosition()).WillByDefault(Return(secs_t(30.0)));
+
+    EXPECT_CALL(*m_player, stop()).WillOnce([&status]() { status = PlaybackStatus::Stopped; });
+    auto restoreStream = suspend(audio::AudioStreamKind::Playback);
+
+    ASSERT_TRUE(restoreStream);
+    EXPECT_TRUE(restoreStream());
+    //! The resume path no longer consults the selection: any explicit
+    //! reposition since the teardown clears the pending position instead.
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty()).Times(0);
+    EXPECT_CALL(*m_player, play(std::optional<secs_t>(secs_t(30.0)))).Times(1);
+
+    playFromCurrentState();
+}
+
+TEST_F(PlaybackControllerTests, SuspendRecording_UsesPhysicalBackstopWhenControllerStateLags)
+{
+    const audio::AudioStreamDescriptor recordingStream { audio::AudioStreamKind::Recording, nullptr, 44100.0 };
+    EXPECT_CALL(*m_recordController, isRecording()).WillOnce(Return(false));
+    EXPECT_CALL(*m_record, stop()).WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_audioEngine, currentStream())
+    .WillOnce(Return(recordingStream))
+    .WillOnce(Return(std::nullopt));
+    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+    EXPECT_CALL(*m_record, start()).Times(0);
+
+    auto restoreStream = suspend(audio::AudioStreamKind::Recording);
+
+    ASSERT_TRUE(restoreStream);
+    EXPECT_TRUE(restoreStream());
+}
+
+TEST_F(PlaybackControllerTests, SuspendRecording_FailsWhenTheStreamCannotBeStopped)
+{
+    EXPECT_CALL(*m_record, stop()).WillOnce(Return(muse::make_ret(muse::Ret::Code::UnknownError)));
+    EXPECT_CALL(*m_audioEngine, currentStream()).Times(0);
+
+    EXPECT_FALSE(suspend(audio::AudioStreamKind::Recording));
+}
+
+TEST_F(PlaybackControllerTests, SuspendRecording_FailsClosedWhenPhysicalBackstopDoesNotStopStream)
+{
+    const audio::AudioStreamDescriptor recordingStream { audio::AudioStreamKind::Recording, nullptr, 44100.0 };
+    EXPECT_CALL(*m_record, stop()).WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_audioEngine, currentStream()).WillRepeatedly(Return(recordingStream));
+    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+
+    EXPECT_FALSE(suspend(audio::AudioStreamKind::Recording));
+}
+
+TEST_F(PlaybackControllerTests, SuspendPlaybackStopsStreamDuringTeardown)
+{
+    const audio::AudioStreamDescriptor playbackStream { audio::AudioStreamKind::Playback, nullptr, 44100.0 };
+    ON_CALL(*m_player, playbackStatus())
+        .WillByDefault(Return(PlaybackStatus::Stopped));
+    EXPECT_CALL(*m_audioEngine, currentStream())
+        .WillOnce(Return(playbackStream))
+        .WillOnce(Return(std::nullopt));
+    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+
+    EXPECT_NE(suspend(audio::AudioStreamKind::Playback), nullptr);
+}
+
+TEST_F(PlaybackControllerTests, SuspendMonitoring_RestoresTheOwningProject)
+{
+    static int dummyProject;
+    ON_CALL(*m_currentProject, au3ProjectPtr())
+    .WillByDefault(Return(reinterpret_cast<uintptr_t>(&dummyProject)));
+    ON_CALL(*m_audioEngine, isMonitoring()).WillByDefault(Return(true));
+
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
+    auto restoreStream = suspend(audio::AudioStreamKind::Monitoring);
+
+    ASSERT_TRUE(restoreStream);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+    EXPECT_TRUE(restoreStream());
+}
+
+TEST_F(PlaybackControllerTests, ChangeAudioApi_SubmitsACompleteTypedChange)
+{
+    ON_CALL(*m_audioDriverController, apis())
+    .WillByDefault(Return(std::vector<std::string> { "Core Audio", "JACK" }));
+
+    audio::AudioConfigurationChange captured;
+    EXPECT_CALL(*m_audioDriverController, apply(muse::modularity::globalCtx(), _))
+    .WillOnce([&captured](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        captured = change;
+        return audio::ApplyResult { audio::ApplyStatus::Applied };
+    });
+
+    changeAudioApi(1);
+
+    ASSERT_TRUE(captured.api.has_value());
+    EXPECT_EQ(*captured.api, "JACK");
+    EXPECT_FALSE(captured.outputDevice.has_value());
+    EXPECT_FALSE(captured.inputDevice.has_value());
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputDevice_RejectedChangeRestoresMenuStateAndReportsError)
+{
+    ON_CALL(*m_audioDriverController, inputDevices())
+    .WillByDefault(Return(std::vector<std::string> { "Built-in microphone", "USB microphone" }));
+
+    EXPECT_CALL(*m_audioDriverController, apply(muse::modularity::globalCtx(), _))
+    .WillOnce(Return(audio::ApplyResult { audio::ApplyStatus::OwnerUnavailable }));
+    EXPECT_CALL(*m_interactive, error(_, _, _, _, _, _))
+    .WillOnce(Return(muse::async::make_promise<muse::IInteractive::Result>(
+                         [](const auto& resolve) { return resolve(muse::IInteractive::Result {}); },
+                         muse::async::PromiseType::AsyncByBody)));
+
+    std::vector<muse::actions::ActionCode> changedActions;
+    m_controller->actionCheckedChanged().onReceive(nullptr, [&changedActions](const muse::actions::ActionCode& code) {
+        changedActions.push_back(code);
+    });
+
+    changeInputDevice(1);
+
+    EXPECT_THAT(changedActions, ::testing::ElementsAre("action://playback/change-recording-device"));
+}
+
+TEST_F(PlaybackControllerTests, RescanAudioDevices_DelegatesToGlobalController)
+{
+    EXPECT_CALL(*m_audioDriverController, rescan())
+    .WillOnce(Return(audio::ApplyResult { audio::ApplyStatus::Applied }));
+
+    rescanAudioDevices();
 }
 
 TEST_F(PlaybackControllerTests, Stop_WhenRecording_StopsTheRecorder)
