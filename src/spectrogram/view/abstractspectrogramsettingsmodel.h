@@ -3,8 +3,6 @@
  */
 #pragma once
 
-#include "audio/iaudiodevicesprovider.h"
-
 #include <QObject>
 
 namespace au::spectrogram {
