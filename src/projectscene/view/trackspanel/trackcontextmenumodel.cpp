@@ -263,7 +263,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
         }
     }
 
-    for (const auto& rate : audioDevicesProvider()->sampleRates()) {
+    for (const auto& rate : audioDriverController()->sampleRates()) {
         if (std::find(codes.begin(), codes.end(), makeTrackRateChangeAction(rate).toString()) != codes.end()) {
             updateTrackRateState();
         }
@@ -362,7 +362,7 @@ void TrackContextMenuModel::updateTrackRateState()
     }
 
     bool isOnAvailableRates = false;
-    for (const auto& rate : audioDevicesProvider()->sampleRates()) {
+    for (const auto& rate : audioDriverController()->sampleRates()) {
         MenuItem& item = findItem(makeTrackRateChangeAction(rate).toString());
         if (track.value().rate != rate) {
             item.setChecked(false);
@@ -465,7 +465,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
 {
     muse::uicomponents::MenuItemList items;
-    for (const auto& rate : audioDevicesProvider()->sampleRates()) {
+    for (const auto& rate : audioDriverController()->sampleRates()) {
         items << makeMenuItem(makeTrackRateChangeAction(rate).toString(),
                               muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, muse::String::number(static_cast<int>(rate)) + " Hz"));
     }

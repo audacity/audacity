@@ -61,7 +61,7 @@ void AudioSetupContextMenuModel::makeMenuItems()
 MenuItemList AudioSetupContextMenuModel::makeHostItems()
 {
     MenuItemList items;
-    auto currentApi = audioDevicesProvider()->currentApi();
+    auto currentApi = audioDriverController()->configuration().api;
 
     auto makeChangeApiAction = [](int index) {
         ActionQuery q = PLAYBACK_CHANGE_AUDIO_API_QUERY;
@@ -69,7 +69,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
         return q;
     };
 
-    const auto& apiList = audioDevicesProvider()->apis();
+    const auto& apiList = audioDriverController()->apis();
     for (size_t i = 0; i < apiList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeApiAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(apiList.at(i))));
@@ -86,7 +86,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
 MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
 {
     MenuItemList items;
-    auto currentOutputDevice = audioDevicesProvider()->currentOutputDevice();
+    auto currentOutputDevice = audioDriverController()->configuration().outputDevice;
 
     auto makeChangePlaybackDeviceAction = [](int index) {
         ActionQuery q = PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY;
@@ -94,7 +94,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
         return q;
     };
 
-    const auto& outputDevicesList = audioDevicesProvider()->outputDevices();
+    const auto& outputDevicesList = audioDriverController()->outputDevices();
     for (size_t i = 0; i < outputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangePlaybackDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(outputDevicesList.at(i))));
@@ -111,7 +111,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
 MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
 {
     MenuItemList items;
-    auto currentInputDevice = audioDevicesProvider()->currentInputDevice();
+    auto currentInputDevice = audioDriverController()->configuration().inputDevice;
 
     auto makeChangeRecordingDeviceAction = [](int index) {
         ActionQuery q = PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY;
@@ -119,7 +119,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
         return q;
     };
 
-    const auto& inputDevicesList = audioDevicesProvider()->inputDevices();
+    const auto& inputDevicesList = audioDriverController()->inputDevices();
     for (size_t i = 0; i < inputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeRecordingDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(inputDevicesList.at(i))));
@@ -136,8 +136,8 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
 MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
 {
     MenuItemList items;
-    int inputChannelsSelected = audioDevicesProvider()->inputChannelsSelected();
-    int inputChannelsAvailable = audioDevicesProvider()->inputChannelsAvailable();
+    int inputChannelsSelected = audioDriverController()->configuration().inputChannels;
+    int inputChannelsAvailable = audioDriverController()->inputChannelsAvailable();
 
     auto makeChangeInputChannelsAction = [](int index) -> ActionQuery {
         ActionQuery q = PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY;

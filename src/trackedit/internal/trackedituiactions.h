@@ -9,12 +9,13 @@
 
 #include "trackeditactionscontroller.h"
 #include "context/iuicontextresolver.h"
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 
 namespace au::trackedit {
 class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
     muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
 
 public:

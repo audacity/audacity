@@ -123,7 +123,7 @@ void RecordController::startWithNewTrack()
         return;
     }
 
-    const int recordingChannels = std::max(1, audioDevicesProvider()->inputChannelsSelected());
+    const int recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
 
     au::trackedit::TrackIdList newTracks;
     if (recordingChannels == 2) {

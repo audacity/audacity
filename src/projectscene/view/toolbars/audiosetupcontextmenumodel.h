@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "context/iglobalcontext.h"
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
@@ -12,7 +12,8 @@ class AudioSetupContextMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
