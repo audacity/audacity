@@ -6,7 +6,6 @@
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "global/tests/mocks/applicationmock.h"
 #include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
@@ -17,6 +16,7 @@
 #include "../internal/playbackcontroller.h"
 
 using ::testing::_;
+using ::testing::Property;
 using ::testing::Return;
 using ::testing::ReturnRef;
 
@@ -35,9 +35,6 @@ public:
     void SetUp() override
     {
         m_controller = new PlaybackController(muse::modularity::globalCtx());
-
-        m_application = std::make_shared<muse::ApplicationMock>();
-        m_controller->application.set(m_application);
 
         m_globalContext = std::make_shared<context::GlobalContextMock>();
         m_controller->globalContext.set(m_globalContext);
@@ -90,14 +87,41 @@ public:
         delete m_controller;
     }
 
-    void togglePlay()
+    //! NOTE: toolbar Play/Pause button — play/pause
+    void togglePlayPause()
     {
-        m_controller->togglePlayAction();
+        m_controller->togglePlayPauseAction();
+    }
+
+    //! NOTE: Spacebar — play/stop
+    void togglePlayStop()
+    {
+        m_controller->togglePlayStopAction();
+    }
+
+    //! NOTE: Shift+Spacebar — play from cursor, ignoring selection (pause while playing)
+    void togglePlayFromCursor()
+    {
+        m_controller->togglePlayFromCursorAction();
     }
 
     void playSelection()
     {
         m_controller->playSelectionAction();
+    }
+
+    void stop()
+    {
+        m_controller->stopAction();
+    }
+
+    void setRecording(bool isRecording, bool isLeadIn = false)
+    {
+        EXPECT_CALL(*m_recordController, isRecording())
+        .WillRepeatedly(Return(isRecording));
+
+        EXPECT_CALL(*m_recordController, isLeadInRecording())
+        .WillRepeatedly(Return(isLeadIn));
     }
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
@@ -133,9 +157,8 @@ public:
 
     PlaybackController* m_controller = nullptr;
 
-    std::shared_ptr<ApplicationMock> m_application;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
-    std::shared_ptr<actions::IActionsDispatcher> m_dispatcher;
+    std::shared_ptr<actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
@@ -189,7 +212,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -216,7 +239,44 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
+}
+
+/**
+ * @brief Toggle play when stopped at the end of a played selection/region
+ * @details Playing a selection leaves the playhead at the region end (mid-project).
+ *          The next play must continue from the playhead, not jump back to project start.
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfPlaybackRegion)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] The played region was a selection {10, 20} and the playhead is at its end
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(10.0), secs_t(20.0) }));
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(secs_t(20.0)));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [THEN] Continue from the playhead (20), not from the project start
+    EXPECT_CALL(*m_player, seek(secs_t(20.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), _))
+    .Times(0);
+
+    //! [THEN] Playback region runs from the playhead to the project end
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(20.0), secs_t(100.0) }))
+    .Times(1);
+
+    //! [THEN] Player should start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
 }
 
 /**
@@ -258,7 +318,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_PlaysFromPlayheadThroug
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -301,7 +361,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -314,10 +374,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
-
-    //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] No checking selection
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
@@ -334,7 +390,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayFromCursor();
 }
 
 /**
@@ -353,7 +409,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayPause();
 }
 
 TEST_F(PlaybackControllerTests, Pause_WhenSeekTargetChangedDuringPlayback_StopsPlayback)
@@ -404,16 +460,12 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Running));
 
-    //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
-
     //! [THEN] Player should stop playing
     EXPECT_CALL(*m_player, stop())
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -432,7 +484,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -445,10 +497,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     //! [GIVEN] Playback is paused
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Paused));
-
-    //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] Expect that playbeck should run from current position
     secs_t currentPosition = 10.0;
@@ -466,7 +514,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     .Times(1);
 
     //! [WHEN] Toggle play
-    togglePlay();
+    togglePlayFromCursor();
 }
 
 /**
@@ -476,41 +524,34 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
  */
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 {
-    //! [GIVEN] Play with Shift modifier
-    EXPECT_CALL(*m_application, keyboardModifiers())
-    .WillOnce(Return(Qt::ShiftModifier))
-    .WillRepeatedly(Return(Qt::NoModifier));
-
-    //! [GIVEN] User started playback
+    //! [GIVEN] User started playback, then paused it
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
-    togglePlay();
+    togglePlayStop();
 
-    //! [GIVEN] And paused it
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Running));
-    togglePlay();
+    togglePlayPause();
 
     //! [GIVEN] In paused state
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Paused));
 
-    //! [THEN] Expect that playbeck should run from selection start position
+    //! [THEN] Expect that playback should restart from the new selection start
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
 
-    //! [THEN] Player should stop playing
+    //! [THEN] Player should stop, then start playing
     EXPECT_CALL(*m_player, stop())
     .Times(1);
 
-    //! [THEN] Player should start playing
     EXPECT_CALL(*m_player, play())
     .Times(1);
 
-    //! [WHEN] Fitst: user changed selection
+    //! [WHEN] First: user changed selection
     changePlaybackRegion(selectionRegion.start, selectionRegion.end);
 
-    //! [WHEN] Second: toggle play
-    togglePlay();
+    //! [WHEN] Second: press Space
+    togglePlayStop();
 
     //! [THEN] Playback restarted from the new selection start
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), selectionRegion.start);
@@ -541,7 +582,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_StartTimeIsMoreThanTotalTime)
 
     //! [WHEN] Change the playback region and toggle play
     changePlaybackRegion(region.start, region.end);
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -777,7 +818,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_AfterRecord_PlaysFromSeekToProjectEnd
     .Times(1);
 
     //! [WHEN] User presses Space
-    togglePlay();
+    togglePlayStop();
 }
 
 /**
@@ -1035,5 +1076,117 @@ TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
 
     //! [THEN] The playback cursor is at the selection start
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
+}
+
+TEST_F(PlaybackControllerTests, Stop_WhenRecording_StopsTheRecorder)
+{
+    //! [GIVEN] Recording is running
+    setRecording(true);
+
+    //! [THEN] The recorder is stopped, not the player
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/stop"))))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+
+    //! [WHEN] User presses the Stop button
+    stop();
+}
+
+TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_PausesTheRecorder)
+{
+    //! [GIVEN] Recording is running (not in lead-in)
+    setRecording(true, false /* isLeadIn */);
+
+    //! [THEN] The recorder is paused, not the player
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, pause())
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button
+    togglePlayPause();
+}
+
+TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadIn_PausesThePlayback)
+{
+    //! [GIVEN] The record lead-in pre-roll is playing back. The audio is driven by the
+    //! record stream, not the player, so the player status is not Running.
+    setRecording(true, true /* isLeadIn */);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] The shared stream is paused, the recorder is not touched
+    EXPECT_CALL(*m_player, pause())
+    .Times(1);
+
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button during lead-in
+    togglePlayPause();
+}
+
+TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadInWhenPaused_ResumesThePlayback)
+{
+    //! [GIVEN] The lead-in pre-roll has been paused (player status is Paused, but the
+    //! recorder is still in lead-in)
+    setRecording(true, true /* isLeadIn */);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    //! [THEN] The shared stream resumes, the recorder is not touched
+    EXPECT_CALL(*m_player, resume())
+    .Times(1);
+
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button to resume the lead-in
+    togglePlayPause();
+}
+
+TEST_F(PlaybackControllerTests, IsPlaying_WhileRecording_ReportsFalse)
+{
+    //! [GIVEN] Recording is running while the player is left "running" (e.g. after
+    //! resuming a lead-in through the shared stream)
+    setRecording(true);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [THEN] The controller reports not-playing, matching the normal record path where
+    //! the player stays stopped (so the record button etc. are not treated as playback)
+    EXPECT_FALSE(m_controller->isPlaying());
+}
+
+TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopButNotPlayPause)
+{
+    //! [GIVEN] Recording is running
+    setRecording(true);
+
+    //! [THEN] Space and Shift+Space are blocked, the toolbar button is not
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
+}
+
+TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogglePlayActions)
+{
+    //! [GIVEN] Not recording
+    setRecording(false);
+
+    //! [THEN] All toggle-play actions are available
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 }
