@@ -270,6 +270,12 @@ TrackItemKeyList TrackNavigationController::itemKeysInRange(const TrackItemKey& 
     return range;
 }
 
+void TrackNavigationController::resetNavigation()
+{
+    m_savedItemStartTime = std::nullopt;
+    navigationController()->setIsHighlight(false);
+}
+
 bool TrackNavigationController::isTrackItemsEmpty(const TrackId& trackId) const
 {
     TrackItemKeyList itemsKeys = sortedItemsKeys(trackId);

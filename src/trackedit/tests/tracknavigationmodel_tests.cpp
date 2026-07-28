@@ -176,6 +176,13 @@ public:
         return event->data.value("controlName").toString();
     }
 
+    //! NOTE Deliver a navigation event (e.g. Escape) to a panel, as navigation system would
+    static void sendPanelEvent(muse::ui::NavigationPanel* panel, muse::ui::INavigation::Event::Type type)
+    {
+        auto event = muse::ui::INavigation::Event::make(type);
+        panel->onEvent(event);
+    }
+
     QQmlEngine m_engine;
     muse::QmlIoCContext* m_qmlIoc = nullptr;
 
@@ -413,5 +420,29 @@ TEST_F(TrackNavigationModelTests, ForwardsIntoItemsPanelKeepsFirstItem)
     //! [WHEN] The navigation enters the clips panel (Tab)
     //! [THEN] The model does not override the control, navigation system keeps its first-item default
     EXPECT_TRUE(requestedControlName(itemsPanel).isEmpty());
+}
+
+/**
+ * Escape from a control of a track's header panel returns the navigation focus
+ * to that track's container panel (with the highlight kept on).
+ */
+TEST_F(TrackNavigationModelTests, EscapeFromHeaderReturnsFocusToTrack)
+{
+    //! [GIVEN] A project with one track
+    loadWithTracks({ makeTrack(10) });
+
+    muse::ui::NavigationPanel* trackPanel = m_model->trackItemPanels().at(0);
+    muse::ui::NavigationPanel* headerPanel = m_model->trackHeaderPanels().at(0);
+
+    //! [AND] The track container panel has an enabled control to land on
+    addItemControl(trackPanel, "track-10", 0);
+
+    //! [EXPECT] The model keeps the highlight and activates the track container control
+    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(1);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), trackPanelName(10).toStdString(), std::string("track-10"))).Times(1);
+
+    //! [WHEN] Escape is pressed on the header panel
+    sendPanelEvent(headerPanel, muse::ui::INavigation::Event::Escape);
 }
 }
