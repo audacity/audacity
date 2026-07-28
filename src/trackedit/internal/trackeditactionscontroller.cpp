@@ -2317,73 +2317,61 @@ void TrackeditActionsController::completeFocusedItemMove()
 
 void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-ext-left");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), -stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsLeft(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-ext-left");
     }
 }
 
 void TrackeditActionsController::extendFocusedItemBoundaryRight()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-ext-right");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsRight(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-ext-right");
     }
 }
 
 void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-cntr-right");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsRight(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-cntr-right");
     }
 }
 
 void TrackeditActionsController::reduceFocusedItemBoundaryRight()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-cntr-left");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsLeft(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-cntr-left");
     }
 }
 
