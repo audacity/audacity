@@ -21,6 +21,9 @@ public:
     virtual ~IAudioDriverController() = default;
 
     virtual AudioConfiguration configuration() const = 0;
+    //! Sent synchronously while the triggering apply()/rescan() is still in
+    //! progress: a listener calling back into apply()/rescan() gets Busy.
+    //! Defer such work instead of reacting inside the notification.
     virtual muse::async::Channel<AudioConfigurationDelta> configurationChanged() const = 0;
 
     virtual std::vector<std::string> apis() const = 0;

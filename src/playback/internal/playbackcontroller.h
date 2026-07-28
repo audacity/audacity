@@ -30,12 +30,8 @@ class PlaybackController : public IPlaybackController, public audio::IAudioStrea
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
-<<<<<<< HEAD
-=======
-    muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
     muse::GlobalInject<audio::IAudioEngine> audioEngine;
->>>>>>> 91d3356275 (Replace contextual AudioDevicesProvider with global AudioDriverController)
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<IPlayback> playback { this };

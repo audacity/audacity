@@ -1126,6 +1126,8 @@ TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
 
     //! [THEN] The playback cursor is at the selection start
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
+}
+
 TEST_F(PlaybackControllerTests, SuspendPlayback_RestoresAtInterruptedPosition)
 {
     PlaybackStatus status = PlaybackStatus::Running;
@@ -1182,7 +1184,7 @@ TEST_F(PlaybackControllerTests, SuspendPausedPlayback_NextPlayUsesDurablePausePo
 TEST_F(PlaybackControllerTests, SuspendRecording_UsesPhysicalBackstopWhenControllerStateLags)
 {
     const audio::AudioStreamDescriptor recordingStream { audio::AudioStreamKind::Recording, nullptr, 44100.0 };
-    EXPECT_CALL(*m_recordController, isRecording()).WillOnce(Return(false));
+    EXPECT_CALL(*m_recordController, isRecording()).WillRepeatedly(Return(false));
     EXPECT_CALL(*m_record, stop()).WillOnce(Return(muse::make_ok()));
     EXPECT_CALL(*m_audioEngine, currentStream())
     .WillOnce(Return(recordingStream))

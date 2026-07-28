@@ -387,6 +387,10 @@ bool Au3AudioDriverController::streamNeedsSuspension(
         return false;
     }
 
+    // Routing and the ASIO flag invalidate the process-wide PortAudio state, so
+    // any stream must reopen. A buffer-length change would only take effect on
+    // the next stream; reopening even another window's stream is a deliberate
+    // policy so the new value is audible immediately.
     const bool routing = changesRouting(delta);
     const bool reopenAll = routing || delta.contains(AudioConfigurationField::BufferLength)
                            || delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate);
@@ -511,6 +515,9 @@ void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& valu
     }
     if (delta.contains(AudioConfigurationField::DefaultSampleRate)) {
         settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(static_cast<int>(value.defaultSampleRate)));
+        // Deliberate: beyond being the default for new projects, the new rate
+        // retargets the requester's open project (and only that one — other
+        // windows keep the rate they were opened with).
         if (auto project = projectForContext(requester)) {
             ::ProjectRate::Get(*project).SetRate(value.defaultSampleRate);
         }

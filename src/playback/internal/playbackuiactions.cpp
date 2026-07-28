@@ -260,11 +260,13 @@ void PlaybackUiActions::init()
     });
 
     m_controller->isPlayAllowedChanged().onNotify(this, [this]() {
-        m_actionEnabledChanged.send({
-            PLAYBACK_PLAY_QUERY.toString(),
-            PLAYBACK_REWIND_START_QUERY.toString(),
-            PLAYBACK_REWIND_END_QUERY.toString()
-        });
+        ActionCodeList codes;
+
+        for (const UiAction& action : actionsList()) {
+            codes.push_back(action.code);
+        }
+
+        m_actionEnabledChanged.send(codes);
     });
 
     m_controller->isPlayingChanged().onNotify(this, [this]() {
