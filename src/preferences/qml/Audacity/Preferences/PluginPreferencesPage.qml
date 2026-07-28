@@ -12,14 +12,15 @@ PreferencesPage {
     id: root
 
     PluginPreferencesModel {
-        id: pluginPreferencesModel
+        id: preferencesModel
     }
 
     Component.onCompleted: {
-        pluginPreferencesModel.init()
+        preferencesModel.init()
     }
 
     Column {
+        id: sectionsColumn
 
         width: parent.width
         spacing: root.sectionsSpacing
@@ -27,7 +28,7 @@ PreferencesPage {
         EffectOptionsSection {
             id: effectBehaviorSection
 
-            pluginPreferencesModel: pluginPreferencesModel
+            pluginPreferencesModel: preferencesModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
@@ -46,25 +47,25 @@ PreferencesPage {
         PluginLocationsSection {
             id: lv2Section
 
-            visible: pluginPreferencesModel.lv2Supported
+            visible: preferencesModel.lv2Supported
 
             title: qsTrc("preferences", "Custom LV2 plugins location")
             dialogTitle: qsTrc("preferences", "Choose custom LV2 plugins location")
 
-            paths: pluginPreferencesModel.lv2CustomPaths
+            paths: preferencesModel.lv2CustomPaths
             pathValidator: function (p) {
-                return pluginPreferencesModel.pathExists(p)
+                return preferencesModel.pathExists(p)
             }
 
             navigation.section: root.navigationSection
             navigation.order: effectBehaviorSection.navigation.order + 1
 
-            onAddPathRequested: pluginPreferencesModel.addLv2Path()
+            onAddPathRequested: preferencesModel.addLv2Path()
             onPathChanged: function (index, newPath) {
-                pluginPreferencesModel.setLv2Path(index, newPath)
+                preferencesModel.setLv2Path(index, newPath)
             }
             onRemovePathRequested: function (index) {
-                pluginPreferencesModel.removeLv2Path(index)
+                preferencesModel.removeLv2Path(index)
             }
 
             onFocusChanged: {
@@ -81,30 +82,66 @@ PreferencesPage {
         PluginLocationsSection {
             id: vst3Section
 
-            visible: pluginPreferencesModel.vst3Supported
+            visible: preferencesModel.vst3Supported
 
             title: qsTrc("preferences", "Custom VST3 plugins location")
             dialogTitle: qsTrc("preferences", "Choose custom VST3 plugins location")
 
-            paths: pluginPreferencesModel.vst3CustomPaths
+            paths: preferencesModel.vst3CustomPaths
             pathValidator: function (p) {
-                return pluginPreferencesModel.pathExists(p)
+                return preferencesModel.pathExists(p)
             }
 
             navigation.section: root.navigationSection
             navigation.order: lv2Section.navigation.order + 1
 
-            onAddPathRequested: pluginPreferencesModel.addVst3Path()
+            onAddPathRequested: preferencesModel.addVst3Path()
             onPathChanged: function (index, newPath) {
-                pluginPreferencesModel.setVst3Path(index, newPath)
+                preferencesModel.setVst3Path(index, newPath)
             }
             onRemovePathRequested: function (index) {
-                pluginPreferencesModel.removeVst3Path(index)
+                preferencesModel.removeVst3Path(index)
             }
 
             onFocusChanged: {
                 if (activeFocus) {
                     root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        Repeater {
+            model: preferencesModel.extensionPreferences
+
+            delegate: Column {
+                id: extensionPreferences
+
+                required property var modelData
+                required property int index
+
+                width: parent.width
+                spacing: root.sectionsSpacing
+
+                SeparatorLine {
+                    width: parent.width
+                }
+
+                ExtensionPreferencesSection {
+                    id: extensionSection
+
+                    width: parent.width
+                    preferenceGroup: extensionPreferences.modelData
+                    pluginPreferencesModel: preferencesModel
+
+                    navigation.section: root.navigationSection
+                    navigation.order: vst3Section.navigation.order + 1 + extensionPreferences.index
+
+                    onFocusChanged: {
+                        if (activeFocus) {
+                            const position = extensionSection.mapToItem(sectionsColumn, 0, 0)
+                            root.ensureContentVisibleRequested(Qt.rect(position.x, position.y, width, height))
+                        }
+                    }
                 }
             }
         }
