@@ -56,6 +56,64 @@ au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
 
     return au::au3cloud::UploadMode::NormalUpdate;
 }
+
+const muse::actions::ActionCodeList& prohibitedWhileRecording()
+{
+    static const muse::actions::ActionCodeList codes {
+        "file-close",
+        "project-import",
+        "file-save",
+        "file-save-to-cloud",
+        "file-save-as",
+        "export-audio",
+        "export-labels",
+        "export-midi",
+        "file-share-audio",
+        "audacity://cloud/update-audio-preview",
+        "audacity://cloud/update-audio-preview-for-project",
+    };
+
+    return codes;
+}
+
+const std::unordered_set<muse::actions::ActionCode>& dontRequireOpenProject()
+{
+    static const std::unordered_set<muse::actions::ActionCode> codes {
+        "file-new",
+        "file-open",
+        "file-open-recent",
+        "project-import-startup-media",
+        "cloud-file-open",
+        "continue-last-session",
+        "clear-recent",
+        "audacity://cloud/open-audio-file",
+        "audacity://cloud/update-audio-preview-for-project",
+        "plugin-manager",
+        "project-show-in-folder",
+    };
+
+    return codes;
+}
+
+const std::unordered_set<muse::actions::ActionCode>& prohibitedOnNonCloudProject()
+{
+    static const std::unordered_set<muse::actions::ActionCode> codes {
+        "audacity://cloud/update-audio-preview",
+    };
+
+    return codes;
+}
+
+const std::unordered_set<muse::actions::ActionCode>& prohibitedWithoutAudio()
+{
+    static const std::unordered_set<muse::actions::ActionCode> codes {
+        "file-share-audio",
+        "audacity://cloud/update-audio-preview",
+        "export-audio",
+    };
+
+    return codes;
+}
 }
 
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
@@ -116,7 +174,7 @@ void ProjectActionsController::init()
     listenCloudProjectChanges();
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
-        m_actionEnabledChanged.send(prohibitedActionsWhileRecording());
+        m_actionEnabledChanged.send(prohibitedWhileRecording());
     });
 }
 
@@ -153,62 +211,26 @@ muse::async::Channel<muse::actions::ActionCodeList> ProjectActionsController::ac
     return m_actionEnabledChanged;
 }
 
-const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
-{
-    static const std::vector<muse::actions::ActionCode> PROHIBITED_WHILE_RECORDING {
-        "file-close",
-        "project-import",
-        "file-save",
-        "file-save-to-cloud",
-        "file-save-as",
-        "export-audio",
-        "export-labels",
-        "export-midi",
-        "file-share-audio",
-    };
-
-    return PROHIBITED_WHILE_RECORDING;
-}
-
 bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
 {
-    if (!currentProject()) {
-        static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT {
-            "file-new",
-            "file-open",
-            "file-open-recent",
-            "project-import-startup-media",
-            "cloud-file-open",
-            "continue-last-session",
-            "clear-recent",
-            "audacity://cloud/open-audio-file",
-            "audacity://cloud/update-audio-preview-for-project",
-            "plugin-manager",
-            "project-show-in-folder",
-        };
-
-        return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
+    const IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return muse::contains(dontRequireOpenProject(), code);
     }
 
-    if (code == "audacity://cloud/update-audio-preview") {
-        return currentProject()->isCloudProject();
+    if (muse::contains(prohibitedOnNonCloudProject(), code) && !project->isCloudProject()) {
+        return false;
     }
 
-    const bool recording = recordController()->isRecording();
-
-    if (code == "file-share-audio") {
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (!prj) {
-            return false;
-        }
-
-        if (!prj->hasAudioContent().val) {
+    if (muse::contains(prohibitedWithoutAudio(), code)) {
+        const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+        if (!trackeditProject || !trackeditProject->hasAudioContent().val) {
             return false;
         }
     }
 
-    if (recording) {
-        return !muse::contains(prohibitedActionsWhileRecording(), code);
+    if (muse::contains(prohibitedWhileRecording(), code) && recordController()->isRecording()) {
+        return false;
     }
 
     return true;

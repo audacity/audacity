@@ -78,7 +78,6 @@ public:
     muse::async::Notification projectBeingDownloadedChanged() const override;
 
     bool isProjectOpened(const muse::io::path_t& projectPath) const;
-    const muse::actions::ActionCodeList& prohibitedActionsWhileRecording() const;
     muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const;
 
 private:
