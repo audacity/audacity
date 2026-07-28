@@ -37,7 +37,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/timer.h>
 
 // Yet another experimental scrub would drag the track under a
-// stationary play head
+// stationary playhead
 #undef DRAG_SCRUB
 
 enum {
@@ -171,7 +171,7 @@ void Scrubber::ScrubPoller::Notify()
 {
     // Call Continue functions here in a timer handler
     // rather than in SelectionHandleDrag()
-    // so that even without drag events, we can instruct the play head to
+    // so that even without drag events, we can instruct the playhead to
     // keep approaching the mouse cursor, when its maximum speed is limited.
 
 #ifndef USE_SCRUB_THREAD

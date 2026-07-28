@@ -1277,7 +1277,7 @@ bool ProjectAudioManager::DoPlayStopSelect(bool click, bool shift)
         if (click && (scrubber.WasSpeedPlaying() || scrubber.WasKeyboardScrubbing())) {
             // don't change the selection.
         } else if (shift && click) {
-            // Change the region selection, as if by shift-click at the play head
+            // Change the region selection, as if by shift-click at the playhead
             auto t0 = selection.t0(), t1 = selection.t1();
             if (time < t0) {
                 // Grow selection
@@ -1297,7 +1297,7 @@ bool ProjectAudioManager::DoPlayStopSelect(bool click, bool shift)
         } else if (click) {
             // avoid a point at negative time.
             time = wxMax(time, 0);
-            // Set a point selection, as if by a click at the play head
+            // Set a point selection, as if by a click at the playhead
             selection.setTimes(time, time);
         } else {
             // How stop and set cursor always worked

@@ -305,7 +305,7 @@ void SeekWhenAudioInactive
     viewport.ScrollIntoView(newT);
 }
 
-// Handle small cursor and play head movements
+// Handle small cursor and playhead movements
 void SeekLeftOrRight
     (AudacityProject& project, double direction, SelectionOperation operation,
     SeekInfo& info)

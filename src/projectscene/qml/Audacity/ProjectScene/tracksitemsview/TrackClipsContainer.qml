@@ -661,9 +661,6 @@ TrackItemsContainer {
 
                 onSelectionResize: function (x1, x2, completed) {
                     root.selectionResize(x1, x2, completed)
-                    if (completed) {
-                        root.seekToX(Math.min(x1, x2))
-                    }
                 }
 
                 onRequestSelectionContextMenu: function (x, y) {
@@ -707,9 +704,6 @@ TrackItemsContainer {
 
                 onSelectionHorizontalResize: function (x1, x2, completed) {
                     root.selectionResize(x1, x2, completed)
-                    if (completed) {
-                        root.seekToX(Math.min(x1, x2))
-                    }
                 }
 
                 onVerticalDragActiveChanged: {

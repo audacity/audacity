@@ -929,7 +929,7 @@ double GetPlayHeadFraction(const AudacityProject* pProject, wxCoord xx)
     return std::max(0.0, std::min(1.0, fraction));
 }
 
-// Handle for dragging the pinned play head, which so far does not need
+// Handle for dragging the pinned playhead, which so far does not need
 // to be a friend of the AdornedRulerPanel class, so we don't make it nested.
 class PlayheadHandle : public UIHandle
 {
@@ -1083,7 +1083,7 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
     auto xx = state.state.m_x;
 
     {
-        // Allow click and drag on the play head even while recording
+        // Allow click and drag on the playhead even while recording
         // Make this handle more prominent then the quick play handle
         auto result = PlayheadHandle::HitTest(pProject, *mParent, xx);
         if (result) {

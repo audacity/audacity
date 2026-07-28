@@ -76,7 +76,6 @@ public:
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE void resetSelectedLabel();
     Q_INVOKABLE void resetDataSelection();
-    Q_INVOKABLE bool isLeftSelection(double time) const;
 
     bool selectionActive() const;
     bool selectionEditInProgress() const;

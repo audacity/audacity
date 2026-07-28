@@ -22,6 +22,9 @@
 
 #include "playcursorcontroller.h"
 
+#include <algorithm>
+#include <cmath>
+
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -32,6 +35,7 @@ static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/pl
 
 static constexpr int SCROLL_SUPPRESSION_TIMEOUT_MS = 3000;
 static constexpr double ANIMATION_DURATION_SEC = TimelineContext::ANIMATION_DURATION_MS / 1000.0;
+static constexpr double SEEK_GESTURE_DRAG_THRESHOLD_PX = 5.0;
 
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -81,6 +85,56 @@ void PlayCursorController::animatedSeekToTime(double secs)
     }
 
     seekToTime(secs);
+}
+
+void PlayCursorController::beginSeekGesture(double time, double x, double y)
+{
+    m_seekGestureActive = true;
+    m_seekGestureDragged = false;
+    m_seekGestureTime = time;
+    m_seekGesturePressPos = QPointF(x, y);
+}
+
+void PlayCursorController::updateSeekGesture(double x, double y)
+{
+    if (!m_seekGestureActive || m_seekGestureDragged) {
+        return;
+    }
+
+    if (std::abs(x - m_seekGesturePressPos.x()) >= SEEK_GESTURE_DRAG_THRESHOLD_PX
+        || std::abs(y - m_seekGesturePressPos.y()) >= SEEK_GESTURE_DRAG_THRESHOLD_PX) {
+        m_seekGestureDragged = true;
+    }
+}
+
+bool PlayCursorController::endSeekGesture()
+{
+    if (!m_seekGestureActive) {
+        return false;
+    }
+
+    m_seekGestureActive = false;
+
+    if (m_seekGestureDragged) {
+        return false;
+    }
+
+    if (playbackState()->isPlaying()) {
+        //! NOTE: while playing the playhead is not moved, but the click position
+        //! is remembered so that stopping returns there. Snap it here: seekToTime
+        //! bails out before snapping while playing, so it would be stored raw and
+        //! stopping would land off the boundary a normal click snaps to.
+        playbackController()->setLastPlaybackSeekTime(std::max(0.0, snapTime(m_seekGestureTime)));
+    }
+    seekToTime(m_seekGestureTime);
+
+    return true;
+}
+
+void PlayCursorController::cancelSeekGesture()
+{
+    m_seekGestureActive = false;
+    m_seekGestureDragged = false;
 }
 
 void PlayCursorController::setPlaybackRegionByTime(double t1, double t2)

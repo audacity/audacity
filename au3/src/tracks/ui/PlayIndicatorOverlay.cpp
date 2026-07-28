@@ -182,7 +182,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
         const Mode mode = scroller.GetMode();
         const bool pinned = (mode == Mode::Pinned || mode == Mode::Right);
 
-        // Use a small tolerance to avoid flicker of play head pinned all the way
+        // Use a small tolerance to avoid flicker of playhead pinned all the way
         // left or right
         const auto tolerance = pinned
                                ? 1.5 * std::chrono::duration<double> { kTimerInterval }.count()
