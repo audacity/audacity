@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Runs the real xdg-open with the environment Audacity was started from.
+# AppRun points LD_LIBRARY_PATH at the AppImage's bundled libraries; system
+# tools spawned with that environment (xdg-open, kde-open, ...) can crash or
+# silently fail when the bundled libraries shadow the ones they were built
+# against, so restore the original environment before delegating.
+
+if [[ "${APPIMAGE_ORIGINAL_LD_LIBRARY_PATH}" ]]; then
+  export LD_LIBRARY_PATH="${APPIMAGE_ORIGINAL_LD_LIBRARY_PATH}"
+else
+  unset LD_LIBRARY_PATH
+fi
+
+# Find the system xdg-open, skipping this wrapper's own directory
+self_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+IFS=':' read -ra path_dirs <<< "${PATH}"
+for dir in "${path_dirs[@]}"; do
+  [[ "${dir}" ]] || continue
+  [[ "$(cd "${dir}" 2>/dev/null && pwd)" == "${self_dir}" ]] && continue
+  if [[ -x "${dir}/xdg-open" ]]; then
+    exec "${dir}/xdg-open" "$@"
+  fi
+done
+
+echo "$0: system xdg-open not found" >&2
+exit 1
