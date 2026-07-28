@@ -24,7 +24,7 @@ struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
-// This can become a bottleneck to the update rate of the play cursor position.
+// This can become a bottleneck to the update rate of the playhead position.
 // Let's set this to 10ms at 48kHz. Even at 16kHz, that'd be a refresh rate of 33fps.
 constexpr size_t TimeQueueGrainSize = 480;
 
@@ -106,7 +106,7 @@ public:
     virtual bool Done(PlaybackSchedule& schedule, unsigned long outputFrames //!< how many playback frames were taken from RingBuffers
                       );
 
-    //! Called when the play head needs to jump a certain distance
+    //! Called when the playhead needs to jump a certain distance
     /*! @param offset signed amount requested to be added to schedule::GetSequenceTime()
        @return the new value that will be set as the schedule's track time
      */
@@ -200,7 +200,7 @@ struct AUDIO_IO_API PlaybackSchedule {
 
      The consumer thread uses that information, and also makes known to the main
      thread, what the last consumed track time is.  The main thread can use that
-     for other purposes such as refreshing the display of the play head position.
+     for other purposes such as refreshing the display of the playhead position.
      */
     class AUDIO_IO_API TimeQueue
     {

@@ -143,8 +143,8 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("toggle-pinned-play-head",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Pinned play head"),
-             TranslatableString("action", "Pinned play head"),
+             TranslatableString("action", "Pinned playhead"),
+             TranslatableString("action", "Pinned playhead"),
              Checkable::Yes
              ),
     UiAction("toggle-playback-on-ruler-click-enabled",
@@ -186,14 +186,14 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("play-position-decrease",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Move play cursor left"),
-             TranslatableString("action", "Move play cursor left")
+             TranslatableString("action", "Move playhead left"),
+             TranslatableString("action", "Move playhead left")
              ),
     UiAction("play-position-increase",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Move play cursor right"),
-             TranslatableString("action", "Move play cursor right")
+             TranslatableString("action", "Move playhead right"),
+             TranslatableString("action", "Move playhead right")
              ),
     UiAction("sel-ext-left",
              au::context::UiCtxProjectOpened,
@@ -222,14 +222,14 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("curs-sel-start",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Move play cursor to selection start"),
-             TranslatableString("action", "Move play cursor to selection start")
+             TranslatableString("action", "Move playhead to selection start"),
+             TranslatableString("action", "Move playhead to selection start")
              ),
     UiAction("curs-sel-end",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Move play cursor to selection end"),
-             TranslatableString("action", "Move play cursor to selection end")
+             TranslatableString("action", "Move playhead to selection end"),
+             TranslatableString("action", "Move playhead to selection end")
              ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,

@@ -197,7 +197,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
     constexpr auto allowance = 0.5;
 
     // Looping may become enabled if the main thread said so, but require too
-    // that the loop region is non-empty and the play head is not far to its
+    // that the loop region is non-empty and the playhead is not far to its
     // right
     bool loopWasEnabled = !RevertToOldDefault(schedule);
     mLoopEnabled = data.mLoopEnabled && !empty
@@ -234,7 +234,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
             newTime = schedule.mT0;
         }
 
-        // So that the play head will redraw in the right place:
+        // So that the playhead will redraw in the right place:
         schedule.mTimeQueue.SetLastTime(newTime);
 
         schedule.RealTimeInit(newTime);
