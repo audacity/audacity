@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include "framework/global/types/ret.h"
 #include "framework/global/types/retval.h"
@@ -18,7 +19,8 @@ public:
 
     virtual bool isBusy() const = 0;
 
-    virtual void play() = 0;
+    //! `startTime` does not change the current playback region.
+    virtual void play(std::optional<muse::secs_t> startTime = std::nullopt) = 0;
     virtual void seek(const muse::secs_t newPosition, bool applyIfPlaying = false) = 0;
     virtual void rewind() = 0;
     virtual void stop() = 0;

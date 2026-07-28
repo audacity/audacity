@@ -24,7 +24,6 @@ import QtQuick 2.15
 import Muse.UiComponents
 
 import Audacity.UiComponents 1.0
-import Audacity.Playback 1.0
 import Audacity.AppShell
 
 BaseSection {
@@ -34,14 +33,6 @@ BaseSection {
     spacing: 16
 
     property var apiModel: null
-
-    PlaybackStateModel {
-        id: playbackState
-    }
-
-    Component.onCompleted: {
-        playbackState.init()
-    }
 
     Row {
         id: sampleRateFormatRow
@@ -55,8 +46,6 @@ BaseSection {
             title: qsTrc("preferences", "Default sample rate")
             columnWidth: root.columnWidth
             titleHeight: sampleRateFormatRow.sharedTitleHeight
-
-            enabled: !playbackState.isPlaying
 
             currentIndex: indexOfValue(apiModel.defaultSampleRate)
             model: apiModel.defaultSampleRateList
@@ -77,8 +66,6 @@ BaseSection {
             title: qsTrc("preferences", "Default sample format")
             columnWidth: root.columnWidth
             titleHeight: sampleRateFormatRow.sharedTitleHeight
-
-            enabled: !playbackState.isPlaying
 
             currentIndex: indexOfValue(apiModel.defaultSampleFormat)
             model: apiModel.defaultSampleFormatList
@@ -102,8 +89,6 @@ BaseSection {
             title: qsTrc("preferences", "Custom sample rate")
             columnWidth: root.columnWidth
             currentValue: apiModel.defaultSampleRateValue
-
-            enabled: !playbackState.isPlaying
 
             minValue: 1
             maxValue: 999999

@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/types/secs.h" // IWYU pragma: export
 
 #include "audio/audiotypes.h"
@@ -40,6 +42,7 @@ struct PlayTracksOptions {
     double mixerEndTime = -1.0;  // Time at which mixer stops producing, maybe > endTime, if not set then == endTime
     double startOffset = 0.0;
     bool isDefaultPolicy = true;
+    std::optional<double> streamStartTime;
 };
 
 class DitherTypePrefs

@@ -10,7 +10,6 @@
 #include "framework/global/async/asyncable.h"
 
 #include "audio/main/iaudioconfiguration.h"
-#include "audio/iaudiodevicesprovider.h"
 #include "playback/iplaybackconfiguration.h"
 
 namespace au::appshell {
@@ -30,8 +29,6 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable, 
     Q_PROPERTY(double longSkip READ longSkip NOTIFY longSkipChanged)
 
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
-
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
 
 public:
     explicit PlaybackPreferencesModel(QObject* parent = nullptr);

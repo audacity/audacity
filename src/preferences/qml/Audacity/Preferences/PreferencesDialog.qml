@@ -172,8 +172,6 @@ StyledDialogView {
             }
 
             onApplyRequested: {
-                preferencesModel.apply()
-
                 var ok = true
                 var pages = preferencesModel.availablePages()
 
@@ -186,6 +184,7 @@ StyledDialogView {
                 }
 
                 if (ok) {
+                    preferencesModel.apply()
                     root.hide()
                 }
             }

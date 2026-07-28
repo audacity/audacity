@@ -37,6 +37,14 @@ PreferencesPage {
         apiModel.load()
     }
 
+    function apply() {
+        return apiModel.apply()
+    }
+
+    function reset() {
+        apiModel.reset()
+    }
+
     Column {
         width: parent.width
         spacing: root.sectionsSpacing

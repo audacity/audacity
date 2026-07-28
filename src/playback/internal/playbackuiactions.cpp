@@ -10,6 +10,7 @@
 #include "context/shortcutcontext.h"
 
 using namespace au::playback;
+using namespace au::audio;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
@@ -290,20 +291,23 @@ void PlaybackUiActions::init()
         m_actionEnabledChanged.send({ PLAYBACK_PLAY_SELECTION_QUERY.toString() });
     });
 
-    audioDevicesProvider()->apiChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_AUDIO_API_QUERY.toString() }));
-    });
-
-    audioDevicesProvider()->outputDeviceChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString() }));
-    });
-
-    audioDevicesProvider()->inputDeviceChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString() }));
-    });
-
-    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString() }));
+    audioDriverController()->configurationChanged().onReceive(this, [this](const AudioConfigurationDelta& delta) {
+        ActionCodeList actions;
+        if (delta.contains(AudioConfigurationField::Api)) {
+            actions.push_back(PLAYBACK_CHANGE_AUDIO_API_QUERY.toString());
+        }
+        if (delta.contains(AudioConfigurationField::OutputDevice)) {
+            actions.push_back(PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString());
+        }
+        if (delta.contains(AudioConfigurationField::InputDevice)) {
+            actions.push_back(PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
+        }
+        if (delta.contains(AudioConfigurationField::InputChannels)) {
+            actions.push_back(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
+        }
+        if (!actions.empty()) {
+            actionCheckedChanged().send(actions);
+        }
     });
 }
 

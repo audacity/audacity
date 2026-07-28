@@ -8,3 +8,7 @@ target_sources(preferences PRIVATE
 target_link_libraries(preferences PRIVATE importer)
 
 add_subdirectory(qml/Audacity/Preferences)
+
+if (AU_BUILD_PREFERENCES_TESTS)
+    add_subdirectory(tests)
+endif()

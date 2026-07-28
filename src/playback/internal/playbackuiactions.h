@@ -7,7 +7,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/ui/iuiactionsmodule.h"
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "context/iuicontextresolver.h"
 #include "internal/playbackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
@@ -15,8 +15,9 @@
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
     muse::ContextInject<context::IUiContextResolver> uiContextResolver{ this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
 public:

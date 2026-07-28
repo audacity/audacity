@@ -15,7 +15,6 @@ namespace au::au3 {
 class WxLogWrap;
 class Au3Playback;
 class Au3Record;
-class Au3AudioDevicesProvider;
 class Au3WrapModule : public muse::modularity::IModuleSetup
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;

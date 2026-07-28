@@ -17,7 +17,7 @@
 #include "trackedit/itracksinteraction.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "record/irecordconfiguration.h"
 
 #include "record/irecord.h"
@@ -27,6 +27,7 @@ namespace au::record {
 class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
@@ -37,7 +38,6 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     RecordController(const muse::modularity::ContextPtr& ctx)

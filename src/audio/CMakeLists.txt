@@ -5,12 +5,14 @@
 declare_module(audio)
 
 set(MODULE_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/audioconfigurationtypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/driver/iaudiodrivercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudiostreamsuspender.h
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.h
     ${CMAKE_CURRENT_LIST_DIR}/audiotypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiometer.h
-    ${CMAKE_CURRENT_LIST_DIR}/iaudiodevicesprovider.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiometer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiometer.h

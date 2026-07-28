@@ -13,6 +13,7 @@
 #include "framework/global/types/string.h"
 
 #include "au3wrap/au3types.h"
+#include "audioconfigurationtypes.h"
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
@@ -30,10 +31,21 @@ public:
 
     virtual bool isBusy() const = 0;
     virtual bool isCapturing() const = 0;
+    virtual bool isMonitoring() const = 0;
+    // Includes transitional busy/inactive stream states.
+    virtual std::optional<AudioStreamDescriptor> currentStream() const = 0;
+
+    struct StartStreamOptions {
+        bool isDefaultPolicy = true;
+        double sampleRate = 0.0;
+        double leadInTime = 0.0;
+        std::vector<std::vector<float> >* crossfadeData = nullptr;
+        //! Does not change the play region.
+        std::optional<double> streamStartTime;
+    };
 
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
-                            AudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate, double leadInTime = 0.0,
-                            std::vector<std::vector<float> >* crossfadeData = nullptr) = 0;
+                            AudacityProject& project, const StartStreamOptions& options) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
     virtual void seekStream(double time) = 0;

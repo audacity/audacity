@@ -7,7 +7,7 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "playback/iplaybackconfiguration.h"
 #include "record/irecord.h"
 #include "record/irecordconfiguration.h"
@@ -42,8 +42,8 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
     muse::GlobalInject<record::IRecordMeterController> recordMeterController;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
     muse::ContextInject<record::IRecord> record{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
 

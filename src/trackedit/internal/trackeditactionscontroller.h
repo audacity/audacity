@@ -13,7 +13,7 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/ui/inavigationcontroller.h"
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "context/iglobalcontext.h"
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
@@ -35,9 +35,9 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };

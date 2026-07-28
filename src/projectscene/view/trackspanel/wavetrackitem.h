@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "playback/iplayback.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "record/irecord.h"
@@ -28,10 +28,11 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
     muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
     muse::ContextInject<playback::IPlayback> playback{ this };
     muse::ContextInject<record::IRecord> record{ this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     explicit WaveTrackItem(QObject* parent = nullptr);

@@ -5,7 +5,7 @@
 
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
 #include "trackedit/iprojecthistory.h"
@@ -17,8 +17,8 @@ class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
     Q_OBJECT
 
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };

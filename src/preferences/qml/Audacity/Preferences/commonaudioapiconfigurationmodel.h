@@ -21,13 +21,16 @@
  */
 #pragma once
 
+#include <optional>
+
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "ui/iuiconfiguration.h"
 
 namespace au::appshell {
@@ -35,6 +38,8 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 {
     Q_OBJECT
     QML_ELEMENT
+
+    friend class CommonAudioApiConfigurationModelTests;
 
     Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
 
@@ -65,13 +70,16 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_PROPERTY(bool asioUseDeviceSampleRate READ asioUseDeviceSampleRate NOTIFY asioUseDeviceSampleRateChanged)
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+    Q_INVOKABLE void reset();
+    Q_INVOKABLE bool apply();
 
     int currentAudioApiIndex() const;
     Q_INVOKABLE QStringList audioApiList() const;
@@ -151,7 +159,18 @@ signals:
     void asioUseDeviceSampleRateChanged();
 
 private:
+    std::string effectiveApi() const;
+    std::string effectiveOutputDevice() const;
+    std::string effectiveInputDevice() const;
+    int effectiveInputChannelsAvailable() const;
+    int effectiveInputChannels() const;
+    void setPendingSampleRate(uint64_t rateValue);
+    void clearPendingValues();
+    void notifyDeviceContextChanged();
+
     std::vector<std::pair<uint64_t, QString> > m_sampleRateMapping;
     bool m_otherSampleRate = false;
+
+    audio::AudioConfigurationChange m_pending;
 };
 }

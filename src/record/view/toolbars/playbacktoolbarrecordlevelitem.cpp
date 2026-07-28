@@ -24,8 +24,10 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         emit meterStyleChanged();
     });
 
-    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
-        recordingChannelsCountChanged();
+    audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
+        if (delta.contains(audio::AudioConfigurationField::InputChannels)) {
+            recordingChannelsCountChanged();
+        }
     });
 
     recordConfiguration()->isMicMeteringOnChanged().onNotify(this, [this]() {
@@ -160,7 +162,7 @@ void PlaybackToolBarRecordLevelItem::setRightMaxPeak(const float newRightMaxPeak
 
 int PlaybackToolBarRecordLevelItem::recordingChannelsCount() const
 {
-    return audioDevicesProvider()->inputChannelsSelected();
+    return audioDriverController()->configuration().inputChannels;
 }
 
 bool PlaybackToolBarRecordLevelItem::isInputMonitoringOn() const

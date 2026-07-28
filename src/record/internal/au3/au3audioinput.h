@@ -9,7 +9,7 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudioengine.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
@@ -26,9 +26,9 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
     muse::GlobalInject<record::IRecordConfiguration> configuration;
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
     muse::GlobalInject<record::IRecordMeterController> meterController;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<record::IRecordController> controller{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };

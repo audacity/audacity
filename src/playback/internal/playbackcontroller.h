@@ -11,29 +11,34 @@
 #include "framework/ui/iuiactionsregister.h"
 
 #include "audio/audiotypes.h"
-#include "audio/iaudiodevicesprovider.h"
+#include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/iaudioengine.h"
+#include "audio/iaudiostreamsuspender.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 #include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
+#include "record/irecord.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::playback {
 class PlaybackUiActions;
-class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Contextable
+class PlaybackController : public IPlaybackController, public audio::IAudioStreamSuspender, public muse::actions::Actionable,
+    public muse::async::Asyncable, public muse::Contextable
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+    muse::GlobalInject<audio::IAudioEngine> audioEngine;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
-    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
     muse::ContextInject<IPlayback> playback { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<record::IRecordController> recordController{ this };
+    muse::ContextInject<record::IRecord> record{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
 public:
@@ -89,6 +94,9 @@ public:
 
     muse::Progress loadingProgress() const override;
 
+    audio::AudioStreamRestorer suspendForAudioConfiguration(
+        audio::AudioStreamKind streamKind) override;
+
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
@@ -136,6 +144,7 @@ private:
     void doPause();
     void doResume();
     void seek(const muse::secs_t secs, bool applyIfPlaying);
+    bool ensurePhysicalStreamStopped();
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
@@ -152,6 +161,7 @@ private:
     void setAudioInputDevice(const muse::actions::ActionQuery& q);
     void setInputChannels(const muse::actions::ActionQuery& q);
     void rescanAudioDevices();
+    void handleAudioConfigurationResult(const audio::ApplyResult& result, const muse::actions::ActionCode& actionCode);
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
     void subscribeOnAudioParamsChanges();
@@ -186,6 +196,7 @@ private:
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
     PlaybackRegion m_lastPlaybackRegion;
     bool m_pauseShouldStopPlayback = false;
+    std::optional<muse::secs_t> m_pausedResumePos;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;

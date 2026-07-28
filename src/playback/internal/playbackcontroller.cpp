@@ -35,6 +35,45 @@ static const ActionCode REPEAT_CODE("repeat");
 
 static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
+namespace {
+QString audioConfigurationFailureMessage(ApplyStatus status)
+{
+    switch (status) {
+    case ApplyStatus::Busy:
+        return muse::qtrc("playback", "Audio settings are already being changed.");
+    case ApplyStatus::InvalidConfiguration:
+        return muse::qtrc("playback", "The selected audio settings are invalid.");
+    case ApplyStatus::InvalidRouting:
+        return muse::qtrc("playback", "The selected audio routing is invalid.");
+    case ApplyStatus::NoUsableAudioApi:
+        return muse::qtrc("playback", "No usable audio API is available.");
+    case ApplyStatus::NoAsioDevice:
+        return muse::qtrc("playback", "No ASIO device is available.");
+    case ApplyStatus::OwnerUnavailable:
+        return muse::qtrc("playback", "The active audio stream could not be stopped.");
+    case ApplyStatus::InternalError:
+        return muse::qtrc("playback", "An internal error occurred while changing the audio settings.");
+    case ApplyStatus::Applied:
+    case ApplyStatus::NoChange:
+        return {};
+    }
+    return {};
+}
+
+QString audioConfigurationMessage(const ApplyResult& result,
+                                  QString message,
+                                  const QString& restorationFailure)
+{
+    if (result.streamRestorationFailed) {
+        if (!message.isEmpty()) {
+            message += " ";
+        }
+        message += restorationFailure;
+    }
+    return message;
+}
+}
+
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
@@ -198,6 +237,7 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
         return;
     }
 
+    m_pausedResumePos.reset();
     player()->seek(secs, applyIfPlaying);
 }
 
@@ -214,12 +254,12 @@ Channel<uint32_t> PlaybackController::midiTickPlayed() const
     return m_tickPlayed;
 }
 
-muse::async::Channel<TrackId> PlaybackController::trackAdded() const
+muse::async::Channel<au::playback::TrackId> PlaybackController::trackAdded() const
 {
     return m_trackAdded;
 }
 
-muse::async::Channel<TrackId> PlaybackController::trackRemoved() const
+muse::async::Channel<au::playback::TrackId> PlaybackController::trackRemoved() const
 {
     return m_trackRemoved;
 }
@@ -341,6 +381,20 @@ void PlaybackController::doPlay(bool clearPlaybackRegion)
 {
     IF_ASSERT_FAILED(player()) {
         return;
+    }
+
+    if (m_pausedResumePos) {
+        // Resuming a stream that a device change tore down while paused: start
+        // at the pause position, leaving the play region and the seek anchor
+        // untouched. Any explicit reposition since the teardown (seek, region
+        // change, stop, play-selection) has already cleared the pending
+        // position; a project that shrank below it makes it unplayable.
+        const muse::secs_t position = *m_pausedResumePos;
+        m_pausedResumePos.reset();
+        if (position < totalPlayTime()) {
+            player()->play(position);
+            return;
+        }
     }
 
     if (!clearPlaybackRegion) {
@@ -502,6 +556,7 @@ void PlaybackController::onChangePlaybackRegionAction(const muse::actions::Actio
 
 void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 {
+    m_pausedResumePos.reset();
     m_lastPlaybackRegion = region;
 
     if (isStopped()) {
@@ -551,7 +606,82 @@ void PlaybackController::stop()
         return;
     }
     m_pauseShouldStopPlayback = false;
+    m_pausedResumePos.reset();
     player()->stop();
+}
+
+AudioStreamRestorer PlaybackController::suspendForAudioConfiguration(AudioStreamKind streamKind)
+{
+    const auto suspendRecording = [this]() -> AudioStreamRestorer {
+        // Recording is intentionally not resumed after reconfiguration.
+        if (!record()->stop() || !ensurePhysicalStreamStopped()) {
+            return {};
+        }
+        return [] { return true; };
+    };
+
+    if (recordController()->isRecording()) {
+        return suspendRecording();
+    }
+
+    const bool wasPlaying = isPlaying();
+    const bool wasPaused = isPaused();
+    if (wasPlaying || wasPaused) {
+        const muse::secs_t position = player()->playbackPosition();
+        stop();
+        if (!ensurePhysicalStreamStopped()) {
+            return {};
+        }
+        if (wasPaused) {
+            m_pausedResumePos = position;
+        }
+        return [this, wasPlaying, position]() {
+            if (!wasPlaying) {
+                return true;
+            }
+            player()->play(position);
+            return isPlaying();
+        };
+    }
+
+    switch (streamKind) {
+    case AudioStreamKind::Recording:
+        return suspendRecording();
+
+    case AudioStreamKind::Monitoring: {
+        const auto project = globalContext()->currentProject();
+        if (!project) {
+            return {};
+        }
+        auto au3Project = reinterpret_cast<AudacityProject*>(project->au3ProjectPtr());
+        audioEngine()->stopMonitoring();
+        if (!ensurePhysicalStreamStopped()) {
+            return {};
+        }
+        return [this, au3Project]() {
+                audioEngine()->startMonitoring(*au3Project);
+                return audioEngine()->isMonitoring();
+            };
+    }
+
+    case AudioStreamKind::Playback:
+        if (!ensurePhysicalStreamStopped()) {
+            return {};
+        }
+        return [] { return true; };
+    }
+    return {};
+}
+
+bool PlaybackController::ensurePhysicalStreamStopped()
+{
+    if (!audioEngine()) {
+        return false;
+    }
+    if (audioEngine()->currentStream()) {
+        audioEngine()->stopStream();
+    }
+    return !audioEngine()->currentStream();
 }
 
 void PlaybackController::doResume()
@@ -713,9 +843,15 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
         return;
     }
 
-    int index = q.param("api_index").toInt();
-
-    audioDevicesProvider()->setApi(audioDevicesProvider()->apis().at(index));
+    const int index = q.param("api_index").toInt();
+    const auto values = audioDriverController()->apis();
+    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+        return;
+    }
+    AudioConfigurationChange change;
+    change.api = values[index];
+    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                   PLAYBACK_CHANGE_AUDIO_API_QUERY.toString());
 }
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
@@ -724,9 +860,15 @@ void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& 
         return;
     }
 
-    int index = q.param("device_index").toInt();
-
-    audioDevicesProvider()->setOutputDevice(audioDevicesProvider()->outputDevices().at(index));
+    const int index = q.param("device_index").toInt();
+    const auto values = audioDriverController()->outputDevices();
+    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+        return;
+    }
+    AudioConfigurationChange change;
+    change.outputDevice = values[index];
+    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                   PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString());
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
@@ -735,9 +877,15 @@ void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q
         return;
     }
 
-    int index = q.param("device_index").toInt();
-
-    audioDevicesProvider()->setInputDevice(audioDevicesProvider()->inputDevices().at(index));
+    const int index = q.param("device_index").toInt();
+    const auto values = audioDriverController()->inputDevices();
+    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+        return;
+    }
+    AudioConfigurationChange change;
+    change.inputDevice = values[index];
+    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                   PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
 }
 
 void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
@@ -746,14 +894,59 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
         return;
     }
 
-    int index = q.param("input-channels_index").toInt();
-
-    audioDevicesProvider()->setInputChannels(index);
+    const int channels = q.param("input-channels_index").toInt();
+    AudioConfigurationChange change;
+    change.inputChannels = channels;
+    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                   PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
 }
 
 void PlaybackController::rescanAudioDevices()
 {
-    audioDevicesProvider()->rescan();
+    const auto result = audioDriverController()->rescan();
+    if (!result.succeeded() && interactive()) {
+        const auto message = audioConfigurationMessage(
+            result,
+            audioConfigurationFailureMessage(result.status),
+            muse::qtrc("playback", "The previous audio state could not be restored."));
+        interactive()->error(muse::qtrc("playback", "Unable to rescan audio devices").toStdString(),
+                             message.toStdString());
+    } else {
+        const auto notice = audioConfigurationMessage(
+            result,
+            {},
+            muse::qtrc("playback", "The audio stream could not be restored after rescanning audio devices."));
+        if (!notice.isEmpty() && interactive()) {
+            interactive()->warning(muse::qtrc("playback", "Audio devices").toStdString(),
+                                   notice.toStdString());
+        }
+    }
+}
+
+void PlaybackController::handleAudioConfigurationResult(const ApplyResult& result, const ActionCode& actionCode)
+{
+    if (!result.succeeded()) {
+        // Restore the check state optimistically changed by the menu.
+        notifyActionCheckedChanged(actionCode);
+        if (interactive()) {
+            const auto message = audioConfigurationMessage(
+                result,
+                audioConfigurationFailureMessage(result.status),
+                muse::qtrc("playback", "The previous audio state could not be restored."));
+            interactive()->error(muse::qtrc("playback", "Unable to change audio settings").toStdString(),
+                                 message.toStdString());
+        }
+        return;
+    }
+
+    const auto notice = audioConfigurationMessage(
+        result,
+        {},
+        muse::qtrc("playback", "The audio stream could not be restored after changing the audio settings."));
+    if (!notice.isEmpty() && interactive()) {
+        interactive()->warning(muse::qtrc("playback", "Audio settings").toStdString(),
+                               notice.toStdString());
+    }
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)
