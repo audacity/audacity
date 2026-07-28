@@ -243,6 +243,43 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
 }
 
 /**
+ * @brief Toggle play when stopped at the end of a played selection/region
+ * @details Playing a selection leaves the playhead at the region end (mid-project).
+ *          The next play must continue from the playhead, not jump back to project start.
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfPlaybackRegion)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] The played region was a selection {10, 20} and the playhead is at its end
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(10.0), secs_t(20.0) }));
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(secs_t(20.0)));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [THEN] Continue from the playhead (20), not from the project start
+    EXPECT_CALL(*m_player, seek(secs_t(20.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), _))
+    .Times(0);
+
+    //! [THEN] Playback region runs from the playhead to the project end
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(20.0), secs_t(100.0) }))
+    .Times(1);
+
+    //! [THEN] Player should start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
+}
+
+/**
  * @brief Toggle play when there is selection
  * @details User made a selection, placed the playhead before it and clicked play
  *          A time selection must not constrain playback: it should start from

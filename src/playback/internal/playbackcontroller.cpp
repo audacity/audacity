@@ -323,8 +323,14 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
     }
 
     if (isStopped()) {
-        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+        if (isPlaybackPositionOnTheEndOfProject()) {
+            //! NOTE: reached the project end — restart from the beginning
             doSeek(0.0, false);
+        } else if (isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+            //! NOTE: reached the end of a played selection/region — continue from the
+            //! playhead rather than the region start, so the next play resumes where it
+            //! left off instead of jumping back
+            doSeek(playbackPosition(), false);
         }
 
         doPlay(clearPlaybackRegion);
