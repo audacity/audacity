@@ -54,6 +54,7 @@ qt_add_qml_module(preferences_qml
         internal/DeleteBehaviorSection.qml
         internal/EffectBehaviorSection.qml
         internal/EffectOptionsSection.qml
+        internal/ExtensionPreferencesSection.qml
         internal/FFmpegLibrarySection.qml
         internal/FoldersSection.qml
         internal/FreeSpaceSection.qml
@@ -107,8 +108,9 @@ qt_add_qml_module(preferences_qml
     IMPORTS
         TARGET muse_ui_qml
         TARGET muse_uicomponents_qml
-        TARGET muse_extensions_qml
         TARGET muse_shortcuts_qml
 )
 
 fixup_qml_module_dependencies(preferences_qml)
+
+target_link_libraries(preferences_qml PRIVATE audacity_extensions)
