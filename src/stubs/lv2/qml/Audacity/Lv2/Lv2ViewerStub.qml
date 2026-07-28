@@ -7,4 +7,6 @@ Item {
     property string instanceId
     property string title
     property string effectState
+
+    signal vendorUiFailed
 }
