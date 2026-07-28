@@ -832,10 +832,10 @@
     </SC>
     <SC>
         <key>action://playback/pause</key>
-        <seq>P</seq>
     </SC>
     <SC>
         <key>action://playback/toggle-play-pause</key>
+        <seq>P</seq>
     </SC>
     <SC>
         <key>action://record/start</key>
