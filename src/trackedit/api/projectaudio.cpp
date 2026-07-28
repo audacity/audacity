@@ -422,6 +422,12 @@ bool AudioWriterObject::write(QObject* object)
         throwProjectError(this, QStringLiteral("Invalid audio write"));
         return false;
     }
+    for (uint32_t channel = 0; channel < m_format.channelCount; ++channel) {
+        if (!chunk->buffer(channel)->isExclusive()) {
+            throwProjectError(this, QStringLiteral("Audio is in use by a native call"));
+            return false;
+        }
+    }
     if (chunk->sampleCount() == 0) {
         return true;
     }

@@ -15,10 +15,17 @@ void throwSizeError(const QObject* object)
         engine->throwError(QJSValue::RangeError, QStringLiteral("Buffer size does not match"));
     }
 }
+
+void throwInUseError(const QObject* object)
+{
+    if (auto* engine = qjsEngine(object)) {
+        engine->throwError(QStringLiteral("Buffer is in use by a native call"));
+    }
+}
 } // namespace
 
 ByteBuffer::ByteBuffer(size_t byteLength, QObject* parent)
-    : QObject(parent), m_data(std::make_shared<QByteArray>(static_cast<qsizetype>(byteLength), Qt::Uninitialized))
+    : QObject(parent), m_data(std::make_shared<QByteArray>(static_cast<qsizetype>(byteLength), '\0'))
 {
 }
 
@@ -29,6 +36,10 @@ qulonglong ByteBuffer::byteLength() const
 
 QByteArray ByteBuffer::copyToArrayBuffer() const
 {
+    if (!isExclusive()) {
+        throwInUseError(this);
+        return {};
+    }
     return *m_data;
 }
 
@@ -36,6 +47,10 @@ void ByteBuffer::copyFromArrayBuffer(const QByteArray& buffer)
 {
     if (buffer.size() != m_data->size()) {
         throwSizeError(this);
+        return;
+    }
+    if (!isExclusive()) {
+        throwInUseError(this);
         return;
     }
     *m_data = buffer;
