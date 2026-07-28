@@ -128,10 +128,26 @@ if [ ! -f ${appdir}/usr/lib/libQt5QuickControls2.so.5 ]; then
     cp ${QT_ROOT_DIR}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
 fi
 
-# The system must be used
-if [ -f ${appdir}/lib/libglib-2.0.so.0 ]; then
-  rm -f ${appdir}/lib/libglib-2.0.so.0
-fi
+# The system versions must be used. The GLib family is versioned as one unit;
+# bundling any of these libraries alongside newer system libraries that depend
+# on GLib (e.g. gdk-pixbuf pulled in via the system FFmpeg) causes unresolved
+# symbols such as g_task_set_static_name, breaking dlopen of those libraries.
+# The same applies to the util-linux libraries that the system GLib depends on
+# (gio -> mount -> blkid -> uuid): a bundled older libmount breaks the system
+# libgio with e.g. "version `MOUNT_2_40' not found".
+system_libs=(
+  libglib-2.0.so.0
+  libgio-2.0.so.0
+  libgobject-2.0.so.0
+  libgmodule-2.0.so.0
+  libgthread-2.0.so.0
+  libmount.so.1
+  libblkid.so.1
+  libuuid.so.1
+)
+for lib in "${system_libs[@]}"; do
+  rm -f "${appdir}/lib/${lib}"
+done
 
 unset QML_SOURCES_PATHS EXTRA_PLATFORM_PLUGINS
 
