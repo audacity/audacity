@@ -1427,36 +1427,7 @@ void ProjectActionsController::updateCloudAudioPreview(const muse::actions::Acti
         }
 
         downloadCloudProject(projectId, localPath, [this](IAudacityProjectPtr downloaded) {
-            auto [ret, progress] = audioComService()->updateAudioPreview(downloaded);
-            if (!ret) {
-                downloaded->close();
-                interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
-                return;
-            }
-
-            if (!progress) {
-                downloaded->close();
-                return;
-            }
-
-            progress->finished().onReceive(this, [this, downloaded](const ProgressResult& result) {
-                downloaded->close();
-                if (result.ret.success()) {
-                    toastService()->showSuccess(trc("cloud", "Cloud audio preview updated"),
-                                                trc("cloud", "The audio preview has been uploaded to audio.com"));
-                    return;
-                }
-
-                if (result.ret.code() == static_cast<int>(au::au3cloud::Err::AudioPreviewUpToDate)) {
-                    interactive()->info(trc("cloud", "Audio preview is up to date"),
-                                        trc("cloud", "The audio preview already matches the latest saved version of this project."));
-                    return;
-                }
-
-                if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)) {
-                    interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
-                }
-            });
+            doUpdateCloudAudioPreview(downloaded, [downloaded]() { downloaded->close(); });
         });
         return;
     }
@@ -1476,20 +1447,39 @@ void ProjectActionsController::updateCloudAudioPreview(const muse::actions::Acti
     }
 
     saveProjectToCloud(CloudProjectInfo { project->displayName() }, CloudSaveMode::NormalUpdate, [this, project]() {
-        auto [ret, progress] = audioComService()->updateAudioPreview(project);
-        if (!ret) {
-            interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
-            return;
+        doUpdateCloudAudioPreview(project);
+    });
+}
+
+void ProjectActionsController::doUpdateCloudAudioPreview(const IAudacityProjectPtr& project, const std::function<void()>& onFinished)
+{
+    auto [ret, progress] = audioComService()->updateAudioPreview(project);
+    if (!ret) {
+        if (onFinished) {
+            onFinished();
         }
 
-        if (!progress) {
-            return;
+        interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
+        return;
+    }
+
+    if (!progress) {
+        if (onFinished) {
+            onFinished();
         }
 
-        progress->finished().onReceive(this, [this](const ProgressResult& result) {
+        return;
+    }
+
+    progress->finished().onReceive(this, [this, onFinished](const ProgressResult& result) {
+        async::Async::call(this, [this, onFinished, result]() {
+            if (onFinished) {
+                onFinished();
+            }
+
             if (result.ret.success()) {
-                toastService()->showSuccess(trc("cloud", "Cloud audio preview updated"),
-                                            trc("cloud", "The audio preview has been uploaded to audio.com"));
+                interactive()->info(trc("cloud", "Cloud audio preview updated"),
+                                    trc("cloud", "The audio preview has been uploaded to audio.com"));
                 return;
             }
 
@@ -1503,26 +1493,9 @@ void ProjectActionsController::updateCloudAudioPreview(const muse::actions::Acti
                 interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
             }
         });
-
-        const bool dismissible = false;
-        const bool showProgressInfo = true;
-        toastService()->showWithProgress(
-            trc("cloud", "Updating cloud audio preview…"),
-            {},
-            progress,
-            muse::ui::IconCode::Code::CLOUD,
-            dismissible,
-        {
-            { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
-            { trc("global", "Stop"), au::toast::ToastActionCode::Custom }
-        },
-            showProgressInfo
-            ).onResolve(this, [progress = progress](const au::toast::ToastActionCode& actionCode) {
-            if (actionCode == au::toast::ToastActionCode::Custom) {
-                progress->cancel();
-            }
-        });
     });
+
+    interactive()->showProgress(trc("cloud", "Updating cloud audio preview…"), *progress);
 }
 
 void ProjectActionsController::downloadCloudProject(const std::string& projectId, const muse::io::path_t& localPath,
@@ -1539,25 +1512,27 @@ void ProjectActionsController::downloadCloudProject(const std::string& projectId
     }
 
     progress->finished().onReceive(this, [this, localPath, onSuccess](const ProgressResult& result) {
-        if (!result.ret) {
-            if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)
-                && result.ret.code() != static_cast<int>(au::au3cloud::Err::OpenProjectCancelled)) {
-                interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
+        async::Async::call(this, [this, localPath, onSuccess, result]() {
+            if (!result.ret) {
+                if (result.ret.code() != static_cast<int>(Ret::Code::Cancel)
+                    && result.ret.code() != static_cast<int>(au::au3cloud::Err::OpenProjectCancelled)) {
+                    interactive()->error(trc("cloud", "Generate audio preview"), result.ret.text());
+                }
+                return;
             }
-            return;
-        }
 
-        const muse::io::path_t projectPath = !result.val.isNull() ? result.val.toPath() : localPath;
+            const muse::io::path_t projectPath = !result.val.isNull() ? result.val.toPath() : localPath;
 
-        const RetVal<IAudacityProjectPtr> loaded = loadProject(projectPath);
-        if (!loaded.ret) {
-            interactive()->error(trc("cloud", "Generate audio preview"), loaded.ret.text());
-            return;
-        }
+            const RetVal<IAudacityProjectPtr> loaded = loadProject(projectPath);
+            if (!loaded.ret) {
+                interactive()->error(trc("cloud", "Generate audio preview"), loaded.ret.text());
+                return;
+            }
 
-        if (onSuccess) {
-            onSuccess(loaded.val);
-        }
+            if (onSuccess) {
+                onSuccess(loaded.val);
+            }
+        });
     });
 
     interactive()->showProgress(trc("project", "Syncing project from cloud…"), *progress);

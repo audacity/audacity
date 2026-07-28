@@ -134,6 +134,7 @@ private:
     void openCloudAudioFile(const muse::actions::ActionQuery& query);
 
     void updateCloudAudioPreview(const muse::actions::ActionQuery& query);
+    void doUpdateCloudAudioPreview(const IAudacityProjectPtr& project, const std::function<void()>& onFinished = nullptr);
     void downloadCloudProject(const std::string& projectId, const muse::io::path_t& localPath,
                               std::function<void(IAudacityProjectPtr)> onSuccess);
     bool dispatchAudioPreviewToWindowWithProject(const muse::io::path_t& projectPath, const std::string& projectId);
