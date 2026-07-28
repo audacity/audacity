@@ -6,8 +6,13 @@
 #include <algorithm>
 #include <limits>
 
+#include <QJSEngine>
+
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-project/Project.h"
 #include "log.h"
-#include "trackedit/itrackeditproject.h"
+
+#include "projectedit.h"
 
 using namespace au::trackedit;
 using namespace au::trackedit::api;
@@ -19,6 +24,24 @@ constexpr double INVALID_TIME = std::numeric_limits<double>::quiet_NaN();
 ProjectApi::ProjectApi(muse::api::IApiEngine* e)
     : ApiObject(e)
 {
+}
+
+AudacityProject* ProjectApi::project() const
+{
+    const auto current = globalContext() ? globalContext()->currentProject() : nullptr;
+    return current ? reinterpret_cast<AudacityProject*>(current->au3ProjectPtr()) : nullptr;
+}
+
+QObject* ProjectApi::selection()
+{
+    auto* current = project();
+    if (!current || !selectionController()) {
+        return nullptr;
+    }
+    auto* result = makeCurrentProjectSelection(current, selectionController()->dataSelectedStartTime(),
+                                               selectionController()->dataSelectedEndTime(), nullptr);
+    QJSEngine::setObjectOwnership(result, QJSEngine::JavaScriptOwnership);
+    return result;
 }
 
 ITrackeditProjectPtr ProjectApi::trackeditProject() const
@@ -56,26 +79,6 @@ int ProjectApi::clipCount(int trackIndex) const
     return static_cast<int>(sortedClips(trackIndex).size());
 }
 
-double ProjectApi::clipStartTime(int trackIndex, int clipIndex) const
-{
-    auto clips = sortedClips(trackIndex);
-    if (clipIndex < 0 || clipIndex >= static_cast<int>(clips.size())) {
-        LOGE() << "clipIndex out of range: " << clipIndex << " on track " << trackIndex;
-        return INVALID_TIME;
-    }
-    return clips[clipIndex].startTime;
-}
-
-double ProjectApi::clipEndTime(int trackIndex, int clipIndex) const
-{
-    auto clips = sortedClips(trackIndex);
-    if (clipIndex < 0 || clipIndex >= static_cast<int>(clips.size())) {
-        LOGE() << "clipIndex out of range: " << clipIndex << " on track " << trackIndex;
-        return INVALID_TIME;
-    }
-    return clips[clipIndex].endTime;
-}
-
 QJSValue ProjectApi::clipsOnTrack(int trackIndex) const
 {
     const auto clips = sortedClips(trackIndex);
@@ -98,26 +101,59 @@ double ProjectApi::totalTime() const
     return static_cast<double>(prj->totalTime());
 }
 
-double ProjectApi::selectionStart() const
+double ProjectApi::defaultSampleRate() const
 {
-    if (!trackeditProject() || !selectionController()) {
-        return INVALID_TIME;
-    }
-    return static_cast<double>(selectionController()->dataSelectedStartTime());
+    const auto* current = project();
+    return current ? ProjectRate::Get(*current).GetRate() : INVALID_TIME;
 }
 
-double ProjectApi::selectionEnd() const
+QObject* ProjectApi::beginEdit(const QString& name, QObject* context)
 {
-    if (!trackeditProject() || !selectionController()) {
-        return INVALID_TIME;
+    if (projectApiScopeActive()) {
+        auto* editContext = dynamic_cast<ProjectEditSession*>(context);
+        if (!editContext || editContext != currentProjectEditContext()) {
+            throwProjectError(this, QStringLiteral("Project edits are not available in this callback"));
+            return nullptr;
+        }
+        return editContext->beginEdit(this);
     }
-    return static_cast<double>(selectionController()->dataSelectedEndTime());
-}
 
-bool ProjectApi::hasSelection() const
-{
-    if (!trackeditProject() || !selectionController()) {
-        return false;
+    if (context) {
+        throwProjectError(this, QStringLiteral("The project edit context is no longer active"));
+        return nullptr;
     }
-    return !selectionController()->timeSelectionIsEmpty();
+
+    auto* current = project();
+    if (!current || !selectionController()) {
+        throwProjectError(this, QStringLiteral("No project is active"));
+        return nullptr;
+    }
+    if (name.isEmpty()) {
+        throwProjectError(this, QStringLiteral("An undo description is required"));
+        return nullptr;
+    }
+    if (recordController() && recordController()->isRecording()) {
+        throwProjectError(this, QStringLiteral("Project edits are not available while recording"));
+        return nullptr;
+    }
+    if (playbackController()) {
+        playbackController()->stop();
+    }
+    const auto appContext = globalContext();
+    const auto selection = selectionController();
+    const auto target = appContext->currentProject();
+    return beginRootProjectEdit(
+        current, selectionController()->dataSelectedStartTime(), selectionController()->dataSelectedEndTime(), name, projectHistory(),
+        [appContext, target, current] {
+        const auto active = appContext->currentProject();
+        return active == target && active && reinterpret_cast<AudacityProject*>(active->au3ProjectPtr()) == current;
+    },
+        [selection](double start, double end, const std::vector<int64_t>& tracks) {
+        selection->resetSelectedClips();
+        selection->resetSelectedLabels();
+        selection->setSelectedTracks(tracks, true);
+        selection->setDataSelectedStartTime(start, true);
+        selection->setDataSelectedEndTime(end, true);
+    },
+        this);
 }

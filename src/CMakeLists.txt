@@ -47,6 +47,7 @@ add_subdirectory(spectrogram)
 
 add_subdirectory(automation)
 
+add_subdirectory(extensions/native)
 add_subdirectory(trackedit)
 
 if (AU_BUILD_PLAYBACK_MODULE)
