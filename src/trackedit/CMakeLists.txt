@@ -85,6 +85,16 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/api/projectapi.cpp
     ${CMAKE_CURRENT_LIST_DIR}/api/projectapi.h
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectaudio.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectaudio.h
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectedit.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectedit.h
+    ${CMAKE_CURRENT_LIST_DIR}/api/projecteditobject.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/api/projecteditobject.h
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectlabels.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectlabels.h
+    ${CMAKE_CURRENT_LIST_DIR}/api/internal/projecteditstate.h
+    ${CMAKE_CURRENT_LIST_DIR}/api/audiotransform.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/deletebehaviorpanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/deletebehaviorpanelmodel.h
@@ -100,7 +110,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap extension_native)
 
 set(MODULE_LINK
     ${MODULE_LINK}
