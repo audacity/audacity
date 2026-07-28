@@ -5,6 +5,7 @@
 
 #include "ieffectsprovider.h"
 
+#include "framework/audioplugins/iknownaudiopluginsregister.h"
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
@@ -67,6 +68,7 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(au::uicomponents::TableSortFilterProxyModel * sortFilterProxy READ sortFilterProxy CONSTANT)
 
     muse::GlobalInject<IEffectsProvider> effectsProvider;
+    muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
 
     muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
     muse::ContextInject<muse::IInteractive> interactive { this };

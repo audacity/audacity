@@ -6,6 +6,10 @@ add_subdirectory(effects_base)
 add_subdirectory(builtin)
 add_subdirectory(builtin_collection)
 
+if (MUSE_MODULE_EXTENSIONS)
+    add_subdirectory(extensions)
+endif()
+
 if (AU_MODULE_EFFECTS_LV2)
     add_subdirectory(lv2)
 endif()

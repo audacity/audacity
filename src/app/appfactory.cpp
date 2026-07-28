@@ -93,6 +93,7 @@
 #ifdef MUSE_MODULE_EXTENSIONS
 #include "framework/extensions/extensionsmodule.h"
 #include "extensions/audacityextensionsmodule.h"
+#include "effects/extensions/extensioneffectsmodule.h"
 #else
 #include "framework/stubs/extensions/extensionsstubmodule.h"
 #include "stubs/extensions/audacityextensionsstubmodule.h"
@@ -164,6 +165,9 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::effects::Lv2EffectsModule());
     app->addModule(new au::effects::VstEffectsModule());
     app->addModule(new au::effects::NyquistEffectsModule());
+#ifdef MUSE_MODULE_EXTENSIONS
+    app->addModule(new au::effects::extensions::ExtensionEffectsModule());
+#endif
     app->addModule(new au::context::ContextModule());
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());

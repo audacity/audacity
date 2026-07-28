@@ -17,6 +17,7 @@
 #include "stringutils.h"
 
 #include <map>
+#include <set>
 
 using namespace muse;
 using namespace au::effects;
@@ -132,9 +133,24 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         }
     }
 
+    std::set<muse::io::path_t> obsoleteExtensionPaths;
+    for (const auto& plugin : knownPluginsRegister()->pluginInfoList()) {
+        if (plugin.state == muse::audioplugins::AudioPluginState::Missing
+            && utils::effectFamilyFromCacheType(plugin.meta.type) == EffectFamily::Extension) {
+            obsoleteExtensionPaths.insert(plugin.path);
+        }
+    }
+    for (const auto& path : obsoleteExtensionPaths) {
+        const muse::Ret result = knownPluginsRegister()->removePluginsAtPath(path);
+        if (!result) {
+            LOGE() << "Failed to remove obsolete extension effects at " << path << ": " << result.toString();
+        }
+    }
+
     reloadEffects();
 
-    return !trustedPluginPaths.empty() || !thirdPartyPluginPaths.empty() ? NewPluginsRegistered::Yes : NewPluginsRegistered::No;
+    return !trustedPluginPaths.empty() || !thirdPartyPluginPaths.empty() || !obsoleteExtensionPaths.empty()
+           ? NewPluginsRegistered::Yes : NewPluginsRegistered::No;
 }
 
 void EffectsProvider::deinit()
