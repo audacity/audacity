@@ -17,6 +17,7 @@
 #include "effects/lv2/internal/lv2types.h"
 #include "effects/nyquist/internal/nyquisttypes.h"
 #include "effects/builtin/internal/builtintypes.h"
+#include "effects/extensions/internal/extensiontypes.h"
 
 #include "au3-components/EffectInterface.h"
 #include "au3-strings/wxArrayStringEx.h"
@@ -39,6 +40,7 @@ muse::String utils::effectFamilyToString(EffectFamily family)
     case EffectFamily::AudioUnit: return u"AudioUnit";
 #endif
     case EffectFamily::Nyquist: return u"Nyquist";
+    case EffectFamily::Extension: return u"Extension";
     default:
         assert(false);
         return u"Unknown";
@@ -61,6 +63,8 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
 #endif
     } else if (family == u"Nyquist") {
         return EffectFamily::Nyquist;
+    } else if (family == u"Extension") {
+        return EffectFamily::Extension;
     }
     assert(false);
     return EffectFamily::Unknown;
@@ -78,6 +82,7 @@ std::string utils::effectFamilyToCacheType(EffectFamily family)
 #endif
     case EffectFamily::Nyquist:   return std::string(nyquist::AUDIO_RESOURCE_TYPE_NAME);
     case EffectFamily::Builtin:   return std::string(builtin::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Extension: return std::string(extensions::AUDIO_RESOURCE_TYPE_NAME);
     case EffectFamily::Unknown:
     case EffectFamily::_count:
         break;
@@ -105,6 +110,9 @@ EffectFamily utils::effectFamilyFromCacheType(const std::string& cacheType)
     }
     if (cacheType == builtin::AUDIO_RESOURCE_TYPE_NAME) {
         return EffectFamily::Builtin;
+    }
+    if (cacheType == extensions::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Extension;
     }
     return EffectFamily::Unknown;
 }

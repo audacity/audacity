@@ -48,6 +48,7 @@ public:
         FileFiltersRole,
         IsFileSaveRole,
         IsFileMultipleRole,
+        IsDirectoryRole,
         IsReadOnlyRole,
         IsHiddenRole,
         IsLogarithmicRole,

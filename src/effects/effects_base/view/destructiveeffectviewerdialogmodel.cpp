@@ -114,7 +114,7 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
         return ViewerComponentType::Builtin;
     }
 
-    if (family == EffectFamily::Nyquist) {
+    if (family == EffectFamily::Nyquist || family == EffectFamily::Extension) {
         return ViewerComponentType::Generated;
     }
 

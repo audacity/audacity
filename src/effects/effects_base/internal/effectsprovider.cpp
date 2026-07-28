@@ -111,17 +111,16 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         thirdPartyPluginPaths.begin(), thirdPartyPluginPaths.end(),
         [&](const auto& path) {
         const auto family = utils::effectFamilyFromCacheType(pathToMetaReader.at(path)->metaType());
-        return !(family == EffectFamily::Nyquist || family == EffectFamily::Builtin);
+        return !(family == EffectFamily::Nyquist || family == EffectFamily::Builtin || family == EffectFamily::Extension);
     });
 
-    muse::io::paths_t audacityPluginPaths(mid, thirdPartyPluginPaths.end());
+    muse::io::paths_t trustedPluginPaths(mid, thirdPartyPluginPaths.end());
     thirdPartyPluginPaths.erase(mid, thirdPartyPluginPaths.end());
 
     knownPluginsRegister()->setPluginsState(scanResult.missingPluginPaths,
                                             muse::audioplugins::AudioPluginState::Missing);
 
-    // built-in and nyquist plugins are trusted, register in-process
-    for (const io::path_t& path : audacityPluginPaths) {
+    for (const io::path_t& path : trustedPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
     }
 
@@ -135,7 +134,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
 
     reloadEffects();
 
-    return !audacityPluginPaths.empty() || !thirdPartyPluginPaths.empty() ? NewPluginsRegistered::Yes : NewPluginsRegistered::No;
+    return !trustedPluginPaths.empty() || !thirdPartyPluginPaths.empty() ? NewPluginsRegistered::Yes : NewPluginsRegistered::No;
 }
 
 void EffectsProvider::deinit()

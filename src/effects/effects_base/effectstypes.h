@@ -114,6 +114,7 @@ struct ParameterInfo {
     std::vector<muse::String> fileFilters;  // File type filters (e.g., "Nyquist Plug-in (*.ny *.NY)")
     bool isFileSave = false;                // true for save dialog, false for open dialog
     bool isFileMultiple = false;            // true to allow multiple file selection
+    bool isDirectory = false;
 
     // Flags
     bool isReadOnly = false;
@@ -196,6 +197,7 @@ public:
         AudioUnit,
 #endif
         Nyquist,
+        Extension,
         _count
     };
     Q_ENUM(EffectFamily)
