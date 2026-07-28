@@ -20,6 +20,8 @@ Rectangle {
     property string title: prv.viewModel.title
     property bool isPreviewing: prv.viewModel.isPreviewing
 
+    signal vendorUiFailed
+
     implicitWidth: textItem.width
     implicitHeight: textItem.height
     color: ui.theme.backgroundPrimaryColor
@@ -27,11 +29,16 @@ Rectangle {
     QtObject {
         id: prv
 
+        property bool vendorUiFailed: false
         property AbstractMenuModel activeMenuModel: null
         property var viewModel: {
             var viewModel = Lv2ViewModelFactory.createModel(root, root.instanceId, root.effectState)
             viewModel.onExternalUiClosed.connect(function () {
                 window.close()
+            })
+            viewModel.onVendorUiFailed.connect(function () {
+                prv.vendorUiFailed = true
+                root.vendorUiFailed()
             })
             return viewModel
         }
@@ -39,7 +46,10 @@ Rectangle {
 
     Component.onCompleted: {
         prv.viewModel.init()
-        Qt.callLater(presetsBarModel.load)
+
+        if (!prv.vendorUiFailed) {
+            Qt.callLater(presetsBarModel.load)
+        }
     }
 
     Component.onDestruction: {
@@ -84,7 +94,7 @@ Rectangle {
         width: visible ? 300 : 0
         height: visible ? 100 : 0
         anchors.centerIn: parent
-        text: "No available UI:\n" + prv.viewModel.unsupportedUiReason + "\n(Plain UI not implemented yet)"
+        text: qsTrc("effects/lv2", "No available UI:\n%1").arg(prv.viewModel.unsupportedUiReason)
         color: ui.theme.fontPrimaryColor
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter

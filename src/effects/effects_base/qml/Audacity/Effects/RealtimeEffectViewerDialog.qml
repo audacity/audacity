@@ -113,6 +113,10 @@ EffectStyledDialogView {
             instanceId: root.instanceId
             effectState: root.effectState // TODO: check if this is really needed !?
             title: root.title
+
+            onVendorUiFailed: {
+                Qt.callLater(viewerModel.notifyVendorUiFailed)
+            }
         }
     }
 
@@ -145,13 +149,18 @@ EffectStyledDialogView {
         anchors.fill: parent
 
         WindowContainer {
+            id: topPanelContainer
+
+            width: root.contentWidth
+            height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
+
             visible: prv.showTopPanel
 
             window: Window {
                 id: topPanel
 
-                width: root.contentWidth
-                height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
+                width: topPanelContainer.width
+                height: topPanelContainer.height
 
                 color: ui.theme.backgroundPrimaryColor
 

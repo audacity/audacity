@@ -53,6 +53,7 @@ signals:
     void titleChanged();
     void externalUiClosed();
     void unsupportedUiReasonChanged();
+    void vendorUiFailed();
 
 private:
     friend class Lv2UiHandler;
@@ -72,8 +73,7 @@ private:
     using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 
     bool buildFancy();
-    bool buildPlain();
-    void startUiTimer(bool fancy);
+    void startUiTimer();
     void startSettingsTimer();
     void onIdle();
     void makeDirty();

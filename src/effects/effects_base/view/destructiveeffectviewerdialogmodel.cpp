@@ -79,6 +79,16 @@ void DestructiveEffectViewerDialogModel::refreshUIMode()
     emit viewerComponentTypeChanged();
 }
 
+void DestructiveEffectViewerDialogModel::notifyVendorUiFailed()
+{
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectFamily());
+    if (!launcher) {
+        return;
+    }
+    launcher->markVendorUiFailed(m_effectId);
+    emit viewerComponentTypeChanged();
+}
+
 EffectFamily DestructiveEffectViewerDialogModel::effectFamily() const
 {
     if (m_effectId.empty()) {
@@ -109,7 +119,7 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
     }
 
     // For external plugins (VST3, LV2), check if we should use generated UI
-    const bool shouldUseVendorUI = useVendorUI();
+    const bool shouldUseVendorUI = useVendorUI() && vendorUiSupported();
     if (!shouldUseVendorUI) {
         return ViewerComponentType::Generated;
     }
@@ -125,6 +135,12 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
     default:
         return ViewerComponentType::Unknown;
     }
+}
+
+bool DestructiveEffectViewerDialogModel::vendorUiSupported() const
+{
+    const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectFamily());
+    return launcher ? launcher->vendorUiSupported(m_effectId) : true;
 }
 
 void DestructiveEffectViewerDialogModel::captureInitialSettings()

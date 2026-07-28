@@ -31,6 +31,10 @@ public:
 
     const LV2PortStates& GetPortStates() const { return mPortStates; }
 
+    const LV2Ports& GetPorts() const { return mPorts; }
+
+    float GetSampleRate() const { return mFeatures.mSampleRate; }
+
     bool ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
     size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
     override;

@@ -6,6 +6,7 @@
 #include "ieffectinstancesregister.h"
 #include "ieffectsprovider.h"
 #include "ieffectsconfiguration.h"
+#include "ieffectviewlaunchregister.h"
 #include "effectstypes.h"
 #include "effectsviewtypes.h"
 
@@ -28,6 +29,7 @@ class DestructiveEffectViewerDialogModel : public QObject, public muse::Contexta
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+    muse::ContextInject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
 
 public:
     explicit DestructiveEffectViewerDialogModel(QObject* parent = nullptr);
@@ -35,6 +37,7 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void refreshUIMode();
+    Q_INVOKABLE void notifyVendorUiFailed();
 
     Q_INVOKABLE void rollbackSettings();
 
@@ -54,6 +57,7 @@ signals:
 
 private:
     void captureInitialSettings();
+    bool vendorUiSupported() const;
 
     QString m_title;
     int m_instanceId = -1;
