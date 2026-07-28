@@ -1413,20 +1413,16 @@ void ProjectActionsController::updateCloudAudioPreview(const muse::actions::Acti
             return;
         }
 
-        muse::io::path_t localPath;
+        std::optional<muse::io::path_t> localPath;
         if (const auto record = cloudProjectsProvider()->projectRecordForId(projectId); record&& !record->localPath.empty()) {
             localPath = record->localPath;
         }
 
-        if (localPath.empty()) {
+        if (localPath && dispatchAudioPreviewToWindowWithProject(*localPath, projectId)) {
             return;
         }
 
-        if (dispatchAudioPreviewToWindowWithProject(localPath, projectId)) {
-            return;
-        }
-
-        downloadCloudProject(projectId, localPath, [this](IAudacityProjectPtr downloaded) {
+        downloadCloudProject(projectId, localPath.value_or(muse::io::path_t {}), [this](IAudacityProjectPtr downloaded) {
             doUpdateCloudAudioPreview(downloaded, [downloaded]() { downloaded->close(); });
         });
         return;
@@ -1522,6 +1518,11 @@ void ProjectActionsController::downloadCloudProject(const std::string& projectId
             }
 
             const muse::io::path_t projectPath = !result.val.isNull() ? result.val.toPath() : localPath;
+            if (projectPath.empty()) {
+                interactive()->error(trc("cloud", "Generate audio preview"),
+                                     trc("cloud", "Could not determine the local path of the downloaded project"));
+                return;
+            }
 
             const RetVal<IAudacityProjectPtr> loaded = loadProject(projectPath);
             if (!loaded.ret) {
