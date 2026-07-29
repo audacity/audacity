@@ -116,13 +116,21 @@ void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
 
 void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
 {
+    const QMimeData* mime = event->mimeData();
+    const QList<QUrl> urls = mime->urls();
+    if (!urls.isEmpty()) {
+        const QUrl& url = urls.front();
+        if (url.isLocalFile() && extensionInstaller()->isFileSupported(url.toLocalFile())) {
+            event->acceptProposedAction();
+            return;
+        }
+    }
+
     if (isProjectOpened()) {
         event->ignore();
         return;
     }
 
-    const QMimeData* mime = event->mimeData();
-    const QList<QUrl> urls = mime->urls();
     for (const QUrl& url : urls) {
         if (projectFilesController()->isUrlSupported(url)) {
             event->acceptProposedAction();
@@ -135,14 +143,24 @@ void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
 
 void ApplicationActionController::onDropEvent(QDropEvent* event)
 {
-    if (isProjectOpened()) {
-        event->ignore();
-        return;
-    }
-
     const QMimeData* mime = event->mimeData();
     const QList<QUrl> urls = mime->urls();
     if (urls.isEmpty()) {
+        return;
+    }
+
+    const QUrl& url = urls.front();
+    if (url.isLocalFile() && extensionInstaller()->isFileSupported(url.toLocalFile())) {
+        event->accept();
+        const muse::io::path_t filePath = url.toLocalFile();
+        muse::async::Async::call(this, [this, filePath]() {
+            extensionInstaller()->installExtension(filePath);
+        });
+        return;
+    }
+
+    if (isProjectOpened()) {
+        event->ignore();
         return;
     }
 

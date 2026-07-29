@@ -130,6 +130,7 @@ add_to_link_if_exists(muse::uicomponents)
 add_to_link_if_exists(muse::workspace)
 
 add_to_link_if_exists(appshell)
+add_to_link_if_exists(audacity_extensions)
 add_to_link_if_exists(au3audio)
 add_to_link_if_exists(au3wrap)
 add_to_link_if_exists(au3cloud)

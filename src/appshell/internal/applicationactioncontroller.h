@@ -43,6 +43,7 @@
 #include "record/irecordcontroller.h"
 #include "context/iuicontextresolver.h"
 #include "context/iglobalcontext.h"
+#include "extensions/iextensioninstaller.h"
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
 #include "multiwindows/imultiwindowsprovider.h"
@@ -69,6 +70,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<context::IUiContextResolver> uiContextResolver { this };
     muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::extensions::IExtensionInstaller> extensionInstaller { this };
 
 public:
 

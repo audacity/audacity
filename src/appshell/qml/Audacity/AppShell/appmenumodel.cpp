@@ -40,7 +40,7 @@ using namespace muse::actions;
 using namespace au::project;
 //! TODO AU4
 // using namespace muse::workspace;
-// using namespace muse::extensions;
+using namespace muse::extensions;
 
 static QString makeId(const ActionCode& actionCode, int itemIndex)
 {
@@ -147,6 +147,14 @@ void AppMenuModel::setupConnections()
 
     configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
         setItemIsChecked("toggle-effects", configuration()->isEffectsPanelVisible());
+    });
+
+    extensionsProvider()->manifestListChanged().onNotify(this, [this]() {
+        findMenu("menu-tools").setSubitems(makeToolItems());
+    });
+
+    extensionsProvider()->manifestChanged().onReceive(this, [this](const Manifest&) {
+        findMenu("menu-tools").setSubitems(makeToolItems());
     });
 }
 
@@ -373,6 +381,37 @@ MenuItem* AppMenuModel::makeAnalyzeMenu()
 MenuItem* AppMenuModel::makeToolsMenu()
 {
     return makeMenu(TranslatableString("appshell-menu-tools", "&Tools"), makeToolItems(), "menu-tools");
+}
+
+MenuItemList AppMenuModel::makeExtensionItems()
+{
+    MenuItemList items;
+    for (const Manifest& manifest : extensionsProvider()->manifestList(Filter::Enabled)) {
+        if (manifest.actions.size() == 1) {
+            const muse::extensions::Action& action = manifest.actions.front();
+            if (action.showOnAppmenu) {
+                items << makeMenuItem(makeActionQuery(manifest.uri, action.code).toString(),
+                                      TranslatableString::untranslatable(action.title.empty() ? manifest.title : action.title));
+            }
+            continue;
+        }
+
+        MenuItemList actions;
+        for (const muse::extensions::Action& action : manifest.actions) {
+            if (action.showOnAppmenu) {
+                actions << makeMenuItem(makeActionQuery(manifest.uri, action.code).toString(),
+                                        TranslatableString::untranslatable(action.title));
+            }
+        }
+        if (!actions.empty()) {
+            items << makeMenu(TranslatableString::untranslatable(manifest.title), actions);
+        }
+    }
+
+    std::sort(items.begin(), items.end(), [](const MenuItem& left, const MenuItem& right) {
+        return left.translatedTitle() < right.translatedTitle();
+    });
+    return items;
 }
 
 MenuItem* AppMenuModel::makeExtraMenu()
@@ -849,6 +888,13 @@ MenuItemList AppMenuModel::makeToolItems()
     items << toolMenus;
 
     if (!toolMenus.empty()) {
+        items << makeSeparator();
+    }
+
+    const muse::uicomponents::MenuItemList extensionItems = makeExtensionItems();
+    items << extensionItems;
+
+    if (!extensionItems.empty()) {
         items << makeSeparator();
     }
 
