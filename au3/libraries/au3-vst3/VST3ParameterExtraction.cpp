@@ -182,7 +182,9 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
                 wrapper.FetchSettings(settings, false);
                 return nullptr;
             });
-            wrapper.lastFetchedSettingsCounter = currentCounter;
+
+            // Modify settings itself bumps the modification counter, re-read the counter.
+            wrapper.lastFetchedSettingsCounter = settingsAccess->modificationCounter();
         }
     }
 
