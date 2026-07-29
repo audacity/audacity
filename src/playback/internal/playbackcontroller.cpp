@@ -457,7 +457,13 @@ void PlaybackController::playSelectionAction()
         return;
     }
 
-    player()->play();
+    if (isLoopRegionActive()) {
+        //! NOTE: the play region cannot be updated while a loop region is active —
+        //! play the selected range directly so the selection is played, not the loop region
+        player()->playRange(selection);
+    } else {
+        player()->play();
+    }
 }
 
 void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)

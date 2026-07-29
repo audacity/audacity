@@ -218,6 +218,20 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
     }
 }
 
+void Au3Player::playRange(const PlaybackRegion& range)
+{
+    IF_ASSERT_FAILED(range.isValid()) {
+        return;
+    }
+
+    //! NOTE: a non-default policy plays the exact range once,
+    //! regardless of the play region and loop region
+    PlayTracksOptions opts;
+    opts.isDefaultPolicy = false;
+
+    playTracks(Au3TrackList::Get(projectRef()), range.start.to_double(), range.end.to_double(), opts);
+}
+
 muse::Ret Au3Player::playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
 {
     muse::Ret ret = doPlayTracks(trackList, startTime, endTime, options);

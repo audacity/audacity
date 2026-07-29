@@ -1057,6 +1057,40 @@ TEST_F(PlaybackControllerTests, PlaySelection_WithSelection)
 }
 
 /**
+ * @brief Play selection with an active loop region plays the selection, not the loop
+ * @details The play region cannot be updated while a loop region is active, so the
+ *          selection must be played as an explicit range (issue #9393)
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WithActiveLoop_PlaysSelectionRange)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] A loop region is active
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+
+    //! [GIVEN] There is selection from 5 to 7 secs
+    PlaybackRegion selectionRegion = { secs_t(5.0), secs_t(7.0) };
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionRegion.start));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionRegion.end));
+
+    //! [THEN] The selection is played as an explicit range, not via the play region
+    EXPECT_CALL(*m_player, playRange(selectionRegion))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
  * @brief Play selection does nothing without a time selection
  */
 TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)

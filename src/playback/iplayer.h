@@ -21,6 +21,8 @@ public:
 
     //! `startTime` does not change the current playback region.
     virtual void play(std::optional<muse::secs_t> startTime = std::nullopt) = 0;
+    //! Plays the given time range once, regardless of the play region and loop region.
+    virtual void playRange(const PlaybackRegion& range) = 0;
     virtual void seek(const muse::secs_t newPosition, bool applyIfPlaying = false) = 0;
     virtual void rewind() = 0;
     virtual void stop() = 0;
