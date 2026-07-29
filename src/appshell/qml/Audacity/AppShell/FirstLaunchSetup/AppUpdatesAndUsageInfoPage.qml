@@ -12,6 +12,7 @@ Page {
     id: root
 
     extraButtonTitle: prv.disableUUIDBtnText
+    extraButtonAccent: false
 
     property string activeButtonTitle: ""
     property int navigationStartRow: 2
