@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import Muse.Ui
 import Muse.UiComponents
 
 Rectangle {
@@ -16,6 +17,32 @@ Rectangle {
     color: ui.theme.backgroundSecondaryColor
 
     property var ffmpegPrefModel: null
+
+    property NavigationSection navigationSection: null
+    property int navigationOrderStart: 0
+    readonly property int navigationOrderEnd: codecsNavPanel.order
+
+    NavigationPanel {
+        id: formatsNavPanel
+
+        name: "FFmpegFormats"
+        direction: NavigationPanel.Vertical
+        section: formatsColumn.navigationSection
+        order: formatsColumn.navigationOrderStart
+        enabled: formatsColumn.enabled && formatsColumn.visible
+        accessible.name: formatsLabel.text
+    }
+
+    NavigationPanel {
+        id: codecsNavPanel
+
+        name: "FFmpegCodecs"
+        direction: NavigationPanel.Vertical
+        section: formatsColumn.navigationSection
+        order: formatsNavPanel.order + 1
+        enabled: formatsColumn.enabled && formatsColumn.visible
+        accessible.name: codecsLabel.text
+    }
 
     RowLayout {
 
@@ -31,6 +58,7 @@ Rectangle {
             Layout.bottomMargin: 10
 
             StyledTextLabel {
+                id: formatsLabel
                 text: qsTrc("export", "Formats")
             }
 
@@ -38,6 +66,9 @@ Rectangle {
                 Layout.fillWidth: true
 
                 text: qsTrc("export", "Show all")
+
+                navigation.panel: formatsNavPanel
+                navigation.row: 0
 
                 onClicked: {
                     ffmpegPrefModel.fetchAllFormats()
@@ -62,9 +93,22 @@ Rectangle {
                     model: ffmpegPrefModel.ffmpegFormatList
 
                     delegate: ListItemBlank {
+                        id: formatItem
+
                         mouseArea.hoverEnabled: false
                         hoverHitColor: "transparent"
                         isSelected: ListView.isCurrentItem
+
+                        navigation.panel: formatsNavPanel
+                        //! NOTE Row 0 is taken by the "Show all" button above
+                        navigation.row: index + 1
+                        navigation.accessible.name: modelData
+                        navigation.accessible.row: index
+                        navigation.onActiveChanged: {
+                            if (formatItem.navigation.active) {
+                                formatItem.scrollIntoView()
+                            }
+                        }
 
                         onClicked: {
                             ffmpegPrefModel.setFFmpegFormat(modelData)
@@ -91,6 +135,7 @@ Rectangle {
             Layout.rightMargin: 10
 
             StyledTextLabel {
+                id: codecsLabel
                 text: qsTrc("export", "Codecs")
             }
 
@@ -98,6 +143,9 @@ Rectangle {
                 Layout.fillWidth: true
 
                 text: qsTrc("export", "Show all")
+
+                navigation.panel: codecsNavPanel
+                navigation.row: 0
 
                 onClicked: {
                     ffmpegPrefModel.fetchAllCodecs()
@@ -122,9 +170,22 @@ Rectangle {
                     model: ffmpegPrefModel.ffmpegCodecList
 
                     delegate: ListItemBlank {
+                        id: codecItem
+
                         mouseArea.hoverEnabled: false
                         hoverHitColor: "transparent"
                         isSelected: ListView.isCurrentItem
+
+                        navigation.panel: codecsNavPanel
+                        //! NOTE Row 0 is taken by the "Show all" button above
+                        navigation.row: index + 1
+                        navigation.accessible.name: modelData
+                        navigation.accessible.row: index
+                        navigation.onActiveChanged: {
+                            if (codecItem.navigation.active) {
+                                codecItem.scrollIntoView()
+                            }
+                        }
 
                         onClicked: {
                             ffmpegPrefModel.setFFmpegCodec(modelData)

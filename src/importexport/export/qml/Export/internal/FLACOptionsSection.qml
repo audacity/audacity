@@ -4,6 +4,7 @@
 import QtQuick
 import QtQuick.Layouts
 
+import Muse.Ui
 import Muse.UiComponents
 
 ColumnLayout {
@@ -14,7 +15,24 @@ ColumnLayout {
     property var ffmpegPrefModel: null
     property int controlWidth: 156
 
+    property NavigationSection navigationSection: null
+    property int navigationOrderStart: 0
+    readonly property int navigationOrderEnd: navPanel.order
+
+    NavigationPanel {
+        id: navPanel
+
+        name: "FFmpegFlacOptions"
+        direction: NavigationPanel.Horizontal
+        section: root.navigationSection
+        order: root.navigationOrderStart
+        enabled: root.enabled && root.visible
+        accessible.name: optionsLabel.text
+    }
+
     StyledTextLabel {
+        id: optionsLabel
+
         text: qsTrc("export", "FLAC options")
 
         font.bold: true
@@ -50,6 +68,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.compression
 
+                    navigation.panel: navPanel
+                    navigation.order: 0
                     navigation.accessible.name: qsTrc("export", "Compression %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -80,6 +100,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.lpc
 
+                    navigation.panel: navPanel
+                    navigation.order: 1
                     navigation.accessible.name: qsTrc("export", "LPC %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -110,6 +132,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.minPdO
 
+                    navigation.panel: navPanel
+                    navigation.order: 2
                     navigation.accessible.name: qsTrc("export", "Min. PdO %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -140,6 +164,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.minPtO
 
+                    navigation.panel: navPanel
+                    navigation.order: 3
                     navigation.accessible.name: qsTrc("export", "Min. PtO %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -181,6 +207,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.frameSize
 
+                    navigation.panel: navPanel
+                    navigation.order: 4
                     navigation.accessible.name: qsTrc("export", "Frame %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -205,6 +233,8 @@ ColumnLayout {
 
                     currentIndex: indexOfValue(ffmpegPrefModel.pdOMethod)
 
+                    navigation.panel: navPanel
+                    navigation.order: 5
                     navigation.accessible.name: qsTrc("export", "PdO method %1").arg(currentText)
 
                     onActivated: function (index, value) {
@@ -232,6 +262,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.maxPdO
 
+                    navigation.panel: navPanel
+                    navigation.order: 6
                     navigation.accessible.name: qsTrc("export", "Max. PdO %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -259,6 +291,8 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.maxPtO
 
+                    navigation.panel: navPanel
+                    navigation.order: 7
                     navigation.accessible.name: qsTrc("export", "Max. PtO %1").arg(currentValue)
 
                     onValueEdited: function (newValue) {
@@ -273,6 +307,9 @@ ColumnLayout {
         id: lpcCheckbox
 
         text: qsTrc("appshell/preferences", "Use LPC")
+
+        navigation.panel: navPanel
+        navigation.order: 8
 
         checked: ffmpegPrefModel.useLpc
 
