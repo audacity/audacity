@@ -523,7 +523,9 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         const auto exportRet = self->exporter()->exportData(tempPath, options, progress, project);
         if (!exportRet) {
             self->filesystem()->remove(tempPath);
-            progress->finish(exportRet);
+            if (!progress->isCanceled()) {
+                progress->finish(exportRet);
+            }
             return;
         }
 
@@ -538,7 +540,9 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
             [self, response, progress, cancellationContext, tempPath](auto) {
             if (response->getError() != audacity::network_manager::NetworkError::NoError) {
                 self->filesystem()->remove(tempPath);
-                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, response->getErrorString()));
+                if (!progress->isCanceled()) {
+                    progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, response->getErrorString()));
+                }
                 return;
             }
 
@@ -546,8 +550,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
                 = audacity::cloud::audiocom::sync::DeserializeProjectSyncState(response->readAll<std::string>());
             if (!syncState) {
                 self->filesystem()->remove(tempPath);
-                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError,
-                                                muse::trc("cloud", "Failed to get audio preview upload URLs")));
+                if (!progress->isCanceled()) {
+                    progress->finish(muse::make_ret(muse::Ret::Code::UnknownError,
+                                                    muse::trc("cloud", "Failed to get audio preview upload URLs")));
+                }
                 return;
             }
 
@@ -564,6 +570,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
                 tempPath.toStdString(),
                 [progress, tempPath, filesystem = self->filesystem()](audacity::cloud::audiocom::ResponseResult result) {
                 filesystem->remove(tempPath);
+
+                if (progress->isCanceled()) {
+                    return;
+                }
 
                 if (result.Code == audacity::cloud::audiocom::SyncResultCode::Success) {
                     progress->finish(muse::make_ok());
