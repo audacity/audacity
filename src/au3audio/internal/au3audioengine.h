@@ -22,6 +22,8 @@ public:
 
     bool isBusy() const override;
     bool isCapturing() const override;
+    bool isStreamActive(AudacityProject& project) const override;
+    double streamTime() const override;
     bool isMonitoring() const override;
     std::optional<audio::AudioStreamDescriptor> currentStream() const override;
 

@@ -34,6 +34,11 @@ public:
     virtual bool isMonitoring() const = 0;
     // Includes transitional busy/inactive stream states.
     virtual std::optional<AudioStreamDescriptor> currentStream() const = 0;
+    //! Whether the stream owned by the given project is active.
+    //! Unlike currentStream(), reports false as soon as the stream has drained.
+    virtual bool isStreamActive(AudacityProject& project) const = 0;
+    //! Playback time of the active stream.
+    virtual double streamTime() const = 0;
 
     struct StartStreamOptions {
         bool isDefaultPolicy = true;

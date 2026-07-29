@@ -18,6 +18,8 @@ public:
     MOCK_METHOD(bool, isCapturing, (), (const, override));
     MOCK_METHOD(bool, isMonitoring, (), (const, override));
     MOCK_METHOD(std::optional<AudioStreamDescriptor>, currentStream, (), (const, override));
+    MOCK_METHOD(bool, isStreamActive, (AudacityProject &), (const, override));
+    MOCK_METHOD(double, streamTime, (), (const, override));
 
     MOCK_METHOD(int, startStream, (const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
                                    AudacityProject & project, const StartStreamOptions& options), (override));
