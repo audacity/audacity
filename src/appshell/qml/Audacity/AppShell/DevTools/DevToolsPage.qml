@@ -24,10 +24,10 @@ import QtQuick 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents
 import Muse.Dock 1.0
+import Muse.Toast 1.0
 
 import "./Gallery"
 import "./Interactive"
-import "./ToastNotification"
 import "./CrashHandler"
 import "./KeyNav"
 import "./Preferences"

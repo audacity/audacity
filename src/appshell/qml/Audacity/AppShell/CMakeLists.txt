@@ -56,7 +56,6 @@ qt_add_qml_module(appshell_qml
         DevTools/KeyNav/KeyNavSubSection.qml
         DevTools/Preferences/SettingsPage.qml
         DevTools/Table/TableTests.qml
-        DevTools/ToastNotification/ToastNotificationTests.qml
         FirstLaunchSetup/ClipVisualizationPage.qml
         FirstLaunchSetup/DoublePage.qml
         FirstLaunchSetup/FirstLaunchSetupDialog.qml
@@ -103,6 +102,7 @@ qt_add_qml_module(appshell_qml
         TARGET muse_extensions_qml
         TARGET muse_learn_qml
         TARGET muse_shortcuts_qml
+        TARGET muse_toast_qml
         TARGET muse_tours_qml
 )
 

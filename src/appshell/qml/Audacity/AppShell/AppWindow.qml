@@ -26,7 +26,7 @@ import Muse.Ui 1.0
 import Muse.Shortcuts 1.0
 
 import Audacity.AppShell 1.0
-import Audacity.Toast 1.0
+import Muse.Toast 1.0
 
 ApplicationWindow {
     id: root
