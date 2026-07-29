@@ -81,7 +81,7 @@ bool Au3AudioEngine::isMonitoring() const
 std::optional<au::audio::AudioStreamDescriptor> Au3AudioEngine::currentStream() const
 {
     const auto audioIO = AudioIO::Get();
-    if (!audioIO->IsBusy() && !audioIO->IsStreamActive()) {
+    if (!audioIO->IsBusy() && !audioIO->IsStreamActive() && !audioIO->IsMonitoring()) {
         return std::nullopt;
     }
 
