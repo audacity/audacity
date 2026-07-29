@@ -266,6 +266,36 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
 }
 
 /**
+ * @brief Toggle play passes the playhead position to the player
+ * @details With an active loop region the play region cannot be updated, so the
+ *          explicit start time is what makes playback start from the playhead
+ *          instead of the loop region start (issue #11074)
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_PassesPlayheadToPlayer)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] Playhead is at 5 secs
+    const secs_t playheadPosition = 5.0;
+    EXPECT_CALL(*m_player, seek(playheadPosition, false))
+    .Times(1);
+    seek(playheadPosition);
+
+    //! [GIVEN] A loop region is active
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Player starts playing from the playhead position, not the loop start
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(playheadPosition)))
+    .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
+}
+
+/**
  * @brief Toggle play when stopped on the end of project
  * @details User clicked play after the previous playback reached the end of project
  *          Playback should be started from start of project (0.0 time)
@@ -532,6 +562,42 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused)
     //! [THEN] Player should resume playing
     EXPECT_CALL(*m_player, resume())
     .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
+}
+
+/**
+ * @brief Toggle play when paused with an active loop region resumes
+ * @details With a loop region active the player's play region (the loop region) never
+ *          matches the last requested playback region; that mismatch must not be
+ *          mistaken for a playback region change — play after pause must resume from the
+ *          paused position, not restart
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithActiveLoop_Resumes)
+{
+    //! [GIVEN] Playback started while stopped, giving a valid last playback region
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    changePlaybackRegion(0.0, 100.0);
+
+    //! [GIVEN] A loop region is active; the player's play region is the loop region
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(10.0), secs_t(20.0) }));
+
+    //! [GIVEN] Playback is paused
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    //! [THEN] Playback resumes from the paused position — no stop, no restart
+    EXPECT_CALL(*m_player, resume())
+    .Times(1);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
 
     //! [WHEN] Toggle play
     togglePlayStop();

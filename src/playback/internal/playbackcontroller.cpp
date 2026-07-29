@@ -201,8 +201,15 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
     return PlaybackRegion();
 }
 
-bool PlaybackController::isSelectionPlaybackRegionChanged() const
+bool PlaybackController::isPlaybackRegionChanged() const
 {
+    if (isLoopRegionActive()) {
+        //! NOTE: with an active loop region the player's play region is the loop region,
+        //! not the last requested playback region — the comparison below would always
+        //! report a change and resuming from pause would restart playback instead
+        return false;
+    }
+
     return m_lastPlaybackRegion.isValid() && m_lastPlaybackRegion != player()->playbackRegion();
 }
 
@@ -347,7 +354,7 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
     }
 
     if (isPaused()) {
-        if (isSelectionPlaybackRegionChanged()) {
+        if (isPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
             doPlay(false);
@@ -417,7 +424,14 @@ void PlaybackController::doPlay(bool clearPlaybackRegion)
         return;
     }
 
-    player()->play();
+    if (isStopped()) {
+        //! NOTE: pass the start explicitly: when a loop region is active the play region
+        //! cannot be updated, and playback must still start from the playhead, not from
+        //! the loop region start
+        player()->play(lastPlaybackSeekTime());
+    } else {
+        player()->play();
+    }
 }
 
 void PlaybackController::playSelectionAction()
