@@ -66,6 +66,17 @@ bool Au3AudioEngine::isCapturing() const
     return AudioIO::Get()->IsCapturing();
 }
 
+bool Au3AudioEngine::isStreamActive(AudacityProject& project) const
+{
+    const int token = ProjectAudioIO::Get(project).GetAudioIOToken();
+    return AudioIO::Get()->IsStreamActive(token);
+}
+
+double Au3AudioEngine::streamTime() const
+{
+    return AudioIO::Get()->GetStreamTime();
+}
+
 bool Au3AudioEngine::isMonitoring() const
 {
     return AudioIO::Get()->IsMonitoring();
