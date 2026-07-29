@@ -50,6 +50,10 @@ add_subdirectory(automation)
 add_subdirectory(extensions/native)
 add_subdirectory(trackedit)
 
+if (MUSE_MODULE_EXTENSIONS)
+    add_subdirectory(extensions)
+endif()
+
 if (AU_BUILD_PLAYBACK_MODULE)
     add_subdirectory(au3audio)
     add_subdirectory(playback)
