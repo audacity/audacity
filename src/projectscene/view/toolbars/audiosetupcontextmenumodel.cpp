@@ -3,6 +3,8 @@
 */
 #include "audiosetupcontextmenumodel.h"
 
+#include "framework/global/containers.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
@@ -101,6 +103,8 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
     };
 
     const auto& outputDevicesList = audioDriverController()->outputDevices();
+    const bool usesSystemDefaultOutput = !currentOutputDevice.has_value()
+                                         || !muse::contains(outputDevicesList, currentOutputDevice.value());
     if (!outputDevicesList.empty()) {
         const std::string resolvedDevice
             = audioDriverController()->systemDefaultOutputDevice(audioDriverController()->configuration().api);
@@ -110,7 +114,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
                                                .arg(muse::String::fromStdString(resolvedDevice));
         MenuItem* item = makeMenuItem(makeSystemDefaultPlaybackDeviceAction().toString(), title);
         item->setId(QString::fromStdString(item->query().toString()));
-        if (!currentOutputDevice.has_value()) {
+        if (usesSystemDefaultOutput) {
             item->setChecked(true);
         }
         items << item;
@@ -148,6 +152,8 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
     };
 
     const auto& inputDevicesList = audioDriverController()->inputDevices();
+    const bool usesSystemDefaultInput = !currentInputDevice.has_value()
+                                        || !muse::contains(inputDevicesList, *currentInputDevice);
     if (!inputDevicesList.empty()) {
         const std::string resolvedDevice
             = audioDriverController()->systemDefaultInputDevice(audioDriverController()->configuration().api);
@@ -158,7 +164,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
                                                .arg(muse::String::fromStdString(resolvedDevice));
         MenuItem* item = makeMenuItem(makeSystemDefaultRecordingDeviceAction().toString(), title);
         item->setId(QString::fromStdString(item->query().toString()));
-        if (!currentInputDevice.has_value()) {
+        if (usesSystemDefaultInput) {
             item->setChecked(true);
         }
         items << item;

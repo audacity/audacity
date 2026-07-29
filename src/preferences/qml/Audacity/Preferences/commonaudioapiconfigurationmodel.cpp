@@ -302,16 +302,6 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
     m_pending.outputDevice.reset();
     m_pending.inputDevice.reset();
     m_pending.inputChannels.reset();
-
-    const auto applied = audioDriverController()->configuration();
-    const auto outputs = audioDriverController()->outputDevices(api);
-    if (applied.outputDevice && !muse::contains(outputs, *applied.outputDevice)) {
-        m_pending.outputDevice = audio::AudioDeviceSelection {};
-    }
-    const auto inputs = audioDriverController()->inputDevices(api);
-    if (applied.inputDevice && !muse::contains(inputs, *applied.inputDevice)) {
-        m_pending.inputDevice = audio::AudioDeviceSelection {};
-    }
     notifyDeviceContextChanged();
 }
 
@@ -358,10 +348,6 @@ QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 
 void CommonAudioApiConfigurationModel::outputDeviceSelected(int index)
 {
-    if (index == currentOutputDeviceIndex()) {
-        return;
-    }
-
     const auto devices = audioDriverController()->outputDevices(effectiveApi());
     if (index < 0 || index > static_cast<int>(devices.size())) {
         return;
@@ -412,10 +398,6 @@ QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 
 void CommonAudioApiConfigurationModel::inputDeviceSelected(int index)
 {
-    if (index == currentInputDeviceIndex()) {
-        return;
-    }
-
     const auto devices = audioDriverController()->inputDevices(effectiveApi());
     if (index < 0 || index > static_cast<int>(devices.size())) {
         return;

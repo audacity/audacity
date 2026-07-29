@@ -54,10 +54,7 @@ public:
         .WillByDefault(Return(std::vector<std::string> { "JACK Out 1", "JACK Out 2" }));
         ON_CALL(*m_controller, inputDevices("JACK"))
         .WillByDefault(Return(std::vector<std::string> { "JACK In" }));
-        ON_CALL(*m_controller, inputChannelsAvailable("JACK", audio::AudioDeviceSelection { "JACK In" }))
-        .WillByDefault(Return(4));
-        ON_CALL(*m_controller, inputChannelsAvailable("JACK", audio::AudioDeviceSelection {}))
-        .WillByDefault(Return(4));
+        ON_CALL(*m_controller, inputChannelsAvailable("JACK", _)).WillByDefault(Return(4));
         ON_CALL(*m_controller, sampleRates())
         .WillByDefault(Return(std::vector<uint64_t> { 44100, 48000 }));
 
