@@ -257,8 +257,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(0.0), secs_t(100.0) }))
     .Times(1);
 
-    //! [THEN] Player should start playing from current position
-    EXPECT_CALL(*m_player, play(_))
+    //! [THEN] Player should start playing from the seek anchor (0.0, no prior seek)
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(secs_t(0.0))))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -393,8 +393,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_PlaysFromPlayheadThroug
     EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { playheadPosition, secs_t(100.0) }))
     .Times(1);
 
-    //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play(_))
+    //! [THEN] Player should start playing from the playhead, not the selection start
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(playheadPosition)))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -625,8 +625,9 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
     .Times(0);
 
-    //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play(_))
+    //! [THEN] Player should start playing without an explicit start time —
+    //! the player asserts that no start time is passed when resuming from pause
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(std::nullopt)))
     .Times(1);
 
     //! [WHEN] Toggle play
@@ -1081,6 +1082,42 @@ TEST_F(PlaybackControllerTests, PlaySelection_WithActiveLoop_PlaysSelectionRange
     .WillByDefault(Return(selectionRegion.end));
 
     //! [THEN] The selection is played as an explicit range, not via the play region
+    EXPECT_CALL(*m_player, playRange(selectionRegion))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    //! [WHEN] Play selection
+    playSelection();
+}
+
+/**
+ * @brief Play selection while playing with an active loop restarts with the selection range
+ * @details Active playback is stopped first, then the selection is played as an
+ *          explicit range because the loop region blocks play region updates
+ */
+TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_WithActiveLoop_Restarts)
+{
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] A loop region is active
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+
+    //! [GIVEN] There is selection from 5 to 7 secs
+    PlaybackRegion selectionRegion = { secs_t(5.0), secs_t(7.0) };
+    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionRegion.start));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionRegion.end));
+
+    //! [THEN] Player is stopped, then the selection is played as an explicit range
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
     EXPECT_CALL(*m_player, playRange(selectionRegion))
     .Times(1);
     EXPECT_CALL(*m_player, play(_))
