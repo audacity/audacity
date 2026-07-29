@@ -218,7 +218,7 @@ StyledDialogView {
                 Layout.preferredHeight: 28
 
                 visible: root.currentPage ? Boolean(root.currentPage.extraButtonTitle) : false
-                accentButton: true
+                accentButton: root.currentPage ? root.currentPage.extraButtonAccent : true
 
                 text: root.currentPage ? root.currentPage.extraButtonTitle : ""
 
@@ -245,7 +245,7 @@ StyledDialogView {
                 Layout.preferredHeight: 28
 
                 text: model.nextButtonText
-                accentButton: !extraButton.visible
+                accentButton: !extraButton.visible || !extraButton.accentButton
 
                 navigation.name: "NextButton"
                 navigation.panel: buttons.navigationPanel
