@@ -1235,12 +1235,33 @@ TEST_F(PlaybackControllerTests, SuspendMonitoring_RestoresTheOwningProject)
     ON_CALL(*m_currentProject, au3ProjectPtr())
     .WillByDefault(Return(reinterpret_cast<uintptr_t>(&dummyProject)));
     ON_CALL(*m_audioEngine, isMonitoring()).WillByDefault(Return(true));
+    ON_CALL(*m_audioDriverController, inputDevices())
+    .WillByDefault(Return(std::vector<std::string> { "Built-in microphone" }));
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable())
+    .WillByDefault(Return(2));
 
     EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
     auto restoreStream = suspend(audio::AudioStreamKind::Monitoring);
 
     ASSERT_TRUE(restoreStream);
     EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+    EXPECT_TRUE(restoreStream());
+}
+
+TEST_F(PlaybackControllerTests, SuspendMonitoring_WithoutRecordDevice_DoesNotRestartMonitoring)
+{
+    static int dummyProject;
+    ON_CALL(*m_currentProject, au3ProjectPtr())
+    .WillByDefault(Return(reinterpret_cast<uintptr_t>(&dummyProject)));
+    ON_CALL(*m_audioEngine, isMonitoring()).WillByDefault(Return(true));
+    ON_CALL(*m_audioDriverController, inputDevices())
+    .WillByDefault(Return(std::vector<std::string> {}));
+
+    EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
+    auto restoreStream = suspend(audio::AudioStreamKind::Monitoring);
+
+    ASSERT_TRUE(restoreStream);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(0);
     EXPECT_TRUE(restoreStream());
 }
 

@@ -150,9 +150,11 @@ void Au3AudioInput::updateAudioEngineMonitoring() const
 
 bool Au3AudioInput::canStartAudioEngineMonitoring() const
 {
+    const bool hasDevice = !audioDriverController()->inputDevices().empty() && audioDriverController()->inputChannelsAvailable() > 0;
+
     // Monitoring can't be started if we are recording or playing/pause
     // it can only be started when we are stopped
-    return !controller()->isRecording() && !playbackController()->isPlaying() && !playbackController()->isPaused();
+    return !controller()->isRecording() && !playbackController()->isPlaying() && !playbackController()->isPaused() && hasDevice;
 }
 
 bool Au3AudioInput::audioEngineShouldBeMonitoring() const

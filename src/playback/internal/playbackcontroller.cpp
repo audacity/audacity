@@ -675,6 +675,10 @@ AudioStreamRestorer PlaybackController::suspendForAudioConfiguration(AudioStream
             return {};
         }
         return [this, au3Project]() {
+                if (audioDriverController()->inputDevices().empty() || audioDriverController()->inputChannelsAvailable() <= 0) {
+                    return true;
+                }
+
                 audioEngine()->startMonitoring(*au3Project);
                 return audioEngine()->isMonitoring();
             };
