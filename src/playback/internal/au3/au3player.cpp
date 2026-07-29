@@ -534,8 +534,14 @@ void Au3Player::updateStreamState()
     bool isActive = AudioIO::Get()->IsStreamActive(token);
 
     if (!isActive) {
-        if (playbackStatus() == PlaybackStatus::Running
-            || playbackStatus() == PlaybackStatus::Paused) {
+        if (playbackStatus() == PlaybackStatus::Running) {
+            //! NOTE: the stream ended on its own (e.g. an explicit range played to its
+            //! end) — do a full stop so the audio engine releases the stream token;
+            //! otherwise isBusy() stays true and no new playback can ever start
+            stop();
+        } else if (playbackStatus() == PlaybackStatus::Paused) {
+            //! NOTE: e.g. a device change tore the stream down while paused; the
+            //! stream lifecycle is handled by that flow — only update the status
             m_playbackStatus.set(PlaybackStatus::Stopped);
         } else if (m_timer.isActive()) {
             // Stream ended (playback or recording finished)
