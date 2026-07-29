@@ -57,7 +57,7 @@ DynamicsEffectBase {
             id: dynamicsPanel
 
             DynamicsPanel {
-                width: root.width
+                width: dynamicsPanelLoader.width
 
                 instanceId: compressor.instanceId
                 playState: root.playState
@@ -74,14 +74,15 @@ DynamicsEffectBase {
         Loader {
             id: dynamicsPanelLoader
 
-            Component.onCompleted: {
-                if (!root.usedDestructively) {
-                    sourceComponent = dynamicsPanel
-                }
-            }
+            width: bottomPanel.width
+            height: Boolean(item) ? item.height : 0
+
+            sourceComponent: root.usedDestructively ? null : dynamicsPanel
         }
 
         Rectangle {
+            id: bottomPanel
+
             width: row.width
             height: row.height
 

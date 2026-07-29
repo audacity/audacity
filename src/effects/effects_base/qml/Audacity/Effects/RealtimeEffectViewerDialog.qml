@@ -23,12 +23,21 @@ EffectStyledDialogView {
 
     alwaysAboveApp: true
 
+    openPolicies: DialogView.OpenOnContentReady
+    isContentReady: {
+        if (viewerModel.viewerComponentType !== ViewerComponentType.Generated) {
+            return true
+        }
+
+        return viewerLoader.item ? viewerLoader.item.isContentReady : false
+    }
+
     contentWidth: Math.max(viewerLoader.width + prv.viewMargins * 2, prv.minimumWidth)
     contentHeight: {
         let height = 0
         height += prv.showTopPanel ? topPanel.height : prv.viewMargins
         height += viewerLoader.height
-        height += prv.showBottomPanel ? bottomPanel.height : prv.viewMargins
+        height += prv.viewMargins
         return height
     }
 

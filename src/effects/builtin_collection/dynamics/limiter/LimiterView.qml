@@ -54,7 +54,7 @@ DynamicsEffectBase {
             id: dynamicsPanel
 
             DynamicsPanel {
-                width: root.width
+                width: dynamicsPanelLoader.width
                 visible: !root.usedDestructively
 
                 instanceId: limiter.instanceId
@@ -79,14 +79,14 @@ DynamicsEffectBase {
         Loader {
             id: dynamicsPanelLoader
 
-            Component.onCompleted: {
-                if (!root.usedDestructively) {
-                    sourceComponent = dynamicsPanel
-                }
-            }
+            width: bottomPanel.width
+            height: Boolean(item) ? item.height : 0
+
+            sourceComponent: root.usedDestructively ? null : dynamicsPanel
         }
 
         Rectangle {
+            id: bottomPanel
 
             color: ui.theme.backgroundSecondaryColor
             border.color: ui.theme.strokeColor
