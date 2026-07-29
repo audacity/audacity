@@ -28,6 +28,13 @@ void AudioSetupContextMenuModel::load()
     AbstractMenuModel::load();
 
     makeMenuItems();
+
+    audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta&) {
+        makeMenuItems();
+    });
+    audioDriverController()->audioDeviceListChanged().onNotify(this, [this]() {
+        makeMenuItems();
+    });
 }
 
 void AudioSetupContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
