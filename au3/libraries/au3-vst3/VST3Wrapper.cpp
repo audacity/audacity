@@ -124,12 +124,42 @@ const VST3EffectSettings& GetSettings(const EffectSettings& settings)
     return *vst3settings;
 }
 
+constexpr Steinberg::int32 MaxChannelsPerAudioBus = 2;
+
+//Checks the arrangements the plug-in actually settled on, which may differ from
+//the ones that were requested.
+bool MainAudioBusArrangementsAreSupported(Steinberg::Vst::IComponent& component, Steinberg::Vst::BusDirection direction)
+{
+    using namespace Steinberg;
+
+    const auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
+
+    for (int i = 0, count = component.getBusCount(Vst::kAudio, direction); i < count; ++i) {
+        Vst::BusInfo busInfo {};
+        if (component.getBusInfo(Vst::kAudio, direction, i, busInfo) != kResultOk) {
+            return false;
+        }
+        if (busInfo.busType != Vst::kMain) {
+            continue;
+        }
+
+        Vst::SpeakerArrangement arrangement {};
+        if (processor->getBusArrangement(direction, i, arrangement) != kResultOk) {
+            return false;
+        }
+
+        const auto channelCount = Vst::SpeakerArr::getChannelCount(arrangement);
+        if (channelCount < 1 || channelCount > MaxChannelsPerAudioBus) {
+            return false;
+        }
+    }
+    return true;
+}
+
 //Activates main audio input/output buses and disables others (event, audio aux)
 bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
 {
     using namespace Steinberg;
-
-    constexpr int32 MaxChannelsPerAudioBus = 2;
 
     std::vector<Vst::SpeakerArrangement> defaultInputSpeakerArrangements;
     std::vector<Vst::SpeakerArrangement> defaultOutputSpeakerArrangements;
@@ -183,7 +213,15 @@ bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
         defaultOutputSpeakerArrangements.size()
         );
 
-    return result == kResultOk;
+    if (result == kResultOk) {
+        return true;
+    }
+
+    //kResultFalse only means the plug-in did not adopt the requested arrangements
+    //verbatim; it is still free to settle on ones we can drive. Some plug-ins never
+    //report kResultOk at all, so judge them by what they ended up with.
+    return MainAudioBusArrangementsAreSupported(component, Vst::kInput)
+           && MainAudioBusArrangementsAreSupported(component, Vst::kOutput);
 }
 
 //The component should be disabled
