@@ -230,9 +230,16 @@ StyledDialogView {
 
                 indicatorSize: 12
                 spacing: 12
+                interactive: true
 
                 count: model.count
                 currentIndex: model.currentIndex
+
+                onCurrentIndexChanged: {
+                    if (currentIndex !== model.currentIndex) {
+                        model.setCurrentIndex(currentIndex)
+                    }
+                }
             }
         }
     }
