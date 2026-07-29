@@ -66,6 +66,7 @@ private:
 
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
+    bool canSilenceAudio() const;
 
     struct ContiguousClipsSpan {
         TrackId trackId = INVALID_TRACK;
@@ -148,7 +149,6 @@ private:
     void doGlobalSilence();
     void silenceAudioSelection();
     void silenceClips(const trackedit::ClipKeyList& clipKeys);
-    void silenceTracks();
 
     void toggleStretchClipToMatchTempo(const muse::actions::ActionData& args);
     void openClipPitchAndSpeed();

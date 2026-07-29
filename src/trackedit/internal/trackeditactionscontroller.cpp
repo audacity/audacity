@@ -330,6 +330,7 @@ void TrackeditActionsController::init()
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
+        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
         setFocusedItemMoveInProgress(false);
     });
 
@@ -343,10 +344,23 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(GROUP_CLIPS_CODE);
         notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
         notifyActionEnabledChanged(JOIN_CODE);
+        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
     });
 
     selectionController()->clipsIntersectingRangeSelectionChanged().onReceive(this, [this](const trackedit::ClipKeyList&) {
         notifyActionEnabledChanged(JOIN_CODE);
+    });
+
+    selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList&) {
+        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+    });
+
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
+        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+    });
+
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t) {
+        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
     });
 }
 
@@ -1653,15 +1667,9 @@ void TrackeditActionsController::doGlobalSilence()
         return;
     }
 
-    ClipKeyList selectedClips = clipsForInteraction();
+    ClipKeyList selectedClips = selectionController()->selectedClips();
     if (!selectedClips.empty()) {
         silenceClips(selectedClips);
-        return;
-    }
-
-    const auto selectedTracks = selectionController()->selectedTracks();
-    if (!selectedTracks.empty()) {
-        silenceTracks();
     }
 }
 
@@ -1692,22 +1700,6 @@ void TrackeditActionsController::silenceAudioSelection()
 void TrackeditActionsController::silenceClips(const ClipKeyList& clipKeys)
 {
     trackeditInteraction()->silenceClips(clipKeys);
-}
-
-void TrackeditActionsController::silenceTracks()
-{
-    const TrackIdList selectedTracks = selectionController()->selectedTracks();
-    if (selectedTracks.empty()) {
-        return;
-    }
-
-    const std::optional<secs_t> selectedStartTime = selectionController()->selectedTracksStartTime();
-    const std::optional<secs_t> selectedEndTime = selectionController()->selectedTracksEndTime();
-    if (!selectedStartTime.has_value() || !selectedEndTime.has_value()) {
-        return;
-    }
-
-    trackeditInteraction()->silenceTracksData(selectedTracks, selectedStartTime.value(), selectedEndTime.value());
 }
 
 void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData& args)
@@ -2205,9 +2197,30 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
             return rangeSelectionCoversMultipleClips();
         }
         return contiguousSelectedClipsSpan().has_value();
+    } else if (actionCode == SILENCE_AUDIO_SELECTION) {
+        return canSilenceAudio();
     }
 
     return true;
+}
+
+bool TrackeditActionsController::canSilenceAudio() const
+{
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        return !trackeditInteraction()->tracksDataIsSilent(selectionController()->selectedTracks(),
+                                                           selectionController()->dataSelectedStartTime(),
+                                                           selectionController()->dataSelectedEndTime());
+    }
+
+    for (const auto& clipKey : selectionController()->selectedClips()) {
+        const secs_t begin = trackeditInteraction()->clipStartTime(clipKey);
+        const secs_t end = trackeditInteraction()->clipEndTime(clipKey);
+        if (!trackeditInteraction()->tracksDataIsSilent({ clipKey.trackId }, begin, end)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void TrackeditActionsController::moveFocusedItemLeft()
