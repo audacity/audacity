@@ -140,6 +140,8 @@ void StartupScenario::runAfterSplashScreen()
         return;
     }
 
+    m_startupCompleted = true;
+
     StartupModeType modeType = resolveStartupModeType();
     if (multiwindowsProvider()->isFirstWindow() && sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
@@ -148,25 +150,14 @@ void StartupScenario::runAfterSplashScreen()
         modeType = StartupModeType::FirstLaunch;
     }
 
-    muse::Uri startupUri = startupPageUri(modeType);
+    const muse::Uri startupUri = startupPageUri(modeType);
 
-    muse::async::Channel<muse::Uri> opened = interactive()->opened();
-    opened.onReceive(this, [this, opened, modeType](const muse::Uri&) {
-        if (m_startupCompleted) {
-            return;
-        }
-
-        m_startupCompleted = true;
-
-        muse::async::Channel<muse::Uri> mut = opened;
-        mut.disconnect(this);
-
+    auto promise = interactive()->open(startupUri);
+    promise.onResolve(this, [this, modeType](const muse::Val&) {
         effectsProviderInitializer()->callAfterSplashScreen();
 
         onStartupPageOpened(modeType);
     });
-
-    interactive()->open(startupUri);
 }
 
 bool StartupScenario::startupCompleted() const
