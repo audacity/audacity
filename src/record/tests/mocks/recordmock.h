@@ -15,6 +15,7 @@ public:
     MOCK_METHOD(muse::Ret, pause, (), (override));
     MOCK_METHOD(muse::Ret, resume, (), (override));
     MOCK_METHOD(muse::Ret, stop, (), (override));
+    MOCK_METHOD(muse::Ret, stopCapture, (), (override));
     MOCK_METHOD(muse::Ret, leadInRecording, (), (override));
 
     MOCK_METHOD(IAudioInputPtr, audioInput, (), (const, override));

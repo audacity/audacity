@@ -160,9 +160,10 @@ bool Au3AudioEngine::isCaptureArmed() const
     return AudioIO::Get()->IsCaptureArmed();
 }
 
-std::optional<double> Au3AudioEngine::armCapture(const TransportSequences& sequences)
+std::optional<double> Au3AudioEngine::armCapture(const TransportSequences& sequences,
+                                                 const std::function<void(double punchTime)>& onArm)
 {
-    return AudioIO::Get()->ArmCapture(sequences.captureSequences);
+    return AudioIO::Get()->ArmCapture(sequences.captureSequences, onArm);
 }
 
 bool Au3AudioEngine::disarmCapture()

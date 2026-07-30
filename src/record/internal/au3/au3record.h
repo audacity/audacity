@@ -24,6 +24,7 @@
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
+class WritableSampleTrack;
 
 namespace au::record {
 class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Contextable
@@ -47,6 +48,7 @@ public:
     muse::Ret pause() override;
     muse::Ret resume() override;
     muse::Ret stop() override;
+    muse::Ret stopCapture() override;
     muse::Ret leadInRecording() override;
 
     IAudioInputPtr audioInput() const override;
@@ -72,6 +74,7 @@ private:
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
                        const double audioStreamSampleRate, double leadInTime = 0.0,
                        std::vector<std::vector<float> >* crossfadeData = nullptr);
+    muse::Ret tryArmCapture(const std::vector<std::shared_ptr<WritableSampleTrack> >& tracks, double projectRate);
     void cancelRecording();
     void commitRecording();
 

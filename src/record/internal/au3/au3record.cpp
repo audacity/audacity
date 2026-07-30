@@ -7,6 +7,7 @@
 
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
+#include "framework/global/realfn.h"
 
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-audio-devices/AudioIOBase.h"
@@ -193,6 +194,33 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
     return result;
 }
 
+static Au3WaveTrack::IntervalHolder insertEmptyInterval(Au3WaveTrack& track, double t0, bool placeholder,
+                                                        const Au3WaveTrack* nameSource = nullptr)
+{
+    //! NOTE The pending track is an empty copy of the original, so the take
+    //! number must be resolved against the original track's clips
+    const Au3WaveTrack& source = nameSource ? *nameSource : track;
+    wxString name;
+    for (auto i = 1;; ++i) {
+        //: a numerical suffix added to distinguish otherwise like-named clips when new record started
+        //: %1 is the track name, %2 is the numerical suffix distinguishing like-named clips
+        name = ::au3::qtToWx(::TranslatableString("audacity", "%1 #%2", "clip name template")
+                             .arg(source.GetName()).arg(i).translated());
+        if (!source.HasClipNamed(name)) {
+            break;
+        }
+    }
+
+    auto clip = track.CreateClip(t0, name);
+    // So that the empty clip is not skipped for insertion:
+    clip->SetIsPlaceholder(true);
+    track.InsertInterval(clip, true);
+    if (!placeholder) {
+        clip->SetIsPlaceholder(false);
+    }
+    return clip;
+}
+
 void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
@@ -305,6 +333,20 @@ void Au3Record::init()
         rebuildRecordingClipKeys();
     });
 
+    audioEngine()->captureStopped().onNotify(this, [this]() {
+        //! NOTE: a gapless (armed) capture was disarmed: the recording is
+        //! committed but the playback stream keeps running, so — unlike the
+        //! finished() handler — the playhead is not repositioned.
+        if (m_recordData.empty()) {
+            return;
+        }
+        m_recordPosition.set(m_recordPosition.val);
+        m_recordingFinished.notify();
+
+        m_recordData.clear();
+        rebuildRecordingClipKeys();
+    });
+
     audioEngine()->commitRequested().onNotify(this, [this]() {
         if (m_recordData.empty()) {
             return;
@@ -392,6 +434,16 @@ muse::Ret Au3Record::start()
         }
     }
 
+    // AU4: gapless punch-in — when this project's playback stream is running
+    // with speculatively opened capture channels, arm them instead of
+    // restarting the stream. Falls through to the restart path on failure.
+    if (!existingTracks.empty()) {
+        Ret armRet = tryArmCapture(existingTracks, projectRate);
+        if (armRet) {
+            return armRet;
+        }
+    }
+
     bool useDuplex = true;
     // gPrefs->Read(wxT("/AudioIO/Duplex"), &useDuplex, true); // todo
 
@@ -428,6 +480,112 @@ muse::Ret Au3Record::start()
     audioEngine()->stopMonitoring();
 
     return doRecord(project, transportTracks, t0, t1, altAppearance, projectRate);
+}
+
+muse::Ret Au3Record::tryArmCapture(const std::vector<std::shared_ptr<WritableSampleTrack> >& tracks, double projectRate)
+{
+    Au3Project& project = projectRef();
+
+    const auto stream = audioEngine()->currentStream();
+    if (!stream || stream->kind != audio::AudioStreamKind::Playback
+        || stream->ownerProject != &project) {
+        return make_ret(Err::UnknownError);
+    }
+
+    if (!audioEngine()->canArmCapture()) {
+        return make_ret(Err::UnknownError);
+    }
+
+    //! NOTE: gapless punch-in follows the linear timeline; with an active loop
+    //! region the punch position would not match what is heard — restart instead.
+    if (ViewInfo::Get(project).playRegion.Active()) {
+        return make_ret(Err::UnknownError);
+    }
+
+    if (!muse::RealIsEqual(stream->sampleRate, projectRate)) {
+        return make_ret(Err::MismatchedSamplingRatesError);
+    }
+
+    const double t0 = playbackState()->playbackPosition();
+
+    auto& pendingTracks = PendingTracks::Get(project);
+
+    TransportSequences transportSequences;
+    std::vector<Au3WaveTrack::IntervalHolder> pendingClips;
+
+    for (const auto& track : tracks) {
+        Au3WaveTrack* wt = dynamic_cast<Au3WaveTrack*>(track.get());
+        IF_ASSERT_FAILED(wt) {
+            continue;
+        }
+
+        auto clipIdHolder = std::make_shared<au3::Au3ClipId>();
+
+        auto updater = [this, trackId = wt->GetId(), clipIdHolder](Au3Track& d, const Au3Track& s){
+            assert(d.NChannels() == s.NChannels());
+            auto& dst = static_cast<Au3WaveTrack&>(d);
+            auto& src = static_cast<const Au3WaveTrack&>(s);
+            dst.Init(src);
+
+            audioEngine()->recordingClipChanged().send(trackId, *clipIdHolder);
+        };
+
+        const auto pending = static_cast<Au3WaveTrack*>(
+            pendingTracks.RegisterPendingChangedTrack(updater, wt)
+            );
+
+        //! NOTE: as in lead-in recording, the clip exists on the pending track
+        //! only; it is created on the original when recorded data arrives.
+        auto pendingClip = insertEmptyInterval(*pending, t0, false, wt);
+        *clipIdHolder = pendingClip->GetId();
+
+        transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
+        pendingClips.push_back(pendingClip);
+
+        m_recordData.push_back(RecordData { trackedit::ClipKey(), pendingClip->GetId(), false, true });
+    }
+    rebuildRecordingClipKeys();
+    pendingTracks.UpdatePendingTracks();
+
+    if (transportSequences.captureSequences.empty()) {
+        m_recordData.clear();
+        rebuildRecordingClipKeys();
+        cancelRecording();
+        return make_ret(Err::UnknownError);
+    }
+
+    //! NOTE: the clips were placed at the playhead position read above; the exact
+    //! punch time is known only while the engine arms (audio worker parked), so
+    //! they are repositioned race-free in the callback before input flows.
+    const auto punchTime = audioEngine()->armCapture(transportSequences, [&pendingClips](double punch) {
+        for (const auto& clip : pendingClips) {
+            clip->SetPlayStartTime(punch);
+        }
+    });
+
+    if (!punchTime.has_value()) {
+        m_recordData.clear();
+        rebuildRecordingClipKeys();
+        cancelRecording();
+        return make_ret(Err::RecordingError);
+    }
+
+    m_recordPosition.set(*punchTime);
+
+    return make_ok();
+}
+
+muse::Ret Au3Record::stopCapture()
+{
+    if (!audioEngine()->isCaptureArmed()) {
+        return make_ret(Err::RecordingStopError);
+    }
+
+    if (!audioEngine()->disarmCapture()) {
+        return make_ret(Err::RecordingStopError);
+    }
+
+    return make_ok();
 }
 
 muse::Ret Au3Record::pause()
@@ -689,32 +847,6 @@ Ret Au3Record::doRecord(Au3Project& project,
     auto& trackList = Au3TrackList::Get(project);
 
     bool appendRecord = !sequences.captureSequences.empty();
-
-    auto insertEmptyInterval
-        =[&](Au3WaveTrack& track, double t0, bool placeholder, const Au3WaveTrack* nameSource = nullptr) {
-        //! NOTE The pending track is an empty copy of the original, so the take
-        //! number must be resolved against the original track's clips
-        const Au3WaveTrack& source = nameSource ? *nameSource : track;
-        wxString name;
-        for (auto i = 1;; ++i) {
-            //: a numerical suffix added to distinguish otherwise like-named clips when new record started
-            //: %1 is the track name, %2 is the numerical suffix distinguishing like-named clips
-            name = ::au3::qtToWx(::TranslatableString("audacity", "%1 #%2", "clip name template")
-                                 .arg(source.GetName()).arg(i).translated());
-            if (!source.HasClipNamed(name)) {
-                break;
-            }
-        }
-
-        auto clip = track.CreateClip(t0, name);
-        // So that the empty clip is not skipped for insertion:
-        clip->SetIsPlaceholder(true);
-        track.InsertInterval(clip, true);
-        if (!placeholder) {
-            clip->SetIsPlaceholder(false);
-        }
-        return clip;
-    };
 
     auto& pendingTracks = PendingTracks::Get(project);
     const bool deferClipCreation = (leadInTime > 0.0);

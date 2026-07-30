@@ -580,10 +580,13 @@ public:
      * appending input to them, without restarting the stream.
      *
      * The sequences' rate must match the rate the stream was opened with.
+     * If given, onArm is invoked with the punch time while the audio worker is
+     * still parked — a race-free window to position clips before input flows.
      * @pre `p != nullptr` for all pointers `p` in `sequences`
      * @return the track time of the punch point, or nullopt on failure
      */
-    std::optional<double> ArmCapture(const RecordableSequences& sequences);
+    std::optional<double> ArmCapture(
+        const RecordableSequences& sequences, const std::function<void(double punchTime)>& onArm = {});
 
     /** \brief Commit the audio captured since ArmCapture() and detach the
      * sequences, leaving the stream running.

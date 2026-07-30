@@ -35,7 +35,7 @@ public:
 
     bool canArmCapture() const override;
     bool isCaptureArmed() const override;
-    std::optional<double> armCapture(const TransportSequences& sequences) override;
+    std::optional<double> armCapture(const TransportSequences& sequences, const std::function<void(double punchTime)>& onArm) override;
     bool disarmCapture() override;
     muse::async::Notification captureStopped() const override;
 

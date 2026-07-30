@@ -30,7 +30,8 @@ public:
 
     MOCK_METHOD(bool, canArmCapture, (), (const, override));
     MOCK_METHOD(bool, isCaptureArmed, (), (const, override));
-    MOCK_METHOD(std::optional<double>, armCapture, (const TransportSequences& sequences), (override));
+    MOCK_METHOD(std::optional<double>, armCapture,
+                (const TransportSequences& sequences, const std::function<void(double)>& onArm), (override));
     MOCK_METHOD(bool, disarmCapture, (), (override));
     MOCK_METHOD(muse::async::Notification, captureStopped, (), (const, override));
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));

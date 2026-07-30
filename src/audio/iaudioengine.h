@@ -4,6 +4,7 @@
 #pragma once
 
 #include <chrono>
+#include <functional>
 #include <optional>
 #include <vector>
 
@@ -60,8 +61,11 @@ public:
     //! opened its capture channels speculatively (openCaptureChannels)
     virtual bool canArmCapture() const = 0;
     virtual bool isCaptureArmed() const = 0;
-    //! @return the track time of the punch point on success
-    virtual std::optional<double> armCapture(const TransportSequences& sequences) = 0;
+    //! @return the track time of the punch point on success. If given, onArm is
+    //! invoked with the punch time before any input flows — a race-free window
+    //! to position the recording clips.
+    virtual std::optional<double> armCapture(const TransportSequences& sequences,
+                                             const std::function<void(double punchTime)>& onArm = {}) = 0;
     //! Commits the captured audio and keeps the stream running
     virtual bool disarmCapture() = 0;
     //! The recording was committed while the stream keeps running

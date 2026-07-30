@@ -1890,7 +1890,8 @@ bool AudioIO::CanArmCapture() const
            && !mRecordingException;
 }
 
-std::optional<double> AudioIO::ArmCapture(const RecordableSequences& sequences)
+std::optional<double> AudioIO::ArmCapture(
+    const RecordableSequences& sequences, const std::function<void(double punchTime)>& onArm)
 {
     // precondition
     assert(std::all_of(sequences.begin(), sequences.end(),
@@ -1951,6 +1952,12 @@ std::optional<double> AudioIO::ArmCapture(const RecordableSequences& sequences)
     mRecordingSchedule.mDuration = std::numeric_limits<double>::max();
 
     const double punchTime = mPlaybackSchedule.GetSequenceTime();
+
+    // Let the caller position its clips at the exact punch time while the
+    // worker is still parked and no input flows yet.
+    if (onArm) {
+        onArm(punchTime);
+    }
 
     // Publish all writes above to the callback thread, then input starts
     // flowing into the ring buffers.

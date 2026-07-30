@@ -26,6 +26,10 @@ public:
     virtual muse::Ret pause() = 0;
     virtual muse::Ret resume() = 0;
     virtual muse::Ret stop() = 0;
+    //! Stop only the capture of a gapless (armed) recording, committing the
+    //! recorded audio while the playback stream keeps running. Fails when the
+    //! recording is not an armed capture — use stop() then.
+    virtual muse::Ret stopCapture() = 0;
     virtual muse::Ret leadInRecording() = 0;
 
     virtual IAudioInputPtr audioInput() const = 0;
