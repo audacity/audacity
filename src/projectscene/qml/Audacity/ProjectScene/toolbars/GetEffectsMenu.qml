@@ -10,22 +10,7 @@ Item {
 
     property var model: null
 
-    property NavigationPanel navigation: NavigationPanel {
-        name: "GetEffectsMenuPanel"
-        enabled: root.enabled && root.visible
-        direction: NavigationPanel.Vertical
-        onActiveChanged: function (active) {
-            if (active) {
-                root.forceActiveFocus()
-            }
-        }
-
-        onNavigationEvent: function (event) {
-            if (event.type === NavigationEvent.AboutActive) {
-                event.setData("controlIndex", [listView.currentIndex])
-            }
-        }
-    }
+    property alias navigation: menuGroup.navigation
 
     QtObject {
         id: prv
@@ -45,21 +30,21 @@ Item {
         color: ui.theme.backgroundPrimaryColor
     }
 
-    ListView {
-        id: listView
+    RadioButtonGroup {
+        id: menuGroup
 
         anchors.fill: parent
         anchors.topMargin: prv.spaceM
         anchors.bottomMargin: prv.spaceM
 
-        clip: true
-        spacing: 0
         model: root.model ? root.model.categories : []
 
-        ScrollBar.vertical: StyledScrollBar {}
+        clip: true
+        orientation: ListView.Vertical
+        spacing: 0
 
         delegate: PageTabButton {
-            width: listView.width
+            width: menuGroup.width
             height: prv.tabHeight
 
             orientation: Qt.Horizontal
@@ -70,17 +55,14 @@ Item {
             selectedStateFont: ui.theme.bodyBoldFont
 
             title: modelData
-            checked: root.model ? (index === root.model.selectedCategoryIndex) : false
+            checked: root.model ? (model.index === root.model.selectedCategoryIndex) : false
 
-            navigation.name: "GetEffectsMenuItem"
-            navigation.panel: root.navigation
-            navigation.row: index
-            navigation.accessible.name: title
-            navigation.accessible.role: MUAccessible.ListItem
+            navigation.panel: menuGroup.navigation
+            navigation.row: model.index
 
-            onClicked: {
+            onToggled: {
                 if (root.model) {
-                    root.model.selectedCategoryIndex = index
+                    root.model.selectedCategoryIndex = model.index
                 }
             }
         }
