@@ -26,6 +26,7 @@ public:
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                                   std::function<bool()> projectSaveCallback = nullptr,
                                                   UploadMode uploadMode = UploadMode::NormalUpdate) override;
+    muse::RetVal<muse::ProgressPtr> updateAudioPreview(au::project::IAudacityProjectPtr project) override;
     muse::RetVal<muse::ProgressPtr> shareAudio(const std::string& title) override;
     muse::RetVal<muse::ProgressPtr> downloadAudioFile(const std::string& audioId) override;
 
