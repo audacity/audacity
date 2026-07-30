@@ -298,6 +298,25 @@ public:
     size_t mNumPlaybackChannels;
     sampleFormat mCaptureFormat;
     double mCaptureRate{};
+
+    // AU4: deferred capture ("armed-capable" playback streams)
+    /*! Set by the main thread in StartStream, unchanging during playback */
+    bool mDeferredCaptureEnabled{ false };
+    /*! Written by the main thread (the armed transition happens with the audio
+        worker quiescent, under mSuspendAudioThread); read by the PortAudio
+        callback and the audio worker with acquire ordering. */
+    std::atomic<bool> mCaptureArmed{ false };
+    /*! Latency compensation determined at stream open; copied into
+        mRecordingSchedule when capture is armed. Main thread only. */
+    double mStreamLatencyCompensation{ 0.0 };
+
+    //! Capture channels are open but not (yet) writing to any sequence
+    bool DeferredCaptureDisarmed() const
+    {
+        return mDeferredCaptureEnabled
+               && !mCaptureArmed.load(std::memory_order_acquire);
+    }
+
     unsigned long long mLostSamples{ 0 };
     std::atomic<bool> mAudioThreadShouldCallSequenceBufferExchangeOnce;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopRunning;
