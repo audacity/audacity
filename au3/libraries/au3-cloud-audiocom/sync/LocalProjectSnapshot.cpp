@@ -491,7 +491,9 @@ void LocalProjectSnapshot::OnSnapshotCreated(
         const auto snapshotId = mCreateSnapshotResponse->Snapshot.Id;
 
         if (result.Code != SyncResultCode::Success) {
-            db.RemovePendingSnapshot(projectId, snapshotId);
+            if (!IsUploadRecoverable(result.Code)) {
+                db.RemovePendingSnapshot(projectId, snapshotId);
+            }
 
             DataUploadFailed(result);
             return;
