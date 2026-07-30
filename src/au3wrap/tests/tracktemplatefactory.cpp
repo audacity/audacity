@@ -10,9 +10,7 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
-using namespace au::au3;
-
-namespace au::trackedit {
+namespace au::au3 {
 TrackTemplateFactory::TrackTemplateFactory(au::au3::Au3Project& project, double sampleRate)
     : m_project(project)
     , m_sampleRate(sampleRate)
