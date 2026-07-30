@@ -5,6 +5,8 @@
 
 #include "framework/global/translation.h"
 
+#include "../recorderrors.h"
+
 using namespace muse;
 using namespace au::record;
 using namespace muse::async;
@@ -116,9 +118,7 @@ void RecordController::start()
         return;
     }
 
-    stopPlaybackIfNeeded();
-
-    Ret ret = record()->start();
+    Ret ret = doStartRecord();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
         return;
@@ -149,7 +149,7 @@ void RecordController::startWithNewTrack()
     selectionController()->setSelectedTracks(newTracks);
     trackNavigationController()->setFocusedTrack(newTracks.front());
 
-    Ret ret = record()->start();
+    Ret ret = doStartRecord();
     if (!ret) {
         trackeditInteraction()->deleteTracks(newTracks);
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -157,6 +157,27 @@ void RecordController::startWithNewTrack()
     }
 
     setCurrentRecordStatus(RecordStatus::Running);
+}
+
+muse::Ret RecordController::doStartRecord()
+{
+    //! NOTE: recording from a paused transport starts it running — use the
+    //! restart path. Gapless arming applies to actively playing streams only.
+    if (playbackController()->isPaused()) {
+        stopPlaybackIfNeeded();
+    }
+
+    Ret ret = record()->start();
+
+    if (!ret && ret.code() == static_cast<int>(Err::GaplessArmFailed)) {
+        //! NOTE: a playback stream was running but could not be armed (no
+        //! matching tracks, loop region active, rate mismatch, ...) — stop
+        //! playback properly and record with a fresh stream from the playhead.
+        stopPlaybackIfNeeded();
+        ret = record()->start();
+    }
+
+    return ret;
 }
 
 void RecordController::stopPlaybackIfNeeded()
@@ -209,6 +230,11 @@ void RecordController::stop()
         return;
     }
 
+    //! NOTE: in a gapless recording the player kept running on the shared
+    //! stream; record()->stop() tears the stream down, so the player state
+    //! must be reset too.
+    const bool playerActive = !playbackController()->isStopped();
+
     Ret ret = record()->stop();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -216,6 +242,10 @@ void RecordController::stop()
     }
 
     setCurrentRecordStatus(RecordStatus::Stopped);
+
+    if (playerActive) {
+        playbackController()->stop();
+    }
 }
 
 void RecordController::stopAndResumePlayback()
@@ -224,9 +254,16 @@ void RecordController::stopAndResumePlayback()
         return;
     }
 
-    //! NOTE: toggling record off keeps the transport running: record()->stop()
-    //! commits the recording synchronously and its finished handler repositions
-    //! the playhead to the record end, so playback resumes from there.
+    //! NOTE: a gapless (armed) recording only disarms the capture — the playback
+    //! stream was never interrupted, so nothing needs to be restarted.
+    if (record()->stopCapture()) {
+        setCurrentRecordStatus(RecordStatus::Stopped);
+        return;
+    }
+
+    //! NOTE: restart path: record()->stop() commits the recording synchronously
+    //! and its finished handler repositions the playhead to the record end, so
+    //! playback resumes from there.
     Ret ret = record()->stop();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());

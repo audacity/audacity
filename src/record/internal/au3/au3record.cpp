@@ -436,11 +436,22 @@ muse::Ret Au3Record::start()
 
     // AU4: gapless punch-in — when this project's playback stream is running
     // with speculatively opened capture channels, arm them instead of
-    // restarting the stream. Falls through to the restart path on failure.
-    if (!existingTracks.empty()) {
-        Ret armRet = tryArmCapture(existingTracks, projectRate);
-        if (armRet) {
-            return armRet;
+    // restarting the stream.
+    {
+        const auto stream = audioEngine()->currentStream();
+        const bool playbackStreamRunning = stream
+                                           && stream->kind == audio::AudioStreamKind::Playback
+                                           && stream->ownerProject == &project;
+        if (playbackStreamRunning) {
+            if (!existingTracks.empty()) {
+                Ret armRet = tryArmCapture(existingTracks, projectRate);
+                if (armRet) {
+                    return armRet;
+                }
+            }
+            //! NOTE: restarting the stream from here would leave the player state
+            //! stale; the controller stops playback properly and calls start() again.
+            return make_ret(Err::GaplessArmFailed);
         }
     }
 

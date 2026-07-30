@@ -84,6 +84,7 @@ private:
     void recordOnNewTrack();
     void start();
     void startWithNewTrack();
+    muse::Ret doStartRecord();
     void stopPlaybackIfNeeded();
     void togglePause();
     void stop();

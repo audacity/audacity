@@ -18,6 +18,7 @@
 #include "trackedit/tests/mocks/tracksinteractionmock.h"
 
 #include "../internal/recordcontroller.h"
+#include "record/recorderrors.h"
 
 using ::testing::_;
 using ::testing::InSequence;
@@ -85,6 +86,14 @@ public:
 
         ON_CALL(*m_playbackController, isPaused())
         .WillByDefault(Return(false));
+
+        //! NOTE: restart-path recording leaves the player stopped
+        ON_CALL(*m_playbackController, isStopped())
+        .WillByDefault(Return(true));
+
+        //! NOTE: stopping the capture only succeeds for gapless (armed) recordings
+        ON_CALL(*m_record, stopCapture())
+        .WillByDefault(Return(make_ret(Err::RecordingStopError)));
 
         ON_CALL(*m_playbackController, isPlayingChanged())
         .WillByDefault(Return(m_isPlayingChanged));
@@ -311,13 +320,14 @@ TEST_F(RecordControllerTests, Stop_WhileRecording_StopsWithoutRestartingPlayback
 }
 
 /**
- * @brief Toggle record off while recording
- * @details User pressed the record button while the recorder is running
- *          The recording is committed and playback keeps running from the record end
+ * @brief Toggle record off while recording (restart path)
+ * @details The recording is not an armed capture, so stopping the capture fails;
+ *          the recorder is stopped (committing) and playback restarts from the
+ *          record end
  */
 TEST_F(RecordControllerTests, ToggleRecordOff_WhileRunning_CommitsAndKeepsPlaying)
 {
-    //! [GIVEN] A recording is running
+    //! [GIVEN] A recording is running (restart path — stopCapture fails by default)
     startRecordingSuccessfully();
 
     //! [THEN] The recorder is stopped first, then playback resumes
@@ -329,6 +339,59 @@ TEST_F(RecordControllerTests, ToggleRecordOff_WhileRunning_CommitsAndKeepsPlayin
 
     //! [WHEN] The user presses record again
     toggleRecord();
+
+    //! [THEN] The controller is no longer recording
+    EXPECT_FALSE(m_controller->isRecording());
+}
+
+/**
+ * @brief Toggle record off during a gapless recording
+ * @details Only the capture is stopped; the playback stream was never
+ *          interrupted, so nothing is stopped or restarted
+ */
+TEST_F(RecordControllerTests, ToggleRecordOff_Gapless_StopsCaptureOnly)
+{
+    //! [GIVEN] A gapless recording is running
+    startRecordingSuccessfully();
+
+    //! [THEN] Only the capture is stopped
+    EXPECT_CALL(*m_record, stopCapture())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_record, stop())
+    .Times(0);
+    EXPECT_CALL(*m_playbackController, play())
+    .Times(0);
+    EXPECT_CALL(*m_playbackController, stop())
+    .Times(0);
+
+    //! [WHEN] The user presses record again
+    toggleRecord();
+
+    //! [THEN] The controller is no longer recording
+    EXPECT_FALSE(m_controller->isRecording());
+}
+
+/**
+ * @brief Stop during a gapless recording
+ * @details The whole stream is torn down; the player state (still running on the
+ *          shared stream) is reset too
+ */
+TEST_F(RecordControllerTests, Stop_WhileGaplessRecording_AlsoResetsPlayer)
+{
+    //! [GIVEN] A gapless recording is running: the player is not stopped
+    startRecordingSuccessfully();
+    ON_CALL(*m_playbackController, isStopped())
+    .WillByDefault(Return(false));
+
+    //! [THEN] The recorder is stopped and the player state is reset
+    InSequence seq;
+    EXPECT_CALL(*m_record, stop())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_playbackController, stop())
+    .Times(1);
+
+    //! [WHEN] The user presses stop
+    stopRecord();
 
     //! [THEN] The controller is no longer recording
     EXPECT_FALSE(m_controller->isRecording());
@@ -425,16 +488,41 @@ TEST_F(RecordControllerTests, CanReceiveAction_RecordStart_AllowedWhilePlaying)
 
 /**
  * @brief Start recording while playback is running
- * @details The player is stopped first (proper stream teardown, position preserved),
- *          then the recorder starts from the current playhead
+ * @details The recorder arms the running playback stream gaplessly;
+ *          the player is not stopped
  */
-TEST_F(RecordControllerTests, StartRecord_WhilePlaying_StopsPlayerThenRecords)
+TEST_F(RecordControllerTests, StartRecord_WhilePlaying_ArmsWithoutStoppingPlayback)
 {
     //! [GIVEN] Playback is running
     setPlaying(true);
 
-    //! [THEN] The player is stopped before the recorder starts
+    //! [THEN] The recorder starts (gapless arm) and the player is not touched
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_playbackController, stop())
+    .Times(0);
+
+    //! [WHEN] The user presses record
+    toggleRecord();
+
+    //! [THEN] The controller reports that it is recording
+    EXPECT_TRUE(m_controller->isRecording());
+}
+
+/**
+ * @brief Gapless arming fails, recording falls back to a stream restart
+ * @details The recorder reports GaplessArmFailed (e.g. loop region active or no
+ *          matching tracks); the player is stopped properly and start is retried
+ */
+TEST_F(RecordControllerTests, StartRecord_WhilePlaying_FallsBackToRestartWhenArmFails)
+{
+    //! [GIVEN] Playback is running
+    setPlaying(true);
+
+    //! [THEN] Arm attempt, then proper player stop, then a fresh record stream
     InSequence seq;
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(make_ret(Err::GaplessArmFailed)));
     EXPECT_CALL(*m_playbackController, stop())
     .Times(1);
     EXPECT_CALL(*m_record, start())
