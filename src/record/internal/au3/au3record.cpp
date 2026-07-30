@@ -946,9 +946,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     success = (token != 0);
 
-    if (success) {
-        ProjectAudioIO::Get(*p).SetAudioIOToken(token);
-    } else {
+    if (!success) {
         cancelRecording();
 
         Ret ret = make_ret(Err::RecordingError);
