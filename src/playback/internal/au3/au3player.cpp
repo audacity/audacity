@@ -245,7 +245,7 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     engineOptions.streamStartTime = options.streamStartTime;
 
     int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
-    bool success = token != 0;
+    bool success = token > 0;
 
     return success ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }

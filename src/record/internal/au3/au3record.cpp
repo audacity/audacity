@@ -923,7 +923,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, options);
 
-    success = (token != 0);
+    success = (token > 0);
 
     if (!success) {
         cancelRecording();
