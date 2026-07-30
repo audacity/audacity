@@ -2,7 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 import QtQuick 2.15
-import QtQuick.Layouts
 
 import Muse.Ui 1.0
 import Muse.UiComponents
@@ -67,15 +66,17 @@ BuiltinEffectBase {
         readonly property int borderRadius: 4
     }
 
-    ColumnLayout {
+    Column {
         id: mainColumn
 
         width: parent.width
+
+        bottomPadding: 2
         spacing: prv.spaceXL
 
         // Estimated start pitch label
         StyledTextLabel {
-            Layout.fillWidth: true
+            width: parent.width
             horizontalAlignment: Text.AlignLeft
             text: changePitch.estimatedStartPitch
             font: ui.theme.bodyFont
@@ -83,7 +84,7 @@ BuiltinEffectBase {
 
         // From pitch / To pitch section
         Column {
-            Layout.fillWidth: true
+            width: parent.width
             spacing: prv.spaceM
 
             RoundedRectangle {
@@ -210,7 +211,7 @@ BuiltinEffectBase {
 
         // Semitones / Cents section
         Column {
-            Layout.fillWidth: true
+            width: parent.width
             spacing: prv.spaceM
 
             RoundedRectangle {
@@ -295,7 +296,7 @@ BuiltinEffectBase {
 
         // Frequency section
         Column {
-            Layout.fillWidth: true
+            width: parent.width
             spacing: prv.spaceM
 
             RoundedRectangle {
@@ -442,8 +443,7 @@ BuiltinEffectBase {
         CheckBox {
             id: highQualityStretchingCheckbox
 
-            Layout.fillWidth: true
-            Layout.bottomMargin: 2
+            width: parent.width
 
             navigation.panel: root.highQualityStretchingNavigationPanel
             navigation.order: 0

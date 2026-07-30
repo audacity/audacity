@@ -123,6 +123,7 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     emit titleChanged();
     emit isMasterEffectChanged();
     emit effectFamilyChanged();
+    emit viewerComponentTypeChanged();
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()

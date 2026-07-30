@@ -21,6 +21,15 @@ EffectStyledDialogView {
     title: viewerModel.title
     navigationSection.name: title
 
+    openPolicies: DialogView.OpenOnContentReady
+    isContentReady: {
+        if (viewerModel.viewerComponentType !== ViewerComponentType.Generated) {
+            return true
+        }
+
+        return viewerLoader.item ? viewerLoader.item.isContentReady : false
+    }
+
     contentWidth: Math.max(viewerLoader.width + prv.viewMargins * 2, prv.minimumWidth)
     contentHeight: {
         let height = 0
@@ -41,7 +50,7 @@ EffectStyledDialogView {
         property bool showTopPanel: viewerModel.effectFamily !== EffectFamily.Builtin || (viewer && viewer.usesPresets)
         property bool showBottomPanel: true
 
-        property bool isApplyAllowed: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
+        property bool isApplyAllowed: viewerModel.effectFamily !== EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
         property bool isPreviewAllowed: !viewer || viewer.isPreviewAllowed !== false
         property bool shouldRollbackOnClose: true
 
@@ -232,7 +241,7 @@ EffectStyledDialogView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: (viewerModel.effectFamily == EffectFamily.Builtin || viewerModel.viewerComponentType == ViewerComponentType.Generated)
+                    visible: (viewerModel.effectFamily === EffectFamily.Builtin || viewerModel.viewerComponentType === ViewerComponentType.Generated)
                 }
             }
         }
@@ -279,7 +288,7 @@ EffectStyledDialogView {
 
                         spacing: prv.panelMargins
                         navigationPanel.section: root.navigationSection
-                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) + (prv.viewer && prv.viewer.numNavigationPanels !== undefined ? prv.viewer.numNavigationPanels : (viewerModel.effectFamily == EffectFamily.Builtin ? 2 : 0))
+                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) + (prv.viewer && prv.viewer.numNavigationPanels !== undefined ? prv.viewer.numNavigationPanels : (viewerModel.effectFamily === EffectFamily.Builtin ? 2 : 0))
 
                         //! TODO Move function to ButtonBox (Muse framework)
                         function buttonById(id) {

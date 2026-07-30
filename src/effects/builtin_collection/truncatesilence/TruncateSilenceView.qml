@@ -2,9 +2,10 @@
 * Audacity: A Digital Audio Editor
 */
 import QtQuick 2.15
-import QtQuick.Layouts
+
 import Muse.Ui 1.0
 import Muse.UiComponents
+
 import Audacity.Effects
 import Audacity.BuiltinEffects
 import Audacity.BuiltinEffectsCollection
@@ -52,7 +53,7 @@ BuiltinEffectBase {
         readonly property int borderRadius: 4
     }
 
-    ColumnLayout {
+    Column {
         id: mainColumn
 
         width: parent.width
@@ -61,7 +62,7 @@ BuiltinEffectBase {
         // Detect silence section
         Column {
 
-            Layout.fillWidth: true
+            width: parent.width
 
             spacing: prv.spaceM
 
@@ -160,8 +161,7 @@ BuiltinEffectBase {
 
         // Action section
         Column {
-
-            Layout.fillWidth: true
+            width: parent.width
 
             spacing: prv.spaceM
 
