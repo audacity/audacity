@@ -962,8 +962,8 @@ bool Au3AudioComService::isSnapshotUpToDate(
     }
 
     const bool snapshotsMatch = (*headSnapshotId == dbProjectData->SnapshotId);
-    const bool fullyDownloaded = (dbProjectData->SyncStatus == sync::DBProjectData::SyncStatusSynced);
-    return snapshotsMatch && fullyDownloaded;
+    const bool localCopyComplete = (dbProjectData->SyncStatus != sync::DBProjectData::SyncStatusDownloading);
+    return snapshotsMatch && localCopyComplete;
 }
 
 std::optional<std::string> Au3AudioComService::getHeadSnapshotID(
