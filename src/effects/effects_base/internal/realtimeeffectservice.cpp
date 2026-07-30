@@ -6,8 +6,6 @@
 #include "realtimeeffectserviceutils.h"
 #include "effectsutils.h"
 
-#include "au3-audio-io/AudioIO.h"
-
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-effects/EffectManager.h"
 #include "au3-effects/Effect.h"
@@ -271,7 +269,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         LOGW() << "cannot load the effect: " << effectId;
         return nullptr;
     }
-    if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
+    if (const auto state = audioEngine()->addRealtimeEffectState(*data->au3Project, data->au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
         projectHistory()->pushHistoryState(
@@ -312,7 +310,7 @@ void RealtimeEffectService::removeRealtimeEffect(TrackId trackId, const Realtime
         return;
     }
 
-    AudioIO::Get()->RemoveState(*data->au3Project, data->au3Track, state);
+    audioEngine()->removeRealtimeEffectState(*data->au3Project, data->au3Track, state);
     const auto effectName = getEffectName(*state);
     const auto trackName = effectTrackName(trackId);
     projectHistory()->pushHistoryState(
@@ -336,7 +334,8 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
-    if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
+    if (const auto newState = audioEngine()->replaceRealtimeEffectState(*data->au3Project, data->au3Track, effectListIndex,
+                                                                        newEffectId.toStdString())) {
         const auto oldEffectName = getEffectName(*oldState);
         const auto newEffectName = getEffectName(*newState);
         projectHistory()->pushHistoryState(

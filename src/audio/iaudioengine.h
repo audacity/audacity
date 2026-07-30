@@ -4,6 +4,7 @@
 #pragma once
 
 #include <chrono>
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -17,6 +18,8 @@
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
+class ChannelGroup;
+class RealtimeEffectState;
 namespace au::audio {
 struct AudioCallbackInfo {
     std::chrono::steady_clock::time_point dacTime;
@@ -56,6 +59,14 @@ public:
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
     virtual void seekStream(double time) = 0;
+
+    // Realtime effect stack of the live stream
+    virtual std::shared_ptr<RealtimeEffectState> addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                        const std::string& effectId) = 0;
+    virtual void removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                           const std::shared_ptr<RealtimeEffectState>& state) = 0;
+    virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                            size_t effectListIndex, const std::string& newEffectId) = 0;
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
