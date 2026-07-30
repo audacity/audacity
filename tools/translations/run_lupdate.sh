@@ -39,6 +39,25 @@ SRC_DIRS=(
     au3/libraries
     au3/modules
     tools/translations/nyquist_strings.cpp.generated
+    muse/framework/accessibility
+    muse/framework/audioplugins
+    muse/framework/cloud
+    muse/framework/diagnostics
+    muse/framework/dockwindow/qml
+    muse/framework/extensions
+    muse/framework/global
+    muse/framework/interactive
+    muse/framework/languages
+    muse/framework/learn
+    muse/framework/multiwindows
+    muse/framework/network
+    muse/framework/shortcuts
+    muse/framework/testflow
+    muse/framework/ui
+    muse/framework/uicomponents
+    muse/framework/update
+    muse/framework/vst
+    muse/framework/workspace
 )
 TS_FILE=share/locale/audacity_${1:-en}.ts
 DEFAULT_LUPDATE_ARGS=(
