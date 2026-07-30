@@ -15059,7 +15059,7 @@ on the storage device.
         <translation>Proiektua ezin izan da ireki, beharbada leku mugatua delako
 biltegiratze gailuan.
 
-% s</translation>
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2264"/>
@@ -15071,7 +15071,7 @@ on the storage device.
         <translation>Ezin da gorde automatikoki informazioa, seguru asko leku mugatua dagoelako
 biltegiratze gailuan.
 
-% s</translation>
+%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2330"/>

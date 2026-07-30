@@ -225,12 +225,12 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="168"/>
         <source>Undo ‘%1’</source>
-        <translation>تراجع '1%'</translation>
+        <translation>تراجع ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="174"/>
         <source>Redo ‘%1’</source>
-        <translation>إعادة '1%'</translation>
+        <translation>إعادة ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>

@@ -16256,7 +16256,7 @@ audio.comのアップデートされたプロジェクトページで、この�
         <source>An Audacity exception occurred while trying to open the project file:
 “%1”</source>
         <translation>次のプロジェクトファイルを開く際に、Audacityの例外処理が発生しました。
-“％1”</translation>
+“%1”</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="45"/>

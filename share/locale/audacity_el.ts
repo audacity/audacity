@@ -10342,7 +10342,7 @@ Perhaps %1 is not writable or the disk is full.</source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
         <translation>
-o % s δεν έχει δικαιώματα εγγραφής.</translation>
+o %1 δεν έχει δικαιώματα εγγραφής.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
@@ -14697,7 +14697,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
-        <translation>Αποτυχία ορισμού ασφαλούς λειτουργίας στη σύνδεση σημείου ελέγχου στο % s</translation>
+        <translation>Αποτυχία ορισμού ασφαλούς λειτουργίας στη σύνδεση σημείου ελέγχου στο %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>

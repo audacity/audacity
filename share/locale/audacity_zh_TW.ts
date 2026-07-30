@@ -8199,7 +8199,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~a 取樣率：~a Hz.~% %Le已處理長度：~a 個樣本 ~a 秒~a</translation>
+        <translation>~a   ~a~%~a 取樣率：~a Hz.~%已處理長度：~a 個樣本 ~a 秒~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>

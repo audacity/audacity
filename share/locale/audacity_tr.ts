@@ -2860,7 +2860,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
         <source>You can disable this anytime in %1.</source>
-        <translation>Bunu istediğiniz zaman kapatabilirsiniz.</translation>
+        <translation>Bunu istediğiniz zaman %1 bölümünden kapatabilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="49"/>
@@ -3693,7 +3693,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
         <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>Güncelleme denetimi için ağ erişimi gereklidir. Gizliliğinizi korumak için Audacity hiçbir kişisel bilgiyi saklamaz. Asyrıntılı bilgi almak için gizlilik ilkemize bakabilirsiniz.</translation>
+        <translation>Güncelleme denetimi için ağ erişimi gereklidir. Gizliliğinizi korumak için Audacity hiçbir kişisel bilgiyi saklamaz. Ayrıntılı bilgi almak için &lt;a href="%1"&gt;gizlilik ilkemize&lt;/a&gt; bakabilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -18743,7 +18743,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="58"/>
         <source>You can change this at any time in %1.</source>
-        <translation>Bunu istediğiniz zaman değiştirebilirsiniz.</translation>
+        <translation>Bunu istediğiniz zaman %1 bölümünden değiştirebilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="60"/>

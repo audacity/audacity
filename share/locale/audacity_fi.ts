@@ -13418,7 +13418,7 @@ Lataa uusin versio paketista ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
         <source>Exporting selected audio with %1 preset</source>
-        <translation>Viedään valittua ääntä %1esiasetuksella</translation>
+        <translation>Viedään valittua ääntä %1 esiasetuksella</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>

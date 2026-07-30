@@ -12547,7 +12547,7 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>„%s” este un fișier bazat pe note muzicale, nu un fișier audio.
+        <translation>„%1” este un fișier bazat pe note muzicale, nu un fișier audio.
 Audacity nu poate deschide acest tip de fișier.
 Încearcă să-l convertești într-un format audio suportat, cum ar fi WAV sau
 AIFF și apoi să-l imporți, sau să-l înregistrezi direct în Audacity.</translation>

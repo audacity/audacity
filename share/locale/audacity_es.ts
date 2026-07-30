@@ -2247,7 +2247,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="45"/>
         <source>Loading “%1”…‎</source>
-        <translation>Cargando '%f'...</translation>
+        <translation>Cargando “%1”…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="51"/>
@@ -2780,7 +2780,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
-        <translation>El nombre %1 Audacity %1 es una marca registrada.</translation>
+        <translation>El nombre &lt;b&gt;Audacity&lt;/b&gt; es una marca registrada.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
@@ -2790,7 +2790,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="28"/>
         <source>App update checking and error reporting require network access. These features are optional.&lt;br&gt;See our %1 for more info.</source>
-        <translation>Política de privacidad</translation>
+        <translation>La comprobación de actualizaciones y el informe de errores requieren acceso a la red. Estas funciones son opcionales.&lt;br&gt;Consulta nuestra %1 para más información.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="54"/>
@@ -2934,7 +2934,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>¿Olvidaste tu contraseña?</translation>
+        <translation>&lt;a href="%1"&gt;¿Olvidaste tu contraseña?&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -3238,7 +3238,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="35"/>
         <source>A clearer interface. Ideal for new users</source>
-        <translation>%1. Color de acento seleccionado</translation>
+        <translation>Una interfaz más clara. Ideal para nuevos usuarios</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="46"/>
@@ -3691,7 +3691,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
         <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>La verificación de actualización requiere acceso a la red. Para proteger tu privacidad, Audacity no almacena información personal. Consulta nuestra política de privacidad para más información.</translation>
+        <translation>La verificación de actualización requiere acceso a la red. Para proteger tu privacidad, Audacity no almacena información personal. Consulta nuestra &lt;a href="%1"&gt;política de privacidad&lt;/a&gt; para más información.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -6053,12 +6053,12 @@ Intente restablecer cualquier bloque estirado o mezcle y genere las pistas antes
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="384"/>
         <source>Applied effect: %1</source>
-        <translation>Ganancia de entrada</translation>
+        <translation>Efecto aplicado: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="49"/>
         <source>Preset “%1” already exists, replace?</source>
-        <translation>Ganancia de salida</translation>
+        <translation>El preajuste “%1” ya existe, ¿reemplazarlo?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
@@ -6069,7 +6069,7 @@ Intente restablecer cualquier bloque estirado o mezcle y genere las pistas antes
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="91"/>
         <source>Are you sure you want to delete “%1”?</source>
         <extracomment>%1 is the name of the preset to delete</extracomment>
-        <translation>Frecuencia 1</translation>
+        <translation>¿Seguro que quieres eliminar “%1”?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="108"/>
@@ -6090,18 +6090,18 @@ Intente restablecer cualquier bloque estirado o mezcle y genere las pistas antes
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="135"/>
         <source>%1: is not a valid presets file.</source>
         <extracomment>%1 is the path of the preset file being imported</extracomment>
-        <translation>Aplicación de efecto fallida</translation>
+        <translation>%1: no es un archivo de preajustes válido.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="138"/>
         <source>%1: is for a different Effect, Generator or Analyzer.</source>
         <extracomment>%1 is the path of the preset file being imported</extracomment>
-        <translation>Potencia en banda 2</translation>
+        <translation>%1: es para un efecto, generador o analizador diferente.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
         <source>Generating %1…</source>
-        <translation>Frecuencia central</translation>
+        <translation>Generando %1…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
@@ -9775,7 +9775,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="101"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="102"/>
         <source>semitones</source>
-        <translation>semitonosCambio de tono final"%1" (roto)Proveedor%1 (roto)Faltante - %1Faltante - "%1"Eliminación de clicsAplicando efecto Nyquist...</translation>
+        <translation>semitonos</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
@@ -13136,7 +13136,7 @@ Estado: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="165"/>
         <source>220-260 kbps (Best Quality)</source>
-        <translation>220-260 %s kbps (mejor calidad)</translation>
+        <translation>220-260 kbps (mejor calidad)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="166"/>

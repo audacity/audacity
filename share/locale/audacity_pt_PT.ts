@@ -8193,7 +8193,7 @@ Canal Direito</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a ~a~%~aTaxa de Sample: ~a Hz.~% %Le Comprimento processado: ~a samples ~a segundos.~a</translation>
+        <translation>~a   ~a~%~aTaxa de Sample: ~a Hz.~%Comprimento processado: ~a samples ~a segundos.~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>

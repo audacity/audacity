@@ -31836,7 +31836,7 @@ vpliv na kakovost zvoka na počasnejših računalnikih.</translation>
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation>Podokno %</translation>
+        <translation>Podokno %1</translation>
     </message>
 </context>
 <context>

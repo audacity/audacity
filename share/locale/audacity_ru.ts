@@ -6804,7 +6804,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="655"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation>ошибка: файл «%s» указан в заголовке, но не найден в каталоге плагинов.
+        <translation>ошибка: файл «%1» указан в заголовке, но не найден в каталоге плагинов.
 </translation>
     </message>
     <message>
@@ -14564,7 +14564,7 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation>Модуль «%1s соответствует версии Audacity «%2». 
+        <translation>Модуль «%1» соответствует версии Audacity «%2».
 
 Он не будет загружен.</translation>
     </message>
@@ -16464,7 +16464,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
         <source>Failed to set page size for database %1</source>
-        <translation>Не удалось установить размер страницы для базы данных % s</translation>
+        <translation>Не удалось установить размер страницы для базы данных %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>

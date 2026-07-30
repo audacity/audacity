@@ -11394,7 +11394,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
         <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation>एफएफएमपीईजी (FFmpeg) ध्वनी सांकेतिक आज्ञावली 0x% x शोधू शकत नाही.
+        <translation>एफएफएमपीईजी (FFmpeg) ध्वनी सांकेतिक आज्ञावली 0x%1 शोधू शकत नाही.
 या सांकेतिक आज्ञावलीसाठी समर्थन बहुदा संकलित केलेले नाही.</translation>
     </message>
     <message>

@@ -10331,7 +10331,7 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
         <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
-        <translation>% souborů</translation>
+        <translation>%1 souborů</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>

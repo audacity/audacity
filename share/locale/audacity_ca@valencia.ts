@@ -3838,14 +3838,14 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="817"/>
         <source>Default recording device number: %1
 </source>
-        <translation>Número per defecte del dispositiu de gravació:% d
+        <translation>Número per defecte del dispositiu de gravació: %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="818"/>
         <source>Default playback device number: %1
 </source>
-        <translation>Número per defecte del dispositiu de reproducció:% d
+        <translation>Número per defecte del dispositiu de reproducció: %1
 </translation>
     </message>
     <message>

@@ -17285,7 +17285,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="731"/>
         <source>Failed to save VST3 preset to file</source>
-        <translation>VST3 პრესეტის ფაილის (%s) შენახვის შეცდომა</translation>
+        <translation>VST3 პრესეტის ფაილის შენახვის შეცდომა</translation>
     </message>
 </context>
 <context>
