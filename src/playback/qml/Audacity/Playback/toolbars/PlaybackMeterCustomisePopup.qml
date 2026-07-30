@@ -14,6 +14,8 @@ import Audacity.UiComponents 1.0
 StyledPopupView {
     id: root
 
+    objectName: "PlaybackMeterCustomisePopup"
+
     property var model: null
 
     contentWidth: 336
@@ -34,6 +36,11 @@ StyledPopupView {
             titleSpacing: 4
 
             value: root.model.meterPosition
+
+            navPanel.name: "PlaybackMeterPosition"
+            navPanel.section: root.navigationSection
+            navPanel.order: 1
+            navPanel.accessible.name: title
 
             model: [
                 {
@@ -68,6 +75,11 @@ StyledPopupView {
 
                 value: root.model.meterStyle
 
+                navPanel.name: "PlaybackMeterStyle"
+                navPanel.section: root.navigationSection
+                navPanel.order: 2
+                navPanel.accessible.name: title
+
                 model: [
                     {
                         label: qsTrc("playback", "Default"),
@@ -99,6 +111,11 @@ StyledPopupView {
 
                 value: root.model.meterType
 
+                navPanel.name: "PlaybackMeterType"
+                navPanel.section: root.navigationSection
+                navPanel.order: 3
+                navPanel.accessible.name: title
+
                 model: [
                     {
                         label: qsTrc("playback", "Logarithmic (dB)"),
@@ -128,117 +145,50 @@ StyledPopupView {
 
             spacing: 6
 
+            NavigationPanel {
+                id: dbRangeNavPanel
+
+                name: "PlaybackMeterDbRange"
+                section: root.navigationSection
+                enabled: root.isOpened
+                order: 4
+
+                accessible.name: dbRangeLabel.text
+            }
+
             StyledTextLabel {
+                id: dbRangeLabel
+
                 text: qsTrc("playback", "dB range")
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.WordWrap
             }
 
-            Item {
-                id: dropdown
+            DropdownWithTitle {
+                id: dbRangeDropdown
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 28
 
                 enabled: root.model.meterType !== PlaybackMeterType.Linear
 
-                function openMenu() {
-                    let rangeList = root.model.dbRangeList.map(function (range) {
-                        return {
-                            id: range,
-                            title: root.model.description(range)
-                        }
-                    })
-                    menuLoader.toggleOpened(rangeList)
-                }
+                allowOptionToggle: false
+                dropdownAccessibleName: dbRangeLabel.text
 
-                Rectangle {
-                    id: backgroundItem
-                    anchors.fill: parent
-
-                    color: ui.theme.textFieldColor
-                    border.color: ui.theme.strokeColor
-                    border.width: Math.max(ui.theme.borderWidth, 1)
-                    radius: 3
-                }
-
-                StyledTextLabel {
-                    id: labelItem
-
-                    anchors.left: parent.left
-                    anchors.leftMargin: 12
-                    anchors.right: dropIconItem.left
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: model.description(root.model.meterDbRange)
-                    horizontalAlignment: Text.AlignLeft
-                    wrapMode: Text.Wrap
-                    maximumLineCount: 1
-                }
-
-                MouseArea {
-                    id: mouseAreaItem
-                    anchors.fill: parent
-                    hoverEnabled: dropdown.enabled
-
-                    onClicked: {
-                        dropdown.openMenu()
+                current: root.model.description(root.model.meterDbRange)
+                model: root.model.dbRangeList.map(function (range) {
+                    return {
+                        id: range,
+                        title: root.model.description(range)
                     }
+                })
 
-                    onPressed: {
-                        ui.tooltip.hide(dropdown, true)
-                    }
+                navigation.name: "DbRange"
+                navigation.panel: dbRangeNavPanel
+                navigation.order: 1
 
-                    onContainsMouseChanged: {
-                        if (!labelItem.truncated || menuLoader.isMenuOpened) {
-                            return
-                        }
-
-                        if (mouseAreaItem.containsMouse) {
-                            ui.tooltip.show(dropdown, labelItem.text)
-                        } else {
-                            ui.tooltip.hide(dropdown)
-                        }
-                    }
-                }
-
-                StyledIconLabel {
-                    id: dropIconItem
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 8
-
-                    iconCode: IconCode.SMALL_ARROW_DOWN
-                }
-
-                states: [
-                    State {
-                        name: "HOVERED"
-                        when: mouseAreaItem.containsMouse && !mouseAreaItem.pressed
-                        PropertyChanges {
-                            target: backgroundItem
-                            border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6)
-                        }
-                    },
-                    State {
-                        name: "OPENED"
-                        when: menuLoader.isMenuOpened
-                        PropertyChanges {
-                            target: backgroundItem
-                            border.color: ui.theme.accentColor
-                            width: 336
-                        }
-                    }
-                ]
-
-                StyledMenuLoader {
-                    id: menuLoader
-
-                    anchors.top: parent.top
-
-                    onHandleMenuItem: function (itemId) {
-                        root.model.meterDbRange = itemId
-                    }
+                onHandleMenuItem: function (itemId) {
+                    root.model.meterDbRange = itemId
                 }
             }
         }

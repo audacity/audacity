@@ -384,8 +384,12 @@ DockPage {
             }
         },
         DockPanel {
+            id: playbackMeterPanel
+
             objectName: pageModel.playbackMeterPanelName()
             title: qsTrc("appshell", "Playback meter")
+
+            navigationSection: root.navigationPanelSec(playbackMeterPanel.location)
 
             closable: false
             floatable: false
@@ -398,7 +402,10 @@ DockPage {
 
             visible: false
 
-            PlaybackMeterPanel {}
+            PlaybackMeterPanel {
+                navigationSection: playbackMeterPanel.navigationSection
+                navigationOrderStart: playbackMeterPanel.contentNavigationPanelOrderStart
+            }
         },
         DockPanel {
             id: historyPanel

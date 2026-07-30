@@ -63,10 +63,10 @@ Slider {
         parent: root.handle
 
         placementPolicies: PopupView.PreferLeft
-        decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
-        minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
-        unitText: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB") : ""
-        volume: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
+        decimalPlaces: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? 2 : 1) : 1
+        minValue: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
+        unitText: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? "" : "dB") : ""
+        volume: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
     }
 
     NavigationControl {
@@ -84,12 +84,17 @@ Slider {
         accessible.stepSize: root.stepSize
 
         onNavigationEvent: function (event) {
+            const isVertical = root.orientation === Qt.Vertical
+
+            const increaseEvent = isVertical ? NavigationEvent.Up : NavigationEvent.Right
+            const decreaseEvent = isVertical ? NavigationEvent.Down : NavigationEvent.Left
+
             switch (event.type) {
-            case NavigationEvent.Down:
+            case decreaseEvent:
                 root.decreaseRequested()
                 event.accepted = true
                 break
-            case NavigationEvent.Up:
+            case increaseEvent:
                 root.increaseRequested()
                 event.accepted = true
                 break
