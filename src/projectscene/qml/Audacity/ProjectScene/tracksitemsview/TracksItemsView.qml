@@ -1021,7 +1021,7 @@ Rectangle {
                                 root.hoveredItemKey = null
                                 root.itemHeaderHovered = false
                                 tracksItemsView.mouseMoveActive = false
-                                timeline.context.updateSelectedClipTime()
+                                timeline.context.updateSelectedItemTime()
                             }
 
                             onIsBrushChanged: function () {
