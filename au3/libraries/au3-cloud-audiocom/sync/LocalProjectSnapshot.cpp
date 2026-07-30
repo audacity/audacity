@@ -296,17 +296,21 @@ void LocalProjectSnapshot::Abort()
         mProjectDataPromise.set_value({});
     }
 
-    UploadFailed({ CloudSyncError::Aborted });
-
-    DeleteSnapshot();
+    if (UploadFailed({ CloudSyncError::Aborted })) {
+        DeleteSnapshot();
+    }
 }
 
-void LocalProjectSnapshot::UploadFailed(CloudSyncError error)
+bool LocalProjectSnapshot::UploadFailed(CloudSyncError error)
 {
-    if (!mCompleted.exchange(true, std::memory_order_release)) {
-        mProjectCloudExtension.OnSyncCompleted(
-            this, std::make_optional(error), mAudiocomTrace);
+    if (mCompleted.exchange(true, std::memory_order_release)) {
+        return false;
     }
+
+    mProjectCloudExtension.OnSyncCompleted(
+        this, std::make_optional(error), mAudiocomTrace);
+
+    return true;
 }
 
 void LocalProjectSnapshot::DataUploadFailed(const ResponseResult& uploadResult)
@@ -605,8 +609,9 @@ void LocalProjectSnapshot::MarkSnapshotSynced()
             return;
         }
 
-        mCompleted.store(true, std::memory_order_release);
-        mProjectCloudExtension.OnSyncCompleted(this, {}, mAudiocomTrace);
+        if (!mCompleted.exchange(true, std::memory_order_release)) {
+            mProjectCloudExtension.OnSyncCompleted(this, {}, mAudiocomTrace);
+        }
     });
 
     mCancellationContext->OnCancelled(response);

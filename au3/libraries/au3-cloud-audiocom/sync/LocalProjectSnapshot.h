@@ -80,7 +80,7 @@ public:
     void Abort();
 
 private:
-    void UploadFailed(CloudSyncError error);
+    bool UploadFailed(CloudSyncError error);
     void DataUploadFailed(const ResponseResult& uploadResult);
     void DataUploadFailed(const MissingBlocksUploadProgress& uploadResult);
 
