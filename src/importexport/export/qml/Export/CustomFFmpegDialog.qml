@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Export 1.0
@@ -51,7 +52,12 @@ StyledDialogView {
             spacing: 0
 
             FormatAndCodecSection {
+                id: formatAndCodecSection
+
                 ffmpegPrefModel: ffmpegPrefModel
+
+                navigationSection: root.navigationSection
+                navigationOrderStart: 1
             }
 
             SeparatorLine {
@@ -76,7 +82,12 @@ StyledDialogView {
                     }
 
                     GeneralOptionsSection {
+                        id: generalOptionsSection
+
                         ffmpegPrefModel: ffmpegPrefModel
+
+                        navigationSection: root.navigationSection
+                        navigationOrderStart: formatAndCodecSection.navigationOrderEnd + 1
                     }
 
                     Item {
@@ -92,7 +103,12 @@ StyledDialogView {
                     }
 
                     FLACOptionsSection {
+                        id: flacOptionsSection
+
                         ffmpegPrefModel: ffmpegPrefModel
+
+                        navigationSection: root.navigationSection
+                        navigationOrderStart: generalOptionsSection.navigationOrderEnd + 1
                     }
 
                     Item {
@@ -108,7 +124,12 @@ StyledDialogView {
                     }
 
                     MPEGOptionsSection {
+                        id: mpegOptionsSection
+
                         ffmpegPrefModel: ffmpegPrefModel
+
+                        navigationSection: root.navigationSection
+                        navigationOrderStart: flacOptionsSection.navigationOrderEnd + 1
                     }
                 }
             }
@@ -122,6 +143,9 @@ StyledDialogView {
             Layout.fillWidth: true
 
             padding: 8
+
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: mpegOptionsSection.navigationOrderEnd + 1
 
             FlatButton {
                 id: cancelBtn
