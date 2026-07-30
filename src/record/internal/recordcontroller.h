@@ -68,6 +68,8 @@ public:
     std::vector<trackedit::TrackId> leadInRecordingTrackIds() const override;
 
 private:
+    friend class RecordControllerTests;
+
     enum class RecordStatus {
         Stopped = 0,
         Paused,
