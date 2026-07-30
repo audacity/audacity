@@ -565,6 +565,33 @@ public:
     // Meaning really capturing, not just lead-in time playing
     bool IsCapturing() const;
 
+    // AU4: deferred capture — arm/disarm recording on a running playback
+    // stream whose capture channels were opened speculatively
+    // (AudioIOStartStreamOptions::openCaptureChannels). Main thread only.
+
+    //! The running stream opened its capture channels speculatively
+    bool IsDeferredCaptureStream() const;
+    //! Capture is armed: input is being appended to the attached sequences
+    bool IsCaptureArmed() const;
+    //! Capture channels are open and idle, so ArmCapture() would succeed
+    bool CanArmCapture() const;
+
+    /** \brief Attach capture sequences to the running stream and start
+     * appending input to them, without restarting the stream.
+     *
+     * The sequences' rate must match the rate the stream was opened with.
+     * @pre `p != nullptr` for all pointers `p` in `sequences`
+     * @return the track time of the punch point, or nullopt on failure
+     */
+    std::optional<double> ArmCapture(const RecordableSequences& sequences);
+
+    /** \brief Commit the audio captured since ArmCapture() and detach the
+     * sequences, leaving the stream running.
+     *
+     * Fires OnCommitRecording and OnAudioIOCaptureStopped. A later
+     * ArmCapture() on the same stream starts a fresh take. */
+    bool DisarmCapture();
+
     /** \brief Ensure selected device names are valid
      *
      */

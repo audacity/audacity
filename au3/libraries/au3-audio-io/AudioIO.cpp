@@ -1868,6 +1868,185 @@ void AudioIO::SeekStream(double seconds)
     mSeek = seconds;
 }
 
+// AU4: deferred capture ------------------------------------------------------
+
+bool AudioIO::IsDeferredCaptureStream() const
+{
+    return mDeferredCaptureEnabled;
+}
+
+bool AudioIO::IsCaptureArmed() const
+{
+    return mDeferredCaptureEnabled
+           && mCaptureArmed.load(std::memory_order_acquire);
+}
+
+bool AudioIO::CanArmCapture() const
+{
+    return mDeferredCaptureEnabled
+           && mStreamToken > 0
+           && IsStreamActive()
+           && !mCaptureArmed.load(std::memory_order_acquire)
+           && !mRecordingException;
+}
+
+std::optional<double> AudioIO::ArmCapture(const RecordableSequences& sequences)
+{
+    // precondition
+    assert(std::all_of(sequences.begin(), sequences.end(),
+                       [](const auto& pSequence){ return pSequence != nullptr; }));
+
+    if (!CanArmCapture() || sequences.empty()) {
+        return std::nullopt;
+    }
+
+    // The device was opened with mCaptureRate; sequences at another rate would
+    // record mis-pitched audio (the resamplers were built for this rate only).
+    for (const auto& sequence : sequences) {
+        if (sequence->GetRate() != mCaptureRate) {
+            return std::nullopt;
+        }
+    }
+
+    wxMutexLocker locker(mSuspendAudioThread);
+
+    // The stream may have ended while waiting for the mutex
+    if (!CanArmCapture()) {
+        return std::nullopt;
+    }
+
+    // Park the audio worker between passes (as CallbackDoSeek does) so the
+    // capture members below can be re-initialized with plain writes.
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(false, std::memory_order_relaxed);
+    while (mAudioThreadSequenceBufferExchangeLoopActive
+           .load(std::memory_order_relaxed))
+    {
+        using namespace std::chrono;
+        std::this_thread::sleep_for(50ms);
+    }
+
+    mCaptureSequences = sequences;
+    ConfigureCaptureRouting(mNumCaptureChannels);
+
+    // The callback does not Put while disarmed, so the ring buffers should be
+    // empty already; discard any stale remainder and reset resampler state.
+    for (auto& buffer : mCaptureBuffers) {
+        buffer->Discard(buffer->AvailForGet());
+    }
+    for (auto& resample : mResample) {
+        resample = std::make_unique<Resample>(true, mFactor, mFactor);
+    }
+
+    mLostSamples = 0;
+    mLostCaptureIntervals.clear();
+    ClearRecordingException();
+
+    // Re-baseline the recording schedule: capture starts now, with no lead-in.
+    // mPosition counts ring-buffer samples consumed since the first Put, so the
+    // existing ToDiscard() machinery discards exactly the latency-compensation
+    // prefix — the same as a fresh recording started at the punch time.
+    mRecordingSchedule = {};
+    mRecordingSchedule.mLatencyCompensation = mStreamLatencyCompensation;
+    mRecordingSchedule.mDuration = std::numeric_limits<double>::max();
+
+    const double punchTime = mPlaybackSchedule.GetSequenceTime();
+
+    // Publish all writes above to the callback thread, then input starts
+    // flowing into the ring buffers.
+    mCaptureArmed.store(true, std::memory_order_release);
+
+    // Resume the worker; DrainRecordBuffers now passes its empty-sequences
+    // gate and starts consuming.
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(true, std::memory_order_relaxed);
+
+    if (auto pListener = GetListener()) {
+        pListener->OnAudioIOStartRecording();
+    }
+    Publish({ mOwningProject.lock().get(), AudioIOEvent::CAPTURE, true });
+
+    return punchTime;
+}
+
+bool AudioIO::DisarmCapture()
+{
+    if (!IsCaptureArmed()) {
+        return false;
+    }
+
+    // Stop producing into the ring buffers first, so the final drain below
+    // sees a fixed tail.
+    mCaptureArmed.store(false, std::memory_order_release);
+
+    // Flush the remaining ring-buffer content to the sequences (the once-flag
+    // also bypasses the minimum-batch gate in DrainRecordBuffers).
+    ProcessOnceAndWait();
+
+    wxMutexLocker locker(mSuspendAudioThread);
+
+    // Park the audio worker between passes so the capture members can be
+    // detached with plain writes.
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(false, std::memory_order_relaxed);
+    while (mAudioThreadSequenceBufferExchangeLoopActive
+           .load(std::memory_order_relaxed))
+    {
+        using namespace std::chrono;
+        std::this_thread::sleep_for(50ms);
+    }
+
+    // Same commit steps as StopStream, but the stream keeps running.
+    for (auto& sequence : mCaptureSequences) {
+        GuardedCall([&] {
+            // use No-fail-guarantee that sequence is flushed,
+            // Partial-guarantee that some initial length of the recording
+            // is saved.
+            sequence->Flush();
+        });
+    }
+
+    if (!mLostCaptureIntervals.empty()) {
+        std::optional<TransactionScope> pScope;
+        if (auto pOwningProject = mOwningProject.lock()) {
+            pScope.emplace(*pOwningProject, "Dropouts");
+        }
+        for (auto& interval : mLostCaptureIntervals) {
+            auto& start = interval.first;
+            auto duration = interval.second;
+            for (auto& sequence : mCaptureSequences) {
+                GuardedCall([&] {
+                    sequence->InsertSilence(start, duration);
+                });
+            }
+        }
+        if (pScope) {
+            pScope->Commit();
+        }
+        mLostCaptureIntervals.clear();
+    }
+
+    if (auto pListener = GetListener()) {
+        pListener->OnCommitRecording();
+        pListener->OnAudioIOCaptureStopped();
+    }
+
+    // Detach; a later ArmCapture() on this stream starts a fresh take.
+    mCaptureSequences.clear();
+    ResetCaptureRouting();
+    mRecordingSchedule = {};
+    ClearRecordingException();
+
+    Publish({ mOwningProject.lock().get(), AudioIOEvent::CAPTURE, false });
+
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(true, std::memory_order_relaxed);
+
+    return true;
+}
+
+// ----------------------------------------------------------------------------
+
 void AudioIO::SetPaused(bool state, bool publish)
 {
     if (state != IsPaused()) {

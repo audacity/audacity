@@ -31,6 +31,11 @@ public:
     // Commit the addition of temporary recording tracks into the project
     virtual void OnCommitRecording() = 0;
 
+    // AU4: deferred capture — the recording was committed while the stream
+    // keeps running (capture disarmed during playback). Default-bodied so
+    // existing listeners are unaffected.
+    virtual void OnAudioIOCaptureStopped() {}
+
     // During recording, the threshold for sound activation has been crossed
     // in either direction
     virtual void OnSoundActivationThreshold() = 0;
