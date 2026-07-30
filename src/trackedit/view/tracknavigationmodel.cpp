@@ -439,6 +439,13 @@ void TrackNavigationModel::cleanup()
     disableDefaultNavigation();
 
     clearPanels();
+
+    //! NOTE: we disabled default navigation, we deleted all panels, so let's deactivate the section
+    if (m_section && m_section->active()) {
+        m_section->setActive(false);
+    }
+
+    navigationController()->setDefaultNavigationControl(nullptr);
 }
 
 void TrackNavigationModel::clearPanels()

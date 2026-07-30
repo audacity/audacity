@@ -601,4 +601,32 @@ TEST_F(TrackNavigationModelTests, PageOpenActivatesFallbackWhenNoTracks)
     //! [WHEN] A project without tracks is loaded into the page
     loadWithTracks({});
 }
+
+/**
+ * Closing the project deletes the panels of its tracks. If the navigation was on one of them,
+ * its section is left active without an active panel: the navigation cannot leave such a state
+ * on its own, so the section has to be deactivated with its panels.
+ */
+TEST_F(TrackNavigationModelTests, ProjectClosedDeactivatesSection)
+{
+    //! [GIVEN] A project with one track, the navigation is on its panel
+    loadWithTracks({ makeTrack(10) });
+
+    m_section->setActive(true);
+    m_model->trackItemPanels().at(0)->setActive(true);
+
+    //! [WHEN] The project is closed
+    ON_CALL(*m_trackeditProject, trackList())
+    .WillByDefault(Return(std::vector<Track>()));
+    ON_CALL(*m_globalContext, currentTrackeditProject())
+    .WillByDefault(Return(ITrackeditProjectPtr()));
+
+    m_projectChanged.notify();
+
+    //! [THEN] The panels of the tracks are deleted
+    EXPECT_TRUE(m_model->trackItemPanels().isEmpty());
+
+    //! [AND] Their section is not active anymore
+    EXPECT_FALSE(m_section->active());
+}
 }
