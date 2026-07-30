@@ -24,6 +24,7 @@
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
+using ::testing::SaveArg;
 using ::testing::_;
 
 namespace au::trackedit {
@@ -156,6 +157,23 @@ public:
         return control;
     }
 
+    //! NOTE Create a control that does not belong to the model's panels (e.g. the "Add track" button)
+    muse::ui::NavigationControl* makeControl(const QString& name)
+    {
+        auto* control = new muse::ui::NavigationControl(m_testCtx);
+        control->setName(name);
+        control->setEnabled(true);
+        m_controls.push_back(control);
+        return control;
+    }
+
+    //! NOTE Keep track of the control the model sets as the default one of the navigation
+    void trackDefaultNavigationControl()
+    {
+        EXPECT_CALL(*m_navigationController, setDefaultNavigationControl(_))
+        .WillRepeatedly(SaveArg<0>(&m_defaultNavigationControl));
+    }
+
     //! NOTE Simulate the navigation controller landing on a given panel/control
     void fireNavigationChanged(muse::ui::NavigationPanel* panel, muse::ui::NavigationControl* control)
     {
@@ -207,6 +225,8 @@ public:
     muse::async::Channel<TrackItemKey, bool> m_focusedItemChanged;
 
     std::vector<muse::ui::NavigationControl*> m_controls;
+
+    muse::ui::INavigationControl* m_defaultNavigationControl = nullptr;
 };
 
 /**
@@ -444,5 +464,80 @@ TEST_F(TrackNavigationModelTests, EscapeFromHeaderReturnsFocusToTrack)
 
     //! [WHEN] Escape is pressed on the header panel
     sendPanelEvent(headerPanel, muse::ui::INavigation::Event::Escape);
+}
+
+/**
+ * The control the navigation falls back to (Escape, navigation reset) is the first
+ * track of the project; until its control is created by QML the "Add track" button is kept.
+ */
+TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsFirstTrack)
+{
+    //! [GIVEN] The "Add track" button is set as the control to fall back to
+    muse::ui::NavigationControl* addTrackControl = makeControl("AddTrack");
+    m_model->setFallbackNavigationControl(addTrackControl);
+
+    //! [AND] The default control set on the navigation controller is tracked
+    trackDefaultNavigationControl();
+
+    //! [WHEN] A project with two tracks is loaded
+    loadWithTracks({ makeTrack(10), makeTrack(20) });
+
+    //! [THEN] The tracks have no controls yet (QML creates them later), the button is kept
+    EXPECT_EQ(m_defaultNavigationControl, addTrackControl);
+
+    //! [WHEN] The tracks get their controls
+    muse::ui::NavigationControl* firstTrackControl = addItemControl(m_model->trackItemPanels().at(0), "track-10", 0);
+    addItemControl(m_model->trackItemPanels().at(1), "track-20", 0);
+
+    //! [THEN] The first track becomes the default control
+    EXPECT_EQ(m_defaultNavigationControl, firstTrackControl);
+}
+
+/**
+ * A project without tracks falls back to the "Add track" button.
+ */
+TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsAddTrackWhenNoTracks)
+{
+    //! [GIVEN] The "Add track" button is set as the control to fall back to
+    muse::ui::NavigationControl* addTrackControl = makeControl("AddTrack");
+    m_model->setFallbackNavigationControl(addTrackControl);
+
+    trackDefaultNavigationControl();
+
+    //! [WHEN] A project without tracks is loaded
+    loadWithTracks({});
+
+    //! [THEN] The default control is the "Add track" button
+    EXPECT_EQ(m_defaultNavigationControl, addTrackControl);
+}
+
+/**
+ * The default control follows the tracks list: removing the first track moves it to the
+ * track that became first, removing the last one returns it to the "Add track" button.
+ */
+TEST_F(TrackNavigationModelTests, DefaultNavigationControlFollowsTracksList)
+{
+    //! [GIVEN] A project with two tracks, both with their controls created
+    muse::ui::NavigationControl* addTrackControl = makeControl("AddTrack");
+    m_model->setFallbackNavigationControl(addTrackControl);
+
+    loadWithTracks({ makeTrack(10), makeTrack(20) });
+
+    addItemControl(m_model->trackItemPanels().at(0), "track-10", 0);
+    muse::ui::NavigationControl* secondTrackControl = addItemControl(m_model->trackItemPanels().at(1), "track-20", 0);
+
+    trackDefaultNavigationControl();
+
+    //! [WHEN] The first track is removed
+    m_trackRemoved.send(makeTrack(10));
+
+    //! [THEN] The default control is the control of the track that became first
+    EXPECT_EQ(m_defaultNavigationControl, secondTrackControl);
+
+    //! [WHEN] The last track is removed
+    m_trackRemoved.send(makeTrack(20));
+
+    //! [THEN] The default control is the "Add track" button again
+    EXPECT_EQ(m_defaultNavigationControl, addTrackControl);
 }
 }

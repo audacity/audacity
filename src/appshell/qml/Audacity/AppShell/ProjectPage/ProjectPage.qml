@@ -307,6 +307,10 @@ DockPage {
                 anchors.fill: parent
                 spacing: 0
 
+                Component.onCompleted: {
+                    tracksNavModel.fallbackNavigationControl = trackstitleBarItem.addTrackNavigation
+                }
+
                 TracksTitleBar {
                     id: trackstitleBarItem
 

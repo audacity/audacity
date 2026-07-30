@@ -30,7 +30,7 @@ static int trackPanelsOrderBase(int pos)
     return TRACK_PANELS_ORDER_START + TRACK_PANELS_ORDER_STRIDE * pos;
 }
 
-static const muse::ui::INavigationControl* findFirstEnabledControl(const muse::ui::INavigationPanel* panel)
+static muse::ui::INavigationControl* findFirstEnabledControl(const muse::ui::INavigationPanel* panel)
 {
     int minIndex = std::numeric_limits<int>::max();
     muse::ui::INavigationControl* firstControl = nullptr;
@@ -71,6 +71,12 @@ static const muse::ui::INavigationControl* findLastEnabledControl(const muse::ui
 TrackNavigationModel::TrackNavigationModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
+    connect(this, &TrackNavigationModel::panelsChanged, this, &TrackNavigationModel::updateDefaultNavigationControl);
+}
+
+TrackNavigationModel::~TrackNavigationModel()
+{
+    navigationController()->setDefaultNavigationControl(nullptr);
 }
 
 void TrackNavigationModel::init(muse::ui::NavigationSection* section)
@@ -196,6 +202,10 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
         }
     });
 
+    trackPanel->controlsListChanged().onNotify(this, [this]() {
+        updateDefaultNavigationControl();
+    });
+
     muse::ui::NavigationPanel* headerPanel = makePanel(makeTrackHeaderPanelName(trackId), orderBase + 1);
 
     connect(headerPanel, &muse::ui::NavigationPanel::navigationEvent, this,
@@ -311,6 +321,42 @@ void TrackNavigationModel::disableDefaultNavigation()
 
     m_defaultPanel->setEnabled(false);
     m_defaultControl->setEnabled(false);
+}
+
+muse::ui::NavigationControl* TrackNavigationModel::fallbackNavigationControl() const
+{
+    return m_fallbackNavigationControl;
+}
+
+void TrackNavigationModel::setFallbackNavigationControl(muse::ui::NavigationControl* control)
+{
+    if (m_fallbackNavigationControl == control) {
+        return;
+    }
+
+    m_fallbackNavigationControl = control;
+
+    if (control) {
+        connect(control, &QObject::destroyed, this, &TrackNavigationModel::updateDefaultNavigationControl,
+                Qt::UniqueConnection);
+    }
+
+    emit fallbackNavigationControlChanged();
+
+    updateDefaultNavigationControl();
+}
+
+void TrackNavigationModel::updateDefaultNavigationControl()
+{
+    //! NOTE: the default navigation control is the control the navigation returns to
+    //! (Escape, reset of the navigation): the first track if there are tracks,
+    //! the fallback control otherwise
+    muse::ui::INavigationControl* control = m_panels.isEmpty() ? nullptr : findFirstEnabledControl(m_panels.first().track);
+    if (!control) {
+        control = m_fallbackNavigationControl.data();
+    }
+
+    navigationController()->setDefaultNavigationControl(control);
 }
 
 void TrackNavigationModel::updateNavigationActive(const muse::ui::INavigationPanel* activePanel)
