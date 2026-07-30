@@ -53,6 +53,8 @@ public:
 
     TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
 
+    void resetNavigation() override;
+
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
 private:
@@ -71,13 +73,13 @@ private:
     void navigateToNextPanel();
     void navigateToPrevPanel();
 
+    bool navigateToAdjacentItem(bool next);
+
     void navigateToPrevTrack();
     void navigateToNextTrack();
     void navigateToFirstTrack();
     void navigateToLastTrack();
 
-    void navigateToNextItem();
-    void navigateToPrevItem();
     void navigateToAboveItem();
     void navigateToBelowItem();
     void navigateToFirstItem();

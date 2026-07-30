@@ -130,6 +130,12 @@ void TrackContextMenuModel::load()
         updateTrackMonoState();
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    trackNavigationController()->openContextMenuRequested().onReceive(this, [this](const trackedit::TrackItemKey& key) {
+        if (key.trackId == m_trackId && key.itemId == trackedit::INVALID_TRACK_ITEM) {
+            emit openRequested();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     auto track = prj->track(m_trackId);
     if (!track.has_value()) {

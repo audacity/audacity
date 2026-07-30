@@ -13,20 +13,22 @@ import Audacity.ProjectScene
 Item {
     id: root
 
-    property var navPanels: null
     property alias tracksModel: tracksModel
-    property NavigationPanel effectColumnNavigationPanel: null
-
-    signal openEffectsRequested
-    signal panelActive(var trackId)
-
-    property NavigationSection trackEffectsNavigationSection: null
-    property NavigationSection masterEffectsNavigationSection: null
 
     // property alias contextMenuModel: contextMenuModel
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
     property alias showEffectsSection: effectSectionModel.showEffectsSection
     property int selectedTrackIndex: -1
+
+    property var navigationPanels: null
+    property var headerNavigationPanels: null
+    property NavigationPanel effectColumnNavigationPanel: null
+
+    property NavigationSection trackEffectsNavigationSection: null
+    property NavigationSection masterEffectsNavigationSection: null
+
+    signal openEffectsRequested
+    signal panelActive(var trackId)
 
     PanelTracksListModel {
         id: tracksModel
@@ -230,8 +232,9 @@ Item {
                             container: view
 
                             navigation.name: Boolean(item) ? item.title + item.index : ""
-                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.panel: root.navigationPanels && root.navigationPanels[index] ? root.navigationPanels[index] : null
                             navigation.order: 0
+                            headerNavigationPanel: root.headerNavigationPanels && root.headerNavigationPanels[index] ? root.headerNavigationPanels[index] : null
                             navigation.accessible.name: Boolean(item) ? (isSelected ? qsTrc("projectscene", "Track %1: %2, audio track, selected").arg(index + 1).arg(item.title) : qsTrc("projectscene", "Track %1: %2, audio track").arg(index + 1).arg(item.title)) : ""
                             navigation.accessible.description: qsTrc("projectscene", "Press Enter to select or deselect")
                             navigation.accessible.role: MUAccessible.Group
@@ -294,8 +297,9 @@ Item {
                             container: view
 
                             navigation.name: Boolean(item) ? item.title + item.index : ""
-                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.panel: root.navigationPanels && root.navigationPanels[index] ? root.navigationPanels[index] : null
                             navigation.order: 0
+                            headerNavigationPanel: root.headerNavigationPanels && root.headerNavigationPanels[index] ? root.headerNavigationPanels[index] : null
                             navigation.accessible.name: Boolean(item) ? (isSelected ? qsTrc("projectscene", "Track %1: %2, label track, selected").arg(index + 1).arg(item.title) : qsTrc("projectscene", "Track %1: %2, label track").arg(index + 1).arg(item.title)) : ""
                             navigation.accessible.description: qsTrc("projectscene", "Press Enter to select or deselect")
                             navigation.accessible.role: MUAccessible.Group

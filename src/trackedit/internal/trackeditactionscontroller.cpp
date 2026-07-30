@@ -701,7 +701,95 @@ void TrackeditActionsController::doGlobalDelete()
 void TrackeditActionsController::doGlobalCancel()
 {
     trackeditInteraction()->notifyAboutCancelDragEdit();
-    trackNavigationController()->setIsNavigationActive(false);
+
+    const TrackItemKey focusedItem = trackNavigationController()->focusedItem();
+    const ClipKeyList selectedClips = selectionController()->selectedClips();
+    const LabelKeyList selectedLabels = selectionController()->selectedLabels();
+
+    const TrackId currentTrack = currentFocusedOrSelectedTrack();
+
+    //! [Stage 1] A clip/label is focused: drop the navigation focus, then step out of the current
+    //! item: onto the selection if the focus is not part of it, otherwise back onto the track.
+    if (focusedItem.isValid()) {
+        trackNavigationController()->resetNavigation();
+
+        if (stepFocusOutOfSelection(selectedClips, focusedItem, currentTrack,
+                                    [this]() { selectionController()->resetSelectedClips(); })) {
+            return;
+        }
+        if (stepFocusOutOfSelection(selectedLabels, focusedItem, currentTrack,
+                                    [this]() { selectionController()->resetSelectedLabels(); })) {
+            return;
+        }
+
+        focusTrack(currentTrack);
+        return;
+    }
+
+    //! [Stage 2] No item is focused: reset the active selection and move the focus back to the track.
+    if (!selectedClips.empty()) {
+        selectionController()->resetSelectedClips();
+    } else if (!selectedLabels.empty()) {
+        selectionController()->resetSelectedLabels();
+    } else if (!selectionController()->timeSelectionIsEmpty()) {
+        selectionController()->resetTimeSelection();
+    } else {
+        return;
+    }
+
+    focusTrack(currentTrack);
+}
+
+void TrackeditActionsController::focusTrack(const TrackId& trackId)
+{
+    if (trackId != INVALID_TRACK) {
+        trackNavigationController()->setFocusedTrack(trackId, false /*highlight*/);
+    }
+}
+
+bool TrackeditActionsController::stepFocusOutOfSelection(const TrackItemKeyList& selectedItems,
+                                                         const TrackItemKey& focusedItem, const TrackId& currentTrack,
+                                                         const std::function<void()>& resetSelection)
+{
+    if (selectedItems.empty()) {
+        return false;
+    }
+
+    //! NOTE: if the focus sits on one of the selected items, cancel that selection and fall back to
+    //! the track; otherwise step the focus onto the selection
+    if (muse::contains(selectedItems, focusedItem)) {
+        resetSelection();
+        focusTrack(currentTrack);
+    } else {
+        trackNavigationController()->setFocusedItem(selectedItems.front(), false /*highlight*/);
+    }
+
+    return true;
+}
+
+TrackId TrackeditActionsController::currentFocusedOrSelectedTrack() const
+{
+    const TrackId focusedTrack = trackNavigationController()->focusedItem().trackId;
+    if (focusedTrack != INVALID_TRACK) {
+        return focusedTrack;
+    }
+
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    if (!selectedTracks.empty()) {
+        return selectedTracks.front();
+    }
+
+    const ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
+    if (!selectedClips.empty()) {
+        return selectedClips.front().trackId;
+    }
+
+    const LabelKeyList selectedLabels = selectionController()->selectedLabelsInTrackOrder();
+    if (!selectedLabels.empty()) {
+        return selectedLabels.front().trackId;
+    }
+
+    return INVALID_TRACK;
 }
 
 void TrackeditActionsController::doGlobalDeleteLeaveGap()
@@ -2245,6 +2333,16 @@ void TrackeditActionsController::moveFocusedItemDown()
 
 void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset)
 {
+    const TrackItemKey focusedItem = trackNavigationController()->focusedItem();
+    const bool trackFocused = focusedItem.trackId != INVALID_TRACK && focusedItem.itemId == INVALID_TRACK_ITEM;
+    if (trackFocused) {
+        if (trackPositionOffset != 0) {
+            const TrackMoveDirection direction = trackPositionOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down;
+            trackeditInteraction()->moveTracks({ focusedItem.trackId }, direction);
+        }
+        return;
+    }
+
     constexpr bool completed = false;
 
     if (!labelsForInteraction().empty()) {
@@ -2320,73 +2418,61 @@ void TrackeditActionsController::completeFocusedItemMove()
 
 void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-ext-left");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), -stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsLeft(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-ext-left");
     }
 }
 
 void TrackeditActionsController::extendFocusedItemBoundaryRight()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-ext-right");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsRight(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-ext-right");
     }
 }
 
 void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-cntr-right");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsRight(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-cntr-right");
     }
 }
 
 void TrackeditActionsController::reduceFocusedItemBoundaryRight()
 {
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("sel-cntr-left");
-        return;
-    }
-
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
     if (!labelsForInteraction().empty()) {
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
-    } else {
+    } else if (!clipsForInteraction().empty()) {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsLeft(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+    } else {
+        dispatcher()->dispatch("sel-cntr-left");
     }
 }
 

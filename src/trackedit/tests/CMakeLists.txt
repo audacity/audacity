@@ -15,8 +15,11 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/projecthistorymock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/tracknavigationcontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/navigationcontrollermock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditinteractionmock.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditactionscontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracknavigationcontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tracknavigationmodel_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3tracksinteraction_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3clipsinteraction_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3labelsinteractions_tests.cpp
@@ -27,9 +30,13 @@ set(MODULE_TEST_SRC
 
 set(MODULE_TEST_LINK
     trackedit
+    spectrogram
     au3wrap
 
     muse::ui
+    muse::ui_qml
+
+    Qt::Quick
     )
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})

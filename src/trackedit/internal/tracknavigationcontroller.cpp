@@ -30,8 +30,6 @@ static const muse::actions::ActionCode TRACK_VIEW_RANGE_SELECTION_CODE("track-vi
 static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_PREV_CODE("track-view-extend-track-selection-prev");
 static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_NEXT_CODE("track-view-extend-track-selection-next");
 
-static const muse::actions::ActionCode TRACK_VIEW_NEXT_ITEM_CODE("track-view-next-item");
-static const muse::actions::ActionCode TRACK_VIEW_PREV_ITEM_CODE("track-view-prev-item");
 static const muse::actions::ActionCode TRACK_VIEW_ABOVE_ITEM_CODE("track-view-above-item");
 static const muse::actions::ActionCode TRACK_VIEW_BELOW_ITEM_CODE("track-view-below-item");
 
@@ -47,8 +45,6 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, TRACK_VIEW_FIRST_TRACK_CODE, this, &TrackNavigationController::navigateToFirstTrack);
     dispatcher()->reg(this, TRACK_VIEW_LAST_TRACK_CODE, this, &TrackNavigationController::navigateToLastTrack);
 
-    dispatcher()->reg(this, TRACK_VIEW_NEXT_ITEM_CODE, this, &TrackNavigationController::navigateToNextItem);
-    dispatcher()->reg(this, TRACK_VIEW_PREV_ITEM_CODE, this, &TrackNavigationController::navigateToPrevItem);
     dispatcher()->reg(this, TRACK_VIEW_ABOVE_ITEM_CODE, this, &TrackNavigationController::navigateToAboveItem);
     dispatcher()->reg(this, TRACK_VIEW_BELOW_ITEM_CODE, this, &TrackNavigationController::navigateToBelowItem);
 
@@ -63,11 +59,6 @@ void TrackNavigationController::init()
 
     dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, [this] {
         m_selectionStart = std::nullopt;
-    });
-
-    dispatcher()->reg(this, "nav-escape", [this] {
-        m_savedItemStartTime = std::nullopt;
-        navigationController()->setIsHighlight(false);
     });
 
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
@@ -279,6 +270,12 @@ TrackItemKeyList TrackNavigationController::itemKeysInRange(const TrackItemKey& 
     return range;
 }
 
+void TrackNavigationController::resetNavigation()
+{
+    m_savedItemStartTime = std::nullopt;
+    navigationController()->setIsHighlight(false);
+}
+
 bool TrackNavigationController::isTrackItemsEmpty(const TrackId& trackId) const
 {
     TrackItemKeyList itemsKeys = sortedItemsKeys(trackId);
@@ -317,46 +314,52 @@ bool TrackNavigationController::isLastTrack(const TrackId& trackId) const
 
 void TrackNavigationController::navigateToNextPanel()
 {
-    bool isTrackPanel = m_focusedItemKey.itemId == INVALID_TRACK_ITEM;
-
-    if (isTrackPanel) {
-        if (isTrackItemsEmpty(m_focusedItemKey.trackId)) {
-            commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
-        } else {
-            navigateToFirstItem();
-        }
+    if (navigateToAdjacentItem(true /*next*/)) {
         return;
     }
 
-    if (isLastTrack(m_focusedItemKey.trackId)) {
-        commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
-        return;
-    }
-
-    navigateToNextTrack();
+    commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
 }
 
 void TrackNavigationController::navigateToPrevPanel()
 {
-    bool isTrackPanel = m_focusedItemKey.itemId == INVALID_TRACK_ITEM;
-
-    if (!isTrackPanel) {
-        setFocusedTrack(m_focusedItemKey.trackId, true /*highlight*/);
+    if (navigateToAdjacentItem(false /*next*/)) {
         return;
     }
 
-    m_focusedItemKey.itemId = INVALID_TRACK_ITEM;
+    commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
+}
 
-    if (isFirstTrack(m_focusedItemKey.trackId)) {
-        commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
-        return;
+bool TrackNavigationController::navigateToAdjacentItem(bool next)
+{
+    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        return false;
     }
 
-    navigateToPrevTrack();
+    const TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
-    if (!isTrackItemsEmpty(m_focusedItemKey.trackId)) {
-        navigateToLastItem();
+    for (size_t i = 0; i < itemsKeys.size(); ++i) {
+        if (itemsKeys.at(i).itemId != m_focusedItemKey.itemId) {
+            continue;
+        }
+
+        if (next) {
+            if (i + 1 >= itemsKeys.size()) {
+                return false;
+            }
+            setFocusedItem(itemsKeys.at(i + 1), true /*highlight*/);
+        } else {
+            if (i == 0) {
+                return false;
+            }
+            setFocusedItem(itemsKeys.at(i - 1), true /*highlight*/);
+        }
+
+        m_savedItemStartTime = std::nullopt;
+        return true;
     }
+
+    return false;
 }
 
 void TrackNavigationController::navigateToPrevTrack()
@@ -429,62 +432,6 @@ void TrackNavigationController::navigateToLastTrack()
     if (!trackList.empty()) {
         setFocusedTrack(trackList.back().id, true /*highlight*/);
     }
-}
-
-void TrackNavigationController::navigateToNextItem()
-{
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("play-position-increase");
-        return;
-    }
-
-    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
-
-    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        commandDispatcher()->dispatch(muse::ui::RIGHT_COMMAND);
-        return;
-    }
-
-    for (size_t i = 0; i < itemsKeys.size(); ++i) {
-        if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
-            if (++i >= itemsKeys.size()) {
-                setFocusedItem(itemsKeys.front(), true /*highlight*/);
-            } else {
-                setFocusedItem(itemsKeys[i], true /*highlight*/);
-            }
-            break;
-        }
-    }
-
-    m_savedItemStartTime = std::nullopt;
-}
-
-void TrackNavigationController::navigateToPrevItem()
-{
-    if (!navigationController()->isHighlight()) {
-        dispatcher()->dispatch("play-position-decrease");
-        return;
-    }
-
-    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
-
-    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        commandDispatcher()->dispatch(muse::ui::LEFT_COMMAND);
-        return;
-    }
-
-    for (size_t i = 0; i < itemsKeys.size(); ++i) {
-        if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
-            if (i == 0) {
-                setFocusedItem(itemsKeys.back(), true /*highlight*/);
-            } else {
-                setFocusedItem(itemsKeys.at(i - 1), true /*highlight*/);
-            }
-            break;
-        }
-    }
-
-    m_savedItemStartTime = std::nullopt;
 }
 
 double TrackNavigationController::itemStartTime(const TrackItemKey& key) const
@@ -839,7 +786,7 @@ void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks
 
 void TrackNavigationController::openContextMenuForFocusedItem()
 {
-    if (!isFocusedItemValid()) {
+    if (m_focusedItemKey.trackId == INVALID_TRACK) {
         return;
     }
 

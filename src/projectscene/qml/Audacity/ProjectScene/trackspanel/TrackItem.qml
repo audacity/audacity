@@ -20,6 +20,10 @@ ListItemBlank {
 
     property bool isFocused: false
 
+    //! NOTE: the track itself is a control of its own panel (root.navigation),
+    //! all the header controls live in the next panel, so Tab goes: track -> header controls -> clips/labels
+    property NavigationPanel headerNavigationPanel: null
+
     property alias headerTrailingControlsComponent: headerTrailingControls.sourceComponent
     property int headerTrailingControlsNavigationStart: collapsed ? title.navigation.order + 1 : extraControlsNavigationEnd + 1
     property int headerTrailingControlsNavigationEnd: 0
@@ -89,6 +93,10 @@ ListItemBlank {
         trackId: root.item ? root.item.trackId : -1
 
         onTrackRenameRequested: title.edit()
+
+        onOpenRequested: {
+            menuButton.toggleMenu(menuButton)
+        }
     }
 
     function init() {
@@ -179,7 +187,7 @@ ListItemBlank {
 
                     text: Boolean(root.item) ? root.item.title : ""
 
-                    navigation.panel: root.navigation.panel
+                    navigation.panel: root.headerNavigationPanel
                     navigation.order: root.navigation.order + 1
 
                     onTextEdited: function (text) {
@@ -199,7 +207,7 @@ ListItemBlank {
 
                     menuModel: contextMenuModel
 
-                    navigation.panel: root.navigation.panel
+                    navigation.panel: root.headerNavigationPanel
                     navigation.order: root.collapsed ? root.headerTrailingControlsNavigationEnd + 1 : title.navigation.order + 1
                     navigation.accessible.name: qsTrc("projectscene", "Track menu")
 

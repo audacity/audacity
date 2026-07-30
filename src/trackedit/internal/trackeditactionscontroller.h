@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <functional>
 #include <optional>
 
 #include "framework/global/async/asyncable.h"
@@ -18,11 +19,11 @@
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
 #include "spectrogram/ispectraleffectsregister.h"
-#include "iprojecthistory.h"
-#include "iselectioncontroller.h"
-#include "itrackeditconfiguration.h"
-#include "itrackeditinteraction.h"
-#include "internal/itracknavigationcontroller.h"
+#include "../iprojecthistory.h"
+#include "../iselectioncontroller.h"
+#include "../itrackeditconfiguration.h"
+#include "../itrackeditinteraction.h"
+#include "itracknavigationcontroller.h"
 
 #include "deletebehavioronboardingscenario.h"
 
@@ -61,6 +62,8 @@ public:
     bool canReceiveAction(const muse::actions::ActionCode& actionCode) const override;
 
 private:
+    friend class TrackeditActionsControllerTests;
+
     void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
@@ -78,6 +81,11 @@ private:
 
     bool isFocusedItemLabel() const;
     LabelKeyList labelsForInteraction() const;
+
+    TrackId currentFocusedOrSelectedTrack() const;
+    void focusTrack(const TrackId& trackId);
+    bool stepFocusOutOfSelection(const TrackItemKeyList& selectedItems, const TrackItemKey& focusedItem, const TrackId& currentTrack,
+                                 const std::function<void()>& resetSelection);
 
     void undo();
     void redo();

@@ -516,9 +516,9 @@ void ApplicationActionController::doGlobalCancel()
 {
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/cancel");
+        return;
     }
 
-    dispatcher()->dispatch("nav-escape");
     commandDispatcher()->dispatch(muse::ui::ESCAPE_COMMAND);
 }
 
@@ -526,9 +526,10 @@ void ApplicationActionController::doGlobalTrigger()
 {
     if (isProjectOpened()) {
         dispatcher()->dispatch("action://playback/toggle-play-stop");
-    } else {
-        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+        return;
     }
+
+    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
 }
 
 void ApplicationActionController::doGlobalEnter()

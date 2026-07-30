@@ -92,8 +92,12 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
         }
 
         INavigationSection* activeSection = navigationController()->activeSection();
-        if (activeSection) {
-            if (activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
+        if (activeSection && activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
+            //! NOTE: the project focus is bound to the track panel and the clips/labels panel.
+            //! The track header controls panel is navigated as a usual panel (general navigation),
+            //! so it is ignored here and treated as merely project-opened, letting the general
+            //! navigation shortcuts (arrows between the controls, ...) work on it
+            if (!trackNavigationController()->isNavigationEnabled()) {
                 return context::UiCtxProjectFocused;
             }
         }

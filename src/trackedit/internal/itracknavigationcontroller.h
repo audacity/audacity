@@ -31,6 +31,8 @@ public:
 
     virtual TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const = 0;
 
+    virtual void resetNavigation() = 0;
+
     virtual muse::async::Channel<TrackItemKey> openContextMenuRequested() const = 0;
 };
 }

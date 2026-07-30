@@ -136,14 +136,6 @@
     </SC>
 
     <SC>
-        <key>track-view-next-item</key>
-        <seq>Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-prev-item</key>
-        <seq>Left</seq>
-    </SC>
-    <SC>
         <key>track-view-item-context-menu</key>
         <seq>Shift+F10</seq>
         <seq>Ctrl+Shift+F10</seq>
