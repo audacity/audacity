@@ -1918,13 +1918,15 @@ std::optional<double> AudioIO::ArmCapture(
 
     // Park the audio worker between passes (as CallbackDoSeek does) so the
     // capture members below can be re-initialized with plain writes.
+    // Poll at 1ms: this blocks the main thread (UI), and the worker parks
+    // within its 10ms sleep interval — 50ms polls would freeze the UI visibly.
     mAudioThreadSequenceBufferExchangeLoopRunning
     .store(false, std::memory_order_relaxed);
     while (mAudioThreadSequenceBufferExchangeLoopActive
            .load(std::memory_order_relaxed))
     {
         using namespace std::chrono;
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(1ms);
     }
 
     mCaptureSequences = sequences;
@@ -1988,19 +1990,21 @@ bool AudioIO::DisarmCapture()
 
     // Flush the remaining ring-buffer content to the sequences (the once-flag
     // also bypasses the minimum-batch gate in DrainRecordBuffers).
-    ProcessOnceAndWait();
+    // Poll at 1ms — this runs on the main thread and the worker wakes every
+    // 10ms; the default 50ms polling would freeze the UI visibly.
+    ProcessOnceAndWait(std::chrono::milliseconds(1));
 
     wxMutexLocker locker(mSuspendAudioThread);
 
     // Park the audio worker between passes so the capture members can be
-    // detached with plain writes.
+    // detached with plain writes (1ms poll: main thread, see above).
     mAudioThreadSequenceBufferExchangeLoopRunning
     .store(false, std::memory_order_relaxed);
     while (mAudioThreadSequenceBufferExchangeLoopActive
            .load(std::memory_order_relaxed))
     {
         using namespace std::chrono;
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(1ms);
     }
 
     // Same commit steps as StopStream, but the stream keeps running.
