@@ -161,7 +161,7 @@ Item {
             Timecode {
                 property var itemData: null
 
-                accessibleName: qsTrc("projectscene", "Playback position: ")
+                accessibleName: qsTrc("projectscene", "Playback position:")
 
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
