@@ -66,8 +66,6 @@ add_subdirectory(importexport)
 
 add_subdirectory(uicomponents)
 
-add_subdirectory(toast)
-
 # Stubs
 add_subdirectory(stubs)
 

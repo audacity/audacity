@@ -17,7 +17,7 @@
 #include "context/iglobalcontext.h"
 #include "project/irecentfilescontroller.h"
 #include "iopensaveprojectscenario.h"
-#include "toast/itoastservice.h"
+#include "framework/toast/itoastservice.h"
 #include "trackedit/iprojecthistory.h"
 #include "record/irecordcontroller.h"
 #include "importexport/export/internal/exportconfiguration.h"
@@ -43,7 +43,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
     muse::GlobalInject<IRecentFilesController> recentFilesController;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
-    muse::GlobalInject<toast::IToastService> toastService;
+    muse::GlobalInject<muse::toast::IToastService> toastService;
     muse::GlobalInject<au3cloud::IAuthorization> authorization;
     muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
 

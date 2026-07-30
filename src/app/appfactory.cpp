@@ -20,6 +20,7 @@
 #include "framework/accessibility/accessibilitymodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
 #include "framework/dockwindow/dockmodule.h"
+#include "framework/toast/toastmodule.h"
 #include "framework/cloud/cloudmodule.h"
 #include "framework/network/networkmodule.h"
 #ifdef MUSE_MODULE_UPDATE
@@ -45,7 +46,6 @@
 #include "spectrogram/spectrogrammodule.h"
 #include "record/recordmodule.h"
 #include "uicomponents/uicomponentsmodule.h"
-#include "toast/toastmodule.h"
 #include "effects/effects_base/effectsmodule.h"
 #include "effects/builtin/builtineffectsmodule.h"
 #include "effects/builtin_collection/builtineffectscollectionmodule.h"
@@ -140,6 +140,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new muse::ui::UiModule());
     app->addModule(new muse::uicomponents::UiComponentsModule());
     app->addModule(new muse::dock::DockModule());
+    app->addModule(new muse::toast::ToastModule());
 #ifdef MUSE_MODULE_SHORTCUTS
     app->addModule(new muse::shortcuts::ShortcutsModule());
 #endif
@@ -168,7 +169,6 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::record::RecordModule());
     app->addModule(new au::trackedit::TrackeditModule());
     app->addModule(new au::spectrogram::SpectrogramModule());
-    app->addModule(new au::toast::ToastModule());
     app->addModule(new au::project::ProjectModule());
     app->addModule(new au::importexport::ExporterModule());
     app->addModule(new au::importexport::ImporterModule());
