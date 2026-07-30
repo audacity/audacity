@@ -83,8 +83,11 @@ std::optional<au::audio::AudioStreamDescriptor> Au3AudioEngine::currentStream() 
     au::audio::AudioStreamKind kind = au::audio::AudioStreamKind::Playback;
     if (audioIO->IsMonitoring()) {
         kind = au::audio::AudioStreamKind::Monitoring;
-    } else if (audioIO->GetNumCaptureChannels() > 0) {
+    } else if (audioIO->GetNumCaptureChannels() > 0
+               && (!audioIO->IsDeferredCaptureStream() || audioIO->IsCaptureArmed())) {
         // Recording lead-in has capture channels before IsCapturing() becomes true.
+        // A deferred-capture stream keeps its channels open while playback-only;
+        // it counts as Recording only once armed.
         kind = au::audio::AudioStreamKind::Recording;
     }
 
@@ -103,6 +106,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
     au3Options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     au3Options.rate = options.sampleRate;
     au3Options.leadInTime = options.leadInTime;
+    au3Options.openCaptureChannels = options.openCaptureChannels;
     if (options.crossfadeData) {
         au3Options.pCrossfadeData = options.crossfadeData;
     }
@@ -144,6 +148,31 @@ void Au3AudioEngine::startMonitoring(AudacityProject& project)
 void Au3AudioEngine::stopMonitoring()
 {
     AudioIO::Get()->StopMonitoring();
+}
+
+bool Au3AudioEngine::canArmCapture() const
+{
+    return AudioIO::Get()->CanArmCapture();
+}
+
+bool Au3AudioEngine::isCaptureArmed() const
+{
+    return AudioIO::Get()->IsCaptureArmed();
+}
+
+std::optional<double> Au3AudioEngine::armCapture(const TransportSequences& sequences)
+{
+    return AudioIO::Get()->ArmCapture(sequences.captureSequences);
+}
+
+bool Au3AudioEngine::disarmCapture()
+{
+    return AudioIO::Get()->DisarmCapture();
+}
+
+muse::async::Notification Au3AudioEngine::captureStopped() const
+{
+    return s_audioIOListener->captureStopped();
 }
 
 void Au3AudioEngine::setInputVolume(const float newInputVolume)

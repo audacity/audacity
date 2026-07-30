@@ -33,6 +33,12 @@ public:
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
 
+    bool canArmCapture() const override;
+    bool isCaptureArmed() const override;
+    std::optional<double> armCapture(const TransportSequences& sequences) override;
+    bool disarmCapture() override;
+    muse::async::Notification captureStopped() const override;
+
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;
     void setPlaybackVolume(float newPlaybackVolume) override;

@@ -42,6 +42,9 @@ public:
         std::vector<std::vector<float> >* crossfadeData = nullptr;
         //! Does not change the play region.
         std::optional<double> streamStartTime;
+        //! Open the input device speculatively so that capture can be armed
+        //! later without restarting the stream (deferred capture).
+        bool openCaptureChannels = false;
     };
 
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
@@ -52,6 +55,17 @@ public:
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+
+    //! Deferred capture: arm/disarm recording on a running playback stream that
+    //! opened its capture channels speculatively (openCaptureChannels)
+    virtual bool canArmCapture() const = 0;
+    virtual bool isCaptureArmed() const = 0;
+    //! @return the track time of the punch point on success
+    virtual std::optional<double> armCapture(const TransportSequences& sequences) = 0;
+    //! Commits the captured audio and keeps the stream running
+    virtual bool disarmCapture() = 0;
+    //! The recording was committed while the stream keeps running
+    virtual muse::async::Notification captureStopped() const = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;
