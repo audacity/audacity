@@ -54,6 +54,8 @@ public:
         std::optional<double> streamStartTime;
     };
 
+    //! Returns a positive stream token on success, 0 otherwise.
+    //! On success the token is recorded as the project's audio IO token.
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
                             AudacityProject& project, const StartStreamOptions& options) = 0;
     virtual void stopStream() = 0;
