@@ -610,6 +610,19 @@ void PlaybackController::stopAction()
     stopSeekAndUpdatePlaybackRegion();
 }
 
+void PlaybackController::play()
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return;
+    }
+
+    //! NOTE: plays from the last seek position to the project end; used e.g. to keep
+    //! the transport running when a recording is toggled off (the record stop handler
+    //! has just repositioned the playhead to the record end).
+    doPlay(false);
+}
+
 void PlaybackController::stop()
 {
     IF_ASSERT_FAILED(player()) {

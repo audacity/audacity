@@ -35,6 +35,7 @@ public:
     MOCK_METHOD(bool, isPaused, (), (const, override));
     MOCK_METHOD(bool, isStopped, (), (const, override));
 
+    MOCK_METHOD(void, play, (), (override));
     MOCK_METHOD(void, stop, (), (override));
     MOCK_METHOD(void, stopSeekAndUpdatePlaybackRegion, (), (override));
 

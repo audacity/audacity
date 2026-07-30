@@ -90,7 +90,9 @@ Notification RecordController::isRecordingChanged() const
 
 void RecordController::toggleRecord()
 {
-    if (isRecording()) {
+    if (m_currentRecordStatus == RecordStatus::Running) {
+        stopAndResumePlayback();
+    } else if (isRecording()) {
         stop();
     } else {
         start();
@@ -99,7 +101,9 @@ void RecordController::toggleRecord()
 
 void RecordController::recordOnNewTrack()
 {
-    if (isRecording()) {
+    if (m_currentRecordStatus == RecordStatus::Running) {
+        stopAndResumePlayback();
+    } else if (isRecording()) {
         stop();
     } else {
         startWithNewTrack();
@@ -212,6 +216,26 @@ void RecordController::stop()
     }
 
     setCurrentRecordStatus(RecordStatus::Stopped);
+}
+
+void RecordController::stopAndResumePlayback()
+{
+    IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    //! NOTE: toggling record off keeps the transport running: record()->stop()
+    //! commits the recording synchronously and its finished handler repositions
+    //! the playhead to the record end, so playback resumes from there.
+    Ret ret = record()->stop();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
+    setCurrentRecordStatus(RecordStatus::Stopped);
+
+    playbackController()->play();
 }
 
 void RecordController::leadInRecording()

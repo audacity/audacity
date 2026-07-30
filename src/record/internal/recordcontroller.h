@@ -87,6 +87,7 @@ private:
     void stopPlaybackIfNeeded();
     void togglePause();
     void stop();
+    void stopAndResumePlayback();
     void leadInRecording();
     void toggleMicMetering();
     void toggleInputMonitoring();

@@ -313,22 +313,76 @@ TEST_F(RecordControllerTests, Stop_WhileRecording_StopsWithoutRestartingPlayback
 /**
  * @brief Toggle record off while recording
  * @details User pressed the record button while the recorder is running
- *          The recording is stopped
+ *          The recording is committed and playback keeps running from the record end
  */
-TEST_F(RecordControllerTests, ToggleRecordOff_WhileRunning_StopsRecording)
+TEST_F(RecordControllerTests, ToggleRecordOff_WhileRunning_CommitsAndKeepsPlaying)
 {
     //! [GIVEN] A recording is running
     startRecordingSuccessfully();
 
-    //! [THEN] The recorder is stopped
+    //! [THEN] The recorder is stopped first, then playback resumes
+    InSequence seq;
     EXPECT_CALL(*m_record, stop())
     .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_playbackController, play())
+    .Times(1);
 
     //! [WHEN] The user presses record again
     toggleRecord();
 
     //! [THEN] The controller is no longer recording
     EXPECT_FALSE(m_controller->isRecording());
+}
+
+/**
+ * @brief Toggle record off while the recording is paused
+ * @details The transport is silent; stopping the recording does not start playback
+ */
+TEST_F(RecordControllerTests, ToggleRecordOff_WhilePaused_StopsEverything)
+{
+    //! [GIVEN] A paused recording
+    startRecordingSuccessfully();
+    EXPECT_CALL(*m_record, pause())
+    .WillOnce(Return(muse::make_ok()));
+    togglePauseRecord();
+    ASSERT_TRUE(m_controller->isRecordingPaused());
+
+    //! [THEN] The recorder is stopped, playback is not started
+    EXPECT_CALL(*m_record, stop())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_playbackController, play())
+    .Times(0);
+
+    //! [WHEN] The user presses record again
+    toggleRecord();
+
+    //! [THEN] The controller is no longer recording
+    EXPECT_FALSE(m_controller->isRecording());
+}
+
+/**
+ * @brief Toggle record off fails
+ * @details The recorder fails to stop: the state is kept and playback is not started
+ */
+TEST_F(RecordControllerTests, ToggleRecordOff_WhenStopFails_KeepsRecordingState)
+{
+    //! [GIVEN] A recording is running
+    startRecordingSuccessfully();
+
+    //! [GIVEN] The recorder fails to stop
+    EXPECT_CALL(*m_record, stop())
+    .WillOnce(Return(muse::make_ret(muse::Ret::Code::InternalError)));
+    EXPECT_CALL(*m_playbackController, play())
+    .Times(0);
+
+    //! [THEN] An error dialog is shown
+    expectErrorDialog();
+
+    //! [WHEN] The user presses record again
+    toggleRecord();
+
+    //! [THEN] The controller still reports recording
+    EXPECT_TRUE(m_controller->isRecording());
 }
 
 /**

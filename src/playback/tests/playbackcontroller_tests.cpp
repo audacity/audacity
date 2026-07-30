@@ -1467,4 +1467,38 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogg
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
+
+TEST_F(PlaybackControllerTests, Play_AfterRecordingStops_PlaysFromLastSeekTime)
+{
+    //! [GIVEN] Not recording; the playhead was repositioned by the record stop
+    //! handler (seek to the record end)
+    setRecording(false);
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    m_controller->setLastPlaybackSeekTime(30.0);
+
+    //! [THEN] Playback runs from the seek position to the project end
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(30.0), secs_t(100.0) }))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(1);
+
+    //! [WHEN] play() is requested (e.g. by the record controller after record-off)
+    m_controller->play();
+}
+
+TEST_F(PlaybackControllerTests, Play_WhileRecording_DoesNothing)
+{
+    //! [GIVEN] Recording is running
+    setRecording(true);
+
+    //! [THEN] The player is not started
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    //! [WHEN] play() is requested
+    m_controller->play();
+}
 }
