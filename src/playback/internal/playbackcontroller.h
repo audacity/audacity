@@ -71,6 +71,7 @@ public:
     bool isPaused() const override;
     bool isStopped() const override;
 
+    void play() override;
     void stop() override;
     void stopSeekAndUpdatePlaybackRegion() override;
 

@@ -35,9 +35,17 @@ public:
         m_timer.stop();
     }
 
+    //! Deferred capture was disarmed: recording committed, stream still running
+    void OnAudioIOCaptureStopped() override
+    {
+        m_captureStopped.notify();
+        m_timer.stop();
+    }
+
     muse::async::Notification updateRequested() const { return m_updateRequested; }
     muse::async::Notification commitRequested() const { return m_commitRequested; }
     muse::async::Notification finished() const { return m_finished; }
+    muse::async::Notification captureStopped() const { return m_captureStopped; }
 
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const { return m_recordingClipChanged; }
 
@@ -45,6 +53,7 @@ private:
     muse::async::Notification m_updateRequested;
     muse::async::Notification m_commitRequested;
     muse::async::Notification m_finished;
+    muse::async::Notification m_captureStopped;
 
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> m_recordingClipChanged;
 

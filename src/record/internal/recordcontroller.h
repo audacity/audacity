@@ -51,6 +51,7 @@ public:
 
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
+    bool isRecordingPaused() const override;
 
     const std::vector<trackedit::ClipKey>& recordingClipKeys() const override;
 
@@ -68,6 +69,8 @@ public:
     std::vector<trackedit::TrackId> leadInRecordingTrackIds() const override;
 
 private:
+    friend class RecordControllerTests;
+
     enum class RecordStatus {
         Stopped = 0,
         Paused,
@@ -81,8 +84,11 @@ private:
     void recordOnNewTrack();
     void start();
     void startWithNewTrack();
-    void pause();
+    muse::Ret doStartRecord();
+    void stopPlaybackIfNeeded();
+    void togglePause();
     void stop();
+    void stopAndResumePlayback();
     void leadInRecording();
     void toggleMicMetering();
     void toggleInputMonitoring();

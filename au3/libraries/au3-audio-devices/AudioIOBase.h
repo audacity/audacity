@@ -60,6 +60,11 @@ struct AudioIOStartStreamOptions
     mutable std::optional<double> pStartTime;
     double leadInTime{ 0.0 };
 
+    //! AU4: deferred capture — open the input device at stream start even when
+    //! there are no capture sequences yet, so that recording can be armed later
+    //! without restarting the stream. Ignored when capture sequences are given.
+    bool openCaptureChannels{ false };
+
     bool playNonWaveTracks{ true };
     bool inputMonitoring{ false };
 

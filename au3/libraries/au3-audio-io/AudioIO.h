@@ -298,6 +298,25 @@ public:
     size_t mNumPlaybackChannels;
     sampleFormat mCaptureFormat;
     double mCaptureRate{};
+
+    // AU4: deferred capture ("armed-capable" playback streams)
+    /*! Set by the main thread in StartStream, unchanging during playback */
+    bool mDeferredCaptureEnabled{ false };
+    /*! Written by the main thread (the armed transition happens with the audio
+        worker quiescent, under mSuspendAudioThread); read by the PortAudio
+        callback and the audio worker with acquire ordering. */
+    std::atomic<bool> mCaptureArmed{ false };
+    /*! Latency compensation determined at stream open; copied into
+        mRecordingSchedule when capture is armed. Main thread only. */
+    double mStreamLatencyCompensation{ 0.0 };
+
+    //! Capture channels are open but not (yet) writing to any sequence
+    bool DeferredCaptureDisarmed() const
+    {
+        return mDeferredCaptureEnabled
+               && !mCaptureArmed.load(std::memory_order_acquire);
+    }
+
     unsigned long long mLostSamples{ 0 };
     std::atomic<bool> mAudioThreadShouldCallSequenceBufferExchangeOnce;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopRunning;
@@ -545,6 +564,36 @@ public:
 
     // Meaning really capturing, not just lead-in time playing
     bool IsCapturing() const;
+
+    // AU4: deferred capture — arm/disarm recording on a running playback
+    // stream whose capture channels were opened speculatively
+    // (AudioIOStartStreamOptions::openCaptureChannels). Main thread only.
+
+    //! The running stream opened its capture channels speculatively
+    bool IsDeferredCaptureStream() const;
+    //! Capture is armed: input is being appended to the attached sequences
+    bool IsCaptureArmed() const;
+    //! Capture channels are open and idle, so ArmCapture() would succeed
+    bool CanArmCapture() const;
+
+    /** \brief Attach capture sequences to the running stream and start
+     * appending input to them, without restarting the stream.
+     *
+     * The sequences' rate must match the rate the stream was opened with.
+     * If given, onArm is invoked with the punch time while the audio worker is
+     * still parked — a race-free window to position clips before input flows.
+     * @pre `p != nullptr` for all pointers `p` in `sequences`
+     * @return the track time of the punch point, or nullopt on failure
+     */
+    std::optional<double> ArmCapture(
+        const RecordableSequences& sequences, const std::function<void(double punchTime)>& onArm = {});
+
+    /** \brief Commit the audio captured since ArmCapture() and detach the
+     * sequences, leaving the stream running.
+     *
+     * Fires OnCommitRecording and OnAudioIOCaptureStopped. A later
+     * ArmCapture() on the same stream starts a fresh take. */
+    bool DisarmCapture();
 
     /** \brief Ensure selected device names are valid
      *

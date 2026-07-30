@@ -16,6 +16,7 @@ public:
 
     MOCK_METHOD(bool, isRecording, (), (const, override));
     MOCK_METHOD(muse::async::Notification, isRecordingChanged, (), (const, override));
+    MOCK_METHOD(bool, isRecordingPaused, (), (const, override));
 
     MOCK_METHOD(const std::vector<trackedit::ClipKey>&, recordingClipKeys, (), (const, override));
 

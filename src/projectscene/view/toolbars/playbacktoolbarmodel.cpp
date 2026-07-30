@@ -180,7 +180,8 @@ void PlaybackToolBarModel::updatePlayState()
     bool showAsPlaying = isPlaying || isLeadIn;
 
     bool leadInPaused = isLeadIn && isPaused;
-    if ((showAsPlaying && !leadInPaused) || (isRecording && !isLeadIn)) {
+    bool recordingPaused = recordController()->isRecordingPaused();
+    if ((showAsPlaying && !leadInPaused) || (isRecording && !isLeadIn && !recordingPaused)) {
         action.iconCode = IconCode::Code::PAUSE_FILL;
     }
     item->setAction(action);

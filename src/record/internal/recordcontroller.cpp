@@ -5,6 +5,8 @@
 
 #include "framework/global/translation.h"
 
+#include "../recorderrors.h"
+
 using namespace muse;
 using namespace au::record;
 using namespace muse::async;
@@ -26,15 +28,11 @@ void RecordController::init()
     dispatcher()->reg(this, RECORD_START_QUERY, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_ON_CURRENT_TRACK_CODE, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_ON_NEW_TRACK_CODE, this, &RecordController::recordOnNewTrack);
-    dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::pause);
+    dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::togglePause);
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
     dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
     dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
     dispatcher()->reg(this, RECORD_LEAD_IN_RECORDING_QUERY, this, &RecordController::leadInRecording);
-
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
-        m_isRecordAllowedChanged.notify();
-    });
 
     record()->recordPositionChanged().onReceive(this, [this](const muse::secs_t&) {
         if (m_currentRecordStatus == RecordStatus::LeadIn) {
@@ -59,7 +57,10 @@ void RecordController::deinit()
 
 bool RecordController::isRecordAllowed() const
 {
-    return !playbackController()->isPlaying();
+    //! NOTE: recording can start while playback is running or paused — the playback
+    //! stream is stopped and a record stream (which also plays all other tracks)
+    //! takes over from the current position. Only the lead-in pre-roll blocks it.
+    return m_currentRecordStatus != RecordStatus::LeadIn;
 }
 
 Notification RecordController::isRecordAllowedChanged() const
@@ -74,6 +75,11 @@ bool RecordController::isRecording() const
            || m_currentRecordStatus == RecordStatus::LeadIn;
 }
 
+bool RecordController::isRecordingPaused() const
+{
+    return m_currentRecordStatus == RecordStatus::Paused;
+}
+
 const std::vector<au::trackedit::ClipKey>& RecordController::recordingClipKeys() const
 {
     return record()->recordingClipKeys();
@@ -86,7 +92,9 @@ Notification RecordController::isRecordingChanged() const
 
 void RecordController::toggleRecord()
 {
-    if (isRecording()) {
+    if (m_currentRecordStatus == RecordStatus::Running) {
+        stopAndResumePlayback();
+    } else if (isRecording()) {
         stop();
     } else {
         start();
@@ -95,7 +103,9 @@ void RecordController::toggleRecord()
 
 void RecordController::recordOnNewTrack()
 {
-    if (isRecording()) {
+    if (m_currentRecordStatus == RecordStatus::Running) {
+        stopAndResumePlayback();
+    } else if (isRecording()) {
         stop();
     } else {
         startWithNewTrack();
@@ -108,7 +118,7 @@ void RecordController::start()
         return;
     }
 
-    Ret ret = record()->start();
+    Ret ret = doStartRecord();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
         return;
@@ -122,6 +132,8 @@ void RecordController::startWithNewTrack()
     IF_ASSERT_FAILED(record()) {
         return;
     }
+
+    stopPlaybackIfNeeded();
 
     const int recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
 
@@ -137,7 +149,7 @@ void RecordController::startWithNewTrack()
     selectionController()->setSelectedTracks(newTracks);
     trackNavigationController()->setFocusedTrack(newTracks.front());
 
-    Ret ret = record()->start();
+    Ret ret = doStartRecord();
     if (!ret) {
         trackeditInteraction()->deleteTracks(newTracks);
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -147,9 +159,59 @@ void RecordController::startWithNewTrack()
     setCurrentRecordStatus(RecordStatus::Running);
 }
 
-void RecordController::pause()
+muse::Ret RecordController::doStartRecord()
+{
+    //! NOTE: recording from a paused transport starts it running — use the
+    //! restart path. Gapless arming applies to actively playing streams only.
+    if (playbackController()->isPaused()) {
+        stopPlaybackIfNeeded();
+    }
+
+    Ret ret = record()->start();
+
+    if (!ret && ret.code() == static_cast<int>(Err::GaplessArmFailed)) {
+        //! NOTE: a playback stream was running but could not be armed (no
+        //! matching tracks, loop region active, rate mismatch, ...) — stop
+        //! playback properly and record with a fresh stream from the playhead.
+        stopPlaybackIfNeeded();
+        ret = record()->start();
+    }
+
+    return ret;
+}
+
+void RecordController::stopPlaybackIfNeeded()
+{
+    //! NOTE: recording takes over the audio stream; stop the player properly so its
+    //! status and the engine pause flag are reset, while the playhead position is
+    //! preserved — the record stream starts from it.
+    if (playbackController()->isPlaying() || playbackController()->isPaused()) {
+        playbackController()->stop();
+    }
+}
+
+void RecordController::togglePause()
 {
     IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    //! NOTE: the play/pause button dispatches record/pause while recording, so the
+    //! action toggles: a running recording is paused, a paused one is resumed.
+    //! The lead-in pre-roll is paused through the player instead, so it is not
+    //! handled here.
+    if (m_currentRecordStatus == RecordStatus::Paused) {
+        Ret ret = record()->resume();
+        if (!ret) {
+            interactive()->error(muse::trc("record", "Recording error"), ret.text());
+            return;
+        }
+
+        setCurrentRecordStatus(RecordStatus::Running);
+        return;
+    }
+
+    if (m_currentRecordStatus != RecordStatus::Running) {
         return;
     }
 
@@ -168,6 +230,11 @@ void RecordController::stop()
         return;
     }
 
+    //! NOTE: in a gapless recording the player kept running on the shared
+    //! stream; record()->stop() tears the stream down, so the player state
+    //! must be reset too.
+    const bool playerActive = !playbackController()->isStopped();
+
     Ret ret = record()->stop();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -175,6 +242,37 @@ void RecordController::stop()
     }
 
     setCurrentRecordStatus(RecordStatus::Stopped);
+
+    if (playerActive) {
+        playbackController()->stop();
+    }
+}
+
+void RecordController::stopAndResumePlayback()
+{
+    IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    //! NOTE: a gapless (armed) recording only disarms the capture — the playback
+    //! stream was never interrupted, so nothing needs to be restarted.
+    if (record()->stopCapture()) {
+        setCurrentRecordStatus(RecordStatus::Stopped);
+        return;
+    }
+
+    //! NOTE: restart path: record()->stop() commits the recording synchronously
+    //! and its finished handler repositions the playhead to the record end, so
+    //! playback resumes from there.
+    Ret ret = record()->stop();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
+    setCurrentRecordStatus(RecordStatus::Stopped);
+
+    playbackController()->play();
 }
 
 void RecordController::leadInRecording()
@@ -258,8 +356,14 @@ void RecordController::setCurrentRecordStatus(RecordStatus status)
         m_leadInRecordingTrackIds.clear();
     }
 
+    const bool leadInChanged = (m_currentRecordStatus == RecordStatus::LeadIn) != (status == RecordStatus::LeadIn);
+
     m_currentRecordStatus = status;
     m_isRecordingChanged.notify();
+
+    if (leadInChanged) {
+        m_isRecordAllowedChanged.notify();
+    }
 }
 
 bool RecordController::canReceiveAction(const ActionCode& code) const
@@ -271,7 +375,8 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
     if (code == RECORD_START_QUERY.toString()
         || code == RECORD_ON_CURRENT_TRACK_CODE
         || code == RECORD_ON_NEW_TRACK_CODE) {
-        return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
+        //! NOTE: recording may start while playback runs; only the lead-in pre-roll blocks it
+        return m_currentRecordStatus != RecordStatus::LeadIn;
     }
 
     if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {

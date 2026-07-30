@@ -1053,6 +1053,10 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     sampleFormat captureFormat = floatSample;
     double captureRate = 44100.0;
 
+    // AU4: deferred capture — reset per-stream state
+    mDeferredCaptureEnabled = false;
+    mCaptureArmed.store(false, std::memory_order_release);
+
     auto pListener = GetListener();
 
     if (sequences.playbackSequences.size() > 0
@@ -1087,6 +1091,23 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         if (pListener) {
             pListener->OnAudioIOStartRecording();
         }
+    } else if (options.openCaptureChannels && playbackChannels > 0
+               && Pa_GetDeviceInfo(getRecordDevIndex()) != nullptr) {
+        // AU4: deferred capture — open the input device now so that recording
+        // can be armed later without restarting the stream. There are no
+        // capture sequences yet, so channel count and sample format come from
+        // preferences, as in StartMonitoring(). Capture routing and the
+        // OnAudioIOStartRecording notification happen at arm time.
+        // The device pre-check avoids dragging playback start through a doomed
+        // bidirectional open when no valid input device is configured.
+        size_t requestedInputChannels = AudioIORecordChannels.Read();
+        if (requestedInputChannels == 0) {
+            requestedInputChannels = 1;
+        }
+        numCaptureChannels = requestedInputChannels;
+        captureFormat = QualitySettings::SampleFormatChoice();
+        captureRate = options.rate;
+        mDeferredCaptureEnabled = true;
     }
 
     bool successAudio;
@@ -1095,6 +1116,22 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     mCaptureRate = captureRate;
     successAudio
         =StartPortAudioStream(options, playbackChannels, numCaptureChannels);
+
+    if (!successAudio && mDeferredCaptureEnabled) {
+        // AU4: deferred capture — the bidirectional open failed (e.g. no common
+        // sample rate for the input and output devices). Retry playback-only;
+        // recording during this stream falls back to a stream restart.
+        mDeferredCaptureEnabled = false;
+        numCaptureChannels = 0;
+        mCaptureFormat = floatSample;
+        mCaptureRate = 44100.0;
+        successAudio
+            =StartPortAudioStream(options, playbackChannels, 0);
+    }
+
+    // Save the compensation determined by the (possibly retried) open, for
+    // re-baselining the recording schedule when capture is armed later.
+    mStreamLatencyCompensation = mRecordingSchedule.mLatencyCompensation;
 
     // Call this only after reassignment of mRate that might happen in the
     // previous call.
@@ -1114,7 +1151,8 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     });
 
     if (!successAudio) {
-        if (pListener && numCaptureChannels > 0) {
+        //! NOTE: for a deferred-capture stream OnAudioIOStartRecording was never fired
+        if (pListener && numCaptureChannels > 0 && !mDeferredCaptureEnabled) {
             pListener->OnAudioIOStopRecording();
         }
         mStreamToken = 0;
@@ -1237,7 +1275,8 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     if (mNumPlaybackChannels > 0) {
         Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, true });
     }
-    if (mNumCaptureChannels > 0) {
+    //! NOTE: a deferred-capture stream advertises CAPTURE when armed, not now
+    if (mNumCaptureChannels > 0 && !mDeferredCaptureEnabled) {
         Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
     }
 
@@ -1758,7 +1797,8 @@ void AudioIO::StopStream()
         }
     }
 
-    if (pListener && mNumCaptureChannels > 0) {
+    //! NOTE: not for a disarmed deferred-capture stream — no recording ever started
+    if (pListener && mNumCaptureChannels > 0 && !DeferredCaptureDisarmed()) {
         pListener->OnAudioIOStopRecording();
     }
 
@@ -1789,7 +1829,8 @@ void AudioIO::StopStream()
         if (mNumPlaybackChannels > 0) {
             Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, false });
         }
-        if (mNumCaptureChannels > 0) {
+        //! NOTE: a disarmed deferred-capture stream never advertised CAPTURE
+        if (mNumCaptureChannels > 0 && !DeferredCaptureDisarmed()) {
             Publish({ pOwningProject.get(),
                       wasMonitoring
                       ? AudioIOEvent::MONITOR
@@ -1802,6 +1843,10 @@ void AudioIO::StopStream()
 
     mNumCaptureChannels = 0;
     mNumPlaybackChannels = 0;
+
+    // AU4: deferred capture — reset per-stream state
+    mDeferredCaptureEnabled = false;
+    mCaptureArmed.store(false, std::memory_order_release);
 
     mPlaybackSequences.clear();
     mCaptureSequences.clear();
@@ -1822,6 +1867,196 @@ void AudioIO::SeekStream(double seconds)
 {
     mSeek = seconds;
 }
+
+// AU4: deferred capture ------------------------------------------------------
+
+bool AudioIO::IsDeferredCaptureStream() const
+{
+    return mDeferredCaptureEnabled;
+}
+
+bool AudioIO::IsCaptureArmed() const
+{
+    return mDeferredCaptureEnabled
+           && mCaptureArmed.load(std::memory_order_acquire);
+}
+
+bool AudioIO::CanArmCapture() const
+{
+    return mDeferredCaptureEnabled
+           && mStreamToken > 0
+           && IsStreamActive()
+           && !mCaptureArmed.load(std::memory_order_acquire)
+           && !mRecordingException;
+}
+
+std::optional<double> AudioIO::ArmCapture(
+    const RecordableSequences& sequences, const std::function<void(double punchTime)>& onArm)
+{
+    // precondition
+    assert(std::all_of(sequences.begin(), sequences.end(),
+                       [](const auto& pSequence){ return pSequence != nullptr; }));
+
+    if (!CanArmCapture() || sequences.empty()) {
+        return std::nullopt;
+    }
+
+    // The device was opened with mCaptureRate; sequences at another rate would
+    // record mis-pitched audio (the resamplers were built for this rate only).
+    for (const auto& sequence : sequences) {
+        if (sequence->GetRate() != mCaptureRate) {
+            return std::nullopt;
+        }
+    }
+
+    wxMutexLocker locker(mSuspendAudioThread);
+
+    // The stream may have ended while waiting for the mutex
+    if (!CanArmCapture()) {
+        return std::nullopt;
+    }
+
+    // Park the audio worker between passes (as CallbackDoSeek does) so the
+    // capture members below can be re-initialized with plain writes.
+    // Poll at 1ms: this blocks the main thread (UI), and the worker parks
+    // within its 10ms sleep interval — 50ms polls would freeze the UI visibly.
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(false, std::memory_order_relaxed);
+    while (mAudioThreadSequenceBufferExchangeLoopActive
+           .load(std::memory_order_relaxed))
+    {
+        using namespace std::chrono;
+        std::this_thread::sleep_for(1ms);
+    }
+
+    mCaptureSequences = sequences;
+    ConfigureCaptureRouting(mNumCaptureChannels);
+
+    // The callback does not Put while disarmed, so the ring buffers should be
+    // empty already; discard any stale remainder and reset resampler state.
+    for (auto& buffer : mCaptureBuffers) {
+        buffer->Discard(buffer->AvailForGet());
+    }
+    for (auto& resample : mResample) {
+        resample = std::make_unique<Resample>(true, mFactor, mFactor);
+    }
+
+    mLostSamples = 0;
+    mLostCaptureIntervals.clear();
+    ClearRecordingException();
+
+    // Re-baseline the recording schedule: capture starts now, with no lead-in.
+    // mPosition counts ring-buffer samples consumed since the first Put, so the
+    // existing ToDiscard() machinery discards exactly the latency-compensation
+    // prefix — the same as a fresh recording started at the punch time.
+    mRecordingSchedule = {};
+    mRecordingSchedule.mLatencyCompensation = mStreamLatencyCompensation;
+    mRecordingSchedule.mDuration = std::numeric_limits<double>::max();
+
+    const double punchTime = mPlaybackSchedule.GetSequenceTime();
+
+    // Let the caller position its clips at the exact punch time while the
+    // worker is still parked and no input flows yet.
+    if (onArm) {
+        onArm(punchTime);
+    }
+
+    // Publish all writes above to the callback thread, then input starts
+    // flowing into the ring buffers.
+    mCaptureArmed.store(true, std::memory_order_release);
+
+    // Resume the worker; DrainRecordBuffers now passes its empty-sequences
+    // gate and starts consuming.
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(true, std::memory_order_relaxed);
+
+    if (auto pListener = GetListener()) {
+        pListener->OnAudioIOStartRecording();
+    }
+    Publish({ mOwningProject.lock().get(), AudioIOEvent::CAPTURE, true });
+
+    return punchTime;
+}
+
+bool AudioIO::DisarmCapture()
+{
+    if (!IsCaptureArmed()) {
+        return false;
+    }
+
+    // Stop producing into the ring buffers first, so the final drain below
+    // sees a fixed tail.
+    mCaptureArmed.store(false, std::memory_order_release);
+
+    // Flush the remaining ring-buffer content to the sequences (the once-flag
+    // also bypasses the minimum-batch gate in DrainRecordBuffers).
+    // Poll at 1ms — this runs on the main thread and the worker wakes every
+    // 10ms; the default 50ms polling would freeze the UI visibly.
+    ProcessOnceAndWait(std::chrono::milliseconds(1));
+
+    wxMutexLocker locker(mSuspendAudioThread);
+
+    // Park the audio worker between passes so the capture members can be
+    // detached with plain writes (1ms poll: main thread, see above).
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(false, std::memory_order_relaxed);
+    while (mAudioThreadSequenceBufferExchangeLoopActive
+           .load(std::memory_order_relaxed))
+    {
+        using namespace std::chrono;
+        std::this_thread::sleep_for(1ms);
+    }
+
+    // Same commit steps as StopStream, but the stream keeps running.
+    for (auto& sequence : mCaptureSequences) {
+        GuardedCall([&] {
+            // use No-fail-guarantee that sequence is flushed,
+            // Partial-guarantee that some initial length of the recording
+            // is saved.
+            sequence->Flush();
+        });
+    }
+
+    if (!mLostCaptureIntervals.empty()) {
+        std::optional<TransactionScope> pScope;
+        if (auto pOwningProject = mOwningProject.lock()) {
+            pScope.emplace(*pOwningProject, "Dropouts");
+        }
+        for (auto& interval : mLostCaptureIntervals) {
+            auto& start = interval.first;
+            auto duration = interval.second;
+            for (auto& sequence : mCaptureSequences) {
+                GuardedCall([&] {
+                    sequence->InsertSilence(start, duration);
+                });
+            }
+        }
+        if (pScope) {
+            pScope->Commit();
+        }
+        mLostCaptureIntervals.clear();
+    }
+
+    if (auto pListener = GetListener()) {
+        pListener->OnCommitRecording();
+        pListener->OnAudioIOCaptureStopped();
+    }
+
+    // Detach; a later ArmCapture() on this stream starts a fresh take.
+    mCaptureSequences.clear();
+    ResetCaptureRouting();
+    mRecordingSchedule = {};
+    ClearRecordingException();
+
+    Publish({ mOwningProject.lock().get(), AudioIOEvent::CAPTURE, false });
+
+    mAudioThreadSequenceBufferExchangeLoopRunning
+    .store(true, std::memory_order_relaxed);
+
+    return true;
+}
+
+// ----------------------------------------------------------------------------
 
 void AudioIO::SetPaused(bool state, bool publish)
 {
@@ -2993,6 +3228,13 @@ unsigned long AudioIoCallback::DrainInputBuffers(
         return 0;
     }
 
+    // AU4: deferred capture — input is metered (SendVuInputMeterData already ran)
+    // but not put into the ring buffers until capture is armed, so the buffers
+    // stay empty and no dropouts are recorded while the stream is playback-only.
+    if (DeferredCaptureDisarmed()) {
+        return 0;
+    }
+
     // If there are no playback sequences, and we are recording, then the
     // earlier checks for being past the end won't happen, so do it here.
     if (mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, 0)) {
@@ -3414,9 +3656,13 @@ int AudioIoCallback::AudioCallback(
         // Eventually it will sort itself out by random luck, but
         // the net effect is a delay in starting/stopping sound activated
         // recording.
-        CheckSoundActivatedRecordingLevel(
-            inputSamples,
-            framesPerBuffer);
+        //! NOTE: not while deferred capture is disarmed — the stream is
+        //! playback-only then, and sound-activated recording must not pause it.
+        if (!DeferredCaptureDisarmed()) {
+            CheckSoundActivatedRecordingLevel(
+                inputSamples,
+                framesPerBuffer);
+        }
     }
 
     // Even when paused, we do playthrough.
@@ -3622,6 +3868,7 @@ bool AudioIO::IsCapturing() const
     // Includes a test of mTime, used in the main thread
     return IsStreamActive()
            && GetNumCaptureChannels() > 0
+           && !DeferredCaptureDisarmed()
            && mPlaybackSchedule.GetSequenceTime()
            >= mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime;
 }

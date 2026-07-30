@@ -541,8 +541,8 @@ void TrackeditUiActions::init()
         m_actions.push_back(std::move(rateAction));
     }
 
-    m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCode& code) {
-        m_actionEnabledChanged.send({ code });
+    m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCodeList& codes) {
+        m_actionEnabledChanged.send(codes);
     });
 
     m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {

@@ -44,6 +44,7 @@ public:
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
 
+    virtual void play() = 0;
     virtual void stop() = 0;
     virtual void stopSeekAndUpdatePlaybackRegion() = 0;
 
