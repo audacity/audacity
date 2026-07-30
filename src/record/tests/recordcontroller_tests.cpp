@@ -20,6 +20,7 @@
 #include "../internal/recordcontroller.h"
 
 using ::testing::_;
+using ::testing::InSequence;
 using ::testing::NiceMock;
 using ::testing::Return;
 
@@ -82,6 +83,9 @@ public:
         ON_CALL(*m_playbackController, isPlaying())
         .WillByDefault(Return(false));
 
+        ON_CALL(*m_playbackController, isPaused())
+        .WillByDefault(Return(false));
+
         ON_CALL(*m_playbackController, isPlayingChanged())
         .WillByDefault(Return(m_isPlayingChanged));
 
@@ -120,6 +124,12 @@ public:
     {
         ON_CALL(*m_playbackController, isPlaying())
         .WillByDefault(Return(isPlaying));
+    }
+
+    void setPaused(bool isPaused)
+    {
+        ON_CALL(*m_playbackController, isPaused())
+        .WillByDefault(Return(isPaused));
     }
 
     //! NOTE: brings the controller into the Running record state
@@ -288,18 +298,67 @@ TEST_F(RecordControllerTests, RecordingFinished_External_SetsStopped)
 
 /**
  * @brief Record actions availability while playing
- * @details Playback is running: starting a recording is currently not possible
+ * @details Playback is running: recording can be started (the record stream takes
+ *          over from the current position); the lead-in pre-roll stays blocked
  */
-TEST_F(RecordControllerTests, CanReceiveAction_RecordStart_BlockedWhilePlaying)
+TEST_F(RecordControllerTests, CanReceiveAction_RecordStart_AllowedWhilePlaying)
 {
     //! [GIVEN] Playback is running
     setPlaying(true);
 
-    //! [THEN] The record actions are blocked
-    EXPECT_FALSE(m_controller->canReceiveAction(RECORD_START_CODE));
-    EXPECT_FALSE(m_controller->canReceiveAction(RECORD_ON_CURRENT_TRACK_CODE));
-    EXPECT_FALSE(m_controller->canReceiveAction(RECORD_ON_NEW_TRACK_CODE));
+    //! [THEN] The record actions are available, the lead-in action is not
+    EXPECT_TRUE(m_controller->canReceiveAction(RECORD_START_CODE));
+    EXPECT_TRUE(m_controller->canReceiveAction(RECORD_ON_CURRENT_TRACK_CODE));
+    EXPECT_TRUE(m_controller->canReceiveAction(RECORD_ON_NEW_TRACK_CODE));
     EXPECT_FALSE(m_controller->canReceiveAction(RECORD_LEAD_IN_CODE));
+}
+
+/**
+ * @brief Start recording while playback is running
+ * @details The player is stopped first (proper stream teardown, position preserved),
+ *          then the recorder starts from the current playhead
+ */
+TEST_F(RecordControllerTests, StartRecord_WhilePlaying_StopsPlayerThenRecords)
+{
+    //! [GIVEN] Playback is running
+    setPlaying(true);
+
+    //! [THEN] The player is stopped before the recorder starts
+    InSequence seq;
+    EXPECT_CALL(*m_playbackController, stop())
+    .Times(1);
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+
+    //! [WHEN] The user presses record
+    toggleRecord();
+
+    //! [THEN] The controller reports that it is recording
+    EXPECT_TRUE(m_controller->isRecording());
+}
+
+/**
+ * @brief Start recording while playback is paused
+ * @details The paused player is stopped first, then the recorder starts
+ *          from the pause position
+ */
+TEST_F(RecordControllerTests, StartRecord_WhilePaused_StopsPlayerThenRecords)
+{
+    //! [GIVEN] Playback is paused
+    setPaused(true);
+
+    //! [THEN] The player is stopped before the recorder starts
+    InSequence seq;
+    EXPECT_CALL(*m_playbackController, stop())
+    .Times(1);
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+
+    //! [WHEN] The user presses record
+    toggleRecord();
+
+    //! [THEN] The controller reports that it is recording
+    EXPECT_TRUE(m_controller->isRecording());
 }
 
 /**
@@ -334,10 +393,10 @@ TEST_F(RecordControllerTests, CanReceiveAction_RecordStop_OnlyWhileRecording)
 }
 
 /**
- * @brief isRecordAllowed depends on playback
- * @details Recording is currently not allowed while playback is running
+ * @brief isRecordAllowed no longer depends on playback
+ * @details Recording is allowed while playback is running or paused
  */
-TEST_F(RecordControllerTests, IsRecordAllowed_DependsOnPlaybackState)
+TEST_F(RecordControllerTests, IsRecordAllowed_WhilePlaying_ReturnsTrue)
 {
     //! [GIVEN] Playback is stopped (fixture default)
     EXPECT_TRUE(m_controller->isRecordAllowed());
@@ -345,7 +404,7 @@ TEST_F(RecordControllerTests, IsRecordAllowed_DependsOnPlaybackState)
     //! [WHEN] Playback is running
     setPlaying(true);
 
-    //! [THEN] Recording is not allowed
-    EXPECT_FALSE(m_controller->isRecordAllowed());
+    //! [THEN] Recording is still allowed
+    EXPECT_TRUE(m_controller->isRecordAllowed());
 }
 }

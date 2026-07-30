@@ -83,6 +83,7 @@ private:
     void recordOnNewTrack();
     void start();
     void startWithNewTrack();
+    void stopPlaybackIfNeeded();
     void pause();
     void stop();
     void leadInRecording();
