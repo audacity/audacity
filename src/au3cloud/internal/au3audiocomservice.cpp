@@ -396,9 +396,15 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
         }
 
         if (projectSaveCallback) {
-            muse::async::Async::call(self.get(), [project, projectSaveCallback = std::move(projectSaveCallback)]() {
+            muse::async::Async::call(self.get(), [project, operation = result.Operation,
+                                                  projectSaveCallback = std::move(projectSaveCallback)]() {
                 bool ret = projectSaveCallback();
                 if (ret) {
+                    return;
+                }
+
+                if (operation) {
+                    operation->Abort();
                     return;
                 }
 
