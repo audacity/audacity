@@ -300,8 +300,8 @@ void PlaybackController::onPlaybackPositionChanged()
 
 void PlaybackController::togglePlayPauseAction()
 {
-    //! NOTE: while recording, the play/pause button pauses the recorder so it stays a
-    //! single action.
+    //! NOTE: while recording, the play/pause button drives the recorder: record/pause
+    //! toggles between pausing and resuming, so play resumes a paused recording.
     if (!recordController()->isRecording()) {
         togglePlay(TogglePlayMode::PlayPause);
         return;
@@ -570,6 +570,16 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 
 void PlaybackController::pauseAction()
 {
+    //! NOTE: while recording (not lead-in) the audio is driven by the record stream,
+    //! so the explicit pause action pauses the recorder, not the player. Unlike the
+    //! play/pause toggle it stays pause-only: a paused recording is left paused.
+    if (recordController()->isRecording() && !recordController()->isLeadInRecording()) {
+        if (!recordController()->isRecordingPaused()) {
+            dispatcher()->dispatch(RECORD_PAUSE_QUERY);
+        }
+        return;
+    }
+
     doPause();
 }
 

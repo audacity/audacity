@@ -96,6 +96,9 @@ public:
         EXPECT_CALL(*m_recordController, isRecording())
         .WillRepeatedly(Return(false));
 
+        EXPECT_CALL(*m_recordController, isRecordingPaused())
+        .WillRepeatedly(Return(false));
+
         m_controller->init();
     }
 
@@ -132,13 +135,16 @@ public:
         m_controller->stopAction();
     }
 
-    void setRecording(bool isRecording, bool isLeadIn = false)
+    void setRecording(bool isRecording, bool isLeadIn = false, bool isRecordPaused = false)
     {
         EXPECT_CALL(*m_recordController, isRecording())
         .WillRepeatedly(Return(isRecording));
 
         EXPECT_CALL(*m_recordController, isLeadInRecording())
         .WillRepeatedly(Return(isLeadIn));
+
+        EXPECT_CALL(*m_recordController, isRecordingPaused())
+        .WillRepeatedly(Return(isRecordPaused));
     }
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
@@ -1311,7 +1317,45 @@ TEST_F(PlaybackControllerTests, Stop_WhenRecording_StopsTheRecorder)
     stop();
 }
 
-TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_PausesTheRecorder)
+TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_DispatchesRecordPauseToggle)
+{
+    //! [GIVEN] Recording is running (not in lead-in)
+    setRecording(true, false /* isLeadIn */);
+
+    //! [THEN] The record/pause action is dispatched (it toggles on the record side),
+    //! the player is not touched
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, pause())
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button
+    togglePlayPause();
+}
+
+TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecordingPaused_StillDispatchesRecordPause)
+{
+    //! [GIVEN] Recording is paused
+    setRecording(true, false /* isLeadIn */, true /* isRecordPaused */);
+
+    //! [THEN] The record/pause action is dispatched again — the record side resumes,
+    //! so pressing play resumes a paused recording
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, pause())
+    .Times(0);
+    EXPECT_CALL(*m_player, resume())
+    .Times(0);
+
+    //! [WHEN] User presses the Play/Pause button
+    togglePlayPause();
+}
+
+TEST_F(PlaybackControllerTests, PauseAction_WhileRecording_DispatchesRecordPause)
 {
     //! [GIVEN] Recording is running (not in lead-in)
     setRecording(true, false /* isLeadIn */);
@@ -1324,8 +1368,26 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_PausesTheRecorder)
     EXPECT_CALL(*m_player, pause())
     .Times(0);
 
-    //! [WHEN] User presses the Play/Pause button
-    togglePlayPause();
+    //! [WHEN] User triggers the explicit pause action
+    pause();
+}
+
+TEST_F(PlaybackControllerTests, PauseAction_WhileRecordingPaused_DoesNothing)
+{
+    //! [GIVEN] Recording is already paused
+    setRecording(true, false /* isLeadIn */, true /* isRecordPaused */);
+
+    //! [THEN] The pause action stays pause-only: no record/pause dispatch (which
+    //! would resume), and the player is not touched
+    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
+                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    .Times(0);
+
+    EXPECT_CALL(*m_player, pause())
+    .Times(0);
+
+    //! [WHEN] User triggers the explicit pause action
+    pause();
 }
 
 TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadIn_PausesThePlayback)

@@ -110,9 +110,10 @@ public:
         m_controller->toggleRecord();
     }
 
-    void pauseRecord()
+    //! NOTE: the record/pause action — dispatched by the play/pause button while recording
+    void togglePauseRecord()
     {
-        m_controller->pause();
+        m_controller->togglePause();
     }
 
     void stopRecord()
@@ -217,7 +218,7 @@ TEST_F(RecordControllerTests, StartRecord_WhenStartFails_ReportsErrorAndStaysSto
  * @details User pressed pause while the recorder is running
  *          The recorder is paused; the controller still reports recording
  */
-TEST_F(RecordControllerTests, Pause_WhileRecording_PausesRecorder)
+TEST_F(RecordControllerTests, TogglePause_WhileRunning_PausesRecorder)
 {
     //! [GIVEN] A recording is running
     startRecordingSuccessfully();
@@ -226,11 +227,66 @@ TEST_F(RecordControllerTests, Pause_WhileRecording_PausesRecorder)
     EXPECT_CALL(*m_record, pause())
     .WillOnce(Return(muse::make_ok()));
 
-    //! [WHEN] The user presses pause
-    pauseRecord();
+    //! [WHEN] The user presses pause (or the play/pause button)
+    togglePauseRecord();
 
     //! [THEN] A paused recording still counts as recording
     EXPECT_TRUE(m_controller->isRecording());
+    EXPECT_TRUE(m_controller->isRecordingPaused());
+}
+
+/**
+ * @brief Resume a paused recording
+ * @details User pressed the play/pause button while the recording is paused
+ *          The recorder resumes instead of pausing again
+ */
+TEST_F(RecordControllerTests, TogglePause_WhilePaused_ResumesRecorder)
+{
+    //! [GIVEN] A paused recording
+    startRecordingSuccessfully();
+    EXPECT_CALL(*m_record, pause())
+    .WillOnce(Return(muse::make_ok()));
+    togglePauseRecord();
+    ASSERT_TRUE(m_controller->isRecordingPaused());
+
+    //! [THEN] The recorder resumes, it is not paused again
+    EXPECT_CALL(*m_record, resume())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_record, pause())
+    .Times(0);
+
+    //! [WHEN] The user presses the play/pause button again
+    togglePauseRecord();
+
+    //! [THEN] The recording is running again
+    EXPECT_TRUE(m_controller->isRecording());
+    EXPECT_FALSE(m_controller->isRecordingPaused());
+}
+
+/**
+ * @brief Resume fails
+ * @details The recorder reports an error on resume: the recording stays paused
+ */
+TEST_F(RecordControllerTests, TogglePause_WhenResumeFails_StaysPaused)
+{
+    //! [GIVEN] A paused recording
+    startRecordingSuccessfully();
+    EXPECT_CALL(*m_record, pause())
+    .WillOnce(Return(muse::make_ok()));
+    togglePauseRecord();
+
+    //! [GIVEN] The recorder fails to resume
+    EXPECT_CALL(*m_record, resume())
+    .WillOnce(Return(muse::make_ret(muse::Ret::Code::InternalError)));
+
+    //! [THEN] An error dialog is shown
+    expectErrorDialog();
+
+    //! [WHEN] The user presses the play/pause button again
+    togglePauseRecord();
+
+    //! [THEN] The recording is still paused
+    EXPECT_TRUE(m_controller->isRecordingPaused());
 }
 
 /**

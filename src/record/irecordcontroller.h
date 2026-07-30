@@ -25,6 +25,7 @@ public:
 
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
+    virtual bool isRecordingPaused() const = 0;
 
     virtual const std::vector<trackedit::ClipKey>& recordingClipKeys() const = 0;
 

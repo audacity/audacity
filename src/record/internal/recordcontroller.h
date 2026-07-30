@@ -51,6 +51,7 @@ public:
 
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
+    bool isRecordingPaused() const override;
 
     const std::vector<trackedit::ClipKey>& recordingClipKeys() const override;
 
@@ -84,7 +85,7 @@ private:
     void start();
     void startWithNewTrack();
     void stopPlaybackIfNeeded();
-    void pause();
+    void togglePause();
     void stop();
     void leadInRecording();
     void toggleMicMetering();

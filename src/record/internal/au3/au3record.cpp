@@ -441,6 +441,17 @@ muse::Ret Au3Record::pause()
     return make_ok();
 }
 
+muse::Ret Au3Record::resume()
+{
+    if (!canStopAudioStream()) {
+        return make_ret(Err::RecordingStopError);
+    }
+
+    audioEngine()->pauseStream(false);
+
+    return make_ok();
+}
+
 muse::Ret Au3Record::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop

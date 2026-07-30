@@ -26,7 +26,7 @@ void RecordController::init()
     dispatcher()->reg(this, RECORD_START_QUERY, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_ON_CURRENT_TRACK_CODE, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_ON_NEW_TRACK_CODE, this, &RecordController::recordOnNewTrack);
-    dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::pause);
+    dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::togglePause);
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
     dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
     dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
@@ -71,6 +71,11 @@ bool RecordController::isRecording() const
     return m_currentRecordStatus == RecordStatus::Running
            || m_currentRecordStatus == RecordStatus::Paused
            || m_currentRecordStatus == RecordStatus::LeadIn;
+}
+
+bool RecordController::isRecordingPaused() const
+{
+    return m_currentRecordStatus == RecordStatus::Paused;
 }
 
 const std::vector<au::trackedit::ClipKey>& RecordController::recordingClipKeys() const
@@ -160,9 +165,28 @@ void RecordController::stopPlaybackIfNeeded()
     }
 }
 
-void RecordController::pause()
+void RecordController::togglePause()
 {
     IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    //! NOTE: the play/pause button dispatches record/pause while recording, so the
+    //! action toggles: a running recording is paused, a paused one is resumed.
+    //! The lead-in pre-roll is paused through the player instead, so it is not
+    //! handled here.
+    if (m_currentRecordStatus == RecordStatus::Paused) {
+        Ret ret = record()->resume();
+        if (!ret) {
+            interactive()->error(muse::trc("record", "Recording error"), ret.text());
+            return;
+        }
+
+        setCurrentRecordStatus(RecordStatus::Running);
+        return;
+    }
+
+    if (m_currentRecordStatus != RecordStatus::Running) {
         return;
     }
 
