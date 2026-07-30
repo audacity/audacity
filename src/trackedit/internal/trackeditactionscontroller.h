@@ -55,7 +55,7 @@ public:
     void init();
 
     bool actionEnabled(const muse::actions::ActionCode& actionCode) const override;
-    muse::async::Channel<muse::actions::ActionCode> actionEnabledChanged() const override;
+    muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const override;
 
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
@@ -65,6 +65,7 @@ private:
     friend class TrackeditActionsControllerTests;
 
     void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
+    void notifyActionsEnabledChanged(const muse::actions::ActionCodeList& actionCodes);
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
     bool isFocusedItemClip() const;
@@ -221,7 +222,7 @@ private:
 
     context::IPlaybackStatePtr playbackState() const;
 
-    muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     DeleteBehaviorOnboardingScenario m_deleteBehaviorOnboardingScenario;

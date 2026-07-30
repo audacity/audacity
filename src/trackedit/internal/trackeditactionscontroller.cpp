@@ -335,9 +335,9 @@ void TrackeditActionsController::init()
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
-        for (const auto& actionCode : actionsDisabledDuringRecording) {
-            notifyActionEnabledChanged(actionCode);
-        }
+        //! NOTE: one batched notification — per-code sends would trigger a full
+        //! UI action-state update for each of the ~40 codes
+        notifyActionsEnabledChanged(actionsDisabledDuringRecording);
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
@@ -373,14 +373,19 @@ bool TrackeditActionsController::actionEnabled(const muse::actions::ActionCode& 
     return true;
 }
 
-muse::async::Channel<muse::actions::ActionCode> TrackeditActionsController::actionEnabledChanged() const
+muse::async::Channel<muse::actions::ActionCodeList> TrackeditActionsController::actionEnabledChanged() const
 {
     return m_actionEnabledChanged;
 }
 
 void TrackeditActionsController::notifyActionEnabledChanged(const ActionCode& actionCode)
 {
-    m_actionEnabledChanged.send(actionCode);
+    m_actionEnabledChanged.send({ actionCode });
+}
+
+void TrackeditActionsController::notifyActionsEnabledChanged(const ActionCodeList& actionCodes)
+{
+    m_actionEnabledChanged.send(actionCodes);
 }
 
 void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
