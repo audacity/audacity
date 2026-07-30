@@ -244,6 +244,10 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     engineOptions.isDefaultPolicy = options.isDefaultPolicy;
     engineOptions.sampleRate = ProjectRate::Get(project).GetRate();
     engineOptions.streamStartTime = options.streamStartTime;
+    //! NOTE: open the input device speculatively (when one is configured) so that
+    //! recording can be armed gaplessly during playback. The engine falls back to
+    //! a playback-only stream if the bidirectional open fails.
+    engineOptions.openCaptureChannels = true;
 
     int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
     bool success = token != 0;
