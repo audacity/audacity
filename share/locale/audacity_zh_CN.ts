@@ -2084,6 +2084,16 @@
         <source>Create new workspace</source>
         <translation>新建工作区</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
+        <source>Show &amp;rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
+        <source>Show rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -2869,7 +2879,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")</extracomment>
         <translation>更新使用情况。%1</translation>
     </message>
     <message>
@@ -2880,15 +2890,15 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="183"/>
         <source>%1. %2</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")
 ----------
-%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this style&quot;)
+%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the selection status (e.g. "Currently selected" or "Click to select this style")
 ----------
-%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available option&quot;)
+%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the availability status (e.g. "Currently selected" or "Available option")
 ----------
-%1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
+%1 is the workspace description, %2 is the selection status (e.g. "Currently selected" or "Click to select this workspace")
 ----------
-%1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
+%1 is the workspace description, %2 is the availability status (e.g. "Currently selected" or "Available workspace")</extracomment>
         <translation>%1. %2</translation>
     </message>
     <message>
@@ -2933,8 +2943,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
-        <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;忘记密码了吗？&lt;/a&gt;</translation>
+        <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
+        <translation>&lt;a href="%1"&gt;忘记密码了吗？&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -3028,13 +3038,13 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
-        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
+        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
         <translation>%1 主题</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
-        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
+        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
         <translation>选择 %1 主题</translation>
     </message>
     <message>
@@ -3174,7 +3184,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
-        <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
+        <extracomment>here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"</extracomment>
         <translation>启用高对比度模式以获得更佳的可视性 %1</translation>
     </message>
     <message>
@@ -3691,8 +3701,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>更新检查需要网络连接。为了保护您的隐私，Audacity 不会存储任何个人信息。请参阅我们的&lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;了解更多信息。</translation>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation>更新检查需要网络连接。为了保护您的隐私，Audacity 不会存储任何个人信息。请参阅我们的&lt;a href="%1"&gt;隐私政策&lt;/a&gt;了解更多信息。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3963,8 +3973,8 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
-        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>为了帮助我们了解用户使用 Audacity 的频率，我们会为每次安装生成一个随机 ID（UUID）。此 ID 不包含任何个人身份信息。想了解更多信息？请查看我们的&lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;。</translation>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
+        <translation>为了帮助我们了解用户使用 Audacity 的频率，我们会为每次安装生成一个随机 ID（UUID）。此 ID 不包含任何个人身份信息。想了解更多信息？请查看我们的&lt;a href="%1"&gt;隐私政策&lt;/a&gt;。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
@@ -4245,6 +4255,13 @@ This action will not delete any of your projects.</source>
         <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
         <source>You can assign soundfonts to instruments using the mixer panel.</source>
         <translation>您可以使用混音器面板为乐器分配声音字体。</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="78"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="273"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="188"/>
+        <source>Validating audio plugins</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4565,7 +4582,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
+        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
         <translation>不可用</translation>
     </message>
     <message>
@@ -5220,7 +5237,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>&quot;infinite impulse response&quot;</extracomment>
+        <extracomment>"infinite impulse response"</extracomment>
         <translation>执行 IIR 滤波以模拟模拟信号滤波器</translation>
     </message>
     <message>
@@ -6379,7 +6396,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>&quot;Nyquist&quot; is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
+        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>奈奎斯特</translation>
     </message>
     <message>
@@ -6768,7 +6785,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
+        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
         <translation>奈奎斯特提示符</translation>
     </message>
     <message>
@@ -6827,7 +6844,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
+        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
         <translation>nyx_error，返回自 %1。
 </translation>
     </message>
@@ -7982,7 +7999,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation>已安装的文件（&quot;允许文件被覆盖&quot; 已禁用）：</translation>
+        <translation>已安装的文件（"允许文件被覆盖" 已禁用）：</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
@@ -8505,10 +8522,10 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
-&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
+&lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
         <translation>利用 Audacity 的 &lt;span&gt;样本数据导出&lt;/span&gt;生成
-&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; 作者：Steve
+&lt;a href="~a"&gt;Audacity&lt;/a&gt; 作者：Steve
 Daulton</translation>
     </message>
     <message>
@@ -8592,7 +8609,7 @@ Daulton</translation>
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
         <translation>错误~%~
-                        无法打开 &quot;~a&quot;。~%~
+                        无法打开 "~a"。~%~
                         检查文件是否存在。</translation>
     </message>
     <message>
@@ -9731,7 +9748,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
+        <extracomment>Abbreviation of "seconds"</extracomment>
         <translation>秒</translation>
     </message>
     <message>
@@ -9742,7 +9759,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
-        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
+        <extracomment>Abbreviation of "milliseconds"</extracomment>
         <translation>毫秒</translation>
     </message>
     <message>
@@ -9759,7 +9776,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>Abbreviation of &quot;hertz&quot;</extracomment>
+        <extracomment>Abbreviation of "hertz"</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
@@ -9770,7 +9787,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
+        <extracomment>Abbreviation of "kilohertz"</extracomment>
         <translation>仟赫</translation>
     </message>
     <message>
@@ -9781,7 +9798,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>Abbreviation of &quot;decibels&quot;</extracomment>
+        <extracomment>Abbreviation of "decibels"</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9792,7 +9809,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
-        <extracomment>Symbol of &quot;percent&quot;</extracomment>
+        <extracomment>Symbol of "percent"</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9809,7 +9826,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
-        <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
+        <extracomment>Abbreviation of "beats per minute"</extracomment>
         <translation>每分钟节拍数</translation>
     </message>
     <message>
@@ -9820,7 +9837,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
-        <extracomment>Symbol of &quot;degrees&quot;</extracomment>
+        <extracomment>Symbol of "degrees"</extracomment>
         <translation>°</translation>
     </message>
     <message>
@@ -10537,13 +10554,13 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
+        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
         <translation>%1 文件</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
-        <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
+        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
         <translation>（%1）</translation>
     </message>
     <message>
@@ -10687,7 +10704,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
-        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
+        <extracomment>Abbreviation of "milliseconds"</extracomment>
         <translation>毫秒</translation>
     </message>
     <message>
@@ -10700,7 +10717,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
-        <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
+        <extracomment>Abbreviation of "points", used to specify a font size</extracomment>
         <translation>点</translation>
     </message>
     <message>
@@ -10971,7 +10988,9 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
         <source>%n day(s) ago</source>
-        <translation><numerusform>%n日前</numerusform></translation>
+        <translation>
+            <numerusform>%n日前</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
@@ -10981,7 +11000,9 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
         <source>%n week(s) ago</source>
-        <translation><numerusform>%n周前</numerusform></translation>
+        <translation>
+            <numerusform>%n周前</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
@@ -10991,39 +11012,45 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
         <source>%n month(s) ago</source>
-        <translation><numerusform>%n个月前</numerusform></translation>
+        <translation>
+            <numerusform>%n个月前</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
         <source>%n year(s) ago</source>
-        <translation><numerusform>%n年前</numerusform></translation>
+        <translation>
+            <numerusform>%n年前</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
         <source>%1 GB</source>
         <comment>gigabyte</comment>
-        <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
+        <extracomment>Abbreviation of "gigabyte", used to indicate file size</extracomment>
         <translation>%1 GB</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
         <source>%1 MB</source>
         <comment>megabyte</comment>
-        <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
+        <extracomment>Abbreviation of "megabyte", used to indicate file size</extracomment>
         <translation>%1 MB</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
         <source>%1 KB</source>
         <comment>kilobyte</comment>
-        <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
+        <extracomment>Abbreviation of "kilobyte", used to indicate file size</extracomment>
         <translation>%1 KB</translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
         <source>%Ln byte(s)</source>
         <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
-        <translation><numerusform>%Ln字节</numerusform></translation>
+        <translation>
+            <numerusform>%Ln字节</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
@@ -12439,7 +12466,7 @@ Audacity 无法打开此类文件。</translation>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
-        <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
+        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
         <translation>此版本 Audacity 在编译时没有开启对 %1 的支持。</translation>
     </message>
     <message>
@@ -12615,7 +12642,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
-        <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
+        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -12686,7 +12713,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
-        <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
+        <extracomment>"Log" is short for "logarithmic"</extracomment>
         <translation>日志搜索</translation>
     </message>
     <message>
@@ -12704,7 +12731,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
+        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
         <translation>索引[%1] 编解码器[%2], 语言[%3], 比特率[%4], 声道数[%5], 时长[%6]</translation>
     </message>
     <message>
@@ -12713,7 +12740,7 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
+        <extracomment>kbps abbreviates "thousands of bits per second"
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
@@ -12784,7 +12811,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
-        <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
+        <extracomment>VBR is "variable bit rate"</extracomment>
         <translation>Vbr 模式</translation>
     </message>
     <message>
@@ -12813,7 +12840,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
-        <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
+        <extracomment>VOIP is "voice over IP"</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -12902,7 +12929,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
+        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
         <translation>FFmpeg 找不到音频编码器 0x%1。
 很可能没有编译入此编码器的支持。</translation>
     </message>
@@ -12921,7 +12948,7 @@ Support for this codec is probably not compiled in.</source>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
-        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
+        <extracomment>"codec" is short for a "coder-decoder" algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
         <translation>无法打开音频编解码器“%1” (0x%2)
 
 %3</translation>
@@ -13442,9 +13469,9 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
+        <extracomment>kbit/s abbreviates "thousands of bits per second"
 ----------
-kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
+kbit/s abbreviates "kilobits per second"</extracomment>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
@@ -13793,7 +13820,7 @@ Audacity 无法完成，将丢弃此次导出。</translation>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
-        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
+        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like "system * error"</extracomment>
         <translation>写入 %1 文件时出错（磁盘已满？）。
 Libsndfile 提示：“%2”</translation>
     </message>
@@ -13850,7 +13877,7 @@ Libsndfile 提示：“%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
+        <extracomment>bps abbreviates "bits per sample"</extracomment>
         <translation>%1 bps</translation>
     </message>
     <message>
@@ -13872,7 +13899,9 @@ Libsndfile 提示：“%2”</translation>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation><numerusform>解码 WavPack 文件时遇到 %1 个错误！</numerusform></translation>
+        <translation>
+            <numerusform>解码 WavPack 文件时遇到 %1 个错误！</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -14609,9 +14638,11 @@ It will not be loaded.</source>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation><numerusform>启用此插件？
-</numerusform></translation>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of "Enable this plug-in?": "Enable these plug-ins?"</extracomment>
+        <translation>
+            <numerusform>启用此插件？
+</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -14730,25 +14761,25 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>The music theory &quot;bar&quot;</extracomment>
+        <extracomment>The music theory "bar"</extracomment>
         <translation>小节</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>The music theory &quot;beat&quot;</extracomment>
+        <extracomment>The music theory "beat"</extracomment>
         <translation>拍子</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
+        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
         <translation>小节:拍子</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
+        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
         <translation>小节:拍子:时钟点</translation>
     </message>
     <message>
@@ -15595,7 +15626,7 @@ It will not be loaded.</source>
     </message>
     <message>
         <source>Please select a path that contains %1</source>
-        <translation>请选择包含 &quot;%1&quot; 的路径。</translation>
+        <translation>请选择包含 "%1" 的路径。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
@@ -16062,7 +16093,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
-        <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
+        <extracomment>accessibility name for the panel at the bottom of the "Projects" page</extracomment>
         <translation>项目操作</translation>
     </message>
     <message>
@@ -17037,13 +17068,13 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
-        <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
+        <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
         <translation>复制</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
-        <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
+        <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
         <translation>选择</translation>
     </message>
     <message>
@@ -17107,9 +17138,9 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
-        <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
-        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
-        <translation>替换已有&lt;a href=&quot;%1&quot;&gt;在线乐谱&lt;/a&gt;</translation>
+        <source>Replace the existing &lt;a href="%1"&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href="%1"&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation>替换已有&lt;a href="%1"&gt;在线乐谱&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
@@ -17123,9 +17154,9 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
-        <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
-        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
-        <translation>替换&lt;a href=&quot;%1&quot;&gt;现有音频&lt;/a&gt;</translation>
+        <source>Replace the &lt;a href="%1"&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href="%1"&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation>替换&lt;a href="%1"&gt;现有音频&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
@@ -17404,8 +17435,8 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
-        <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;观看视频&lt;/a&gt;</translation>
+        <source>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Watch video&lt;/a&gt;</source>
+        <translation>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;观看视频&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
@@ -17920,13 +17951,13 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>The music theory &quot;beat&quot;</extracomment>
+        <extracomment>The music theory "beat"</extracomment>
         <translation>拍子</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>The music theory &quot;bar&quot;</extracomment>
+        <extracomment>The music theory "bar"</extracomment>
         <translation>小节</translation>
     </message>
     <message>
@@ -17967,7 +17998,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>The music theory &quot;triplet&quot;</extracomment>
+        <extracomment>The music theory "triplet"</extracomment>
         <translation>三连音</translation>
     </message>
     <message>
@@ -18485,7 +18516,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
         <translation>剪切/拷贝/粘贴</translation>
     </message>
     <message>
@@ -18608,19 +18639,25 @@ Error code: %1</source>
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>剩余 %n 小时</numerusform></translation>
+        <translation>
+            <numerusform>剩余 %n 小时</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>剩余 %n 分钟</numerusform></translation>
+        <translation>
+            <numerusform>剩余 %n 分钟</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>剩余 %n 秒</numerusform></translation>
+        <translation>
+            <numerusform>剩余 %n 秒</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -18949,7 +18986,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
         <source>Directories actions</source>
-        <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
+        <extracomment>Accessibility description of the button group at the top of the "Choose Directories" dialog</extracomment>
         <translation>目录命令</translation>
     </message>
     <message>
@@ -19050,7 +19087,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
         <source>Key</source>
         <comment>key/value</comment>
-        <extracomment>As in a &quot;key/value&quot; pair: for example, the &quot;key&quot; could be the name of a setting and the &quot;value&quot; the value of that setting.</extracomment>
+        <extracomment>As in a "key/value" pair: for example, the "key" could be the name of a setting and the "value" the value of that setting.</extracomment>
         <translation>键</translation>
     </message>
     <message>
@@ -19402,8 +19439,8 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
-        <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
-        <translation>您已拥有 %1 的最新版本。请访问 &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;以了解后续动态。</translation>
+        <source>You already have the latest version of %1. Please visit &lt;a href="%2"&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation>您已拥有 %1 的最新版本。请访问 &lt;a href="%2"&gt;%3&lt;/a&gt;以了解后续动态。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
@@ -19440,6 +19477,22 @@ Do you wish to continue?</source>
         <source>Downloading MuseScore Studio %1</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
         <translation>正在下载MuseScore Studio %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <source>Check for update</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading %1 %2</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -19707,6 +19760,16 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <source>Name already exists</source>
         <translation>名称已存在</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
+        <source>New workspace</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <source>Edit workspaces</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>xml</name>
@@ -19733,6 +19796,169 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
         <translation>无法解析 XML</translation>
+    </message>
+</context>
+<context>
+    <name>navigation</name>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
+        <source>Escape</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
+        <source>Navigate escape</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
+        <source>Next section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
+        <source>Navigate next section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
+        <source>Previous section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
+        <source>Navigate previous section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
+        <source>Next panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
+        <source>Navigate next panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
+        <source>Previous panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
+        <source>Navigate previous panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
+        <source>Next tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
+        <source>Navigate next tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
+        <source>Previous tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
+        <source>Navigate previous tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
+        <source>Right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
+        <source>Navigate right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
+        <source>Left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
+        <source>Navigate left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
+        <source>Up</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
+        <source>Navigate up</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
+        <source>Down</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
+        <source>Navigate down</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
+        <source>First control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
+        <source>Navigate first control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
+        <source>Last control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
+        <source>Navigate last control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
+        <source>Next row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
+        <source>Navigate next row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
+        <source>Previous row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
+        <source>Navigate previous row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
+        <source>Trigger control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
+        <source>Navigate trigger control</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

@@ -1829,6 +1829,186 @@
         <source>Change track sample rate</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
+        <source>Save diagnostic files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
+        <source>Show p&amp;aths…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
+        <source>Show paths</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
+        <source>Show pr&amp;ofiler…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
+        <source>Show g&amp;raphics info…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
+        <source>Show graphics info</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
+        <source>Show &amp;navigation tree…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
+        <source>Show navigation tree</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
+        <source>Show &amp;accessibility tree…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
+        <source>Show accessibility tree</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
+        <source>&amp;Dump accessibility tree to console</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
+        <source>Dump accessibility tree to console</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
+        <source>Show engraving &amp;elements</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
+        <source>Show engraving elements</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
+        <source>Show engraving &amp;undo stack</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
+        <source>Show engraving undo stack</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
+        <source>Show engraving &amp;style options list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
+        <source>Show engraving style options list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
+        <source>Show &amp;actions list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
+        <source>Show actions list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
+        <source>Show &amp;rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
+        <source>Show rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
+        <source>&amp;Manage plugins…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
+        <source>Manage plugins…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
+        <source>Show API dump</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
+        <source>&amp;Multiinstances</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
+        <source>Show &amp;scripts…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
+        <source>Show scripts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
+        <source>Check for &amp;update</source>
+        <translation>استعلام عن توفّر تحديثات</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
+        <source>Use old view</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
+        <source>Use new view</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
+        <source>Select workspace</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
+        <source>Edit workspaces…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
+        <source>Edit workspaces</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
+        <source>Create new workspace</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -2061,6 +2241,11 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
+        <source>Accounts</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -3916,6 +4101,13 @@ This action will not delete any of your projects.</source>
         <source>Scanning audio plugins</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="78"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="273"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="188"/>
+        <source>Validating audio plugins</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>audio setup</name>
@@ -5211,6 +5403,21 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
         <source>Sign in buttons</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
+        <source>My accounts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
+        <source>Log in</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
+        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -9793,6 +10000,160 @@ Master effects will be turned back on after export.</source>
         <source>Reload plugins</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
+        <source>Enabled</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
+        <source>Disabled</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <source>Version:</source>
+        <translation>إصدار: </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <source>Shortcut:</source>
+        <extracomment>Keyboard shortcut</extracomment>
+        <translation>اختصار:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <source>Edit shortcut</source>
+        <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Enable</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Disable</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
+        <source>Plugin not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
+        <source>Could not load plugin</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
+        <source>Plugin is not in the correct format</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
+        <source>Manually</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
+        <source>Failed to install extension</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
+        <source>The extension does not contain a valid manifest file.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
+        <source>The extension is already installed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
+        <source>This extension cannot be updated.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
+        <source>The currently installed version cannot be uninstalled.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
+        <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
+        <source>Update extension</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <source>Error code: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <source>Composing/arranging tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <source>Color notes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Playback</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <source>Lyrics</source>
+        <translation>كلمات</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
+        <source>Run plugin %1</source>
+        <extracomment>%1 is replaced with the name of the plugin</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
+        <source>Run plugin %1: %2</source>
+        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <source>Not specified</source>
+        <extracomment>No version is specified for this plugin.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <source>Not defined</source>
+        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>fft</name>
@@ -10036,7 +10397,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
-        <translation type="unfinished">طبق</translation>
+        <translation>تطبيق</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
@@ -10204,6 +10565,271 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
         <source>Stop</source>
         <translation>توقف</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
+        <source>Copy</source>
+        <translation>نسخ</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
+        <source>Error details have been copied to the clipboard.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Hide details</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Show details</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <source>Question</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <source>Information</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <source>Warning</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <source>Error</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <source>Don’t show this message again</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
+        <source>Delete</source>
+        <translation>مسح</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
+        <source>Hours</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
+        <source>Minutes</source>
+        <translation>دقائق</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
+        <source>Seconds</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
+        <source>Milliseconds</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
+        <source>Collapse</source>
+        <extracomment>Collapse a tree item</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
+        <source>Expand</source>
+        <extracomment>Expand a tree item</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="118"/>
+        <source>Create</source>
+        <translation>Create</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="115"/>
+        <source>Select</source>
+        <translation>اختيار</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
+        <source>Today</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="49"/>
+        <source>Yesterday</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
+        <source>%n day(s) ago</source>
+        <translation type="unfinished">
+            <numerusform/>
+        </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
+        <source>Last week</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
+        <source>%n week(s) ago</source>
+        <translation type="unfinished">
+            <numerusform/>
+        </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
+        <source>Last month</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
+        <source>%n month(s) ago</source>
+        <translation type="unfinished">
+            <numerusform/>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
+        <source>%n year(s) ago</source>
+        <translation type="unfinished">
+            <numerusform/>
+        </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
+        <source>%1 GB</source>
+        <comment>gigabyte</comment>
+        <extracomment>Abbreviation of "gigabyte", used to indicate file size</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
+        <source>%1 MB</source>
+        <comment>megabyte</comment>
+        <extracomment>Abbreviation of "megabyte", used to indicate file size</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
+        <source>%1 KB</source>
+        <comment>kilobyte</comment>
+        <extracomment>Abbreviation of "kilobyte", used to indicate file size</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
+        <source>%Ln byte(s)</source>
+        <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
+        <translation type="unfinished">
+            <numerusform/>
+        </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <source>Save all</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <source>Don’t save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <source>Yes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <source>Yes to all</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <source>No</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <source>No to all</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <source>Abort</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <source>Retry</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <source>Ignore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <source>Discard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <source>Help</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <source>Reset</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <source>Continue</source>
+        <translation>استمرار</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <source>Checking for updates…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <source>Downloading %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <source>Unpacking %1…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -14672,6 +15298,58 @@ You need to run that version of Audacity to recover the project.</source>
         <source>Unable to connect to Audio.com</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
+        <source>Public</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="167"/>
+        <source>Unlisted</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="173"/>
+        <source>Private</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
+        <source>Publish to MuseScore.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
+        <source>Replace the existing &lt;a href="%1"&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href="%1"&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
+        <source>Publish as new online score</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
+        <source>Share on Audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
+        <source>Replace the &lt;a href="%1"&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href="%1"&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
+        <source>Upload as new audio file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
+        <source>Share</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>project/share</name>
@@ -16398,6 +17076,136 @@ Do you wish to continue?</source>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
         <translation>شريط: إيقاع: علامة</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
+        <source>No button</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
+        <source>OK</source>
+        <translation>موافقة</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
+        <source>Save</source>
+        <translation>حفظ</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
+        <source>Save all</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
+        <source>Don’t save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
+        <source>Open</source>
+        <translation>فتح…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
+        <source>Yes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
+        <source>Yes to all</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
+        <source>No</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
+        <source>No to all</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
+        <source>Abort</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
+        <source>Retry</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
+        <source>Ignore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
+        <source>Close</source>
+        <translation>إغلاق</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
+        <source>Discard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
+        <source>Help</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
+        <source>Apply</source>
+        <translation>تطبيق</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
+        <source>Reset</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
+        <source>Restore defaults</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
+        <source>Continue</source>
+        <translation>استمرار</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
+        <source>Next</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
+        <source>Back</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
+        <source>Select</source>
+        <translation>اختيار</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
+        <source>Clear</source>
+        <translation>مسح</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
+        <source>Done</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -30833,6 +31641,2090 @@ the meter affecting audio quality on slower machines.</source>
     <message>
         <source>Legacy</source>
         <translation type="vanished"/>
+    </message>
+</context>
+<context>
+    <name>accessibility</name>
+    <message>
+        <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
+        <source>%1 panel</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/dock</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <source>Close</source>
+        <translation>إغلاق</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <source>Dock</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <source>Undock</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>diagnostics</name>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <source>Save diagnostic files?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <source>Save diagnostic files</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>global/noteName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="267"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="282"/>
+        <source>C</source>
+        <translation>دو</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="268"/>
+        <source>C♯</source>
+        <translation>C♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="269"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="284"/>
+        <source>D</source>
+        <translation>ري</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="270"/>
+        <source>D♯</source>
+        <translation>D♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="271"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="286"/>
+        <source>E</source>
+        <translation>مي</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="272"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="287"/>
+        <source>F</source>
+        <translation>فا</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="273"/>
+        <source>F♯</source>
+        <translation>F♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="274"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="289"/>
+        <source>G</source>
+        <translation>صول</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="275"/>
+        <source>G♯</source>
+        <translation>G♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="276"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="291"/>
+        <source>A</source>
+        <translation>ﻻ</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="277"/>
+        <source>A♯</source>
+        <translation>A♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="278"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="293"/>
+        <source>B</source>
+        <translation>سي</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="283"/>
+        <source>D♭</source>
+        <translation>D♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="285"/>
+        <source>E♭</source>
+        <translation>E♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="288"/>
+        <source>G♭</source>
+        <translation>G♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="290"/>
+        <source>A♭</source>
+        <translation>A♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="292"/>
+        <source>B♭</source>
+        <translation>سي</translation>
+    </message>
+</context>
+<context>
+    <name>global/pitchName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="31"/>
+        <source>C-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="32"/>
+        <source>C♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="33"/>
+        <source>D♭-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="34"/>
+        <source>D-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="35"/>
+        <source>D♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="36"/>
+        <source>E♭-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="37"/>
+        <source>E-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="38"/>
+        <source>E♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="39"/>
+        <source>F♭-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="40"/>
+        <source>F-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="41"/>
+        <source>F♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="42"/>
+        <source>G♭-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="43"/>
+        <source>G-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="44"/>
+        <source>G♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="45"/>
+        <source>A♭-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="46"/>
+        <source>A-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="47"/>
+        <source>A♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="48"/>
+        <source>B♭-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="49"/>
+        <source>B-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="50"/>
+        <source>B♯-1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="52"/>
+        <source>C♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="53"/>
+        <source>C0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="54"/>
+        <source>C♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="55"/>
+        <source>D♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="56"/>
+        <source>D0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="57"/>
+        <source>D♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="58"/>
+        <source>E♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="59"/>
+        <source>E0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="60"/>
+        <source>E♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="61"/>
+        <source>F♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="62"/>
+        <source>F0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="63"/>
+        <source>F♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="64"/>
+        <source>G♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="65"/>
+        <source>G0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="66"/>
+        <source>G♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="67"/>
+        <source>A♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="68"/>
+        <source>A0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="69"/>
+        <source>A♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="70"/>
+        <source>B♭0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="71"/>
+        <source>B0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="72"/>
+        <source>B♯0</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="74"/>
+        <source>C♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="75"/>
+        <source>C1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="76"/>
+        <source>C♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="77"/>
+        <source>D♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="78"/>
+        <source>D1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="79"/>
+        <source>D♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="80"/>
+        <source>E♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="81"/>
+        <source>E1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="82"/>
+        <source>E♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="83"/>
+        <source>F♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="84"/>
+        <source>F1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="85"/>
+        <source>F♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="86"/>
+        <source>G♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="87"/>
+        <source>G1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="88"/>
+        <source>G♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="89"/>
+        <source>A♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="90"/>
+        <source>A1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="91"/>
+        <source>A♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="92"/>
+        <source>B♭1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="93"/>
+        <source>B1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="94"/>
+        <source>B♯1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="96"/>
+        <source>C♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="97"/>
+        <source>C2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="98"/>
+        <source>C♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="99"/>
+        <source>D♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="100"/>
+        <source>D2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="101"/>
+        <source>D♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="102"/>
+        <source>E♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="103"/>
+        <source>E2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="104"/>
+        <source>E♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="105"/>
+        <source>F♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="106"/>
+        <source>F2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="107"/>
+        <source>F♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="108"/>
+        <source>G♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="109"/>
+        <source>G2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="110"/>
+        <source>G♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="111"/>
+        <source>A♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="112"/>
+        <source>A2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="113"/>
+        <source>A♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="114"/>
+        <source>B♭2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="115"/>
+        <source>B2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="116"/>
+        <source>B♯2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="118"/>
+        <source>C♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="119"/>
+        <source>C3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="120"/>
+        <source>C♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="121"/>
+        <source>D♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="122"/>
+        <source>D3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="123"/>
+        <source>D♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="124"/>
+        <source>E♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="125"/>
+        <source>E3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="126"/>
+        <source>E♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="127"/>
+        <source>F♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="128"/>
+        <source>F3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="129"/>
+        <source>F♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="130"/>
+        <source>G♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="131"/>
+        <source>G3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="132"/>
+        <source>G♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="133"/>
+        <source>A♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="134"/>
+        <source>A3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="135"/>
+        <source>A♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="136"/>
+        <source>B♭3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="137"/>
+        <source>B3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="138"/>
+        <source>B♯3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="140"/>
+        <source>C♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="141"/>
+        <source>C4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="142"/>
+        <source>C♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="143"/>
+        <source>D♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="144"/>
+        <source>D4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="145"/>
+        <source>D♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="146"/>
+        <source>E♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="147"/>
+        <source>E4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="148"/>
+        <source>E♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="149"/>
+        <source>F♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="150"/>
+        <source>F4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="151"/>
+        <source>F♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="152"/>
+        <source>G♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="153"/>
+        <source>G4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="154"/>
+        <source>G♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="155"/>
+        <source>A♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="156"/>
+        <source>A4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="157"/>
+        <source>A♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="158"/>
+        <source>B♭4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="159"/>
+        <source>B4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="160"/>
+        <source>B♯4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="162"/>
+        <source>C♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="163"/>
+        <source>C5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="164"/>
+        <source>C♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="165"/>
+        <source>D♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="166"/>
+        <source>D5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="167"/>
+        <source>D♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="168"/>
+        <source>E♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="169"/>
+        <source>E5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="170"/>
+        <source>E♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="171"/>
+        <source>F♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="172"/>
+        <source>F5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="173"/>
+        <source>F♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="174"/>
+        <source>G♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="175"/>
+        <source>G5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="176"/>
+        <source>G♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="177"/>
+        <source>A♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="178"/>
+        <source>A5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="179"/>
+        <source>A♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="180"/>
+        <source>B♭5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="181"/>
+        <source>B5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="182"/>
+        <source>B♯5</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="184"/>
+        <source>C♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="185"/>
+        <source>C6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="186"/>
+        <source>C♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="187"/>
+        <source>D♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="188"/>
+        <source>D6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="189"/>
+        <source>D♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="190"/>
+        <source>E♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="191"/>
+        <source>E6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="192"/>
+        <source>E♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="193"/>
+        <source>F♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="194"/>
+        <source>F6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="195"/>
+        <source>F♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="196"/>
+        <source>G♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="197"/>
+        <source>G6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="198"/>
+        <source>G♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="199"/>
+        <source>A♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="200"/>
+        <source>A6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="201"/>
+        <source>A♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="202"/>
+        <source>B♭6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="203"/>
+        <source>B6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="204"/>
+        <source>B♯6</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="206"/>
+        <source>C♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="207"/>
+        <source>C7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="208"/>
+        <source>C♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="209"/>
+        <source>D♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="210"/>
+        <source>D7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="211"/>
+        <source>D♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="212"/>
+        <source>E♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="213"/>
+        <source>E7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="214"/>
+        <source>E♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="215"/>
+        <source>F♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="216"/>
+        <source>F7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="217"/>
+        <source>F♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="218"/>
+        <source>G♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="219"/>
+        <source>G7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="220"/>
+        <source>G♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="221"/>
+        <source>A♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="222"/>
+        <source>A7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="223"/>
+        <source>A♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="224"/>
+        <source>B♭7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="225"/>
+        <source>B7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="226"/>
+        <source>B♯7</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="228"/>
+        <source>C♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="229"/>
+        <source>C8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="230"/>
+        <source>C♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="231"/>
+        <source>D♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="232"/>
+        <source>D8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="233"/>
+        <source>D♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="234"/>
+        <source>E♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="235"/>
+        <source>E8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="236"/>
+        <source>E♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="237"/>
+        <source>F♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="238"/>
+        <source>F8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="239"/>
+        <source>F♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="240"/>
+        <source>G♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="241"/>
+        <source>G8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="242"/>
+        <source>G♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="243"/>
+        <source>A♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="244"/>
+        <source>A8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="245"/>
+        <source>A♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="246"/>
+        <source>B♭8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="247"/>
+        <source>B8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="248"/>
+        <source>B♯8</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="250"/>
+        <source>C♭9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="251"/>
+        <source>C9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="252"/>
+        <source>C♯9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="253"/>
+        <source>D♭9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="254"/>
+        <source>D9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="255"/>
+        <source>D♯9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="256"/>
+        <source>E♭9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="257"/>
+        <source>E9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="258"/>
+        <source>E♯9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="259"/>
+        <source>F♭9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="260"/>
+        <source>F9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="261"/>
+        <source>F♯9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="262"/>
+        <source>G♭9</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="263"/>
+        <source>G9</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>languages</name>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
+        <source>Up to date</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
+        <source>Error while parsing response from server</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
+        <source>Error while downloading language</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
+        <source>Error while writing language files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
+        <source>Language not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
+        <source>Error while removing language directory</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
+        <source>Another operation on this language has already been started</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>learn</name>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
+        <source>Open %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <source>Sorry, we are unable to load these videos right now</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="103"/>
+        <source>Learn</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <source>Learn tab bar</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <source>Get started</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <source>Classes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
+        <source>The received playlist is empty.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <source>Marc Sabatella</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <source>Instructor</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <source>Creator, Mastering MuseScore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
+
+Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
+
+In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
+
+(Note: Mastering MuseScore is available in English only)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <source>Mastering MuseScore</source>
+        <translation>إجادة استخدام برنامج ميوزسكور</translation>
+    </message>
+</context>
+<context>
+    <name>navigation</name>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
+        <source>Escape</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
+        <source>Navigate escape</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
+        <source>Next section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
+        <source>Navigate next section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
+        <source>Previous section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
+        <source>Navigate previous section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
+        <source>Next panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
+        <source>Navigate next panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
+        <source>Previous panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
+        <source>Navigate previous panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
+        <source>Next tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
+        <source>Navigate next tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
+        <source>Previous tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
+        <source>Navigate previous tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
+        <source>Right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
+        <source>Navigate right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
+        <source>Left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
+        <source>Navigate left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
+        <source>Up</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
+        <source>Navigate up</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
+        <source>Down</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
+        <source>Navigate down</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
+        <source>First control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
+        <source>Navigate first control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
+        <source>Last control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
+        <source>Navigate last control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
+        <source>Next row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
+        <source>Navigate next row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
+        <source>Previous row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
+        <source>Navigate previous row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
+        <source>Trigger control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
+        <source>Navigate trigger control</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>network</name>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
+        <source>The request was aborted</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
+        <source>The connection to the remote server timed out</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
+        <source>An unknown network-related error occurred</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
+        <source>The I/O device was not opened for reading</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
+        <source>The I/O device was not opened for writing</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>notation</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
+        <source>Extensions toolbar</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>shortcuts</name>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
+        <source>Old shortcut:</source>
+        <translation>:اختصار قديم</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
+        <source>New shortcut:</source>
+        <translation>اختصار جديد:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
+        <source>Type to set shortcut</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
+        <source>Shortcuts bottom panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
+        <source>Import</source>
+        <translation>استيراد</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
+        <source>Export</source>
+        <translation>تصدير</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
+        <source>Reset to default</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
+        <source>action</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="34"/>
+        <source>shortcut</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
+        <source>Shortcuts top panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
+        <source>Define…</source>
+        <translation>تعريف…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="98"/>
+        <source>Search shortcut</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
+        <source>Enter shortcut sequence</source>
+        <translation>إدراج تسلسل الاختصار</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <source>Define keyboard shortcut</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
+        <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <source>Reassign shortcut</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <source>MuseScore Studio shortcuts file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <source>Import shortcuts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <source>Export shortcuts</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>system</name>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="54"/>
+        <source>The file does not exist</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="55"/>
+        <source>The file already exists</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="56"/>
+        <source>The file could not be removed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="57"/>
+        <source>The directory is not empty</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
+        <source>The directory could not be cleared</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
+        <source>An error occurred when reading from the file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="60"/>
+        <source>An error occurred when writing to the file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="61"/>
+        <source>An error occurred when making a path</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="62"/>
+        <source>An error occurred when copying the file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="63"/>
+        <source>An error occurred when moving the file</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>ui</name>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="218"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
+        <source>Browse</source>
+        <translation>Browse</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
+        <source>Current path:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
+        <source>Choose file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
+        <source>Choose directory</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
+        <source>Directories actions</source>
+        <extracomment>Accessibility description of the button group at the top of the "Choose Directories" dialog</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
+        <source>Directories</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
+        <source>Add directory</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
+        <source>Path</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
+        <source>Directories list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <source>checked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <source>unchecked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="82"/>
+        <source>selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is the chosen option in a list of options</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="84"/>
+        <source>not selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is not the chosen option in a list of options</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="93"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
+        <source>Menu</source>
+        <extracomment>a type of ui item</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted ascending</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted descending</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
+        <source>not sorted</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
+        <source>Search</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
+        <source>Key</source>
+        <comment>key/value</comment>
+        <extracomment>As in a "key/value" pair: for example, the "key" could be the name of a setting and the "value" the value of that setting.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
+        <source>Value</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
+        <source>Value list panel</source>
+        <extracomment>Accessibility description of the body of a value list (table)</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Visible</source>
+        <translation>مرئي</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Hidden</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
+        <source>Light</source>
+        <extracomment>The name of the light ui theme</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
+        <source>Dark</source>
+        <extracomment>The name of the dark ui theme</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
+        <source>White</source>
+        <extracomment>The name of the high contrast light ui theme</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
+        <source>Black</source>
+        <extracomment>The name of the high contrast dark ui theme</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="149"/>
+        <source>direction is horizontal</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="150"/>
+        <source>direction is vertical</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
+        <source>direction is both</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>update</name>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <source>A new version of %1 is available!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <source>Release notes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <source>Skip this version</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <source>Remind me later</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <source>Install update</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
+        <source>Read the %1 release notes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <source>You already have the latest version of %1. Please visit &lt;a href="%2"&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <source>You’re up to date!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <source>Cannot connect to server</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <source>Sorry - please try again later</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <source>Check for update</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
+        <source>Close</source>
+        <translation>إغلاق</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading %1 %2</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>workspace</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
+        <source>Remove</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
+        <source>Workspaces</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
+        <source>Save layout as new workspace</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
+        <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
+        <source>Reset</source>
+        <translation>Reset</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
+        <source>New workspace</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
+        <source>Workspace name:</source>
+        <translation>اسم مجال العمل:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <source>Edit workspaces</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
+        <source>New</source>
+        <translation>جديد</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
+        <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
+        <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <source>Resetting workspaces</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="232"/>
+        <source>Reset workspace</source>
+        <translation>Reset workspace</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="263"/>
+        <source>Name cannot be empty</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="274"/>
+        <source>Name already exists</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>
