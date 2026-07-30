@@ -109,6 +109,8 @@ void TrackNavigationModel::load()
         return;
     }
 
+    m_activateDefaultNavigationRequested = true;
+
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         clearPanels();
 
@@ -168,6 +170,8 @@ void TrackNavigationModel::load()
     if (trackList.empty()) {
         addDefaultNavigation();
     }
+
+    updateDefaultNavigationControl();
 
     tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
         if (tracksNavigationController()->focusedItem().itemId != INVALID_TRACK_ITEM) {
@@ -346,17 +350,36 @@ void TrackNavigationModel::setFallbackNavigationControl(muse::ui::NavigationCont
     updateDefaultNavigationControl();
 }
 
+void TrackNavigationModel::activateDefaultNavigation()
+{
+    m_activateDefaultNavigationRequested = true;
+
+    updateDefaultNavigationControl();
+}
+
 void TrackNavigationModel::updateDefaultNavigationControl()
 {
     //! NOTE: the default navigation control is the control the navigation returns to
     //! (Escape, reset of the navigation): the first track if there are tracks,
     //! the fallback control otherwise
-    muse::ui::INavigationControl* control = m_panels.isEmpty() ? nullptr : findFirstEnabledControl(m_panels.first().track);
-    if (!control) {
-        control = m_fallbackNavigationControl.data();
-    }
+    muse::ui::INavigationControl* trackControl = m_panels.isEmpty() ? nullptr : findFirstEnabledControl(m_panels.first().track);
+    muse::ui::INavigationControl* control = trackControl ? trackControl : m_fallbackNavigationControl.data();
 
     navigationController()->setDefaultNavigationControl(control);
+
+    if (!m_activateDefaultNavigationRequested || !control) {
+        return;
+    }
+
+    //! NOTE: QML creates the control of a track later than the model creates its panels,
+    //! so the requested activation waits for the first track instead of landing on the fallback control
+    if (!m_panels.isEmpty() && !trackControl) {
+        return;
+    }
+
+    m_activateDefaultNavigationRequested = false;
+
+    activateNavigation(control);
 }
 
 void TrackNavigationModel::updateNavigationActive(const muse::ui::INavigationPanel* activePanel)
@@ -543,4 +566,24 @@ void TrackNavigationModel::activateNavigation(const TrackItemKey& itemKey, bool 
             return;
         }
     }
+}
+
+void TrackNavigationModel::activateNavigation(const muse::ui::INavigationControl* control, bool highlight)
+{
+    if (!control || control->active()) {
+        return;
+    }
+
+    const muse::ui::INavigationPanel* panel = control->panel();
+    const muse::ui::INavigationSection* section = panel ? panel->section() : nullptr;
+    if (!section) {
+        return;
+    }
+
+    navigationController()->setIsHighlight(highlight);
+    navigationController()->requestActivateByName(
+        section->name().toStdString(),
+        panel->name().toStdString(),
+        control->name().toStdString()
+        );
 }

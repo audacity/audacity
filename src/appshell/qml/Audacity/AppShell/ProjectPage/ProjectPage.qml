@@ -124,6 +124,8 @@ DockPage {
 
     onInited: {
         Qt.callLater(pageModel.init)
+
+        tracksNavModel.activateDefaultNavigation()
     }
 
     readonly property int verticalPanelDefaultWidth: 281

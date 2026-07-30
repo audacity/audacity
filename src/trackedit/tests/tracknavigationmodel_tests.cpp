@@ -21,6 +21,7 @@
 #include "mocks/tracknavigationcontrollermock.h"
 #include "mocks/trackeditprojectmock.h"
 
+using ::testing::AnyNumber;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
@@ -29,6 +30,8 @@ using ::testing::_;
 
 namespace au::trackedit {
 static constexpr const char* SECTION_NAME = "TrackViewSection";
+static constexpr const char* FALLBACK_PANEL_NAME = "FallbackPanel";
+static constexpr const char* FALLBACK_CONTROL_NAME = "FallbackControl";
 
 class TrackNavigationModelTests : public ::testing::Test
 {
@@ -105,6 +108,11 @@ public:
         }
         m_controls.clear();
 
+        for (muse::ui::NavigationPanel* panel : m_extraPanels) {
+            delete panel;
+        }
+        m_extraPanels.clear();
+
         delete m_model;
         m_model = nullptr;
 
@@ -157,13 +165,25 @@ public:
         return control;
     }
 
-    //! NOTE Create a control that does not belong to the model's panels (e.g. the "Add track" button)
-    muse::ui::NavigationControl* makeControl(const QString& name)
+    //! NOTE Create the control the page gives the model to fall back to when the project
+    //! has no tracks. It may be any control of the page, so it lives in its own panel
+    muse::ui::NavigationControl* makeFallbackControl()
     {
+        auto* panel = new muse::ui::NavigationPanel(m_testCtx);
+        panel->setName(FALLBACK_PANEL_NAME);
+        panel->setOrder(100);
+        panel->setSection(m_section);
+        panel->componentComplete();
+        m_extraPanels.push_back(panel);
+
         auto* control = new muse::ui::NavigationControl(m_testCtx);
-        control->setName(name);
+        control->setName(FALLBACK_CONTROL_NAME);
         control->setEnabled(true);
+        control->setPanel(panel);
         m_controls.push_back(control);
+
+        m_model->setFallbackNavigationControl(control);
+
         return control;
     }
 
@@ -225,6 +245,7 @@ public:
     muse::async::Channel<TrackItemKey, bool> m_focusedItemChanged;
 
     std::vector<muse::ui::NavigationControl*> m_controls;
+    std::vector<muse::ui::NavigationPanel*> m_extraPanels;
 
     muse::ui::INavigationControl* m_defaultNavigationControl = nullptr;
 };
@@ -468,13 +489,12 @@ TEST_F(TrackNavigationModelTests, EscapeFromHeaderReturnsFocusToTrack)
 
 /**
  * The control the navigation falls back to (Escape, navigation reset) is the first
- * track of the project; until its control is created by QML the "Add track" button is kept.
+ * track of the project; until its control is created by QML the fallback control is kept.
  */
 TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsFirstTrack)
 {
-    //! [GIVEN] The "Add track" button is set as the control to fall back to
-    muse::ui::NavigationControl* addTrackControl = makeControl("AddTrack");
-    m_model->setFallbackNavigationControl(addTrackControl);
+    //! [GIVEN] The page has given the model a control to fall back to
+    muse::ui::NavigationControl* fallbackControl = makeFallbackControl();
 
     //! [AND] The default control set on the navigation controller is tracked
     trackDefaultNavigationControl();
@@ -482,8 +502,8 @@ TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsFirstTrack)
     //! [WHEN] A project with two tracks is loaded
     loadWithTracks({ makeTrack(10), makeTrack(20) });
 
-    //! [THEN] The tracks have no controls yet (QML creates them later), the button is kept
-    EXPECT_EQ(m_defaultNavigationControl, addTrackControl);
+    //! [THEN] The tracks have no controls yet (QML creates them later), the fallback one is kept
+    EXPECT_EQ(m_defaultNavigationControl, fallbackControl);
 
     //! [WHEN] The tracks get their controls
     muse::ui::NavigationControl* firstTrackControl = addItemControl(m_model->trackItemPanels().at(0), "track-10", 0);
@@ -494,32 +514,30 @@ TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsFirstTrack)
 }
 
 /**
- * A project without tracks falls back to the "Add track" button.
+ * A project without tracks falls back to the control given by the page.
  */
-TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsAddTrackWhenNoTracks)
+TEST_F(TrackNavigationModelTests, DefaultNavigationControlIsFallbackWhenNoTracks)
 {
-    //! [GIVEN] The "Add track" button is set as the control to fall back to
-    muse::ui::NavigationControl* addTrackControl = makeControl("AddTrack");
-    m_model->setFallbackNavigationControl(addTrackControl);
+    //! [GIVEN] The page has given the model a control to fall back to
+    muse::ui::NavigationControl* fallbackControl = makeFallbackControl();
 
     trackDefaultNavigationControl();
 
     //! [WHEN] A project without tracks is loaded
     loadWithTracks({});
 
-    //! [THEN] The default control is the "Add track" button
-    EXPECT_EQ(m_defaultNavigationControl, addTrackControl);
+    //! [THEN] The default control is the fallback one
+    EXPECT_EQ(m_defaultNavigationControl, fallbackControl);
 }
 
 /**
  * The default control follows the tracks list: removing the first track moves it to the
- * track that became first, removing the last one returns it to the "Add track" button.
+ * track that became first, removing the last one returns it to the fallback control.
  */
 TEST_F(TrackNavigationModelTests, DefaultNavigationControlFollowsTracksList)
 {
     //! [GIVEN] A project with two tracks, both with their controls created
-    muse::ui::NavigationControl* addTrackControl = makeControl("AddTrack");
-    m_model->setFallbackNavigationControl(addTrackControl);
+    muse::ui::NavigationControl* fallbackControl = makeFallbackControl();
 
     loadWithTracks({ makeTrack(10), makeTrack(20) });
 
@@ -537,7 +555,50 @@ TEST_F(TrackNavigationModelTests, DefaultNavigationControlFollowsTracksList)
     //! [WHEN] The last track is removed
     m_trackRemoved.send(makeTrack(20));
 
-    //! [THEN] The default control is the "Add track" button again
-    EXPECT_EQ(m_defaultNavigationControl, addTrackControl);
+    //! [THEN] The default control is the fallback one again
+    EXPECT_EQ(m_defaultNavigationControl, fallbackControl);
+}
+
+/**
+ * Opening the project page moves the navigation to the default control. The controls of the
+ * tracks are created by QML later than their panels, so the activation waits for the first track.
+ */
+TEST_F(TrackNavigationModelTests, PageOpenActivatesFirstTrack)
+{
+    //! [GIVEN] A page with a fallback control and a project with two tracks
+    makeFallbackControl();
+
+    loadWithTracks({ makeTrack(10), makeTrack(20) });
+
+    //! [EXPECT] The navigation lands on the first track, without the highlight
+    EXPECT_CALL(*m_navigationController, setIsHighlight(false)).Times(1);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), trackPanelName(10).toStdString(), std::string("track-10"))).Times(1);
+
+    //! [WHEN] The page is opened and QML creates the controls of the tracks
+    m_model->activateDefaultNavigation();
+
+    addItemControl(m_model->trackItemPanels().at(0), "track-10", 0);
+    addItemControl(m_model->trackItemPanels().at(1), "track-20", 0);
+}
+
+/**
+ * A project without tracks opens with the navigation on the fallback control.
+ */
+TEST_F(TrackNavigationModelTests, PageOpenActivatesFallbackWhenNoTracks)
+{
+    //! [GIVEN] A page with a fallback control
+    makeFallbackControl();
+
+    //! [EXPECT] The navigation lands on the fallback control, without the highlight
+    //! (the empty project also activates its own "Tracks: Empty" control)
+    EXPECT_CALL(*m_navigationController, requestActivateByName(_, _, _)).Times(AnyNumber());
+    EXPECT_CALL(*m_navigationController, setIsHighlight(false)).Times(1);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), std::string(FALLBACK_PANEL_NAME),
+                    std::string(FALLBACK_CONTROL_NAME))).Times(1);
+
+    //! [WHEN] A project without tracks is loaded into the page
+    loadWithTracks({});
 }
 }

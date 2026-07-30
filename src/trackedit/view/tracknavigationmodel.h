@@ -29,8 +29,8 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackHeaderPanels READ trackHeaderPanels NOTIFY panelsChanged)
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY panelsChanged)
 
-    //! NOTE: the control that becomes the default navigation control of the page
-    //! when there are no tracks (the "Add track" button)
+    //! NOTE: the control the page provides to become its default navigation control
+    //! when the project has no tracks
     Q_PROPERTY(
         muse::ui::NavigationControl
         * fallbackNavigationControl READ fallbackNavigationControl WRITE setFallbackNavigationControl NOTIFY fallbackNavigationControlChanged)
@@ -42,6 +42,8 @@ public:
     Q_INVOKABLE void init(muse::ui::NavigationSection* section);
 
     Q_INVOKABLE void moveFocusTo(const QVariant& trackId);
+
+    Q_INVOKABLE void activateDefaultNavigation();
 
     QList<muse::ui::NavigationPanel*> trackItemPanels() const;
     QList<muse::ui::NavigationPanel*> trackHeaderPanels() const;
@@ -85,6 +87,7 @@ private:
 
     void activateNavigation(const TrackId& trackId, bool highlight = false);
     void activateNavigation(const TrackItemKey& itemKey, bool highlight = false);
+    void activateNavigation(const muse::ui::INavigationControl* control, bool highlight = false);
 
     muse::ui::INavigationSection* m_section = nullptr;
 
@@ -94,6 +97,8 @@ private:
     QList<TrackPanels> m_panels;
 
     QPointer<muse::ui::NavigationControl> m_fallbackNavigationControl;
+
+    bool m_activateDefaultNavigationRequested = false;
 
     int m_lastActivePanelOrder = -1;
 };
