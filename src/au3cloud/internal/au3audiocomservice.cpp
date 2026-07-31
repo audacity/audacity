@@ -390,6 +390,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
             uploadMode,
             AudiocomTrace::SaveProjectSaveToCloudMenu);
 
+        if (!future.valid()) {
+            return;
+        }
+
         auto result = future.get();
         if (!result.Response) {
             return;

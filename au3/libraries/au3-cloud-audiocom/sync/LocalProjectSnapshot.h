@@ -80,6 +80,9 @@ public:
     void Abort();
 
 private:
+    void SetProjectData(const ProjectUploadData& data);
+    void SetCreateSnapshotResult(SnapshotData data);
+
     bool UploadFailed(CloudSyncError error);
     void DataUploadFailed(const ResponseResult& uploadResult);
     void DataUploadFailed(const MissingBlocksUploadProgress& uploadResult);
@@ -121,5 +124,6 @@ private:
     std::atomic<bool> mCompleted { false };
     std::atomic<bool> mCancelled { false };
     std::atomic<bool> mProjectDataReady { false };
+    std::atomic<bool> mCreateSnapshotResultReady { false };
 };
 } // namespace audacity::cloud::audiocom::sync

@@ -212,6 +212,8 @@ LocalProjectSnapshot::LocalProjectSnapshot(
 
 LocalProjectSnapshot::~LocalProjectSnapshot()
 {
+    SetProjectData({});
+    SetCreateSnapshotResult({});
 }
 
 LocalProjectSnapshot::Future LocalProjectSnapshot::Create(
@@ -269,8 +271,21 @@ void LocalProjectSnapshot::Start()
 
 void LocalProjectSnapshot::SetUploadData(const ProjectUploadData& data)
 {
-    mProjectDataReady.store(true);
-    mProjectDataPromise.set_value(data);
+    SetProjectData(data);
+}
+
+void LocalProjectSnapshot::SetProjectData(const ProjectUploadData& data)
+{
+    if (!mProjectDataReady.exchange(true, std::memory_order_release)) {
+        mProjectDataPromise.set_value(data);
+    }
+}
+
+void LocalProjectSnapshot::SetCreateSnapshotResult(SnapshotData data)
+{
+    if (!mCreateSnapshotResultReady.exchange(true, std::memory_order_release)) {
+        mCreateSnapshotPromise.set_value(std::move(data));
+    }
 }
 
 void LocalProjectSnapshot::Cancel()
@@ -279,9 +294,8 @@ void LocalProjectSnapshot::Cancel()
 
     mCancellationContext->Cancel();
 
-    if (!mProjectDataReady.load(std::memory_order_acquire)) {
-        mProjectDataPromise.set_value({});
-    }
+    SetProjectData({});
+    SetCreateSnapshotResult({});
 
     UploadFailed({ CloudSyncError::Cancelled });
 }
@@ -292,9 +306,8 @@ void LocalProjectSnapshot::Abort()
 
     mCancellationContext->Cancel();
 
-    if (!mProjectDataReady.load(std::memory_order_acquire)) {
-        mProjectDataPromise.set_value({});
-    }
+    SetProjectData({});
+    SetCreateSnapshotResult({});
 
     if (UploadFailed({ CloudSyncError::Aborted })) {
         DeleteSnapshot();
@@ -354,6 +367,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
     if (project == nullptr) {
         UploadFailed(MakeClientFailure(
                          TranslatableString("cloud-audiocom", "Project was closed before snapshot was created")));
+        SetCreateSnapshotResult({});
         return;
     }
 
@@ -424,7 +438,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
         if (error != NetworkError::NoError) {
             UploadFailed(DeduceUploadError(*response));
 
-            mCreateSnapshotPromise.set_value({});
+            SetCreateSnapshotResult({});
             return;
         }
 
@@ -435,7 +449,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
             UploadFailed(MakeClientFailure(
                              TranslatableString("cloud-audiocom", "Invalid Response: %1").arg(body).translated().toStdString()));
 
-            mCreateSnapshotPromise.set_value({});
+            SetCreateSnapshotResult({});
             return;
         }
 
@@ -453,6 +467,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
     if (project == nullptr) {
         UploadFailed(MakeClientFailure(
                          TranslatableString("cloud-audiocom", "Project was closed before snapshot was created")));
+        SetCreateSnapshotResult({});
         return;
     }
 
@@ -469,7 +484,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
         mCreateSnapshotResponse = response;
     }
 
-    mCreateSnapshotPromise.set_value({ response, shared_from_this() });
+    SetCreateSnapshotResult({ response, shared_from_this() });
 
     auto projectData = mProjectDataPromise.get_future().get();
 
