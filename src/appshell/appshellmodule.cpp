@@ -24,6 +24,7 @@
 
 #include <QQmlEngine>
 
+#include "framework/global/iapplicationeventcontroller.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
@@ -80,6 +81,18 @@ void AppShellModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
         ir->registerQmlUri(muse::Uri("audacity://signin/audiocom"), "Audacity.AppShell", "SigninAudiocomDialog");
         ir->registerQmlUri(muse::Uri("audacity://welcomedialog"), "Audacity.AppShell", "WelcomeDialog");
+    }
+}
+
+void AppShellModule::onPreInit(const muse::IApplication::RunMode& mode)
+{
+    if (mode == muse::IApplication::RunMode::AudioPluginRegistration) {
+        return;
+    }
+
+    auto eventController = globalIoc()->resolve<muse::IApplicationEventController>(mname);
+    if (eventController) {
+        eventController->setPendingEventTypes({ QEvent::FileOpen });
     }
 }
 
@@ -143,10 +156,7 @@ void AppShellContext::onAllInited(const muse::IApplication::RunMode& mode)
         return;
     }
 
-    //! NOTE: process QEvent::FileOpen as early as possible if it was postponed
-#ifdef Q_OS_MACOS
-    qApp->processEvents();
-#endif
+    m_applicationActionController->processPendingEvents();
 }
 
 void AppShellContext::onDeinit()

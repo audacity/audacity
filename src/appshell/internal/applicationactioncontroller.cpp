@@ -254,44 +254,57 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 
     //! on macOS custom URL opened from browser are also passed as QEvent::FileOpen
     if (event->type() == QEvent::FileOpen && watched == qApp) {
-        const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
-        const QUrl url = openEvent->url();
+        handleFileOpenEvent(static_cast<const QFileOpenEvent*>(event));
+        return true;
+    }
 
-        // TODO: isUrlSupported - is misleading, as it does not handle audio.com urls
-        if (projectFilesController()->isUrlSupported(url)) {
-            if (startupScenario()->startupCompleted()) {
-                // On macos the main window may be hidden, show and raise it
-                // before loading the project
-                if (auto mw = mainWindow()) {
-                    if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
-                        window->setVisible(true);
-                    }
-                    mw->requestShowOnFront();
-                }
-                dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
-            } else {
-                startupScenario()->setStartupProjectFile(project::ProjectFile { url });
-            }
+    return QObject::eventFilter(watched, event);
+}
 
-            return true;
+void ApplicationActionController::processPendingEvents()
+{
+    for (const std::unique_ptr<QEvent>& event : applicationEventController()->takePendingEvents()) {
+        if (event->type() == QEvent::FileOpen) {
+            handleFileOpenEvent(static_cast<const QFileOpenEvent*>(event.get()));
         }
+    }
+}
 
-        const QString urlStr = url.toString(QUrl::FullyEncoded);
+void ApplicationActionController::handleFileOpenEvent(const QFileOpenEvent* event)
+{
+    const QUrl url = event->url();
+
+    // TODO: isUrlSupported - is misleading, as it does not handle audio.com urls
+    if (projectFilesController()->isUrlSupported(url)) {
         if (startupScenario()->startupCompleted()) {
+            // On macos the main window may be hidden, show and raise it
+            // before loading the project
             if (auto mw = mainWindow()) {
                 if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
                     window->setVisible(true);
                 }
                 mw->requestShowOnFront();
             }
-            dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(urlStr));
+            dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
         } else {
-            startupScenario()->setStartupUrl(urlStr);
+            startupScenario()->setStartupProjectFile(project::ProjectFile { url });
         }
-        return true;
+
+        return;
     }
 
-    return QObject::eventFilter(watched, event);
+    const QString urlStr = url.toString(QUrl::FullyEncoded);
+    if (startupScenario()->startupCompleted()) {
+        if (auto mw = mainWindow()) {
+            if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
+                window->setVisible(true);
+            }
+            mw->requestShowOnFront();
+        }
+        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(urlStr));
+    } else {
+        startupScenario()->setStartupUrl(urlStr);
+    }
 }
 
 bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
