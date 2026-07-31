@@ -20,4 +20,5 @@ endif()
 
 if (NOT MUSE_MODULE_EXTENSIONS)
     add_subdirectory(extensions)
+    add_subdirectory(effects_extensions)
 endif()
