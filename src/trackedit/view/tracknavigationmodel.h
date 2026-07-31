@@ -88,6 +88,7 @@ private:
     void resetPanelOrder();
     void deletePanels(const TrackPanels& panels);
     int indexOfTrack(const TrackId& trackId) const;
+    bool isNavigationOnTrack(const TrackId& trackId) const;
     QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
     void updateNavigationActive(const muse::ui::INavigationPanel* activePanel);
     void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);

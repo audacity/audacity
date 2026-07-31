@@ -179,6 +179,10 @@ void TrackNavigationModel::load()
         }
 
         QTimer::singleShot(10, [this, trackId, highlight](){
+            if (isNavigationOnTrack(trackId)) {
+                return;
+            }
+
             activateNavigation(trackId, highlight);
         });
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -268,6 +272,23 @@ void TrackNavigationModel::resetPanelOrder()
     }
 
     emit panelsChanged();
+}
+
+bool TrackNavigationModel::isNavigationOnTrack(const TrackId& trackId) const
+{
+    const muse::ui::INavigationPanel* activePanel = navigationController()->activePanel();
+    if (!activePanel) {
+        return false;
+    }
+
+    const int pos = indexOfTrack(trackId);
+    if (pos < 0) {
+        return false;
+    }
+
+    const TrackPanels& panels = m_panels.at(pos);
+
+    return activePanel == panels.track || activePanel == panels.header || activePanel == panels.items;
 }
 
 int TrackNavigationModel::indexOfTrack(const TrackId& trackId) const
