@@ -86,7 +86,9 @@ Notification RecordController::isRecordingChanged() const
 
 void RecordController::toggleRecord()
 {
-    if (isRecording()) {
+    if (m_currentRecordStatus == RecordStatus::Paused) {
+        resume();
+    } else if (isRecording()) {
         stop();
     } else {
         start();
@@ -108,6 +110,8 @@ void RecordController::start()
         return;
     }
 
+    stopPlaybackIfPaused();
+
     Ret ret = record()->start();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -122,6 +126,8 @@ void RecordController::startWithNewTrack()
     IF_ASSERT_FAILED(record()) {
         return;
     }
+
+    stopPlaybackIfPaused();
 
     const int recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
 
@@ -153,6 +159,11 @@ void RecordController::pause()
         return;
     }
 
+    if (m_currentRecordStatus == RecordStatus::Paused) {
+        resume();
+        return;
+    }
+
     Ret ret = record()->pause();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -160,6 +171,21 @@ void RecordController::pause()
     }
 
     setCurrentRecordStatus(RecordStatus::Paused);
+}
+
+void RecordController::resume()
+{
+    IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    Ret ret = record()->resume();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
+    setCurrentRecordStatus(RecordStatus::Running);
 }
 
 void RecordController::stop()
@@ -183,8 +209,11 @@ void RecordController::leadInRecording()
         return;
     }
 
-    // Store the recording start position and selected tracks before starting
-    m_leadInRecordingStartTime = selectionController()->selectionStartTime();
+    stopPlaybackIfPaused();
+
+    // Store the recording start position and selected tracks before starting;
+    // recording always starts from the current playhead position
+    m_leadInRecordingStartTime = globalContext()->playbackState()->playbackPosition();
     m_leadInRecordingTrackIds = selectionController()->selectedTracks();
 
     Ret ret = record()->leadInRecording();
@@ -195,6 +224,16 @@ void RecordController::leadInRecording()
     }
 
     setCurrentRecordStatus(RecordStatus::LeadIn);
+}
+
+void RecordController::stopPlaybackIfPaused()
+{
+    //! NOTE: recording from a paused playback state must start immediately from
+    //! the playhead; stop playback first so that the paused stream is released
+    //! and the engine pause flag is cleared
+    if (playbackController()->isPaused()) {
+        playbackController()->stop();
+    }
 }
 
 void RecordController::toggleMicMetering()

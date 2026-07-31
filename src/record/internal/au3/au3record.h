@@ -37,6 +37,8 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
 
+    friend class Au3RecordTests;
+
 public:
     Au3Record(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
@@ -45,6 +47,7 @@ public:
 
     muse::Ret start() override;
     muse::Ret pause() override;
+    muse::Ret resume() override;
     muse::Ret stop() override;
     muse::Ret leadInRecording() override;
 

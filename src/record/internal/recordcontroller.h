@@ -39,6 +39,8 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
+    friend class RecordControllerTests;
+
 public:
     RecordController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
@@ -82,8 +84,10 @@ private:
     void start();
     void startWithNewTrack();
     void pause();
+    void resume();
     void stop();
     void leadInRecording();
+    void stopPlaybackIfPaused();
     void toggleMicMetering();
     void toggleInputMonitoring();
 
