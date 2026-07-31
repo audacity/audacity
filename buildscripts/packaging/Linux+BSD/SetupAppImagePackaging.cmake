@@ -21,6 +21,8 @@ install(PROGRAMS ${PROJECT_BINARY_DIR}/portable-utils
 
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/portable/qt.conf DESTINATION bin COMPONENT portable)
 
+install(PROGRAMS ${CMAKE_CURRENT_LIST_DIR}/portable/wrappers/xdg-open DESTINATION wrappers COMPONENT portable)
+
 
 # Identify App's main window so that it receives the correct name
 # and icon in the OS dock / taskbar. Run `xprop WM_CLASS` and click on

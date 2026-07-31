@@ -18,6 +18,14 @@ for fb_dir in "${APPDIR}/fallback"/*; do
   fi
 done
 
+# Remember the environment the AppImage was started from, so that child
+# processes which interact with the host system (e.g. xdg-open) can be run
+# without the AppImage's bundled libraries. See the wrappers directory.
+if [[ "${LD_LIBRARY_PATH}" ]]; then
+  export APPIMAGE_ORIGINAL_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+fi
+export PATH="${APPDIR}/wrappers:${PATH}"
+
 # Add fallback directories to LD_LIBRARY_PATH. Don't add the main lib
 # directory because linuxdeploy sets RUNPATH to point to it anyway.
 export LD_LIBRARY_PATH="${APPDIR}/lib:${APPDIR}/lib/audacity:${LD_LIBRARY_PATH}${fallback_libs}"
