@@ -239,17 +239,15 @@ BuiltinEffectBase {
                     standardPointStyle {
                         centerRadius: 5.0
                         centerColor: ui.theme.accentColor
-                    }
 
-                    hoveredPointStyle {
-                        centerRadius: 1.0
-                        centerColor: ui.theme.extra["white_color"]
+                        centerRadiusHovered: 1.0
+                        centerColorHovered: ui.theme.extra["white_color"]
 
-                        middleRingWidth: 2.0
-                        middleRingColor: ui.theme.extra["black_color"]
+                        middleRingWidthHovered: 2.0
+                        middleRingColorHovered: ui.theme.extra["black_color"]
 
-                        outlineWidth: 3.0
-                        outlineColor: ui.theme.accentColor
+                        outlineWidthHovered: 3.0
+                        outlineColorHovered: ui.theme.accentColor
                     }
 
                     ghostPointStyle {
