@@ -168,7 +168,10 @@ void WindowsSystemAudioDevicesListener::scheduleNotification()
 {
     QMetaObject::invokeMethod(this, [this]() {
         // bursts of notifications (e.g. plugging a headset changes the
-        // device list and the defaults) collapse into one notification
-        m_debounceTimer.start();
+        // device list and the defaults) collapse into one notification;
+        // restarting the timer would let a continuous stream starve it forever
+        if (!m_debounceTimer.isActive()) {
+            m_debounceTimer.start();
+        }
     }, Qt::QueuedConnection);
 }

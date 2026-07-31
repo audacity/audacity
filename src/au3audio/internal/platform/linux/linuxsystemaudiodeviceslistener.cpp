@@ -54,11 +54,14 @@ void LinuxSystemAudioDevicesListener::startListening()
     m_notifier = std::make_unique<QSocketNotifier>(udev_monitor_get_fd(m_monitor), QSocketNotifier::Read);
     QObject::connect(m_notifier.get(), &QSocketNotifier::activated, this, [this]() {
         // drain the queued events; what changed does not matter, and bursts
-        // (a card exposes several sound devices) collapse into one notification
+        // (a card exposes several sound devices) collapse into one notification;
+        // restarting the timer would let a continuous stream starve it forever
         while (struct udev_device* device = udev_monitor_receive_device(m_monitor)) {
             udev_device_unref(device);
         }
-        m_debounceTimer.start();
+        if (!m_debounceTimer.isActive()) {
+            m_debounceTimer.start();
+        }
     });
 }
 

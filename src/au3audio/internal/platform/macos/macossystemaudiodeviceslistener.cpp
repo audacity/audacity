@@ -75,6 +75,9 @@ muse::async::Notification MacosSystemAudioDevicesListener::systemDevicesChanged(
 void MacosSystemAudioDevicesListener::onSystemDevicesChanged()
 {
     // bursts of CoreAudio notifications (e.g. plugging a headset changes
-    // the device list and both defaults) collapse into one notification
-    m_debounceTimer.start();
+    // the device list and both defaults) collapse into one notification;
+    // restarting the timer would let a continuous stream starve it forever
+    if (!m_debounceTimer.isActive()) {
+        m_debounceTimer.start();
+    }
 }
