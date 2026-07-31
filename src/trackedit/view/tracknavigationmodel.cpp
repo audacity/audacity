@@ -305,7 +305,10 @@ void TrackNavigationModel::addDefaultNavigation()
         muse::ui::AccessibleItem* accessible = m_defaultControl->accessible();
         accessible->setRole(muse::ui::MUAccessible::Information);
         accessible->setName(muse::qtrc("trackedit", "Tracks: Empty"));
+        accessible->setVisualItem(m_trackViewItem);
         accessible->componentComplete();
+
+        emit defaultNavigationControlChanged();
     }
 
     m_defaultPanel->setEnabled(true);
@@ -348,6 +351,31 @@ void TrackNavigationModel::setFallbackNavigationControl(muse::ui::NavigationCont
     emit fallbackNavigationControlChanged();
 
     updateDefaultNavigationControl();
+}
+
+muse::ui::NavigationControl* TrackNavigationModel::defaultNavigationControl() const
+{
+    return m_defaultControl;
+}
+
+QQuickItem* TrackNavigationModel::trackViewItem() const
+{
+    return m_trackViewItem;
+}
+
+void TrackNavigationModel::setTrackViewItem(QQuickItem* item)
+{
+    if (m_trackViewItem == item) {
+        return;
+    }
+
+    m_trackViewItem = item;
+
+    if (m_defaultControl) {
+        m_defaultControl->accessible()->setVisualItem(item);
+    }
+
+    emit trackViewItemChanged();
 }
 
 void TrackNavigationModel::activateDefaultNavigation()

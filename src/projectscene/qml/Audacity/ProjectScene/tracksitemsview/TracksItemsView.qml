@@ -15,6 +15,12 @@ Rectangle {
 
     property var navPanels: null
 
+    //! NOTE: the control of the empty project, it has no item of its own,
+    //! so the tracks area draws the navigation focus border for it
+    property NavigationControl navDefaultControl: null
+
+    readonly property alias tracksAreaItem: content
+
     property bool itemHovered: false
     property bool itemHeaderHovered: false
     property var hoveredItemKey: null
@@ -1296,6 +1302,11 @@ Rectangle {
             width: verticalRulerPanelHeader.width
             anchors.right: parent.right
             anchors.bottom: parent.bottom
+        }
+
+        NavigationFocusBorder {
+            navigationCtrl: root.navDefaultControl
+            drawOutsideParent: false
         }
     }
 

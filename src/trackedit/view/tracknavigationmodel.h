@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QPointer>
+#include <QQuickItem>
 
 #include "ui/qml/Muse/Ui/navigationsection.h"
 #include "ui/qml/Muse/Ui/navigationpanel.h"
@@ -35,6 +36,10 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
         muse::ui::NavigationControl
         * fallbackNavigationControl READ fallbackNavigationControl WRITE setFallbackNavigationControl NOTIFY fallbackNavigationControlChanged)
 
+    Q_PROPERTY(QQuickItem * trackViewItem READ trackViewItem WRITE setTrackViewItem NOTIFY trackViewItemChanged)
+    Q_PROPERTY(
+        muse::ui::NavigationControl * defaultNavigationControl READ defaultNavigationControl NOTIFY defaultNavigationControlChanged)
+
 public:
     explicit TrackNavigationModel(QObject* parent = nullptr);
     ~TrackNavigationModel() override;
@@ -52,9 +57,16 @@ public:
     muse::ui::NavigationControl* fallbackNavigationControl() const;
     void setFallbackNavigationControl(muse::ui::NavigationControl* control);
 
+    QQuickItem* trackViewItem() const;
+    void setTrackViewItem(QQuickItem* item);
+
+    muse::ui::NavigationControl* defaultNavigationControl() const;
+
 signals:
     void panelsChanged();
     void fallbackNavigationControlChanged();
+    void trackViewItemChanged();
+    void defaultNavigationControlChanged();
 
 private:
     struct TrackPanels
@@ -97,6 +109,7 @@ private:
     QList<TrackPanels> m_panels;
 
     QPointer<muse::ui::NavigationControl> m_fallbackNavigationControl;
+    QPointer<QQuickItem> m_trackViewItem;
 
     bool m_activateDefaultNavigationRequested = false;
 

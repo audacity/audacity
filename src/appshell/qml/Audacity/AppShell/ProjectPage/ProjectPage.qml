@@ -438,6 +438,13 @@ DockPage {
         id: tracksItemsView
 
         navPanels: tracksNavModel.viewItemPanels
+        navDefaultControl: tracksNavModel.defaultNavigationControl
+
+        Binding {
+            target: tracksNavModel
+            property: "trackViewItem"
+            value: tracksItemsView.tracksAreaItem
+        }
 
         Connections {
             target: root
