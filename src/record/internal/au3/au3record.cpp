@@ -444,7 +444,7 @@ muse::Ret Au3Record::pause()
 muse::Ret Au3Record::resume()
 {
     if (!canStopAudioStream()) {
-        return make_ret(Err::RecordingStopError);
+        return make_ret(Err::RecordingResumeError);
     }
 
     audioEngine()->pauseStream(false);

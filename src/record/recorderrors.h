@@ -17,6 +17,7 @@ enum class Err {
 
     RecordingError,
     RecordingStopError,
+    RecordingResumeError,
     MismatchedSamplingRatesError,
     TooFewCompatibleTracksSelected,
 
@@ -34,6 +35,7 @@ inline muse::Ret make_ret(Err e)
     case Err::UnknownError: return muse::Ret(retCode);
     case Err::RecordingError: return muse::Ret(retCode, muse::trc("record", "Error opening recording device.\nError code: %1"));
     case Err::RecordingStopError: return muse::Ret(retCode, muse::trc("record", "Cannot stop recording"));
+    case Err::RecordingResumeError: return muse::Ret(retCode, muse::trc("record", "Cannot resume recording"));
     case Err::MismatchedSamplingRatesError: return muse::Ret(retCode,
                                                              muse::trc("record",
                                                                        "The tracks selected for recording must all have the same sampling rate"));
