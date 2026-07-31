@@ -86,7 +86,9 @@ Notification RecordController::isRecordingChanged() const
 
 void RecordController::toggleRecord()
 {
-    if (isRecording()) {
+    if (m_currentRecordStatus == RecordStatus::Paused) {
+        resume();
+    } else if (isRecording()) {
         stop();
     } else {
         start();
@@ -157,6 +159,11 @@ void RecordController::pause()
         return;
     }
 
+    if (m_currentRecordStatus == RecordStatus::Paused) {
+        resume();
+        return;
+    }
+
     Ret ret = record()->pause();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
@@ -164,6 +171,21 @@ void RecordController::pause()
     }
 
     setCurrentRecordStatus(RecordStatus::Paused);
+}
+
+void RecordController::resume()
+{
+    IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    Ret ret = record()->resume();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
+    setCurrentRecordStatus(RecordStatus::Running);
 }
 
 void RecordController::stop()

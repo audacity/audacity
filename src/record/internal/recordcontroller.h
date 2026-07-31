@@ -84,6 +84,7 @@ private:
     void start();
     void startWithNewTrack();
     void pause();
+    void resume();
     void stop();
     void leadInRecording();
     void stopPlaybackIfPaused();

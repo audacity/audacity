@@ -47,6 +47,7 @@ public:
 
     muse::Ret start() override;
     muse::Ret pause() override;
+    muse::Ret resume() override;
     muse::Ret stop() override;
     muse::Ret leadInRecording() override;
 

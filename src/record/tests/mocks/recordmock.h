@@ -13,6 +13,7 @@ class RecordMock : public IRecord
 public:
     MOCK_METHOD(muse::Ret, start, (), (override));
     MOCK_METHOD(muse::Ret, pause, (), (override));
+    MOCK_METHOD(muse::Ret, resume, (), (override));
     MOCK_METHOD(muse::Ret, stop, (), (override));
     MOCK_METHOD(muse::Ret, leadInRecording, (), (override));
 

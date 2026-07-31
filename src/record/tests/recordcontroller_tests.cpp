@@ -61,6 +61,16 @@ public:
         m_controller->toggleRecord();
     }
 
+    void pause()
+    {
+        m_controller->pause();
+    }
+
+    bool recordStatusIsRunning() const
+    {
+        return m_controller->m_currentRecordStatus == RecordController::RecordStatus::Running;
+    }
+
     std::shared_ptr<RecordController> m_controller;
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
@@ -135,5 +145,47 @@ TEST_F(RecordControllerTests, RecordFromStoppedPlaybackDoesNotStopPlayback)
 
     //! [WHEN] Recording is initiated
     toggleRecord();
+}
+
+TEST_F(RecordControllerTests, ToggleRecordWhilePausedResumesRecording)
+{
+    //! [GIVEN] A recording is running and has been paused
+    ON_CALL(*m_record, pause())
+    .WillByDefault(Return(muse::make_ok()));
+    toggleRecord();
+    pause();
+
+    //! [THEN] The recording is resumed, not stopped
+    EXPECT_CALL(*m_record, resume())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_record, stop())
+    .Times(0);
+
+    //! [WHEN] Record is triggered again
+    toggleRecord();
+
+    //! [THEN] The recording is running again
+    EXPECT_TRUE(recordStatusIsRunning());
+}
+
+TEST_F(RecordControllerTests, PauseWhilePausedResumesRecording)
+{
+    //! [GIVEN] A recording is running and has been paused
+    ON_CALL(*m_record, pause())
+    .WillByDefault(Return(muse::make_ok()));
+    toggleRecord();
+    pause();
+
+    //! [THEN] The recording is resumed rather than paused again
+    EXPECT_CALL(*m_record, resume())
+    .WillOnce(Return(muse::make_ok()));
+    EXPECT_CALL(*m_record, pause())
+    .Times(0);
+
+    //! [WHEN] Pause is triggered again
+    pause();
+
+    //! [THEN] The recording is running again
+    EXPECT_TRUE(recordStatusIsRunning());
 }
 }
