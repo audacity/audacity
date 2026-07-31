@@ -81,6 +81,7 @@ private:
     void onStartupPageOpened(StartupModeType modeType);
     void showStartupDialogsIfNeed(StartupModeType modeType);
 
+    bool hasExplicitStartupTarget() const;
     StartupModeType resolveStartupModeType() const;
     muse::Uri startupPageUri(StartupModeType modeType) const;
 
