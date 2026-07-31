@@ -80,18 +80,16 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
         return;
     }
 
-    std::optional<project::ProjectFile> projectFile;
+    startupScenario->setStartupType(options->startup.type);
     if (options->startup.projectUrl.has_value()) {
         project::ProjectFile file;
         file.url = options->startup.projectUrl.value();
         if (options->startup.projectDisplayNameOverride.has_value()) {
             file.displayNameOverride = options->startup.projectDisplayNameOverride.value();
         }
-        projectFile = file;
+        startupScenario->setStartupProjectFile(file);
     }
 
-    startupScenario->setStartupType(options->startup.type);
-    startupScenario->setStartupProjectFile(projectFile);
     startupScenario->setStartupMediaFiles(options->startup.mediaFiles);
     startupScenario->setRemoveMediaFilesAfterImport(options->startup.removeMediaFilesAfterImport);
     if (options->startup.startupUrl.has_value()) {
