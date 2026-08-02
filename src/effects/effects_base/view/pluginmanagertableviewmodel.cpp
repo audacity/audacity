@@ -91,6 +91,22 @@ void PluginManagerTableViewModel::componentComplete()
     m_sortFilterProxy->toggleColumnSort(s_typeColumnIndex);
     m_sortFilterProxy->toggleColumnSort(s_vendorColumnIndex);
     m_sortFilterProxy->toggleColumnSort(s_nameColumnIndex);
+
+    knownPlugins()->pluginInfoListChanged().onNotify(this, [this] {
+        EffectMetaList effects = effectsProvider()->effectMetaList();
+        effects.erase(std::remove_if(effects.begin(), effects.end(), [](const EffectMeta& meta) {
+            return meta.isLoadable() && meta.type == EffectType::Unknown;
+        }), effects.end());
+        for (const EffectMeta& effect : effects) {
+            const auto known = std::find_if(m_initialState.begin(), m_initialState.end(), [&](const EffectMeta& initial) {
+                return initial.id == effect.id;
+            });
+            if (known == m_initialState.end()) {
+                m_initialState.push_back(effect);
+            }
+        }
+        rebuildSourceTable(std::move(effects));
+    });
 }
 
 void PluginManagerTableViewModel::aboutToDestroy()

@@ -9,13 +9,15 @@
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "appshell/iappshellconfiguration.h"
+#include "framework/extensions/iextensionsprovider.h"
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
 
 #include <QObject>
 
 namespace au::appshell {
-class PluginPreferencesModel : public QObject, public muse::async::Asyncable
+class PluginPreferencesModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -27,9 +29,13 @@ class PluginPreferencesModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(bool lv2Supported READ lv2Supported CONSTANT)
     Q_PROPERTY(bool vst3Supported READ vst3Supported CONSTANT)
+    Q_PROPERTY(QVariantList extensionPreferences READ extensionPreferences NOTIFY extensionPreferencesChanged)
 
     muse::GlobalInject<effects::IEffectsConfiguration> effectsConfiguration;
     muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
+    muse::GlobalInject<IAppShellConfiguration> appshellConfiguration;
+
+    muse::ContextInject<muse::extensions::IExtensionsProvider> extensionsProvider{ this };
 
 public:
     explicit PluginPreferencesModel(QObject* parent = nullptr);
@@ -42,6 +48,8 @@ public:
 
     bool lv2Supported() const;
     bool vst3Supported() const;
+    QVariantList extensionPreferences() const;
+    Q_INVOKABLE bool setExtensionPreference(const QString& extensionId, const QString& key, const QVariant& value);
 
     Q_INVOKABLE void addLv2Path();
     Q_INVOKABLE void setLv2Path(int index, const QString& path);
@@ -59,5 +67,11 @@ signals:
     void effectMenuOrganizationChanged();
     void lv2CustomPathsChanged();
     void vst3CustomPathsChanged();
+    void extensionPreferencesChanged();
+
+private:
+    void reloadExtensionPreferences();
+
+    QVariantList m_extensionPreferences;
 };
 }

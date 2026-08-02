@@ -32,6 +32,7 @@
 
 #include "wxtypes_convert.h"
 #include "trackcolor.h"
+#include "../au3projectcontext.h"
 #include "../au3types.h"
 
 #include <random>
@@ -97,6 +98,7 @@ Au3ProjectAccessor::Au3ProjectAccessor(const muse::modularity::ContextPtr& ctx)
     : IAu3Project(ctx), m_data(std::make_shared<Au3ProjectData>())
 {
     m_data->project = Au3Project::Create();
+    setProjectIocContext(m_data->projectRef(), ctx);
     mTrackListSubstription = Au3TrackList::Get(m_data->projectRef()).Subscribe([this](const TrackListEvent& event)
     {
         if (event.mType == TrackListEvent::ADDITION) {

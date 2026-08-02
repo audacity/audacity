@@ -96,7 +96,7 @@ void TrackeditModule::resolveImports()
 {
     auto ar = globalIoc()->resolve<muse::api::IApiRegister>(mname);
     if (ar) {
-        ar->regApiCreator(mname, "MuseApi.Project", new muse::api::ApiCreator<api::ProjectApi>());
+        ar->regApiCreator(mname, "Audacity.Project", new muse::api::ApiCreator<api::ProjectApi>());
     }
 
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);

@@ -49,7 +49,7 @@ Q_MOC_INCLUDE(< QWindow >)
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
 #include "project/irecentfilescontroller.h"
-// #include "extensions/iextensionsprovider.h"
+#include "extensions/iextensionsprovider.h"
 #include "update/iupdateconfiguration.h"
 
 namespace au::appshell {
@@ -75,7 +75,7 @@ public:
 
     //! TODO AU4
     // muse::ContextInject<workspace::IWorkspaceManager> workspacesManager = { this };
-    // muse::ContextInject<extensions::IExtensionsProvider> extensionsProvider = { this };
+    muse::ContextInject<muse::extensions::IExtensionsProvider> extensionsProvider = { this };
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);
@@ -133,6 +133,7 @@ private:
     muse::uicomponents::MenuItemList makeGeneratorItems();
     muse::uicomponents::MenuItemList makeToolItems();
     muse::uicomponents::MenuItemList makeAnalyzeItems();
+    muse::uicomponents::MenuItemList makeExtensionItems();
 
     void setItemIsChecked(const QString& itemId, bool checked);
 

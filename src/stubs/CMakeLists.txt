@@ -17,3 +17,8 @@ endif()
 if (NOT AU_BUILD_USAGEINFO_MODULE)
     add_subdirectory(usageinfo)
 endif()
+
+if (NOT MUSE_MODULE_EXTENSIONS)
+    add_subdirectory(extensions)
+    add_subdirectory(effects_extensions)
+endif()

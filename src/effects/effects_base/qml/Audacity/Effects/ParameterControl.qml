@@ -371,6 +371,10 @@ Item {
                         return FilePicker.PickerType.File
                     }
 
+                    if (parameterData.isDirectory) {
+                        return FilePicker.PickerType.Directory
+                    }
+
                     // If "save" flag is set, use Any type (save dialog)
                     if (parameterData.isFileSave) {
                         return FilePicker.PickerType.Any
