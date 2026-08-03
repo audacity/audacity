@@ -2,6 +2,16 @@
 
 #include "global/translation.h"
 
+#include "log.h"
+
+#define TRACK_NAVIGATION_LOGGING_ENABLED
+
+#ifdef TRACK_NAVIGATION_LOGGING_ENABLED
+#define MYLOG() LOGI()
+#else
+#define MYLOG() LOGN()
+#endif
+
 using namespace au::trackedit;
 
 static const QString makeTrackPanelName(const TrackId& trackId)
@@ -87,6 +97,8 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
 
     m_section = section;
 
+    MYLOG() << "section: " << section->name().toStdString();
+
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         cleanup();
         load();
@@ -95,6 +107,9 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
     navigationController()->navigationChanged().onNotify(this, [this](){
         const muse::ui::INavigationPanel* activePanel = navigationController()->activePanel();
         const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
+
+        MYLOG() << "navigation changed, panel: " << (activePanel ? activePanel->name().toStdString() : std::string("null"))
+                << ", control: " << (activeControl ? activeControl->name().toStdString() : std::string("null"));
 
         updateNavigationActive(activePanel);
 
@@ -163,6 +178,9 @@ void TrackNavigationModel::load()
     });
 
     const auto trackList = prj->trackList();
+
+    MYLOG() << "load, tracks: " << trackList.size();
+
     for (const auto& track : trackList) {
         addPanels(track.id, m_panels.size());
     }
@@ -174,12 +192,16 @@ void TrackNavigationModel::load()
     updateDefaultNavigationControl();
 
     tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
+        MYLOG() << "focused track changed: " << trackId << ", highlight: " << highlight;
+
         if (tracksNavigationController()->focusedItem().itemId != INVALID_TRACK_ITEM) {
+            MYLOG() << "skipped, the focused item is set: " << tracksNavigationController()->focusedItem().itemId;
             return;
         }
 
         QTimer::singleShot(10, [this, trackId, highlight](){
             if (isNavigationOnTrack(trackId)) {
+                MYLOG() << "skipped, the navigation is already on the track " << trackId;
                 return;
             }
 
@@ -188,6 +210,9 @@ void TrackNavigationModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     tracksNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& itemKey, bool highlight) {
+        MYLOG() << "focused item changed, track: " << itemKey.trackId << ", item: " << itemKey.itemId
+                << ", highlight: " << highlight;
+
         QTimer::singleShot(10, [this, itemKey, highlight](){
             activateNavigation(itemKey, highlight);
         });
@@ -197,6 +222,8 @@ void TrackNavigationModel::load()
 void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 {
     const int orderBase = trackPanelsOrderBase(pos);
+
+    MYLOG() << "track: " << trackId << ", pos: " << pos << ", order base: " << orderBase;
 
     muse::ui::NavigationPanel* trackPanel = makePanel(makeTrackPanelName(trackId), orderBase);
 
@@ -332,6 +359,8 @@ void TrackNavigationModel::addDefaultNavigation()
         emit defaultNavigationControlChanged();
     }
 
+    MYLOG() << "the project has no tracks, the default control is enabled";
+
     m_defaultPanel->setEnabled(true);
     m_defaultControl->setEnabled(true);
 
@@ -346,6 +375,8 @@ void TrackNavigationModel::disableDefaultNavigation()
     if (!m_defaultPanel) {
         return;
     }
+
+    MYLOG() << "the default control is disabled";
 
     m_defaultPanel->setEnabled(false);
     m_defaultControl->setEnabled(false);
@@ -414,6 +445,8 @@ void TrackNavigationModel::updateDefaultNavigationControl()
     muse::ui::INavigationControl* trackControl = m_panels.isEmpty() ? nullptr : findFirstEnabledControl(m_panels.first().track);
     muse::ui::INavigationControl* control = trackControl ? trackControl : m_fallbackNavigationControl.data();
 
+    MYLOG() << "default control: " << (control ? control->name().toStdString() : std::string("null"));
+
     navigationController()->setDefaultNavigationControl(control);
 
     if (!m_activateDefaultNavigationRequested || !control) {
@@ -450,6 +483,8 @@ void TrackNavigationModel::updateNavigationActive(const muse::ui::INavigationPan
         }
     }
 
+    MYLOG() << "navigation active: " << navigationActive;
+
     tracksNavigationController()->setIsNavigationActive(navigationActive);
 }
 
@@ -465,12 +500,18 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
             m_lastActivePanelOrder = activePanel->index().order();
 
             const TrackItemId itemId = activeControl ? activeControl->name().toLongLong() : INVALID_TRACK_ITEM;
+
+            MYLOG() << "the items panel is active, track: " << panels.trackId << ", item: " << itemId;
+
             tracksNavigationController()->setFocusedItem({ panels.trackId, itemId });
             return;
         }
 
         if (panels.track == activePanel || panels.header == activePanel) {
             m_lastActivePanelOrder = activePanel->index().order();
+
+            MYLOG() << "the " << (panels.track == activePanel ? "track" : "header") << " panel is active, track: "
+                    << panels.trackId;
 
             tracksNavigationController()->setFocusedItem({ panels.trackId, INVALID_TRACK_ITEM });
             return;
@@ -485,6 +526,8 @@ void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 
 void TrackNavigationModel::cleanup()
 {
+    MYLOG() << "====";
+
     disableDefaultNavigation();
 
     clearPanels();
@@ -499,6 +542,8 @@ void TrackNavigationModel::cleanup()
 
 void TrackNavigationModel::clearPanels()
 {
+    MYLOG() << "panels of tracks: " << m_panels.size();
+
     for (const TrackPanels& panels : m_panels) {
         deletePanels(panels);
     }
@@ -510,6 +555,8 @@ void TrackNavigationModel::clearPanels()
 
 void TrackNavigationModel::removePanels(const TrackId& trackId)
 {
+    MYLOG() << "track: " << trackId;
+
     const int pos = indexOfTrack(trackId);
     if (pos < 0) {
         return;
@@ -581,6 +628,9 @@ void TrackNavigationModel::activateNavigation(const TrackId& trackId, bool highl
         return;
     }
 
+    MYLOG() << "activate the track " << trackId << ", control: " << firstControl->name().toStdString()
+            << ", highlight: " << highlight;
+
     navigationController()->setIsHighlight(highlight);
     navigationController()->requestActivateByName(
         m_section->name().toStdString(),
@@ -613,6 +663,9 @@ void TrackNavigationModel::activateNavigation(const TrackItemKey& itemKey, bool 
                 return;
             }
 
+            MYLOG() << "activate the item " << itemKey.itemId << " of the track " << itemKey.trackId
+                    << ", highlight: " << highlight;
+
             navigationController()->setIsHighlight(highlight);
             navigationController()->requestActivateByName(
                 m_section->name().toStdString(),
@@ -635,6 +688,9 @@ void TrackNavigationModel::activateNavigation(const muse::ui::INavigationControl
     if (!section) {
         return;
     }
+
+    MYLOG() << "activate the control " << control->name().toStdString() << " of the panel "
+            << panel->name().toStdString() << ", highlight: " << highlight;
 
     navigationController()->setIsHighlight(highlight);
     navigationController()->requestActivateByName(
