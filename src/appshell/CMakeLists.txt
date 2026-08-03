@@ -33,6 +33,8 @@ target_sources(appshell PRIVATE
     internal/appshellconfiguration.h
     internal/applicationactioncontroller.cpp
     internal/applicationactioncontroller.h
+    internal/fileopeneventbuffer.cpp
+    internal/fileopeneventbuffer.h
     internal/framelesswindowcontroller.cpp
     internal/framelesswindowcontroller.h
     internal/startupscenario.cpp
