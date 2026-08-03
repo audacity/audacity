@@ -17,6 +17,7 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "au3audio/tests/mocks/audioenginemock.h"
+#include "audio/tests/mocks/audiodrivercontrollermock.h"
 #include "mocks/recordconfigurationmock.h"
 
 #include "au3wrap/internal/au3project.h"
@@ -52,6 +53,7 @@ public:
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
         m_recordConfiguration = std::make_shared<NiceMock<RecordConfigurationMock> >();
+        m_audioDriverController = std::make_shared<NiceMock<audio::AudioDriverControllerMock> >();
         m_trackeditProject = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
 
@@ -60,6 +62,7 @@ public:
         m_record->selectionController.set(m_selectionController);
         m_record->audioEngine.set(m_audioEngine);
         m_record->recordConfiguration.set(m_recordConfiguration);
+        m_record->audioDriverController.set(m_audioDriverController);
 
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
@@ -78,6 +81,11 @@ public:
         .WillByDefault(Return(m_recordingClipChanged));
         ON_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
         .WillByDefault(Return(1));
+
+        ON_CALL(*m_audioDriverController, inputDevices())
+        .WillByDefault(Return(std::vector<std::string> { "Test Input Device" }));
+        ON_CALL(*m_audioDriverController, inputChannelsAvailable())
+        .WillByDefault(Return(2));
 
         ON_CALL(*m_recordConfiguration, leadInTimeDuration())
         .WillByDefault(Return(2.0));
@@ -143,6 +151,7 @@ public:
     std::shared_ptr<context::PlaybackStateMock> m_playbackState;
     std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
     std::shared_ptr<RecordConfigurationMock> m_recordConfiguration;
+    std::shared_ptr<audio::AudioDriverControllerMock> m_audioDriverController;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 
