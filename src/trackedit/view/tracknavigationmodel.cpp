@@ -1,10 +1,11 @@
 #include "tracknavigationmodel.h"
 
+#include "global/defer.h"
 #include "global/translation.h"
 
 #include "log.h"
 
-#define TRACK_NAVIGATION_LOGGING_ENABLED
+// #define TRACK_NAVIGATION_LOGGING_ENABLED
 
 #ifdef TRACK_NAVIGATION_LOGGING_ENABLED
 #define MYLOG() LOGI()
@@ -194,6 +195,11 @@ void TrackNavigationModel::load()
     tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
         MYLOG() << "focused track changed: " << trackId << ", highlight: " << highlight;
 
+        if (m_isFocusSyncing) {
+            MYLOG() << "skipped, the focus is set from the navigation";
+            return;
+        }
+
         if (tracksNavigationController()->focusedItem().itemId != INVALID_TRACK_ITEM) {
             MYLOG() << "skipped, the focused item is set: " << tracksNavigationController()->focusedItem().itemId;
             return;
@@ -212,6 +218,11 @@ void TrackNavigationModel::load()
     tracksNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& itemKey, bool highlight) {
         MYLOG() << "focused item changed, track: " << itemKey.trackId << ", item: " << itemKey.itemId
                 << ", highlight: " << highlight;
+
+        if (m_isFocusSyncing) {
+            MYLOG() << "skipped, the focus is set from the navigation";
+            return;
+        }
 
         QTimer::singleShot(10, [this, itemKey, highlight](){
             activateNavigation(itemKey, highlight);
@@ -495,6 +506,11 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
     //! so the focused item of the tracks controller is taken from the active panel/control.
     //! Setting an item of the already focused track sends the item notification only,
     //! so this doesn't fight with the activation done on focus changes
+    m_isFocusSyncing = true;
+    DEFER {
+        m_isFocusSyncing = false;
+    };
+
     for (const TrackPanels& panels : m_panels) {
         if (panels.items == activePanel) {
             m_lastActivePanelOrder = activePanel->index().order();

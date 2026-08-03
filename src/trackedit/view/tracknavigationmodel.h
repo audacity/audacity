@@ -113,6 +113,7 @@ private:
     QPointer<QQuickItem> m_trackViewItem;
 
     bool m_activateDefaultNavigationRequested = false;
+    bool m_isFocusSyncing = false;
 
     int m_lastActivePanelOrder = -1;
 };
