@@ -863,7 +863,7 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
 
         auto clone = DomConverter::track(au3Clone.get());
 
-        prj->notifyAboutTrackInserted(clone, tracks.Size());
+        prj->notifyAboutTrackInserted(clone, static_cast<int>(utils::getTrackIndex(tracks, *au3Clone)));
 
         if (dynamic_cast<Au3WaveTrack*>(au3Clone.get())) {
             for (const auto& clip : prj->clipList(au3Clone->GetId())) {
