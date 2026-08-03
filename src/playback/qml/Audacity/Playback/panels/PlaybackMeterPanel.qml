@@ -14,6 +14,19 @@ import Audacity.Playback 1.0
 Item {
     id: root
 
+    property alias navigationSection: navPanel.section
+    property alias navigationOrderStart: navPanel.order
+
+    NavigationPanel {
+        id: navPanel
+
+        name: "PlaybackMeterPanel"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+
+        accessible.name: qsTrc("playback", "Playback meter")
+    }
+
     PlaybackMeterPanelModel {
         id: model
 
@@ -46,7 +59,12 @@ Item {
             Layout.bottomMargin: 12
 
             icon: IconCode.AUDIO
+            toolTipTitle: qsTrc("playback", "Playback meter settings")
             accentButton: popup.isOpened
+
+            navigation.name: "PlaybackMeterSettings"
+            navigation.panel: navPanel
+            navigation.order: 1
 
             onClicked: {
                 popup.toggleOpened()
@@ -139,13 +157,17 @@ Item {
 
                 handleWidth: 24
 
+                navigation.name: "PlaybackVolume"
+                navigation.panel: navPanel
+                navigation.order: meterOptionsBtn.navigation.order + 1
+
                 onVolumeLevelMoved: function (level) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
                     rightVolumePressure.resetClipped()
 
-                    model.volumeLevelChangeRequested(level)
+                    model.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                 }
 
                 onHandlePressed: function () {
@@ -153,6 +175,20 @@ Item {
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
                     rightVolumePressure.resetClipped()
+                }
+
+                onDecreaseRequested: {
+                    if (volumeLevel <= from) {
+                        return
+                    }
+                    model.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 - stepSize)
+                }
+
+                onIncreaseRequested: {
+                    if (volumeLevel >= to) {
+                        return
+                    }
+                    model.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 + stepSize)
                 }
             }
 

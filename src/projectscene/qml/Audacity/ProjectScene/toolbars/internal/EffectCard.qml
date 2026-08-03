@@ -14,6 +14,8 @@ Rectangle {
     property string subtitle: ""
     property string effectCode: ""
 
+    property alias navigation: getItButton.navigation
+
     signal getEffectClicked(string code)
 
     QtObject {
@@ -123,10 +125,17 @@ Rectangle {
             }
 
             FlatButton {
+                id: getItButton
+
                 Layout.preferredHeight: prv.getItButtonHeight
                 Layout.preferredWidth: prv.getItButtonWidth
+
                 text: qsTrc("projectscene", "Get it on MuseHub")
                 accentButton: true
+
+                navigation.name: root.title
+                navigation.accessible.name: root.title + ". " + root.subtitle + ". " + text
+
                 onClicked: root.getEffectClicked(root.effectCode)
             }
         }
