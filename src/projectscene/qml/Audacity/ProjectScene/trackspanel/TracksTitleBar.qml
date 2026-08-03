@@ -11,6 +11,7 @@ Item {
     property alias navigation: buttonContainer.navigation
     property alias realtimeEffectsNavigation: effectsTitleBar.navigation
     property alias closeEffectsNavigation: effectsTitleBar.navigation
+    property alias addTrackNavigation: addNewTrackBtn.navigation
 
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false

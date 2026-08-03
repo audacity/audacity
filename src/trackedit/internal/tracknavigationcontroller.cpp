@@ -16,6 +16,16 @@
 #include "itrackeditproject.h"
 #include "trackedit/trackedittypes.h"
 
+#include "log.h"
+
+// #define TRACK_NAVIGATION_LOGGING_ENABLED
+
+#ifdef TRACK_NAVIGATION_LOGGING_ENABLED
+#define MYLOG() LOGI()
+#else
+#define MYLOG() LOGN()
+#endif
+
 using namespace au::trackedit;
 
 static const muse::actions::ActionCode TRACK_VIEW_NEXT_PANEL_CODE("track-view-next-panel");
@@ -106,6 +116,8 @@ void TrackNavigationController::setIsNavigationActive(bool active)
         return;
     }
 
+    MYLOG() << "navigation active: " << active;
+
     m_isNavigationActive = active;
     m_isNavigationActiveChannel.notify();
 }
@@ -130,6 +142,8 @@ void TrackNavigationController::setFocusedTrack(const TrackId& trackId, bool hig
     if (m_focusedItemKey == newKey) {
         return;
     }
+
+    MYLOG() << "track: " << trackId << ", highlight: " << highlight;
 
     m_focusedItemKey = newKey;
 
@@ -160,6 +174,9 @@ void TrackNavigationController::setFocusedItem(const TrackItemKey& itemKey, bool
     }
 
     bool isTrackChanged = m_focusedItemKey.trackId != key.trackId;
+
+    MYLOG() << "track: " << key.trackId << ", item: " << key.itemId << ", highlight: " << highlight
+            << ", track changed: " << isTrackChanged;
 
     m_focusedItemKey = key;
 
@@ -272,6 +289,8 @@ TrackItemKeyList TrackNavigationController::itemKeysInRange(const TrackItemKey& 
 
 void TrackNavigationController::resetNavigation()
 {
+    MYLOG() << "====";
+
     m_savedItemStartTime = std::nullopt;
     navigationController()->setIsHighlight(false);
 }
@@ -314,18 +333,26 @@ bool TrackNavigationController::isLastTrack(const TrackId& trackId) const
 
 void TrackNavigationController::navigateToNextPanel()
 {
+    MYLOG() << "====";
+
     if (navigateToAdjacentItem(true /*next*/)) {
         return;
     }
+
+    MYLOG() << "no next item on the track, go to the next panel";
 
     commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
 }
 
 void TrackNavigationController::navigateToPrevPanel()
 {
+    MYLOG() << "====";
+
     if (navigateToAdjacentItem(false /*next*/)) {
         return;
     }
+
+    MYLOG() << "no prev item on the track, go to the prev panel";
 
     commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
 }
@@ -333,6 +360,7 @@ void TrackNavigationController::navigateToPrevPanel()
 bool TrackNavigationController::navigateToAdjacentItem(bool next)
 {
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        MYLOG() << "no focused item, the track items are not navigated";
         return false;
     }
 
@@ -364,6 +392,8 @@ bool TrackNavigationController::navigateToAdjacentItem(bool next)
 
 void TrackNavigationController::navigateToPrevTrack()
 {
+    MYLOG() << "====";
+
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -387,6 +417,8 @@ void TrackNavigationController::navigateToPrevTrack()
 
 void TrackNavigationController::navigateToNextTrack()
 {
+    MYLOG() << "====";
+
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -410,6 +442,8 @@ void TrackNavigationController::navigateToNextTrack()
 
 void TrackNavigationController::navigateToFirstTrack()
 {
+    MYLOG() << "====";
+
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -423,6 +457,8 @@ void TrackNavigationController::navigateToFirstTrack()
 
 void TrackNavigationController::navigateToLastTrack()
 {
+    MYLOG() << "====";
+
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -478,6 +514,8 @@ TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& tr
 
 void TrackNavigationController::navigateToAboveItem()
 {
+    MYLOG() << "====";
+
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
         navigateToPrevTrack();
         return;
@@ -516,6 +554,8 @@ void TrackNavigationController::navigateToAboveItem()
 
 void TrackNavigationController::navigateToBelowItem()
 {
+    MYLOG() << "====";
+
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
         navigateToNextTrack();
         return;
@@ -554,6 +594,8 @@ void TrackNavigationController::navigateToBelowItem()
 
 void TrackNavigationController::navigateToFirstItem()
 {
+    MYLOG() << "====";
+
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (itemsKeys.empty()) {
@@ -566,6 +608,8 @@ void TrackNavigationController::navigateToFirstItem()
 
 void TrackNavigationController::navigateToLastItem()
 {
+    MYLOG() << "====";
+
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (itemsKeys.empty()) {
@@ -786,6 +830,8 @@ void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks
 
 void TrackNavigationController::openContextMenuForFocusedItem()
 {
+    MYLOG() << "track: " << m_focusedItemKey.trackId << ", item: " << m_focusedItemKey.itemId;
+
     if (m_focusedItemKey.trackId == INVALID_TRACK) {
         return;
     }

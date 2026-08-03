@@ -140,6 +140,8 @@ void StartupScenario::runAfterSplashScreen()
         return;
     }
 
+    m_startupCompleted = true;
+
     StartupModeType modeType = resolveStartupModeType();
     if (multiwindowsProvider()->isFirstWindow() && sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
@@ -148,25 +150,14 @@ void StartupScenario::runAfterSplashScreen()
         modeType = StartupModeType::FirstLaunch;
     }
 
-    muse::Uri startupUri = startupPageUri(modeType);
+    const muse::Uri startupUri = startupPageUri(modeType);
 
-    muse::async::Channel<muse::Uri> opened = interactive()->opened();
-    opened.onReceive(this, [this, opened, modeType](const muse::Uri&) {
-        if (m_startupCompleted) {
-            return;
-        }
-
-        m_startupCompleted = true;
-
-        muse::async::Channel<muse::Uri> mut = opened;
-        mut.disconnect(this);
-
+    auto promise = interactive()->open(startupUri);
+    promise.onResolve(this, [this, modeType](const muse::Val&) {
         effectsProviderInitializer()->callAfterSplashScreen();
 
         onStartupPageOpened(modeType);
     });
-
-    interactive()->open(startupUri);
 }
 
 bool StartupScenario::startupCompleted() const
@@ -297,17 +288,19 @@ void StartupScenario::openProject(const ProjectFile& file)
 
 void StartupScenario::restoreLastSession()
 {
-    muse::IInteractive::Result result = interactive()->questionSync(muse::trc("appshell", "The previous session quit unexpectedly."),
-                                                                    muse::trc("appshell", "Do you want to restore the session?"),
-                                                                    { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes },
-                                                                    muse::IInteractive::Button::NoButton, {},
-                                                                    muse::trc("appshell", "Restore session"));
+    auto promise = interactive()->question(muse::trc("appshell", "The previous session quit unexpectedly."),
+                                           muse::trc("appshell", "Do you want to restore the session?"),
+                                           { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes },
+                                           muse::IInteractive::Button::NoButton, {},
+                                           muse::trc("appshell", "Restore session"));
 
-    if (result.button() == static_cast<int>(muse::IInteractive::Button::Yes)) {
-        sessionsManager()->restore();
-    } else {
-        sessionsManager()->reset();
-    }
+    promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
+        if (res.isButton(muse::IInteractive::Button::Yes)) {
+            sessionsManager()->restore();
+        } else {
+            sessionsManager()->reset();
+        }
+    });
 }
 
 void StartupScenario::tryCheckForUpdate()

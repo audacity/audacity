@@ -231,7 +231,7 @@ Item {
                             isFocused: Boolean(item) ? item.isFocused : false
                             container: view
 
-                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.name: Boolean(item) ? item.title + index : ""
                             navigation.panel: root.navigationPanels && root.navigationPanels[index] ? root.navigationPanels[index] : null
                             navigation.order: 0
                             headerNavigationPanel: root.headerNavigationPanels && root.headerNavigationPanels[index] ? root.headerNavigationPanels[index] : null
@@ -296,7 +296,7 @@ Item {
                             isFocused: Boolean(item) ? item.isFocused : false
                             container: view
 
-                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.name: Boolean(item) ? item.title + index : ""
                             navigation.panel: root.navigationPanels && root.navigationPanels[index] ? root.navigationPanels[index] : null
                             navigation.order: 0
                             headerNavigationPanel: root.headerNavigationPanels && root.headerNavigationPanels[index] ? root.headerNavigationPanels[index] : null

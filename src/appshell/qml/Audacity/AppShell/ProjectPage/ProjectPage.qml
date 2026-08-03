@@ -56,18 +56,19 @@ DockPage {
     property NavigationSection playbackToolBarKeyNavSec: NavigationSection {
         id: keynavSec
         name: "PlaybackSection"
+        enabled: root.visible
         order: 2
     }
 
     property NavigationSection trackEffectsKeyNavSec: NavigationSection {
         name: "TrackEffectsSection"
-        enabled: tracksPanel.showEffectsSection
+        enabled: root.visible && tracksPanel.showEffectsSection
         order: playbackToolBarKeyNavSec.order + 1
     }
 
     property NavigationSection masterEffectsKeyNavSec: NavigationSection {
         name: "MasterEffectsSection"
-        enabled: tracksPanel.showEffectsSection
+        enabled: root.visible && tracksPanel.showEffectsSection
         order: trackEffectsKeyNavSec.order + 1
     }
 
@@ -124,6 +125,8 @@ DockPage {
 
     onInited: {
         Qt.callLater(pageModel.init)
+
+        tracksNavModel.activateDefaultNavigation()
     }
 
     readonly property int verticalPanelDefaultWidth: 281
@@ -307,6 +310,10 @@ DockPage {
                 anchors.fill: parent
                 spacing: 0
 
+                Component.onCompleted: {
+                    tracksNavModel.fallbackNavigationControl = trackstitleBarItem.addTrackNavigation
+                }
+
                 TracksTitleBar {
                     id: trackstitleBarItem
 
@@ -431,6 +438,13 @@ DockPage {
         id: tracksItemsView
 
         navPanels: tracksNavModel.viewItemPanels
+        navDefaultControl: tracksNavModel.defaultNavigationControl
+
+        Binding {
+            target: tracksNavModel
+            property: "trackViewItem"
+            value: tracksItemsView.tracksAreaItem
+        }
 
         Connections {
             target: root
