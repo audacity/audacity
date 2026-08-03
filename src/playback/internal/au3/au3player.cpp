@@ -218,6 +218,20 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
     }
 }
 
+void Au3Player::playRange(const PlaybackRegion& range)
+{
+    IF_ASSERT_FAILED(range.isValid()) {
+        return;
+    }
+
+    //! NOTE: a non-default policy plays the exact range once,
+    //! regardless of the play region and loop region
+    PlayTracksOptions opts;
+    opts.isDefaultPolicy = false;
+
+    playTracks(Au3TrackList::Get(projectRef()), range.start.to_double(), range.end.to_double(), opts);
+}
+
 muse::Ret Au3Player::playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
 {
     muse::Ret ret = doPlayTracks(trackList, startTime, endTime, options);
@@ -520,8 +534,14 @@ void Au3Player::updateStreamState()
     bool isActive = AudioIO::Get()->IsStreamActive(token);
 
     if (!isActive) {
-        if (playbackStatus() == PlaybackStatus::Running
-            || playbackStatus() == PlaybackStatus::Paused) {
+        if (playbackStatus() == PlaybackStatus::Running) {
+            //! NOTE: the stream ended on its own (e.g. an explicit range played to its
+            //! end) — do a full stop so the audio engine releases the stream token;
+            //! otherwise isBusy() stays true and no new playback can ever start
+            stop();
+        } else if (playbackStatus() == PlaybackStatus::Paused) {
+            //! NOTE: e.g. a device change tore the stream down while paused; the
+            //! stream lifecycle is handled by that flow — only update the status
             m_playbackStatus.set(PlaybackStatus::Stopped);
         } else if (m_timer.isActive()) {
             // Stream ended (playback or recording finished)

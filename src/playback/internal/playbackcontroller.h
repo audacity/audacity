@@ -109,7 +109,7 @@ private:
     bool loopBoundariesSet() const;
 
     PlaybackRegion selectionPlaybackRegion() const;
-    bool isSelectionPlaybackRegionChanged() const;
+    bool isPlaybackRegionChanged() const;
     void updatePlaybackRegion();
 
     void onProjectChanged();
