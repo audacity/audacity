@@ -10,10 +10,12 @@
 class AudacityProject;
 
 namespace au::audio {
+using AudioDeviceSelection = std::optional<std::string>;
+
 struct AudioConfiguration {
     std::string api;
-    std::string outputDevice;
-    std::string inputDevice;
+    AudioDeviceSelection outputDevice;
+    AudioDeviceSelection inputDevice;
     int inputChannels = 1;
     double bufferLength = 0.0;
     bool automaticLatencyCompensation = false;
@@ -25,8 +27,8 @@ struct AudioConfiguration {
 
 struct AudioConfigurationChange {
     std::optional<std::string> api;
-    std::optional<std::string> outputDevice;
-    std::optional<std::string> inputDevice;
+    std::optional<AudioDeviceSelection> outputDevice;
+    std::optional<AudioDeviceSelection> inputDevice;
     std::optional<int> inputChannels;
     std::optional<double> bufferLength;
     std::optional<bool> automaticLatencyCompensation;
@@ -93,8 +95,8 @@ struct ApplyResult {
 
 struct AudioRoutingChange {
     std::optional<std::string> api;
-    std::optional<std::string> outputDevice;
-    std::optional<std::string> inputDevice;
+    std::optional<AudioDeviceSelection> outputDevice;
+    std::optional<AudioDeviceSelection> inputDevice;
 };
 
 enum class AudioStreamKind {

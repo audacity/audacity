@@ -9,6 +9,7 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/ui/iuiactionsregister.h"
+#include "framework/toast/itoastservice.h"
 
 #include "audio/audiotypes.h"
 #include "audio/driver/iaudiodrivercontroller.h"
@@ -32,6 +33,7 @@ public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
     muse::GlobalInject<audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<muse::toast::IToastService> toastService;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<IPlayback> playback { this };

@@ -3,6 +3,8 @@
 */
 #include "audiosetupcontextmenumodel.h"
 
+#include "framework/global/containers.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
@@ -26,6 +28,13 @@ void AudioSetupContextMenuModel::load()
     AbstractMenuModel::load();
 
     makeMenuItems();
+
+    audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta&) {
+        makeMenuItems();
+    });
+    audioDriverController()->audioDeviceListChanged().onNotify(this, [this]() {
+        makeMenuItems();
+    });
 }
 
 void AudioSetupContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
@@ -94,7 +103,31 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
         return q;
     };
 
+    auto makeSystemDefaultPlaybackDeviceAction = []() {
+        ActionQuery q = PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY;
+        q.addParam("is_default_device", muse::Val(true));
+        return q;
+    };
+
     const auto& outputDevicesList = audioDriverController()->outputDevices();
+    const bool usesSystemDefaultOutput = !currentOutputDevice.has_value()
+                                         || !muse::contains(outputDevicesList, currentOutputDevice.value());
+    if (!outputDevicesList.empty()) {
+        const std::string resolvedDevice
+            = audioDriverController()->systemDefaultOutputDevice(audioDriverController()->configuration().api);
+        const muse::TranslatableString title = resolvedDevice.empty()
+                                               ? muse::TranslatableString("audio setup", "System default")
+                                               : muse::TranslatableString("audio setup", "System default: %1")
+                                               .arg(muse::String::fromStdString(resolvedDevice));
+        MenuItem* item = makeMenuItem(makeSystemDefaultPlaybackDeviceAction().toString(), title);
+        item->setId(QString::fromStdString(item->query().toString()));
+        if (usesSystemDefaultOutput) {
+            item->setChecked(true);
+        }
+        items << item;
+        items << makeSeparator();
+    }
+
     for (size_t i = 0; i < outputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangePlaybackDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(outputDevicesList.at(i))));
@@ -119,7 +152,32 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
         return q;
     };
 
+    auto makeSystemDefaultRecordingDeviceAction = []() {
+        ActionQuery q = PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY;
+        q.addParam("is_default_device", muse::Val(true));
+        return q;
+    };
+
     const auto& inputDevicesList = audioDriverController()->inputDevices();
+    const bool usesSystemDefaultInput = !currentInputDevice.has_value()
+                                        || !muse::contains(inputDevicesList, *currentInputDevice);
+    if (!inputDevicesList.empty()) {
+        const std::string resolvedDevice
+            = audioDriverController()->systemDefaultInputDevice(audioDriverController()->configuration().api);
+        //: %1 is the device the system default currently resolves to
+        const muse::TranslatableString title = resolvedDevice.empty()
+                                               ? muse::TranslatableString("audio setup", "System default")
+                                               : muse::TranslatableString("audio setup", "System default: %1")
+                                               .arg(muse::String::fromStdString(resolvedDevice));
+        MenuItem* item = makeMenuItem(makeSystemDefaultRecordingDeviceAction().toString(), title);
+        item->setId(QString::fromStdString(item->query().toString()));
+        if (usesSystemDefaultInput) {
+            item->setChecked(true);
+        }
+        items << item;
+        items << makeSeparator();
+    }
+
     for (size_t i = 0; i < inputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeRecordingDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(inputDevicesList.at(i))));

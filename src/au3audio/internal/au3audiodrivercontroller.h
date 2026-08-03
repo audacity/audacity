@@ -5,18 +5,21 @@
 
 #include <optional>
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudioengine.h"
 #include "audio/iaudiostreamsuspender.h"
+#include "au3audio/isystemaudiodeviceslistener.h"
 
 namespace au::au3audio {
-class Au3AudioDriverController final : public audio::IAudioDriverController
+class Au3AudioDriverController final : public audio::IAudioDriverController, public muse::async::Asyncable
 {
     muse::GlobalInject<audio::IAudioEngine> audioEngine;
     muse::GlobalInject<muse::IApplication> application;
+    muse::GlobalInject<ISystemAudioDevicesListener> systemAudioDevicesListener;
 
 public:
     void init();
@@ -27,10 +30,12 @@ public:
     std::vector<std::string> apis() const override;
     std::vector<std::string> outputDevices() const override;
     std::vector<std::string> outputDevices(const std::string& api) const override;
+    std::string systemDefaultOutputDevice(const std::string& api) const override;
     std::vector<std::string> inputDevices() const override;
     std::vector<std::string> inputDevices(const std::string& api) const override;
+    std::string systemDefaultInputDevice(const std::string& api) const override;
     int inputChannelsAvailable() const override;
-    int inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const override;
+    int inputChannelsAvailable(const std::string& api, const audio::AudioDeviceSelection& inputDevice) const override;
     std::vector<uint64_t> sampleRates() const override;
     std::vector<std::string> sampleFormats() const override;
 
@@ -40,13 +45,16 @@ public:
     audio::ApplyResult openAsioDriverSettings(const audio::AudioRoutingChange& routing) override;
 
     muse::async::Notification audioDeviceListChanged() const override;
+    muse::async::Channel<std::string> usedOutputDeviceChanged() const override;
+    muse::async::Channel<std::string> usedInputDeviceChanged() const override;
 
 private:
     friend class Au3AudioDriverControllerTests;
 
     void initDefaults();
+    void onSystemDevicesChanged();
     audio::AudioConfiguration configurationFromSettings() const;
-    void refreshInputDeviceSettings(const std::string& api, const std::string& inputDevice);
+    void refreshInputDeviceSettings(const std::string& api, const audio::AudioDeviceSelection& inputDevice);
 
     std::optional<audio::AudioConfiguration> normalizedConfiguration(
         const audio::AudioConfiguration& current, const audio::AudioConfigurationChange& change) const;
@@ -66,8 +74,11 @@ private:
     void publish(const audio::AudioConfigurationDelta& delta, bool deviceListChanged = false) noexcept;
     audio::AudioConfiguration m_configuration;
     bool m_applying = false;
+    bool m_pendingSystemDevicesChange = false;
 
     muse::async::Channel<audio::AudioConfigurationDelta> m_configurationChanged;
     muse::async::Notification m_audioDeviceListChanged;
+    muse::async::Channel<std::string> m_usedOutputDeviceChanged;
+    muse::async::Channel<std::string> m_usedInputDeviceChanged;
 };
 }

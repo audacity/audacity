@@ -134,6 +134,22 @@ void PlaybackController::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
     });
+
+    audioDriverController()->usedOutputDeviceChanged().onReceive(this, [this](const std::string& device) {
+        const std::string message = device.empty()
+                                    ? muse::trc("playback", "No playback device is available.")
+                                    : muse::qtrc("playback", "“%1” is now used for playback.")
+                                    .arg(QString::fromStdString(device)).toStdString();
+        toastService()->showInfo(muse::trc("playback", "Playback device changed"), message);
+    });
+
+    audioDriverController()->usedInputDeviceChanged().onReceive(this, [this](const std::string& device) {
+        const std::string message = device.empty()
+                                    ? muse::trc("playback", "No recording device is available.")
+                                    : muse::qtrc("playback", "“%1” is now used for recording.")
+                                    .arg(QString::fromStdString(device)).toStdString();
+        toastService()->showInfo(muse::trc("playback", "Recording device changed"), message);
+    });
 }
 
 void PlaybackController::deinit()
@@ -679,6 +695,10 @@ AudioStreamRestorer PlaybackController::suspendForAudioConfiguration(AudioStream
             return {};
         }
         return [this, au3Project]() {
+                if (audioDriverController()->inputDevices().empty() || audioDriverController()->inputChannelsAvailable() <= 0) {
+                    return true;
+                }
+
                 audioEngine()->startMonitoring(*au3Project);
                 return audioEngine()->isMonitoring();
             };
@@ -876,34 +896,42 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("device_index")) {
-        return;
-    }
-
-    const int index = q.param("device_index").toInt();
-    const auto values = audioDriverController()->outputDevices();
-    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-        return;
-    }
     AudioConfigurationChange change;
-    change.outputDevice = values[index];
+    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+        change.outputDevice = AudioDeviceSelection {};
+    } else {
+        IF_ASSERT_FAILED(q.contains("device_index")) {
+            return;
+        }
+
+        const int index = q.param("device_index").toInt();
+        const auto values = audioDriverController()->outputDevices();
+        if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+            return;
+        }
+        change.outputDevice = values[index];
+    }
     handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
                                    PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString());
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("device_index")) {
-        return;
-    }
-
-    const int index = q.param("device_index").toInt();
-    const auto values = audioDriverController()->inputDevices();
-    if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-        return;
-    }
     AudioConfigurationChange change;
-    change.inputDevice = values[index];
+    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+        change.inputDevice = AudioDeviceSelection {};
+    } else {
+        IF_ASSERT_FAILED(q.contains("device_index")) {
+            return;
+        }
+
+        const int index = q.param("device_index").toInt();
+        const auto values = audioDriverController()->inputDevices();
+        if (index < 0 || static_cast<size_t>(index) >= values.size()) {
+            return;
+        }
+        change.inputDevice = values[index];
+    }
     handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
                                    PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
 }

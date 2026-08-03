@@ -107,6 +107,58 @@ bool changesRouting(const AudioConfigurationDelta& delta)
            || delta.contains(AudioConfigurationField::OutputDevice)
            || delta.contains(AudioConfigurationField::InputDevice);
 }
+
+std::string systemDefaultOutputDevice(const std::string& api)
+{
+    const auto& maps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(api);
+    return MakeDeviceSourceString(DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex), maps);
+}
+
+std::string systemDefaultInputDevice(const std::string& api)
+{
+    const auto& maps = DeviceManager::Instance()->GetInputDeviceMaps();
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(api);
+    return MakeDeviceSourceString(DeviceManager::Instance()->GetDefaultInputDevice(hostIndex), maps);
+}
+
+const DeviceSourceMap* findDevice(const std::vector<DeviceSourceMap>& maps,
+                                  const std::string& api, const std::string& device)
+{
+    if (device.empty()) {
+        return nullptr;
+    }
+    const auto it = std::find_if(maps.begin(), maps.end(), [&](const DeviceSourceMap& candidate) {
+        return candidate.hostString == api && MakeDeviceSourceString(&candidate, maps) == device;
+    });
+    return it == maps.end() ? nullptr : &*it;
+}
+
+std::string effectiveOutputDevice(const std::string& api, const AudioDeviceSelection& selection)
+{
+    const auto& maps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    if (selection && findDevice(maps, api, selection.value())) {
+        return selection.value();
+    }
+    return systemDefaultOutputDevice(api);
+}
+
+std::string effectiveInputDevice(const std::string& api, const AudioDeviceSelection& selection)
+{
+    const auto& maps = DeviceManager::Instance()->GetInputDeviceMaps();
+    if (selection && findDevice(maps, api, selection.value())) {
+        return selection.value();
+    }
+    return systemDefaultInputDevice(api);
+}
+
+AudioDeviceSelection selectionFromSetting(const std::string& value)
+{
+    if (value.empty()) {
+        return std::nullopt;
+    }
+    return value;
+}
 }
 
 void Au3AudioDriverController::init()
@@ -121,16 +173,7 @@ void Au3AudioDriverController::init()
     }
 
     const auto api = settings()->value(AUDIO_HOST).toString();
-    const auto outputs = outputDevices(api);
-    const auto inputs = inputDevices(api);
-    if (!muse::contains(outputs, settings()->value(PLAYBACK_DEVICE).toString())) {
-        settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(outputs.empty() ? std::string() : outputs.front()));
-    }
-    if (!muse::contains(inputs, settings()->value(RECORDING_DEVICE).toString())) {
-        settings()->setLocalValue(RECORDING_DEVICE, muse::Val(inputs.empty() ? std::string() : inputs.front()));
-    }
-
-    const auto inputDevice = settings()->value(RECORDING_DEVICE).toString();
+    const auto inputDevice = selectionFromSetting(settings()->value(RECORDING_DEVICE).toString());
     refreshInputDeviceSettings(api, inputDevice);
     const auto availableChannels = inputChannelsAvailable(api, inputDevice);
     const auto inputChannels
@@ -140,6 +183,49 @@ void Au3AudioDriverController::init()
           : 0;
     settings()->setLocalValue(INPUT_CHANNELS, muse::Val(inputChannels));
     m_configuration = configurationFromSettings();
+
+    systemAudioDevicesListener()->systemDevicesChanged().onNotify(this, [this]() {
+        onSystemDevicesChanged();
+    });
+
+    if (audioEngine()) {
+        audioEngine()->streamStopped().onNotify(this, [this]() {
+            if (m_pendingSystemDevicesChange) {
+                m_pendingSystemDevicesChange = false;
+                onSystemDevicesChanged();
+            }
+        });
+    }
+}
+
+void Au3AudioDriverController::onSystemDevicesChanged()
+{
+    if (audioEngine() && audioEngine()->isBusy()) {
+        m_pendingSystemDevicesChange = true;
+        return;
+    }
+
+    const auto before = m_configuration;
+    const std::string prevOutputDevice = effectiveOutputDevice(before.api, before.outputDevice);
+    const std::string prevInputDevice = effectiveInputDevice(before.api, before.inputDevice);
+
+    const auto result = rescan();
+    if (!result.succeeded()) {
+        LOGW() << "device rescan after a system change failed, status: " << static_cast<int>(result.status);
+        m_pendingSystemDevicesChange = true;
+        return;
+    }
+
+    const auto after = m_configuration;
+    const std::string outputDevice = effectiveOutputDevice(after.api, after.outputDevice);
+    const std::string inputDevice = effectiveInputDevice(after.api, after.inputDevice);
+
+    if (outputDevice != prevOutputDevice) {
+        m_usedOutputDeviceChanged.send(outputDevice);
+    }
+    if (inputDevice != prevInputDevice) {
+        m_usedInputDeviceChanged.send(inputDevice);
+    }
 }
 
 void Au3AudioDriverController::initDefaults()
@@ -147,14 +233,8 @@ void Au3AudioDriverController::initDefaults()
     const auto availableApis = apis();
     settings()->setDefaultValue(AUDIO_HOST, muse::Val(preferredAudioHost(availableApis)));
 
-    const int hostIndex = DeviceManager::Instance()->GetHostIndex(settings()->value(AUDIO_HOST).toString());
-    const auto inputDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
-    const auto outputDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
-    const auto& inputMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    const auto& outputMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
-
-    settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(MakeDeviceSourceString(outputDevice, outputMaps)));
-    settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(MakeDeviceSourceString(inputDevice, inputMaps)));
+    settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(std::string()));
+    settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(std::string()));
     settings()->setDefaultValue(INPUT_CHANNELS, muse::Val(1));
     settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
     settings()->setDefaultValue(AUTOMATIC_LATENCY_COMPENSATION, muse::Val(false));
@@ -169,8 +249,8 @@ AudioConfiguration Au3AudioDriverController::configurationFromSettings() const
 {
     AudioConfiguration result;
     result.api = settings()->value(AUDIO_HOST).toString();
-    result.outputDevice = settings()->value(PLAYBACK_DEVICE).toString();
-    result.inputDevice = settings()->value(RECORDING_DEVICE).toString();
+    result.outputDevice = selectionFromSetting(settings()->value(PLAYBACK_DEVICE).toString());
+    result.inputDevice = selectionFromSetting(settings()->value(RECORDING_DEVICE).toString());
     result.inputChannels = settings()->value(INPUT_CHANNELS).toInt();
     result.bufferLength = settings()->value(LATENCY_DURATION).toDouble();
     result.automaticLatencyCompensation = settings()->value(AUTOMATIC_LATENCY_COMPENSATION).toBool();
@@ -224,6 +304,11 @@ std::vector<std::string> Au3AudioDriverController::outputDevices(const std::stri
     return result;
 }
 
+std::string Au3AudioDriverController::systemDefaultOutputDevice(const std::string& api) const
+{
+    return ::systemDefaultOutputDevice(api);
+}
+
 std::vector<std::string> Au3AudioDriverController::inputDevices() const
 {
     return inputDevices(m_configuration.api);
@@ -241,21 +326,22 @@ std::vector<std::string> Au3AudioDriverController::inputDevices(const std::strin
     return result;
 }
 
+std::string Au3AudioDriverController::systemDefaultInputDevice(const std::string& api) const
+{
+    return ::systemDefaultInputDevice(api);
+}
+
 int Au3AudioDriverController::inputChannelsAvailable() const
 {
     return inputChannelsAvailable(m_configuration.api,
                                   m_configuration.inputDevice);
 }
 
-int Au3AudioDriverController::inputChannelsAvailable(const std::string& api, const std::string& inputDevice) const
+int Au3AudioDriverController::inputChannelsAvailable(const std::string& api, const AudioDeviceSelection& inputDevice) const
 {
     const auto& maps = DeviceManager::Instance()->GetInputDeviceMaps();
-    for (const auto& device : maps) {
-        if (device.hostString == api && MakeDeviceSourceString(&device, maps) == inputDevice) {
-            return device.numChannels;
-        }
-    }
-    return 0;
+    const DeviceSourceMap* device = findDevice(maps, api, effectiveInputDevice(api, inputDevice));
+    return device ? device->numChannels : 0;
 }
 
 std::vector<uint64_t> Au3AudioDriverController::sampleRates() const
@@ -288,20 +374,8 @@ std::optional<AudioConfiguration> Au3AudioDriverController::normalizedConfigurat
         result.api = *change.api;
     }
 
-    const auto outputs = outputDevices(result.api);
-    const auto inputs = inputDevices(result.api);
-    if (change.outputDevice) {
-        result.outputDevice = muse::contains(outputs, *change.outputDevice)
-                              ? *change.outputDevice : (outputs.empty() ? std::string() : outputs.front());
-    } else if (!muse::contains(outputs, result.outputDevice)) {
-        result.outputDevice = outputs.empty() ? std::string() : outputs.front();
-    }
-    if (change.inputDevice) {
-        result.inputDevice = muse::contains(inputs, *change.inputDevice)
-                             ? *change.inputDevice : (inputs.empty() ? std::string() : inputs.front());
-    } else if (!muse::contains(inputs, result.inputDevice)) {
-        result.inputDevice = inputs.empty() ? std::string() : inputs.front();
-    }
+    result.outputDevice = change.outputDevice.value_or(result.outputDevice);
+    result.inputDevice = change.inputDevice.value_or(result.inputDevice);
 
     const int channels = inputChannelsAvailable(result.api, result.inputDevice);
     if (channels > 0) {
@@ -488,10 +562,10 @@ void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& valu
         settings()->setLocalValue(AUDIO_HOST, muse::Val(value.api));
     }
     if (delta.contains(AudioConfigurationField::OutputDevice)) {
-        settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(value.outputDevice));
+        settings()->setLocalValue(PLAYBACK_DEVICE, muse::Val(value.outputDevice.value_or(std::string())));
     }
     if (delta.contains(AudioConfigurationField::InputDevice)) {
-        settings()->setLocalValue(RECORDING_DEVICE, muse::Val(value.inputDevice));
+        settings()->setLocalValue(RECORDING_DEVICE, muse::Val(value.inputDevice.value_or(std::string())));
     }
     if (delta.contains(AudioConfigurationField::InputChannels)) {
         settings()->setLocalValue(INPUT_CHANNELS, muse::Val(value.inputChannels));
@@ -755,9 +829,9 @@ ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingC
     const auto& after = *normalized;
     const auto routingDelta = makeDelta(before, after);
 
-    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(after.api, after.outputDevice);
+    int paIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(after.api, effectiveOutputDevice(after.api, after.outputDevice));
     if (paIndex < 0) {
-        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(after.api, after.inputDevice);
+        paIndex = DeviceManager::Instance()->GetInputDevicePaIndex(after.api, effectiveInputDevice(after.api, after.inputDevice));
     }
     if (paIndex < 0) {
         return { ApplyStatus::NoAsioDevice };
@@ -831,18 +905,27 @@ muse::async::Notification Au3AudioDriverController::audioDeviceListChanged() con
     return m_audioDeviceListChanged;
 }
 
+muse::async::Channel<std::string> Au3AudioDriverController::usedOutputDeviceChanged() const
+{
+    return m_usedOutputDeviceChanged;
+}
+
+muse::async::Channel<std::string> Au3AudioDriverController::usedInputDeviceChanged() const
+{
+    return m_usedInputDeviceChanged;
+}
+
 void Au3AudioDriverController::refreshInputDeviceSettings(const std::string& api,
-                                                          const std::string& inputDevice)
+                                                          const AudioDeviceSelection& inputDevice)
 {
     const auto& maps = DeviceManager::Instance()->GetInputDeviceMaps();
-    for (const auto& device : maps) {
-        if (device.hostString != api || MakeDeviceSourceString(&device, maps) != inputDevice) {
-            continue;
-        }
-        DeviceManager::Instance()->UpdateAsioDeviceCaps(device.deviceIndex);
-        settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device.sourceIndex));
-        settings()->setLocalValue(RECORDING_SOURCE,
-                                  muse::Val(device.totalSources >= 1 ? device.sourceString.ToStdString() : std::string()));
+    const DeviceSourceMap* device = findDevice(maps, api, effectiveInputDevice(api, inputDevice));
+    if (!device) {
         return;
     }
+
+    DeviceManager::Instance()->UpdateAsioDeviceCaps(device->deviceIndex);
+    settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device->sourceIndex));
+    settings()->setLocalValue(RECORDING_SOURCE,
+                              muse::Val(device->totalSources >= 1 ? device->sourceString.ToStdString() : std::string()));
 }

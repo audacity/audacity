@@ -49,10 +49,17 @@ void Au3AudioEngine::init()
 {
     s_audioIOListener = std::make_shared<Au3AudioIOListener>();
     AudioIO::Init();
+
+    m_streamStatusSubscription = AudioIO::Get()->Subscribe([this](const AudioIOEvent& event) {
+        if (!event.on && event.type != AudioIOEvent::PAUSE) {
+            m_streamStopped.notify();
+        }
+    });
 }
 
 void Au3AudioEngine::deinit()
 {
+    m_streamStatusSubscription.Reset();
     AudioIO::Deinit();
 }
 
@@ -74,7 +81,7 @@ bool Au3AudioEngine::isMonitoring() const
 std::optional<au::audio::AudioStreamDescriptor> Au3AudioEngine::currentStream() const
 {
     const auto audioIO = AudioIO::Get();
-    if (!audioIO->IsBusy() && !audioIO->IsStreamActive()) {
+    if (!audioIO->IsBusy() && !audioIO->IsStreamActive() && !audioIO->IsMonitoring()) {
         return std::nullopt;
     }
 
@@ -218,19 +225,24 @@ std::optional<au::audio::AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackI
     return std::nullopt;
 }
 
-muse::async::Notification Au3AudioEngine::updateRequested() const
+muse::async::Notification Au3AudioEngine::recordingUpdateRequested() const
 {
-    return s_audioIOListener->updateRequested();
+    return s_audioIOListener->recordingUpdateRequested();
 }
 
-muse::async::Notification Au3AudioEngine::commitRequested() const
+muse::async::Notification Au3AudioEngine::recordingCommitRequested() const
 {
-    return s_audioIOListener->commitRequested();
+    return s_audioIOListener->recordingCommitRequested();
 }
 
-muse::async::Notification Au3AudioEngine::finished() const
+muse::async::Notification Au3AudioEngine::recordingFinished() const
 {
-    return s_audioIOListener->finished();
+    return s_audioIOListener->recordingFinished();
+}
+
+muse::async::Notification Au3AudioEngine::streamStopped() const
+{
+    return m_streamStopped;
 }
 
 muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> Au3AudioEngine::recordingClipChanged() const
