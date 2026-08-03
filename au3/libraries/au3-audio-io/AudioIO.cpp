@@ -248,6 +248,8 @@ AudioIO::AudioIO()
     .store(false, std::memory_order_relaxed);
     mAudioThreadSequenceBufferExchangeLoopActive
     .store(false, std::memory_order_relaxed);
+    mAudioThreadMonitoring
+    .store(false, std::memory_order_relaxed);
 
     mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_relaxed);
 
@@ -897,6 +899,8 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
         return;
     }
 
+    mAudioThreadMonitoring.store(true, std::memory_order_release);
+
     Publish({ pOwningProject.get(), AudioIOEvent::MONITOR, true });
 
     // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
@@ -911,6 +915,8 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
         // advertise the chosen I/O sample rate to the UI
         pListener->OnAudioIORate((int)mRate);
     }
+
+    WaitForAudioThreadStarted();
 }
 
 void AudioIO::StopMonitoring()
@@ -1214,9 +1220,11 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         err = Pa_StartStream(mPortStreamV19);
 
         if (err != paNoError) {
-            mStreamToken = 0;
-
+            // Do the start/stop handshake
+            WaitForAudioThreadStarted();
             StopAudioThread();
+            WaitForAudioThreadStopped();
+            mStreamToken = 0;
 
             if (pListener && mNumCaptureChannels > 0) {
                 pListener->OnAudioIOStopRecording();
@@ -1924,7 +1932,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
 
             lastState = ProcessingState::ePrimeProcessing;
         } else if (gAudioIO->mAudioThreadSequenceBufferExchangeLoopRunning
-                   .load(std::memory_order_relaxed)) {
+                   .load(std::memory_order_acquire)) {
             if (lastState != ProcessingState::eCallbackProcessing) {
                 // Main thread has told us to start - acknowledge that we do
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
@@ -1939,6 +1947,14 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             // store really means that the one-time exchange was done.
 
             gAudioIO->SequenceBufferExchange();
+        } else if (gAudioIO->mAudioThreadMonitoring.load(std::memory_order_acquire)) {
+            if (lastState != ProcessingState::eMonitoringProcessing) {
+                // Acknowledge that the monitoring state was observed before
+                // the main thread is allowed to send the matching stop.
+                gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
+                                                        std::memory_order_release);
+            }
+            lastState = ProcessingState::eMonitoringProcessing;
         } else {
             if ((lastState == ProcessingState::eCallbackProcessing)
                 || (lastState == ProcessingState::eMonitoringProcessing)
@@ -1949,10 +1965,6 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
                                                         std::memory_order::memory_order_release);
             }
             lastState = ProcessingState::eSkipProcessing;
-
-            if (gAudioIO->IsMonitoring()) {
-                lastState = ProcessingState::eMonitoringProcessing;
-            }
         }
 
         gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
@@ -3594,6 +3606,7 @@ void AudioIoCallback::WaitForAudioThreadStarted()
 void AudioIoCallback::StopAudioThread()
 {
     mAudioThreadSequenceBufferExchangeLoopRunning.store(false, std::memory_order_release);
+    mAudioThreadMonitoring.store(false, std::memory_order_release);
 }
 
 void AudioIoCallback::WaitForAudioThreadStopped()

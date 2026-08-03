@@ -302,6 +302,7 @@ public:
     std::atomic<bool> mAudioThreadShouldCallSequenceBufferExchangeOnce;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopRunning;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopActive;
+    std::atomic<bool> mAudioThreadMonitoring;
 
     std::atomic<Acknowledge> mAudioThreadAcknowledge;
 
