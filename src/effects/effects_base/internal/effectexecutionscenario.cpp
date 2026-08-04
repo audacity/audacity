@@ -886,7 +886,16 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
 
         bool success = pInstance->Process(settings);
         if (!success) {
-            return muse::make_ret(muse::Ret::Code::InternalError);
+            const bool cancelled = progress->Poll(1, 1) == BasicUI::ProgressResult::Cancelled;
+            progress.reset();
+            if (cancelled) {
+                return muse::make_ret(muse::Ret::Code::Cancel);
+            }
+            const muse::Ret ret = make_ret(Err::EffectProcessFailed, pInstance->GetLastError());
+            interactive()->error(muse::trc("effects", "Effect preview"), ret.text(), {},
+                                 int(muse::IInteractive::Button::NoButton),
+                                 { muse::IInteractive::Option::WithIcon });
+            return ret;
         }
 
         // Time-warping effects (e.g. Paulstretch) may update mT1 during
