@@ -17,7 +17,7 @@ static const muse::Settings::Key COMPAT_RECENT_FILES_DATA(module_name, "project/
 static const muse::Settings::Key USER_PROJECTS_PATH(module_name, "project/paths/myprojects");
 static const muse::Settings::Key LAST_OPENED_PROJECTS_PATH(module_name, "project/paths/lastprojects");
 static const muse::Settings::Key LAST_SAVED_PROJECTS_PATH(module_name, "application/paths/lastSavedProjectsPath");
-static const muse::Settings::Key TEMPORARY_FILES_PATH(module_name, "project/temporaryFilesPath");
+static const muse::Settings::Key TEMPORARY_FILES_PATH("au3wrap", "Directories/TempDir");
 static const muse::Settings::Key LAST_USED_SAVE_LOCATION_TYPE(module_name, "project/lastUsedSaveLocationType");
 static const muse::Settings::Key SHOULD_ASK_SAVE_LOCATION_TYPE(module_name, "project/shouldAskSaveLocationType");
 static const muse::Settings::Key HOME_PROJECTS_PAGE_VIEW_TYPE(module_name, "project/homeProjectsPageViewType");
