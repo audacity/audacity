@@ -820,6 +820,9 @@ Rectangle {
 
                     menuModel: (root.multiClipsSelected || root.isGrouped) ? multiClipContextMenuModel : singleClipContextMenuModel
 
+                    accentColor: root.clipColor
+                    hoverHitColor: root.clipSelectedColor
+
                     visible: header.width > (60 + menuBtn.implicitWidth)
 
                     navigation.name: "ClipMenuBtn"
