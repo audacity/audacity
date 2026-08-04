@@ -3,10 +3,6 @@
 #include "framework/global/settings.h"
 #include "framework/global/translation.h"
 
-#include "au3-files/FileNames.h"
-
-#include "au3wrap/internal/wxtypes_convert.h"
-
 #include "projectconfiguration.h"
 
 using namespace au::project;
@@ -271,7 +267,6 @@ void ProjectConfiguration::initTempDir()
     }
     muse::settings()->setDefaultValue(TEMPORARY_FILES_PATH, muse::Val(appDataLocation));
     muse::settings()->valueChanged(TEMPORARY_FILES_PATH).onReceive(nullptr, [this](const muse::Val& val) {
-        UpdateDefaultPath(FileNames::Operation::Temp, au3::wxFromString(val.toPath().toString()));
         m_temporaryDirChanged.send(val.toString());
     });
 }

@@ -6,7 +6,6 @@
 #include <wx/log.h>
 
 #include "mod-ffmpeg/FFmpeg.h"
-#include "au3-files/FileNames.h"
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-preferences/Prefs.h"
@@ -67,9 +66,6 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     }
 
     FFmpegStartup();
-
-    muse::String tempDir = projectConfiguration()->temporaryDir().toString();
-    UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));
 
     m_au3BasicUi = std::make_shared<Au3BasicUI>(application.get());
     (void)BasicUI::Install(m_au3BasicUi.get());
