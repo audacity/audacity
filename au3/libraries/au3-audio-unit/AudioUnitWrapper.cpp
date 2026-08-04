@@ -21,6 +21,10 @@
 #include <wx/osx/core/private.h>
 #include <wx/log.h>
 
+#include <atomic>
+#include <chrono>
+#include <thread>
+
 AudioUnitEffectSettings&
 AudioUnitWrapper::GetSettings(EffectSettings& settings)
 {
@@ -270,8 +274,34 @@ bool AudioUnitWrapper::MoveSettingsContents(
 
 bool AudioUnitWrapper::CreateAudioUnit()
 {
-    AudioUnit unit{};
-    auto result = AudioComponentInstanceNew(mComponent, &unit);
+    // Instantiate asynchronously and keep the run loop serviced while waiting.
+    // Out-of-process components (e.g. Intel-only plug-ins bridged through
+    // AUHostingService on Apple silicon) may need the host's main thread to
+    // answer view-service requests while the instance is being created, so a
+    // blocking AudioComponentInstanceNew on the main thread can deadlock.
+    struct InstantiationState {
+        std::atomic<bool> done { false };
+        OSStatus status = noErr;
+        AudioComponentInstance instance = nullptr;
+    };
+    auto state = std::make_shared<InstantiationState>();
+
+    AudioComponentInstantiate(mComponent, AudioComponentInstantiationOptions {},
+                              ^ (AudioComponentInstance instance, OSStatus status) {
+        state->instance = instance;
+        state->status = status;
+        state->done.store(true);
+        CFRunLoopWakeUp(CFRunLoopGetMain());
+    });
+
+    while (!state->done.load()) {
+        if (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, true) == kCFRunLoopRunFinished) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+
+    AudioUnit unit = state->instance;
+    auto result = state->status;
     if (!result) {
         mUnit.reset(unit);
         if (&mParameters == &mOwnParameters && !mOwnParameters) {
