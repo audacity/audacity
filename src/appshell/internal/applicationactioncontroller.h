@@ -28,6 +28,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/iapplicationeventcontroller.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/icommanddispatcher.h"
@@ -50,6 +51,8 @@
 // #include "audio/isoundfontrepository.h"
 // #include "istartupscenario.h"
 
+class QFileOpenEvent;
+
 namespace au::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
     public muse::async::Asyncable, public muse::Contextable
@@ -58,6 +61,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<muse::IApplicationEventController> applicationEventController;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
@@ -81,6 +85,7 @@ public:
 
     void preInit();
     void init();
+    void processPendingEvents();
     const std::vector<muse::actions::ActionCode>& prohibitedActionsWhileRecording() const;
 
     muse::ValCh<bool> isFullScreen() const;
@@ -93,6 +98,8 @@ public:
 
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
+
+    void handleFileOpenEvent(const QFileOpenEvent* event);
 
     void setupConnections();
 

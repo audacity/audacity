@@ -3,6 +3,8 @@
 */
 #include "au3cloudactionscontroller.h"
 
+#include <variant>
+
 #include "framework/actions/actiontypes.h"
 #include "framework/global/types/uri.h"
 
@@ -42,6 +44,16 @@ void Au3CloudActionsController::init()
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_PAGE_ACTION, this, &Au3CloudActionsController::openCloudAudioPage);
     dispatcher()->reg(this, OPEN_CLOUD_PROFILE_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProfilePage);
     dispatcher()->reg(this, "open-url", this, &Au3CloudActionsController::openUrl);
+
+    authorization()->authState().ch.onReceive(this, [this](const AuthState& state) {
+        if (std::holds_alternative<Authorizing>(state)) {
+            return;
+        }
+
+        for (const std::string& url : std::exchange(m_pendingUrls, {})) {
+            m_urlHandler->handle(QString::fromStdString(url));
+        }
+    });
 }
 
 void Au3CloudActionsController::openUrl(const muse::actions::ActionData& args)
@@ -49,7 +61,14 @@ void Au3CloudActionsController::openUrl(const muse::actions::ActionData& args)
     if (args.empty()) {
         return;
     }
-    m_urlHandler->handle(args.arg<QString>(0));
+
+    const QString url = args.arg<QString>(0);
+    if (std::holds_alternative<Authorizing>(authorization()->authState().val)) {
+        m_pendingUrls.push_back(url.toStdString());
+        return;
+    }
+
+    m_urlHandler->handle(url);
 }
 
 bool Au3CloudActionsController::canReceiveAction(const muse::actions::ActionCode&) const

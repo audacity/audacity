@@ -3,6 +3,9 @@
 */
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include "framework/actions/actionable.h"
 #include "framework/actions/actiontypes.h"
 #include "framework/global/async/asyncable.h"
@@ -44,5 +47,6 @@ private:
     void openUrl(const muse::actions::ActionData& args);
 
     std::unique_ptr<CloudUrlHandler> m_urlHandler;
+    std::vector<std::string> m_pendingUrls;
 };
 }

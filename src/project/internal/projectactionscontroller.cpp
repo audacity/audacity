@@ -2,6 +2,8 @@
 
 #include <QFileDialog>
 
+#include <variant>
+
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
@@ -43,6 +45,17 @@ static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("audacity://
 static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("audacity://cloud/update-audio-preview-for-project");
 
 namespace {
+QString cloudProjectOpenUrl(const muse::String& projectId, const muse::String& snapshotId)
+{
+    muse::UriQuery cloudUri(AUDACITY_URL_SCHEME.toStdString() + "://open");
+    cloudUri.addParam("projectId", muse::Val(projectId.toStdString()));
+    if (!snapshotId.isEmpty()) {
+        cloudUri.addParam("snapshotId", muse::Val(snapshotId.toStdString()));
+    }
+
+    return QString::fromStdString(cloudUri.toString());
+}
+
 au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
 {
     switch (mode) {
@@ -415,14 +428,8 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     }
 
     if (globalContext()->currentProject()) {
-        muse::UriQuery cloudUri(AUDACITY_URL_SCHEME.toStdString() + "://open");
-        cloudUri.addParam("projectId", muse::Val(cloudProjectId.toStdString()));
-        if (!snapshotId.isEmpty()) {
-            cloudUri.addParam("snapshotId", muse::Val(snapshotId.toStdString()));
-        }
-
         QStringList newWindowArgs;
-        newWindowArgs << QString::fromStdString(cloudUri.toString());
+        newWindowArgs << cloudProjectOpenUrl(cloudProjectId, snapshotId);
         multiwindowsProvider()->openNewWindow(newWindowArgs);
         return;
     }
@@ -1026,6 +1033,12 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     if (!audioComService()->enabled()) {
         LOGE() << "Cloud support is not available";
         return make_ret(Ret::Code::NotSupported);
+    }
+
+    if (std::holds_alternative<au::au3cloud::Authorizing>(authorization()->authState().val)) {
+        dispatcher()->dispatch("open-url",
+                               muse::actions::ActionData::make_arg1<QString>(cloudProjectOpenUrl(projectId, snapshotId)));
+        return muse::make_ok();
     }
 
     if (!ensureAuthorization()) {
