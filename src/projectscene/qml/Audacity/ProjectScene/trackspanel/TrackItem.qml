@@ -249,12 +249,8 @@ ListItemBlank {
         }
     }
 
-    Item {
-        anchors.fill: parent
-
-        HoverHandler {
-            id: hoverHandler
-        }
+    HoverHandler {
+        id: hoverHandler
     }
 
     MouseArea {
