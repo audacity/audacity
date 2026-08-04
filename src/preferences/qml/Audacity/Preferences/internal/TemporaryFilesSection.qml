@@ -71,7 +71,7 @@ BaseSection {
 
         StyledTextLabel {
             text: qsTrc("preferences", "Folder in which unsaved projects and other data are kept")
-            color: ui.theme.fontSecondaryColor
+            opacity: 0.7
         }
     }
 }
