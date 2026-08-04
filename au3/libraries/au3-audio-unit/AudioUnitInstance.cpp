@@ -170,6 +170,15 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
         return false;
     }
 
+    // Must be set, not just queried: out-of-process plug-ins size their
+    // shared render buffers from this property, and rendering without it
+    // fails with kAudioUnitErr_RenderTimeout
+    if (SetProperty(kAudioUnitProperty_MaximumFramesPerSlice,
+                    static_cast<UInt32>(mBlockSize))) {
+        wxLogError("%ls didn't accept maximum frames per slice\n", mIdentifier.wx_str());
+        return false;
+    }
+
     if (!Initialize()) {
         return false;
     }
