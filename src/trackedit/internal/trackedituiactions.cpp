@@ -21,8 +21,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("rename-item",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Rename item"),
-             TranslatableString("action", "Rename item")
+             TranslatableString("action", "Rename item (clip/label)"),
+             TranslatableString("action", "Rename item (clip/label)")
              ),
     UiAction("action://trackedit/copy",
              au::context::UiCtxProjectOpened,

@@ -161,13 +161,6 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Clip properties"),
              TranslatableString("action", "Show clip properties")
              ),
-    UiAction("clip-rename",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Rename clip"),
-             TranslatableString("action", "Rename clip"),
-             Checkable::Yes
-             ),
     UiAction("action://delete",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
