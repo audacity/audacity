@@ -275,8 +275,6 @@ public:
     /** \brief Find out if playback / recording is currently paused */
     bool IsPaused() const;
 
-    virtual void StopStream() = 0;
-
     /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
      * or recording.
      *
