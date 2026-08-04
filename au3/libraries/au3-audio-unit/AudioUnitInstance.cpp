@@ -14,6 +14,7 @@
 #include "AudioUnitInstance.h"
 
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include "au3-basic-ui/BasicUI.h"
 #include "au3-exceptions/AudacityException.h"
 #include <wx/log.h>
 
@@ -147,6 +148,7 @@ bool AudioUnitInstance::Initialize()
 bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                           double sampleRate, ChannelNames chanMap)
 {
+    mLastError.clear();
     if (!StoreSettings(mProcessor, GetSettings(settings))) {
         return false;
     }
@@ -215,6 +217,11 @@ bool AudioUnitInstance::ProcessFinalize() noexcept
     return true;
 }
 
+std::string AudioUnitInstance::GetLastError() const
+{
+    return mLastError;
+}
+
 size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
                                        const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
@@ -245,6 +252,12 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
     if (result != noErr) {
         wxLogError("Render failed: %d %4.4s\n",
                    static_cast<int>(result), reinterpret_cast<char*>(&result));
+        if (result == kAudioComponentErr_InstanceInvalidated
+            || result == kAudioComponentErr_InstanceTimedOut) {
+            mLastError = TranslatableString("audio-unit",
+                                            "The plugin “%1” has crashed while processing audio")
+                         .arg(mProcessor.GetName()).Translation();
+        }
         return 0;
     }
 
@@ -391,7 +404,17 @@ AudioUnitInstance::RealtimeProcess(size_t group, EffectSettings& settings,
         pSlave = mSlaves[group].get();
     }
     if (pSlave) {
-        return pSlave->ProcessBlock(settings, inbuf, outbuf, numSamples);
+        const auto processed = pSlave->ProcessBlock(settings, inbuf, outbuf, numSamples);
+        if (processed == 0 && !pSlave->mLastError.empty()
+            && !mRealtimeErrorReported.exchange(true)) {
+            const auto message = pSlave->mLastError;
+            BasicUI::CallAfter([message]{
+                BasicUI::ShowErrorDialog(
+                    {}, TranslatableString("audio-unit", "Realtime effect error"),
+                    TranslatableString::untranslatable(message.c_str()), {});
+            });
+        }
+        return processed;
     } else {
         return 0;
     }

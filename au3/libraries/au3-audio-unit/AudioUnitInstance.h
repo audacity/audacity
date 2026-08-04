@@ -13,6 +13,8 @@
 #define __AUDACITY_AUDIO_UNIT_INSTANCE__
 
 #include "au3-effects/PerTrackEffect.h"
+#include <atomic>
+
 #include "AudioUnitWrapper.h"
 struct AudioUnitEvent;
 
@@ -48,6 +50,7 @@ private:
 
     bool ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
     bool ProcessFinalize() noexcept override;
+    std::string GetLastError() const override;
     size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
     override;
 
@@ -84,5 +87,7 @@ private:
     const wxString& mIdentifier; // for debug messages only
     const size_t mBlockSize;
     const bool mUseLatency;
+    std::string mLastError;
+    std::atomic<bool> mRealtimeErrorReported{ false };
 };
 #endif

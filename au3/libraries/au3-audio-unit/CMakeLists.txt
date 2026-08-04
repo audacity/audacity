@@ -20,6 +20,7 @@ set( LIBRARIES
    au3-utility
    au3-effects-interface
    PRIVATE
+   au3-basic-ui
    "-framework AudioUnit"
    "-framework AudioToolbox"
    au3-strings-interface
