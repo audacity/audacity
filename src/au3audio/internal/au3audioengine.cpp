@@ -117,7 +117,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
         au3Options.pStartTime = *options.streamStartTime;
     }
     auto& audioIO = *AudioIO::Get();
-    const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, au3Options);
+    const int token = audioIO.StartBufferExchange(sequences, startTime, endTime, mixerEndTime, au3Options);
     if (token > 0) {
         LOGI() << "PortAudio latency report (ms): outputLatency=" << audioIO.GetHardwarePlaybackLatencyMs() <<
             ", inputLatency=" << audioIO.GetHardwareCaptureLatencyMs();
@@ -127,7 +127,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
 
 void Au3AudioEngine::stopStream()
 {
-    AudioIO::Get()->StopStream();
+    AudioIO::Get()->StopBufferExchange();
     AudioIO::Get()->WaitWhileBusy();
 }
 
