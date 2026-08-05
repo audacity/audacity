@@ -1470,6 +1470,11 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     // Now, clear the selection
     track.HandleClear(t0, t1, addCutLines, split, moveClips, clearByTrimming);
 
+    const auto pasteDelta = srcEndTime - (t1 - t0);
+    if (std::abs(pasteDelta) >= LongSamplesToTime(1)) {
+        track.ShiftBy(t1, pasteDelta);
+    }
+
     // And paste in the new data
     track.PasteWaveTrackAtSameTempo(t0, src, merge, moveClips);
 
