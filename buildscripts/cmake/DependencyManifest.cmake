@@ -24,8 +24,11 @@ require_dep(wavpack)
 require_dep(libsndfile)
 if (OS_IS_WIN)
     require_source_dep(asiosdk)
+    require_dep(portaudio REBUILD)
+else()
+    require_dep(portaudio)
 endif()
-require_dep(portaudio)
+require_dep(libpng)
 require_dep(wxwidgets)
 
 
