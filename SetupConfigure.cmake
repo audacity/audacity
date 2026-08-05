@@ -62,7 +62,7 @@ if(BUILD_MODE MATCHES "RELEASE")
     set(MUSE_APP_UNSTABLE OFF)
     set(MUSE_APP_RELEASE_CHANNEL "stable")
     set(MUSE_APP_IS_PRERELEASE OFF)
-    set(AU4_ALLOW_UPDATE_ON_PRERELEASE OFF)
+    set(AU4_ALLOW_UPDATE_ON_PRERELEASE ON)
 endif()
 
 # Display version number and the release channel (unless it is a release) as the app title
