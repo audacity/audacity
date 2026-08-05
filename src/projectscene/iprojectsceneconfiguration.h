@@ -45,6 +45,7 @@ public:
     virtual const std::vector<ClipColorInfo>& clipColorInfos() const = 0;
     virtual muse::Color clipColor(trackedit::ClipColorIndex index) const = 0;
     virtual muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const = 0;
+    virtual muse::Color clipHeaderHoverColor(trackedit::ClipColorIndex index) const = 0;
 
     virtual ClipStyles::Style clipStyle() const = 0;
     virtual void setClipStyle(ClipStyles::Style style) = 0;

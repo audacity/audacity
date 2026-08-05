@@ -40,6 +40,7 @@ public:
     const std::vector<ClipColorInfo>& clipColorInfos() const override;
     muse::Color clipColor(trackedit::ClipColorIndex index) const override;
     muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const override;
+    muse::Color clipHeaderHoverColor(trackedit::ClipColorIndex index) const override;
 
     ClipStyles::Style clipStyle() const override;
     void setClipStyle(ClipStyles::Style style) override;

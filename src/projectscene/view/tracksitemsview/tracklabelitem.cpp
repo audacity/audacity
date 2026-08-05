@@ -18,6 +18,7 @@ void TrackLabelItem::setLabel(const trackedit::Label& label)
     m_title = label.title;
     m_color = configuration()->clipColor(label.colorIndex).toQColor();
     m_selectedColor = configuration()->clipSelectedColor(label.colorIndex).toQColor();
+    m_headerHoverColor = configuration()->clipHeaderHoverColor(label.colorIndex).toQColor();
 
     emit titleChanged();
     emit colorChanged();

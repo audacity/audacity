@@ -228,6 +228,16 @@ muse::Color ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorInd
     return muse::Color::fromQColor(color);
 }
 
+muse::Color ProjectSceneConfiguration::clipHeaderHoverColor(trackedit::ClipColorIndex index) const
+{
+    QString key = QString("clip_header_hover_color_%1").arg(index);
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_header_hover_color_1"].value<QColor>();
+    }
+    return muse::Color::fromQColor(color);
+}
+
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const
 {
     return muse::settings()->value(CLIP_STYLE).toEnum<ClipStyles::Style>();

@@ -44,6 +44,11 @@ QColor ViewTrackItem::selectedColor() const
     return m_selectedColor;
 }
 
+QColor ViewTrackItem::headerHoverColor() const
+{
+    return m_headerHoverColor;
+}
+
 double ViewTrackItem::x() const
 {
     return m_x;
