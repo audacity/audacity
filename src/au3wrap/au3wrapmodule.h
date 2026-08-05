@@ -7,8 +7,6 @@
 
 #include "iglobalconfiguration.h"
 
-#include "project/iprojectconfiguration.h"
-
 class Au3BasicUI;
 
 namespace au::au3 {
@@ -18,7 +16,6 @@ class Au3Record;
 class Au3WrapModule : public muse::modularity::IModuleSetup
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
-    muse::GlobalInject<au::project::IProjectConfiguration> projectConfiguration;
     muse::GlobalInject<muse::IApplication> application;
 public:
 
