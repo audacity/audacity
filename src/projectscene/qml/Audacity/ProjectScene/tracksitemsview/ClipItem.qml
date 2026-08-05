@@ -829,8 +829,11 @@ Rectangle {
 
                     menuModel: (root.multiClipsSelected || root.isGrouped) ? multiClipContextMenuModel : singleClipContextMenuModel
 
-                    accentColor: root.clipColor
-                    hoverHitColor: root.clipSelectedColor
+                    //! NOTE The Classic style does not use the clip colour palette, so the menu
+                    //! button falls back to the standard theme colours there rather than tinting
+                    //! itself with a colour the clip never shows.
+                    accentColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : ui.theme.accentColor
+                    hoverHitColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipSelectedColor : ui.theme.buttonColor
 
                     visible: header.width > (60 + menuBtn.implicitWidth)
 
