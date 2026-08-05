@@ -12,7 +12,9 @@
 #include <QByteArray>
 #include <QJSEngine>
 #include <QJSValue>
+#if !defined(Q_OS_WIN)
 #include <QLibrary>
+#endif
 #include <QObject>
 #include <QPointer>
 #include <QString>
@@ -90,7 +92,12 @@ private:
 
     friend class NativeCall;
 
+#if defined(Q_OS_WIN)
+    void* m_libraryHandle = nullptr;
+    QString m_loadError;
+#else
     QLibrary m_library;
+#endif
     ext_dispatch_fn m_dispatch = nullptr;
     QJSValue m_workerPromiseFactory;
 };

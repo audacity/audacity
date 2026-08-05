@@ -7,6 +7,18 @@
 #include <chrono>
 #include <utility>
 
+#if defined(Q_OS_WIN)
+#include <QDir>
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
+
 #include "global/concurrency/taskscheduler.h"
 
 #include "bytebuffer.h"
@@ -15,6 +27,28 @@ using namespace muse::extensions;
 
 namespace {
 constexpr quint32 MAX_ARGUMENT_COUNT = 256;
+
+#if defined(Q_OS_WIN)
+QString windowsErrorString(DWORD error)
+{
+    wchar_t* message = nullptr;
+    const DWORD length = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM
+                                        | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_MAX_WIDTH_MASK,
+                                        nullptr, error, 0, reinterpret_cast<wchar_t*>(&message), 0, nullptr);
+    QString result;
+    if (length != 0 && message) {
+        result = QString::fromWCharArray(message, static_cast<qsizetype>(length)).trimmed();
+    }
+    if (message) {
+        LocalFree(message);
+    }
+    if (result.isEmpty()) {
+        return QStringLiteral("Windows error %1").arg(error);
+    }
+    return QStringLiteral("%1 (Windows error %2)").arg(result).arg(error);
+}
+
+#endif
 
 muse::TaskScheduler& nativeCallScheduler()
 {
@@ -81,13 +115,31 @@ void NativeCallData::releaseBuffers()
 }
 
 NativeLibrary::NativeLibrary(const QString& path, const QByteArray& dispatchSymbol, QObject* parent)
-    : QObject(parent), m_library(path)
+    : QObject(parent)
 {
+#if defined(Q_OS_WIN)
+    // Special case for windows because DLLs do not have runpath equivalent of dylib/so
+    // When loading a library QLibrary doesn't add the current dll directory to the library search path
+    // resulting in a loading failure if a DLL is linked to another DLL stored in the same directory
+
+    // LoadLibraryExW(..LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS) does exactly this
+    const QString nativePath = QDir::toNativeSeparators(path);
+    m_libraryHandle = LoadLibraryExW(reinterpret_cast<LPCWSTR>(nativePath.utf16()), nullptr,
+                                     LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+    if (!m_libraryHandle) {
+        m_loadError = windowsErrorString(GetLastError());
+        return;
+    }
+    m_dispatch = reinterpret_cast<ext_dispatch_fn>(
+        GetProcAddress(static_cast<HMODULE>(m_libraryHandle), dispatchSymbol.constData()));
+#else
+    m_library.setFileName(path);
     // Required while orphaned worker calls retain m_dispatch
     m_library.setLoadHints(QLibrary::ResolveAllSymbolsHint | QLibrary::PreventUnloadHint);
     if (m_library.load()) {
         m_dispatch = reinterpret_cast<ext_dispatch_fn>(m_library.resolve(dispatchSymbol.constData()));
     }
+#endif
 }
 
 NativeLibrary::~NativeLibrary()
@@ -108,7 +160,11 @@ bool NativeLibrary::isLoaded() const
 
 QString NativeLibrary::errorString() const
 {
+#if defined(Q_OS_WIN)
+    return m_libraryHandle && !m_dispatch ? QStringLiteral("The native library has no dispatcher") : m_loadError;
+#else
     return m_library.isLoaded() && !m_dispatch ? QStringLiteral("The native library has no dispatcher") : m_library.errorString();
+#endif
 }
 
 int32_t NativeLibrary::dispatch(const QByteArray& name, const ext_value* arguments, uint32_t argumentCount, ext_value* result) const
