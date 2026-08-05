@@ -28,6 +28,7 @@ if (OS_IS_WIN)
 else()
     require_dep(portaudio)
 endif()
+require_dep(libpng)
 require_dep(wxwidgets)
 
 
