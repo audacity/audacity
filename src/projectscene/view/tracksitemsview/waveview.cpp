@@ -25,14 +25,8 @@ static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
 
-// AU3 colors from au3/libraries/au3-theme-resources/light/Components/Colors.txt
-static const QColor CLASSIC_BACKGROUND_COLOR = QColor(240, 243, 255);               // Unselected: #f0f3ff
-static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(170, 195, 242);      // Selected: #aac3f2
-static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 211);             // Sample: #6464D3
-static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(103, 124, 228);    // SelSample: #677ce4
-static const QColor CLASSIC_RMS_COLOR = QColor(151, 151, 253);                      // Rms: #9797FD
-static const QColor CLASSIC_RMS_SELECTED_COLOR = QColor(151, 151, 253);             // Rms: #9797FD // TODO: This need update
-static const QColor CLASSIC_CLIPPING_COLOR = QColor(239, 71, 111);                  // Clipped: #ef476f
+//! NOTE Classic style colours now come from the theme - see
+//! ProjectSceneConfiguration::classicClipColors() and the classic_clip_* theme keys.
 
 static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
 static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
@@ -161,27 +155,38 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
 
 void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) const
 {
-    params.style.blankBrush = selected ? CLASSIC_BACKGROUND_SELECTED_COLOR : CLASSIC_BACKGROUND_COLOR;
+    const ClassicClipColors colors = configuration()->classicClipColors();
+    const QColor background = colors.background.toQColor();
+    const QColor backgroundSelected = colors.backgroundSelected.toQColor();
+    const QColor samples = colors.samples.toQColor();
+    const QColor samplesSelected = colors.samplesSelected.toQColor();
+    const QColor rms = colors.rms.toQColor();
+
+    params.style.blankBrush = selected ? backgroundSelected : background;
     params.style.normalBackground = params.style.blankBrush;
-    params.style.selectedBackground = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+    params.style.selectedBackground = selected ? transformColor(backgroundSelected) : backgroundSelected;
 
     params.style.envelopeBackground = params.style.blankBrush;
     params.style.selectedEnvelopeBackground
-        = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+        = selected ? transformColor(backgroundSelected) : backgroundSelected;
 
-    QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
+    QColor baseSampleColor = selected ? samplesSelected : samples;
     params.style.samplePen = baseSampleColor;
-    params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
-    params.style.rmsPen = CLASSIC_RMS_COLOR;
-    params.style.rmsSelectedPen = muse::blendQColors(params.style.selectedSamplePen, CLASSIC_RMS_COLOR, 0.6); // TODO: use CLASSIC_RMS_SELECTED_COLOR
-    params.style.clippedPen = CLASSIC_CLIPPING_COLOR;
+    params.style.selectedSamplePen = samplesSelected;
+    params.style.rmsPen = rms;
+    params.style.rmsSelectedPen = muse::blendQColors(params.style.selectedSamplePen, rms, 0.6); // TODO: use a dedicated selected-RMS colour
+    params.style.clippedPen = colors.clipping.toQColor();
     params.style.centerLine = baseSampleColor;
     params.style.sampleHead = baseSampleColor;
     params.style.sampleStalk = baseSampleColor;
 
     if (!selected) {
-        params.style.sampleHeadSelection = baseSampleColor;
-        params.style.sampleStalkSelection = baseSampleColor;
+        //! NOTE Mirrors the Colorful style, which emphasises samples inside a time selection by
+        //! blending 0.3 further toward its base colour. Colorful can hardcode black for that;
+        //! Classic takes the target from the theme so it works on dark bodies too.
+        const QColor emphasis = colors.sampleEmphasis.toQColor();
+        params.style.sampleHeadSelection = muse::blendQColors(baseSampleColor, emphasis, 0.3);
+        params.style.sampleStalkSelection = muse::blendQColors(baseSampleColor, emphasis, 0.3);
     }
 }
 

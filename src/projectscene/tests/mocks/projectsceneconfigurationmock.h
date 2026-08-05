@@ -37,6 +37,7 @@ public:
     MOCK_METHOD(muse::Color, clipColor, (trackedit::ClipColorIndex index), (const, override));
     MOCK_METHOD(muse::Color, clipSelectedColor, (trackedit::ClipColorIndex index), (const, override));
     MOCK_METHOD(muse::Color, clipHeaderHoverColor, (trackedit::ClipColorIndex index), (const, override));
+    MOCK_METHOD(ClassicClipColors, classicClipColors, (), (const, override));
 
     MOCK_METHOD(ClipStyles::Style, clipStyle, (), (const, override));
     MOCK_METHOD(void, setClipStyle, (ClipStyles::Style style), (override));
