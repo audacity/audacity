@@ -178,6 +178,9 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
     if (SetProperty(kAudioUnitProperty_MaximumFramesPerSlice,
                     static_cast<UInt32>(mBlockSize))) {
         wxLogError("%ls didn't accept maximum frames per slice\n", mIdentifier.wx_str());
+        mLastError = TranslatableString("audio-unit",
+                                        "The plugin “%1” does not support the required block size")
+                     .arg(mProcessor.GetName()).Translation();
         return false;
     }
 
@@ -219,7 +222,20 @@ bool AudioUnitInstance::ProcessFinalize() noexcept
 
 std::string AudioUnitInstance::GetLastError() const
 {
-    return mLastError;
+    if (!mLastError.empty()) {
+        return mLastError;
+    }
+
+    // Realtime processing spreads channel groups over slave instances, so a
+    // failure may have been recorded by any of them
+    for (const auto& pSlave : mSlaves) {
+        std::string slaveError = pSlave->GetLastError();
+        if (!slaveError.empty()) {
+            return slaveError;
+        }
+    }
+
+    return {};
 }
 
 size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
