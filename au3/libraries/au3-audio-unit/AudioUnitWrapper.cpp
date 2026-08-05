@@ -274,11 +274,21 @@ bool AudioUnitWrapper::MoveSettingsContents(
 
 bool AudioUnitWrapper::CreateAudioUnit()
 {
-    // Instantiate asynchronously and keep the run loop serviced while waiting.
-    // Out-of-process components (e.g. Intel-only plug-ins bridged through
-    // AUHostingService on Apple silicon) may need the host's main thread to
-    // answer view-service requests while the instance is being created, so a
-    // blocking AudioComponentInstanceNew on the main thread can deadlock.
+    // Some plug-ins don't run inside our process: macOS hosts them in a
+    // separate service process (e.g. Intel-only plug-ins on Apple silicon).
+    // Creating an instance of such a plug-in is a request to that service,
+    // and while handling it the service may in turn ask us - on our main
+    // thread - about the plug-in's embedded view. So the main thread must
+    // keep handling events while the instance is being created; the blocking
+    // AudioComponentInstanceNew would deadlock here (we wait for the service,
+    // the service waits for us). Instead, use the asynchronous
+    // AudioComponentInstantiate and keep running the event loop until its
+    // completion handler delivers the result.
+    // The wait below pumps the current thread's run loop but wakes the main
+    // one; both are only the same - and the pumping only meaningful - on the
+    // main thread, which is where all instantiation happens
+    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
     struct InstantiationState {
         std::atomic<bool> done { false };
         OSStatus status = noErr;
