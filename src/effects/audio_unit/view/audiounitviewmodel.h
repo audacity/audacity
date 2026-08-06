@@ -63,6 +63,7 @@ private:
                                       AudioUnitParameterValue inParameterValue);
     void EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue);
     EventListenerPtr MakeListener();
+    void fetchSettingsAsync();
 
     void settingsToView();
     void settingsFromView();
@@ -74,7 +75,8 @@ private:
     std::shared_ptr<AudioUnitInstance> m_instance;
     EffectSettingsAccessPtr m_settingsAccess;
     EventListenerPtr m_eventListenerRef;
-    EventListenerContext* m_listenerContext = nullptr;
+    std::shared_ptr<EventListenerContext> m_listenerContext;
+    bool m_settingsFetchPending = false;
 
     QString m_title;
     QTimer m_settingsTimer;
