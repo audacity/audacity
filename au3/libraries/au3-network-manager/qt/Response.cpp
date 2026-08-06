@@ -214,9 +214,6 @@ void Response::perform()
             QNetworkRequest::ManualRedirectPolicy);
     }
 
-    request.setTransferTimeout(
-        static_cast<int>(mRequest.getTimeout().count()));
-
     for (const auto& header : mRequest.getHeaders()) {
         request.setRawHeader(
             QByteArray::fromStdString(header.Name),
