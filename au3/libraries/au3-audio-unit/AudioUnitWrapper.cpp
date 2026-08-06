@@ -272,6 +272,27 @@ bool AudioUnitWrapper::MoveSettingsContents(
     return true;
 }
 
+dispatch_queue_t AudioUnitWrapper::TeardownQueue()
+{
+    static const dispatch_queue_t queue
+        =dispatch_queue_create("org.audacityteam.AudioUnitTeardown", DISPATCH_QUEUE_SERIAL);
+    return queue;
+}
+
+AudioUnitWrapper::~AudioUnitWrapper()
+{
+    // Disposing an out-of-process instance is a blocking request to the
+    // hosting service, which may be unresponsive or in turn be waiting for
+    // this thread. Dispose asynchronously instead of in the field's
+    // destructor; the queue is serial so a previously scheduled
+    // AudioUnitUninitialize of the same unit comes first.
+    if (AudioUnit unit = mUnit.release()) {
+        dispatch_async(TeardownQueue(), ^ {
+            AudioComponentInstanceDispose(unit);
+        });
+    }
+}
+
 bool AudioUnitWrapper::CreateAudioUnit()
 {
     // Some plug-ins don't run inside our process: macOS hosts them in a

@@ -70,6 +70,18 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect& effect,
     CreateAudioUnit();
 }
 
+AudioUnitInstance::~AudioUnitInstance()
+{
+    // Uninitializing an out-of-process instance is a blocking request to the
+    // hosting service, so it is taken off this thread just like the dispose
+    // in ~AudioUnitWrapper, which runs after this on the same serial queue.
+    if (AudioUnit unit = mInitialization.release()) {
+        dispatch_async(TeardownQueue(), ^ {
+            AudioUnitUninitialize(unit);
+        });
+    }
+}
+
 size_t AudioUnitInstance::InitialBlockSize() const
 {
     // Retrieve the desired number of frames per slice
