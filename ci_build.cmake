@@ -75,7 +75,8 @@ macro(do_build build_type build_dir)
 
     # Allow macos architecture override with env OSX_ARCHITECTURES
     if (DEFINED ENV{OSX_ARCHITECTURES} AND NOT "$ENV{OSX_ARCHITECTURES}" STREQUAL "")
-        list(APPEND CONFIGURE_ARGS "-DCMAKE_OSX_ARCHITECTURES=$ENV{OSX_ARCHITECTURES}")
+        string(REPLACE ";" "\\;" _osx_architectures "$ENV{OSX_ARCHITECTURES}")
+        list(APPEND CONFIGURE_ARGS "-DCMAKE_OSX_ARCHITECTURES=${_osx_architectures}")
     endif()
 
     message(STATUS "========= Begin configure =========")
