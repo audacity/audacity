@@ -213,6 +213,7 @@ vtest.artifacts
 MuseScorePortable
 /*.config
 /*.creator
+/*.qtcreator
 /*.files
 /*.includes
 *.user
