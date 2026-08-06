@@ -127,7 +127,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
 
 void Au3AudioEngine::stopStream()
 {
-    AudioIO::Get()->StopBufferExchange();
+    AudioIO::Get()->StopStream();
     AudioIO::Get()->WaitWhileBusy();
 }
 
