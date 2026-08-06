@@ -25,6 +25,7 @@ public:
 
     AudioUnitInstance(const PerTrackEffect& effect, AudioComponent component, Parameters& parameters, const wxString& identifier,
                       unsigned audioIns, unsigned audioOuts, bool useLatency);
+    ~AudioUnitInstance() override;
 
     bool Initialize();
 

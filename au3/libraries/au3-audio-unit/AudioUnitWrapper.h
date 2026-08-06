@@ -17,6 +17,7 @@
 #include <map>
 #include <set>
 #include <unordered_map>
+#include <dispatch/dispatch.h>
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
@@ -104,6 +105,12 @@ struct AudioUnitWrapper
         , mParameters{pParameters ? *pParameters : mOwnParameters}
     {
     }
+
+    ~AudioUnitWrapper();
+
+    //! Serial queue on which AudioUnit instances are uninitialized and
+    //! disposed asynchronously
+    static dispatch_queue_t TeardownQueue();
 
     // Supply most often used values as defaults for scope and element
     template<typename T>
