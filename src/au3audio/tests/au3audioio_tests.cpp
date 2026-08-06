@@ -32,9 +32,7 @@ class AudioIOMonitoringTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        // StartPortAudioStream refuses to run without an owning project
-        // (AudioIO.cpp: `if (mOwningProject.expired()) return false;`),
-        // so load a real (empty) one, like au3record_tests does.
+        // StartPortAudioStream asserts an owning project, so load a real (empty) one, like au3record_tests does.
         m_au3ProjectAccessor = std::make_shared<au::au3::Au3ProjectAccessor>(muse::modularity::globalCtx());
         const std::string source = std::string(au3audio_tests_DATA_ROOT) + "/../../trackedit/tests/data/empty.aup4";
         m_workingProjectPath = std::string(au3audio_tests_DATA_ROOT) + "/monitoring_working.aup4";
