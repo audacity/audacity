@@ -677,7 +677,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                 const auto prj = globalContext()->currentTrackeditProject();
                 const std::vector<trackedit::Track> tracksBefore = prj->trackList();
                 if (pInstanceEx->Process(settings) == false) {
-                    if (progress.cancelled()) {
+                    if (progress.Cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
                     } else {
                         success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
@@ -888,12 +888,11 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
 
         bool success = pInstance->Process(settings);
         if (!success) {
-            const bool cancelled = progress->Poll(1, 1) == BasicUI::ProgressResult::Cancelled;
-            progress.reset();
-            if (cancelled) {
+            if (progress->Cancelled()) {
                 return muse::make_ret(muse::Ret::Code::Cancel);
             }
             const muse::Ret ret = make_ret(Err::EffectProcessFailed, pInstance->GetLastError());
+            progress.reset();
             interactive()->error(muse::trc("effects", "Effect preview"), ret.text(), {},
                                  int(muse::IInteractive::Button::NoButton),
                                  { muse::IInteractive::Option::WithIcon });

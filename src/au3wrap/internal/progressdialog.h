@@ -36,7 +36,7 @@ public:
 
     void SetMessage(const ::TranslatableString& message) override;
 
-    bool cancelled() const
+    bool Cancelled() const override
     {
         return m_cancelled;
     }
