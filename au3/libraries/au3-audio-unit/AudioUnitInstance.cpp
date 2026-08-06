@@ -284,6 +284,7 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
 bool AudioUnitInstance::RealtimeInitialize(
     EffectSettings& settings, double sampleRate, size_t)
 {
+    mRealtimeErrorReported.store(false);
     return ProcessInitialize(settings, sampleRate, nullptr);
 }
 

@@ -94,6 +94,8 @@ public:
     ProgressResult Poll(
         unsigned long long numerator, unsigned long long denominator, const TranslatableString& message = {}) override;
 
+    bool Cancelled() const override;
+
     void SetMessage(const TranslatableString& message) override;
 
 protected:
