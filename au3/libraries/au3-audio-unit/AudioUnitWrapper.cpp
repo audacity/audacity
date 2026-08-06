@@ -296,6 +296,10 @@ bool AudioUnitWrapper::CreateAudioUnit()
     };
     auto state = std::make_shared<InstantiationState>();
 
+    // ^ (...) {} == [](){}
+    // Apple invented this note-format before C++ had lambdas and it is
+    // the only type AudioComponentInstantiate function accepts.
+    // So basically we're passing instructions to be done after the plugin is ready.
     AudioComponentInstantiate(mComponent, AudioComponentInstantiationOptions {},
                               ^ (AudioComponentInstance instance, OSStatus status) {
         state->instance = instance;
