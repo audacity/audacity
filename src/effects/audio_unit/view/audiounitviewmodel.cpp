@@ -3,6 +3,11 @@
  */
 #include "audiounitviewmodel.h"
 
+#include <map>
+#include <memory>
+#include <optional>
+#include <utility>
+
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <dispatch/dispatch.h>
@@ -105,12 +110,11 @@ void AudioUnitViewModel::deinit()
         return;
     }
 
-    EventListenerContext* context = m_listenerContext;
+    std::shared_ptr<EventListenerContext> context = m_listenerContext;
     context->viewModel = nullptr;
-    m_listenerContext = nullptr;
+    m_listenerContext.reset();
 
     if (!m_eventListenerRef) {
-        delete context;
         return;
     }
 
@@ -123,7 +127,7 @@ void AudioUnitViewModel::deinit()
 
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^ {
             AUListenerDispose(listener);
-            delete context;
+            (void)context;
         });
 }
 
@@ -216,11 +220,73 @@ void au::effects::AudioUnitViewModel::EventListener(const AudioUnitEvent* inEven
         projectHistory()->markUnsaved();
     } else if (inEvent->mEventType == kAudioUnitEvent_PropertyChange
                && inEvent->mArgument.mProperty.mPropertyID == kAudioUnitProperty_PresentPreset) {
-        m_settingsAccess->ModifySettings([this](EffectSettings& settings) {
-            m_instance->FetchSettings(AudioUnitInstance::GetSettings(settings), true, true);
-            return nullptr;
-        });
+        fetchSettingsAsync();
     }
+}
+
+void au::effects::AudioUnitViewModel::fetchSettingsAsync()
+{
+    IF_ASSERT_FAILED(m_instance && m_settingsAccess && m_listenerContext) {
+        return;
+    }
+
+    if (m_settingsFetchPending) {
+        return;
+    }
+    m_settingsFetchPending = true;
+
+    // For an out-of-process plugin, reading the preset and every parameter
+    // value is a series of blocking requests to the hosting service, which
+    // may itself be waiting for this thread. Do the reads on a background
+    // queue and only write the result into the settings back on the main
+    // thread, where the shared name set may be safely modified.
+    std::shared_ptr<EventListenerContext> context = m_listenerContext;
+    std::shared_ptr<AudioUnitInstance> instance = m_instance;
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^ {
+            AUPreset preset {};
+            std::optional<SInt32> presetNumber;
+            if (!instance->GetFixedSizeProperty(kAudioUnitProperty_PresentPreset, preset)
+                && preset.presetNumber >= 0) {
+                presetNumber = preset.presetNumber;
+            }
+
+            using FetchedValues = std::map<AudioUnitParameterID, std::optional<std::pair<wxString, AudioUnitParameterValue> > >;
+            auto values = std::make_shared<FetchedValues>();
+            instance->ForEachParameter(
+                [&](const AudioUnitWrapper::ParameterInfo& pi, AudioUnitParameterID ID) {
+            auto& slot = (*values)[ID];
+            AudioUnitParameterValue value;
+            if (pi.mName
+                && !AudioUnitGetParameter(instance->GetAudioUnit(), ID, kAudioUnitScope_Global, 0, &value)) {
+                slot.emplace(*pi.mName, value);
+            }
+            return true;
+        });
+
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                AudioUnitViewModel* viewModel = context->viewModel;
+                if (!viewModel) {
+                    return;
+                }
+
+                viewModel->m_settingsFetchPending = false;
+                viewModel->m_settingsAccess->ModifySettings([&](EffectSettings& settings) {
+                auto& mySettings = AudioUnitInstance::GetSettings(settings);
+                if (presetNumber) {
+                    mySettings.mPresetNumber = presetNumber;
+                }
+                for (const auto& [ID, fetched] : *values) {
+                    auto& slot = mySettings.values[ID];
+                    slot.reset();
+                    if (fetched) {
+                        slot.emplace(mySettings.Intern(fetched->first), fetched->second);
+                    }
+                }
+                return nullptr;
+            });
+            });
+        });
 }
 
 au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewModel::MakeListener()
@@ -229,12 +295,12 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     EventListenerPtr result;
 
     // Register a callback with the audio unit
-    m_listenerContext = new EventListenerContext { this };
+    m_listenerContext = std::make_shared<EventListenerContext>();
+    m_listenerContext->viewModel = this;
     AUEventListenerRef eventListenerRef{};
-    if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode,
-                              0.0, 0.0, &eventListenerRef)) {
-        delete m_listenerContext;
-        m_listenerContext = nullptr;
+    if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext.get(), CFRunLoopGetCurrent(),
+                              kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef)) {
+        m_listenerContext.reset();
         return nullptr;
     }
 
