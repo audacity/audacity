@@ -5,6 +5,7 @@
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <CoreFoundation/CoreFoundation.h>
+#include <dispatch/dispatch.h>
 
 #include "au3-effects/EffectManager.h"
 #include "au3-effects/Effect.h"
@@ -23,6 +24,7 @@ AudioUnitViewModel::AudioUnitViewModel(QObject* parent, int instanceId)
 AudioUnitViewModel::~AudioUnitViewModel()
 {
     checkSettingChangesFromUi();
+    deinit();
 }
 
 void AudioUnitViewModel::doInit()
@@ -97,10 +99,32 @@ void au::effects::AudioUnitViewModel::doStopPreview()
 
 void AudioUnitViewModel::deinit()
 {
-    if (m_eventListenerRef) {
-        AUListenerDispose(m_eventListenerRef.get());
-        m_eventListenerRef.reset();
+    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
+    if (!m_listenerContext) {
+        return;
     }
+
+    EventListenerContext* context = m_listenerContext;
+    context->viewModel = nullptr;
+    m_listenerContext = nullptr;
+
+    if (!m_eventListenerRef) {
+        delete context;
+        return;
+    }
+
+    // AUListenerDispose can wait for the plugin's hosting service, and the
+    // service may be waiting for us - so calling it here would deadlock.
+    // Dispose in the background instead. The context stays alive until the
+    // dispose is done; a callback arriving in the meantime sees a null
+    // viewModel and does nothing.
+    AUEventListenerRef listener = m_eventListenerRef.release();
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^ {
+            AUListenerDispose(listener);
+            delete context;
+        });
 }
 
 void au::effects::AudioUnitViewModel::settingsToView()
@@ -157,7 +181,10 @@ void AudioUnitViewModel::EventListenerCallback(void* inCallbackRefCon, void* inO
 {
     UNUSED(inObject);
     UNUSED(inEventHostTime);
-    static_cast<AudioUnitViewModel*>(inCallbackRefCon)->EventListener(inEvent, inParameterValue);
+    auto* context = static_cast<EventListenerContext*>(inCallbackRefCon);
+    if (context->viewModel) {
+        context->viewModel->EventListener(inEvent, inParameterValue);
+    }
 }
 
 void au::effects::AudioUnitViewModel::EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue)
@@ -202,9 +229,12 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     EventListenerPtr result;
 
     // Register a callback with the audio unit
+    m_listenerContext = new EventListenerContext { this };
     AUEventListenerRef eventListenerRef{};
-    if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, this, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, 0.0, 0.0,
-                              &eventListenerRef)) {
+    if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode,
+                              0.0, 0.0, &eventListenerRef)) {
+        delete m_listenerContext;
+        m_listenerContext = nullptr;
         return nullptr;
     }
 
