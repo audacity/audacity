@@ -37,8 +37,8 @@ jobs:
           - { os: windows, mode: source,   arch: x86_64,  runner: windows-2022,     qt_host: windows,       qt_arch: win64_msvc2022_64 }
           - { os: windows, mode: prebuilt, arch: aarch64, runner: windows-11-arm,   qt_host: windows_arm64, qt_arch: win64_msvc2022_arm64 }
           - { os: windows, mode: source,   arch: aarch64, runner: windows-11-arm,   qt_host: windows_arm64, qt_arch: win64_msvc2022_arm64 }
-          - { os: macos,   mode: prebuilt, runner: macos-26, arch: universal, osx_arch: '',     qt_host: mac, qt_arch: clang_64 }
-          - { os: macos,   mode: source,   runner: macos-26, arch: universal, osx_arch: '',     qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: prebuilt, runner: macos-26, arch: universal, osx_arch: 'x86_64;arm64', qt_host: mac, qt_arch: clang_64 }
+          - { os: macos,   mode: source,   runner: macos-26, arch: universal, osx_arch: 'x86_64;arm64', qt_host: mac, qt_arch: clang_64 }
           - { os: macos,   mode: prebuilt, runner: macos-26, arch: arm64,     osx_arch: arm64,  qt_host: mac, qt_arch: clang_64 }
           - { os: macos,   mode: source,   runner: macos-26, arch: arm64,     osx_arch: arm64,  qt_host: mac, qt_arch: clang_64 }
           - { os: macos,   mode: prebuilt, runner: macos-26, arch: x86_64,    osx_arch: x86_64, qt_host: mac, qt_arch: clang_64 }

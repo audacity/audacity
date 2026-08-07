@@ -62,7 +62,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { arch: universal, osx_arch: '' }
+          - { arch: universal, osx_arch: 'x86_64;arm64' }
           - { arch: arm64,     osx_arch: arm64 }
           - { arch: x86_64,    osx_arch: x86_64 }
     runs-on: macos-26

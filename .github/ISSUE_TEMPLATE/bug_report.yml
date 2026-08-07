@@ -42,8 +42,8 @@ body:
       label: Audacity Version
       description: What version of Audacity are you running?
       options:
+        - Audacity 4.0 beta 3
         - Audacity 4.0 beta 2
-        - Audacity 4.0 beta 1
         - Other
     validations:
       required: true
