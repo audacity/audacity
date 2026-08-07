@@ -73,6 +73,17 @@ bool Au3AudioEngine::isCapturing() const
     return AudioIO::Get()->IsCapturing();
 }
 
+bool Au3AudioEngine::isStreamActive(AudacityProject& project) const
+{
+    const int token = ProjectAudioIO::Get(project).GetAudioIOToken();
+    return AudioIO::Get()->IsStreamActive(token);
+}
+
+double Au3AudioEngine::streamTime() const
+{
+    return AudioIO::Get()->GetStreamTime();
+}
+
 bool Au3AudioEngine::isMonitoring() const
 {
     return AudioIO::Get()->IsMonitoring();
@@ -119,6 +130,9 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
     auto& audioIO = *AudioIO::Get();
     const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, au3Options);
     if (token > 0) {
+        //! NOTE: the stream token is the engine's session bookkeeping —
+        //! record it here so callers don't have to
+        ProjectAudioIO::Get(project).SetAudioIOToken(token);
         LOGI() << "PortAudio latency report (ms): outputLatency=" << audioIO.GetHardwarePlaybackLatencyMs() <<
             ", inputLatency=" << audioIO.GetHardwareCaptureLatencyMs();
     }
@@ -129,6 +143,24 @@ void Au3AudioEngine::stopStream()
 {
     AudioIO::Get()->StopStream();
     AudioIO::Get()->WaitWhileBusy();
+}
+
+std::shared_ptr<RealtimeEffectState> Au3AudioEngine::addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                            const std::string& effectId)
+{
+    return AudioIO::Get()->AddState(project, group, effectId);
+}
+
+void Au3AudioEngine::removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                               const std::shared_ptr<RealtimeEffectState>& state)
+{
+    AudioIO::Get()->RemoveState(project, group, state);
+}
+
+std::shared_ptr<RealtimeEffectState> Au3AudioEngine::replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                                size_t effectListIndex, const std::string& newEffectId)
+{
+    return AudioIO::Get()->ReplaceState(project, group, effectListIndex, newEffectId);
 }
 
 void Au3AudioEngine::pauseStream(const bool pause)

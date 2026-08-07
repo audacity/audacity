@@ -7,6 +7,8 @@ set(MODULE_TEST playback_tests)
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playbackcontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3player_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../../trackedit/tests/tracktemplatefactory.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/playbackmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/playermock.h
