@@ -102,19 +102,13 @@ void au::effects::AudioUnitViewModel::doStopPreview()
     executionScenario()->stopPreview();
 }
 
-void AudioUnitViewModel::deinit()
+void AudioUnitViewModel::DisposeListenerAsync(AUEventListenerRef listener, std::shared_ptr<EventListenerContext> context)
 {
-    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
-
-    if (!m_listenerContext) {
-        return;
+    if (context) {
+        context->viewModel = nullptr;
     }
 
-    std::shared_ptr<EventListenerContext> context = m_listenerContext;
-    context->viewModel = nullptr;
-    m_listenerContext.reset();
-
-    if (!m_eventListenerRef) {
+    if (!listener) {
         return;
     }
 
@@ -123,12 +117,17 @@ void AudioUnitViewModel::deinit()
     // Dispose in the background instead. The context stays alive until the
     // dispose is done; a callback arriving in the meantime sees a null
     // viewModel and does nothing.
-    AUEventListenerRef listener = m_eventListenerRef.release();
-
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^ {
             AUListenerDispose(listener);
             (void)context;
         });
+}
+
+void AudioUnitViewModel::deinit()
+{
+    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
+    DisposeListenerAsync(m_eventListenerRef.release(), std::move(m_listenerContext));
 }
 
 void au::effects::AudioUnitViewModel::settingsToView()
@@ -231,6 +230,7 @@ void au::effects::AudioUnitViewModel::fetchSettingsAsync()
     }
 
     if (m_settingsFetchPending) {
+        m_settingsFetchQueued = true;
         return;
     }
     m_settingsFetchPending = true;
@@ -271,6 +271,16 @@ void au::effects::AudioUnitViewModel::fetchSettingsAsync()
                 }
 
                 viewModel->m_settingsFetchPending = false;
+
+                // Another preset change arrived while this fetch was running:
+                // the values read above may be stale, so discard them and
+                // fetch again.
+                if (viewModel->m_settingsFetchQueued) {
+                    viewModel->m_settingsFetchQueued = false;
+                    viewModel->fetchSettingsAsync();
+                    return;
+                }
+
                 viewModel->m_settingsAccess->ModifySettings([&](EffectSettings& settings) {
                 auto& mySettings = AudioUnitInstance::GetSettings(settings);
                 if (presetNumber) {
@@ -300,7 +310,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     AUEventListenerRef eventListenerRef{};
     if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext.get(), CFRunLoopGetCurrent(),
                               kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef)) {
-        m_listenerContext.reset();
+        DisposeListenerAsync(nullptr, std::move(m_listenerContext));
         return nullptr;
     }
 
@@ -320,6 +330,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
         for (const auto& ID : parameters) {
             parameter.mParameterID = ID;
             if (AUEventListenerAddEventType(result.get(), this, &event)) {
+                DisposeListenerAsync(result.release(), std::move(m_listenerContext));
                 return nullptr;
             }
             AudioUnitParameterValue value;
@@ -339,6 +350,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
         event.mArgument.mProperty = AudioUnitUtils::Property{
             unit, type, kAudioUnitScope_Global };
         if (AUEventListenerAddEventType(result.get(), this, &event)) {
+            DisposeListenerAsync(result.release(), std::move(m_listenerContext));
             return nullptr;
         }
     }
