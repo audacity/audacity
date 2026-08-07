@@ -94,6 +94,12 @@ set(MUSE_MODULE_WORKSPACE_TESTS ON)
 set(MUSE_MODULE_VST ON)
 set(MUSE_MODULE_VST_QML ON)
 
+# TestFlow is a developer/testing facility. Keep public automation available in
+# stable releases, but do not compile or install the internal TestFlow tooling.
+if (AU4_BUILD_MODE STREQUAL "release")
+    set(MUSE_MODULE_TESTFLOW OFF)
+endif()
+
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 option(AU_BUILD_AUTOMATION_TESTS "Build automation tests" ON)

@@ -35,6 +35,10 @@ set(_forbidden_patterns
     "(^|/)qml/QtQuick/Shapes/DesignHelpers/"
 )
 
+if(BUILD_MODE STREQUAL "release" OR BUILD_MODE STREQUAL "stable_build")
+    list(APPEND _forbidden_patterns "(^|/)testflowscripts/")
+endif()
+
 set(_allowed_macos_quick_plugins
     libeffectsplugin.dylib
     liblabsmodelsplugin.dylib
