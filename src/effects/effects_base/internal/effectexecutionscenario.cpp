@@ -892,6 +892,8 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
                 return muse::make_ret(muse::Ret::Code::Cancel);
             }
             const muse::Ret ret = make_ret(Err::EffectProcessFailed, pInstance->GetLastError());
+            // reset is needed to close progress dialog before modal error dialog opens
+            // so they don't stack
             progress.reset();
             interactive()->error(muse::trc("effects", "Effect preview"), ret.text(), {},
                                  int(muse::IInteractive::Button::NoButton),
