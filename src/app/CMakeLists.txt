@@ -263,7 +263,9 @@ if (CC_IS_MINGW)
 endif(CC_IS_MINGW)
 
 if (CC_IS_MSVC)
-    target_link_options(${EXECUTABLE_NAME} PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
+    target_link_options(${EXECUTABLE_NAME} PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup
+        "/ILK:${CMAKE_BINARY_DIR}/${APP_OUTPUT_NAME}-$<CONFIG>.ilk"
+    )
 endif(CC_IS_MSVC)
 
 ###########################################
