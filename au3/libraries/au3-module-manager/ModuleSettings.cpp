@@ -83,6 +83,7 @@ static const std::unordered_set<wxString>& autoEnabledModules()
         "mod-ffmpeg",
         "mod-cl",
         "mod-lof",
+        "mod-cvsd",
         "mod-aup",
         "mod-opus",
         "mod-midi-import-export",
