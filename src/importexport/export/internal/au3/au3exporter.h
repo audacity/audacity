@@ -37,7 +37,7 @@ public:
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
     std::vector<std::string> formatExtensions(const std::string& format) const override;
-    std::vector<std::string> cloudPreferredAudioFormats() const override;
+    std::vector<std::string> cloudPreferredAudioFormats(bool preferLossless) const override;
     ExportParameters cloudExportParameters(const std::string& format) const override;
     bool isCustomFFmpegExportFormat() const override;
     bool isOggExportFormat() const override;

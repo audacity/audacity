@@ -30,9 +30,9 @@ void Au3CloudConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
     audacity::cloud::audiocom::CloudProjectsSavePath.Write(path.toStdString());
 }
 
-std::vector<std::string> Au3CloudConfiguration::preferredAudioFormats() const
+std::vector<std::string> Au3CloudConfiguration::preferredAudioFormats(bool preferLossless) const
 {
-    return audacity::cloud::audiocom::GetServiceConfig().GetPreferredAudioFormats(true);
+    return audacity::cloud::audiocom::GetServiceConfig().GetPreferredAudioFormats(preferLossless);
 }
 
 std::string Au3CloudConfiguration::exportConfig(const std::string& mimeType) const
