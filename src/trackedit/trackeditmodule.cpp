@@ -38,6 +38,7 @@
 #include "internal/trackeditoperationcontroller.h"
 #include "internal/clipboarddata.h"
 #include "internal/tracknavigationcontroller.h"
+#include "internal/itemrenamecontroller.h"
 #include "internal/trackspectrogramsettingsupdater.h"
 #include "internal/undomanager.h"
 
@@ -138,6 +139,7 @@ void TrackeditContext::registerExports()
     m_selectionController = std::make_shared<Au3SelectionController>(iocContext());
     m_trackNavigationController = std::make_shared<TrackNavigationController>(iocContext());
     m_trackSpectrogramSettingsUpdater = std::make_shared<TrackSpectrogramSettingsUpdater>(iocContext());
+    m_itemRenameController = std::make_shared<ItemRenameController>(iocContext());
 
     ioc()->registerExport<ITrackeditInteraction>(mname,
                                                  new TrackeditInteraction(iocContext(), std::make_unique<TrackeditOperationController>(
@@ -146,6 +148,7 @@ void TrackeditContext::registerExports()
     ioc()->registerExport<IProjectHistory>(mname, new Au3ProjectHistory(iocContext()));
     ioc()->registerExport<ITrackeditClipboard>(mname, new Au3TrackeditClipboard(iocContext()));
     ioc()->registerExport<ITrackNavigationController>(mname, m_trackNavigationController);
+    ioc()->registerExport<IItemRenameController>(mname, m_itemRenameController);
 
     ioc()->registerExport<ITracksInteraction>(mname, new Au3TracksInteraction(iocContext()));
     ioc()->registerExport<IClipsInteraction>(mname, new Au3ClipsInteraction(iocContext()));
@@ -159,6 +162,7 @@ void TrackeditContext::onInit(const muse::IApplication::RunMode&)
     m_selectionController->init();
     m_trackNavigationController->init();
     m_trackSpectrogramSettingsUpdater->init();
+    m_itemRenameController->init();
 
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
     if (ar) {

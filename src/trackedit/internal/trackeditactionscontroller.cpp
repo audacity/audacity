@@ -2182,8 +2182,9 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
 
 void TrackeditActionsController::addLabel()
 {
-    if (trackeditInteraction()->addLabelToSelection()) {
-        dispatcher()->dispatch("rename-item");
+    const muse::RetVal<LabelKey> newLabel = trackeditInteraction()->addLabelToSelection();
+    if (newLabel.ret) {
+        itemRenameController()->requestLabelTitleEdit(newLabel.val);
     }
 }
 
