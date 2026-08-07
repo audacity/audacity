@@ -17,7 +17,7 @@ if (OS_IS_WIN)
     set(APP_OUTPUT_NAME ${MUSE_APP_NAME}${MUSE_APP_VERSION_MAJOR})
 
     include(GetCompilerInfo)
-    
+
     set(WINDOWS_VERSION_RC ${PROJECT_BINARY_DIR}/windows_version.rc)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/windows_version.rc.in
@@ -246,6 +246,11 @@ if (OS_IS_MAC)
         PROPERTIES
         SKIP_UNITY_BUILD_INCLUSION ON
         SKIP_PRECOMPILE_HEADERS ON
+    )
+
+    add_custom_command(TARGET audacity POST_BUILD
+        COMMAND codesign --force --sign - "$<TARGET_BUNDLE_DIR:audacity>"
+        VERBATIM
     )
 endif (OS_IS_MAC)
 
