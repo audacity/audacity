@@ -22,6 +22,7 @@ class TrackLabelItem : public ViewTrackItem
     Q_PROPERTY(int visualHeight READ visualHeight WRITE setVisualHeight NOTIFY visualHeightChanged FINAL)
 
     Q_PROPERTY(bool isEditing READ isEditing WRITE setIsEditing NOTIFY isEditingChanged FINAL)
+    Q_PROPERTY(bool titleEditRequested READ titleEditRequested WRITE setTitleEditRequested NOTIFY titleEditRequestedChanged FINAL)
 
     Q_PROPERTY(bool isLeftLinked READ isLeftLinked WRITE setIsLeftLinked NOTIFY isLeftLinkedChanged FINAL)
     Q_PROPERTY(bool isRightLinked READ isRightLinked WRITE setIsRightLinked NOTIFY isRightLinkedChanged FINAL)
@@ -46,6 +47,9 @@ public:
     bool isEditing() const;
     void setIsEditing(bool editing);
 
+    bool titleEditRequested() const;
+    void setTitleEditRequested(bool requested);
+
     bool isLeftLinked() const;
     void setIsLeftLinked(bool linked);
 
@@ -63,6 +67,7 @@ signals:
     void visualHeightChanged();
 
     void isEditingChanged();
+    void titleEditRequestedChanged();
 
     void isLeftLinkedChanged();
     void isRightLinkedChanged();
@@ -74,6 +79,7 @@ private:
     int m_visualHeight = 0;
 
     bool m_isEditing = false;
+    bool m_titleEditRequested = false;
     bool m_isLeftLinked = false;
     bool m_isRightLinked = false;
     bool m_isLinkedActive = false;

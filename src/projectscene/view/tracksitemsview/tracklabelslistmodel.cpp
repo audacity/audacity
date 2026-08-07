@@ -30,10 +30,8 @@ void TrackLabelsListModel::onInit()
         onSelectedItems(keyList);
     });
 
-    dispatcher()->reg(this, "rename-item", [this]() {
-        QTimer::singleShot(100, this, [this]() {
-            requestItemTitleChange();
-        });
+    itemRenameController()->labelTitleEditRequested().onReceive(this, [this](const trackedit::LabelKey&) {
+        updatePendingTitleEdit();
     });
 }
 
@@ -177,9 +175,34 @@ void TrackLabelsListModel::update()
         onSelectedItems(selectionController()->selectedLabels());
     }
 
+    updatePendingTitleEdit();
+
     muse::async::Async::call(this, [cleanupList]() {
         qDeleteAll(cleanupList);
     });
+}
+
+void TrackLabelsListModel::updatePendingTitleEdit()
+{
+    const std::optional<trackedit::LabelKey> pending = itemRenameController()->pendingLabelTitleEdit();
+    if (!pending.has_value() || pending->trackId != m_trackId) {
+        return;
+    }
+
+    TrackLabelItem* item = labelItemByKey(*pending);
+    if (item) {
+        item->setTitleEditRequested(true);
+    }
+}
+
+void TrackLabelsListModel::titleEditRequestHandled(const LabelKey& key)
+{
+    TrackLabelItem* item = labelItemByKey(key.key);
+    if (item) {
+        item->setTitleEditRequested(false);
+    }
+
+    itemRenameController()->labelTitleEditRequestHandled();
 }
 
 void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
