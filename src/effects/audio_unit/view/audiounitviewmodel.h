@@ -54,10 +54,17 @@ private:
     void doStopPreview() override;
 
     using EventListenerPtr = AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
+
+    struct EventListenerContext {
+        AudioUnitViewModel* viewModel = nullptr;
+    };
+
     static void EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent, UInt64 inEventHostTime,
                                       AudioUnitParameterValue inParameterValue);
+    static void DisposeListenerAsync(AUEventListenerRef listener, std::shared_ptr<EventListenerContext> context);
     void EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue);
     EventListenerPtr MakeListener();
+    void fetchSettingsAsync();
 
     void settingsToView();
     void settingsFromView();
@@ -69,6 +76,9 @@ private:
     std::shared_ptr<AudioUnitInstance> m_instance;
     EffectSettingsAccessPtr m_settingsAccess;
     EventListenerPtr m_eventListenerRef;
+    std::shared_ptr<EventListenerContext> m_listenerContext;
+    bool m_settingsFetchPending = false;
+    bool m_settingsFetchQueued = false;
 
     QString m_title;
     QTimer m_settingsTimer;

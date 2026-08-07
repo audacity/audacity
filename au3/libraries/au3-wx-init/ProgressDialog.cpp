@@ -1513,6 +1513,11 @@ ProgressResult ProgressDialog::Poll(
     return Update(numerator, denominator, message);
 }
 
+bool ProgressDialog::Cancelled() const
+{
+    return mCancel;
+}
+
 //
 // Update the time and, optionally, the message
 //

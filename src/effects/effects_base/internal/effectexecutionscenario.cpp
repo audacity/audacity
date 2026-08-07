@@ -675,7 +675,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                 const auto prj = globalContext()->currentTrackeditProject();
                 const std::vector<trackedit::Track> tracksBefore = prj->trackList();
                 if (pInstanceEx->Process(settings) == false) {
-                    if (progress.cancelled()) {
+                    if (progress.Cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
                     } else {
                         success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
@@ -886,7 +886,17 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
 
         bool success = pInstance->Process(settings);
         if (!success) {
-            return muse::make_ret(muse::Ret::Code::InternalError);
+            if (progress->Cancelled()) {
+                return muse::make_ret(muse::Ret::Code::Cancel);
+            }
+            const muse::Ret ret = make_ret(Err::EffectProcessFailed, pInstance->GetLastError());
+            // reset is needed to close progress dialog before modal error dialog opens
+            // so they don't stack
+            progress.reset();
+            interactive()->error(muse::trc("effects", "Effect preview"), ret.text(), {},
+                                 int(muse::IInteractive::Button::NoButton),
+                                 { muse::IInteractive::Option::WithIcon });
+            return ret;
         }
 
         // Time-warping effects (e.g. Paulstretch) may update mT1 during
