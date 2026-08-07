@@ -266,6 +266,14 @@ if (CC_IS_MSVC)
     target_link_options(${EXECUTABLE_NAME} PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup
         "/ILK:${CMAKE_BINARY_DIR}/${APP_OUTPUT_NAME}-$<CONFIG>.ilk"
     )
+
+    if (AU4_BUILD_MODE STREQUAL "release")
+        target_link_options(${EXECUTABLE_NAME} PRIVATE
+            /INCREMENTAL:NO
+            /OPT:REF
+            /OPT:ICF
+        )
+    endif()
 endif(CC_IS_MSVC)
 
 ###########################################
