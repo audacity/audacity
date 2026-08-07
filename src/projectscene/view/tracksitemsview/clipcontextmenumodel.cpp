@@ -50,7 +50,16 @@ void ClipContextMenuModel::load()
     auto resetPitchSpeedItem = makeItemWithArg(RESET_PITCH_SPEED_CODE);
     updatePitchSpeedModifiedEnabledState(*resetPitchSpeedItem);
 
-    auto colorItems = makeClipColourItems();
+    //! NOTE The Classic style does not use the clip colour palette at all, so the colour
+    //! submenu is left out entirely rather than offered and ignored.
+    const bool clipColorsApply = projectSceneConfiguration()->clipStyle() == ClipStyles::Style::COLORFUL;
+
+    MenuItemList colorItems;
+    if (clipColorsApply) {
+        colorItems = makeClipColourItems();
+    } else {
+        m_colorChangeActionCodeList.clear();
+    }
 
     MenuItemList cutAndItems {
         makeMenuItem("cut-leave-gap",
@@ -73,7 +82,6 @@ void ClipContextMenuModel::load()
     MenuItemList items {
         makeItemWithArg("clip-properties"),
         makeItemWithArg("rename-item", muse::TranslatableString("clip", "Rename clip")),
-        makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"),
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
@@ -119,10 +127,13 @@ void ClipContextMenuModel::load()
         }, muse::async::Asyncable::Mode::SetReplace);
     }
 
+    if (clipColorsApply) {
+        items.insert(2, makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"));
+    }
+
     setItems(items);
 
     updateColorCheckedState();
-    updateColorMenu();
 }
 
 void ClipContextMenuModel::handleMenuItem(const QString& itemId)
@@ -211,6 +222,11 @@ void ClipContextMenuModel::updatePitchSpeedModifiedEnabledState(MenuItem& item)
 
 void ClipContextMenuModel::updateColorCheckedState()
 {
+    //! NOTE Empty in the Classic style, where the colour submenu is not built at all
+    if (m_colorChangeActionCodeList.empty()) {
+        return;
+    }
+
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
         return;
@@ -247,17 +263,6 @@ void ClipContextMenuModel::updateColorCheckedState()
     }
 }
 
-void ClipContextMenuModel::updateColorMenu()
-{
-    ClipStyles::Style clipStyle = projectSceneConfiguration()->clipStyle();
-    MenuItem& colorMenu = findMenu("colorMenu");
-
-    if (clipStyle == ClipStyles::Style::CLASSIC) {
-        colorMenu.setState(muse::ui::UiActionState::make_disabled());
-    } else {
-        colorMenu.setState(muse::ui::UiActionState::make_enabled());
-    }
-}
 
 MenuItemList ClipContextMenuModel::makeClipColourItems()
 {

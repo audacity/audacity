@@ -15,6 +15,21 @@ struct ClipColorInfo {
     std::string name;
     trackedit::ClipColorIndex index = 0;
 };
+
+//! NOTE Colours for the Classic clip style. Unlike the Colorful style these
+//! do not derive from the clip's own colour, so they come straight from the theme.
+struct ClassicClipColors {
+    muse::Color background;
+    muse::Color backgroundSelected;
+    muse::Color samples;
+    muse::Color samplesSelected;
+    muse::Color rms;
+    muse::Color clipping;
+    //! NOTE Blend target used to emphasise samples inside a time selection. Colorful always
+    //! blends toward black because its clips are pale; Classic bodies follow the theme, so
+    //! this is black on light themes and white on dark ones.
+    muse::Color sampleEmphasis;
+};
 class IProjectSceneConfiguration : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IProjectSceneConfiguration)
@@ -45,6 +60,8 @@ public:
     virtual const std::vector<ClipColorInfo>& clipColorInfos() const = 0;
     virtual muse::Color clipColor(trackedit::ClipColorIndex index) const = 0;
     virtual muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const = 0;
+    virtual muse::Color clipHeaderHoverColor(trackedit::ClipColorIndex index) const = 0;
+    virtual ClassicClipColors classicClipColors() const = 0;
 
     virtual ClipStyles::Style clipStyle() const = 0;
     virtual void setClipStyle(ClipStyles::Style style) = 0;
