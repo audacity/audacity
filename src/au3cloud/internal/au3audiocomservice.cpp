@@ -630,7 +630,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
             return;
         }
 
-        const auto preferredFormats = self->exporter()->cloudPreferredAudioFormats();
+        const auto preferredFormats = self->exporter()->cloudPreferredAudioFormats(false);
         if (preferredFormats.empty()) {
             progress->finish(make_ret(Err::NoExportPlugin));
             return;
