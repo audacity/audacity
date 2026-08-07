@@ -8,6 +8,8 @@
 #include <QVector>
 #include <QAbstractItemModel>
 
+#include <optional>
+
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -96,5 +98,7 @@ private:
 
     bool m_dragActive = false;
     int m_dragIndex = -1;
+
+    std::optional<double> m_pendingAddedTime;
 };
 }
