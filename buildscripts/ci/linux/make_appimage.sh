@@ -4,6 +4,7 @@ INSTALL_DIR="$1" # App was installed here
 APPIMAGE_NAME="$2" # name for AppImage file (created outside $INSTALL_DIR)
 PACKARCH="$3" # architecture (x86_64, aarch64, armv7l)
 ENV="$4" # path to environment.sh
+BUILD_MODE="$5" # stable_build, testing_build, nightly_build, or devel_build
 
 source $ENV
 
@@ -110,23 +111,13 @@ export EXTRA_PLATFORM_PLUGINS="libqoffscreen.so;libqwayland.so"
 # Colon-separated list of root directories containing QML files.
 # Needed for linuxdeploy-plugin-qt to scan for QML imports.
 # Qml files can be in different directories, the qmlimportscanner will go through everything recursively.
-export QML_SOURCES_PATHS=./
+export QML_SOURCES_PATHS="${ORIGIN_DIR}/src:${ORIGIN_DIR}/muse/framework"
 
 export LD_LIBRARY_PATH=${appdir}/lib:$LD_LIBRARY_PATH
 linuxdeploy --appdir "${appdir}" # adds all shared library dependencies
 echo "end linuxdeploy: $?"
 linuxdeploy-plugin-qt --appdir "${appdir}" # adds all Qt dependencies
 echo "end linuxdeploy-plugin-qt: $?"
-
-# Approximately on June 1, the QtQuick/Controls.2 stopped being deploying
-# (at that time the linux deploy was updated).
-# This is a hack, for the deployment of QtQuick/Controls.2
-if [ ! -f ${appdir}/usr/lib/libQt5QuickControls2.so.5 ]; then
-    cp -r ${QT_ROOT_DIR}/qml/QtQuick/Controls.2 ${appdir}/usr/qml/QtQuick/Controls.2
-    cp -r ${QT_ROOT_DIR}/qml/QtQuick/Templates.2 ${appdir}/usr/qml/QtQuick/Templates.2
-    cp ${QT_ROOT_DIR}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5
-    cp ${QT_ROOT_DIR}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
-fi
 
 # The system versions must be used. The GLib family is versioned as one unit;
 # bundling any of these libraries alongside newer system libraries that depend
@@ -197,8 +188,6 @@ unwanted_files=(
 # List them here using paths relative to the Qt root directory. Report new
 # additions at https://github.com/linuxdeploy/linuxdeploy-plugin-qt/issues
 additional_qt_components=(
-  plugins/printsupport/libcupsprintersupport.so
-
   # At an unknown point in time, the libqgtk3 plugin stopped being deployed
   plugins/platformthemes/libqgtk3.so
 
@@ -307,6 +296,29 @@ for file in "${libnss3_files[@]}"; do
   cp -L "${libnss3_system_path}/${file}" "${libnss3_appdir_path}/${file}"
   rm -f "${appdir}/lib/$(basename "${file}")" # in case it was already packaged by linuxdeploy
 done
+
+##########################################################################
+# PRUNE AND AUDIT THE RELEASE PAYLOAD
+##########################################################################
+
+cmake -DQT_DEPLOY_ROOT="${appdir}" \
+  -P "${ORIGIN_DIR}/buildscripts/packaging/prune_qt_deployment.cmake"
+
+rm -f "${appdir}/install_manifest.txt"
+
+# Keep the unstripped build tree for dump_syms, but strip the installed copy
+# before AppImage compression. GNU strip preserves build IDs and unwind data
+# with --strip-unneeded.
+while IFS= read -r -d '' file_path; do
+  if file -b "${file_path}" | grep -q '^ELF '; then
+    strip --strip-unneeded "${file_path}"
+  fi
+done < <(find "${appdir}" -type f -print0)
+
+cmake -DPAYLOAD_ROOT="${appdir}" \
+  -DBUILD_MODE="${BUILD_MODE}" \
+  -DMANIFEST_FILE="${ORIGIN_DIR}/build.artifacts/${APPIMAGE_NAME}.contents.txt" \
+  -P "${ORIGIN_DIR}/buildscripts/packaging/audit_release_payload.cmake"
 
 ##########################################################################
 # TURN APPDIR INTO AN APPIMAGE

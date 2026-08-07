@@ -63,7 +63,7 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
-        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        modules: 'qt5compat qtnetworkauth qtshadertools'
         cache: true
 
     - name: Setup environment

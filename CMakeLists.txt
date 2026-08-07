@@ -153,7 +153,6 @@ set(APP_WORKSPACE_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/src/app/configs/workspa
 set(APP_BUILTIN_WORKSPACES_DIR "${CMAKE_CURRENT_LIST_DIR}/share/workspaces")
 
 # === Compile ===
-option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
 option(MUSE_COMPILE_USE_UNITY "Use unity build." ON)
 option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
 

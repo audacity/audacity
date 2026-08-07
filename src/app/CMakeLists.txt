@@ -308,15 +308,17 @@ if (OS_IS_WIN)
 
     endif(CC_IS_MINGW)
 
-    # Install Qt
-    set(deploy_tool_options_arg "--plugindir bin --qmldir ${PROJECT_SOURCE_DIR}")
-
+    # Install Qt. QML imports are derived from the target's production QML
+    # modules instead of scanning the whole repository.
     qt_generate_deploy_qml_app_script(
         TARGET audacity
         OUTPUT_SCRIPT deploy_script
         NO_UNSUPPORTED_PLATFORM_ERROR
-        ${NO_TRANSLATIONS_OPTION} # Even with NO_OVERWRITE set, the translations get re-generated each time ...
-        DEPLOY_TOOL_OPTIONS ${deploy_tool_options_arg}
+        NO_TRANSLATIONS
+        EXCLUDE_PLUGIN_TYPES qmltooling sqldrivers
+        DEPLOY_TOOL_OPTIONS
+            --plugindir bin
+            --qmldir ${PROJECT_SOURCE_DIR}/buildscripts/packaging/qml
     )
 
     add_custom_command(
@@ -326,6 +328,10 @@ if (OS_IS_WIN)
     )
 
     install(SCRIPT ${deploy_script})
+
+    install(CODE
+        "set(QT_DEPLOY_ROOT \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\")\ninclude(\"${PROJECT_SOURCE_DIR}/buildscripts/packaging/prune_qt_deployment.cmake\")"
+    )
 
     if (WIN_PORTABLE)
         # deploy the files and directory structure needed for the PortableApps.com format
@@ -362,17 +368,19 @@ elseif(OS_IS_MAC)
 
     install(TARGETS audacity BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-    if(MU_COMPILE_INSTALL_QTQML_FILES)
-        install(DIRECTORY
-                ${QT_INSTALL_QML}
-                DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}${AU4_FRAMEWORKS_NAME}
-                REGEX ".*QtWebkit.*" EXCLUDE
-                REGEX ".*QtTest.*" EXCLUDE
-                REGEX ".*QtSensors.*" EXCLUDE
-                REGEX ".*QtMultimedia.*" EXCLUDE
-                REGEX ".*QtAudioEngine.*" EXCLUDE
-                REGEX ".*_debug\\.dylib" EXCLUDE)
-    endif()
+    qt_generate_deploy_qml_app_script(
+        TARGET audacity
+        OUTPUT_SCRIPT deploy_script
+        NO_TRANSLATIONS
+        EXCLUDE_PLUGIN_TYPES qmltooling sqldrivers
+        DEPLOY_TOOL_OPTIONS
+            -qmldir=${PROJECT_SOURCE_DIR}/buildscripts/packaging/qml
+    )
+    install(SCRIPT ${deploy_script})
+
+    install(CODE
+        "set(QT_DEPLOY_ROOT \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\")\ninclude(\"${PROJECT_SOURCE_DIR}/buildscripts/packaging/prune_qt_deployment.cmake\")"
+    )
 
 ###########################################
 # Wasm

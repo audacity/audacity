@@ -71,7 +71,7 @@ jobs:
           host: ${{ matrix.qt_host }}
           target: 'desktop'
           arch: ${{ matrix.qt_arch }}
-          modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+          modules: 'qt5compat qtnetworkauth qtshadertools'
           cache: true
 
       - name: Platform setup

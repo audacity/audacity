@@ -25,6 +25,18 @@ endif()
 
 file(MAKE_DIRECTORY ${INSTALL_DIR}/audacity.app/Contents/Resources/Frameworks)
 
+execute_process(
+    COMMAND ${CMAKE_COMMAND}
+        -DPAYLOAD_ROOT=${INSTALL_DIR}
+        -DBUILD_MODE=${BUILD_MODE}
+        -DMANIFEST_FILE=${ARTIFACTS_DIR}/release-payload-${PACKARCH}.contents.txt
+        -P ${ROOT_DIR}/buildscripts/packaging/audit_release_payload.cmake
+    RESULT_VARIABLE _audit_result
+)
+if(_audit_result)
+    message(FATAL_ERROR "Release payload audit failed")
+endif()
+
 # Setup keychain for code sign
 set(_secret "$ENV{SIGN_CERTIFICATE_ENCRYPT_SECRET}")
 if(_secret)
@@ -74,10 +86,30 @@ set(DMG_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
 set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}-${PACKARCH}.dmg)
 
 execute_process(
-    COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --long_name "${LONG_NAME}" --version ${BUILD_VERSION}
+    COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --long_name "${LONG_NAME}" --version ${BUILD_VERSION} --arch ${PACKARCH}
+    RESULT_VARIABLE _dmg_result
 )
+if(_dmg_result)
+    message(FATAL_ERROR "DMG packaging failed: ${_dmg_result}")
+endif()
 
 file(COPY_FILE ${INSTALL_DIR}/${DMG_NAME} ${ARTIFACTS_DIR}/${ARTIFACT_NAME})
+
+if(PACKARCH STREQUAL "universal")
+    set(_max_dmg_size 105000000)
+else()
+    set(_max_dmg_size 70000000)
+endif()
+execute_process(
+    COMMAND ${CMAKE_COMMAND}
+        -DARTIFACT_PATH=${ARTIFACTS_DIR}/${ARTIFACT_NAME}
+        -DMAX_SIZE_BYTES=${_max_dmg_size}
+        -P ${ROOT_DIR}/buildscripts/packaging/check_artifact_size.cmake
+    RESULT_VARIABLE _size_result
+)
+if(_size_result)
+    message(FATAL_ERROR "DMG size check failed")
+endif()
 
 file(MAKE_DIRECTORY ${ARTIFACTS_DIR}/env)
 

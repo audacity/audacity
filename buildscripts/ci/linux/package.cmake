@@ -78,12 +78,27 @@ if(PACKTYPE STREQUAL "appimage")
     require_tool(appimageupdatetool)
 
     execute_process(
-        COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}" "${BUILD_TOOLS}/environment.sh"
+        COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}" "${BUILD_TOOLS}/environment.sh" "${BUILD_MODE}"
+        RESULT_VARIABLE _appimage_result
     )
+    if(_appimage_result)
+        message(FATAL_ERROR "AppImage packaging failed: ${_appimage_result}")
+    endif()
 
     execute_process(
         COMMAND mv "${INSTALL_DIR}/../${ARTIFACT_NAME}.AppImage" "${ARTIFACTS_DIR}/"
     )
+
+    execute_process(
+        COMMAND ${CMAKE_COMMAND}
+            -DARTIFACT_PATH=${ARTIFACTS_DIR}/${ARTIFACT_NAME}.AppImage
+            -DMAX_SIZE_BYTES=90000000
+            -P ${_repo_root}/buildscripts/packaging/check_artifact_size.cmake
+        RESULT_VARIABLE _size_check_result
+    )
+    if(_size_check_result)
+        message(FATAL_ERROR "AppImage size check failed")
+    endif()
 
 
     # if [ -v UPDATE_INFORMATION ]; then

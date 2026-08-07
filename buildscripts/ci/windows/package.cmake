@@ -5,6 +5,7 @@ message(STATUS "Package")
 set(ARTIFACTS_DIR "build.artifacts")
 set(BUILD_DIR "build.release")
 set(INSTALL_DIR "build.install")
+get_filename_component(ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
@@ -124,6 +125,18 @@ if(PACK_TYPE STREQUAL "msi")
     message(STATUS "[sign-prepack] disabled or credentials missing; skipping exe signing")
   endif()
 
+  execute_process(
+    COMMAND "${CMAKE_COMMAND}"
+            -DPAYLOAD_ROOT=${INSTALL_DIR}
+            -DBUILD_MODE=${BUILD_MODE}
+            -DMANIFEST_FILE=${ARTIFACTS_DIR}/release-payload-${PACKARCH}.contents.txt
+            -P ${ROOT_DIR}/buildscripts/packaging/audit_release_payload.cmake
+    RESULT_VARIABLE _rc_audit
+  )
+  if(NOT _rc_audit EQUAL 0)
+    message(FATAL_ERROR "Release payload audit failed")
+  endif()
+
   get_filename_component(_cmake_bin_dir "${CMAKE_COMMAND}" DIRECTORY)
   find_program(_cpack_cmd cpack HINTS "${_cmake_bin_dir}" REQUIRED)
   execute_process(
@@ -194,6 +207,17 @@ if(PACK_TYPE STREQUAL "msi")
   get_filename_component(_copied_name "${MSI_FILE}" NAME)
   file(RENAME "${ARTIFACTS_DIR}/${_copied_name}" "${ARTIFACT_PATH}")
   message(STATUS "Copied installer to ${ARTIFACT_PATH}")
+
+  execute_process(
+    COMMAND "${CMAKE_COMMAND}"
+            -DARTIFACT_PATH=${ARTIFACT_PATH}
+            -DMAX_SIZE_BYTES=80000000
+            -P ${ROOT_DIR}/buildscripts/packaging/check_artifact_size.cmake
+    RESULT_VARIABLE _rc_size
+  )
+  if(NOT _rc_size EQUAL 0)
+    message(FATAL_ERROR "Windows installer size check failed")
+  endif()
 
   if(SIGN_ENABLE)
     if(NOT EXISTS "${SIGN_SERVICE_SH}")
