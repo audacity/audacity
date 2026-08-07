@@ -1,7 +1,7 @@
 extern "C"
 {
-#include "../../avutil/56/avconfig.h"
-#include "../../ffmpeg-4.2.4-single-header.h"
+#include "../../avutil/61/avconfig.h"
+#include "../../ffmpeg-9.0.0-single-header.h"
 }
 
 #include <cstring>
@@ -17,15 +17,15 @@ extern "C"
 
 #include "../../FFmpegAPIResolver.h"
 
-namespace avcodec_58 {
+namespace avcodec_63 {
 #include "../AVCodecContextWrapperImpl.inl"
-#include "../AVCodecCapabilitiesLegacy.inl"
+#include "../AVCodecCapabilitiesQuery.inl"
 #include "../AVCodecWrapperImpl.inl"
 #include "../AVPacketWrapperImpl.inl"
 
 void Register()
 {
-    FFmpegAPIResolver::Get().AddAVCodecFactories(58, {
+    FFmpegAPIResolver::Get().AddAVCodecFactories(63, {
             &CreateAVCodecContextWrapper,
             &CreateAVCodecContextWrapperFromCodec,
             &CreateAVCodecWrapper,
@@ -34,7 +34,7 @@ void Register()
 }
 
 const bool registered = ([]() {
-    FFmpegAPIResolver::Get().AddAVCodecFactories(58, {
+    FFmpegAPIResolver::Get().AddAVCodecFactories(63, {
             &CreateAVCodecContextWrapper,
             &CreateAVCodecContextWrapperFromCodec,
             &CreateAVCodecWrapper,
