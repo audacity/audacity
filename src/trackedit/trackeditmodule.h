@@ -12,6 +12,7 @@ class TrackeditUiActions;
 class Au3SelectionController;
 class TrackNavigationController;
 class TrackSpectrogramSettingsUpdater;
+class ItemRenameController;
 
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
@@ -47,5 +48,6 @@ private:
     std::shared_ptr<Au3SelectionController> m_selectionController;
     std::shared_ptr<TrackNavigationController> m_trackNavigationController;
     std::shared_ptr<TrackSpectrogramSettingsUpdater> m_trackSpectrogramSettingsUpdater;
+    std::shared_ptr<ItemRenameController> m_itemRenameController;
 };
 }

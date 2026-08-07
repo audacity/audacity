@@ -6,10 +6,14 @@
 #include "trackitemslistmodel.h"
 #include "tracklabelitem.h"
 
+#include "trackedit/iitemrenamecontroller.h"
+
 namespace au::projectscene {
 class TrackLabelsListModel : public TrackItemsListModel
 {
     Q_OBJECT
+
+    muse::ContextInject<trackedit::IItemRenameController> itemRenameController { this };
 
 public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);
@@ -18,6 +22,7 @@ public:
     Q_INVOKABLE void selectLabelWithSharedStalk(const LabelKey& key, bool rightSide);
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const LabelKey& key);
 
     Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
 
@@ -35,6 +40,7 @@ private:
     void onReload() override;
 
     void update();
+    void updatePendingTitleEdit();
     void updateItemMetrics(ViewTrackItem* item) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
 

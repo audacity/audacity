@@ -19,6 +19,7 @@
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
 #include "spectrogram/ispectraleffectsregister.h"
+#include "../iitemrenamecontroller.h"
 #include "../iprojecthistory.h"
 #include "../iselectioncontroller.h"
 #include "../itrackeditconfiguration.h"
@@ -45,6 +46,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::ContextInject<trackedit::ISelectionController> selectionController { this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::ContextInject<trackedit::IItemRenameController> itemRenameController { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
 
