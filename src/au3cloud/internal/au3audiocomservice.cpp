@@ -597,6 +597,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
                                                          muse::trc("cloud", "Project is not synced with the cloud"));
     }
 
+    const std::string projectPage = ::getCloudProjectPage(project);
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
     if (auto oldProgress = std::exchange(m_audioPreviewProgress, progress)) {
@@ -617,7 +618,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         cancellationContext->Cancel();
     });
 
-    std::thread([weak = weak_from_this(), project, progress, cancellationContext, projectId, snapshotId]() {
+    std::thread([weak = weak_from_this(), project, progress, cancellationContext, projectId, snapshotId, projectPage]() {
         auto self = weak.lock();
         if (!self) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Service destroyed")));
@@ -630,7 +631,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
             return;
         }
 
-        const auto preferredFormats = self->exporter()->cloudPreferredAudioFormats();
+        const auto preferredFormats = self->exporter()->cloudPreferredAudioFormats(false);
         if (preferredFormats.empty()) {
             progress->finish(make_ret(Err::NoExportPlugin));
             return;
@@ -687,7 +688,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         cancellationContext->OnCancelled(response);
 
         response->setRequestFinishedCallback(
-            [self, response, progress, cancellationContext, tempPath](auto) {
+            [self, response, progress, cancellationContext, tempPath, projectPage](auto) {
             if (response->getError() != audacity::network_manager::NetworkError::NoError) {
                 self->filesystem()->remove(tempPath);
                 if (!progress->isCanceled()) {
@@ -718,7 +719,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
                 audacity::cloud::audiocom::GetServiceConfig(),
                 syncState->MixdownUrls,
                 tempPath.toStdString(),
-                [progress, tempPath, filesystem = self->filesystem()](audacity::cloud::audiocom::ResponseResult result) {
+                [progress, tempPath, projectPage, filesystem = self->filesystem()](audacity::cloud::audiocom::ResponseResult result) {
                 filesystem->remove(tempPath);
 
                 if (progress->isCanceled()) {
@@ -726,7 +727,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
                 }
 
                 if (result.Code == audacity::cloud::audiocom::SyncResultCode::Success) {
-                    progress->finish(muse::make_ok());
+                    progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(projectPage)));
                 } else if (result.Code == audacity::cloud::audiocom::SyncResultCode::Cancelled) {
                     progress->finish(make_ret(Err::Cancelled));
                 } else {
