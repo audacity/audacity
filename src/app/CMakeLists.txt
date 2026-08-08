@@ -102,6 +102,13 @@ set(LINK_LIB
     muse::draw
 )
 
+# Remove unused direct Qt dependencies
+list(REMOVE_ITEM LINK_LIB
+    Qt::PrintSupport
+    Qt::QuickWidgets
+    Qt::Xml
+)
+
 add_to_link_if_exists(muse::accessibility)
 add_to_link_if_exists(muse::actions)
 add_to_link_if_exists(muse::rcommand)
