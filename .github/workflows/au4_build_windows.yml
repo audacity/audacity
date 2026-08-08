@@ -247,7 +247,9 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
-        path: ./build.artifacts/
+        path: |
+          ./build.artifacts/
+          !./build.artifacts/symbols/**
 
     - name: Prepare ccache files for saving
       id: prepare-save-ccache
