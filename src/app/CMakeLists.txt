@@ -96,8 +96,17 @@ macro(add_to_link_if_exists lib)
     endif()
 endmacro()
 
+# The framework exposes a broad Qt list for all of its clients. Keep Audacity's
+# direct links narrow; any real framework dependency still arrives transitively.
+set(AUDACITY_QT_LIBRARIES ${QT_LIBRARIES})
+list(REMOVE_ITEM AUDACITY_QT_LIBRARIES
+    Qt::PrintSupport
+    Qt::QuickWidgets
+    Qt::Xml
+)
+
 set(LINK_LIB
-    ${QT_LIBRARIES}
+    ${AUDACITY_QT_LIBRARIES}
     muse::global
     muse::draw
 )
