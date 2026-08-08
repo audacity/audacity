@@ -25,6 +25,7 @@ set(_unsupported_qml_paths
     QtQml/StateMachine
     QtQml/XmlListModel
     QtQuick/Dialogs
+    QtQuick/Controls/designer
     QtQuick/LocalStorage
     QtQuick/Particles
     QtQuick/Shapes/DesignHelpers
@@ -34,6 +35,21 @@ set(_unsupported_qml_paths
     QtWebSockets
 )
 
+# Keep each platform's default style and its Qt fallback chain.
+if(APPLE)
+    set(_unused_qt_quick_controls_styles
+        FluentWinUI3 Imagine Material Universal Windows iOS
+    )
+elseif(WIN32)
+    set(_unused_qt_quick_controls_styles
+        FluentWinUI3 Fusion Imagine Material Universal macOS iOS
+    )
+else()
+    set(_unused_qt_quick_controls_styles
+        FluentWinUI3 Imagine Material Universal Windows macOS iOS
+    )
+endif()
+
 foreach(_qml_root IN LISTS _qml_roots)
     if(NOT EXISTS "${_qml_root}")
         continue()
@@ -41,6 +57,10 @@ foreach(_qml_root IN LISTS _qml_roots)
 
     foreach(_relative_path IN LISTS _unsupported_qml_paths)
         file(REMOVE_RECURSE "${_qml_root}/${_relative_path}")
+    endforeach()
+
+    foreach(_style IN LISTS _unused_qt_quick_controls_styles)
+        file(REMOVE_RECURSE "${_qml_root}/QtQuick/Controls/${_style}")
     endforeach()
 
     file(GLOB _qt_labs_modules LIST_DIRECTORIES TRUE "${_qml_root}/Qt/labs/*")
@@ -103,6 +123,16 @@ foreach(_plugin IN LISTS _macos_quick_plugins)
     endif()
 endforeach()
 
+foreach(_style IN LISTS _unused_qt_quick_controls_styles)
+    string(TOLOWER "${_style}" _style_lower)
+    file(GLOB _unused_macos_style_plugins LIST_DIRECTORIES FALSE
+        "${QT_DEPLOY_ROOT}/audacity.app/Contents/PlugIns/quick/libqtquickcontrols2${_style_lower}style*plugin.dylib"
+    )
+    if(_unused_macos_style_plugins)
+        file(REMOVE ${_unused_macos_style_plugins})
+    endif()
+endforeach()
+
 # The compiler runtime DLLs are deployed app-locally on Windows. The separate
 # redistributable executable is not run by the installer and is redundant.
 file(GLOB _compiler_redistributables
@@ -146,10 +176,26 @@ set(_unused_qt_library_stems
     Qt6QuickVectorImage
     Qt6QuickVectorImageGenerator
     Qt6QuickVectorImageHelpers
-    Qt6QuickWidgets
     Qt6Sql
     Qt6WebSockets
 )
+
+foreach(_style IN LISTS _unused_qt_quick_controls_styles)
+    if(_style STREQUAL "macOS")
+        list(APPEND _unused_qt_library_stems Qt6QuickControls2MacOSStyleImpl)
+    elseif(_style STREQUAL "iOS")
+        list(APPEND _unused_qt_library_stems Qt6QuickControls2IOSStyleImpl)
+    elseif(_style STREQUAL "Windows")
+        list(APPEND _unused_qt_library_stems Qt6QuickControls2WindowsStyleImpl)
+    elseif(_style STREQUAL "FluentWinUI3")
+        list(APPEND _unused_qt_library_stems Qt6QuickControls2FluentWinUI3StyleImpl)
+    else()
+        list(APPEND _unused_qt_library_stems
+            "Qt6QuickControls2${_style}"
+            "Qt6QuickControls2${_style}StyleImpl"
+        )
+    endif()
+endforeach()
 
 foreach(_stem IN LISTS _unused_qt_library_stems)
     file(GLOB _unused_qt_libraries
