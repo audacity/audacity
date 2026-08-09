@@ -148,6 +148,20 @@ do
     fi
 done
 
+TARGET_ARCH=$(lipo -archs "$BIN_FILE" 2>/dev/null)
+if [[ "$TARGET_ARCH" == "x86_64" || "$TARGET_ARCH" == "arm64" ]]; then
+  echo "Thin universal dependencies to ${TARGET_ARCH}"
+  while IFS= read -r -d '' FILE_PATH; do
+    ARCHS=$(lipo -archs "$FILE_PATH" 2>/dev/null) || continue
+    if [[ " $ARCHS " == *" $TARGET_ARCH "* && "$ARCHS" == *" "* ]]; then
+      FILE_MODE=$(stat -f '%Lp' "$FILE_PATH")
+      lipo "$FILE_PATH" -thin "$TARGET_ARCH" -output "${FILE_PATH}.thin"
+      chmod "$FILE_MODE" "${FILE_PATH}.thin"
+      mv -f "${FILE_PATH}.thin" "$FILE_PATH"
+    fi
+  done < <(find "${VOLUME}/${APPNAME}.app/Contents" -type f -print0)
+fi
+
 otool -L ${VOLUME}/${APPNAME}.app/Contents/MacOS/${APPNAME}
 
 # Remove dSYM files
