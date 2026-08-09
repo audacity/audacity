@@ -303,6 +303,15 @@ done
 cmake -DQT_DEPLOY_ROOT="${appdir}" \
   -P "${ORIGIN_DIR}/buildscripts/packaging/prune_qt_runtime.cmake"
 
+# Keep the unstripped build tree for dump_syms, but strip the installed copy
+# before AppImage compression. GNU strip preserves build IDs and unwind data
+# with --strip-unneeded.
+while IFS= read -r -d '' file_path; do
+  if file -b "${file_path}" | grep -q '^ELF '; then
+    strip --strip-unneeded "${file_path}"
+  fi
+done < <(find "${appdir}" -type f -print0)
+
 ##########################################################################
 # TURN APPDIR INTO AN APPIMAGE
 ##########################################################################
