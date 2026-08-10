@@ -100,7 +100,19 @@ macro(do_build build_type build_dir)
         RESULT_VARIABLE NINJA_RESULT
     )
     if (NINJA_RESULT GREATER 0)
-        message(FATAL_ERROR "========= Failed build =========")
+        if (DEFINED ENV{OSX_ARCHITECTURES} AND "$ENV{OSX_ARCHITECTURES}" MATCHES ";")
+            message(WARNING "========= Build failed for universal macOS target, retrying once serially =========")
+            execute_process(
+                COMMAND ninja -j 1
+                WORKING_DIRECTORY ${build_dir}
+                RESULT_VARIABLE NINJA_RETRY_RESULT
+            )
+            if (NINJA_RETRY_RESULT GREATER 0)
+                message(FATAL_ERROR "========= Failed build =========")
+            endif()
+        else()
+            message(FATAL_ERROR "========= Failed build =========")
+        endif()
     else()
         message(STATUS "========= Success build =========")
     endif()
