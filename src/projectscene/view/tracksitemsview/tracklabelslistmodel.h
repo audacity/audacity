@@ -6,14 +6,14 @@
 #include "trackitemslistmodel.h"
 #include "tracklabelitem.h"
 
-#include "trackedit/iitemrenamecontroller.h"
+#include "trackedit/itracksviewcontroller.h"
 
 namespace au::projectscene {
 class TrackLabelsListModel : public TrackItemsListModel
 {
     Q_OBJECT
 
-    muse::ContextInject<trackedit::IItemRenameController> itemRenameController { this };
+    muse::ContextInject<trackedit::ITracksViewController> tracksViewController { this };
 
 public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);

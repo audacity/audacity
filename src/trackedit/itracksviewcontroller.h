@@ -11,12 +11,12 @@
 #include "trackedittypes.h"
 
 namespace au::trackedit {
-class IItemRenameController : MODULE_EXPORT_INTERFACE
+class ITracksViewController : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IItemRenameController)
+    INTERFACE_ID(ITracksViewController)
 
 public:
-    virtual ~IItemRenameController() = default;
+    virtual ~ITracksViewController() = default;
 
     //! NOTE Set when a label should enter title edit mode; the view consumes
     //! the request once the label item exists, whenever that happens

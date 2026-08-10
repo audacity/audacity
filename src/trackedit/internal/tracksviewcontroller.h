@@ -10,12 +10,12 @@
 #include "framework/actions/actionable.h"
 
 #include "context/iglobalcontext.h"
-#include "../iitemrenamecontroller.h"
+#include "../itracksviewcontroller.h"
 #include "../iselectioncontroller.h"
 #include "itracknavigationcontroller.h"
 
 namespace au::trackedit {
-class ItemRenameController : public IItemRenameController, public muse::actions::Actionable, public muse::async::Asyncable,
+class TracksViewController : public ITracksViewController, public muse::actions::Actionable, public muse::async::Asyncable,
     public muse::Contextable
 {
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
@@ -24,7 +24,7 @@ class ItemRenameController : public IItemRenameController, public muse::actions:
     muse::ContextInject<ITrackNavigationController> trackNavigationController { this };
 
 public:
-    ItemRenameController(const muse::modularity::ContextPtr& ctx)
+    TracksViewController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     void init();
