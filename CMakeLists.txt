@@ -94,6 +94,11 @@ set(MUSE_MODULE_WORKSPACE_TESTS ON)
 set(MUSE_MODULE_VST ON)
 set(MUSE_MODULE_VST_QML ON)
 
+# Skip TestFlow in release builds
+if (AU4_BUILD_MODE STREQUAL "release")
+    set(MUSE_MODULE_TESTFLOW OFF)
+endif()
+
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 option(AU_BUILD_AUTOMATION_TESTS "Build automation tests" ON)

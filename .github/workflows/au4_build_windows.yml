@@ -224,15 +224,18 @@ jobs:
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |
-        cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake
+        cmake -DSIGN_ENABLE=OFF -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake
 
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
       run: |
         APP_BIN=$(pwd)/build.release/Audacity4.pdb
+        APP_EXE=$(pwd)/build.release/Audacity4.exe
+        cmake -E copy_if_different build.install/bin/Audacity4.exe "${APP_EXE}"
+        trap 'cmake -E rm -f "${APP_EXE}"' EXIT
 
-        cmake -DAPP_BIN=${APP_BIN} \
+        cmake -DAPP_BIN="${APP_BIN}" \
               -DSENTRY_URL=https://sentry.audacityteam.org \
               -DSENTRY_ORG=sentry \
               -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
@@ -244,7 +247,9 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
-        path: ./build.artifacts/
+        path: |
+          ./build.artifacts/
+          !./build.artifacts/symbols/**
 
     - name: Prepare ccache files for saving
       id: prepare-save-ccache
