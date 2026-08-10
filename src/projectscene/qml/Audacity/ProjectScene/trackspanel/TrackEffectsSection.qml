@@ -28,6 +28,10 @@ Rectangle {
         menuModel.init()
     }
 
+    function requestActive() {
+        addEffectButton.navigation.requestActive()
+    }
+
     QtObject {
         id: prv
         property bool enabled: effectList.trackName !== ""
