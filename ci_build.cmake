@@ -100,7 +100,14 @@ macro(do_build build_type build_dir)
         RESULT_VARIABLE NINJA_RESULT
     )
     if (NINJA_RESULT GREATER 0)
-        if (DEFINED ENV{OSX_ARCHITECTURES} AND "$ENV{OSX_ARCHITECTURES}" MATCHES ";")
+        set(IS_UNIVERSAL_MACOS OFF)
+        if (DEFINED ENV{OSX_ARCHITECTURES}
+                AND "$ENV{OSX_ARCHITECTURES}" MATCHES "(^|;)x86_64(;|$)"
+                AND "$ENV{OSX_ARCHITECTURES}" MATCHES "(^|;)arm64(;|$)")
+            set(IS_UNIVERSAL_MACOS ON)
+        endif()
+
+        if (IS_UNIVERSAL_MACOS)
             message(WARNING "========= Build failed for universal macOS target, retrying once serially =========")
             execute_process(
                 COMMAND ninja -j 1
