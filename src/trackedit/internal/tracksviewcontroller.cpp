@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "itemrenamecontroller.h"
+#include "tracksviewcontroller.h"
 
 #include "global/containers.h"
 
@@ -13,12 +13,12 @@ using namespace au::trackedit;
 
 static const ActionCode RENAME_ITEM_CODE("rename-item");
 
-void ItemRenameController::init()
+void TracksViewController::init()
 {
-    dispatcher()->reg(this, RENAME_ITEM_CODE, this, &ItemRenameController::renameSelectedItem);
+    dispatcher()->reg(this, RENAME_ITEM_CODE, this, &TracksViewController::renameSelectedItem);
 }
 
-void ItemRenameController::renameSelectedItem()
+void TracksViewController::renameSelectedItem()
 {
     LabelKeyList selected = selectionController()->selectedLabels();
 
@@ -40,23 +40,23 @@ void ItemRenameController::renameSelectedItem()
     requestLabelTitleEdit(selected.front());
 }
 
-void ItemRenameController::requestLabelTitleEdit(const LabelKey& labelKey)
+void TracksViewController::requestLabelTitleEdit(const LabelKey& labelKey)
 {
     m_pendingLabelTitleEdit = labelKey;
     m_labelTitleEditRequested.send(labelKey);
 }
 
-std::optional<LabelKey> ItemRenameController::pendingLabelTitleEdit() const
+std::optional<LabelKey> TracksViewController::pendingLabelTitleEdit() const
 {
     return m_pendingLabelTitleEdit;
 }
 
-void ItemRenameController::labelTitleEditRequestHandled()
+void TracksViewController::labelTitleEditRequestHandled()
 {
     m_pendingLabelTitleEdit.reset();
 }
 
-muse::async::Channel<LabelKey> ItemRenameController::labelTitleEditRequested() const
+muse::async::Channel<LabelKey> TracksViewController::labelTitleEditRequested() const
 {
     return m_labelTitleEditRequested;
 }

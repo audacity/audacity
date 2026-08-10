@@ -30,7 +30,7 @@ void TrackLabelsListModel::onInit()
         onSelectedItems(keyList);
     });
 
-    itemRenameController()->labelTitleEditRequested().onReceive(this, [this](const trackedit::LabelKey&) {
+    tracksViewController()->labelTitleEditRequested().onReceive(this, [this](const trackedit::LabelKey&) {
         updatePendingTitleEdit();
     });
 }
@@ -184,7 +184,11 @@ void TrackLabelsListModel::update()
 
 void TrackLabelsListModel::updatePendingTitleEdit()
 {
-    const std::optional<trackedit::LabelKey> pending = itemRenameController()->pendingLabelTitleEdit();
+    if (!tracksViewController()) {
+        return;
+    }
+
+    const std::optional<trackedit::LabelKey> pending = tracksViewController()->pendingLabelTitleEdit();
     if (!pending.has_value() || pending->trackId != m_trackId) {
         return;
     }
@@ -202,7 +206,7 @@ void TrackLabelsListModel::titleEditRequestHandled(const LabelKey& key)
         item->setTitleEditRequested(false);
     }
 
-    itemRenameController()->labelTitleEditRequestHandled();
+    tracksViewController()->labelTitleEditRequestHandled();
 }
 
 void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
