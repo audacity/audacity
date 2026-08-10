@@ -2186,7 +2186,7 @@ void TrackeditActionsController::addLabel()
 {
     const muse::RetVal<LabelKey> newLabel = trackeditInteraction()->addLabelToSelection();
     if (newLabel.ret) {
-        itemRenameController()->requestLabelTitleEdit(newLabel.val);
+        tracksViewController()->requestLabelTitleEdit(newLabel.val);
     }
 }
 
