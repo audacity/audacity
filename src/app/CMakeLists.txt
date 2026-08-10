@@ -332,6 +332,7 @@ if (OS_IS_WIN)
         EXCLUDE_PLUGIN_TYPES qmltooling sqldrivers styles
         DEPLOY_TOOL_OPTIONS
             --plugindir bin
+            --no-system-dxc-compiler
             --qmldir ${PROJECT_SOURCE_DIR}/src
             --qmldir ${PROJECT_SOURCE_DIR}/muse/framework
     )
