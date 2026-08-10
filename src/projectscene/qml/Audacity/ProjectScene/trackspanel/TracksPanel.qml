@@ -82,7 +82,7 @@ Item {
                 onFocusEffectsPanelRequested: {
                     Qt.callLater(function () {
                         if (root.effectColumnNavigationPanel && effectColumn.visible) {
-                            root.effectColumnNavigationPanel.requestActive()
+                            trackEffectsSection.requestActive()
                         }
                     })
                 }
@@ -266,6 +266,8 @@ Item {
                                 tracksModel.focusTrack(index)
                                 effectSectionModel.showEffectsSection = true
                                 root.openEffectsRequested()
+
+                                trackEffectsSection.requestActive()
                             }
 
                             onRemoveSelectionRequested: {
