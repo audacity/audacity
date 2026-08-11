@@ -22,6 +22,8 @@
 
 #include "opensaveprojectscenario.h"
 
+#include "log.h"
+
 #include "cloud/clouderrors.h"
 #include "interactive/iinteractive.h"
 #include "projecterrors.h"
@@ -319,11 +321,25 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityPr
 
     cloud::Visibility defaultVisibility = isPublishShare ? cloud::Visibility::Public : cloud::Visibility::Private;
 
+    QString name = rv.val.toQString();
+
+    const QByteArray nameUtf8 = name.toUtf8();
+    for (qsizetype i = 0; i < nameUtf8.size(); ++i) {
+        LOGW() << "cloud project name byte " << i << " of " << nameUtf8.size() << ": 0x"
+               << QString::number(static_cast<uchar>(nameUtf8.at(i)), 16).rightJustified(2, u'0').toStdString();
+    }
+
+    name.removeIf([](QChar c) {
+        return c.category() == QChar::Other_Control
+               || c == QChar::LineSeparator
+               || c == QChar::ParagraphSeparator;
+    });
+
     CloudProjectInfo result;
-    result.name = rv.val.toQString();
+    result.name = name.trimmed();
     result.visibility = defaultVisibility;
 
-    if (result.name.trimmed().isEmpty()) {
+    if (result.name.isEmpty()) {
         return make_ret(Ret::Code::BadData);
     }
 
