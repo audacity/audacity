@@ -31,7 +31,7 @@ public:
 
     void requestLabelTitleEdit(const LabelKey& labelKey) override;
     std::optional<LabelKey> pendingLabelTitleEdit() const override;
-    void labelTitleEditRequestHandled() override;
+    void labelTitleEditRequestHandled(const LabelKey& labelKey) override;
     muse::async::Channel<LabelKey> labelTitleEditRequested() const override;
 
 private:

@@ -206,7 +206,7 @@ void TrackLabelsListModel::titleEditRequestHandled(const LabelKey& key)
         item->setTitleEditRequested(false);
     }
 
-    tracksViewController()->labelTitleEditRequestHandled();
+    tracksViewController()->labelTitleEditRequestHandled(key.key);
 }
 
 void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
