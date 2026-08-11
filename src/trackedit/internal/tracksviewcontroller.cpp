@@ -51,9 +51,11 @@ std::optional<LabelKey> TracksViewController::pendingLabelTitleEdit() const
     return m_pendingLabelTitleEdit;
 }
 
-void TracksViewController::labelTitleEditRequestHandled()
+void TracksViewController::labelTitleEditRequestHandled(const LabelKey& labelKey)
 {
-    m_pendingLabelTitleEdit.reset();
+    if (m_pendingLabelTitleEdit == labelKey) {
+        m_pendingLabelTitleEdit.reset();
+    }
 }
 
 muse::async::Channel<LabelKey> TracksViewController::labelTitleEditRequested() const
