@@ -11,6 +11,7 @@ set(BUILD_NUMBER "" CACHE STRING "Build number")
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
 set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
+option(ENABLE_CRASHPAD_CLIENT "Enable crashpad client" ON)
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)

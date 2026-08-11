@@ -379,6 +379,12 @@ elseif(OS_IS_MAC)
 
     install(TARGETS audacity BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
 
+    if(MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT)
+        install(PROGRAMS "${MUSE_MODULE_DIAGNOSTICS_CRASHPAD_HANDLER_PATH}"
+            DESTINATION audacity.app/Contents/MacOS
+        )
+    endif()
+
     qt_generate_deploy_qml_app_script(
         TARGET audacity
         OUTPUT_SCRIPT deploy_script
