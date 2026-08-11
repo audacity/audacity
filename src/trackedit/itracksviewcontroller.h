@@ -22,7 +22,7 @@ public:
     //! the request once the label item exists, whenever that happens
     virtual void requestLabelTitleEdit(const LabelKey& labelKey) = 0;
     virtual std::optional<LabelKey> pendingLabelTitleEdit() const = 0;
-    virtual void labelTitleEditRequestHandled() = 0;
+    virtual void labelTitleEditRequestHandled(const LabelKey& labelKey) = 0;
     virtual muse::async::Channel<LabelKey> labelTitleEditRequested() const = 0;
 };
 }
