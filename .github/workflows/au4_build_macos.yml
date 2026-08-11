@@ -139,12 +139,6 @@ jobs:
           SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_KEY
         fi
 
-        # Skip crash reporting and symbols for non-universal builds
-        if [ "${{ matrix.arch }}" != "universal" ]; then
-          DO_UPLOAD_SYMBOLS='false'
-          SENTRY_URL=""
-        fi
-
         echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
         echo "DO_BUILD: $DO_BUILD"
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" >> $GITHUB_ENV
@@ -227,7 +221,10 @@ jobs:
       shell: bash
       run: |
         APP_BIN=$(pwd)/build.install/audacity.app/Contents/MacOS/audacity
-        GENERATE_ARCHS=("x86_64 arm64")
+        GENERATE_ARCHS="${{ matrix.arch }}"
+        if [ "$GENERATE_ARCHS" == "universal" ]; then
+          GENERATE_ARCHS="x86_64 arm64"
+        fi
         BUILD_DIR=$(pwd)/build.install
 
         cmake -DAPP_BIN=${APP_BIN} \
