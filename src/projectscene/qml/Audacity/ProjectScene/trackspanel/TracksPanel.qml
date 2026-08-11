@@ -76,6 +76,8 @@ Item {
             RealtimeEffectSectionModel {
                 id: effectSectionModel
 
+                navigationFocusInsideEffectsPanel: root.effectsNavigationPanel.section.active || trackEffectsSection.hasPendingDialogRestore || masterEffectsSection.hasPendingDialogRestore
+
                 onFocusEffectsPanelRequested: {
                     Qt.callLater(function () {
                         if (root.effectsNavigationPanel && effectColumn.visible) {
