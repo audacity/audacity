@@ -20,6 +20,7 @@ Rectangle {
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
     readonly property int navigationOrderEnd: navigationOrderStart + effectList.count + 1
+    property alias hasPendingDialogRestore: effectList.hasPendingDialogRestore
 
     color: ui.theme.backgroundPrimaryColor
 
