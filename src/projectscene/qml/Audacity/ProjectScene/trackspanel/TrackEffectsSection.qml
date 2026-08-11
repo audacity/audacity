@@ -17,7 +17,6 @@ Rectangle {
     property alias isMasterTrack: effectList.isMasterTrack
     property alias minimumHeight: prv.addEffectButtonHeight
 
-    property NavigationSection navigationSection: null
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
     readonly property int navigationOrderEnd: navigationOrderStart + effectList.count + 1

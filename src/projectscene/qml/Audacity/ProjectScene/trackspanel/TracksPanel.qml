@@ -22,10 +22,7 @@ Item {
 
     property var navigationPanels: null
     property var headerNavigationPanels: null
-    property NavigationPanel effectColumnNavigationPanel: null
-
-    property NavigationSection trackEffectsNavigationSection: null
-    property NavigationSection masterEffectsNavigationSection: null
+    property NavigationPanel effectsNavigationPanel: null
 
     signal openEffectsRequested
     signal panelActive(var trackId)
@@ -81,7 +78,7 @@ Item {
 
                 onFocusEffectsPanelRequested: {
                     Qt.callLater(function () {
-                        if (root.effectColumnNavigationPanel && effectColumn.visible) {
+                        if (root.effectsNavigationPanel && effectColumn.visible) {
                             trackEffectsSection.requestActive()
                         }
                     })
@@ -93,8 +90,7 @@ Item {
             TrackEffectsSection {
                 id: trackEffectsSection
 
-                navigationSection: trackEffectsNavigationSection
-                navigationPanel: root.effectColumnNavigationPanel
+                navigationPanel: root.effectsNavigationPanel
                 navigationOrderStart: 1
 
                 Layout.fillWidth: true
@@ -136,8 +132,7 @@ Item {
             TrackEffectsSection {
                 id: masterEffectsSection
 
-                navigationSection: masterEffectsNavigationSection
-                navigationPanel: root.effectColumnNavigationPanel
+                navigationPanel: root.effectsNavigationPanel
                 navigationOrderStart: trackEffectsSection.navigationOrderEnd + 1
 
                 Layout.fillWidth: true
