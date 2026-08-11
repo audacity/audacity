@@ -9,9 +9,8 @@ Item {
     id: root
 
     property alias navigation: buttonContainer.navigation
-    property alias realtimeEffectsNavigation: effectsTitleBar.navigation
-    property alias closeEffectsNavigation: effectsTitleBar.navigation
     property alias addTrackNavigation: addNewTrackBtn.navigation
+    property NavigationPanel effectsNavigationPanel: null
 
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false
@@ -48,15 +47,6 @@ Item {
             id: effectsTitleBar
 
             property int padding: parent.height / 4
-            property NavigationPanel navigation: NavigationPanel {
-                name: "RealtimeEffectsSectionPanel"
-                enabled: root.enabled && root.visible && root.showEffectsSection
-                section: buttonContainer.navigation.section
-                direction: NavigationPanel.Vertical
-                order: 0
-
-                accessible.name: qsTrc("projectscene", "Real-time effects panel")
-            }
 
             Layout.preferredWidth: root.effectsSectionWidth
             Layout.preferredHeight: root.height
@@ -94,7 +84,7 @@ Item {
                     height: parent.height - 2 * effectsTitleBar.padding
 
                     navigation.name: "CloseEffectsSection"
-                    navigation.panel: effectsTitleBar.navigation
+                    navigation.panel: root.effectsNavigationPanel
                     navigation.order: 0
 
                     //: Tooltip of the button that closes the panel
