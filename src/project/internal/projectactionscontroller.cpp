@@ -670,7 +670,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
     }
 
     auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
-        return saveProjectLocally(projectFilePath, SaveMode::Save);
+        return doSaveProjectLocally(projectFilePath, SaveMode::Save);
     }, toUploadMode(cloudSaveMode));
 
     if (!uploadRet) {
@@ -736,6 +736,25 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
 }
 
 bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
+{
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return false;
+    }
+
+    if (cloudProjectsProvider()->projectRecordForPath(filePath).has_value()) {
+        LOGI() << "unregistering the cloud project at the local save destination: " << filePath;
+
+        const Ret deleteRet = audioComService()->deleteCloudProject(filePath);
+        if (!deleteRet) {
+            LOGW() << deleteRet.toString();
+        }
+    }
+
+    return doSaveProjectLocally(filePath, saveMode);
+}
+
+bool ProjectActionsController::doSaveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
 {
     IAudacityProjectPtr project = currentProject();
     if (!project) {

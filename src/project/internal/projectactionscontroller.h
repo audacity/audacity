@@ -112,6 +112,7 @@ private:
     muse::Ret canSaveProject() const;
     bool saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);
     bool saveProjectAt(const SaveLocation& saveLocation, SaveMode saveMode = SaveMode::Save, bool force = false);
+    bool doSaveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode);
 
     RecentFile makeRecentFile(IAudacityProjectPtr project);
     void clearRecentProjects();
