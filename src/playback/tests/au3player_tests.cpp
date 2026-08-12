@@ -192,6 +192,34 @@ TEST_F(Au3PlayerTests, Play_WithInactivePlayRegion_StreamsFromCursorToTrackEnd)
 }
 
 /**
+ * @brief playRange streams the exact range once, ignoring an active loop region
+ * @details The mechanism behind "Play the selected time range" with looping enabled
+ *          (issue #9393): a non-default policy stream bounded by the range itself
+ */
+TEST_F(Au3PlayerTests, PlayRange_WithActiveLoopRegion_StreamsExactRangeOnce)
+{
+    //! [GIVEN] An active loop region elsewhere in the track
+    setLoopRegion(0.3, 0.4);
+
+    //! [THEN] The stream covers exactly the requested range with a non-default
+    //! (one-shot) policy — the loop region does not leak into the bounds
+    EXPECT_CALL(*m_audioEngine, startStream(_,
+                                            DoubleNear(0.1, TIME_TOLERANCE),
+                                            DoubleNear(0.2, TIME_TOLERANCE),
+                                            DoubleNear(0.2, TIME_TOLERANCE),
+                                            _,
+                                            testing::Field(&audio::IAudioEngine::StartStreamOptions::isDefaultPolicy,
+                                                           false)))
+    .WillOnce(Return(1));
+
+    //! [WHEN] Play the range 0.1-0.2 secs
+    m_player->playRange({ muse::secs_t(0.1), muse::secs_t(0.2) });
+
+    //! [THEN] The player is running
+    EXPECT_EQ(m_player->playbackStatus(), PlaybackStatus::Running);
+}
+
+/**
  * @brief Seek while a loop region is active does not touch the play region
  */
 TEST_F(Au3PlayerTests, Seek_WhileLoopRegionActive_DoesNotChangePlayRegion)
@@ -224,10 +252,43 @@ TEST_F(Au3PlayerTests, UpdatePlaybackPosition_WhenStreamInactive_WhileRunning_St
     ON_CALL(*m_audioEngine, isStreamActive(_))
     .WillByDefault(Return(false));
 
+    //! [THEN] The engine stream is fully stopped, releasing the stream token;
+    //! otherwise isBusy() would stay true and no new playback could ever start
+    EXPECT_CALL(*m_audioEngine, stopStream())
+    .Times(1);
+
     //! [WHEN] The position poll runs
     m_player->updatePlaybackPosition();
 
     //! [THEN] The player is stopped
+    EXPECT_EQ(m_player->playbackStatus(), PlaybackStatus::Stopped);
+}
+
+/**
+ * @brief A stream that went inactive while paused only updates the status
+ * @details E.g. a device change tore the stream down while paused — that flow owns
+ *          the stream lifecycle, so no full stop must be issued
+ */
+TEST_F(Au3PlayerTests, UpdatePlaybackPosition_WhenStreamInactive_WhilePaused_DoesNotStopStream)
+{
+    //! [GIVEN] Playback is running, then paused
+    m_player->play();
+    ASSERT_EQ(m_player->playbackStatus(), PlaybackStatus::Running);
+    m_player->pause();
+    ASSERT_EQ(m_player->playbackStatus(), PlaybackStatus::Paused);
+
+    //! [GIVEN] The stream went inactive
+    ON_CALL(*m_audioEngine, isStreamActive(_))
+    .WillByDefault(Return(false));
+
+    //! [THEN] No full stop is issued
+    EXPECT_CALL(*m_audioEngine, stopStream())
+    .Times(0);
+
+    //! [WHEN] The position poll runs
+    m_player->updatePlaybackPosition();
+
+    //! [THEN] Only the status is updated
     EXPECT_EQ(m_player->playbackStatus(), PlaybackStatus::Stopped);
 }
 
