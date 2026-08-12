@@ -272,22 +272,15 @@ bool AudioUnitWrapper::MoveSettingsContents(
     return true;
 }
 
-dispatch_queue_t AudioUnitWrapper::TeardownQueue()
-{
-    static const dispatch_queue_t queue
-        =dispatch_queue_create("org.audacityteam.AudioUnitTeardown", DISPATCH_QUEUE_SERIAL);
-    return queue;
-}
-
 AudioUnitWrapper::~AudioUnitWrapper()
 {
-    // Disposing an out-of-process instance is a blocking request to the
-    // hosting service, which may be unresponsive or in turn be waiting for
-    // this thread. Dispose asynchronously instead of in the field's
-    // destructor; the queue is serial so a previously scheduled
-    // AudioUnitUninitialize of the same unit comes first.
+    // Disposing a plug-in removes the run loop timers it registered on the
+    // thread that created it, so it has to happen on the main thread. The
+    // destructor itself can run on any thread, hence the dispatch; it is
+    // asynchronous so that an unresponsive out-of-process plug-in cannot
+    // block the caller.
     if (AudioUnit unit = mUnit.release()) {
-        dispatch_async(TeardownQueue(), ^ {
+        dispatch_async(dispatch_get_main_queue(), ^ {
             AudioComponentInstanceDispose(unit);
         });
     }
