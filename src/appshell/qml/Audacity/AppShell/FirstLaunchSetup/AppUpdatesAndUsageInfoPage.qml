@@ -33,12 +33,15 @@ Page {
         readonly property int contentMargins: 24
         readonly property int contentTextSpacing: 16
 
-        readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences → Application"))
-        readonly property string preferencesUrl: "audacity://preferences"
-        readonly property string updatesTitleText: qsTrc("appshell/gettingstarted", "App Updates")
+        readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences → General"))
+        readonly property string preferencesUrl: "audacity://preferences?currentPageId=general"
+        readonly property string updatesTitleText: qsTrc("appshell/gettingstarted", "App updates")
         readonly property string updatesBodyText1: qsTrc("appshell/gettingstarted", "Audacity notifies you in-app when a new version is available to download.")
         readonly property string updatesBodyText2: qsTrc("appshell/gettingstarted", "You can turn this off anytime in %1.").arg(prv.preferencesLink)
-        readonly property string usageInfoTitleText: qsTrc("appshell/gettingstarted", "Usage Info")
+        readonly property string crashReportsTitleText: qsTrc("appshell/gettingstarted", "Crash reports")
+        readonly property string crashReportsBodyText1: qsTrc("appshell/gettingstarted", "Audacity automatically sends crash reports to help us improve product quality.")
+        readonly property string crashReportsBodyText2: qsTrc("appshell/gettingstarted", "You can turn this off anytime in %1.").arg(prv.preferencesLink)
+        readonly property string usageInfoTitleText: qsTrc("appshell/gettingstarted", "Usage info")
         readonly property string privacyPolicyUrl: "https://www.audacityteam.org/legal/privacy-notice/"
         readonly property string privacyPolicyLink: "<a href=\"%1\">%2</a>".arg(prv.privacyPolicyUrl).arg(qsTrc("appshell/gettingstarted", "privacy policy"))
         readonly property string usageInfoBodyText1: qsTrc("appshell/gettingstarted", "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.").arg(prv.privacyPolicyLink)
@@ -130,6 +133,54 @@ Page {
                     font: ui.theme.bodyFont
 
                     text: prv.updatesBodyText2
+
+                    onLinkActivated: function (link) {
+                        api.launcher.open(prv.preferencesUrl)
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.NoButton
+                        cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    }
+                }
+            }
+        }
+
+        Column {
+            id: crashReportsColumn
+
+            width: parent.width
+
+            spacing: prv.titleTextSpacing
+
+            StyledTextLabel {
+                text: prv.crashReportsTitleText
+                font: ui.theme.largeBodyBoldFont
+            }
+
+            Column {
+                width: parent.width
+                spacing: prv.contentTextSpacing
+
+                StyledTextLabel {
+                    width: parent.width
+                    horizontalAlignment: Text.AlignLeft
+                    wrapMode: Text.Wrap
+
+                    text: prv.crashReportsBodyText1
+                }
+
+                Text {
+                    width: parent.width
+                    horizontalAlignment: Text.AlignLeft
+                    wrapMode: Text.Wrap
+
+                    color: ui.theme.fontPrimaryColor
+                    linkColor: ui.theme.linkColor
+                    font: ui.theme.bodyFont
+
+                    text: prv.crashReportsBodyText2
 
                     onLinkActivated: function (link) {
                         api.launcher.open(prv.preferencesUrl)
