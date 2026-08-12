@@ -76,5 +76,8 @@ public:
     MOCK_METHOD(void, setZoomPreset1, (ZoomPresets::Preset preset), (override));
     MOCK_METHOD(ZoomPresets::Preset, zoomPreset2, (), (const, override));
     MOCK_METHOD(void, setZoomPreset2, (ZoomPresets::Preset preset), (override));
+
+    MOCK_METHOD(trackedit::TrackRulerType, defaultTrackRulerType, (), (const, override));
+    MOCK_METHOD(void, setDefaultTrackRulerType, (trackedit::TrackRulerType type), (override));
 };
 }

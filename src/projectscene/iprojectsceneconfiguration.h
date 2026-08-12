@@ -8,6 +8,7 @@
 
 #include "global/types/color.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/dom/track.h"
 #include "types/projectscenetypes.h"
 
 namespace au::projectscene {
@@ -86,5 +87,8 @@ public:
 
     virtual ZoomPresets::Preset zoomPreset2() const = 0;
     virtual void setZoomPreset2(ZoomPresets::Preset preset) = 0;
+
+    virtual trackedit::TrackRulerType defaultTrackRulerType() const = 0;
+    virtual void setDefaultTrackRulerType(trackedit::TrackRulerType type) = 0;
 };
 }

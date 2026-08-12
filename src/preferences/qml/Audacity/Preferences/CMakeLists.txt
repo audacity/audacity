@@ -88,6 +88,7 @@ qt_add_qml_module(preferences_qml
         internal/TemporaryFilesSection.qml
         internal/ThemeAdditionalOptionsSection.qml
         internal/ThemesSection.qml
+        internal/TrackRulerFormatSection.qml
         internal/UiColorsSection.qml
         internal/UiFontSection.qml
         internal/UsageInfoSection.qml
