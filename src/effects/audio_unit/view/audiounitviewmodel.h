@@ -62,7 +62,8 @@ private:
 
     static void EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent, UInt64 inEventHostTime,
                                       AudioUnitParameterValue inParameterValue);
-    static void DisposeListenerAsync(AUEventListenerRef listener, std::shared_ptr<EventListenerContext> context);
+    static void DisposeListenerAsync(AUEventListenerRef listener, std::shared_ptr<EventListenerContext> context,
+                                     std::shared_ptr<AudioUnitInstance> instance);
     void EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue);
     EventListenerPtr MakeListener();
     void fetchSettingsAsync();
