@@ -125,8 +125,6 @@ void TrackNavigationModel::load()
         return;
     }
 
-    m_activateDefaultNavigationRequested = true;
-
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         clearPanels();
 
@@ -136,15 +134,10 @@ void TrackNavigationModel::load()
 
         if (tracks.empty()) {
             addDefaultNavigation();
-        } else {
-            disableDefaultNavigation();
         }
     });
 
     prj->trackAdded().onReceive(this, [this](const Track& track) {
-        if (m_panels.isEmpty()) {
-            disableDefaultNavigation();
-        }
         addPanels(track.id, m_panels.size());
         resetPanelOrder();
     });
@@ -160,9 +153,6 @@ void TrackNavigationModel::load()
     });
 
     prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
-        if (m_panels.isEmpty()) {
-            disableDefaultNavigation();
-        }
         addPanels(track.id, pos);
         resetPanelOrder();
     });
@@ -190,7 +180,7 @@ void TrackNavigationModel::load()
         addDefaultNavigation();
     }
 
-    updateDefaultNavigationControl();
+    activateDefaultNavigation();
 
     tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
         MYLOG() << "focused track changed: " << trackId << ", highlight: " << highlight;
@@ -205,14 +195,7 @@ void TrackNavigationModel::load()
             return;
         }
 
-        QTimer::singleShot(10, [this, trackId, highlight](){
-            if (isNavigationOnTrack(trackId)) {
-                MYLOG() << "skipped, the navigation is already on the track " << trackId;
-                return;
-            }
-
-            activateNavigation(trackId, highlight);
-        });
+        requestNavigation({ trackId, INVALID_TRACK_ITEM }, highlight);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     tracksNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& itemKey, bool highlight) {
@@ -224,9 +207,7 @@ void TrackNavigationModel::load()
             return;
         }
 
-        QTimer::singleShot(10, [this, itemKey, highlight](){
-            activateNavigation(itemKey, highlight);
-        });
+        requestNavigation(itemKey, highlight);
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
@@ -250,6 +231,7 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 
     trackPanel->controlsListChanged().onNotify(this, [this]() {
         updateDefaultNavigationControl();
+        updatePendingNavigation();
     });
 
     muse::ui::NavigationPanel* headerPanel = makePanel(makeTrackHeaderPanelName(trackId), orderBase + 1);
@@ -264,6 +246,10 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
     });
 
     muse::ui::NavigationPanel* itemsPanel = makePanel(makeTrackItemsPanelName(trackId), orderBase + 2);
+
+    itemsPanel->controlsListChanged().onNotify(this, [this]() {
+        updatePendingNavigation();
+    });
 
     connect(itemsPanel, &muse::ui::NavigationPanel::navigationEvent, this,
             [this, itemsPanel](muse::ui::NavigationEvent* event) {
@@ -450,6 +436,10 @@ void TrackNavigationModel::activateDefaultNavigation()
 
 void TrackNavigationModel::updateDefaultNavigationControl()
 {
+    if (!m_panels.isEmpty()) {
+        disableDefaultNavigation();
+    }
+
     //! NOTE: the default navigation control is the control the navigation returns to
     //! (Escape, reset of the navigation): the first track if there are tracks,
     //! the fallback control otherwise
@@ -535,6 +525,60 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
     }
 }
 
+void TrackNavigationModel::requestNavigation(const TrackItemKey& itemKey, bool highlight)
+{
+    if (itemKey.trackId == INVALID_TRACK) {
+        m_pendingNavigation.reset();
+        return;
+    }
+
+    m_pendingNavigation = NavigationRequest { itemKey, highlight };
+    updatePendingNavigation();
+}
+
+void TrackNavigationModel::updatePendingNavigation()
+{
+    if (!m_pendingNavigation) {
+        return;
+    }
+
+    const NavigationRequest request = *m_pendingNavigation;
+
+    const int pos = indexOfTrack(request.itemKey.trackId);
+    if (pos < 0) {
+        return;
+    }
+
+    const TrackPanels& panels = m_panels.at(pos);
+    const muse::ui::INavigationControl* control = nullptr;
+
+    if (request.itemKey.itemId == INVALID_TRACK_ITEM) {
+        if (isNavigationOnTrack(request.itemKey.trackId)) {
+            MYLOG() << "skipped, the navigation is already on the track " << request.itemKey.trackId;
+            m_pendingNavigation.reset();
+            return;
+        }
+
+        control = findFirstEnabledControl(panels.track);
+    } else {
+        const QString controlName = QString::number(request.itemKey.itemId);
+        for (const muse::ui::INavigationControl* candidate : panels.items->controls()) {
+            if (candidate && candidate->enabled() && candidate->name() == controlName) {
+                control = candidate;
+                break;
+            }
+        }
+    }
+
+    if (!control) {
+        return;
+    }
+
+    m_pendingNavigation.reset();
+
+    activateNavigation(control, request.highlight);
+}
+
 void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 {
     tracksNavigationController()->setFocusedTrack(trackId.toInt(), false /*highlight*/);
@@ -543,6 +587,8 @@ void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 void TrackNavigationModel::cleanup()
 {
     MYLOG() << "====";
+
+    m_pendingNavigation.reset();
 
     disableDefaultNavigation();
 
