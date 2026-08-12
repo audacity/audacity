@@ -11,12 +11,12 @@
 #include "trackedittypes.h"
 
 namespace au::trackedit {
-class ITracksViewController : MODULE_EXPORT_INTERFACE
+class ITracksViewRequestsService : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(ITracksViewController)
+    INTERFACE_ID(ITracksViewRequestsService)
 
 public:
-    virtual ~ITracksViewController() = default;
+    virtual ~ITracksViewRequestsService() = default;
 
     //! NOTE Set when a label should enter title edit mode; the view consumes
     //! the request once the label item exists, whenever that happens

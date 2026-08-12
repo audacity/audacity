@@ -19,7 +19,7 @@
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
 #include "spectrogram/ispectraleffectsregister.h"
-#include "../itracksviewcontroller.h"
+#include "../itracksviewrequestsservice.h"
 #include "../iprojecthistory.h"
 #include "../iselectioncontroller.h"
 #include "../itrackeditconfiguration.h"
@@ -46,7 +46,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::ContextInject<trackedit::ISelectionController> selectionController { this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
-    muse::ContextInject<trackedit::ITracksViewController> tracksViewController { this };
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
 
@@ -199,6 +199,7 @@ private:
     void changeTrackView(const muse::actions::ActionQuery&, TrackViewType);
 
     void addLabel();
+    void renameSelectedItem();
 
     void labelDeleteMulti(const muse::actions::ActionData& args);
     void labelCutMulti(const muse::actions::ActionData& args);
