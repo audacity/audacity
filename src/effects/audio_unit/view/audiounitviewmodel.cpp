@@ -3,14 +3,17 @@
  */
 #include "audiounitviewmodel.h"
 
+#include <future>
 #include <map>
 #include <memory>
 #include <optional>
+#include <thread>
 #include <utility>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <dispatch/dispatch.h>
+#include <pthread.h>
 
 #include "au3-effects/EffectManager.h"
 #include "au3-effects/Effect.h"
@@ -22,6 +25,38 @@
 #include "log.h"
 
 namespace au::effects {
+namespace {
+//! Dedicated thread on whose run loop AudioUnit event listeners live.
+//! Parameter notifications are delivered and the listeners are disposed
+//! there, so the main thread is never part of the listener's lifecycle:
+//! disposing a listener away from its run loop leaves its delivery timer
+//! scheduled and firing into an empty callback, while disposing on the
+//! main thread deadlocks when an in-flight notification holds the listener
+//! lock during a blocking request to the plugin's hosting service.
+CFRunLoopRef auEventListenerRunLoop()
+{
+    static const CFRunLoopRef runLoop = [] {
+        std::promise<CFRunLoopRef> promise;
+        std::thread thread([&promise] {
+            pthread_setname_np("AudioUnitEventListener");
+
+            //! NOTE An unsignaled source keeps the run loop from returning
+            CFRunLoopSourceContext sourceContext {};
+            CFRunLoopSourceRef source = CFRunLoopSourceCreate(kCFAllocatorDefault, 0, &sourceContext);
+            CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode);
+            CFRelease(source);
+
+            promise.set_value(CFRunLoopGetCurrent());
+            CFRunLoopRun();
+        });
+        thread.detach();
+        return promise.get_future().get();
+    }();
+
+    return runLoop;
+}
+}
+
 AudioUnitViewModel::AudioUnitViewModel(QObject* parent, int instanceId)
     : AbstractEffectViewModel(parent, instanceId)
 {}
@@ -112,15 +147,17 @@ void AudioUnitViewModel::DisposeListenerAsync(AUEventListenerRef listener, std::
         return;
     }
 
-    // AUListenerDispose can wait for the plugin's hosting service, and the
-    // service may be waiting for us - so calling it here would deadlock.
-    // Dispose in the background instead. The context stays alive until the
-    // dispose is done; a callback arriving in the meantime sees a null
-    // viewModel and does nothing.
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^ {
+    // Dispose on the listener run loop, where the listener and its delivery
+    // timer live. If a notification is in flight, only that thread waits for
+    // it; the main thread stays available. The context stays alive until the
+    // dispose runs; a callback arriving in the meantime sees a null viewModel
+    // and does nothing.
+    CFRunLoopRef runLoop = auEventListenerRunLoop();
+    CFRunLoopPerformBlock(runLoop, kCFRunLoopDefaultMode, ^ {
             AUListenerDispose(listener);
             (void)context;
         });
+    CFRunLoopWakeUp(runLoop);
 }
 
 void AudioUnitViewModel::deinit()
@@ -184,10 +221,21 @@ void AudioUnitViewModel::EventListenerCallback(void* inCallbackRefCon, void* inO
 {
     UNUSED(inObject);
     UNUSED(inEventHostTime);
-    auto* context = static_cast<EventListenerContext*>(inCallbackRefCon);
-    if (context->viewModel) {
-        context->viewModel->EventListener(inEvent, inParameterValue);
+
+    // Called on the listener run loop; the view model lives on the main
+    // thread, so hand the event over
+    auto* rawContext = static_cast<EventListenerContext*>(inCallbackRefCon);
+    std::shared_ptr<EventListenerContext> context = rawContext->self.lock();
+    if (!context) {
+        return;
     }
+
+    const AudioUnitEvent event = *inEvent;
+    dispatch_async(dispatch_get_main_queue(), ^ {
+            if (context->viewModel) {
+                context->viewModel->EventListener(&event, inParameterValue);
+            }
+        });
 }
 
 void au::effects::AudioUnitViewModel::EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue)
@@ -307,8 +355,9 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     // Register a callback with the audio unit
     m_listenerContext = std::make_shared<EventListenerContext>();
     m_listenerContext->viewModel = this;
+    m_listenerContext->self = m_listenerContext;
     AUEventListenerRef eventListenerRef{};
-    if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext.get(), CFRunLoopGetCurrent(),
+    if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext.get(), auEventListenerRunLoop(),
                               kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef)) {
         DisposeListenerAsync(nullptr, std::move(m_listenerContext));
         return nullptr;

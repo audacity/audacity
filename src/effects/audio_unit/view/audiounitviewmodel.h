@@ -57,6 +57,7 @@ private:
 
     struct EventListenerContext {
         AudioUnitViewModel* viewModel = nullptr;
+        std::weak_ptr<EventListenerContext> self;
     };
 
     static void EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent, UInt64 inEventHostTime,
