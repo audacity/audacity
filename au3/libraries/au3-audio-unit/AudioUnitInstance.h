@@ -88,6 +88,7 @@ private:
     const wxString& mIdentifier; // for debug messages only
     const size_t mBlockSize;
     const bool mUseLatency;
+    double mInitializedSampleRate = 0.0;
     std::string mLastError;
     std::atomic<bool> mRealtimeErrorReported{ false };
 };
