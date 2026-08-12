@@ -121,12 +121,32 @@ PreferencesPage {
 
         SeparatorLine {}
 
+        CrashReportsSection {
+            sendCrashReports: usageInfoModel.sendCrashReports
+            privacyPolicyUrl: updateModel.privacyPolicyUrl()
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
+
+            onSendCrashReportsChangeRequested: function (send) {
+                usageInfoModel.sendCrashReports = send
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {}
+
         UsageInfoSection {
             sendAnonymousUsageInfo: usageInfoModel.sendAnonymousUsageInfo
             privacyPolicyUrl: updateModel.privacyPolicyUrl()
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 4
+            navigation.order: root.navigationOrderStart + 5
 
             onSendAnonymousUsageInfoChangeRequested: function (send) {
                 usageInfoModel.sendAnonymousUsageInfo = send
@@ -145,7 +165,7 @@ PreferencesPage {
             id: temporaryFilesSection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 5
+            navigation.order: root.navigationOrderStart + 6
 
             temporaryPath: preferencesModel.temporaryDir
 
@@ -172,7 +192,7 @@ PreferencesPage {
             id: ffmpegLibrarySection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 6
+            navigation.order: root.navigationOrderStart + 7
 
             onFocusChanged: {
                 if (activeFocus) {
