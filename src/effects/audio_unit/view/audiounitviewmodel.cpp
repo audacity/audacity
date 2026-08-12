@@ -107,7 +107,9 @@ void AudioUnitViewModel::doInit()
         return;
     }
 
-    settingsToView();
+    if (!m_instance->IsInitialized()) {
+        settingsToView();
+    }
 
     setTitle(effect->GetSymbol().Msgid().translated());
     connect(&m_settingsTimer, &QTimer::timeout, this, [this]() {
@@ -187,15 +189,9 @@ void au::effects::AudioUnitViewModel::settingsToView()
         return;
     }
 
-    if (m_instance->StoreSettings(m_instance->mProcessor, AudioUnitInstance::GetSettings(m_settingsAccess->Get()))) {
-        AudioUnitParameter aup = {};
-        aup.mAudioUnit = m_instance->GetAudioUnit();
-        aup.mParameterID = kAUParameterListener_AnyParameter;
-        aup.mScope = kAudioUnitScope_Global;
-        aup.mElement = 0;
-        AUParameterListenerNotify(NULL, NULL, &aup);
-    }
-    return;
+    m_instance->Initialize();
+
+    m_instance->StoreSettings(m_instance->mProcessor, AudioUnitInstance::GetSettings(m_settingsAccess->Get()));
 }
 
 void au::effects::AudioUnitViewModel::settingsFromView()
