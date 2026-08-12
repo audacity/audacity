@@ -54,6 +54,10 @@ ColumnLayout {
                 return prv.privacySubtitle.arg("<a href=\"%1\">%2</a>".arg(privacyUrl.url).arg(qsTrc("appshell/about", "privacy policy")))
             }
             font: ui.theme.bodyFont
+
+            onLinkActivated: function (link) {
+                Qt.openUrlExternally(link)
+            }
         }
     }
 
