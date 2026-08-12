@@ -1,5 +1,7 @@
 #include "dropcontroller.h"
 
+#include "log.h"
+
 using namespace au::projectscene;
 
 namespace {
@@ -16,16 +18,22 @@ void DropController::probeAudioFiles(const QStringList& fileUrls)
 {
     m_lastDraggedUrls.clear();
     m_lastDraggedFilesInfo.clear();
+    m_lastDraggedLabelPaths.clear();
 
     std::vector<muse::io::path_t> localPaths;
     localPaths.reserve(fileUrls.size());
 
     const auto exts = importer()->supportedExtensions();
+    const auto labelExts = labelsImporter()->supportedExtensions();
     for (const auto& fileUrl : fileUrls) {
         const QUrl url(fileUrl);
         QString local = url.isLocalFile() ? url.toLocalFile() : fileUrl;
         muse::io::path_t path = muse::io::path_t(local);
-        if (muse::contains(exts, muse::io::suffix(path))) {
+        //! NOTE: the audio importer's extension list includes the label extensions,
+        //! so check for label files first
+        if (muse::contains(labelExts, muse::io::suffix(path))) {
+            m_lastDraggedLabelPaths.push_back(path);
+        } else if (muse::contains(exts, muse::io::suffix(path))) {
             localPaths.push_back(path);
             m_lastDraggedUrls.push_back(fileUrl);
         }
@@ -96,6 +104,7 @@ void DropController::endImportSession()
     m_trackCountBeforeImport = -1;
     m_lastDraggedFilesInfo.clear();
     m_lastDraggedUrls.clear();
+    m_lastDraggedLabelPaths.clear();
 }
 
 int DropController::requiredTracksCount() const
@@ -307,6 +316,17 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
 
 void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime)
 {
+    for (const muse::io::path_t& labelPath : m_lastDraggedLabelPaths) {
+        muse::Ret ret = labelsImporter()->importData(labelPath);
+        if (!ret) {
+            LOGE() << ret.toString();
+        }
+    }
+
+    if (m_lastDraggedFilesInfo.empty() || trackIds.empty()) {
+        return;
+    }
+
     std::vector<muse::io::path_t> localPaths;
 
     // NOTE: importer only needs the first trackId (out of many) for multichannel files

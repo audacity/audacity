@@ -33,8 +33,9 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
 
     auto& tracks = Au3TrackList::Get(*project);
 
-    // Create a new label track for imported labels
-    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    // Create a new label track for imported labels, named after the imported file
+    const wxString trackName = wxFromPath(muse::io::filename(filePath, false /* includingExtension */));
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks, trackName);
 
     // Import labels into the track
     labelTrack->Import(textFile, format);

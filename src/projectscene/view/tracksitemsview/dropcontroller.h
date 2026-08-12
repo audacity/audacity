@@ -7,6 +7,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "importexport/import/iimporter.h"
+#include "importexport/labels/ilabelsimporter.h"
 #include "trackedit/itracksinteraction.h"
 
 namespace au::projectscene {
@@ -16,6 +17,7 @@ class DropController : public QObject, public muse::Contextable
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<importexport::IImporter> importer{ this };
+    muse::ContextInject<importexport::ILabelsImporter> labelsImporter{ this };
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
 
 public:
@@ -35,6 +37,7 @@ public:
 private:
     std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;
     QStringList m_lastDraggedUrls;
+    std::vector<muse::io::path_t> m_lastDraggedLabelPaths;
     int m_trackCountBeforeImport = -1;
 };
 }

@@ -324,11 +324,19 @@ void LabelsTableViewModel::exportLabels()
 
 void LabelsTableViewModel::importLabels()
 {
-    muse::io::path_t importPath = selectFileForImport();
-    Ret ret = labelsImporter()->importData(importPath);
-    if (!ret) {
-        LOGE() << ret.toString();
-    } else {
+    io::paths_t importPaths = selectFilesForImport();
+
+    bool imported = false;
+    for (const io::path_t& importPath : importPaths) {
+        Ret ret = labelsImporter()->importData(importPath);
+        if (!ret) {
+            LOGE() << ret.toString();
+        } else {
+            imported = true;
+        }
+    }
+
+    if (imported) {
         // reload
         load();
     }
@@ -627,16 +635,16 @@ io::path_t LabelsTableViewModel::selectFileForExport()
     return filePath;
 }
 
-io::path_t LabelsTableViewModel::selectFileForImport()
+io::paths_t LabelsTableViewModel::selectFilesForImport()
 {
     std::vector<std::string> filter = importExportFilter(labelsImportExportConfiguration()->fileFilter());
     io::path_t defaultDir = labelsImportExportConfiguration()->labelsDirectoryPath();
 
-    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
+    io::paths_t filePaths = interactive()->selectOpeningFilesSync(muse::trc("global", "Open"), defaultDir, filter);
 
-    if (!filePath.empty()) {
-        labelsImportExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+    if (!filePaths.empty()) {
+        labelsImportExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePaths.front()));
     }
 
-    return filePath;
+    return filePaths;
 }
