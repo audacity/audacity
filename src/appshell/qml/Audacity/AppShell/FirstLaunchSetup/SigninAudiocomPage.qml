@@ -274,6 +274,10 @@ Page {
                         anchors.fill: parent
                         text: prv.forgotPasswordLink.arg(prv.forgotPasswordUrl)
                         textFormat: Text.RichText
+
+                        onLinkActivated: function (link) {
+                            Qt.openUrlExternally(link)
+                        }
                     }
                 }
             }

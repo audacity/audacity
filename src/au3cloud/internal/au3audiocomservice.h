@@ -23,9 +23,7 @@
 #include "importexport/export/iexporter.h"
 #include "context/iglobalcontext.h"
 
-#include "au3-cloud-audiocom/CloudSyncService.h"
 #include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
-#include "au3-concurrency/concurrency/CancellationContext.h"
 #include "au3-utility/Observer.h"
 
 #include "au3cloud/cloudtypes.h"
@@ -86,12 +84,11 @@ public:
 
 private:
     muse::ProgressPtr createSyncProgress();
-    bool isSnapshotUpToDate(
-        const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData,
-        audacity::cloud::audiocom::sync::ProgressCallback progressCallback, audacity::concurrency::CancellationContextPtr context);
-    std::optional<std::string> getHeadSnapshotID(
-        const std::string& projectId, audacity::cloud::audiocom::sync::ProgressCallback progressCallback,
-        audacity::concurrency::CancellationContextPtr context);
+    void startNewSnapshotUpload(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress, const std::string& name,
+                                UploadMode uploadMode, std::function<bool()> projectSaveCallback);
+    void resumePendingSnapshotOrStartNew(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress,
+                                         const audacity::cloud::audiocom::sync::DBProjectData& pendingSnapshotData, const std::string& name,
+                                         UploadMode uploadMode, std::function<bool()> projectSaveCallback);
     std::optional<ProjectList::Item> findCachedProject(const std::string& projectId) const;
     muse::Ret checkUnsyncedProject(const std::string& cloudProjectId) const;
 

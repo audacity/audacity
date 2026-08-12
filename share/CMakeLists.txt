@@ -3,7 +3,9 @@
 #
 
 add_subdirectory(locale)
-add_subdirectory(testflowscripts)
+if (MUSE_MODULE_TESTFLOW)
+    add_subdirectory(testflowscripts)
+endif()
 add_subdirectory(icons)
 add_subdirectory(workspaces)
 
