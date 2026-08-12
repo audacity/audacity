@@ -344,9 +344,16 @@ bool AudioUnitInstance::RealtimeAddProcessor(
     return true;
 }
 
-bool AudioUnitInstance::RealtimeFinalize(EffectSettings&) noexcept
+bool AudioUnitInstance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
     return GuardedCall<bool>([&]{
+        // Adopt the values the plug-in has been processing with, which include
+        // whatever the user changed in its own editor. Effects that don't use
+        // messages get this for free, as the realtime state copies the worker
+        // settings back; a message-based one has to bring them over itself, or
+        // the next instance starts from the values these replace.
+        FetchSettings(GetSettings(settings), true, true);
+
         for (auto& pSlave : mSlaves) {
             pSlave->ProcessFinalize();
         }
