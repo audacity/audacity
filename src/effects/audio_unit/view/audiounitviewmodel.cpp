@@ -212,14 +212,21 @@ void au::effects::AudioUnitViewModel::checkSettingChangesFromUi()
         m_settingsAccess->ModifySettings([&](EffectSettings& settings){
             auto& mySettings = AudioUnitInstance::GetSettings(settings);
             for (auto [ID, value] : m_toUpdate) {
-                if (auto& pair = mySettings.values[ID]; pair.has_value()) {
+                auto& pair = mySettings.values[ID];
+                if (pair.has_value()) {
                     pair->second = value;
+                } else {
+                    pair.emplace(mySettings.Intern(wxString {}), value);
                 }
             }
 
             m_instance->StoreSettings(m_instance->mProcessor, mySettings);
 
-            return nullptr;
+            //! NOTE A message marks the settings as changed for the realtime
+            //! state; without it the change is not carried over to the stored
+            //! settings when processing is not running, and the effect falls
+            //! back to its previous values the next time it is initialized
+            return m_instance->MakeMessage();
         });
         m_toUpdate.clear();
         m_settingsAccess->Flush();
