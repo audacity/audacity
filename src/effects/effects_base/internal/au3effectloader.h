@@ -8,6 +8,7 @@
 #include "au3-components/ComponentInterface.h"
 
 #include "framework/audioplugins/iknownaudiopluginsregister.h"
+#include "framework/audioplugins/iaudiopluginsloadguard.h"
 #include "framework/global/modularity/ioc.h"
 
 class PluginProvider;
@@ -17,6 +18,7 @@ class Au3EffectLoader : public IEffectLoader
 {
 public:
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
+    muse::GlobalInject<muse::audioplugins::IAudioPluginsLoadGuard> loadGuard;
 
 public:
     Au3EffectLoader(PluginProvider& provider, EffectFamily family);
