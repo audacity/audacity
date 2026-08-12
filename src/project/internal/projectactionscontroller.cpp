@@ -578,45 +578,47 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
         return true;
     }
 
-    bool result = true;
-
     if (project->hasUnsavedChanges()) {
-        IInteractive::Button btn = askAboutSavingProject(project);
+        const IInteractive::Button btn = askAboutSavingProject(project);
 
         if (btn == IInteractive::Button::Cancel) {
-            result = false;
-        } else if (btn == IInteractive::Button::Save) {
-            result = saveProject();
-        } else if (btn == IInteractive::Button::DontSave) {
-            result = true;
+            return false;
         }
-    }
 
-    if (result && project->isCloudProject()) {
-        result = askAboutStoppingCloudSync();
-    }
+        if (btn == IInteractive::Button::Save) {
+            if (!saveProject()) {
+                return false;
+            }
 
-    if (result) {
-        interactive()->closeAllDialogsSync();
-
-        project->close();
-
-        globalContext()->setCurrentProject(nullptr);
-
-        if (quitApp) {
-            //! NOTE: we need to call `quit` in the next event loop due to controlling the lifecycle of this method
-            muse::async::Async::call(this, [this](){
-                dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
-            });
-        } else {
-            Ret ret = openPageIfNeed(HOME_PAGE_URI);
-            if (!ret) {
-                LOGE() << ret.toString();
+            if (audioComService()->syncingInProgressChanged().val) {
+                return false;
             }
         }
     }
 
-    return result;
+    if (project->isCloudProject() && !askAboutStoppingCloudSync()) {
+        return false;
+    }
+
+    interactive()->closeAllDialogsSync();
+
+    project->close();
+
+    globalContext()->setCurrentProject(nullptr);
+
+    if (quitApp) {
+        //! NOTE: we need to call `quit` in the next event loop due to controlling the lifecycle of this method
+        muse::async::Async::call(this, [this](){
+            dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
+        });
+    } else {
+        Ret ret = openPageIfNeed(HOME_PAGE_URI);
+        if (!ret) {
+            LOGE() << ret.toString();
+        }
+    }
+
+    return true;
 }
 
 bool ProjectActionsController::askAboutStoppingCloudSync()
