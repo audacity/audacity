@@ -24,3 +24,18 @@ void UsageInfoPreferencesModel::setSendAnonymousUsageInfo(bool allow)
     usageInfo()->setSendAnonymousUsageInfo(allow);
     emit sendAnonymousUsageInfoChanged(allow);
 }
+
+bool UsageInfoPreferencesModel::sendCrashReports() const
+{
+    return diagnosticsConfiguration()->isDumpUploadAllowed();
+}
+
+void UsageInfoPreferencesModel::setSendCrashReports(bool send)
+{
+    if (send == sendCrashReports()) {
+        return;
+    }
+
+    diagnosticsConfiguration()->setIsDumpUploadAllowed(send);
+    emit sendCrashReportsChanged(send);
+}
