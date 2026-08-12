@@ -29,6 +29,8 @@ public:
 
     bool Initialize();
 
+    bool IsInitialized() const { return static_cast<bool>(mInitialization); }
+
     void EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue);
 
     // Override the virtual function to allocate an empty message
