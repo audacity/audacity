@@ -137,7 +137,8 @@ void au::effects::AudioUnitViewModel::doStopPreview()
     executionScenario()->stopPreview();
 }
 
-void AudioUnitViewModel::DisposeListenerAsync(AUEventListenerRef listener, std::shared_ptr<EventListenerContext> context)
+void AudioUnitViewModel::DisposeListenerAsync(AUEventListenerRef listener, std::shared_ptr<EventListenerContext> context,
+                                              std::shared_ptr<AudioUnitInstance> instance)
 {
     if (context) {
         context->viewModel = nullptr;
@@ -152,10 +153,23 @@ void AudioUnitViewModel::DisposeListenerAsync(AUEventListenerRef listener, std::
     // it; the main thread stays available. The context stays alive until the
     // dispose runs; a callback arriving in the meantime sees a null viewModel
     // and does nothing.
+    //
+    // The instance is held until the dispose completes: AudioComponentInstance
+    // Dispose spins until the instance has no live listeners, so releasing the
+    // instance only after AUListenerDispose keeps the component teardown from
+    // overlapping the listener teardown - overlapping them deadlocks the
+    // out-of-process hosting service.
     CFRunLoopRef runLoop = auEventListenerRunLoop();
     CFRunLoopPerformBlock(runLoop, kCFRunLoopDefaultMode, ^ {
             AUListenerDispose(listener);
-            (void)context;
+
+            // Hand the strong references back to the main thread. Dropping the
+            // last one here would destroy the instance on this thread, and its
+            // destruction reaches state that only the main thread may touch.
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                (void)context;
+                (void)instance;
+            });
         });
     CFRunLoopWakeUp(runLoop);
 }
@@ -164,7 +178,7 @@ void AudioUnitViewModel::deinit()
 {
     assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
 
-    DisposeListenerAsync(m_eventListenerRef.release(), std::move(m_listenerContext));
+    DisposeListenerAsync(m_eventListenerRef.release(), std::move(m_listenerContext), m_instance);
 }
 
 void au::effects::AudioUnitViewModel::settingsToView()
@@ -313,6 +327,10 @@ void au::effects::AudioUnitViewModel::fetchSettingsAsync()
         });
 
             dispatch_async(dispatch_get_main_queue(), ^ {
+                // Capture the instance so its last reference is released on the
+                // main thread rather than on the queue this fetch ran on.
+                (void)instance;
+
                 AudioUnitViewModel* viewModel = context->viewModel;
                 if (!viewModel) {
                     return;
@@ -359,7 +377,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     AUEventListenerRef eventListenerRef{};
     if (AUEventListenerCreate(AudioUnitViewModel::EventListenerCallback, m_listenerContext.get(), auEventListenerRunLoop(),
                               kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef)) {
-        DisposeListenerAsync(nullptr, std::move(m_listenerContext));
+        DisposeListenerAsync(nullptr, std::move(m_listenerContext), m_instance);
         return nullptr;
     }
 
@@ -379,7 +397,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
         for (const auto& ID : parameters) {
             parameter.mParameterID = ID;
             if (AUEventListenerAddEventType(result.get(), this, &event)) {
-                DisposeListenerAsync(result.release(), std::move(m_listenerContext));
+                DisposeListenerAsync(result.release(), std::move(m_listenerContext), m_instance);
                 return nullptr;
             }
             AudioUnitParameterValue value;
@@ -399,7 +417,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
         event.mArgument.mProperty = AudioUnitUtils::Property{
             unit, type, kAudioUnitScope_Global };
         if (AUEventListenerAddEventType(result.get(), this, &event)) {
-            DisposeListenerAsync(result.release(), std::move(m_listenerContext));
+            DisposeListenerAsync(result.release(), std::move(m_listenerContext), m_instance);
             return nullptr;
         }
     }
