@@ -172,9 +172,6 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                           double sampleRate, ChannelNames chanMap)
 {
     mLastError.clear();
-    if (!StoreSettings(mProcessor, GetSettings(settings))) {
-        return false;
-    }
 
     mInputList
         =PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
@@ -186,43 +183,57 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                 // accumulate the number of frames processed so far
     mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-    mInitialization.reset();
-    // Redo this with the correct sample rate, not the arbirary 44100 that the
-    // effect used
-    auto ins = mAudioIns;
-    auto outs = mAudioOuts;
-    if (!SetRateAndChannels(sampleRate, mIdentifier)) {
-        return false;
-    }
+    //! NOTE Reinitialize only when the sample rate actually changed.
+    const bool needsReinitialize = !mInitialization || mInitializedSampleRate != sampleRate;
+    if (needsReinitialize) {
+        mInitialization.reset();
+        // Redo this with the correct sample rate, not the arbirary 44100 that the
+        // effect used
+        auto ins = mAudioIns;
+        auto outs = mAudioOuts;
+        if (!SetRateAndChannels(sampleRate, mIdentifier)) {
+            return false;
+        }
 
-    // Must be set, not just queried: out-of-process plug-ins size their
-    // shared render buffers from this property, and rendering without it
-    // fails with kAudioUnitErr_RenderTimeout
-    if (SetProperty(kAudioUnitProperty_MaximumFramesPerSlice,
-                    static_cast<UInt32>(mBlockSize))) {
-        wxLogError("%ls didn't accept maximum frames per slice\n", mIdentifier.wx_str());
-        mLastError = TranslatableString("audio-unit",
-                                        "The plugin “%1” does not support the required block size")
-                     .arg(mProcessor.GetName()).Translation();
-        return false;
-    }
+        // Must be set, not just queried: out-of-process plug-ins size their
+        // shared render buffers from this property, and rendering without it
+        // fails with kAudioUnitErr_RenderTimeout
+        if (SetProperty(kAudioUnitProperty_MaximumFramesPerSlice,
+                        static_cast<UInt32>(mBlockSize))) {
+            wxLogError("%ls didn't accept maximum frames per slice\n", mIdentifier.wx_str());
+            mLastError = TranslatableString("audio-unit",
+                                            "The plugin “%1” does not support the required block size")
+                         .arg(mProcessor.GetName()).Translation();
+            return false;
+        }
 
-    if (!Initialize()) {
-        return false;
-    }
+        if (!Initialize()) {
+            return false;
+        }
 
-    if (ins != mAudioIns || outs != mAudioOuts) {
-        // A change of channels with changing rate?  This is unexpected!
-        ins = mAudioIns;
-        outs = mAudioOuts;
-        return false;
-    }
+        if (ins != mAudioIns || outs != mAudioOuts) {
+            // A change of channels with changing rate?  This is unexpected!
+            ins = mAudioIns;
+            outs = mAudioOuts;
+            return false;
+        }
 
-    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
-                    AudioUnitUtils::RenderCallback { RenderCallback, this },
-                    kAudioUnitScope_Input)) {
-        wxLogError("Setting input render callback failed.\n");
-        return false;
+        if (SetProperty(kAudioUnitProperty_SetRenderCallback,
+                        AudioUnitUtils::RenderCallback { RenderCallback, this },
+                        kAudioUnitScope_Input)) {
+            wxLogError("Setting input render callback failed.\n");
+            return false;
+        }
+
+        mInitializedSampleRate = sampleRate;
+
+        // Store once the unit is initialized: out-of-process plug-ins discard
+        // parameter values set before AudioUnitInitialize. A unit that stayed
+        // initialized is left alone - it is already processing with the values
+        // the user set, which the stored copy may lag behind.
+        if (!StoreSettings(mProcessor, GetSettings(settings))) {
+            return false;
+        }
     }
 
     if (AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0)) {
