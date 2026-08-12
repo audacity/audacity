@@ -72,14 +72,25 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect& effect,
 
 AudioUnitInstance::~AudioUnitInstance()
 {
-    // Uninitializing an out-of-process instance is a blocking request to the
-    // hosting service, so it is taken off this thread just like the dispose
-    // in ~AudioUnitWrapper, which runs after this on the same serial queue.
-    if (AudioUnit unit = mInitialization.release()) {
-        dispatch_async(TeardownQueue(), ^ {
-            AudioUnitUninitialize(unit);
-        });
+    // Tearing an instance down is main-thread work: for an out-of-process
+    // plug-in AudioUnitUninitialize dismantles the shared render pipe, and
+    // disposing a plug-in removes the run loop timers it registered when it
+    // was created. Both trip over a thread that owns neither. The destructor
+    // itself can run on any thread, so hand the work to the main queue
+    // instead of doing it here. Both handles are released so the base
+    // ~AudioUnitWrapper does not dispose a second time.
+    const bool wasInitialized = mInitialization.release() != nullptr;
+    AudioUnit unit = mUnit.release();
+    if (!unit) {
+        return;
     }
+
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        if (wasInitialized) {
+            AudioUnitUninitialize(unit);
+        }
+        AudioComponentInstanceDispose(unit);
+    });
 }
 
 size_t AudioUnitInstance::InitialBlockSize() const

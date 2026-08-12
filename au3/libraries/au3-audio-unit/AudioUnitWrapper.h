@@ -108,10 +108,6 @@ struct AudioUnitWrapper
 
     ~AudioUnitWrapper();
 
-    //! Serial queue on which AudioUnit instances are uninitialized and
-    //! disposed asynchronously
-    static dispatch_queue_t TeardownQueue();
-
     // Supply most often used values as defaults for scope and element
     template<typename T>
     OSStatus GetFixedSizeProperty(AudioUnitPropertyID inID, T& property,
