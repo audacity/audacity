@@ -3,7 +3,10 @@
 */
 #include "au3cloudactionscontroller.h"
 
+#include <string_view>
 #include <variant>
+
+#include <QUrl>
 
 #include "framework/actions/actiontypes.h"
 #include "framework/global/types/uri.h"
@@ -24,6 +27,20 @@ const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/
 const muse::actions::ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("audacity://cloud/open-profile-page");
 
 constexpr const char* createAccountModeParam = "isCreateAccountMode";
+
+std::string redactUrlToken(std::string url)
+{
+    constexpr std::string_view tokenParam = "token=";
+    const size_t valueStart = url.find(tokenParam);
+    if (valueStart == std::string::npos) {
+        return url;
+    }
+
+    const size_t from = valueStart + tokenParam.size();
+    const size_t to = url.find('&', from);
+    url.replace(from, (to == std::string::npos ? url.size() : to) - from, "<redacted>");
+    return url;
+}
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
@@ -178,5 +195,14 @@ void Au3CloudActionsController::openCloudProfilePage()
         return;
     }
 
-    platformInteractive()->openUrl(url);
+    const QUrl parsedUrl(QString::fromStdString(url));
+    LOGW() << "Opening cloud profile page: url=" << redactUrlToken(url)
+           << ", parsedValid=" << parsedUrl.isValid()
+           << ", scheme=" << parsedUrl.scheme()
+           << ", host=" << parsedUrl.host();
+
+    const muse::Ret ret = platformInteractive()->openUrl(url);
+    if (!ret) {
+        LOGW() << "Failed to open cloud profile page URL: " << ret.toString();
+    }
 }

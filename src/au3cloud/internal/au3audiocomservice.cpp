@@ -837,6 +837,11 @@ std::string Au3AudioComService::getCloudProfilePage() const
     const auto userId = GetUserService().GetUserId().ToStdString();
     const auto userSlug = GetUserService().GetUserSlug().ToStdString();
     const auto profilePage = serviceConfig.GetProfilePagePath(userSlug, AudiocomTrace::OpenFromCloudMenu);
+
+    LOGW() << "getCloudProfilePage: userId=" << (userId.empty() ? "<empty>" : userId)
+           << ", userSlug=" << (userSlug.empty() ? "<empty>" : userSlug)
+           << ", profilePagePath=" << profilePage;
+
     return oauthService.MakeAudioComAuthorizeURL(userId, profilePage);
 }
 
