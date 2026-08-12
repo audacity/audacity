@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <QPointer>
 #include <QQuickItem>
 
@@ -78,6 +80,12 @@ private:
         muse::ui::NavigationPanel* items = nullptr;
     };
 
+    struct NavigationRequest
+    {
+        TrackItemKey itemKey;
+        bool highlight = false;
+    };
+
     void load();
     void cleanup();
     void clearPanels();
@@ -92,6 +100,8 @@ private:
     QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
     void updateNavigationActive(const muse::ui::INavigationPanel* activePanel);
     void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);
+    void requestNavigation(const TrackItemKey& itemKey, bool highlight);
+    void updatePendingNavigation();
 
     void addDefaultNavigation();
     void disableDefaultNavigation();
@@ -113,6 +123,7 @@ private:
     QPointer<QQuickItem> m_trackViewItem;
 
     bool m_activateDefaultNavigationRequested = false;
+    std::optional<NavigationRequest> m_pendingNavigation;
     bool m_isFocusSyncing = false;
 
     int m_lastActivePanelOrder = -1;
