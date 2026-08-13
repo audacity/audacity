@@ -34,7 +34,7 @@ struct AVCodecFactories final
 {
    std::unique_ptr<AVCodecContextWrapper> (*CreateAVCodecContextWrapper)(const FFmpegFunctions&, AVCodecContext*) = nullptr;
    std::unique_ptr<AVCodecContextWrapper> (*CreateAVCodecContextWrapperFromCodec)(const FFmpegFunctions&, std::unique_ptr<AVCodecWrapper>) = nullptr;
-   std::unique_ptr<AVCodecWrapper> (*CreateAVCodecWrapper) (const AVCodec*) = nullptr;
+   std::unique_ptr<AVCodecWrapper> (*CreateAVCodecWrapper) (const FFmpegFunctions&, const AVCodec*) = nullptr;
 
    //! @post return value is not null
    std::unique_ptr<AVPacketWrapper> (*CreateAVPacketWrapper) (const FFmpegFunctions&) = nullptr;

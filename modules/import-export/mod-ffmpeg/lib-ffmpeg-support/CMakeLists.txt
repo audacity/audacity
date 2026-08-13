@@ -96,6 +96,13 @@ if (${_OPT}use_ffmpeg)
       impl/avformat/62/AVFormatImpl.cpp
       impl/avutil/60/AVUtilImpl.cpp
 
+      impl/ffmpeg-9.0.0-single-header.h
+      impl/avutil/61/avconfig.h
+      impl/avcodec/63/AVCodecIDLookup.cpp
+      impl/avcodec/63/AVCodecImpl.cpp
+      impl/avformat/63/AVFormatImpl.cpp
+      impl/avutil/61/AVUtilImpl.cpp
+
       # Loaders
       impl/avcodec/AVCodecFunctionsLoader.cpp
       impl/avcodec/AVCodecFunctionsLoader.h
@@ -106,6 +113,8 @@ if (${_OPT}use_ffmpeg)
 
       # not necessary here for the build, but they help browsing in an IDE:
       impl/AVCodecIDLookup.inl
+      impl/avcodec/AVCodecCapabilitiesLegacy.inl
+      impl/avcodec/AVCodecCapabilitiesQuery.inl
       impl/avcodec/AVCodecContextWrapperImpl.inl
       impl/avcodec/AVCodecWrapperImpl.inl
       impl/avcodec/AVPacketWrapperImpl.inl
