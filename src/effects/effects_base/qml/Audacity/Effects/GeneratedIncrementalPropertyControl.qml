@@ -15,6 +15,9 @@ IncrementalPropertyControl {
     signal valueCommitted(double newValue)
 
     currentValue: parameterData ? parameterData.currentValue : 0
+    // Strip the group separators formatReal adds: the base control reformats
+    // the field on every keystroke, and "1,234" breaks the validator
+    currentText: ui.df.formatReal(root.currentValue ? root.currentValue : 0.0, root.decimals).split(Qt.locale().groupSeparator).join("")
     // IntInputValidator (used when decimals is 0) has int bounds that wrap
     // when fed e.g. +/-FLT_MAX; the double validator takes any range
     function clampBoundToValidator(v) {
