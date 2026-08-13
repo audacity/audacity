@@ -447,7 +447,7 @@ FFmpegFunctions::CreateDecoder(AVCodecIDFwd codecID) const
         return {};
     }
 
-    return mPrivate->CodecFactories.CreateAVCodecWrapper(codec);
+    return mPrivate->CodecFactories.CreateAVCodecWrapper(*this, codec);
 }
 
 std::unique_ptr<AVCodecWrapper>
@@ -459,7 +459,7 @@ FFmpegFunctions::CreateEncoder(AVCodecIDFwd codecID) const
         return {};
     }
 
-    return mPrivate->CodecFactories.CreateAVCodecWrapper(codec);
+    return mPrivate->CodecFactories.CreateAVCodecWrapper(*this, codec);
 }
 
 std::unique_ptr<AVCodecWrapper>
@@ -471,7 +471,7 @@ FFmpegFunctions::CreateEncoder(const char* name) const
         return {};
     }
 
-    return mPrivate->CodecFactories.CreateAVCodecWrapper(codec);
+    return mPrivate->CodecFactories.CreateAVCodecWrapper(*this, codec);
 }
 
 std::unique_ptr<AVCodecContextWrapper>
@@ -524,7 +524,7 @@ void FFmpegFunctions::FillCodecsList()
         while ((currentCodec = av_codec_iterate(&i)))
         {
             mCodecs.emplace_back(
-                mPrivate->CodecFactories.CreateAVCodecWrapper(currentCodec));
+                mPrivate->CodecFactories.CreateAVCodecWrapper(*this, currentCodec));
         }
     } else if (av_codec_next != nullptr) {
         AVCodec* currentCodec = nullptr;
@@ -532,7 +532,7 @@ void FFmpegFunctions::FillCodecsList()
         while ((currentCodec = av_codec_next(currentCodec)) != nullptr)
         {
             mCodecs.emplace_back(
-                mPrivate->CodecFactories.CreateAVCodecWrapper(currentCodec));
+                mPrivate->CodecFactories.CreateAVCodecWrapper(*this, currentCodec));
         }
     }
 
