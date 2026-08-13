@@ -1662,6 +1662,8 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
 {
     const auto ret = openSaveProjectScenario()->showCloudOpenError(error, localPath);
 
+    std::optional<muse::Ret> retryRet;
+
     switch (ret.code()) {
     case IOpenSaveProjectScenario::RET_CODE_OPEN_LOCAL:
         doOpenProject(localPath);
@@ -1724,10 +1726,10 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
-        openCloudProject(localPath, {}, {}, true);
+        retryRet = openCloudProject(localPath, {}, {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED:
-        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
+        retryRet = openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM:
         if (!cloudProjectId.empty()) {
@@ -1737,6 +1739,23 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
     default:
         break;
     }
+
+    if (retryRet.has_value() && retryRet.value().success()) {
+        return;
+    }
+
+    if (globalContext()->currentProject()) {
+        return;
+    }
+
+    //! NOTE No project ended up open.
+    //! Close the window if multiple opened or go to home page
+    if (multiwindowsProvider()->windowCount() > 1) {
+        mainWindow()->qWindow()->close();
+        return;
+    }
+
+    openPageIfNeed(HOME_PAGE_URI);
 }
 
 void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
