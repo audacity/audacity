@@ -187,6 +187,10 @@ ColumnLayout {
 
                                 return c.role ? c.name + ", " + c.role : c.name
                             }).join("<br>")
+
+                            onLinkActivated: function (link) {
+                                Qt.openUrlExternally(link)
+                            }
                         }
                     }
                 }

@@ -100,6 +100,10 @@ ColumnLayout {
                     text: root.model.gplText()
 
                     font: ui.theme.bodyFont
+
+                    onLinkActivated: function (link) {
+                        Qt.openUrlExternally(link)
+                    }
                 }
             }
         }
