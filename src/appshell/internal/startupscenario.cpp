@@ -263,7 +263,6 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
 
     if (!configuration()->hasCompletedFirstLaunchSetup()) {
         interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
-            showWelcomePage();
             return resolve();
         });
     } else {
