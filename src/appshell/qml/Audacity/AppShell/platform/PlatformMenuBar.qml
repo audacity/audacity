@@ -19,17 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-pragma ComponentBehavior: Bound
-
-import QtQuick
-import Qt.labs.platform as PLATFORM
+import QtQuick 2.15
+import Qt.labs.platform 1.1 as PLATFORM
 
 import Audacity.AppShell
 
 Item {
-    id: root
-
     readonly property bool available: menuModel.isGlobalMenuAvailable()
 
     PLATFORM.MenuBar {
@@ -85,13 +80,6 @@ Item {
         menu.title = menuInfo.title
         menu.enabled = menuInfo.enabled
         menu.subitems = menuInfo.subitems
-
-        menuInfo.subitemsChanged.connect(function (subitems, menuId) {
-            if (menu.id === menuId) {
-                menu.subitems = subitems
-                menu.load()
-            }
-        })
     }
 
     function makeMenuItem(parentMenu, itemInfo) {
@@ -131,11 +119,11 @@ Item {
                     var isMenu = Boolean(item.subitems) && item.subitems.length > 0
 
                     if (isMenu) {
-                        let menu = root.makeMenu(item)
+                        let menu = makeMenu(item)
                         addMenu(menu)
                         menu.load()
                     } else {
-                        let menuItem = root.makeMenuItem(this, item)
+                        let menuItem = makeMenuItem(this, item)
                         addItem(menuItem)
                     }
                 }
@@ -151,15 +139,15 @@ Item {
                     let isMenu = Boolean(item.subitems) && item.subitems.length > 0
 
                     if (isMenu) {
-                        root.setUpMenu(items[i].subMenu, item)
+                        setUpMenu(items[i].subMenu, item)
                     } else {
-                        root.setUpMenuItem(items[i], item)
+                        setUpMenuItem(items[i], item)
                     }
                 }
             }
 
             onAboutToShow: {
-                update()
+                load()
             }
         }
     }
