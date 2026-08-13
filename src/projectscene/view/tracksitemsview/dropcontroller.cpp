@@ -18,10 +18,7 @@ void DropController::probeAudioFiles(const QStringList& fileUrls)
 {
     m_lastDraggedUrls.clear();
     m_lastDraggedFilesInfo.clear();
-    m_lastDraggedLabelPaths.clear();
-
-    std::vector<muse::io::path_t> localPaths;
-    localPaths.reserve(fileUrls.size());
+    m_lastDraggedLabelFiles.clear();
 
     const auto exts = importer()->supportedExtensions();
     const auto labelExts = labelsImporter()->supportedExtensions();
@@ -32,23 +29,15 @@ void DropController::probeAudioFiles(const QStringList& fileUrls)
         //! NOTE: the audio importer's extension list includes the label extensions,
         //! so check for label files first
         if (muse::contains(labelExts, muse::io::suffix(path))) {
-            m_lastDraggedLabelPaths.push_back(path);
+            m_lastDraggedLabelFiles.push_back({ path, m_lastDraggedFilesInfo.size() });
         } else if (muse::contains(exts, muse::io::suffix(path))) {
-            localPaths.push_back(path);
+            au::importexport::FileInfo fileInfo = importer()->fileInfo(path);
+            if (fileInfo.isEmpty()) {
+                continue;
+            }
+            m_lastDraggedFilesInfo.push_back(std::move(fileInfo));
             m_lastDraggedUrls.push_back(fileUrl);
         }
-    }
-
-    if (localPaths.empty()) {
-        return;
-    }
-
-    for (const auto& path : localPaths) {
-        au::importexport::FileInfo fileInfo = importer()->fileInfo(path);
-        if (fileInfo.isEmpty()) {
-            continue;
-        }
-        m_lastDraggedFilesInfo.push_back(std::move(fileInfo));
     }
 }
 
@@ -104,7 +93,7 @@ void DropController::endImportSession()
     m_trackCountBeforeImport = -1;
     m_lastDraggedFilesInfo.clear();
     m_lastDraggedUrls.clear();
-    m_lastDraggedLabelPaths.clear();
+    m_lastDraggedLabelFiles.clear();
 }
 
 int DropController::requiredTracksCount() const
@@ -316,31 +305,99 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
 
 void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime)
 {
-    for (const muse::io::path_t& labelPath : m_lastDraggedLabelPaths) {
-        muse::Ret ret = labelsImporter()->importData(labelPath);
-        if (!ret) {
-            LOGE() << ret.toString();
+    //! NOTE: audio first, so that the imported label tracks can be positioned
+    //! relative to the audio destination tracks
+    if (!m_lastDraggedFilesInfo.empty() && !trackIds.empty()) {
+        std::vector<muse::io::path_t> localPaths;
+
+        // NOTE: importer only needs the first trackId (out of many) for multichannel files
+        // while `trackIds` contains all, we may need to skip some of them
+        std::vector<trackedit::TrackId> adjustedDstTrackIds;
+        auto dstTrackIter = trackIds.begin();
+        for (const auto& info : m_lastDraggedFilesInfo) {
+            localPaths.push_back(info.path);
+
+            adjustedDstTrackIds.push_back(*dstTrackIter);
+            std::advance(dstTrackIter, info.trackCount);
         }
+
+        project::IAudacityProjectPtr prj = globalContext()->currentProject();
+
+        prj->importIntoTracks(localPaths, adjustedDstTrackIds, startTime);
     }
 
-    if (m_lastDraggedFilesInfo.empty() || trackIds.empty()) {
+    importDroppedLabelFiles(trackIds);
+}
+
+void DropController::importDroppedLabelFiles(const std::vector<trackedit::TrackId>& audioDstTrackIds)
+{
+    if (m_lastDraggedLabelFiles.empty()) {
         return;
     }
 
-    std::vector<muse::io::path_t> localPaths;
-
-    // NOTE: importer only needs the first trackId (out of many) for multichannel files
-    // while `trackIds` contains all, we may need to skip some of them
-    std::vector<trackedit::TrackId> adjustedDstTrackIds;
-    auto dstTrackIter = trackIds.begin();
+    // last destination track of each dragged audio file, used as the insertion
+    // anchor for the label track that follows it in the dropped file order
+    std::vector<trackedit::TrackId> anchorPerAudioFile;
+    size_t consumed = 0;
     for (const auto& info : m_lastDraggedFilesInfo) {
-        localPaths.push_back(info.path);
-
-        adjustedDstTrackIds.push_back(*dstTrackIter);
-        std::advance(dstTrackIter, info.trackCount);
+        if (consumed >= audioDstTrackIds.size()) {
+            break;
+        }
+        const size_t count = std::max(info.trackCount, 1);
+        const size_t last = std::min(consumed + count, audioDstTrackIds.size()) - 1;
+        anchorPerAudioFile.push_back(audioDstTrackIds[last]);
+        consumed += count;
     }
 
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-    prj->importIntoTracks(localPaths, adjustedDstTrackIds, startTime);
+    auto trackRow = [&prj](const trackedit::TrackId& trackId) -> int {
+        const std::vector<trackedit::Track> tracks = prj->trackList();
+        for (size_t i = 0; i < tracks.size(); ++i) {
+            if (tracks[i].id == trackId) {
+                return static_cast<int>(i);
+            }
+        }
+        return -1;
+    };
+
+    trackedit::TrackId previousLabelTrackId = -1;
+    size_t previousPrecedingCount = 0;
+
+    for (const LabelFile& labelFile : m_lastDraggedLabelFiles) {
+        muse::RetVal<trackedit::TrackId> rv = labelsImporter()->importData(labelFile.path);
+        if (!rv.ret) {
+            LOGE() << rv.ret.toString();
+            continue;
+        }
+
+        if (!prj || anchorPerAudioFile.empty()) {
+            // no audio dropped along: leave the label track appended at the end
+            continue;
+        }
+
+        //! NOTE: the new label track is appended at the end of the track list;
+        //! move it so that the interleaved order of the dropped files is preserved
+        const size_t precedingCount = std::min(labelFile.precedingAudioFiles, anchorPerAudioFile.size());
+
+        int anchorRow = -1;
+        bool placeBelowAnchor = true;
+        if (previousLabelTrackId != -1 && precedingCount == previousPrecedingCount) {
+            // consecutive label files: place below the previously placed label track
+            anchorRow = trackRow(previousLabelTrackId);
+        } else if (precedingCount == 0) {
+            // label file dragged before any audio file: place above the first audio track
+            anchorRow = trackRow(anchorPerAudioFile.front());
+            placeBelowAnchor = false;
+        } else {
+            anchorRow = trackRow(anchorPerAudioFile[precedingCount - 1]);
+        }
+
+        if (anchorRow >= 0) {
+            tracksInteraction()->moveTracksTo({ rv.val }, placeBelowAnchor ? anchorRow + 1 : anchorRow);
+        }
+
+        previousLabelTrackId = rv.val;
+        previousPrecedingCount = precedingCount;
+    }
 }

@@ -35,9 +35,18 @@ public:
     Q_INVOKABLE void handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime);
 
 private:
+    struct LabelFile {
+        muse::io::path_t path;
+        //! NOTE: number of dragged audio files preceding this label file,
+        //! used to preserve the interleaved order of the dropped files
+        size_t precedingAudioFiles = 0;
+    };
+
+    void importDroppedLabelFiles(const std::vector<trackedit::TrackId>& audioDstTrackIds);
+
     std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;
     QStringList m_lastDraggedUrls;
-    std::vector<muse::io::path_t> m_lastDraggedLabelPaths;
+    std::vector<LabelFile> m_lastDraggedLabelFiles;
     int m_trackCountBeforeImport = -1;
 };
 }

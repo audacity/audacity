@@ -16,7 +16,7 @@
 using namespace au::au3;
 using namespace au::importexport;
 
-muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
+muse::RetVal<au::trackedit::TrackId> Au3LabelsImporter::importData(const muse::io::path_t& filePath)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {
@@ -54,7 +54,7 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
         }
     }
 
-    return muse::make_ret(muse::Ret::Code::Ok);
+    return muse::RetVal<trackedit::TrackId>::make_ok(labelTrack->GetId());
 }
 
 std::vector<std::string> Au3LabelsImporter::supportedExtensions() const

@@ -328,9 +328,9 @@ void LabelsTableViewModel::importLabels()
 
     bool imported = false;
     for (const io::path_t& importPath : importPaths) {
-        Ret ret = labelsImporter()->importData(importPath);
-        if (!ret) {
-            LOGE() << ret.toString();
+        RetVal<trackedit::TrackId> ret = labelsImporter()->importData(importPath);
+        if (!ret.ret) {
+            LOGE() << ret.ret.toString();
         } else {
             imported = true;
         }
