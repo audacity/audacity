@@ -327,7 +327,7 @@ jobs:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
     - name: Package
-      uses: audacity/audacity-actions/package@v6
+      uses: audacity/audacity-actions/package@v7
       env:
         AUDACITY_BUILD_DIR: "${{ github.workspace }}/.build.x64"
         AUDACITY_BUILD_TYPE: ${{ env.BUILD_TYPE }}
