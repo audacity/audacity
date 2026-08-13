@@ -21,8 +21,9 @@ class ILabelsImporter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ILabelsImporter() = default;
 
-    //! NOTE: returns the id of the label track created for the imported labels
-    virtual muse::RetVal<trackedit::TrackId> importData(const muse::io::path_t& filePath) = 0;
+    //! NOTE: imports into the given label track if valid, otherwise creates a new one;
+    //! returns the id of the label track holding the imported labels
+    virtual muse::RetVal<trackedit::TrackId> importData(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId = -1) = 0;
 
     virtual std::vector<std::string> supportedExtensions() const = 0;
 };

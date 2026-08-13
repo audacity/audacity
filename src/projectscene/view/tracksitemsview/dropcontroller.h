@@ -32,6 +32,7 @@ public:
     Q_INVOKABLE void prepareConditionalTracks(int currentTrackId, int draggedFileCount);
     Q_INVOKABLE QVariantList draggedTracksIds(int currentTrackId, int draggedFilesCount);
     Q_INVOKABLE void removeDragAddedTracks(int currentTrackId, int draggedFilesCount);
+    Q_INVOKABLE void updateLabelPreviewTracks(const std::vector<trackedit::TrackId>& audioDstTrackIds);
     Q_INVOKABLE void handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime);
 
 private:
@@ -42,11 +43,16 @@ private:
         size_t precedingAudioFiles = 0;
     };
 
+    std::vector<trackedit::TrackId> computeDraggedTracksIds(int currentTrackId, int draggedFilesCount) const;
+    void positionLabelTracks(const std::vector<trackedit::TrackId>& labelTrackIds,
+                             const std::vector<trackedit::TrackId>& audioDstTrackIds);
     void importDroppedLabelFiles(const std::vector<trackedit::TrackId>& audioDstTrackIds);
 
     std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;
     QStringList m_lastDraggedUrls;
     std::vector<LabelFile> m_lastDraggedLabelFiles;
+    std::vector<trackedit::TrackId> m_dragAddedWaveTrackIds;
+    std::vector<trackedit::TrackId> m_dragAddedLabelTrackIds;
     int m_trackCountBeforeImport = -1;
 };
 }
