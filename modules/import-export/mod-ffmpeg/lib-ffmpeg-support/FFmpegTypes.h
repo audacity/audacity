@@ -127,6 +127,7 @@ typedef struct AVIOContext AVIOContext;
 typedef struct AVCodecContext AVCodecContext;
 
 using AVCodecIDFwd = int;
+using AVCodecConfigFwd = int;
 using AVMediaTypeFwd = int;
 using AVPixelFormatFwd = int;
 using AVSampleFormatFwd = int;

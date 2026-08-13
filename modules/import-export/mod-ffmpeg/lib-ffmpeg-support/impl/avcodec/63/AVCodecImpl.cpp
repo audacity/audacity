@@ -1,7 +1,7 @@
 extern "C"
 {
-#include "../../avutil/59/avconfig.h"
-#include "../../ffmpeg-7.0.0-single-header.h"
+#include "../../avutil/61/avconfig.h"
+#include "../../ffmpeg-9.0.0-single-header.h"
 }
 
 #include <cstring>
@@ -17,15 +17,15 @@ extern "C"
 
 #include "../../FFmpegAPIResolver.h"
 
-namespace avcodec_61
+namespace avcodec_63
 {
 #include "../AVCodecContextWrapperImpl.inl"
-#include "../AVCodecCapabilitiesLegacy.inl"
+#include "../AVCodecCapabilitiesQuery.inl"
 #include "../AVCodecWrapperImpl.inl"
 #include "../AVPacketWrapperImpl.inl"
 
 const bool registered = ([]() {
-   FFmpegAPIResolver::Get().AddAVCodecFactories(61, {
+   FFmpegAPIResolver::Get().AddAVCodecFactories(63, {
       &CreateAVCodecContextWrapper,
       &CreateAVCodecContextWrapperFromCodec,
       &CreateAVCodecWrapper,
@@ -44,4 +44,3 @@ static_assert(
 ,
    "FFmpeg constants don't match"
 );
-

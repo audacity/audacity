@@ -20,6 +20,7 @@ extern "C"
 namespace avcodec_60
 {
 #include "../AVCodecContextWrapperImpl.inl"
+#include "../AVCodecCapabilitiesLegacy.inl"
 #include "../AVCodecWrapperImpl.inl"
 #include "../AVPacketWrapperImpl.inl"
 
