@@ -27,12 +27,11 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
 {
-    const auto state = m_effectState.lock();
-    IF_ASSERT_FAILED(state) {
-        // Effect state lifetime is expected to span more than this.
-        return;
+    // After undo/redo the state may already be destroyed. Then no dialog can
+    // be open for it (open dialogs share ownership), so there's nothing to hide.
+    if (const auto state = m_effectState.lock()) {
+        effectViewController()->hideEffect(state);
     }
-    effectViewController()->hideEffect(state);
 }
 
 bool RealtimeEffectListItemModel::prop_isMasterEffect() const
