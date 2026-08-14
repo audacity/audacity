@@ -800,9 +800,6 @@ void AudioIO::StopPortAudioStream()
     // Re-enable system sleep
     wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
 #endif
-
-    mNumCaptureChannels = 0;
-    mNumPlaybackChannels = 0;
 }
 
 wxString AudioIO::LastPaErrorString()
@@ -948,6 +945,7 @@ void AudioIO::StopMonitoring()
     ResetMeters();
 
     StopPortAudioStream();
+    mNumCaptureChannels = mNumPlaybackChannels = 0;
 
     ResetOwningProject();
 
@@ -1261,6 +1259,8 @@ int AudioIO::StartBufferExchange(const TransportSequences& sequences,
                 pListener->OnAudioIOStopRecording();
             }
             StopPortAudioStream();
+            mNumCaptureChannels = mNumPlaybackChannels = 0;
+
             StartStreamCleanup();
             ResetOwningProject();
             // PRL: PortAudio error messages are sadly not internationalized
@@ -1674,8 +1674,6 @@ void AudioIO::StopBufferExchange()
 
     StopBufferExchangeOnAudioThread();
 
-    const auto wasPlaying = mNumPlaybackChannels > 0;
-    const auto wasRecording = mNumCaptureChannels > 0;
     StopPortAudioStream();
 
     // We previously told AudioThread to stop processing, now let's
@@ -1694,6 +1692,11 @@ void AudioIO::StopBufferExchange()
     // to call SequenceBufferExchange one last time (it normally would not do
     // so since Pa_GetStreamActive() would now return false
     ProcessOnceAndWait();
+
+    // Now there won't be activity on the audio thread until we restart the stream and we can reset those two member variables.
+    const auto wasPlaying = mNumPlaybackChannels > 0;
+    const auto wasRecording = mNumCaptureChannels > 0;
+    mNumCaptureChannels = mNumPlaybackChannels = 0;
 
     // No longer need effects processing. This must be done after the stream is stopped
     // to prevent the callback from being invoked after the effects are finalized.
