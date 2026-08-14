@@ -176,7 +176,7 @@ class AudacityConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps"
     options = { "use_asio": [True, False], "use_jack": [True, False], "lib_dir": [None, "ANY"]}
-    default_options = { "use_asio": False, "use_jack": False, "lib_dir": None }
+    default_options = { "use_asio": True, "use_jack": False, "lib_dir": None }
 
     # List of Audacity dependencies
     _dependencies = [

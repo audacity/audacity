@@ -17,6 +17,8 @@
 #include "PrefsPanel.h"
 
 class wxChoice;
+class wxButton;
+class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
@@ -43,6 +45,9 @@ class DevicePrefs final : public PrefsPanel
    void OnDevice(wxCommandEvent & e);
    void OnDefaultSampleRateChoice(wxCommandEvent& e);
    void OnProjectSampleRateChoice(wxCommandEvent& e);
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   void OnAsioControlPanel(wxCommandEvent& e);
+#endif
 
    AudacityProject* mProject;
 
@@ -58,6 +63,11 @@ class DevicePrefs final : public PrefsPanel
    wxChoice *mPlay;
    wxChoice *mRecord;
    wxChoice *mChannels;
+
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   wxCheckBox *mAsioUseDeviceSampleRate { nullptr };
+   wxButton *mAsioControlPanel { nullptr };
+#endif
 
    wxChoice* mProjectSampleRates { nullptr };
    wxTextCtrl* mOtherProjectSampleRate { nullptr };

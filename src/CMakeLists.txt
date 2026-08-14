@@ -975,6 +975,9 @@ set( DEFINES
       $<$<BOOL:${${_OPT}has_updates_check}>:
           HAVE_UPDATES_CHECK
       >
+      $<$<BOOL:${${_OPT}has_asio_support}>:
+          USE_ASIO
+      >
 )
 
 # If we have cmake 3.16 or higher, we can use precompiled headers, but

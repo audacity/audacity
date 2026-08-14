@@ -645,6 +645,10 @@ void DeviceToolBar::ChangeDevice(bool isInput)
       return;
    }
 
+   if (isInput) {
+      DeviceManager::Instance()->UpdateAsioDeviceCaps(maps[newIndex].deviceIndex);
+   }
+
    SetDevices(isInput ? &maps[newIndex] : NULL,
               isInput ? NULL            : &maps[newIndex]);
 }

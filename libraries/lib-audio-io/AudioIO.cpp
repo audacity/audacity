@@ -1708,6 +1708,18 @@ void AudioIO::SetPaused(bool state, bool publish)
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
 {
+   // Opening ASIO streams at the device's current rate allows simultaneous
+   // playback with drivers that support it. The rate can be changed from the
+   // driver's control panel at any time, so it is never cached here.
+   if (AudioIOUseAsioDeviceSampleRate.Read()) {
+      const int asioDevIndex = playing ? getPlayDevIndex() : getRecordDevIndex();
+      if (DeviceManager::IsAsioDevice(asioDevIndex)) {
+         const double asioRate = DeviceManager::GetAsioDeviceCurrentSampleRate(asioDevIndex);
+         if (asioRate > 0.0)
+            return asioRate;
+      }
+   }
+
    // Check if we can use the cached value
    if (mCachedBestRateIn != 0.0 && mCachedBestRateIn == sampleRate
       && mCachedBestRatePlaying == playing && mCachedBestRateCapturing == capturing) {

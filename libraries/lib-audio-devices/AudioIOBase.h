@@ -393,5 +393,6 @@ extern AUDIO_DEVICES_API IntSetting    AudioIORecordChannels;
 extern AUDIO_DEVICES_API StringSetting AudioIORecordingDevice;
 extern AUDIO_DEVICES_API StringSetting AudioIORecordingSource;
 extern AUDIO_DEVICES_API IntSetting    AudioIORecordingSourceIndex;
+extern AUDIO_DEVICES_API BoolSetting   AudioIOUseAsioDeviceSampleRate;
 
 #endif

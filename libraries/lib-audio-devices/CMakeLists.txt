@@ -25,6 +25,10 @@ set( LIBRARIES
    $<$<BOOL:${USE_PORTMIXER}>:portmixer>
    lib-preferences-interface
 )
+set( DEFINES
+   PRIVATE
+      $<$<BOOL:${audacity_has_asio_support}>:USE_ASIO>
+)
 audacity_library( lib-audio-devices "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "${DEFINES}" ""
 )

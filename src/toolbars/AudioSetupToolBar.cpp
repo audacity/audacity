@@ -658,6 +658,10 @@ void AudioSetupToolBar::ChangeDeviceLabel(
       return;
    }
 
+   if (isInput)
+      DeviceManager::Instance()->UpdateAsioDeviceCaps(
+         maps[newIndex].deviceIndex);
+
    SetDevices(isInput ? &maps[newIndex] : nullptr,
               isInput ? nullptr : &maps[newIndex]);
 }
@@ -760,4 +764,3 @@ AttachedToolBarMenuItem sAttachment{
    AudioSetupToolBar::ID(), wxT("ShowAudioSetupTB"), XXO("&Audio Setup Toolbar")
 };
 }
-

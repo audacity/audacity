@@ -17,6 +17,7 @@ Paul Licameli split from AudioIO.cpp
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 
+#include "DeviceManager.h"
 #include "IteratorX.h"
 #include "Meter.h"
 #include "Prefs.h"
@@ -146,6 +147,13 @@ void AudioIOBase::HandleDeviceChange()
       #endif
       Px_CloseMixer(mPortMixer);
       mPortMixer = NULL;
+   }
+
+   // PortMixer does not support ASIO
+   if (DeviceManager::IsAsioDevice(playDeviceNum) ||
+       DeviceManager::IsAsioDevice(recDeviceNum)) {
+      mInputMixerWorks = false;
+      return;
    }
 
    // Looking for highest supported sample rate for a given
@@ -668,6 +676,15 @@ std::vector<long> AudioIOBase::GetSupportedSampleRates(int playDevice, int recDe
  * the real rates. */
 int AudioIOBase::GetOptimalSupportedSampleRate()
 {
+   // For ASIO, use the last known device rate
+   const int playDevice = getPlayDevIndex();
+   if (DeviceManager::IsAsioDevice(playDevice)) {
+      const PaDeviceInfo *info = Pa_GetDeviceInfo(playDevice);
+      if (info && info->defaultSampleRate > 0)
+         return static_cast<int>(info->defaultSampleRate);
+      return 44100;
+   }
+
    auto rate = GetClosestSupportedSampleRate(-1, -1, 44100);
 
    // if there are no supported rates, the next bit crashes. So check first,
@@ -1083,3 +1100,5 @@ StringSetting AudioIORecordingSource{
    L"/AudioIO/RecordingSource", L"" };
 IntSetting AudioIORecordingSourceIndex{
    L"/AudioIO/RecordingSourceIndex", -1 };
+BoolSetting AudioIOUseAsioDeviceSampleRate{
+   L"/AudioIO/ASIO/UseDeviceSampleRate", true };
