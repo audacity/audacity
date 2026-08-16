@@ -1,6 +1,7 @@
 
 # Just for local tests
 set(CI_DIR ${CMAKE_CURRENT_LIST_DIR})
+get_filename_component(ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 
 # Options
 set(EVENT "pull_request" CACHE STRING "Action event")
@@ -32,7 +33,7 @@ execute_process(
 message(STATUS "~~Generate dump symbols~~")
 
 set(CONFIG
-    -DAPP_BIN="${CMAKE_CURRENT_LIST_DIR}/build.release/src/app/audacity.pdb"
+    -DAPP_BIN="${ROOT_DIR}/build.release/Audacity4.pdb"
 )
 
 execute_process(

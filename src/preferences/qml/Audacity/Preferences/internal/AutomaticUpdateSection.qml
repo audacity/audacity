@@ -62,5 +62,9 @@ BaseSection {
         horizontalAlignment: Qt.AlignLeft
         wrapMode: Text.WordWrap
         maximumLineCount: 3
+
+        onLinkActivated: function (link) {
+            Qt.openUrlExternally(link)
+        }
     }
 }

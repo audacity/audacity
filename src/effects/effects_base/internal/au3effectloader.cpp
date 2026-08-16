@@ -68,6 +68,11 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
     ::PluginDescriptor desc;
     ::PluginPath au3path;
 
+    // Loading a third-party binary may crash the whole application; leave a
+    // sentinel on disk so the plugin gets marked as broken at the next launch
+    // if we don't survive this (see IAudioPluginsLoadGuard).
+    loadGuard()->beginLoad(effectId.toStdString());
+
     // We need the complete effect's path, e.g. in VST a .vst3 bundle (one path) may contain several effects.
     // Hence an effect's UUID is appended to the .vst3 path for disambiguation.
     m_pluginProvider.DiscoverPluginsAtPath(
@@ -85,11 +90,15 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
     });
 
     if (au3path.empty()) {
+        loadGuard()->endLoad(effectId.toStdString());
         LOGE() << "Failed to find plugin path for effect: " << effectId;
         return false;
     }
 
     m_loadedInterfaces.emplace(effectId, m_pluginProvider.LoadPlugin(au3path));
+
+    loadGuard()->endLoad(effectId.toStdString());
+
     if (!m_loadedInterfaces.at(effectId)) {
         LOGE() << "Failed to load plugin: " << effectId;
         m_loadedInterfaces.erase(effectId);

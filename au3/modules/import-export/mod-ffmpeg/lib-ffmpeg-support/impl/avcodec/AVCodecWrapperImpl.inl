@@ -11,8 +11,9 @@ class AVCodecWrapperImpl : public AVCodecWrapper
 {
 public:
    explicit
-   AVCodecWrapperImpl(const AVCodec* wrapped) noexcept
+   AVCodecWrapperImpl(const FFmpegFunctions& ffmpeg, const AVCodec* wrapped) noexcept
       : AVCodecWrapper(wrapped)
+      , mFFmpeg(ffmpeg)
    {
    }
 
@@ -58,37 +59,22 @@ public:
 
    const AVRational* GetSupportedFramerates() const noexcept override
    {
-      if (mAVCodec != nullptr)
-         return mAVCodec->supported_framerates;
-
-      return {};
+      return AVCodecCapabilities::GetSupportedFramerates(mFFmpeg, mAVCodec);
    }
 
    const AVPixelFormatFwd* GetPixFmts() const noexcept override
    {
-      static_assert(sizeof(AVPixelFormat) == sizeof(AVPixelFormatFwd));
-      if (mAVCodec != nullptr)
-         return reinterpret_cast<const AVPixelFormatFwd*>(mAVCodec->pix_fmts);
-
-      return {};
+      return AVCodecCapabilities::GetPixFmts(mFFmpeg, mAVCodec);
    }
 
    const int* GetSupportedSamplerates() const noexcept override
    {
-      if (mAVCodec != nullptr)
-         return mAVCodec->supported_samplerates;
-
-      return {};
+      return AVCodecCapabilities::GetSupportedSamplerates(mFFmpeg, mAVCodec);
    }
 
    const AVSampleFormatFwd* GetSampleFmts() const noexcept override
    {
-      static_assert(sizeof(AVSampleFormat) == sizeof(AVSampleFormatFwd));
-
-      if (mAVCodec != nullptr)
-         return reinterpret_cast<const AVSampleFormatFwd*>(mAVCodec->sample_fmts);
-
-      return {};
+      return AVCodecCapabilities::GetSampleFmts(mFFmpeg, mAVCodec);
    }
 
    uint8_t GetMaxLowres() const noexcept override
@@ -106,9 +92,13 @@ public:
 
       return {};
    }
+
+private:
+   const FFmpegFunctions& mFFmpeg;
 };
 
-std::unique_ptr<AVCodecWrapper>CreateAVCodecWrapper(const AVCodec* obj)
+std::unique_ptr<AVCodecWrapper>CreateAVCodecWrapper(
+   const FFmpegFunctions& ffmpeg, const AVCodec* obj)
 {
-   return std::make_unique<AVCodecWrapperImpl>(obj);
+   return std::make_unique<AVCodecWrapperImpl>(ffmpeg, obj);
 }

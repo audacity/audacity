@@ -79,12 +79,14 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption("plugin-registration-self-test",
                                           "Run plugin registration app self-test (verify initialization)"));
 
+#ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     m_parser.addOption(QCommandLineOption("test-case", "Run test case by name or file", "nameOrFile"));
     m_parser.addOption(QCommandLineOption("test-case-context", "Set test case context by name or file", "nameOrFile"));
     m_parser.addOption(QCommandLineOption("test-case-context-value", "Set test case context value", "value"));
     m_parser.addOption(QCommandLineOption("test-case-func", "Call test case function", "name"));
     m_parser.addOption(QCommandLineOption("test-case-func-args", "Call test case function args", "args"));
+#endif
 }
 
 void CommandLineParser::parse(int argc, char** argv)
@@ -174,6 +176,7 @@ void CommandLineParser::parse(int argc, char** argv)
         m_options->audioPluginRegistration.selfTest = true;
     }
 
+#ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     if (m_parser.isSet("test-case")) {
         m_options->runMode = IApplication::RunMode::ConsoleApp;
@@ -195,6 +198,7 @@ void CommandLineParser::parse(int argc, char** argv)
     if (m_parser.isSet("test-case-func-args")) {
         m_options->testflow.testCaseFuncArgs = m_parser.value("test-case-func-args");
     }
+#endif
 
     // Startup
     if (m_options->runMode == IApplication::RunMode::GuiApp) {
