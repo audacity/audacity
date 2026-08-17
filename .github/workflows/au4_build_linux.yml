@@ -18,6 +18,10 @@ on:
         description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
         required: false
         default: ''
+      testflow_reuse_run_id:
+        description: 'Run only the testflow jobs, reusing the AppImage artifact of this workflow run ID (skips the build)'
+        required: false
+        default: ''
 
   workflow_call:
     inputs:
@@ -56,6 +60,9 @@ env:
 
 jobs:
   au4_build_linux:
+    # Skipped when a dispatch asks to reuse a previous run's AppImage
+    # (inputs is empty on non-dispatch events, so this is true for PRs)
+    if: inputs.testflow_reuse_run_id == ''
     strategy:
       fail-fast: false
       matrix:
@@ -307,6 +314,12 @@ jobs:
 
   testflow-linux:
     needs: [au4_build_linux, testflow-discover]
+    # Run when the build succeeded, or when reusing a previous run's AppImage
+    # (in which case the build job is skipped)
+    if: >-
+      !cancelled()
+      && needs.testflow-discover.result == 'success'
+      && (needs.au4_build_linux.result == 'success' || inputs.testflow_reuse_run_id != '')
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false # let sibling test cases finish even if one fails
@@ -342,12 +355,15 @@ jobs:
     - name: Download AppImage artifact
       if: matrix.status != 'DISABLED'
       # The artifact name is dynamic (AU4_<build_number>_Lin_x86_64_<info>),
-      # so match it by pattern.
+      # so match it by pattern. run-id defaults to this run; a dispatch with
+      # testflow_reuse_run_id points it at a previous run's artifact instead.
       uses: actions/download-artifact@v6
       with:
         pattern: AU4_*_Lin_x86_64_*
         merge-multiple: true
         path: ./build.artifacts
+        run-id: ${{ inputs.testflow_reuse_run_id || github.run_id }}
+        github-token: ${{ github.token }}
 
     - name: Run testflow test case
       if: matrix.status != 'DISABLED'
