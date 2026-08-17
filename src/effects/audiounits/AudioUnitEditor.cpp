@@ -38,12 +38,6 @@ AudioUnitEditor::AudioUnitEditor(CreateToken,
    wxTheApp->Bind(wxEVT_IDLE, &AudioUnitEditor::OnIdle, this);
 }
 
-AudioUnitEditor::~AudioUnitEditor()
-{
-   if (mpControl)
-      mpControl->Close();
-}
-
 auto AudioUnitEditor::MakeListener()
    -> EventListenerPtr
 {

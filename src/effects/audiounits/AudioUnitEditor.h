@@ -38,8 +38,6 @@ public:
       const EffectUIServices &effect, EffectSettingsAccess &access,
       AudioUnitInstance &instance, AUControl *pControl, bool isGraphical);
 
-   ~AudioUnitEditor() override;
-
    bool UpdateUI() override;
    bool ValidateUI() override;
    bool IsGraphicalUI() override;
