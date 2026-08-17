@@ -167,14 +167,17 @@ void VST3Editor::OnClose()
 
    mWrapper.EndParameterEdit();
 
-   mAccess.ModifySettings([&](EffectSettings &settings){
-      if (mDuration != nullptr)
-         settings.extra.SetDuration(mDuration->GetValue());
-      //Flush changes if there is no processing performed at the moment
-      mWrapper.FlushParameters(settings);
-      mWrapper.StoreSettings(settings);
-      return nullptr;
-   });
+   if (mAccess.Get().has_value())
+   {
+      mAccess.ModifySettings([&](EffectSettings &settings){
+         if (mDuration != nullptr)
+            settings.extra.SetDuration(mDuration->GetValue());
+         //Flush changes if there is no processing performed at the moment
+         mWrapper.FlushParameters(settings);
+         mWrapper.StoreSettings(settings);
+         return nullptr;
+      });
+   }
    //Make sure that new state has been written to the caches...
    mAccess.Flush();
 

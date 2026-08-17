@@ -576,6 +576,8 @@ bool VSTEditor::StoreSettingsToInstance(const EffectSettings& settings)
 
 bool VSTEditor::ValidateUI()
 {
+   if (!mAccess.Get().has_value())
+      return true;
    mAccess.ModifySettings([this](EffectSettings& settings)
    {
       if (mType == EffectTypeGenerate)
