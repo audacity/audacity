@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
+# Link Winterberg, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Tamil (https://app.transifex.com/audacity/teams/164520/ta/)\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
@@ -238,6 +238,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "வழு."
@@ -1302,7 +1303,7 @@ msgid "Compress Excess Silence"
 msgstr ""
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "அமைதியை வெட்டு"
 
@@ -1324,10 +1325,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "இறக்குவதில் வழு"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -1977,6 +1977,10 @@ msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
 msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
@@ -4748,7 +4752,7 @@ msgstr "&சரி"
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #, c-format
 msgid "%d kbps"
-msgstr ""
+msgstr "%d kbps"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -6501,6 +6505,10 @@ msgid "Unable to create target file for writing"
 msgstr ""
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr ""
 
@@ -6874,9 +6882,8 @@ msgid "Open from audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "ஒலி ஒலித்தல்"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 #, c-format
@@ -6913,9 +6920,8 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Audacity திட்டம் திறக்கிறது"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Audio File..."
@@ -7062,9 +7068,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "ஒலியை முதல் சிட்டைக்குமுன் சேர்க்கவும்"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7087,9 +7092,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "தட பெயர்"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7113,9 +7117,8 @@ msgid "Loading audio list..."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "%s இனை நீக்க முடியாதுள்ளது"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7915,7 +7918,7 @@ msgstr ""
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10466,7 +10469,7 @@ msgstr ""
 msgid "Realtime Effects"
 msgstr ""
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr ""
 
@@ -11156,7 +11159,11 @@ msgid "Welcome to Audacity!"
 msgstr "Audacity இற்கு வரவேற்கிறோம்"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11168,6 +11175,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
@@ -11176,15 +11187,11 @@ msgid "View free plugins"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
+msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11679,6 +11686,10 @@ msgstr ""
 msgid "Color 3"
 msgstr ""
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr ""
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr ""
@@ -11795,10 +11806,6 @@ msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
-msgstr ""
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
 msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
@@ -12316,7 +12323,7 @@ msgstr ""
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: src/effects/Contrast.cpp
 msgid "zero"
@@ -12390,7 +12397,7 @@ msgstr "அளக்கப்பட்ட முன்னணி மட்டம�
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%.2f dB"
-msgstr ""
+msgstr "%.2f dB"
 
 #: src/effects/Contrast.cpp
 msgid "No foreground measured"
@@ -12885,7 +12892,7 @@ msgstr ""
 #: src/effects/ScienFilter.cpp
 #, c-format
 msgid "%d dB"
-msgstr ""
+msgstr "%d dB"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -13801,6 +13808,32 @@ msgstr ""
 msgid "Trunc&ate tracks independently"
 msgstr ""
 
+#: src/effects/TruncSilence.cpp
+msgid "Truncate Location"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &middle"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &end"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr ""
@@ -14523,7 +14556,15 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Cursor to Next Clip Boundary"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp
@@ -16323,7 +16364,7 @@ msgstr ""
 #: src/prefs/RecordingPrefs.h
 msgctxt "preference"
 msgid "Recording"
-msgstr ""
+msgstr "Google Translate"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
@@ -18804,7 +18845,7 @@ msgstr "&ஸ்டீரியோ தட்டுகள்"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%+.1f dB"
-msgstr ""
+msgstr "%+.1f dB"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -19194,9 +19235,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "இடது=உள்ளே ஜூம்,வலம்=வெளியே ஜூம்,நடு=சாதாரணம்"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "Audacity பதிவுகள்"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19218,6 +19258,39 @@ msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to create installer file. Please check write permissions."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Download Error"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
 msgstr ""
 
 #. i18n-hint: Title of the dialog no updates available.
@@ -19264,15 +19337,6 @@ msgstr ""
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr ""
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
 msgstr ""
 
 #. i18n-hint: Window title of the app update notice dialog.

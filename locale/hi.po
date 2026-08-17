@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
 # Pritam Shekhawat, 2024
 # bashishtha <bashishtha.singh@gmail.com>, 2025
+# Link Winterberg, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: bashishtha <bashishtha.singh@gmail.com>, 2025\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/audacity/teams/164520/hi/)\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
@@ -244,6 +244,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "त्रुटि"
@@ -1331,7 +1332,7 @@ msgid "Compress Excess Silence"
 msgstr "अतिरिक्त मौन हटाएं"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "चुप्पी हटाएं"
 
@@ -1353,10 +1354,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "शीघ्र स्वर गुणवत्ता परिवर्तन, 1970 के लोकप्रिय गिटार संगीत की तरह"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "आयात में त्रुटि"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -2072,6 +2072,10 @@ msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
 msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
@@ -6813,6 +6817,10 @@ msgid "Unable to create target file for writing"
 msgstr "लेखन के लिये लक्षित फाइल बनाने में असमर्थ"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "चयनित ध्वनि का निर्यात WavPack में कर रहे हैं"
 
@@ -7186,16 +7194,15 @@ msgid "Open from audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "डाउनलोड %s हो रहा है"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "\"%s\" में से प्रिसेट एनकोड नहीं कर सका"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7225,14 +7232,12 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "परियोजना खोलें..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "CAF (Apple कोर ऑडियो फ़ाइल)"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7375,9 +7380,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "प्रथम लेबल से पहले के ऑडियो को शामिल करें"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7385,11 +7389,11 @@ msgid "less than 1 minute"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d मिनट"
-msgstr[1] "%d मिनट"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7400,9 +7404,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "शीर्षक ट्रैक"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7422,14 +7425,12 @@ msgid "Failed to authorize account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "ऑडियो अपलोड हो रहा है..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "स्वरूप का अनुमान लगाने में असफ़ल"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -8232,8 +8233,8 @@ msgstr "%s वेबसाइट : "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr "%s सॉफ्टवेयर कॉपीराइट%s 1999-2024 है %s टीम."
+msgid "%s software is copyright %s 1999-2026 %s Team."
+msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -10231,7 +10232,7 @@ msgstr "बहुत कम संगत टैकों का चयन कि
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr ""
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10917,7 +10918,7 @@ msgstr "%s के लिए रीयलटाइम प्रभाव"
 msgid "Realtime Effects"
 msgstr "समयोचित प्रभाव"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "वीडियो देखें"
 
@@ -11642,7 +11643,11 @@ msgid "Welcome to Audacity!"
 msgstr "Audacity में आपका स्वागत है!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11654,24 +11659,23 @@ msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "नए प्लगइन्स"
-
-#: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
+msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -12166,6 +12170,10 @@ msgstr "रंग 2"
 msgid "Color 3"
 msgstr "रंग 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "बेनाम"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "यहाँ पर :"
@@ -12283,10 +12291,6 @@ msgstr "एक परियोजना के विभिन्न मूल�
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "ट्रैक अवस्था सेट करें"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "बेनाम"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14301,6 +14305,32 @@ msgstr "यहाँ तक संपीड़ित करें :"
 msgid "Trunc&ate tracks independently"
 msgstr "ट्रैकों को स्वतंत्र रूप से  काटें"
 
+#: src/effects/TruncSilence.cpp
+msgid "Truncate Location"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &middle"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &end"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "VST प्रिसेट सहेजें, इस नाम से:"
@@ -15035,8 +15065,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "पूर्व चयन सीमा से कर्सर तक"
 
 #: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "कर्सर से अगले चयन सीमा तक"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Cursor to Next Clip Boundary"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -16756,7 +16794,7 @@ msgstr "ऐपलिकेशन के लिए प्राथमिकता
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "अद्यतन सूचनाएं"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16766,7 +16804,7 @@ msgstr "अद्यतन के लिए देखें (&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "ऐप अद्यतन की जाँच के लिए नेटवर्क एक्सेस की आवश्यकता होती है. आपकी गोपनीयता की रक्षा के लिए, Audacity  कोई व्यक्तिगत जानकारी संग्रहीत नहीं करता है."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -19750,9 +19788,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "बायाँ=आकार बढ़ाना, दायाँ=आकार घटाना, मध्य=सामान्य"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "अद्यतन स्थापित करें (&I)"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19774,6 +19811,39 @@ msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to create installer file. Please check write permissions."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Audacity अपडेट"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "डाउनलोड %s हो रहा है"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Download Error"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
 msgstr ""
 
 #. i18n-hint: Title of the dialog no updates available.
@@ -19821,15 +19891,6 @@ msgstr "अपडेट डाउनलोड करने में त्र�
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Audacity ऑडेसिटी डाउनलोड लिंक नहीं खोल सकता."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Audacity अपडेट"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "डाउनलोड %s हो रहा है"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21734,10 +21795,3 @@ msgstr "स्पेक्ट्रल टूल्स"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Audacity %s में नया क्या है"

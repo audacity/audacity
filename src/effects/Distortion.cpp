@@ -345,6 +345,9 @@ void EffectDistortion::Editor::PopulateOrExchange(ShuttleGui& S)
 
 bool EffectDistortion::Editor::UpdateUI()
 {
+   // get the settings from the MessageBuffer and write them to our local copy
+   mSettings = GetSettings(mAccess.Get());
+
    const auto& ms = mSettings;
 
    if (!mUIParent->TransferDataToWindow())

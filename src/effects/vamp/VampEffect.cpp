@@ -294,13 +294,17 @@ bool VampEffect::Init()
 {
    mRate = 0.0;
 
-   // PRL: There is no check that all tracks have one rate, and only the first
-   // is remembered in mRate.  Is that correct?
-
-   if (inputTracks()->empty())
+   // Use the first selected wave track, not the first wave track in the project.
+   // Otherwise a Vamp effect may inherit rate/context from an unselected track.
+   auto selected = inputTracks()->Selected<const WaveTrack>();
+   if (selected.empty()) 
+   {
       mRate = mProjectRate;
-   else
-      mRate = (*inputTracks()->Any<const WaveTrack>().begin())->GetRate();
+   } 
+   else 
+   {
+      mRate = (*selected.begin())->GetRate();
+   }
 
    // The plugin must be reloaded to allow changing parameters
 
@@ -338,8 +342,10 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
    }
 
    std::vector<std::shared_ptr<AddedAnalysisTrack>> addedTracks;
-
-   for (auto pTrack : inputTracks()->Any<const WaveTrack>())
+   
+   // Process only selected wave tracks.
+   //Using Any<> causes Vamp effects to ignore vertical track selection and process every wave track in project.
+   for (auto pTrack : inputTracks()->Selected<const WaveTrack>())
    {
       auto channelGroup = pTrack->Channels();
       auto left = *channelGroup.first++;
@@ -356,6 +362,12 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       sampleCount len = 0;
       GetBounds(*pTrack, &start, &len);
 
+      // Selection may not intersect this selected track.
+      if (len == 0) 
+      {
+         continue;
+      }
+      
       // TODO: more-than-two-channels
 
       size_t step = mPlugin->getPreferredStepSize();

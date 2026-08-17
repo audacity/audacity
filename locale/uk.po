@@ -5,17 +5,17 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Yuri Chornoivan <yurchor@ukr.net>, 2025
-# , fuzzy
+# Taras Panchenko <top39@ukr.net>, 2026
+# Yuri Chornoivan <yurchor@ukr.net>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2026\n"
 "Language-Team: Ukrainian (https://app.transifex.com/audacity/teams/164520/uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -244,6 +244,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Помилка"
@@ -1333,7 +1334,7 @@ msgid "Compress Excess Silence"
 msgstr "Стискання усуванням тиші"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Обрізати тишу"
 
@@ -2078,6 +2079,10 @@ msgstr "текстовий файл SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "файл WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr "Глави подкасту"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6825,6 +6830,10 @@ msgid "Unable to create target file for writing"
 msgstr "Не вдалося створити файл призначення для запису"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr "Непідтримуване значення байтів на семпл для експортування WavPack"
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Експортуємо позначені звукові дані як WavPack"
 
@@ -8254,8 +8263,8 @@ msgstr "Сайт %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr "Права на програмне забезпечення %s належать %s 1999-2024 команді %s."
+msgid "%s software is copyright %s 1999-2026 %s Team."
+msgstr "Права на програмне забезпечення %s належать %s 1999-2026 команді %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -10944,7 +10953,7 @@ msgstr "Ефекти реального часу %s"
 msgid "Realtime Effects"
 msgstr "Ефекти реального часу"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Переглянути відео"
 
@@ -11669,8 +11678,12 @@ msgid "Welcome to Audacity!"
 msgstr "Ласкаво просимо до Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Відео: як ми змінюємо дизайн Audacity задля майбутнього"
+msgid "Try the new Audacity 4 Beta release"
+msgstr "Спробуйте новий випуск Audacity 4 Beta"
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr "Спробувати бета-випуск"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11681,6 +11694,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Отримайте наші безкоштовні інструменти ШІ OpenVino"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner: студійна якість накладного звуку"
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Вивчіть вільні додатки для надання форми вашому звуку"
 
@@ -11689,16 +11706,12 @@ msgid "View free plugins"
 msgstr "Переглянути безкоштовні додатки"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "Розпродаж товарів до 25-річчя!"
+msgid "Help us decide the future of Audacity"
+msgstr "Допоможіть нам створити майбутнє Audacity"
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Відвідати зараз"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Відвідайте нашу нову крамницю товарів Audacity"
+msgid "Take part in survey"
+msgstr "Взяти участь в опитуванні"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12192,6 +12205,10 @@ msgstr "Колір 2"
 msgid "Color 3"
 msgstr "Колір 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Без назви"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "У:"
@@ -12309,10 +12326,6 @@ msgstr "Встановлює різноманітні параметри для 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Встановлення стану доріжки"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Без назви"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14327,6 +14340,38 @@ msgstr "С&тиснути до:"
 msgid "Trunc&ate tracks independently"
 msgstr "Об&різати доріжки окремо"
 
+#: src/effects/TruncSilence.cpp
+msgid "Truncate Location"
+msgstr "Обрізати місце"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr "Вилучити тишу з по&чатку"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &middle"
+msgstr "Вилучити тишу з с&ередини"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &end"
+msgstr "Вилучити тишу з &кінця"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+"Має бути вибрано принаймні один з варіантів місця.\n"
+"\n"
+"Будь ласка, виберіть хоч один з варіантів:\n"
+"* Вилучити тишу з початку\n"
+"* Вилучити тишу з середини\n"
+"* Вилучити тишу з кінця"
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Зберегти шаблон VST як:"
@@ -15067,8 +15112,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Від межі п&опереднього кліпу до курсора"
 
 #: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Позначити від межі попередньго кліпу до курсора"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Від курсора до ме&жі наступного кліпу"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Позначити від курсора до межі наступного кліпу"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19571,7 +19624,7 @@ msgstr "Пересунути доріжку в&низ"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Top"
-msgstr "Пересунути доріжку &нижче"
+msgstr "Пересунути доріжку на &початок"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Bottom"
@@ -19816,6 +19869,39 @@ msgstr "Ні, дякую"
 msgid "Remind me later"
 msgstr "Нагадайте пізніше"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr "Не вдалося отримати відомості щодо випуску Audacity 4. Будь ласка, повторіть спробу пізніше."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr "Не вдалося обробити відомості щодо випуску Audacity 4. Будь ласка, повторіть спробу пізніше."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr "Для вашої платформи не передбачено засобу для встановлення Audacity 4."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Не вдалося створити файл для встановлення. Будь ласка, перевірте, чи є у вас права для запису до відповідної теки."
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Оновлення Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Отримуємо %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Download Error"
+msgstr "Помилка під час отримання"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr "Не вдалося отримати файл для встановлення Audacity 4. Будь ласка, повторіть спробу пізніше."
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19861,15 +19947,6 @@ msgstr "Помилка під час отримання оновлення"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Не вдалося відкрити посилання для отримання Audacity."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Оновлення Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Отримуємо %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp

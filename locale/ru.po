@@ -10,13 +10,13 @@
 # Johnny Storm <x24cm5b8c54q6szxw@yandex.ru>, 2015, 2017
 # Дмитрий Шатера <mr.bobsans@gmail.com>, 2015
 # Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2002-2018
-# Alexander Kovalenko <nktch@yandex.ru>, 2019-2025
+# Alexander Kovalenko <nktch@yandex.ru>, 2019-2026
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
-"PO-Revision-Date: 2025-11-27 12:14+0500\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2026-05-27 09:44+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -166,7 +166,7 @@ msgstr "Поддерживаемые частоты:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Нелзя проверить взаимные частоты дискретизации без обоих устройств.\n"
+msgstr "Общие частоты дискретизации нельзя проверить без обоих устройств.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -247,6 +247,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Ошибка"
@@ -360,7 +361,7 @@ msgstr "Не удалось декодировать пресет '%s'"
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to convert \"%s\" preset to internal format"
-msgstr "Не удалось преобразовать пресет '%s' во внутренний формат"
+msgstr "Не удалось преобразовать пресет '%s'  во внутренний формат"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
@@ -446,16 +447,16 @@ msgstr "Изменяет высоту тона трека без изменен�
 
 #: libraries/lib-builtin-effects/ChangePitchBase.cpp
 msgid "High Quality Pitch Change"
-msgstr "Изменение высоты тона высокого качества"
+msgstr "Изменение тона высокого качества"
 
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Change Speed and Pitch"
-msgstr "Изменение скорости и высоты тона"
+msgstr "Изменение скорости и тона"
 
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Изменяет скорость и высоту тона трека"
+msgstr "Изменяет скорость трека и изменяет тон"
 
 #: libraries/lib-builtin-effects/ChangeTempoBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -464,7 +465,7 @@ msgstr "Изменение темпа"
 
 #: libraries/lib-builtin-effects/ChangeTempoBase.cpp
 msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Изменяет темп выделенного фрагмента без изменения высоты тона"
+msgstr "Изменяет темп выделенного фрагмента без изменения тона"
 
 #: libraries/lib-builtin-effects/ChangeTempoBase.cpp
 msgid "High Quality Tempo Change"
@@ -550,7 +551,7 @@ msgstr "Выравниватель"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Rectifier Distortion"
-msgstr "Диодный исказитель"
+msgstr "Диодный"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Limiter 1413"
@@ -1005,7 +1006,7 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
-"Выделенный для превью фрагмент слишком мал\n"
+"Выделенный для прослушивания фрагмент слишком мал\n"
 "\n"
 "Попробуйте увеличить выделение хотя бы до %.1f сек.,\n"
 "или уменьшить 'Разрешение по времени' до менее %.1f сек."
@@ -1020,7 +1021,7 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
-"Превью невозможно.\n"
+"Прослушивание невозможно.\n"
 "\n"
 "Для текущего выделения максимальное\n"
 "'Разрешение по времени' %.1f сек."
@@ -1059,7 +1060,7 @@ msgid ""
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 "Не удалось проанализировать аудио. Это может быть связано с растянутым или сдвинутым по высоте тона клипом.\n"
-"Попробуйте сбросить все растянутые клипы или смикшировать и рендерить треки перед анализом"
+"Попробуйте сбросить все растянутые клипы или смикшировать и отрендерить треки перед анализом"
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
@@ -1336,7 +1337,7 @@ msgid "Compress Excess Silence"
 msgstr "Сжать избыточную тишину"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Усечение тишины"
 
@@ -1521,7 +1522,7 @@ msgstr "SFX усиления кульминации"
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Engine Breathing SFX"
-msgstr "SFX дыхания двигателя"
+msgstr "SFX дыхание двигателя"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1623,7 +1624,7 @@ msgstr "Неизвестное имя встроенного эффекта"
 
 #: libraries/lib-effects/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
-msgstr "Микс и рендер"
+msgstr "Микширование и рендеринг"
 
 #: libraries/lib-effects/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
@@ -2081,6 +2082,10 @@ msgstr "SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr "Главы подкаста"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -3600,11 +3605,11 @@ msgstr "Справка"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
-msgstr "&Превью"
+msgstr "&Прослушать"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 msgid "Dry Previe&w"
-msgstr "Превью &до применения"
+msgstr "Прослушать &до применения"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 msgid "&Settings"
@@ -4001,7 +4006,7 @@ msgid ""
 "Please report the problem."
 msgstr ""
 "Audacity не смог прочесть свою исходную тему.\n"
-"Сообщите о возникшей проблеме разработчикам."
+"Сообщите разработчикам  о возникшей проблеме."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -4192,12 +4197,12 @@ msgstr "Не удалось сохранить VST3-пресет в файл"
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Mel"
-msgstr "Мелвина"
+msgstr "Mel"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Bark"
-msgstr "Баркгаузена"
+msgstr "Баркгаузен"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
@@ -4249,11 +4254,11 @@ msgstr "Высота тона (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr "Вейвлет (1/6 октавы Ханна)"
+msgstr "Импульс (1/6 октавы Ханна)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Максимальная частота должна быть 100 Гц и выше"
+msgstr "Максимальная частота должна быть 100 Гц или выше"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Minimum frequency must be at least 0 Hz"
@@ -4340,7 +4345,7 @@ msgstr "Внимание - усечение слишком длинного бл
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Pre-processing"
-msgstr "Пре-обработка"
+msgstr "&Опережение:"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
@@ -4353,7 +4358,7 @@ msgstr "&Мульти-вид"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
-msgstr "Не удалось изменить частоту дискретизации."
+msgstr "Не удалось выполнить повторную выборку."
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -4375,7 +4380,7 @@ msgstr "%s.%i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
-msgstr "Недостаточно места для вставки выделения"
+msgstr "Недостаточно места для вставки выделенного"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
@@ -4457,7 +4462,7 @@ msgstr "Закрыть"
 
 #: libraries/lib-wx-init/HelpSystem.cpp
 msgid "Help on the Internet"
-msgstr "Справка в интернете"
+msgstr "Справка в Интернете"
 
 #: libraries/lib-wx-init/HelpSystem.cpp
 msgid "Local"
@@ -4465,7 +4470,7 @@ msgstr "Локальный"
 
 #: libraries/lib-wx-init/HelpSystem.cpp
 msgid "From Internet"
-msgstr "Из интернета"
+msgstr "Из Интернета"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Welcome!"
@@ -4527,7 +4532,7 @@ msgstr "Локальная справка отсутствует"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
-msgstr "Audacity может импортировать незащищённые файлы во многих других форматах (таких как M4A и WMA, сжатые файлы WAV с портативных рекордеров и аудио из видеофайлов), если установить дополнительную [[https://support.audacityteam.org/basics/installing-ffmpeg| библиотеку FFmpeg]] на свой компьютер."
+msgstr "Если скачать и установить в системе дополнительно [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg,Audacity сможет импортировать незащищённые файлы других форматов (M4A и WMA, файлы сжатых данных WAV портативных рекордеров и аудио видеофайлов)."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
@@ -4535,7 +4540,7 @@ msgstr "Также можно ознакомиться с нашей справ�
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Похоже, не установлено руководство пользователя. Пожалуйста, [[*URL*|просмотрите его онлайн]] или [[https://manual.audacityteam.org/man/unzipping_the_manual.html| скачайте]].<br><br>Чтобы всегда прсматривать его онлайн, измените 'Размещение учебника' в настройках интерфейса на 'В интернете'."
+msgstr "Похоже не установлено руководство пользователя. Пожалуйста, [[*URL*|просмотрите его онлайн]] или [[https://manual.audacityteam.org/man/unzipping_the_manual.html| скачайте]].<br><br>Чтобы всегда прсматривать его онлайн, измените 'Размещение учебника' в настройках интерфейса на 'В интернете'."
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -4583,7 +4588,7 @@ msgstr "OK"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
-msgstr "Прошло времени:"
+msgstr "Затрачено времени:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -4714,7 +4719,7 @@ msgstr "1-ая экспериментальная команда…"
 
 #: modules/etc/mod-null/ModNullCallback.cpp
 msgid "2nd Experimental Command"
-msgstr "2-ая экспериментальная команда"
+msgstr "2-ая экспериментальная команда…"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
@@ -4745,8 +4750,8 @@ msgid ""
 msgstr ""
 "%s\n"
 "Эта функция не поддерживается в версиях Audacity после 3.3.3.\n"
-"Эти стереотреки были разделены на монотреки.\n"
-"Перед сохранением убедитесь, что всё работает как надо"
+"Все стереотреки были разделены на монотреки.\n"
+"Прежде чем сохранять, убедитесь, что всё работает как надо"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
@@ -4757,7 +4762,7 @@ msgid ""
 "you may import it with this version of Audacity."
 msgstr ""
 "Этот проект был сохранён Audacity версии 1.0 или более ранней. Формат\n"
-"изменён - эта версия Audacity не может импортировать проект.\n"
+"изменён, и эта версия Audacity не может импортировать проект.\n"
 "\n"
 "Используйте версию Audacity до v3.0.0 для обновления проекта, а затем\n"
 "можно будет импортировать его с помощью этой версии Audacity."
@@ -4813,11 +4818,11 @@ msgstr "Активный проект уже имеет трек времени,
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
-msgstr "Недопустимый атрибут последовательности 'maxsamples'."
+msgstr "Недопустимый атрибут последовательности  'maxsamples'."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
-msgstr "Недопустимый атрибут последовательности 'sampleformat'."
+msgstr "Недопустимый атрибут последовательности  'sampleformat'."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'numsamples' attribute."
@@ -4997,7 +5002,7 @@ msgstr "Качество (кб/c)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Compression"
-msgstr "Компрессия"
+msgstr "Сжатие"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
@@ -5102,7 +5107,7 @@ msgstr "Сверхширокая полоса"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Fullband"
-msgstr "Полная полоса"
+msgstr "Неограниченная полоса"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Open custom FFmpeg format options"
@@ -5110,11 +5115,11 @@ msgstr "Открыть собственные настройки формата 
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Current Format:"
-msgstr "Текущий формат:"
+msgstr "Формат:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Current Codec:"
-msgstr "Текущий кодек:"
+msgstr "Кодек:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5172,7 +5177,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg: ОШИБКА - не удалось разместить буфер чтения данных аудио FIFO."
+msgstr "FFmpeg: ОШИБКА - не удалось разместить буфер для чтения данных аудиопотока FIFO."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -5208,7 +5213,7 @@ msgid ""
 "You can configure it at Preferences > Libraries."
 msgstr ""
 "Необходимо правильно настроить FFmpeg.\n"
-"Сделайте это в диалоге Настройки -> Библиотеки."
+"Сделайте это в диалоге Настройки > Библиотеки."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5234,7 +5239,7 @@ msgstr "Неверная частота дискретизации"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp src/menus/TrackMenus.cpp
 msgid "Resample"
-msgstr "Изменить частоту дискретизации"
+msgstr "Изменение частоты дискретизации"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5396,7 +5401,7 @@ msgid ""
 msgstr ""
 "Трёхбуквенный код языка ISO 639\n"
 "Необязательный параметр\n"
-"если пусто - автоматически"
+"при пустом значении - автоматически"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
@@ -5517,7 +5522,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
-msgstr "Компрессия:"
+msgstr "Сжатие:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5563,8 +5568,8 @@ msgid ""
 "Full search - default"
 msgstr ""
 "Метод прогноза уровня сигнала\n"
-"Оценочный - самый быстрый, низкая компрессия\n"
-"Поиск в журнале - самый медленный, лучшая компрессия\n"
+"Оценочный - самый быстрый, низкое сжатие\n"
+"Поиск в журнале - самый медленный, лучшее сжатие\n"
 "Полный поиск - по умолчанию"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
@@ -6515,7 +6520,7 @@ msgstr "Файл изменил количество каналов в сере�
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "IO error reading from file"
-msgstr "Ошибка ввода/вывода при чтении из файла"
+msgstr "Ошибка ввода-вывода при чтении из файла"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "not an Opus file"
@@ -6824,6 +6829,10 @@ msgstr "WavPack"
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to create target file for writing"
 msgstr "Невозможно создать целевой файл записи"
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr "Неподдерживаемое значение байтов на сэмпл экспорта в WavPack."
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -7173,7 +7182,7 @@ msgstr "Перейти к следующему S-выражению"
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
-msgstr "Начало"
+msgstr "Старт"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Start script"
@@ -8184,7 +8193,7 @@ msgstr "&Об %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "Перевод на русский язык:<br />Александр Коваленко, (2019-2025)<br />e-mail: nktch@yandex.ru<br />Предыдущие переводчики:<br />Александр Прокудин, (2002-2018)<br />Дмитрий Шатера, (2015)"
+msgstr "Перевод на русский язык:<br />Александр Коваленко, (2019-2026)<br />e-mail: nktch@yandex.ru<br />Предыдущие переводчики:<br />Александр Прокудин, (2002-2018)<br />Дмитрий Шатера, (2015)"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8248,8 +8257,8 @@ msgstr "Веб-сайт %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr "Права на программное обеспечение %s принадлежат %s 1999-2024 команде %s."
+msgid "%s software is copyright %s 1999-2026 %s Team."
+msgstr "Права на программное обеспечение %s принадлежат %s 1999-2026 команде %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -10936,7 +10945,7 @@ msgstr "Эффекты реального времени для %s"
 msgid "Realtime Effects"
 msgstr "Эффекты реального времени"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Показать видео"
 
@@ -11661,8 +11670,12 @@ msgid "Welcome to Audacity!"
 msgstr "Добро пожаловать в Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Видео: как мы перерабатываем Audacity для будущего"
+msgid "Try the new Audacity 4 Beta release"
+msgstr "Попробуйте новую бета-версию Audacity 4"
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr "Тест бета-версии"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11673,24 +11686,24 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Получите наши бесплатные инструменты ИИ OpenVino"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner: закадровый звук студийного качества"
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr "Изучите бесплатные плагины для улучшения аудио"
+msgstr "Изучите бесплатные плагины улучшения аудио"
 
 #: src/WhatsNewDialog.cpp
 msgid "View free plugins"
 msgstr "Посмотреть бесплатные плагины"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "Акция к 25-летию!"
+msgid "Help us decide the future of Audacity"
+msgstr "Помогите определить будущее Audacity."
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Посетить нас"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Посетить наш новый магазин продуктов Audacity"
+msgid "Take part in survey"
+msgstr "Примите участие в опросе"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11702,7 +11715,7 @@ msgstr "Посетить наш форум"
 
 #: src/WhatsNewDialog.cpp
 msgid "&Don't show this again at start up"
-msgstr "&Больше это при запуске не показывать"
+msgstr "При запуске &больше это не показывать"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -12184,6 +12197,10 @@ msgstr "Цвет 2"
 msgid "Color 3"
 msgstr "Цвет 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Без имени"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "В:"
@@ -12301,10 +12318,6 @@ msgstr "Задаёт различные значения для проекта."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Задать статус трека"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Без имени"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -12455,7 +12468,7 @@ msgstr "&Порог:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
-msgstr "Превью недоступно"
+msgstr "Прослушивание недоступно"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Presets"
@@ -12753,7 +12766,7 @@ msgstr "Анализатор контраста измеряет разност�
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
 #: src/toolbars/SelectionBar.cpp
 msgid "End"
-msgstr "Конец"
+msgstr "Окончание"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
@@ -13157,25 +13170,25 @@ msgstr "В&ывод"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "A&ctual compression"
-msgstr "&Фактическая компрессия"
+msgstr "&Фактическое сжатие"
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show actual compression"
-msgstr "Показать фактическую компрессию"
+msgstr "Показать фактическое сжатие"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Tar&get compression"
-msgstr "&Целевая компрессия"
+msgstr "&Целевое сжатие"
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show target compression"
-msgstr "Показать целевую компрессию"
+msgstr "Показать целевое сжатие"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Compression curve"
-msgstr "Кривая компрессии"
+msgstr "Кривая сжатия"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Smoothing"
@@ -13219,11 +13232,11 @@ msgstr "Вход"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Actual Compression"
-msgstr "Фактическая компрессия"
+msgstr "Фактическое сжатие"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Target Compression"
-msgstr "Целевая компрессия"
+msgstr "Целевое сжатие"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
@@ -13263,11 +13276,11 @@ msgstr "Заводские по умолчанию"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
-msgstr "Подготовка превью"
+msgstr "Готовится прослушивание"
 
 #: src/effects/EffectPreview.cpp
 msgid "Previewing"
-msgstr "Превью"
+msgstr "Прослушивание"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "&Generate"
@@ -13283,7 +13296,7 @@ msgstr "Пресеты &и настройки"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
-msgstr "Превью эффекта"
+msgstr "Прослушивание эффекта"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
@@ -14319,6 +14332,38 @@ msgstr "С&жать до:"
 msgid "Trunc&ate tracks independently"
 msgstr "&Усечь треки по отдельности"
 
+#: src/effects/TruncSilence.cpp
+msgid "Truncate Location"
+msgstr "Усечь расположение"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr "У&брать тишину в начале"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &middle"
+msgstr "Уб&рать тишину из середины"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &end"
+msgstr "Убр&ать тишину в конце"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+"Надо выбрать хотя бы один вариант расположения.\n"
+"\n"
+"Выберите хотя бы один из:\n"
+"* Убрать тишину в начале\n"
+"* Убрать тишину из середины\n"
+"* Убрать тишину в конце"
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Сохранить пресет VST как:"
@@ -14329,7 +14374,7 @@ msgstr "Стандартный файл банка VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Standard VST program file"
-msgstr "Стандартный файл программы VST"
+msgstr "Стандартный файл VST-плагина"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Audacity VST preset file"
@@ -14337,7 +14382,7 @@ msgstr "Файл пресета VST Audacity"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
-msgstr "Неапознанное расширение файла."
+msgstr "Нераспознанное расширение файла."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Load VST Preset:"
@@ -15056,8 +15101,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "От п&редыдущей границы клипа до курсора"
 
 #: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Выбрать от предыдущей границы клипа до курсора"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "От курсора до с&ледующей границы клипа"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Выбрать от курсора до следующей границы клипа"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -16409,7 +16462,7 @@ msgstr "В&ыровнять"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align End to End"
-msgstr "&Концы"
+msgstr "&По концам"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align &Together"
@@ -17587,7 +17640,7 @@ msgstr "Настройки проигрывания"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
-msgstr "Превью эффектов"
+msgstr "Прослушивание эффектов"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
@@ -17596,7 +17649,7 @@ msgstr "&Длительность:"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "Превью выреза"
+msgstr "Прослушивание выреза"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -17717,7 +17770,7 @@ msgstr "Включает:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
-msgstr " заданное &имя трека"
+msgstr " Заданное &имя трека"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom name text"
@@ -17725,19 +17778,19 @@ msgstr " Заданный текст имени"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Recorded_Audio"
-msgstr " записанное_аудио"
+msgstr " Записанное_аудио"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Track Number"
-msgstr " &номер трека"
+msgstr " &Номер трека"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System &Date"
-msgstr " &системную дату"
+msgstr " &Системную дату"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System T&ime"
-msgstr " системное &время"
+msgstr " Системное &время"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
@@ -17778,7 +17831,7 @@ msgstr "Запись с перезаписью"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr "&Преролл:"
+msgstr "&Опережение:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
@@ -18141,15 +18194,15 @@ msgstr "Отображать полу&волну при сворачивании
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
-msgstr "&Ффиксированная головка записи/проигрывания"
+msgstr "Закреплённая головка записи/&проигрывания"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "A&uto-scroll if head unpinned"
-msgstr "А&втопрокрутка, если головка не фиксирована"
+msgstr "А&втопрокрутка, если головка откреплена"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
-msgstr "&Позиция фиксированной головки"
+msgstr "По&зиция закреплённой головки"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -18733,7 +18786,7 @@ msgstr "Иг&рать один раз"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Играть превью выре&за"
+msgstr "Играть препросмотр выре&за"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Ad&just Playback Speed..."
@@ -19124,25 +19177,25 @@ msgstr "Переименовать клип..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Pitch and Speed..."
-msgstr "Высота тона и скорость..."
+msgstr "Тон и скорость..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
-msgstr "Рендер высоты тона и скорости"
+msgstr "Тон и скорость рендера"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
-msgstr "Изменённая скорость клипа до %.01f%%"
+msgstr "Изменена скорость клипа до %.01f%%"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Speed to %.01f%%"
-msgstr "Изменённая скорость до %.01f%%"
+msgstr "Изменена скорость до %.01f%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Set Wave Clip Name"
@@ -19166,11 +19219,11 @@ msgstr "Растянутые по времени аудиоданные с ре�
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch Shift"
-msgstr "Сдвиг высоты тона"
+msgstr "Смещение тона"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Changed Pitch Shift"
-msgstr "Изменённый сдвиг высоты тона"
+msgstr "Изменено смещение тона"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
@@ -19178,19 +19231,19 @@ msgstr "&Переименовать клип..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Pitch and Speed..."
-msgstr "Высота &тона и скорость..."
+msgstr "&Тон и скорость..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
-msgstr "Рендер высоты тона и &скорости"
+msgstr "Рендер тона и &скорости"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Up"
-msgstr "Высота тона &выше"
+msgstr "Тон &выше"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Down"
-msgstr "Высота тона &ниже"
+msgstr "Тон &ниже"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -19198,7 +19251,7 @@ msgstr "&Разрядность"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Changing sample format"
-msgstr "Изменение формата сэмплов"
+msgstr "Изменённый формат сэмплов"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -19808,6 +19861,39 @@ msgstr "Нет, спасибо"
 msgid "Remind me later"
 msgstr "Напомнить мне позже"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr "Не удалось получить информацию о версии Audacity 4. Попробуйте позже."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr "Неудачный парсинг о версии Audacity 4. Попробуйте позже."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr "Для вашей платформы нет доступного установщика Audacity 4."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Не удалось создать файл установщика. Проверьте права на запись."
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Обновление Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Загрузка %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Download Error"
+msgstr "Ошибка загрузки"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr "Не удалось загрузить установщик Audacity 4. Попробуйте позже."
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19853,15 +19939,6 @@ msgstr "Ошибка получения обновления"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Не удаётся открыть ссылку для загрузки Audacity."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Обновление Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Загрузка %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21465,7 +21542,7 @@ msgstr "<b>Пиковая амплитуда:</b> &nbsp;&nbsp;~a (линейна
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
-msgstr "<b>RMS</b> (невзвешенное): &nbsp;&nbsp;~a дБ."
+msgstr "<b>RMS</b> (невзвешенная): &nbsp;&nbsp;~a дБ."
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
@@ -21753,7 +21830,7 @@ msgstr "Специальные"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Reduction and Isolation"
-msgstr "Снижение и изоляция вокала"
+msgstr "Устранение и изоляция вокала"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"

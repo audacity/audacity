@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
+# Link Winterberg, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/audacity/teams/164520/el/)\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -240,6 +240,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Σφάλμα"
@@ -1326,7 +1327,7 @@ msgid "Compress Excess Silence"
 msgstr "Συμπίεση υπερβάλουσας σιγής"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Περικοπή σίγασης"
 
@@ -1348,10 +1349,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Γρήγορες διακυμάνσεις ποιότητας τόνου, όπως αυτές του ήχου της κιθάρας που ήταν τόσο δημοφιλείς τη δεκαετία του 1970"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Σφάλμα στην εισαγωγή"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -2069,6 +2069,10 @@ msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
 msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
@@ -2993,6 +2997,9 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
+"Για να χρησιμοποιήσετε 'Φασματικά εφέ', ενεργοποιήστε 'Φασματική επιλογή'\n"
+"στις ρυθμίσεις φασματογραφήματος κομματιού και επιλέξτε\n"
+"την περιοχή συχνότητας στην οποία θα δράσει το εφέ."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -6801,6 +6808,10 @@ msgid "Unable to create target file for writing"
 msgstr ""
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr ""
 
@@ -7174,16 +7185,15 @@ msgid "Open from audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Λήψη %s"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Αποτυχία κωδικοποίησης προρύθμισης από το \"%s\""
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7213,14 +7223,12 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Άνοιγμα έργου..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "CAF (Apple Core Audio File)"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7363,9 +7371,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Να περιλαμβάνεται ο ήχος πριν την πρώτη ετικέτα"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7373,11 +7380,11 @@ msgid "less than 1 minute"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d λεπτό"
-msgstr[1] "%d λεπτά"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7388,9 +7395,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Τίτλος κομματιού"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7410,14 +7416,12 @@ msgid "Failed to authorize account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Αλλαγή &δέκτη ήχου..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Αποτυχία πρόβλεψης μορφής"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -8217,7 +8221,7 @@ msgstr "Ιστότοπος %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10196,7 +10200,7 @@ msgstr "Επιλέχτηκαν πολύ λίγα συμβατά κομμάτια
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr ""
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10877,7 +10881,7 @@ msgstr ""
 msgid "Realtime Effects"
 msgstr ""
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr ""
 
@@ -11602,7 +11606,11 @@ msgid "Welcome to Audacity!"
 msgstr "Καλωσήρθατε στο Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11614,24 +11622,23 @@ msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Ενεργοποίηση νέων προσθέτων"
-
-#: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
+msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -12126,6 +12133,10 @@ msgstr "Χρώμα 2"
 msgid "Color 3"
 msgstr "Χρώμα 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Ανώνυμο"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Στα:"
@@ -12243,10 +12254,6 @@ msgstr "Ορίζει διάφορες τιμές για έργο."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Ορισμός κατάστασης κομματιού"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Ανώνυμο"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14261,6 +14268,32 @@ msgstr "Σ&υμπίεση σε:"
 msgid "Trunc&ate tracks independently"
 msgstr "Ανεξάρτητη πε&ρικοπή κομματιών"
 
+#: src/effects/TruncSilence.cpp
+msgid "Truncate Location"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &middle"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &end"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Αποθήκευση προεπιλογής VST ως:"
@@ -14995,8 +15028,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Προ&ηγούμενο όριο αποσπάσματος στον δρομέα"
 
 #: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Δρομέας στο επό&μενο όριο αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Cursor to Next Clip Boundary"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -16716,7 +16757,7 @@ msgstr "Προτιμήσεις για την εφαρμογή"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Ειδοποιήσει ενημέρωσης"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16726,7 +16767,7 @@ msgstr "Έ&λεγχος για ενημερώσεις"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Ο έλεγχος ενημέρωσης της εφαρμογής απαιτεί πρόσβαση στο διαδίκτυο. Προκειμένου να προστατευθεί το απόρρητό σας, το Audacity δεν αποθηκεύει προσωπικές πληροφορίες."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -19698,9 +19739,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Αριστερό=Μεγέθυνση, Δεξί=Σμίκρυνση, Μεσαίο=Κανονικό"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "Ε&γκατάσταση ενημέρωσης"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19722,6 +19762,39 @@ msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to create installer file. Please check write permissions."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Ενημέρωση Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Λήψη %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Download Error"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
 msgstr ""
 
 #. i18n-hint: Title of the dialog no updates available.
@@ -19769,15 +19842,6 @@ msgstr "Σφάλμα κατά τη λήψη της ενημέρωσης"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Αδυναμία ανοίγματος του συνδέσμου λήψης του Audacity."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Ενημέρωση Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Λήψη %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21657,7 +21721,3 @@ msgstr ""
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Τι νέο υπάρχει στο Audacity %s"
