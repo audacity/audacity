@@ -276,8 +276,112 @@ jobs:
         APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
         QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
 
+  testflow-discover:
+    # Lists the test scripts so that testflow-linux can fan out one job per
+    # script. Reads the repo (same commit the AppImage is built from) instead
+    # of the artifact, so it runs in parallel with the build.
+    runs-on: ubuntu-22.04
+    outputs:
+      scripts: ${{ steps.list.outputs.scripts }}
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v6
+      with:
+        repository: ${{ inputs.app_repo || job.workflow_repository }}
+        ref: ${{ inputs.app_ref || job.workflow_sha }}
+        persist-credentials: false
+        # These are gitignore-style patterns; a trailing "# comment" would
+        # become part of the pattern. buildscripts/ci/tools is needed for
+        # list_testflow_scripts.sh.
+        sparse-checkout: |
+          share/testflowscripts
+          buildscripts/ci/tools
+
+    - name: List test scripts
+      id: list
+      run: |
+        scripts=$(bash ${CI_DIR}/tools/list_testflow_scripts.sh)
+        echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
+        echo "Discovered: $scripts"
+
+  testflow-linux:
+    needs: [au4_build_linux, testflow-discover]
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false # let sibling test cases finish even if one fails
+      matrix:
+        script: ${{ fromJSON(needs.testflow-discover.outputs.scripts) }}
+    steps:
+    # No checkout: everything this job runs comes from the AppImage artifact.
+
+    - name: Setup environment
+      # The AppImage bundles Qt and most libraries; this installs a virtual
+      # display plus exactly the libraries the AppImage excludelist leaves to
+      # the host: the full GLVND family (the app links libOpenGL/libGLX
+      # directly), X client libs, fontconfig/freetype, and audio client libs
+      # (pulse/jack are dlopened, so not bundled either).
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          xvfb openbox dbus-x11 \
+          libgl1 libglx0 libopengl0 libegl1 \
+          libx11-6 libx11-xcb1 libxcb1 \
+          libfontconfig1 libfreetype6 libexpat1 \
+          libasound2
+
+    - name: Download AppImage artifact
+      # The artifact name is dynamic (AU4_<build_number>_Lin_x86_64_<info>),
+      # so match it by pattern.
+      uses: actions/download-artifact@v6
+      with:
+        pattern: AU4_*_Lin_x86_64_*
+        merge-multiple: true
+        path: ./build.artifacts
+
+    - name: Run testflow test case
+      env:
+        SCRIPT: ${{ matrix.script }}
+      run: |
+        APPIMAGE=$(find ./build.artifacts -type f -name '*.AppImage' -print -quit)
+        test -n "$APPIMAGE" || { echo "AppImage not found in artifact"; exit 1; }
+        chmod +x "$APPIMAGE"
+        # Extract instead of mounting, so the runner doesn't need libfuse2
+        "$APPIMAGE" --appimage-extract > /dev/null
+        APP_BIN="$PWD/squashfs-root/AppRun"
+        SCRIPTS_DIR=$(find "$PWD/squashfs-root" -type d -name "testflowscripts" -print -quit)
+        test -n "$SCRIPTS_DIR" || { echo "testflowscripts not found in AppImage (release build?)"; exit 1; }
+
+        tc="$SCRIPTS_DIR/$SCRIPT"
+        test -f "$tc" || { echo "script not in AppImage: $SCRIPT"; exit 1; }
+
+        # A leftover instance would swallow the args and exit 0 = false PASS
+        export AU_ALLOW_MULTIPLE_PROCESSES=1
+        export MUSE_TESTFLOW_DATA_PATH="$PWD/testflow_data"
+        # Fresh profile: no settings/recent-projects/session-restore leakage
+        SANDBOX=$(mktemp -d)
+        export XDG_CONFIG_HOME="$SANDBOX/config" XDG_DATA_HOME="$SANDBOX/data" \
+               XDG_CACHE_HOME="$SANDBOX/cache" XDG_STATE_HOME="$SANDBOX/state"
+
+        # Let run 5mn, then kill it after 15s if it doesn't exit on its own
+        rc=0
+        timeout -k 15 300 xvfb-run -a -s "-screen 0 1600x1000x24" \
+          "$APP_BIN" --test-case "$tc" --test-case-speed Fast || rc=$?
+        # Forward testflow output to the job log
+        find "$PWD/testflow_data" -name '*.txt' -exec sh -c 'echo "--- $1"; cat "$1"' _ {} \; 2>/dev/null || true
+        test "$rc" -eq 124 && echo "timed out"
+        exit $rc
+
+  delete-selftest-artifacts:
+    # testflow-linux consumes the packaged artifact, not the selftest one,
+    # so only the self-test job needs to be waited for
+    needs: [plugin-registration-self-test]
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+    steps:
     - name: Delete self-test artifact
-      if: always()
       uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
       with:
         failOnError: false
