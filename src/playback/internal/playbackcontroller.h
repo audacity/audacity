@@ -74,7 +74,6 @@ public:
     bool isStopped() const override;
 
     void stop() override;
-    void stopSeekAndUpdatePlaybackRegion() override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 
@@ -130,6 +129,7 @@ private:
 
     void togglePlay(TogglePlayMode mode);
 
+    void stopSeekAndUpdatePlaybackRegion();
     void stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
 
     void togglePlayPauseAction();

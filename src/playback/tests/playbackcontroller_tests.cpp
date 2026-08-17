@@ -911,12 +911,12 @@ TEST_F(PlaybackControllerTests, Rewind_ToEnd_CheckSelectionReset)
 }
 
 /**
- * @brief Seek then stopSeekAndUpdatePlaybackRegion should keep the cursor.
- * @details User clicks the cursor at 42s, then triggers a stop-and-update
- *          (e.g. via Shift+Space while playing). The playback region forwarded
- *          to the player should be the cursor, not an empty region.
+ * @brief Seek then stop should keep the cursor.
+ * @details User clicks the cursor at 42s, then presses Stop. The playback
+ *          region forwarded to the player should be the cursor, not an
+ *          empty region.
  */
-TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPosition)
+TEST_F(PlaybackControllerTests, Stop_PreservesSeekPosition)
 {
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
@@ -933,7 +933,7 @@ TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPos
     EXPECT_CALL(*m_player, seek(cursor, false))
     .Times(2);
 
-    //! [THEN] stopSeekAndUpdatePlaybackRegion stops the player
+    //! [THEN] Stop stops the player
     EXPECT_CALL(*m_player, stop())
     .Times(1);
 
@@ -944,8 +944,8 @@ TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPos
     //! [WHEN] User clicks the cursor at 42s
     seek(cursor, false);
 
-    //! [WHEN] Then triggers a stop-and-update
-    m_controller->stopSeekAndUpdatePlaybackRegion();
+    //! [WHEN] Then presses Stop
+    stop();
 }
 
 /**
