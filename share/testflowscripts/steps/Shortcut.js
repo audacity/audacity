@@ -55,6 +55,10 @@ module.exports = {
     {
         api.keyboard.key("Ctrl+V")
     },
+    openEffects: function()
+    {
+        api.keyboard.key("E")
+    },
     Duplicate: function()
     {
         api.keyboard.key("Ctrl+D")

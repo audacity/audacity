@@ -1,5 +1,9 @@
 /*
  * Audacity: A Digital Audio Editor
+ *
+ * NOTE The expected control count is the shipped workspace default, only
+ * guaranteed on a fresh profile (CI, or the headless launch configuration).
+ * See TC1.4 for details.
  */
 
 var Navigation = require("steps/Navigation.js")
@@ -18,14 +22,20 @@ var testCase = {
         {
             name: "Create new project", func: function () {
                 Home.createNewProject()
+                // The project page loads asynchronously, and querying a
+                // navigation panel before it exists crashes the app
+                api.testflow.sleep(2000)
             }
         },
         {
-            name: "Count the Workspace toolbar items", func: function () {
-                var controls = api.navigation.controls("PlaybackSection", "ToolBarView")
-                if (controls.length !== 17) {
-                    api.testflow.error("Control count is not 17")
-                }
+            name: "Switch to the Classic workspace", func: function () {
+                api.dispatcher.dispatch("command://workspace/select?name=Classic")
+                api.testflow.sleep(1500)
+            }
+        },
+        {
+            name: "Count the toolbar items", func: function () {
+                Navigation.assertControlCount("PlaybackSection", "PlaybackToolBar", 43)
             }
         }
     ]

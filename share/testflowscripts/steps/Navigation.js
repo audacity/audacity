@@ -57,7 +57,8 @@ module.exports = {
     assertControlCount: function (sectionName, panelName, count) {
         var controls = api.navigation.controls(sectionName, panelName)
         if (controls.length !== count) {
-            api.testflow.error("Control count is not " + count + ", section: " + sectionName + ", panel: " + panelName)
+            api.testflow.error("Control count is " + controls.length + ", expected " + count
+                               + ", section: " + sectionName + ", panel: " + panelName)
         }
     },
     assertControlsEnabled: function (sectionName, panelName) {
