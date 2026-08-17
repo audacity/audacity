@@ -124,13 +124,17 @@ private:
     enum class TogglePlayMode {
         PlayPause,      //!< pause while playing; resume/replay when not
         PlayStop,       //!< stop while playing; play when not
+        PlayStopAndSetCursor, //!< stop and seek to the stop position while playing, so the next play continues from there; play when not
         PlayFromCursor  //!< pause while playing; play from the cursor, clearing the playback region, when not
     };
 
     void togglePlay(TogglePlayMode mode);
 
+    void stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
+
     void togglePlayPauseAction();
     void togglePlayStopAction();
+    void togglePlayStopAndSetCursorAction();
     void togglePlayFromCursorAction();
     void playSelectionAction();
     void doPlay(bool clearPlaybackRegion);
