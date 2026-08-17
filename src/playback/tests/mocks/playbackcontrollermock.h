@@ -36,7 +36,6 @@ public:
     MOCK_METHOD(bool, isStopped, (), (const, override));
 
     MOCK_METHOD(void, stop, (), (override));
-    MOCK_METHOD(void, stopSeekAndUpdatePlaybackRegion, (), (override));
 
     MOCK_METHOD(muse::async::Channel<uint32_t>, midiTickPlayed, (), (const, override));
 
