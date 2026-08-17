@@ -116,6 +116,12 @@ public:
         m_controller->togglePlayStopAction();
     }
 
+    //! NOTE: X — play/stop, keeping the stop position for the next play
+    void togglePlayStopAndSetCursor()
+    {
+        m_controller->togglePlayStopAndSetCursorAction();
+    }
+
     //! NOTE: Shift+Spacebar — play from cursor, ignoring selection (pause while playing)
     void togglePlayFromCursor()
     {
@@ -546,6 +552,46 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
 
     //! [WHEN] Toggle play
     togglePlayStop();
+}
+
+/**
+ * @brief Toggle play/stop-select while playing, then play again
+ * @details User pressed X during playback: playback stops and the stop position
+ *          becomes the new start position, so the next play continues from where
+ *          playback stopped instead of the old start position
+ */
+TEST_F(PlaybackControllerTests, TogglePlayStopSelect_StopsAndNextPlayContinuesFromStopPosition)
+{
+    //! [GIVEN] Playback started from 5 secs and is running
+    m_controller->setLastPlaybackSeekTime(5.0);
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] The playhead is at 42 secs
+    const secs_t stopPosition = 42.0;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(stopPosition));
+
+    //! [THEN] Playback stops
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+
+    //! [WHEN] Toggle play/stop and set cursor
+    togglePlayStopAndSetCursor();
+
+    //! [THEN] The stop position became the new start position
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), stopPosition);
+
+    //! [GIVEN] Playback is stopped now
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] The next play continues from the stop position, not the old start position
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(stopPosition)))
+    .Times(1);
+
+    //! [WHEN] Toggle play/stop-select again
+    togglePlayStopAndSetCursor();
 }
 
 /**
@@ -1547,8 +1593,9 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopBu
     //! [GIVEN] Recording is running
     setRecording(true);
 
-    //! [THEN] Space and Shift+Space are blocked, the toolbar button is not
+    //! [THEN] Space, X and Shift+Space are blocked, the toolbar button is not
     EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
     EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
@@ -1560,6 +1607,7 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogg
 
     //! [THEN] All toggle-play actions are available
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
