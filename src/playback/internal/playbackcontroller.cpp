@@ -13,6 +13,7 @@ using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/toggle-play-stop");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY("action://playback/toggle-play-stop-and-set-cursor");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY("action://playback/toggle-play-from-cursor");
 static const ActionQuery PLAYBACK_PLAY_SELECTION_QUERY("action://playback/play-selection");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
@@ -78,6 +79,7 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_QUERY, this, &PlaybackController::togglePlayStopAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY, this, &PlaybackController::togglePlayStopAndSetCursorAction);
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY, this, &PlaybackController::togglePlayFromCursorAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_SELECTION_QUERY, this, &PlaybackController::playSelectionAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
@@ -272,6 +274,16 @@ void PlaybackController::stopSeekAndUpdatePlaybackRegion()
     updatePlaybackRegion();
 }
 
+void PlaybackController::stopSeekToPlaybackPositionAndUpdatePlaybackRegion()
+{
+    const muse::secs_t stopPosition = playbackPosition();
+
+    stop();
+
+    doSeek(stopPosition, false);
+    updatePlaybackRegion();
+}
+
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
 {
     return m_tickPlayed;
@@ -345,6 +357,11 @@ void PlaybackController::togglePlayStopAction()
     togglePlay(TogglePlayMode::PlayStop);
 }
 
+void PlaybackController::togglePlayStopAndSetCursorAction()
+{
+    togglePlay(TogglePlayMode::PlayStopAndSetCursor);
+}
+
 void PlaybackController::togglePlayFromCursorAction()
 {
     togglePlay(TogglePlayMode::PlayFromCursor);
@@ -360,7 +377,9 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
     const bool clearPlaybackRegion = mode == TogglePlayMode::PlayFromCursor;
 
     if (isPlaying()) {
-        if (mode == TogglePlayMode::PlayStop) {
+        if (mode == TogglePlayMode::PlayStopAndSetCursor) {
+            stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
+        } else if (mode == TogglePlayMode::PlayStop) {
             stopSeekAndUpdatePlaybackRegion();
         } else {
             doPause();
@@ -1106,6 +1125,7 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
     //! NOTE: toggle-play-pause stays available while recording — it pauses the recorder.
     //! Starting or restarting playback outright must not be possible while recording.
     if (code == PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString()
+        || code == PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY.toString()
         || code == PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString()) {
         return !recordController()->isRecording();
     }
