@@ -26,6 +26,9 @@ void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::II
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
     const auto doScanThirdPartyPlugins = [&interactive]() {
+        if (qEnvironmentVariableIsSet("AU_SKIP_PLUGIN_VALIDATION_PROMPT")) {
+            return false;
+        }
         auto ret = interactive.questionSync(muse::trc("appshell", "Validate audio plugins"),
                                             muse::trc(
                                                 "appshell",

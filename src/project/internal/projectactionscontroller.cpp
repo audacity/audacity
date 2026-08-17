@@ -578,7 +578,7 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
         return true;
     }
 
-    if (project->hasUnsavedChanges()) {
+    if (project->hasUnsavedChanges() && !qEnvironmentVariableIsSet("AU_SKIP_SAVE_PROJECT_PROMPT")) {
         const IInteractive::Button btn = askAboutSavingProject(project);
 
         if (btn == IInteractive::Button::Cancel) {
