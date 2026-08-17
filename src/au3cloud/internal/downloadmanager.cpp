@@ -41,6 +41,19 @@ void DownloadManager::scheduleDownloads(const std::vector<DownloadRequest>& requ
     }
 }
 
+void DownloadManager::cancelAll()
+{
+    std::map<std::string, muse::Progress> activeProgresses;
+    {
+        std::lock_guard lock(m_mutex);
+        activeProgresses = m_activeProgresses;
+    }
+
+    for (auto& [id, progress] : activeProgresses) {
+        progress.cancel();
+    }
+}
+
 muse::async::Channel<std::string, muse::io::path_t> DownloadManager::downloadCompleted() const
 {
     return m_downloadCompleted;
@@ -67,6 +80,7 @@ void DownloadManager::startDownload(const std::string& id, const std::string& ur
         }
 
         m_activeManagers[id] = std::move(manager);
+        m_activeProgresses[id] = retVal.val;
     }
 
     retVal.val.finished().onReceive(this,
@@ -74,6 +88,7 @@ void DownloadManager::startDownload(const std::string& id, const std::string& ur
         {
             std::lock_guard lock(m_mutex);
             m_activeManagers.erase(id);
+            m_activeProgresses.erase(id);
             m_inProgressIds.erase(id);
         }
 
