@@ -746,20 +746,24 @@ void MIDIPlay::StopOtherStream()
 
       mMidiOutputComplete = true;
 
-      // now we can assume "ownership" of the mMidiStream
-      // if output in progress, send all off, etc.
-      AllNotesOff();
-      // AllNotesOff() should be sufficient to stop everything, but
-      // in Linux, if you Pm_Close() immediately, it looks like
-      // messages are dropped. ALSA then seems to send All Sound Off
-      // and Reset All Controllers messages, but not all synthesizers
-      // respond to these messages. This is probably a bug in PortMidi
-      // if the All Off messages do not get out, but for security,
-      // delay a bit so that messages can be delivered before closing
-      // the stream. Add 2ms of "padding" to avoid any rounding errors.
-      while (mMaxMidiTimestamp + 2 > MidiTime()) {
-         using namespace std::chrono;
-         std::this_thread::sleep_for(1ms); // deliver the all-off messages
+      // If mCallbackCount == 0 nothing was written to the device, there are
+      // no notes to turn off, and nothing to drain
+      if (mCallbackCount > 0) {
+         // now we can assume "ownership" of the mMidiStream
+         // if output in progress, send all off, etc.
+         AllNotesOff();
+         // AllNotesOff() should be sufficient to stop everything, but
+         // in Linux, if you Pm_Close() immediately, it looks like
+         // messages are dropped. ALSA then seems to send All Sound Off
+         // and Reset All Controllers messages, but not all synthesizers
+         // respond to these messages. This is probably a bug in PortMidi
+         // if the All Off messages do not get out, but for security,
+         // delay a bit so that messages can be delivered before closing
+         // the stream. Add 2ms of "padding" to avoid any rounding errors.
+         while (mMaxMidiTimestamp + 2 > MidiTime()) {
+            using namespace std::chrono;
+            std::this_thread::sleep_for(1ms); // deliver the all-off messages
+         }
       }
       Pm_Close(mMidiStream);
       mMidiStream = NULL;
@@ -835,7 +839,7 @@ bool Iterator::OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo)
    // (RBD)
    // if mNextEvent's channel is visible, play it, visibility can
    // be updated while playing.
-   
+
    // Be careful: if we have a note-off,
    // then we must not pay attention to the channel selection
    // or mute/solo buttons because we must turn the note off
