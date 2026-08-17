@@ -1121,6 +1121,12 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const bool err = results.trackError;
 
    if (bParseSuccess && !err) {
+      // Set clip's project tempo - this is a fix for issue #11337
+      const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
+      const std::optional<double> oldTempo{};
+      for (auto track : tracks)
+         OnProjectTempoChange::Call(*track, oldTempo, projectTempo);
+
       Viewport::Get(project).ReinitScrollbars();
 
       ProjectHistory::Get( project ).InitialState();
