@@ -93,6 +93,55 @@ DeviceSourceMap* DeviceManager::GetDefaultInputDevice(int hostIndex)
    return GetDefaultDevice(hostIndex, 1);
 }
 
+namespace {
+wxString HostDevicesKeyRoot(const wxString &host)
+{
+   wxString escaped = host;
+   escaped.Replace(L"/", L"_");
+   return L"/AudioIO/HostDevices/" + escaped + L"/";
+}
+
+wxString JoinDeviceSource(const wxString &device, const wxString &source)
+{
+   return source.empty() ? device : device + wxT(": ") + source;
+}
+
+const DeviceSourceMap *FindDevice(const std::vector<DeviceSourceMap> &maps, const wxString &host, const wxString &name)
+{
+   if (name.empty())
+      return nullptr;
+
+   for (auto &map : maps)
+      if (map.hostString == host && MakeDeviceSourceString(&map) == name)
+         return &map;
+
+   return nullptr;
+}
+}
+
+void DeviceManager::SaveDevicesForHost(const wxString &host)
+{
+   if (host.empty())
+      return;
+
+   const wxString root = HostDevicesKeyRoot(host);
+   gPrefs->Write(root + L"Input", JoinDeviceSource(AudioIORecordingDevice.Read(), AudioIORecordingSource.Read()));
+   gPrefs->Write(root + L"Output", JoinDeviceSource(AudioIOPlaybackDevice.Read(), AudioIOPlaybackSource.Read()));
+   gPrefs->Flush();
+}
+
+std::pair<const DeviceSourceMap *, const DeviceSourceMap *> DeviceManager::DevicesForHost(const wxString &host)
+{
+   if (host.empty())
+      return {};
+
+   const wxString root = HostDevicesKeyRoot(host);
+   return {
+      FindDevice(GetInputDeviceMaps(), host, gPrefs->Read(root + L"Input", wxString{})),
+      FindDevice(GetOutputDeviceMaps(), host, gPrefs->Read(root + L"Output", wxString{}))
+   };
+}
+
 //--------------- Device Enumeration --------------------------
 
 //Port Audio requires we open the stream with a callback or a lot of devices will fail

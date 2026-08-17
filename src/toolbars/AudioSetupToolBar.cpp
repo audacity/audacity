@@ -247,6 +247,10 @@ void AudioSetupToolBar::UpdatePrefs()
       // updates mHost and mOutput
       FillHostDevices();
 
+   // What the user last chose on this host, preferred over the host's default
+   // when the settings still name a device belonging to the previous host
+   const auto [rememberedIn, rememberedOut] = DeviceManager::Instance()->DevicesForHost(hostName);
+
    auto devName = AudioIORecordingDevice.Read();
    auto sourceName = AudioIORecordingSource.Read();
    if (sourceName.empty())
@@ -258,6 +262,10 @@ void AudioSetupToolBar::UpdatePrefs()
       if (mInput.Set(desc))
          // updates mInputChannels
          FillInputChannels();
+      else if (rememberedIn) {
+         mInput.Set(MakeDeviceSourceString(rememberedIn));
+         SetDevices(rememberedIn, nullptr);
+      }
       else if (!mInput.Empty()) {
          for (size_t i = 0; i < inMaps.size(); i++) {
             if (inMaps[i].hostString == hostName &&
@@ -286,8 +294,12 @@ void AudioSetupToolBar::UpdatePrefs()
    else
       desc = devName + wxT(": ") + sourceName;
 
-   if (mOutput.Get() && *mOutput.Get() != desc) {
-      if (!mOutput.Set(desc) && !mOutput.Empty()) {
+   if (mOutput.Get() && *mOutput.Get() != desc && !mOutput.Set(desc)) {
+      if (rememberedOut) {
+         mOutput.Set(MakeDeviceSourceString(rememberedOut));
+         SetDevices(nullptr, rememberedOut);
+      }
+      else if (!mOutput.Empty()) {
          for (size_t i = 0; i < outMaps.size(); i++) {
             if (outMaps[i].hostString == hostName &&
                MakeDeviceSourceString(&outMaps[i]) == mOutput.GetFirst()) {
@@ -597,6 +609,8 @@ bool AudioSetupToolBar::ChangeHost(int hostId)
 
    if (oldHost == newHost)
       return false;
+
+   DeviceManager::SaveDevicesForHost(oldHost);
 
    //change the host and switch to correct devices.
    AudioIOHost.Write(newHost);

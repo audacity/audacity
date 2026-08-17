@@ -397,6 +397,16 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    if (!this->mRecordSource.empty())
       recDevice += wxT(": ") + mRecordSource;
 
+   wxString playDevice = mPlayDevice;
+
+   // What the user last chose on this host, preferred over the settings, which
+   // name the devices of whichever host was selected before
+   const auto [rememberedIn, rememberedOut] = DeviceManager::Instance()->DevicesForHost(apiName);
+   if (rememberedIn)
+      recDevice = MakeDeviceSourceString(rememberedIn);
+   if (rememberedOut)
+      playDevice = MakeDeviceSourceString(rememberedOut);
+
    mRecord->Clear();
    for (i = 0; i < inMaps.size(); i++) {
       if (index == inMaps[i].hostIndex) {
@@ -417,7 +427,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
          device   = MakeDeviceSourceString(&outMaps[i]);
          devindex = mPlay->Append(device);
          mPlay->SetClientData(devindex, const_cast<DeviceSourceMap *>(&outMaps[i]));
-         if (device == mPlayDevice) {  /* if this is the default device, select it */
+         if (device == playDevice) {  /* if this is the default device, select it */
             mPlay->SetSelection(devindex);
          }
       }
@@ -581,6 +591,9 @@ void DevicePrefs::OnProjectSampleRateChoice(wxCommandEvent& e)
 
 bool DevicePrefs::Commit()
 {
+   // The settings still describe the host that was selected on entry
+   DeviceManager::SaveDevicesForHost(AudioIOHost.Read());
+
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    DeviceSourceMap *map = NULL;
@@ -605,6 +618,8 @@ bool DevicePrefs::Commit()
          AudioIORecordingSource.Reset();
       AudioIORecordChannels.Write(mChannels->GetSelection() + 1);
    }
+
+   DeviceManager::SaveDevicesForHost(AudioIOHost.Read());
 
    AudioIOLatencyDuration.Invalidate();
    AudioIOLatencyCorrection.Invalidate();
