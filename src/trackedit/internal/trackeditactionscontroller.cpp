@@ -965,7 +965,7 @@ void TrackeditActionsController::doGlobalJoin()
 std::optional<TrackeditActionsController::ContiguousClipsSpan> TrackeditActionsController::contiguousSelectedClipsSpan() const
 {
     const ClipKeyList clipKeys = selectionController()->selectedClips();
-    if (clipKeys.size() < 2) {
+    if (clipKeys.empty()) {
         return std::nullopt;
     }
 
@@ -983,6 +983,7 @@ std::optional<TrackeditActionsController::ContiguousClipsSpan> TrackeditActionsC
 
     const muse::async::NotifyList<Clip> trackClips = prj->clipList(trackId);
 
+    ClipKeyList clipsToJoin = clipKeys;
     size_t selectedCount = 0;
     double begin = std::numeric_limits<double>::max();
     double end = std::numeric_limits<double>::lowest();
@@ -998,8 +999,31 @@ std::optional<TrackeditActionsController::ContiguousClipsSpan> TrackeditActionsC
         return std::nullopt;
     }
 
+    if (clipKeys.size() == 1) {
+        const double selectedBegin = begin;
+        const double selectedEnd = end;
+
+        for (const Clip& clip : trackClips) {
+            if (muse::contains(clipKeys, clip.key)) {
+                continue;
+            }
+
+            if (muse::RealIsEqual(clip.endTime, selectedBegin)) {
+                clipsToJoin.push_back(clip.key);
+                begin = std::min(begin, clip.startTime);
+            } else if (muse::RealIsEqual(clip.startTime, selectedEnd)) {
+                clipsToJoin.push_back(clip.key);
+                end = std::max(end, clip.endTime);
+            }
+        }
+    }
+
+    if (clipsToJoin.size() < 2) {
+        return std::nullopt;
+    }
+
     for (const Clip& clip : trackClips) {
-        if (!muse::contains(clipKeys, clip.key) && clip.startTime < end && clip.endTime > begin) {
+        if (!muse::contains(clipsToJoin, clip.key) && clip.startTime < end && clip.endTime > begin) {
             return std::nullopt;
         }
     }
