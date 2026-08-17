@@ -299,6 +299,7 @@ jobs:
 
     - name: List test scripts
       id: list
+      # Disabled test cases are listed in share/testflowscripts/disabled.json
       run: |
         scripts=$(bash ${CI_DIR}/tools/list_testflow_scripts.sh)
         echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
@@ -309,17 +310,26 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false # let sibling test cases finish even if one fails
-      matrix:
-        script: ${{ fromJSON(needs.testflow-discover.outputs.scripts) }}
+      # A job-level `if` cannot see the matrix context (it is evaluated before
+      # the matrix expands), so disabled test cases are handled with step-level
+      # conditions instead: their job runs, labeled DISABLED, with every step
+      # skipped.
+      matrix: ${{ fromJSON(needs.testflow-discover.outputs.scripts) }}
     steps:
     # No checkout: everything this job runs comes from the AppImage artifact.
 
+    - name: Report disabled test case
+      if: matrix.status == 'DISABLED'
+      env:
+        SCRIPT: ${{ matrix.script }}
+      run: echo "::warning title=Test case disabled::$SCRIPT is disabled - see share/testflowscripts/disabled.json for the reason"
+
     - name: Setup environment
+      if: matrix.status != 'DISABLED'
       # The AppImage bundles Qt and most libraries; this installs a virtual
       # display plus exactly the libraries the AppImage excludelist leaves to
       # the host: the full GLVND family (the app links libOpenGL/libGLX
-      # directly), X client libs, fontconfig/freetype, and audio client libs
-      # (pulse/jack are dlopened, so not bundled either).
+      # directly), X client libs, fontconfig/freetype, and ALSA.
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends \
@@ -330,6 +340,7 @@ jobs:
           libasound2
 
     - name: Download AppImage artifact
+      if: matrix.status != 'DISABLED'
       # The artifact name is dynamic (AU4_<build_number>_Lin_x86_64_<info>),
       # so match it by pattern.
       uses: actions/download-artifact@v6
@@ -339,6 +350,7 @@ jobs:
         path: ./build.artifacts
 
     - name: Run testflow test case
+      if: matrix.status != 'DISABLED'
       env:
         SCRIPT: ${{ matrix.script }}
       run: |
