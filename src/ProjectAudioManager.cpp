@@ -32,6 +32,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectRate.h"
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
+#include "RealtimeEffectList.h"
 #include "ScrubState.h"
 #include "TrackFocus.h"
 #include "prefs/TracksPrefs.h"
@@ -845,6 +846,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
                dst.Init(src);
+               // Explicitly copy effect list
+               RealtimeEffectList::Set(dst, RealtimeEffectList::Get(src).Duplicate());
             };
 
             // End of current track is before or at recording start time.

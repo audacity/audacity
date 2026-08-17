@@ -60,9 +60,9 @@ public:
 
    Lock &GetLock() const { return mLock; }
 
-   //! Should be called (for pushing undo states) only from main thread, to
-   //! avoid races
+   //! Should be called (for pushing undo states) only from main thread, to avoid races
    std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
+   //! Shallow copy, shares the states with this
    std::unique_ptr<RealtimeEffectList> Duplicate() const;
 
    static RealtimeEffectList &Get(AudacityProject &project);
@@ -73,6 +73,7 @@ public:
 
    static RealtimeEffectList &Get(ChannelGroup &group);
    static const RealtimeEffectList &Get(const ChannelGroup &group);
+   static RealtimeEffectList &Set(ChannelGroup &group, std::unique_ptr<RealtimeEffectList> list);
 
    // Type that state visitor functions would have for out-of-line definition
    // of Visit

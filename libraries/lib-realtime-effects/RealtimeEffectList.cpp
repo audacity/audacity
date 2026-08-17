@@ -21,6 +21,7 @@ RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
+// Deep copy of states
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
@@ -30,7 +31,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
    return result;
 }
 
-// Deep copy of states
+// Shallow copy of states
 std::unique_ptr<RealtimeEffectList> RealtimeEffectList::Duplicate() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
@@ -87,6 +88,13 @@ const RealtimeEffectList &RealtimeEffectList::Get(
    const ChannelGroup &group)
 {
    return Get(const_cast<ChannelGroup &>(group));
+}
+
+RealtimeEffectList &RealtimeEffectList::Set(ChannelGroup &group, std::unique_ptr<RealtimeEffectList> list)
+{
+   auto &result = *list;
+   group.Attachments::Assign(channelGroupEffects, std::move(list));
+   return result;
 }
 
 bool
