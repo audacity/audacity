@@ -1,0 +1,101 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "features",
+      "hidden": true,
+      "description": "Audacity build toggles",
+      "cacheVariables": {
+        "audacity_has_vst3": "ON",
+        "audacity_has_networking": "OFF",
+        "audacity_has_audiocom_upload": "OFF",
+        "audacity_has_updates_check": "OFF",
+        "audacity_use_ffmpeg": "loaded",
+        "audacity_use_ladspa": "ON",
+        "audacity_use_nyquist": "ON",
+        "audacity_has_tests": "ON"
+      }
+    },
+    {
+      "name": "base",
+      "hidden": true,
+      "inherits": "features",
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+
+    { "name": "debug",   "hidden": true, "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "release", "hidden": true, "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } },
+    {
+      "name": "asan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "-fsanitize=address -fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fsanitize=address"
+      }
+    },
+
+    {
+      "name": "mac",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Ninja",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    { "name": "mac-arm", "hidden": true, "inherits": "mac", "cacheVariables": { "MACOS_ARCHITECTURE": "arm64" } },
+    { "name": "mac-x86", "hidden": true, "inherits": "mac", "cacheVariables": { "MACOS_ARCHITECTURE": "x86_64" } },
+    {
+      "name": "linux",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Ninja",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "win",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+
+    { "name": "mac-arm-debug",   "inherits": [ "mac-arm", "debug" ] },
+    { "name": "mac-arm-release", "inherits": [ "mac-arm", "release" ] },
+    { "name": "mac-arm-asan",    "inherits": [ "mac-arm", "asan" ] },
+    { "name": "mac-x86-debug",   "inherits": [ "mac-x86", "debug" ] },
+    { "name": "mac-x86-release", "inherits": [ "mac-x86", "release" ] },
+    { "name": "mac-x86-asan",    "inherits": [ "mac-x86", "asan" ] },
+    { "name": "linux-debug",     "inherits": [ "linux", "debug" ] },
+    { "name": "linux-release",   "inherits": [ "linux", "release" ] },
+    { "name": "linux-asan",      "inherits": [ "linux", "asan" ] },
+    { "name": "win-debug",       "inherits": "win", "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Debug" } },
+    { "name": "win-release",     "inherits": "win", "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Release" } },
+    {
+      "name": "win-asan",
+      "inherits": "win",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "/fsanitize=address",
+        "CMAKE_CXX_FLAGS": "/fsanitize=address"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "mac-arm-debug",   "configurePreset": "mac-arm-debug" },
+    { "name": "mac-arm-release", "configurePreset": "mac-arm-release" },
+    { "name": "mac-arm-asan",    "configurePreset": "mac-arm-asan" },
+    { "name": "mac-x86-debug",   "configurePreset": "mac-x86-debug" },
+    { "name": "mac-x86-release", "configurePreset": "mac-x86-release" },
+    { "name": "mac-x86-asan",    "configurePreset": "mac-x86-asan" },
+    { "name": "linux-debug",     "configurePreset": "linux-debug" },
+    { "name": "linux-release",   "configurePreset": "linux-release" },
+    { "name": "linux-asan",      "configurePreset": "linux-asan" },
+    { "name": "win-debug",       "configurePreset": "win-debug",   "configuration": "Debug" },
+    { "name": "win-release",     "configurePreset": "win-release", "configuration": "Release" },
+    { "name": "win-asan",        "configurePreset": "win-asan",    "configuration": "RelWithDebInfo" }
+  ]
+}
