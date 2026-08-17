@@ -815,7 +815,7 @@
         <key>track-move-bottom</key>
     </SC>
     <SC>
-        <key>play-stop-select</key>
+        <key>action://playback/toggle-play-stop-and-set-cursor</key>
         <seq>X</seq>
     </SC>
     <SC>
