@@ -42,9 +42,9 @@ EffectOutputTracks::EffectOutputTracks(
 
    for (auto aTrack : trackRange) {
       auto pTrack = aTrack->Duplicate();
-      // Explicitly copy effect list and their states
+      // Explicitly share the effect states, the duplicate replaces the original in Commit()
       if (const auto pWaveTrack = dynamic_cast<WaveTrack*>(aTrack))
-         RealtimeEffectList::Set(*pTrack, RealtimeEffectList::Get(*pWaveTrack).Duplicate());
+         RealtimeEffectList::ShareStates(*pTrack, *pWaveTrack);
       mIMap.push_back(aTrack);
       mOMap.push_back(pTrack.get());
       mOutputTracks->Add(pTrack);

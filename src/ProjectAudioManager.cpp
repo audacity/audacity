@@ -846,8 +846,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
                dst.Init(src);
-               // Explicitly copy effect list
-               RealtimeEffectList::Set(dst, RealtimeEffectList::Get(src).Duplicate());
+               // Explicitly share the effect states, the pending track replaces the source on stop
+               RealtimeEffectList::ShareStates(dst, src);
             };
 
             // End of current track is before or at recording start time.

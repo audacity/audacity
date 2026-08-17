@@ -60,10 +60,11 @@ public:
 
    Lock &GetLock() const { return mLock; }
 
+   enum class CopyDepth { Shallow, Deep };
+
    //! Should be called (for pushing undo states) only from main thread, to avoid races
    std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
-   //! Shallow copy, shares the states with this
-   std::unique_ptr<RealtimeEffectList> Duplicate() const;
+   std::unique_ptr<RealtimeEffectList> Duplicate(CopyDepth depth) const;
 
    static RealtimeEffectList &Get(AudacityProject &project);
    static const RealtimeEffectList &Get(const AudacityProject &project);
@@ -74,6 +75,10 @@ public:
    static RealtimeEffectList &Get(ChannelGroup &group);
    static const RealtimeEffectList &Get(const ChannelGroup &group);
    static RealtimeEffectList &Set(ChannelGroup &group, std::unique_ptr<RealtimeEffectList> list);
+
+   //! Give group the same effect state instances as other, not copies of them,
+   //! so they stay alive after other is destroyed
+   static void ShareStates(ChannelGroup &group, const ChannelGroup &other);
 
    // Type that state visitor functions would have for out-of-line definition
    // of Visit
