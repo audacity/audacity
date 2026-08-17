@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // Fresh profile for headless testflow runs, like CI's per-test sandbox.
+            // Also guards against a crashed run leaving session-restore state behind,
+            // which would flip the next startup into Recovery mode.
+            "label": "testflow: reset headless profile",
+            "type": "shell",
+            "command": "rm -rf '${config:au4.testflowProfileDir}' && mkdir -p '${config:au4.testflowProfileDir}'/{config,data,cache,state}",
+            "dependsOn": ["CMake: install"],
+            "problemMatcher": []
+        }
+    ]
+}

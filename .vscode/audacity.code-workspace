@@ -20,5 +20,7 @@
         "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
         "cmake.buildBeforeRun": false, // Useful if you are running the "audacity (install)" target :
         "uncrustify.executablePath.linux": "/usr/local/bin/uncrustify_074",
+        // Referenced as ${config:au4.testflowProfileDir} in launch.json and tasks.json
+        "au4.testflowProfileDir": "/tmp/au4-testflow-profile",
     }
 }
