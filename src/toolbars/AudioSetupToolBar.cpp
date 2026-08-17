@@ -292,7 +292,7 @@ void AudioSetupToolBar::UpdatePrefs()
             if (outMaps[i].hostString == hostName &&
                MakeDeviceSourceString(&outMaps[i]) == mOutput.GetFirst()) {
                // use the default.  It should exist but check just in case, falling back on the 0 index.
-               DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(outMaps[i].hostIndex);
+               DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(outMaps[i].hostIndex);
                if (defaultMap) {
                   mOutput.Set(MakeDeviceSourceString(defaultMap));
                   SetDevices(nullptr, defaultMap);

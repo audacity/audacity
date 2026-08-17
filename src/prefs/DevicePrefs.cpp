@@ -453,8 +453,8 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       if (defaultMap)
          mRecord->SetStringSelection(MakeDeviceSourceString(defaultMap));
 
-      if (mPlay->GetSelection() == wxNOT_FOUND) {
-         mPlay->SetSelection(0);
+      if (mRecord->GetSelection() == wxNOT_FOUND) {
+         mRecord->SetSelection(0);
       }
    }
 
