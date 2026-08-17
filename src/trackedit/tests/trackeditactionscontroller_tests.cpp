@@ -5,9 +5,12 @@
 
 #include "trackedit/internal/trackeditactionscontroller.h"
 
+#include "context/tests/mocks/globalcontextmock.h"
+
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/tracknavigationcontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
+#include "mocks/trackeditprojectmock.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -21,6 +24,8 @@ public:
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_trackNavigationController = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
         m_trackeditInteraction = std::make_shared<NiceMock<TrackeditInteractionMock> >();
+        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
+        m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
 
         m_testCtx = std::make_shared<muse::modularity::Context>(999);
         m_controller = std::make_shared<TrackeditActionsController>(m_testCtx);
@@ -28,6 +33,10 @@ public:
         m_controller->selectionController.set(m_selectionController);
         m_controller->trackNavigationController.set(m_trackNavigationController);
         m_controller->trackeditInteraction.set(m_trackeditInteraction);
+        m_controller->globalContext.set(m_globalContext);
+
+        ON_CALL(*m_globalContext, currentTrackeditProject())
+        .WillByDefault(Return(m_trackeditProject));
 
         ON_CALL(*m_trackNavigationController, focusedItem())
         .WillByDefault(Return(TrackItemKey { INVALID_TRACK, INVALID_TRACK_ITEM }));
@@ -57,13 +66,94 @@ public:
         m_controller->doGlobalCancel();
     }
 
+    static Clip makeClip(const TrackId trackId, const TrackItemId itemId, const double startTime, const double endTime)
+    {
+        Clip clip;
+        clip.key = { trackId, itemId };
+        clip.startTime = startTime;
+        clip.endTime = endTime;
+        return clip;
+    }
+
+    void setupTrackClips(const TrackId trackId, const std::vector<Clip>& clips)
+    {
+        ON_CALL(*m_trackeditProject, clipList(trackId))
+        .WillByDefault([clips](const TrackId&) {
+            muse::async::NotifyList<Clip> list;
+            for (const Clip& clip : clips) {
+                list.push_back(clip);
+            }
+            return list;
+        });
+    }
+
+    struct ClipsSpan {
+        TrackId trackId = INVALID_TRACK;
+        secs_t begin = 0.0;
+        secs_t end = 0.0;
+    };
+
+    std::optional<ClipsSpan> selectedClipsSpan() const
+    {
+        const auto span = m_controller->contiguousSelectedClipsSpan();
+        if (!span) {
+            return std::nullopt;
+        }
+        return ClipsSpan { span->trackId, span->begin, span->end };
+    }
+
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackeditActionsController> m_controller;
 
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
+    std::shared_ptr<context::GlobalContextMock> m_globalContext;
+    std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
 };
+
+TEST_F(TrackeditActionsControllerTests, SingleSelectedClipJoinsTouchingNeighbors)
+{
+    const Clip left = makeClip(1, 101, 0.0, 1.0);
+    const Clip selected = makeClip(1, 102, 1.0, 2.0);
+    const Clip right = makeClip(1, 103, 2.0, 3.0);
+    setupTrackClips(1, { left, selected, right });
+    ON_CALL(*m_selectionController, selectedClips())
+    .WillByDefault(Return(ClipKeyList { selected.key }));
+
+    const auto span = selectedClipsSpan();
+
+    ASSERT_TRUE(span.has_value());
+    EXPECT_EQ(1, span->trackId);
+    EXPECT_DOUBLE_EQ(0.0, span->begin);
+    EXPECT_DOUBLE_EQ(3.0, span->end);
+}
+
+TEST_F(TrackeditActionsControllerTests, SingleSelectedClipJoinsOneTouchingNeighbor)
+{
+    const Clip selected = makeClip(1, 101, 0.0, 1.0);
+    const Clip right = makeClip(1, 102, 1.0, 2.0);
+    setupTrackClips(1, { selected, right });
+    ON_CALL(*m_selectionController, selectedClips())
+    .WillByDefault(Return(ClipKeyList { selected.key }));
+
+    const auto span = selectedClipsSpan();
+
+    ASSERT_TRUE(span.has_value());
+    EXPECT_DOUBLE_EQ(0.0, span->begin);
+    EXPECT_DOUBLE_EQ(2.0, span->end);
+}
+
+TEST_F(TrackeditActionsControllerTests, SingleSelectedClipDoesNotJoinAcrossGap)
+{
+    const Clip selected = makeClip(1, 101, 0.0, 1.0);
+    const Clip right = makeClip(1, 102, 1.1, 2.0);
+    setupTrackClips(1, { selected, right });
+    ON_CALL(*m_selectionController, selectedClips())
+    .WillByDefault(Return(ClipKeyList { selected.key }));
+
+    EXPECT_FALSE(selectedClipsSpan().has_value());
+}
 
 /**
  * Cancel always notifies about the in-progress drag edit being cancelled.
