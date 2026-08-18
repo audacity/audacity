@@ -17,7 +17,6 @@ using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/toggle-play-stop");
-static const ActionQuery PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY("action://playback/toggle-play-from-cursor");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY("action://playback/toggle-play-stop-and-set-cursor");
 static const ActionQuery PLAYBACK_PLAY_SELECTION_QUERY("action://playback/play-selection");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
@@ -57,15 +56,6 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Play/Stop and set cursor"),
              TranslatableString("action", "Play/Stop and set cursor to the stop position"),
-             IconCode::Code::PLAY_FILL
-             ),
-    UiAction(PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString(),
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Play/Pause from cursor"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Play/Pause from cursor"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PLAY_SELECTION_QUERY.toString(),
@@ -341,7 +331,6 @@ void PlaybackUiActions::init()
         ActionCodeList codes= {
             PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(),
             PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(),
-            PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString(),
             PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY.toString(),
             PLAYBACK_PLAY_SELECTION_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),
