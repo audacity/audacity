@@ -37,7 +37,7 @@ constexpr std::array<muse::audioplugins::AudioPluginState, 4> statusFilterOrder 
 QString effectDisplayName(const EffectMeta& meta)
 {
     if (!meta.title.empty()) {
-        return meta.title.toQString();
+        return utils::effectDisplayTitle(meta).toQString();
     }
     // never-validated entries have no title; their id is the binary's basename,
     // unless it's a full effect id we can parse a name out of
