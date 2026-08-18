@@ -47,6 +47,8 @@ EffectFamily effectFamilyFromCacheType(const std::string& cacheType);
 bool isFamilyType(const muse::audioplugins::PluginMeta& meta, EffectFamily family);
 
 muse::audioplugins::PluginMeta auToMuseEffectMeta(const EffectMeta& meta);
+
+muse::String effectDisplayTitle(const EffectMeta& meta);
 EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::PluginMeta& meta,
                               muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Validated);
 }
