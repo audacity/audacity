@@ -9,6 +9,7 @@
 **********************************************************************/
 #include "EffectOutputTracks.h"
 #include "BasicUI.h"
+#include "RealtimeEffectList.h"
 #include "SyncLock.h"
 #include "UserException.h"
 #include "WaveTrack.h"
@@ -41,6 +42,9 @@ EffectOutputTracks::EffectOutputTracks(
 
    for (auto aTrack : trackRange) {
       auto pTrack = aTrack->Duplicate();
+      // Explicitly share the effect states, the duplicate replaces the original in Commit()
+      if (const auto pWaveTrack = dynamic_cast<WaveTrack*>(aTrack))
+         RealtimeEffectList::ShareStates(*pTrack, *pWaveTrack);
       mIMap.push_back(aTrack);
       mOMap.push_back(pTrack.get());
       mOutputTracks->Add(pTrack);

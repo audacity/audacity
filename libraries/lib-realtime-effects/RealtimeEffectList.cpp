@@ -23,19 +23,14 @@ RealtimeEffectList::~RealtimeEffectList()
 
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
-   auto result = std::make_unique<RealtimeEffectList>();
-   for (auto &pState : mStates)
-      result->mStates.push_back(pState->Clone());
-   result->SetActive(this->IsActive());
-   return result;
+   return Duplicate(CopyDepth::Deep);
 }
 
-// Deep copy of states
-std::unique_ptr<RealtimeEffectList> RealtimeEffectList::Duplicate() const
+std::unique_ptr<RealtimeEffectList> RealtimeEffectList::Duplicate(CopyDepth depth) const
 {
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
-      result->mStates.push_back(pState);
+      result->mStates.push_back(depth == CopyDepth::Deep ? pState->Clone() : pState);
    result->SetActive(this->IsActive());
    return result;
 }
@@ -87,6 +82,18 @@ const RealtimeEffectList &RealtimeEffectList::Get(
    const ChannelGroup &group)
 {
    return Get(const_cast<ChannelGroup &>(group));
+}
+
+RealtimeEffectList &RealtimeEffectList::Set(ChannelGroup &group, std::unique_ptr<RealtimeEffectList> list)
+{
+   auto &result = *list;
+   group.Attachments::Assign(channelGroupEffects, std::move(list));
+   return result;
+}
+
+void RealtimeEffectList::ShareStates(ChannelGroup &group, const ChannelGroup &other)
+{
+   Set(group, Get(other).Duplicate(CopyDepth::Shallow));
 }
 
 bool
@@ -298,8 +305,14 @@ void RealtimeEffectList::SetActive(bool value)
 struct MasterEffectListRestorer final : UndoStateExtension
 {
    MasterEffectListRestorer(AudacityProject &project)
-      : list{ RealtimeEffectList::Get(project).Duplicate() }
+      : list{ RealtimeEffectList::Get(project).Duplicate(RealtimeEffectList::CopyDepth::Shallow) }
    {
+      // One instance of each effect state is shared with every undo state,
+      // so only their values can be restored
+      for (size_t i = 0, count = list->GetStatesCount(); i < count; ++i) {
+         const auto pState = list->GetStateAt(i);
+         stateSettings.push_back({ pState, pState->GetSettings() });
+      }
    }
 
    void RestoreUndoRedoState(AudacityProject& project) override
@@ -311,9 +324,22 @@ struct MasterEffectListRestorer final : UndoStateExtension
       for (auto i = 0; i < list->GetStatesCount(); ++i)
          projectList.AddState(list->GetStateAt(i));
       projectList.SetActive(list->IsActive());
+
+      for (const auto &item : stateSettings) {
+         item.pState->SetActive(item.settings.extra.GetActive());
+         const auto access = item.pState->GetAccess();
+         access->Set(EffectSettings { item.settings });
+         access->Flush();
+      }
    }
 
+   struct StateAndSettings {
+      std::shared_ptr<RealtimeEffectState> pState;
+      EffectSettings settings;
+   };
+
    const std::unique_ptr<RealtimeEffectList> list;
+   std::vector<StateAndSettings> stateSettings;
 };
 
 static UndoRedoExtensionRegistry::Entry sEntry {
