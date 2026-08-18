@@ -19,6 +19,7 @@
 #define __AUDACITY_DEVICEMANAGER__
 
 #include <chrono>
+#include <utility>
 #include <vector>
 
 #include <wx/string.h> // member variables
@@ -63,6 +64,16 @@ class AUDIO_DEVICES_API DeviceManager final
    const std::vector<DeviceSourceMap> &GetInputDeviceMaps();
    const std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
 
+   static void SaveDevicesForHost(const wxString &host);
+
+   /// Input and output devices last used with \p host, either may be null
+   std::pair<const DeviceSourceMap *, const DeviceSourceMap *> DevicesForHost(const wxString &host);
+
+   bool UpdateAsioDeviceCaps(int paDeviceIndex);
+   static bool IsAsioDevice(int paDeviceIndex);
+   static double GetAsioDeviceCurrentSampleRate(int paDeviceIndex);
+   static void ShowAsioControlPanel(int paDeviceIndex);
+
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
    // DeviceChangeHandler implementation
@@ -92,4 +103,3 @@ private:
 };
 
 #endif
-

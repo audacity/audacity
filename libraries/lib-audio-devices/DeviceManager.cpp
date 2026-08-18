@@ -15,6 +15,10 @@
 
 
 #include "portaudio.h"
+#if defined(__WXMSW__) && defined(USE_ASIO)
+#include <windows.h>
+#include "pa_asio.h"
+#endif
 #ifdef __WXMSW__
 #include "pa_win_wasapi.h"
 #endif
@@ -24,6 +28,7 @@
 #endif
 
 #include "AudioIOBase.h"
+#include "Prefs.h"
 
 #include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
 
@@ -86,6 +91,55 @@ DeviceSourceMap* DeviceManager::GetDefaultOutputDevice(int hostIndex)
 DeviceSourceMap* DeviceManager::GetDefaultInputDevice(int hostIndex)
 {
    return GetDefaultDevice(hostIndex, 1);
+}
+
+namespace {
+wxString HostDevicesKeyRoot(const wxString &host)
+{
+   wxString escaped = host;
+   escaped.Replace(L"/", L"_");
+   return L"/AudioIO/HostDevices/" + escaped + L"/";
+}
+
+wxString JoinDeviceSource(const wxString &device, const wxString &source)
+{
+   return source.empty() ? device : device + wxT(": ") + source;
+}
+
+const DeviceSourceMap *FindDevice(const std::vector<DeviceSourceMap> &maps, const wxString &host, const wxString &name)
+{
+   if (name.empty())
+      return nullptr;
+
+   for (auto &map : maps)
+      if (map.hostString == host && MakeDeviceSourceString(&map) == name)
+         return &map;
+
+   return nullptr;
+}
+}
+
+void DeviceManager::SaveDevicesForHost(const wxString &host)
+{
+   if (host.empty())
+      return;
+
+   const wxString root = HostDevicesKeyRoot(host);
+   gPrefs->Write(root + L"Input", JoinDeviceSource(AudioIORecordingDevice.Read(), AudioIORecordingSource.Read()));
+   gPrefs->Write(root + L"Output", JoinDeviceSource(AudioIOPlaybackDevice.Read(), AudioIOPlaybackSource.Read()));
+   gPrefs->Flush();
+}
+
+std::pair<const DeviceSourceMap *, const DeviceSourceMap *> DeviceManager::DevicesForHost(const wxString &host)
+{
+   if (host.empty())
+      return {};
+
+   const wxString root = HostDevicesKeyRoot(host);
+   return {
+      FindDevice(GetInputDeviceMaps(), host, gPrefs->Read(root + L"Input", wxString{})),
+      FindDevice(GetOutputDeviceMaps(), host, gPrefs->Read(root + L"Output", wxString{}))
+   };
 }
 
 //--------------- Device Enumeration --------------------------
@@ -202,7 +256,9 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
    // Vista/Win7 separate these into two devices with the same names (but different
    // portaudio indices)
    // Also, for mapper devices we don't want to keep any sources, so check for it here
-   if (isInput && !IsInputDeviceAMapperDevice(info)) {
+   // Also, ASIO devices must not be opened during a scan
+   if (isInput && !DeviceManager::IsAsioDevice(deviceIndex) &&
+       !IsInputDeviceAMapperDevice(info)) {
       if (info)
          parameters.suggestedLatency = info->defaultLowInputLatency;
       else
@@ -231,6 +287,104 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
                  map.hostString + wxT(":") + map.deviceString + wxT(": ") +
                  wxString(wxSafeConvertMB2WX(Pa_GetErrorText((PaError)error))));
    }
+}
+
+bool DeviceManager::IsAsioDevice(int paDeviceIndex)
+{
+   const PaDeviceInfo *info = Pa_GetDeviceInfo(paDeviceIndex);
+   if (!info)
+      return false;
+
+   const PaHostApiInfo *hostInfo = Pa_GetHostApiInfo(info->hostApi);
+   return hostInfo && hostInfo->type == paASIO;
+}
+
+// ASIO device properties are cached instead of being read every time
+// because opening an ASIO device may cause sound interruptions in other programs
+#if defined(__WXMSW__) && defined(USE_ASIO)
+static wxString AsioCacheKeyRoot(const char *deviceName)
+{
+   wxString escaped = wxSafeConvertMB2WX(deviceName);
+   escaped.Replace(L"/", L"_");
+   return L"/AudioIO/ASIODeviceInfoCache/" + escaped + L"/";
+}
+#endif
+
+static void ApplyCachedAsioDeviceInfo()
+{
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   const int deviceCount = Pa_GetDeviceCount();
+   for (int i = 0; i < deviceCount; ++i) {
+      if (!DeviceManager::IsAsioDevice(i)) {
+         continue;
+      }
+
+      const wxString root = AsioCacheKeyRoot(Pa_GetDeviceInfo(i)->name);
+
+      int maxInputChannels;
+      int maxOutputChannels;
+      double defaultSampleRate;
+      if (!gPrefs->Read(root + L"MaxInputChannels", &maxInputChannels) ||
+          !gPrefs->Read(root + L"MaxOutputChannels", &maxOutputChannels) ||
+          !gPrefs->Read(root + L"DefaultSampleRate", &defaultSampleRate)) {
+         continue;
+      }
+
+      PaAsio_SetCachedDeviceInfo(i, maxInputChannels, maxOutputChannels, defaultSampleRate);
+   }
+#endif
+}
+
+double DeviceManager::GetAsioDeviceCurrentSampleRate(int paDeviceIndex)
+{
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   if (!IsAsioDevice(paDeviceIndex)) {
+      return 0.0;
+   }
+
+   double rate = 0.0;
+   if (PaAsio_GetDeviceCurrentSampleRate(paDeviceIndex, &rate) != paNoError) {
+      return 0.0;
+   }
+
+   const PaDeviceInfo *info = Pa_GetDeviceInfo(paDeviceIndex);
+   const wxString root = AsioCacheKeyRoot(info->name);
+
+   // This runs on every stream start, so stay off the disk unless the driver
+   // reported something the cache does not already hold
+   int cachedInputChannels;
+   int cachedOutputChannels;
+   double cachedSampleRate;
+   if (gPrefs->Read(root + L"MaxInputChannels", &cachedInputChannels) &&
+       gPrefs->Read(root + L"MaxOutputChannels", &cachedOutputChannels) &&
+       gPrefs->Read(root + L"DefaultSampleRate", &cachedSampleRate) &&
+       cachedInputChannels == info->maxInputChannels &&
+       cachedOutputChannels == info->maxOutputChannels &&
+       cachedSampleRate == info->defaultSampleRate) {
+      return rate;
+   }
+
+   gPrefs->Write(root + L"MaxInputChannels", info->maxInputChannels);
+   gPrefs->Write(root + L"MaxOutputChannels", info->maxOutputChannels);
+   gPrefs->Write(root + L"DefaultSampleRate", info->defaultSampleRate);
+   gPrefs->Flush();
+
+   return rate;
+#else
+   (void)paDeviceIndex;
+   return 0.0;
+#endif
+}
+
+void DeviceManager::ShowAsioControlPanel(int paDeviceIndex)
+{
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   if (IsAsioDevice(paDeviceIndex)) {
+      PaAsio_ShowControlPanel(paDeviceIndex, GetDesktopWindow());
+   }
+#else
+   (void)paDeviceIndex;
+#endif
 }
 
 /// Gets a NEW list of devices by terminating and restarting portaudio
@@ -262,6 +416,8 @@ void DeviceManager::Rescan()
       Pa_Initialize();
    }
 
+   ApplyCachedAsioDeviceInfo();
+
    // FIXME: TRAP_ERR PaErrorCode not handled in ReScan()
    int nDevices = Pa_GetDeviceCount();
 
@@ -285,6 +441,31 @@ void DeviceManager::Rescan()
 
    m_inited = true;
    mRescanTime = std::chrono::steady_clock::now();
+}
+
+bool DeviceManager::UpdateAsioDeviceCaps(int paDeviceIndex)
+{
+   if (GetAsioDeviceCurrentSampleRate(paDeviceIndex) <= 0) {
+      return false;
+   }
+
+   const PaDeviceInfo *info = Pa_GetDeviceInfo(paDeviceIndex);
+   if (!info) {
+      return false;
+   }
+
+   for (auto &map : mInputDeviceSourceMaps) {
+      if (map.deviceIndex == paDeviceIndex) {
+         map.numChannels = info->maxInputChannels;
+      }
+   }
+   for (auto &map : mOutputDeviceSourceMaps) {
+      if (map.deviceIndex == paDeviceIndex) {
+         map.numChannels = info->maxOutputChannels;
+      }
+   }
+
+   return true;
 }
 
 

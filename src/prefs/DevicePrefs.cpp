@@ -34,6 +34,10 @@ other settings.
 #include <wx/log.h>
 #include <wx/textctrl.h>
 #include <wx/bmpbuttn.h>
+#if defined(__WXMSW__) && defined(USE_ASIO)
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#endif
 
 #include "portaudio.h"
 
@@ -56,7 +60,10 @@ enum {
    RecordID,
    ChannelsID,
    DefaultSampleRateChoice,
-   ProjectSampleRateChoice
+   ProjectSampleRateChoice,
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   AsioControlPanelID,
+#endif
 };
 
 BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
@@ -64,6 +71,9 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
    EVT_CHOICE(RecordID, DevicePrefs::OnDevice)
    EVT_CHOICE(DefaultSampleRateChoice, DevicePrefs::OnDefaultSampleRateChoice)
    EVT_CHOICE(ProjectSampleRateChoice, DevicePrefs::OnProjectSampleRateChoice)
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   EVT_BUTTON(AsioControlPanelID, DevicePrefs::OnAsioControlPanel)
+#endif
 END_EVENT_TABLE()
 
 DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid, AudacityProject* project)
@@ -205,6 +215,21 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   S.StartStatic(Verbatim("ASIO"));
+   {
+      S.StartMultiColumn(2);
+      {
+         mAsioUseDeviceSampleRate = S.TieCheckBox(
+            XXO("Use device sample rate"), AudioIOUseAsioDeviceSampleRate);
+         mAsioControlPanel =
+            S.Id(AsioControlPanelID).AddButton(XXO("Driver settings"));
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+#endif
+
    S.StartStatic(XO("Playback"));
    {
       S.StartMultiColumn(2);
@@ -343,6 +368,12 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       return;
    }
 
+#if defined(__WXMSW__) && defined(USE_ASIO)
+   const bool isAsio = Pa_GetHostApiInfo(index)->type == paASIO;
+   mAsioUseDeviceSampleRate->Enable(isAsio);
+   mAsioControlPanel->Enable(isAsio);
+#endif
+
    int nDevices = Pa_GetDeviceCount();
 
    // FIXME: TRAP_ERR PaErrorCode not handled.  nDevices can be negative number.
@@ -366,6 +397,16 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    if (!this->mRecordSource.empty())
       recDevice += wxT(": ") + mRecordSource;
 
+   wxString playDevice = mPlayDevice;
+
+   // What the user last chose on this host, preferred over the settings, which
+   // name the devices of whichever host was selected before
+   const auto [rememberedIn, rememberedOut] = DeviceManager::Instance()->DevicesForHost(apiName);
+   if (rememberedIn)
+      recDevice = MakeDeviceSourceString(rememberedIn);
+   if (rememberedOut)
+      playDevice = MakeDeviceSourceString(rememberedOut);
+
    mRecord->Clear();
    for (i = 0; i < inMaps.size(); i++) {
       if (index == inMaps[i].hostIndex) {
@@ -386,7 +427,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
          device   = MakeDeviceSourceString(&outMaps[i]);
          devindex = mPlay->Append(device);
          mPlay->SetClientData(devindex, const_cast<DeviceSourceMap *>(&outMaps[i]));
-         if (device == mPlayDevice) {  /* if this is the default device, select it */
+         if (device == playDevice) {  /* if this is the default device, select it */
             mPlay->SetSelection(devindex);
          }
       }
@@ -422,8 +463,8 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       if (defaultMap)
          mRecord->SetStringSelection(MakeDeviceSourceString(defaultMap));
 
-      if (mPlay->GetSelection() == wxNOT_FOUND) {
-         mPlay->SetSelection(0);
+      if (mRecord->GetSelection() == wxNOT_FOUND) {
+         mRecord->SetSelection(0);
       }
    }
 
@@ -444,6 +485,7 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
 
    DeviceSourceMap *inMap = (DeviceSourceMap *) mRecord->GetClientData(ndx);
    if (inMap != NULL) {
+      DeviceManager::Instance()->UpdateAsioDeviceCaps(inMap->deviceIndex);
       cnt = inMap->numChannels;
    }
 
@@ -496,6 +538,41 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
    Layout();
 }
 
+#if defined(__WXMSW__) && defined(USE_ASIO)
+void DevicePrefs::OnAsioControlPanel(wxCommandEvent& event)
+{
+   const auto selectedDeviceIndex = [](wxChoice *choice) {
+      const int selection = choice->GetSelection();
+      if (selection == wxNOT_FOUND)
+         return static_cast<int>(paNoDevice);
+
+      const auto map = static_cast<DeviceSourceMap *>(
+         choice->GetClientData(selection));
+      return map ? map->deviceIndex : static_cast<int>(paNoDevice);
+   };
+
+   int deviceIndex = selectedDeviceIndex(mPlay);
+   if (!DeviceManager::IsAsioDevice(deviceIndex))
+      deviceIndex = selectedDeviceIndex(mRecord);
+   if (!DeviceManager::IsAsioDevice(deviceIndex))
+      return;
+
+   // The control panel re-initialises the driver, so nothing may hold it open.
+   // Another project may be playing or recording, which is not ours to stop.
+   auto audioIO = AudioIOBase::Get();
+   if (audioIO) {
+      if (audioIO->IsBusy())
+         return;
+      if (audioIO->IsMonitoring())
+         audioIO->StopStream();
+   }
+
+   DeviceManager::ShowAsioControlPanel(deviceIndex);
+   DeviceManager::Instance()->UpdateAsioDeviceCaps(deviceIndex);
+   OnDevice(event);
+}
+#endif
+
 void DevicePrefs::OnDefaultSampleRateChoice(wxCommandEvent& e)
 {
    const int sel = mDefaultSampleRates->GetSelection();
@@ -514,6 +591,9 @@ void DevicePrefs::OnProjectSampleRateChoice(wxCommandEvent& e)
 
 bool DevicePrefs::Commit()
 {
+   // The settings still describe the host that was selected on entry
+   DeviceManager::SaveDevicesForHost(AudioIOHost.Read());
+
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    DeviceSourceMap *map = NULL;
@@ -538,6 +618,8 @@ bool DevicePrefs::Commit()
          AudioIORecordingSource.Reset();
       AudioIORecordChannels.Write(mChannels->GetSelection() + 1);
    }
+
+   DeviceManager::SaveDevicesForHost(AudioIOHost.Read());
 
    AudioIOLatencyDuration.Invalidate();
    AudioIOLatencyCorrection.Invalidate();
