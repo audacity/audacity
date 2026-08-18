@@ -876,10 +876,6 @@
         <seq>Space</seq>
     </SC>
     <SC>
-        <key>action://playback/toggle-play-from-cursor</key>
-        <seq>Shift+Space</seq>
-    </SC>
-    <SC>
         <key>action://playback/play-selection</key>
         <seq>W</seq>
     </SC>
