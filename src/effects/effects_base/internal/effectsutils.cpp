@@ -10,6 +10,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/log.h"
 #include "framework/global/stringutils.h"
+#include "framework/global/translation.h"
 
 #include "effectstypes.h"
 #include "effects/vst/internal/vsttypes.h"
@@ -368,6 +369,7 @@ muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     museMeta.attributes.emplace(EFFECT_CATEGORY_ATTRIBUTE, meta.category);
     // Store the plugin name (from $name directive) for display
     museMeta.attributes.emplace(EFFECT_TITLE_ATTRIBUTE, meta.title);
+    museMeta.attributes.emplace(EFFECT_TITLE_CONTEXT_ATTRIBUTE, meta.titleContext);
     museMeta.attributes.emplace(EFFECT_DESCRIPTION_ATTRIBUTE, meta.description);
     museMeta.attributes.emplace(EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, meta.paramsAreInputAgnostic ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, meta.isRealtimeCapable ? u"true" : u"false");
@@ -377,6 +379,14 @@ muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     museMeta.attributes.emplace(EFFECT_ACTIVATED_ATTRIBUTE, meta.isActivated ? u"true" : u"false");
 
     return museMeta;
+}
+
+muse::String utils::effectDisplayTitle(const EffectMeta& meta)
+{
+    if (meta.titleContext.empty()) {
+        return meta.title;
+    }
+    return muse::mtrc(meta.titleContext.toStdString().c_str(), meta.title);
 }
 
 namespace {
@@ -416,6 +426,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
     effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, isLoadable));
     effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, isLoadable);
+    effectMeta.titleContext = meta.attributeVal(EFFECT_TITLE_CONTEXT_ATTRIBUTE);
     effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, isLoadable);
     effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, isLoadable);
     effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, isLoadable);

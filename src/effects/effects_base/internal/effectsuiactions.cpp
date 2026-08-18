@@ -3,6 +3,8 @@
  */
 #include "effectsuiactions.h"
 
+#include "effectsutils.h"
+
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
@@ -81,7 +83,7 @@ EffectsUiActions::EffectsUiActions(const muse::modularity::ContextPtr& ctx, Effe
         IF_ASSERT_FAILED(it != m_actions.end()) {
             return;
         }
-        const auto effectTitle = effectsProvider()->meta(effectId).title;
+        const auto effectTitle = utils::effectDisplayTitle(effectsProvider()->meta(effectId));
         it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
         m_actionsChanged.send({ *it });
     });
@@ -99,7 +101,7 @@ UiAction makeUiAction(const std::string& uri, const EffectMeta& meta)
     action.uiCtx = au::context::UiCtxProjectOpened;
     action.scCtx = au::context::CTX_PROJECT_FOCUSED;
     action.description = TranslatableString::untranslatable(meta.description);
-    action.title = TranslatableString::untranslatable(meta.title);
+    action.title = TranslatableString::untranslatable(utils::effectDisplayTitle(meta));
     return action;
 }
 
