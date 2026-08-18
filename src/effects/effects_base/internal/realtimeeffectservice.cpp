@@ -1,5 +1,7 @@
 #include "realtimeeffectservice.h"
 
+#include "global/translation.h"
+
 #include "realtimeeffectrestorer.h"
 #include "realtimeeffectserviceutils.h"
 #include "effectsutils.h"
@@ -272,7 +274,10 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
     if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
-        projectHistory()->pushHistoryState("Added " + effectName + " to " + trackName.value_or(""), "Add " + effectName);
+        projectHistory()->pushHistoryState(
+            muse::mtrc("effects", "Added %1 to %2")
+            .arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
+            muse::mtrc("effects", "Add %1").arg(muse::String::fromStdString(effectName)).toStdString());
         return state;
     }
 
@@ -307,7 +312,10 @@ void RealtimeEffectService::removeRealtimeEffect(TrackId trackId, const Realtime
     AudioIO::Get()->RemoveState(*data->au3Project, data->au3Track, state);
     const auto effectName = getEffectName(*state);
     const auto trackName = effectTrackName(trackId);
-    projectHistory()->pushHistoryState("Removed " + effectName + " from " + trackName.value_or(""), "Remove " + effectName);
+    projectHistory()->pushHistoryState(
+        muse::mtrc("effects", "Removed %1 from %2")
+        .arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
+        muse::mtrc("effects", "Remove %1").arg(muse::String::fromStdString(effectName)).toStdString());
 }
 
 RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trackId, int effectListIndex, const muse::String& newEffectId)
@@ -325,7 +333,10 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
     if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
         const auto oldEffectName = getEffectName(*oldState);
         const auto newEffectName = getEffectName(*newState);
-        projectHistory()->pushHistoryState("Replaced " + oldEffectName + " with " + newEffectName, "Replace " + oldEffectName);
+        projectHistory()->pushHistoryState(
+            muse::mtrc("effects", "Replaced %1 with %2")
+            .arg(muse::String::fromStdString(oldEffectName)).arg(muse::String::fromStdString(newEffectName)).toStdString(),
+            muse::mtrc("effects", "Replace %1").arg(muse::String::fromStdString(oldEffectName)).toStdString());
         return newState;
     }
 
@@ -357,9 +368,12 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
 
     const auto effectName = getEffectName(*state);
     const auto trackName = effectTrackName(*tId);
-    projectHistory()->pushHistoryState("Moved " + effectName
-                                       + (oldIndex < newIndex ? " up " : " down ") + " in " + trackName.value_or(""),
-                                       "Change effect order");
+    projectHistory()->pushHistoryState(
+        (oldIndex < newIndex
+         ? muse::mtrc("effects", "Moved %1 up in %2")
+         : muse::mtrc("effects", "Moved %1 down in %2"))
+        .arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
+        muse::trc("effects", "Change effect order"));
 }
 
 bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& state) const
