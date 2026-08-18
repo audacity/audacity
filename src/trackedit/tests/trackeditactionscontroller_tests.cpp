@@ -155,6 +155,29 @@ TEST_F(TrackeditActionsControllerTests, SingleSelectedClipDoesNotJoinAcrossGap)
     EXPECT_FALSE(selectedClipsSpan().has_value());
 }
 
+TEST_F(TrackeditActionsControllerTests, MultipleSelectedClipsDoNotJoinAcrossGap)
+{
+    const Clip left = makeClip(1, 101, 0.0, 1.0);
+    const Clip right = makeClip(1, 102, 1.1, 2.0);
+    setupTrackClips(1, { left, right });
+    ON_CALL(*m_selectionController, selectedClips())
+    .WillByDefault(Return(ClipKeyList { left.key, right.key }));
+
+    EXPECT_FALSE(selectedClipsSpan().has_value());
+}
+
+TEST_F(TrackeditActionsControllerTests, SingleSelectedClipDoesNotJoinOverlappingTouchingNeighbors)
+{
+    const Clip left = makeClip(1, 101, 0.0, 1.0);
+    const Clip overlappingLeft = makeClip(1, 102, 0.5, 1.0);
+    const Clip selected = makeClip(1, 103, 1.0, 2.0);
+    setupTrackClips(1, { left, overlappingLeft, selected });
+    ON_CALL(*m_selectionController, selectedClips())
+    .WillByDefault(Return(ClipKeyList { selected.key }));
+
+    EXPECT_FALSE(selectedClipsSpan().has_value());
+}
+
 /**
  * Cancel always notifies about the in-progress drag edit being cancelled.
  */
