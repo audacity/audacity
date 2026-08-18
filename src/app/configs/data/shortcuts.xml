@@ -819,7 +819,7 @@
         <seq>X</seq>
     </SC>
     <SC>
-        <key>once-play-stop</key>
+        <key>action://playback/play-selection</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>
