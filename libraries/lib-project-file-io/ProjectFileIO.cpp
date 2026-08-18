@@ -16,7 +16,16 @@ Paul Licameli split from AudacityProject.cpp
 #include <optional>
 #include <cstring>
 
+#if defined(__WXMSW__)
+#include <wx/msw/wrapwin.h>
+#include <io.h>
+#else
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
 #include <wx/crt.h>
+#include <wx/file.h>
 #include <wx/log.h>
 #include <wx/sstream.h>
 #include <wx/utils.h>
@@ -1415,6 +1424,27 @@ ProjectFileIO::BackupProject::~BackupProject()
    }
 }
 
+// According to docs, wxFile::Flush is noop on Windows
+// and weak on macos, hence this function
+static bool FlushToDisk(const wxString &path)
+{
+   wxFile file(path, wxFile::read_write);
+   if (!file.IsOpened())
+      return false;
+
+#if defined(__WXMSW__)
+   return FlushFileBuffers(
+      reinterpret_cast<HANDLE>(_get_osfhandle(file.fd()))) != 0;
+#elif defined(__APPLE__)
+   // on macos fsync is not enough
+   if (fcntl(file.fd(), F_FULLFSYNC) == 0)
+      return true;
+   return fsync(file.fd()) == 0;
+#else
+   return fsync(file.fd()) == 0;
+#endif
+}
+
 void ProjectFileIO::Compact(
    const std::vector<const TrackList *> &tracks, bool force)
 {
@@ -1475,8 +1505,12 @@ void ProjectFileIO::Compact(
          // gets cleaned up.
          if (wxFileName::GetSize(tempName) < wxFileName::GetSize(origName))
          {
+            if (!FlushToDisk(tempName))
+            {
+               wxLogWarning(wxT("Compaction failed to flush %s"), tempName);
+            }
             // Rename the original to backup
-            if (wxRenameFile(origName, backName))
+            else if (wxRenameFile(origName, backName))
             {
                // Rename the temporary to original
                if (wxRenameFile(tempName, origName))
