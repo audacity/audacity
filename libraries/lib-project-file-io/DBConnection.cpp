@@ -588,10 +588,13 @@ void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
             throw SimpleMessageBoxException{ rc != SQLITE_FULL ? ExceptionType::Internal : ExceptionType::BadEnvironment,
                message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
             SimpleGuard<void>{},
-            [this](AudacityException * e) {
-               // This executes in the main thread.
-               if (mCallback)
-                  mCallback();
+            [wProject = mpProject, callback = mCallback]
+            (AudacityException * e) {
+               // This executes in the main thread, by which time this
+               // connection may have been closed and destroyed
+               auto pProject = wProject.lock();
+               if (pProject && callback)
+                  callback();
                if (e)
                   e->DelayedHandlerAction();
             }
