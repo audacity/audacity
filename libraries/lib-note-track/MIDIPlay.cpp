@@ -551,8 +551,12 @@ MIDIPlay::~MIDIPlay()
 }
 
 bool MIDIPlay::StartOtherStream(const TransportSequences &tracks,
-   const PaStreamInfo* info, double, double rate)
+   const PaStreamInfo* info, double startTime, double rate)
 {
+   // MIDI events are timed in warped seconds from mT0, so AudioTime() must match.
+   // Without a time track this is just startTime.
+   mWarpedStartTime = mPlaybackSchedule.mT0 + mPlaybackSchedule.RealDurationSigned(startTime);
+
    mMidiPlaybackTracks.clear();
    for (const auto &pSequence : tracks.otherPlayableSequences)
       if (const auto pNoteTrack =
@@ -592,7 +596,7 @@ bool MIDIPlay::StartOtherStream(const TransportSequences &tracks,
    bool successMidi = true;
 
    if(!mMidiPlaybackTracks.empty()){
-      successMidi = StartPortMidiStream(rate);
+      successMidi = StartPortMidiStream(startTime, rate);
    }
 
    // On the other hand, if MIDI cannot be opened, we will not complain
@@ -675,7 +679,7 @@ double Iterator::GetNextEventTime() const
    return mNextEventTime;
 }
 
-bool MIDIPlay::StartPortMidiStream(double rate)
+bool MIDIPlay::StartPortMidiStream(double startTime, double rate)
 {
 #ifdef __WXGTK__
    // Duplicating a bit of AudioIO::StartStream
@@ -728,7 +732,7 @@ bool MIDIPlay::StartPortMidiStream(double rate)
       mMidiLoopPasses = 0;
       mMidiOutputComplete = false;
       mMaxMidiTimestamp = 0;
-      PrepareMidiIterator(true, mPlaybackSchedule.mT0, 0);
+      PrepareMidiIterator(true, startTime, 0);
 
       // It is ok to call this now, but do not send timestamped midi
       // until after the first audio callback, which provides necessary
@@ -1124,7 +1128,7 @@ void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
 {
    if (mCallbackCount++ == 0) {
        // This is effectively mSystemMinusAudioTime when the buffer is empty:
-       mStartTime = SystemTime(mUsingAlsa) - mPlaybackSchedule.mT0;
+       mStartTime = SystemTime(mUsingAlsa) - mWarpedStartTime;
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 

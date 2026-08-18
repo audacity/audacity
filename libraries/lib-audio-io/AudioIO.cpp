@@ -983,13 +983,14 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
 
    auto range = Extensions();
+   const double playStartTime = pStartTime ? *pStartTime : t0;
    successAudio = successAudio &&
       std::all_of(range.begin(), range.end(),
-         [this, &sequences, t0](auto &ext){
+         [this, &sequences, playStartTime](auto &ext){
             return ext.StartOtherStream(sequences,
               (mPortStreamV19 != NULL && mLastPaError == paNoError)
                  ? Pa_GetStreamInfo(mPortStreamV19) : nullptr,
-              t0, mRate ); });
+              playStartTime, mRate ); });
 
    if (!successAudio) {
       if (pListener && numCaptureChannels > 0)
