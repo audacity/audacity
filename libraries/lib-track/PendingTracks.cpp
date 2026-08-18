@@ -208,8 +208,9 @@ void PendingTracks::ClearPendingTracks(
       const auto pTrack = *it;
       ++it;
       if (pTrack->GetId() == TrackId{}) {
+         auto removed = mTracks.Remove(*pTrack);
          if (pAdded)
-            pAdded->emplace_back(mTracks.Remove(*pTrack));
+            pAdded->emplace_back(move(removed));
       }
       else {
          if (pAdded)
