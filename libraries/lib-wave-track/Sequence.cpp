@@ -804,6 +804,7 @@ size_t Sequence::GetBestBlockSize(sampleCount start) const
 }
 
 static constexpr auto Start_attr = "start";
+static constexpr auto Length_attr = "length";
 static constexpr auto MaxSamples_attr = "maxsamples";
 static constexpr auto SampleFormat_attr = "sampleformat";
 static constexpr auto EffectiveSampleFormat_attr = "effectivesampleformat";
@@ -1038,6 +1039,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
 
       xmlFile.StartTag(WaveBlock_tag);
       xmlFile.WriteAttr(Start_attr, bb.start.as_long_long());
+      xmlFile.WriteAttr(Length_attr, static_cast<long long>(bb.sb->GetSampleCount()));
 
       bb.sb->SaveXML(xmlFile);
 
