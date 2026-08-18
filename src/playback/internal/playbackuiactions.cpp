@@ -55,7 +55,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Play/Stop and set cursor"),
-             TranslatableString("action", "Play/Stop and set cursor to the stop position"),
+             TranslatableString("action", "Play/Stop and set cursor"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PLAY_SELECTION_QUERY.toString(),
@@ -63,8 +63,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::CTX_PROJECT_OPENED,
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play selection"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Play the selected time range"),
+             TranslatableString("action", "Play selection"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PAUSE_QUERY.toString(),
