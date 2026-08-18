@@ -30,9 +30,11 @@ static const std::string musehubAPIEndpointUrl = "https://cosmos-customer-webser
 static const std::string musehubAPIDevEndpointUrl = "https://cosmos-customer-webservice-dev.azurewebsites.net/graphql/v3";
 static const std::string musehubEffectUrl = "https://www.musehub.com/plugin/";
 
-static const std::string musehubEffectUtmSource = "utm_source=au-app-get-fx-panel";
-static const std::string musehubEffectUtmMediumPrefix = "utm_medium=";
-static const std::string musehubEffectUtmCampaignPrefix = "utm_campaign=au-app-get-fx-mh-";
+static const std::string musehubEffectUtmParams =
+   "utm_source=au"
+   "&utm_medium=Referral"
+   "&utm_campaign=MH_WW_REF_AU_DESKTOP_ALL_170826_crosslink"
+   "&utm_content=get_fx_panel";
 
 static const std::string getEffectsQuery = R"(
     query EffectsQuery($locale: String) {
@@ -190,10 +192,7 @@ std::string GetMusehubAPIEndpoint()
 
 std::string GetEffectUrl(const std::string& effectCode)
 {
-   return musehubEffectUrl + effectCode +
-         "?" + musehubEffectUtmSource +
-         "&" + musehubEffectUtmMediumPrefix + effectCode +
-         "&" + musehubEffectUtmCampaignPrefix + effectCode;
+   return musehubEffectUrl + effectCode + "?" + musehubEffectUtmParams;
 }
 
 }
