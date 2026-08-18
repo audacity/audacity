@@ -338,11 +338,15 @@ private:
 
    std::optional<SQLiteBlobStream> mBlobStream;
    size_t mNextBlobIndex { 0 };
+   bool mReadError { false };
 
    sqlite3* mDB;
    const char* mSchema;
    const char* mTable;
    const int64_t mRowID;
+
+public:
+   bool HadReadError() const { return mReadError; }
 
 protected:
    bool HasMoreData() const override
@@ -368,6 +372,7 @@ protected:
          // the next one
          mBlobStream = {};
          mNextBlobIndex = Columns.size();
+         mReadError = true;
 
          return 0;
       }
@@ -2120,7 +2125,7 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
 
       success = ProjectSerializer::Decode(stream, this);
 
-      if (!success)
+      if (!success || stream.HadReadError())
       {
          SetError(
             XO("Unable to parse project information.")
