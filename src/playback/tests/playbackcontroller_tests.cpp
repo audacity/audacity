@@ -122,12 +122,6 @@ public:
         m_controller->togglePlayStopAndSetCursorAction();
     }
 
-    //! NOTE: Shift+Spacebar — play from cursor, ignoring selection (pause while playing)
-    void togglePlayFromCursor()
-    {
-        m_controller->togglePlayFromCursorAction();
-    }
-
     void playSelection()
     {
         m_controller->playSelectionAction();
@@ -199,7 +193,7 @@ public:
 
     void playFromCurrentState()
     {
-        m_controller->doPlay(false);
+        m_controller->doPlay();
     }
 
     void rescanAudioDevices()
@@ -451,35 +445,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 }
 
 /**
- * @brief Toggle play with ignore selection
- * @details User clicked play with Shift modifier
- *          Playback should be started from previous seek position
- */
-TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
-{
-    //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
-
-    //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .Times(0);
-
-    //! [THEN] Expect that playback region will be reseted and playback will be seek to previous seek position
-    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion()))
-    .Times(1);
-    EXPECT_CALL(*m_player, seek(_, _))
-    .Times(1);
-
-    //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play(_))
-    .Times(1);
-
-    //! [WHEN] Toggle play
-    togglePlayFromCursor();
-}
-
-/**
  * @brief Toggle play when already playing
  * @details User clicked play again for pause
  *          Playback should be paused
@@ -647,37 +612,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithActiveLoop_Resumes)
 
     //! [WHEN] Toggle play
     togglePlayStop();
-}
-
-/**
- * @brief Toggle play when paused with skiping selection
- * @details User clicked play with Shift modifier
- *          Playback should resume from current position with ignoring selection
- */
-TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
-{
-    //! [GIVEN] Playback is paused
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Paused));
-
-    //! [THEN] Expect that playbeck should run from current position
-    secs_t currentPosition = 10.0;
-    EXPECT_CALL(*m_player, playbackPosition())
-    .WillRepeatedly(Return(currentPosition));
-    EXPECT_CALL(*m_player, seek(currentPosition, false))
-    .WillRepeatedly(Return());
-
-    //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .Times(0);
-
-    //! [THEN] Player should start playing without an explicit start time —
-    //! the player asserts that no start time is passed when resuming from pause
-    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(std::nullopt)))
-    .Times(1);
-
-    //! [WHEN] Toggle play
-    togglePlayFromCursor();
 }
 
 /**
@@ -1593,10 +1527,9 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopBu
     //! [GIVEN] Recording is running
     setRecording(true);
 
-    //! [THEN] Space, X and Shift+Space are blocked, the toolbar button is not
+    //! [THEN] Space and X are blocked, the toolbar button is not
     EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
     EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 
@@ -1608,7 +1541,6 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogg
     //! [THEN] All toggle-play actions are available
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 }
