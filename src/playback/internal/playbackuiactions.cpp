@@ -51,14 +51,14 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Play/Stop and set cursor"),
-             TranslatableString("action", "Play/Stop and set cursor to the stop position"),
+             TranslatableString("action", "Play/Stop and set cursor"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PLAY_SELECTION_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Play selection"),
-             TranslatableString("action", "Play the selected time range"),
+             TranslatableString("action", "Play selection"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PAUSE_QUERY.toString(),
