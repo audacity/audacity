@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <vector>
 
 #include "global/translation.h"
 #include "global/defer.h"
@@ -1020,6 +1021,21 @@ std::optional<TrackeditActionsController::ContiguousClipsSpan> TrackeditActionsC
 
     if (clipsToJoin.size() < 2) {
         return std::nullopt;
+    }
+
+    std::vector<Clip> orderedClipsToJoin;
+    for (const Clip& clip : trackClips) {
+        if (muse::contains(clipsToJoin, clip.key)) {
+            orderedClipsToJoin.push_back(clip);
+        }
+    }
+    std::sort(orderedClipsToJoin.begin(), orderedClipsToJoin.end(), [](const Clip& left, const Clip& right) {
+        return left.startTime < right.startTime;
+    });
+    for (size_t i = 1; i < orderedClipsToJoin.size(); ++i) {
+        if (!muse::RealIsEqual(orderedClipsToJoin[i - 1].endTime, orderedClipsToJoin[i].startTime)) {
+            return std::nullopt;
+        }
     }
 
     for (const Clip& clip : trackClips) {
