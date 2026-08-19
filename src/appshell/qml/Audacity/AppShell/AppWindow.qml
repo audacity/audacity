@@ -81,7 +81,9 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
-    ToastProvider {}
+    ToastProvider {
+        navigationOrder: 2000
+    }
 
     function showMinimizedWithSavePreviousState() {
         bridge.showMinimizedWithSavePreviousState()
