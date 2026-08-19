@@ -242,6 +242,19 @@ if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
 endif()
 
 if (OS_IS_MAC)
+    # macOS localizes its own interface - the native file pickers, standard
+    # buttons and the application menu - according to the localizations the
+    # bundle declares, not according to the Qt catalogues we load. Build the
+    # list from the languages we ship so the two cannot drift apart.
+    file(READ ${PROJECT_SOURCE_DIR}/share/locale/languages.json AU4_LANGUAGES_JSON)
+    string(JSON AU4_LANGUAGES_COUNT LENGTH ${AU4_LANGUAGES_JSON})
+    math(EXPR AU4_LANGUAGES_LAST_INDEX "${AU4_LANGUAGES_COUNT} - 1")
+    set(AU4_BUNDLE_LOCALIZATIONS "")
+    foreach(index RANGE ${AU4_LANGUAGES_LAST_INDEX})
+        string(JSON AU4_LANGUAGE_CODE MEMBER ${AU4_LANGUAGES_JSON} ${index})
+        string(APPEND AU4_BUNDLE_LOCALIZATIONS "\t\t<string>${AU4_LANGUAGE_CODE}</string>\n")
+    endforeach()
+
     set_target_properties(audacity
         PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/MacOS/MacOSXBundleInfo.plist.in
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
