@@ -48,6 +48,16 @@ muse::String utils::effectFamilyToString(EffectFamily family)
     }
 }
 
+muse::String utils::effectFamilyLabel(EffectFamily family)
+{
+    //! NOTE The other families are plug-in format names, which stay as they are
+    if (family == EffectFamily::Extension) {
+        return muse::mtrc("effects", "Extension");
+    }
+
+    return effectFamilyToString(family);
+}
+
 EffectFamily utils::effectFamilyFromString(const muse::String& family)
 {
     if (family == u"Audacity") {
@@ -368,6 +378,19 @@ muse::String utils::effectTypeToString(EffectType type)
     }
 }
 
+muse::String utils::effectTypeLabel(EffectType type)
+{
+    switch (type) {
+    case EffectType::Unknown: return muse::mtrc("effects", "Unknown");
+    case EffectType::Analyzer: return muse::mtrc("effects", "Analyzer");
+    case EffectType::Generator: return muse::mtrc("effects", "Generator");
+    case EffectType::Processor: return muse::mtrc("effects", "Effect");
+    case EffectType::Tool: return muse::mtrc("effects", "Tool");
+    default:
+        return effectTypeToString(type);
+    }
+}
+
 EffectType utils::effectTypeFromString(const muse::String& type)
 {
     if (type == "Analyzer") {
@@ -629,7 +652,7 @@ MenuItemList thirdPartyGroup(const EffectMetaList& effects, IEffectMenuItemFacto
             publisherMenus << effectMenu.makeMenuEffect(publisher, makeItemsOrDisambiguationSubmenus(publisherEffects, effectMenu));
         }
 
-        items << effectMenu.makeMenuEffect(family, publisherMenus);
+        items << effectMenu.makeMenuEffect(utils::effectFamilyLabel(utils::effectFamilyFromString(family)), publisherMenus);
     }
 
     return items;
