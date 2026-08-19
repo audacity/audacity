@@ -17,7 +17,7 @@
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "mocks/navigationcontrollermock.h"
+#include "ui/tests/mocks/navigationmocks.h"
 #include "mocks/tracknavigationcontrollermock.h"
 #include "mocks/trackeditprojectmock.h"
 
