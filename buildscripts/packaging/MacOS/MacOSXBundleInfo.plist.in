@@ -116,7 +116,6 @@
 	<false/>
 	<key>CFBundleLocalizations</key>
 	<array>
-		<string>en</string>
-	</array>
+${AU4_BUNDLE_LOCALIZATIONS}	</array>
 </dict>
 </plist>
