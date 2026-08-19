@@ -325,6 +325,35 @@ EffectCategory utils::effectCategoryFromString(const muse::String& category)
     return EffectCategory::Unspecified;
 }
 
+muse::String utils::effectCategoryLabel(const muse::String& category)
+{
+    if (category == volumeAndCompressionEffectCategoryString) {
+        return muse::mtrc("effects", "Volume and compression");
+    } else if (category == fadingEffectCategoryString) {
+        return muse::mtrc("effects", "Fading");
+    } else if (category == pitchAndTempoEffectCategoryString) {
+        return muse::mtrc("effects", "Pitch and tempo");
+    } else if (category == eqAndFiltersEffectCategoryString) {
+        return muse::mtrc("effects", "EQ and filters");
+    } else if (category == noiseRemovalAndRepairEffectCategoryString) {
+        return muse::mtrc("effects", "Noise removal and repair");
+    } else if (category == delayAndReverbEffectCategoryString) {
+        return muse::mtrc("effects", "Delay and reverb");
+    } else if (category == distortionAndModulationEffectCategoryString) {
+        return muse::mtrc("effects", "Distortion and modulation");
+    } else if (category == specialEffectCategoryString) {
+        return muse::mtrc("effects", "Special");
+    } else if (category == spectralToolsEffectCategoryString) {
+        return muse::mtrc("effects", "Spectral tools");
+    } else if (category == legacyEffectCategoryString) {
+        return muse::mtrc("effects", "Legacy");
+    } else if (category == unspecifiedEffectCategoryString) {
+        return muse::mtrc("effects", "Third-party");
+    }
+
+    return category;
+}
+
 muse::String utils::effectTypeToString(EffectType type)
 {
     switch (type) {
@@ -559,7 +588,7 @@ MenuItemList audacityDestructiveEffectsGroup(const EffectMetaList& effects, IEff
                 items << effectMenu.makeMenuEffectItem(effectId);
             }
         } else {
-            items << makeEffectSubmenu(CiString { category }, effectIds, effectMenu);
+            items << makeEffectSubmenu(utils::effectCategoryLabel(category), effectIds, effectMenu);
         }
     }
     return items;
