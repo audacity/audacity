@@ -37,6 +37,8 @@ EffectType effectTypeFromString(const muse::String& type);
 muse::String effectCategoryToString(EffectCategory category);
 EffectCategory effectCategoryFromString(const muse::String& category);
 muse::String effectCategoryLabel(const muse::String& category);
+muse::String effectFamilyLabel(EffectFamily family);
+muse::String effectTypeLabel(EffectType type);
 
 muse::String effectFamilyToString(EffectFamily family);
 EffectFamily effectFamilyFromString(const muse::String& family);
