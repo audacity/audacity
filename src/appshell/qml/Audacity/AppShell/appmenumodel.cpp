@@ -52,6 +52,39 @@ static const ActionCode RENAME_ITEM_CODE("rename-item");
 static const QString RENAME_CLIP_ITEM_ID("rename-clip-item");
 static const QString RENAME_LABEL_ITEM_ID("rename-label-item");
 
+namespace {
+//! NOTE Workspace names are file names, so they exist only as data and cannot
+//! be extracted for translation. Give the workspaces we ship a translated title;
+muse::TranslatableString workspaceTitle(const std::string& name)
+{
+    if (name == "Classic") {
+        return muse::TranslatableString("workspace", "Classic");
+    } else if (name == "Modern") {
+        return muse::TranslatableString("workspace", "Modern");
+    } else if (name == "Music") {
+        return muse::TranslatableString("workspace", "Music");
+    }
+
+    return muse::TranslatableString::untranslatable(muse::String::fromStdString(name));
+}
+
+const muse::uicomponents::MenuItemList& translateWorkspaceTitles(const muse::uicomponents::MenuItemList& items)
+{
+    for (muse::uicomponents::MenuItem* item : items) {
+        const muse::actions::ActionData args = item->args();
+        if (args.empty()) {
+            continue;
+        }
+
+        muse::ui::UiAction action = item->action();
+        action.title = workspaceTitle(args.arg<std::string>(0));
+        item->setAction(action);
+    }
+
+    return items;
+}
+}
+
 AppMenuModel::AppMenuModel(QObject* parent)
     : AbstractMenuModel(parent)
 {
@@ -125,6 +158,7 @@ void AppMenuModel::setupConnections()
 #ifdef MUSE_MODULE_WORKSPACE
     connect(m_workspacesMenuModel.get(), &workspace::WorkspacesMenuModel::itemsChanged, this, [this](){
         MenuItem& workspacesItem = findMenu("menu-workspaces");
+        translateWorkspaceTitles(m_workspacesMenuModel->items());
         workspacesItem.setSubitems(m_workspacesMenuModel->items());
     });
 #endif
@@ -351,7 +385,8 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem("toggle-history")
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
-        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces")
+        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),
+                    translateWorkspaceTitles(m_workspacesMenuModel->items()), "menu-workspaces")
         << makeSeparator()
 #endif
 #ifndef Q_OS_MAC
