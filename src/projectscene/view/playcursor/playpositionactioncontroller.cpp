@@ -35,6 +35,8 @@ static const ActionCode SEL_CNTR_LEFT("sel-cntr-left");
 static const ActionCode SEL_CNTR_RIGHT("sel-cntr-right");
 static const ActionCode CURS_SEL_START("curs-sel-start");
 static const ActionCode CURS_SEL_END("curs-sel-end");
+static const ActionCode SEL_START("sel-start");
+static const ActionCode SEL_END("sel-end");
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
@@ -52,6 +54,8 @@ void PlayPositionActionController::init()
     dispatcher()->reg(this, SEL_CNTR_RIGHT, this, &PlayPositionActionController::selectionContractRight);
     dispatcher()->reg(this, CURS_SEL_START, this, &PlayPositionActionController::cursorToSelectionStart);
     dispatcher()->reg(this, CURS_SEL_END, this, &PlayPositionActionController::cursorToSelectionEnd);
+    dispatcher()->reg(this, SEL_START, this, &PlayPositionActionController::selectionToProjectStart);
+    dispatcher()->reg(this, SEL_END, this, &PlayPositionActionController::selectionToProjectEnd);
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         onProjectChanged();
@@ -213,6 +217,34 @@ void PlayPositionActionController::selectionContractRight()
         newEnd = start;
     }
     selectionController()->setDataSelectedEndTime(newEnd, true);
+}
+
+void PlayPositionActionController::selectionToProjectStart()
+{
+    if (selectionController()->timeSelectionIsEmpty()) {
+        selectionController()->initSelectionAtPlayhead();
+    }
+    selectionController()->setDataSelectedStartTime(0.0, true);
+    m_context->animatedInsureVisible(0.0);
+}
+
+void PlayPositionActionController::selectionToProjectEnd()
+{
+    auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return;
+    }
+
+    if (selectionController()->timeSelectionIsEmpty()) {
+        selectionController()->initSelectionAtPlayhead();
+    }
+
+    const muse::secs_t end = currentProject->trackeditProject()->totalTime();
+    if (end < selectionController()->dataSelectedStartTime()) {
+        selectionController()->setDataSelectedStartTime(end, true);
+    }
+    selectionController()->setDataSelectedEndTime(end, true);
+    m_context->animatedInsureVisible(end);
 }
 
 void PlayPositionActionController::onProjectChanged()

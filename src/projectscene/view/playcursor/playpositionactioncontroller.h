@@ -58,6 +58,8 @@ public:
     void selectionExtendRight();
     void selectionContractLeft();
     void selectionContractRight();
+    void selectionToProjectStart();
+    void selectionToProjectEnd();
 
     void cursorToSelectionStart();
     void cursorToSelectionEnd();

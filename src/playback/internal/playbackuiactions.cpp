@@ -85,8 +85,8 @@ const UiActionList PlaybackUiActions::m_mainActions = {
     UiAction(PLAYBACK_REWIND_END_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Rewind to end"),
-             TranslatableString("action", "Rewind to end"),
+             TranslatableString("action", "Skip to end"),
+             TranslatableString("action", "Skip to end"),
              IconCode::Code::REWIND_END_FILL
              ),
     UiAction("toggle-loop-region",

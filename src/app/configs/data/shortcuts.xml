@@ -648,11 +648,11 @@
         <seq>K</seq>
     </SC>
     <SC>
-        <key>curs-project-start</key>
+        <key>action://playback/rewind-start</key>
         <seq>Home</seq>
     </SC>
     <SC>
-        <key>curs-project-end</key>
+        <key>action://playback/rewind-end</key>
         <seq>End</seq>
     </SC>
     <SC>
