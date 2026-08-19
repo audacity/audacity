@@ -551,8 +551,12 @@ MIDIPlay::~MIDIPlay()
 }
 
 bool MIDIPlay::StartOtherStream(const TransportSequences &tracks,
-   const PaStreamInfo* info, double, double rate)
+   const PaStreamInfo* info, double startTime, double rate)
 {
+   // MIDI events are timed in warped seconds from mT0, so AudioTime() must match.
+   // Without a time track this is just startTime.
+   mWarpedStartTime = mPlaybackSchedule.mT0 + mPlaybackSchedule.RealDurationSigned(startTime);
+
    mMidiPlaybackTracks.clear();
    for (const auto &pSequence : tracks.otherPlayableSequences)
       if (const auto pNoteTrack =
@@ -592,7 +596,7 @@ bool MIDIPlay::StartOtherStream(const TransportSequences &tracks,
    bool successMidi = true;
 
    if(!mMidiPlaybackTracks.empty()){
-      successMidi = StartPortMidiStream(rate);
+      successMidi = StartPortMidiStream(startTime, rate);
    }
 
    // On the other hand, if MIDI cannot be opened, we will not complain
@@ -675,7 +679,7 @@ double Iterator::GetNextEventTime() const
    return mNextEventTime;
 }
 
-bool MIDIPlay::StartPortMidiStream(double rate)
+bool MIDIPlay::StartPortMidiStream(double startTime, double rate)
 {
 #ifdef __WXGTK__
    // Duplicating a bit of AudioIO::StartStream
@@ -728,7 +732,7 @@ bool MIDIPlay::StartPortMidiStream(double rate)
       mMidiLoopPasses = 0;
       mMidiOutputComplete = false;
       mMaxMidiTimestamp = 0;
-      PrepareMidiIterator(true, mPlaybackSchedule.mT0, 0);
+      PrepareMidiIterator(true, startTime, 0);
 
       // It is ok to call this now, but do not send timestamped midi
       // until after the first audio callback, which provides necessary
@@ -746,20 +750,24 @@ void MIDIPlay::StopOtherStream()
 
       mMidiOutputComplete = true;
 
-      // now we can assume "ownership" of the mMidiStream
-      // if output in progress, send all off, etc.
-      AllNotesOff();
-      // AllNotesOff() should be sufficient to stop everything, but
-      // in Linux, if you Pm_Close() immediately, it looks like
-      // messages are dropped. ALSA then seems to send All Sound Off
-      // and Reset All Controllers messages, but not all synthesizers
-      // respond to these messages. This is probably a bug in PortMidi
-      // if the All Off messages do not get out, but for security,
-      // delay a bit so that messages can be delivered before closing
-      // the stream. Add 2ms of "padding" to avoid any rounding errors.
-      while (mMaxMidiTimestamp + 2 > MidiTime()) {
-         using namespace std::chrono;
-         std::this_thread::sleep_for(1ms); // deliver the all-off messages
+      // If mCallbackCount == 0 nothing was written to the device, there are
+      // no notes to turn off, and nothing to drain
+      if (mCallbackCount > 0) {
+         // now we can assume "ownership" of the mMidiStream
+         // if output in progress, send all off, etc.
+         AllNotesOff();
+         // AllNotesOff() should be sufficient to stop everything, but
+         // in Linux, if you Pm_Close() immediately, it looks like
+         // messages are dropped. ALSA then seems to send All Sound Off
+         // and Reset All Controllers messages, but not all synthesizers
+         // respond to these messages. This is probably a bug in PortMidi
+         // if the All Off messages do not get out, but for security,
+         // delay a bit so that messages can be delivered before closing
+         // the stream. Add 2ms of "padding" to avoid any rounding errors.
+         while (mMaxMidiTimestamp + 2 > MidiTime()) {
+            using namespace std::chrono;
+            std::this_thread::sleep_for(1ms); // deliver the all-off messages
+         }
       }
       Pm_Close(mMidiStream);
       mMidiStream = NULL;
@@ -835,7 +843,7 @@ bool Iterator::OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo)
    // (RBD)
    // if mNextEvent's channel is visible, play it, visibility can
    // be updated while playing.
-   
+
    // Be careful: if we have a note-off,
    // then we must not pay attention to the channel selection
    // or mute/solo buttons because we must turn the note off
@@ -1120,7 +1128,7 @@ void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
 {
    if (mCallbackCount++ == 0) {
        // This is effectively mSystemMinusAudioTime when the buffer is empty:
-       mStartTime = SystemTime(mUsingAlsa) - mPlaybackSchedule.mT0;
+       mStartTime = SystemTime(mUsingAlsa) - mWarpedStartTime;
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 

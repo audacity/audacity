@@ -86,10 +86,13 @@ struct MIDIPlay : AudioIOExt
    ~MIDIPlay() override;
 
    double AudioTime(double rate) const
-   { return mPlaybackSchedule.mT0 + mNumFrames / rate; }
+   { return mWarpedStartTime + mNumFrames / rate; }
 
    const PlaybackSchedule &mPlaybackSchedule;
    NoteTrackConstArray mMidiPlaybackTracks;
+
+   //! Where AudioTime() starts, warped to match MIDI event times
+   double mWarpedStartTime = 0.0;
 
    /// True when output reaches mT1
    static bool      mMidiOutputComplete;
@@ -148,7 +151,7 @@ struct MIDIPlay : AudioIOExt
 #endif
 
    void PrepareMidiIterator(bool send, double startTime, double offset);
-   bool StartPortMidiStream(double rate);
+   bool StartPortMidiStream(double startTime, double rate);
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
 
