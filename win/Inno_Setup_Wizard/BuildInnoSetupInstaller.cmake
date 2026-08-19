@@ -75,7 +75,13 @@ execute_process(
         ${INNO_SETUP_COMPILER} /Sbyparam=$p "audacity.iss"
     WORKING_DIRECTORY
         ${OUTPUT_DIR}
+    RESULT_VARIABLE
+        ISCC_RESULT
 )
+
+if( NOT ISCC_RESULT EQUAL 0 )
+    message( FATAL_ERROR "Inno Setup compiler failed (${ISCC_RESULT})" )
+endif()
 
 # Emulate CPack behavior
 
