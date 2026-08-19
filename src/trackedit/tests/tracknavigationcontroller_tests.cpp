@@ -9,7 +9,7 @@
 #include "framework/ui/navigationcommands.h"
 #include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "mocks/navigationcontrollermock.h"
+#include "ui/tests/mocks/navigationmocks.h"
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/trackeditprojectmock.h"
