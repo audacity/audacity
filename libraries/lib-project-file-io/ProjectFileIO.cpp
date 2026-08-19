@@ -11,11 +11,21 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 
 #include <atomic>
+#include <mutex>
 #include <sqlite3.h>
 #include <optional>
 #include <cstring>
 
+#if defined(__WXMSW__)
+#include <wx/msw/wrapwin.h>
+#include <io.h>
+#else
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
 #include <wx/crt.h>
+#include <wx/file.h>
 #include <wx/log.h>
 #include <wx/sstream.h>
 #include <wx/utils.h>
@@ -328,11 +338,15 @@ private:
 
    std::optional<SQLiteBlobStream> mBlobStream;
    size_t mNextBlobIndex { 0 };
+   bool mReadError { false };
 
    sqlite3* mDB;
    const char* mSchema;
    const char* mTable;
    const int64_t mRowID;
+
+public:
+   bool HadReadError() const { return mReadError; }
 
 protected:
    bool HasMoreData() const override
@@ -358,6 +372,7 @@ protected:
          // the next one
          mBlobStream = {};
          mNextBlobIndex = Columns.size();
+         mReadError = true;
 
          return 0;
       }
@@ -1414,6 +1429,27 @@ ProjectFileIO::BackupProject::~BackupProject()
    }
 }
 
+// According to docs, wxFile::Flush is noop on Windows
+// and weak on macos, hence this function
+static bool FlushToDisk(const wxString &path)
+{
+   wxFile file(path, wxFile::read_write);
+   if (!file.IsOpened())
+      return false;
+
+#if defined(__WXMSW__)
+   return FlushFileBuffers(
+      reinterpret_cast<HANDLE>(_get_osfhandle(file.fd()))) != 0;
+#elif defined(__APPLE__)
+   // on macos fsync is not enough
+   if (fcntl(file.fd(), F_FULLFSYNC) == 0)
+      return true;
+   return fsync(file.fd()) == 0;
+#else
+   return fsync(file.fd()) == 0;
+#endif
+}
+
 void ProjectFileIO::Compact(
    const std::vector<const TrackList *> &tracks, bool force)
 {
@@ -1474,8 +1510,12 @@ void ProjectFileIO::Compact(
          // gets cleaned up.
          if (wxFileName::GetSize(tempName) < wxFileName::GetSize(origName))
          {
+            if (!FlushToDisk(tempName))
+            {
+               wxLogWarning(wxT("Compaction failed to flush %s"), tempName);
+            }
             // Rename the original to backup
-            if (wxRenameFile(origName, backName))
+            else if (wxRenameFile(origName, backName))
             {
                // Rename the temporary to original
                if (wxRenameFile(tempName, origName))
@@ -1840,6 +1880,7 @@ bool ProjectFileIO::WriteDoc(const char *table,
                              const char *schema /* = "main" */)
 {
    auto db = DB();
+   std::lock_guard<std::mutex> lock(CurrConn()->TransactionMutex());
 
    TransactionScope transaction(mProject, "UpdateProject");
 
@@ -2046,6 +2087,13 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    if (!OpenConnection(fileName))
       return {};
 
+   // Prevent opening file read only
+   if (sqlite3_db_readonly(DB(), "main") == 1)
+   {
+      SetError(XO("The project file is read-only"), {}, SQLITE_READONLY);
+      return {};
+   }
+
    int64_t rowId = -1;
 
    bool useAutosave =
@@ -2077,24 +2125,12 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
 
       success = ProjectSerializer::Decode(stream, this);
 
-      if (!success)
+      if (!success || stream.HadReadError())
       {
          SetError(
             XO("Unable to parse project information.")
          );
          return {};
-      }
-
-      // Check for orphans blocks...sets mRecovered if any were deleted
-
-      auto blockids = WaveTrackFactory::Get( mProject )
-         .GetSampleBlockFactory()
-            ->GetActiveBlockIDs();
-      if (blockids.size() > 0)
-      {
-         success = DeleteBlocks(blockids, true);
-         if (!success)
-            return {};
       }
 
       // Remember if we used autosave or not
