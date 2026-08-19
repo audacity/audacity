@@ -22,7 +22,9 @@ else()
 endif()
 
 if( SIGN )
-    set( SIGN_TOOL "SignTool=byparam powershell -ExecutionPolicy Bypass -File \$q${SOURCE_DIR}/scripts/build/windows/PfxSign.ps1\$q -File $f")
+    # Signing service disabled
+    #set( SIGN_TOOL "SignTool=byparam powershell -ExecutionPolicy Bypass -File \$q${SOURCE_DIR}/scripts/build/windows/PfxSign.ps1\$q -File $f")
+    set( SIGN_TOOL )
 else()
     set( SIGN_TOOL )
 endif()

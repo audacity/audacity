@@ -1,8 +1,9 @@
 # Code signing
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   install( CODE "set( PFX_SIGN_PS_LOCATION \"${CMAKE_SOURCE_DIR}/scripts/build/windows/PfxSign.ps1\") " )
-   install( SCRIPT "scripts/build/windows/PfxSign.cmake" )
+   # Signing service disabled
+   #install( CODE "set( PFX_SIGN_PS_LOCATION \"${CMAKE_SOURCE_DIR}/scripts/build/windows/PfxSign.ps1\") " )
+   #install( SCRIPT "scripts/build/windows/PfxSign.cmake" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")
    set_from_env( APPLE_CODESIGN_IDENTITY )
    set_from_env( APPLE_NOTARIZATION_USER_NAME )
