@@ -188,7 +188,7 @@ muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectFamilyOption
 {
     std::vector<DropdownOption> options = { { "all", muse::qtrc("effects", "All") } };
     for (auto i = 0; i < static_cast<int>(EffectFamily::_count); ++i) {
-        options.push_back({ QString::number(i), utils::effectFamilyToString(static_cast<EffectFamily>(i)) });
+        options.push_back({ QString::number(i), utils::effectFamilyLabel(static_cast<EffectFamily>(i)) });
     }
     return utils::toMenuItemList(options, m_effectFamilySelectedIndex, this);
 }
@@ -217,7 +217,7 @@ muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectTypeOptions(
 {
     std::vector<DropdownOption> options = { { "all", muse::qtrc("effects", "All") } };
     for (auto i = 0; i < static_cast<int>(EffectType::_count); ++i) {
-        options.push_back({ QString::number(i), utils::effectTypeToString(static_cast<EffectType>(i)) });
+        options.push_back({ QString::number(i), utils::effectTypeLabel(static_cast<EffectType>(i)) });
     }
     return utils::toMenuItemList(options, m_effectTypeSelectedIndex, this);
 }
@@ -346,7 +346,7 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
         row.append(makeCell(muse::Val(pluginStateToString(meta.state))));
         row.append(makeCell(muse::Val(meta.vendor.toQString())));
         row.append(makeCell(muse::Val(meta.path.toQString())));
-        row.append(makeCell(muse::Val(utils::effectFamilyToString(meta.family).toQString())));
+        row.append(makeCell(muse::Val(utils::effectFamilyLabel(meta.family).toQString())));
         table.append(row);
     }
 
