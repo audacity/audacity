@@ -171,10 +171,6 @@ Rectangle {
             elide: Text.ElideNone
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft
-
-            onLinkActivated: function (link) {
-                Qt.openUrlExternally(link)
-            }
         }
     }
 }
