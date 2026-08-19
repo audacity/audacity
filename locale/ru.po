@@ -13,9 +13,9 @@
 # Alexander Kovalenko <nktch@yandex.ru>, 2019-2026
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2026-05-27 09:44+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: \n"
@@ -3484,6 +3484,10 @@ msgstr "Не удалось удалить информацию автосохр
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Невозможно привязаться к бинарным данным"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Файл проекта доступен только для чтения"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11670,20 +11674,8 @@ msgid "Welcome to Audacity!"
 msgstr "Добро пожаловать в Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "Попробуйте новую бета-версию Audacity 4"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "Тест бета-версии"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Завершите настройку облака Audacity с помощью audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Получите наши бесплатные инструменты ИИ OpenVino"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16898,6 +16890,14 @@ msgstr "Метод &вывода звука:"
 msgid "Using:"
 msgstr "Используется:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Использовать частоту дискретизации устройства"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Настройки драйвера"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21843,3 +21843,12 @@ msgstr "Инструменты спектра"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Традиционные"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "Попробуйте новую бета-версию Audacity 4"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "Тест бета-версии"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Получите наши бесплатные инструменты ИИ OpenVino"

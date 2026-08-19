@@ -5,9 +5,9 @@
 # Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2011—2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -3548,6 +3548,11 @@ msgstr ""
 #, fuzzy
 msgid "Unable to bind to blob"
 msgstr "Nisam uspeo da pronađem kodek"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "The project file is read-only"
+msgstr "Nadgledam podatke datoteke projekta"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
@@ -12090,19 +12095,7 @@ msgid "Welcome to Audacity!"
 msgstr "Dobrodošli u Odvažnost!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -17878,6 +17871,16 @@ msgstr "&Domaćin"
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
 msgstr "Koristi:"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Use device sample rate"
+msgstr "Nekorišćeni filteri:"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Driver settings"
+msgstr "Podešavanja odjeka"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
@@ -27061,9 +27064,6 @@ msgstr ""
 
 #~ msgid "R&ename"
 #~ msgstr "&Preimenuj"
-
-#~ msgid "Reverb settings"
-#~ msgstr "Podešavanja odjeka"
 
 #~ msgid "Load preset:"
 #~ msgstr "Učitaj podešenost:"

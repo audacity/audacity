@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: 王晨旭 <wcxu21@126.com>, 2026\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/audacity/teams/164520/zh_CN/)\n"
@@ -3474,6 +3474,10 @@ msgstr "从项目文件中移除自动保存信息失败。"
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "无法建立存储区块"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "项目文件为只读"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11640,20 +11644,8 @@ msgid "Welcome to Audacity!"
 msgstr "欢迎使用 Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "试试新的 Audacity 4 测试版版本"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "测试测试版版本"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "使用 audio.com 完成您的 Audacity 云设置"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "获取我们的免费 OpenVINO AI 工具"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16862,6 +16854,14 @@ msgstr "主机(&H)："
 msgid "Using:"
 msgstr "使用："
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "使用设备采样率"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "驱动设置"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21796,3 +21796,12 @@ msgstr "频谱工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "传统"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "试试新的 Audacity 4 测试版版本"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "测试测试版版本"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "获取我们的免费 OpenVINO AI 工具"

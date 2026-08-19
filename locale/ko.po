@@ -12,9 +12,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2026-05-30 10:10+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
@@ -3480,6 +3480,10 @@ msgstr "이 프로젝트 파일에서 자동 저장 정보를 삭제하는데 �
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Blob과 바인딩 할 수 없습니다"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "프로젝트 파일이 읽기 전용입니다"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11652,20 +11656,8 @@ msgid "Welcome to Audacity!"
 msgstr "오다시티 사용을 환영합니다!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "새로운 Audacity 4 베타 버전을 사용해 보세요"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "베타 버전 사용해 보기"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "오디오닷컴으로 Audacity 클라우드 설정을 완료하세요"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "OpenVino AI 도구를 무료로 받기"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16870,6 +16862,14 @@ msgstr "호스트(&H):"
 msgid "Using:"
 msgstr "사용 중:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "장치의 샘플 레이트 사용"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "드라이버 설정"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21814,6 +21814,15 @@ msgstr "특수 도구"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "레거시"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "새로운 Audacity 4 베타 버전을 사용해 보세요"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "베타 버전 사용해 보기"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "OpenVino AI 도구를 무료로 받기"
 
 #~ msgid "Video: how we're redesigning Audacity for the future"
 #~ msgstr "비디오: 미래에 우리가 어떻게 오다시티를 다시 디자인 할 것인지"

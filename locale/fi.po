@@ -12,9 +12,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Heino Keränen, 2026\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
@@ -3481,6 +3481,10 @@ msgstr "Projektitiedoston automaattitallennustietojen poistaminen epäonnistui."
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Binääriobjektiin sitominen epäonnistui"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Projektitiedosto on kirjoitussuojattu"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11666,20 +11670,8 @@ msgid "Welcome to Audacity!"
 msgstr "Tervetuloa käyttämään Audacityä!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "Kokeile uutta Audacity 4 Beta -julkaisua"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "Testaa beta-julkaisua"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Viimeistele Audacity-pilvipalvelusi asennus osoitteessa audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Hanki ilmaiset OpenVino AI-työkalut"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16890,6 +16882,14 @@ msgstr "&Isäntä:"
 msgid "Using:"
 msgstr "Käyttää:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Käytä laitteen näytteenottotaajuutta"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Ajurin asetukset"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21830,3 +21830,12 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "Kokeile uutta Audacity 4 Beta -julkaisua"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "Testaa beta-julkaisua"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Hanki ilmaiset OpenVino AI-työkalut"

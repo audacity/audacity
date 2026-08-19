@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Stian Kristensen, 2026\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/audacity/teams/164520/nb/)\n"
@@ -3485,6 +3485,10 @@ msgstr "Kunne ikke fjerne autolagringsinformasjon fra prosjektfilen."
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Kunne ikke koble til blob"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Prosjektfilen er skrivebeskyttet"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11668,20 +11672,8 @@ msgid "Welcome to Audacity!"
 msgstr "Velkommen til Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Fullfør Audacity-skyoppsettet med audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Få våre OpenVino AI-verktøy"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16886,6 +16878,14 @@ msgstr "&Vert:"
 msgid "Using:"
 msgstr "Bruker:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Bruk enhetens samplingsfrekvens"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Driverinnstillinger"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21812,3 +21812,6 @@ msgstr "Spektralverktøy"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Få våre OpenVino AI-verktøy"
