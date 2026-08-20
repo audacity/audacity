@@ -236,7 +236,8 @@ TEST_F(Au3RecordTests, RecordingToNewTrackUsesConfiguredTrackName)
 
     //! [THEN] Recording goes to a new track named after the configured scheme
     const auto tracks = Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>();
-    ASSERT_FALSE(tracks.empty());
+    ASSERT_EQ(tracks.size(), 1u);
+    EXPECT_EQ((*tracks.begin())->NChannels(), 2u);
     EXPECT_EQ((*tracks.begin())->GetName(), wxString("MyTake_1"));
 }
 
