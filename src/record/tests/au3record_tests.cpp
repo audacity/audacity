@@ -87,6 +87,11 @@ public:
         ON_CALL(*m_audioDriverController, inputChannelsAvailable())
         .WillByDefault(Return(2));
 
+        audio::AudioConfiguration audioConfiguration;
+        audioConfiguration.inputChannels = 2;
+        ON_CALL(*m_audioDriverController, configuration())
+        .WillByDefault(Return(audioConfiguration));
+
         ON_CALL(*m_recordConfiguration, leadInTimeDuration())
         .WillByDefault(Return(2.0));
         ON_CALL(*m_recordConfiguration, crossfadeDuration())
