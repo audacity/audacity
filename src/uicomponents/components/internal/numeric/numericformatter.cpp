@@ -5,6 +5,8 @@
 
 #include <cstdio>
 
+#include <QLocale>
+
 using namespace au::uicomponents;
 
 /**
@@ -269,8 +271,13 @@ void NumericFormatter::init()
                 if (numWholeFields == 0) {
                     m_prefix = delimStr;
                 } else {
-                    delimStr.replace('<', ',');
-                    delimStr.replace('>', '.');
+                    // Localize: ',' groups digits, '<'/'>' mark the decimal
+                    // point (AU3 encoding). Group first: in comma-decimal
+                    // locales the decimal point is ',' itself.
+                    const QLocale locale;
+                    delimStr.replace(QStringLiteral(","), locale.groupSeparator());
+                    delimStr.replace(QStringLiteral("<"), locale.decimalPoint());
+                    delimStr.replace(QStringLiteral(">"), locale.decimalPoint());
                     m_fields[numWholeFields - 1].label = delimStr;
                 }
             }
