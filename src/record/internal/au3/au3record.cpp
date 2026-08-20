@@ -70,10 +70,10 @@ PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
     return result;
 }
 
-WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate)
+WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate,
+                                                       const size_t recordingChannels)
 {
     auto p = &proj;
-    size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
     bool strictRules = (recordingChannels <= 2);
 
     // Iterate over all wave tracks, or over selected wave tracks only.
@@ -383,9 +383,11 @@ muse::Ret Au3Record::start()
     }
 
     if (appendRecord) {
+        const size_t recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+
         // Try to find wave tracks to record into.  (If any are selected,
         // try to choose only from them; else if wave tracks exist, may record into any.)
-        existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
+        existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
         if (!existingTracks.empty()) {
             projectRate = rateOfSelected;
         } else {
@@ -393,7 +395,7 @@ muse::Ret Au3Record::start()
                 return make_ret(Err::TooFewCompatibleTracksSelected);
             }
 
-            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate);
+            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
         }
     }
 
@@ -508,7 +510,8 @@ muse::Ret Au3Record::leadInRecording()
     }
 
     // Find tracks to record into (must be selected)
-    auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
+    const size_t recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
     if (tracks.empty()) {
         return make_ret(Err::LeadInRecordingNoTracksSelected);
     }
@@ -827,7 +830,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         // Count the tracks.
         auto numTracks = trackList.Any<const Au3WaveTrack>().size();
 
-        auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
+        const auto recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
 
         gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
         gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
