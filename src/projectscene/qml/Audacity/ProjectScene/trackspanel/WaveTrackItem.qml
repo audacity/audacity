@@ -244,6 +244,11 @@ TrackItem {
                 icon: IconCode.MUTE
                 checked: Boolean(root.item) ? root.item.muted : false
 
+                toolTipTitle: checked ? qsTrc("projectscene", "Unmute") : qsTrc("projectscene", "Mute")
+                toolTipDescription: checked
+                                    ? ""
+                                    : qsTrc("projectscene", "Shift+click to mute only this track")
+
                 navigation.panel: root.headerNavigationPanel
                 navigation.order: root.headerTrailingControlsNavigationStart
                 navigation.accessible.name: qsTrc("projectscene", "Mute")
@@ -264,6 +269,11 @@ TrackItem {
 
                 icon: IconCode.SOLO
                 checked: Boolean(root.item) ? root.item.solo : false
+
+                toolTipTitle: checked ? qsTrc("projectscene", "Unsolo") : qsTrc("projectscene", "Solo")
+                toolTipDescription: checked
+                                    ? ""
+                                    : qsTrc("projectscene", "Shift+click to solo only this track")
 
                 navigation.panel: root.headerNavigationPanel
                 navigation.order: muteButton.navigation.order + 1
