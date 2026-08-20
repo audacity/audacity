@@ -49,6 +49,11 @@ STRINGS_API const wxString& GetCustomTranslation(const wxString& str1)
     return GetCustomSubstitution(str2);
 }
 
+void Internat::SetDecimalSeparator(wxChar sep)
+{
+    mDecimalSeparator = sep;
+}
+
 void Internat::Init()
 {
     // Save decimal point character
