@@ -37,16 +37,21 @@ void PlaybackToolBarCustomiseModel::load()
     ToolConfig toolConfig = uiState()->toolConfig(TOOLBAR_NAME,
                                                   projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
-    auto isSeparator = [](const UiAction& a) { return a.code.empty(); };
-
     bool lastWasSeparator = false;
     for (const auto& configItem : toolConfig.items) {
-        UiAction action = actionsRegister()->action(configItem.action);
-
-        if (isSeparator(action) && lastWasSeparator) {
+        if (configItem.isSeparator()) {
+            if (!lastWasSeparator) {
+                items << makeSeparatorItem();
+            }
+            lastWasSeparator = true;
             continue;
         }
-        lastWasSeparator = isSeparator(action);
+        lastWasSeparator = false;
+
+        UiAction action = actionsRegister()->action(configItem.intent);
+        if (action.code.empty()) {
+            continue;
+        }
 
         items << makeItem(action, configItem.show);
     }
@@ -207,10 +212,6 @@ void PlaybackToolBarCustomiseModel::updateAddSeparatorAvailability()
 
 PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeItem(const UiAction& action, bool checked)
 {
-    if (action.code.empty()) {
-        return makeSeparatorItem();
-    }
-
     PlaybackToolBarCustomiseItem* item = new PlaybackToolBarCustomiseItem(PlaybackToolBarCustomiseItem::ItemType::ACTION, this);
     item->setId(QString::fromStdString(action.code));
     item->setTitle(action.title.qTranslatedWithoutMnemonic());
@@ -257,7 +258,7 @@ void PlaybackToolBarCustomiseModel::saveActions()
         }
 
         ToolConfig::Item citem;
-        citem.action = customiseItem->id().toStdString();
+        citem.intent = customiseItem->id().toStdString();
         citem.show = customiseItem->checked();
         config.items.append(citem);
     }
