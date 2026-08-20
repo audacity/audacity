@@ -93,8 +93,6 @@ public:
     void setLastPlaybackSeekTime(muse::secs_t secs) override;
     muse::async::Notification lastPlaybackSeekTimeChanged() const override;
 
-    muse::Progress loadingProgress() const override;
-
     audio::AudioStreamRestorer suspendForAudioConfiguration(
         audio::AudioStreamKind streamKind) override;
 
@@ -104,8 +102,6 @@ private:
     friend class PlaybackControllerTests;
 
     IPlayerPtr player() const;
-
-    bool isLoaded() const;
 
     bool loopBoundariesSet() const;
 
@@ -206,9 +202,6 @@ private:
     muse::async::Channel<playback::TrackId> m_trackRemoved;
 
     muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
-
-    muse::Progress m_loadingProgress;
-    size_t m_loadingTrackCount = 0;
 
     bool m_isExportingAudio = false;
     bool m_isRangeSelection = false;
