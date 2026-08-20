@@ -97,6 +97,7 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
     dispatcher()->reg(this, "action://trigger", this, &ApplicationActionController::doGlobalTrigger);
     dispatcher()->reg(this, "action://enter", this, &ApplicationActionController::doGlobalEnter);
+    dispatcher()->reg(this, "action://shift-enter", this, &ApplicationActionController::doGlobalShiftEnter);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -573,6 +574,22 @@ void ApplicationActionController::doGlobalEnter()
 
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("track-view-replace-selection");
+        return;
+    }
+
+    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+}
+
+void ApplicationActionController::doGlobalShiftEnter()
+{
+    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
+    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
+        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+        return;
+    }
+
+    if (isProjectOpenedAndFocused()) {
+        dispatcher()->dispatch("track-view-range-selection");
         return;
     }
 
