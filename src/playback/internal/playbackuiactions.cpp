@@ -225,6 +225,48 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Creating a loop also selects audio"),
              Checkable::Yes
              ),
+    UiAction("track-mute",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Mute/unmute focused track"),
+             TranslatableString("action", "Mute/unmute focused track"),
+             IconCode::Code::MUTE
+             ),
+    UiAction("track-solo",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Solo/unsolo focused track"),
+             TranslatableString("action", "Solo/unsolo focused track"),
+             IconCode::Code::SOLO
+             ),
+    UiAction("mute-all-tracks",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Mute all tracks"),
+             TranslatableString("action", "Mute all tracks"),
+             IconCode::Code::MUTE
+             ),
+    UiAction("unmute-all-tracks",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Unmute all tracks"),
+             TranslatableString("action", "Unmute all tracks"),
+             IconCode::Code::MUTE
+             ),
+    UiAction("mute-tracks",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Mute selected tracks"),
+             TranslatableString("action", "Mute selected tracks"),
+             IconCode::Code::MUTE
+             ),
+    UiAction("unmute-tracks",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Unmute selected tracks"),
+             TranslatableString("action", "Unmute selected tracks"),
+             IconCode::Code::MUTE
+             ),
 };
 
 const UiActionList PlaybackUiActions::m_settingsActions = {
