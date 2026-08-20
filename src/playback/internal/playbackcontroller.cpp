@@ -202,11 +202,6 @@ bool PlaybackController::isStopped() const
     return player()->playbackStatus() == PlaybackStatus::Stopped;
 }
 
-bool PlaybackController::isLoaded() const
-{
-    return m_loadingTrackCount == 0;
-}
-
 bool PlaybackController::isLoopRegionActive() const
 {
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
@@ -1137,11 +1132,6 @@ muse::secs_t PlaybackController::totalPlayTime() const
 Notification PlaybackController::totalPlayTimeChanged() const
 {
     return m_totalPlayTimeChanged;
-}
-
-muse::Progress PlaybackController::loadingProgress() const
-{
-    return m_loadingProgress;
 }
 
 bool PlaybackController::canReceiveAction(const ActionCode& code) const
