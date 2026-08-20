@@ -51,7 +51,5 @@ public:
     MOCK_METHOD(muse::secs_t, lastPlaybackSeekTime, (), (const, override));
     MOCK_METHOD(void, setLastPlaybackSeekTime, (muse::secs_t), (override));
     MOCK_METHOD(muse::async::Notification, lastPlaybackSeekTimeChanged, (), (const, override));
-
-    MOCK_METHOD(muse::Progress, loadingProgress, (), (const, override));
 };
 }
