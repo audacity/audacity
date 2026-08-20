@@ -3,13 +3,15 @@
 */
 
 #include "au3record.h"
+
+#include <cfloat>
+
 #include "au3-strings/TranslatableString.h"
 
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
 #include "au3-audio-io/ProjectAudioIO.h"
-#include "au3-audio-devices/AudioIOBase.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
@@ -824,22 +826,16 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     if (transportSequences.captureSequences.empty()) {
         // recording to NEW track(s).
-        bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
-        wxString defaultTrackName, defaultRecordingTrackName;
-
         // Count the tracks.
         auto numTracks = trackList.Any<const Au3WaveTrack>().size();
 
         const auto recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
 
-        gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
-        gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
-        gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
-        gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-        defaultTrackName = trackList.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference());
-        gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
-
-        wxString baseTrackName = recordingNameCustom ? defaultRecordingTrackName : defaultTrackName;
+        const RecordingTrackNameOptions nameOptions = recordConfiguration()->recordingTrackNameOptions();
+        const wxString defaultTrackName = trackList.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference());
+        const wxString baseTrackName = nameOptions.useCustomName && !nameOptions.customName.empty()
+                                       ? wxFromStdString(nameOptions.customName)
+                                       : defaultTrackName;
 
         std::vector<WaveTrack::Holder> newTracks;
         if (recordingChannels == 2u) {
@@ -865,18 +861,18 @@ Ret Au3Record::doRecord(Au3Project& project,
             newTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
 
-            if (useTrackNumber) {
+            if (nameOptions.addTrackNumber) {
                 nameSuffix += wxString::Format(wxT("%d"), 1 + (int)numTracks + trackCounter++);
             }
 
-            if (useDateStamp) {
+            if (nameOptions.addDateStamp) {
                 if (!nameSuffix.empty()) {
                     nameSuffix += wxT("_");
                 }
                 nameSuffix += wxDateTime::Now().FormatISODate();
             }
 
-            if (useTimeStamp) {
+            if (nameOptions.addTimeStamp) {
                 if (!nameSuffix.empty()) {
                     nameSuffix += wxT("_");
                 }
