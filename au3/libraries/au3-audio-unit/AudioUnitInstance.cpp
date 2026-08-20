@@ -14,6 +14,7 @@
 #include "AudioUnitInstance.h"
 
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include <dispatch/dispatch.h>
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-exceptions/AudacityException.h"
 #include <wx/log.h>
@@ -155,6 +156,8 @@ size_t AudioUnitInstance::GetTailSize() const
 
 bool AudioUnitInstance::Initialize()
 {
+    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
     if (mInitialization) {
         return true;
     }
@@ -183,7 +186,10 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                 // accumulate the number of frames processed so far
     mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-    //! NOTE Reinitialize only when the sample rate actually changed.
+    //! NOTE Every playback start calls this. Uninitializing and initializing
+    //! the unit again resets the plug-in to the values it was last given,
+    //! discarding whatever the user has since changed in its own editor, so
+    //! only do it when the sample rate makes it necessary.
     const bool needsReinitialize = !mInitialization || mInitializedSampleRate != sampleRate;
     if (needsReinitialize) {
         mInitialization.reset();
@@ -227,10 +233,13 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
 
         mInitializedSampleRate = sampleRate;
 
-        // Store once the unit is initialized: out-of-process plug-ins discard
-        // parameter values set before AudioUnitInitialize. A unit that stayed
-        // initialized is left alone - it is already processing with the values
-        // the user set, which the stored copy may lag behind.
+        // The reinitialization above discarded the unit's parameter state and
+        // only this method knows it did, so restore it from the stored
+        // settings - and only now, because an out-of-process plug-in also
+        // discards values set before AudioUnitInitialize. A unit that stayed
+        // initialized is left alone: it is already processing with the values
+        // the user set, which the stored copy may lag behind (see
+        // RealtimeFinalize).
         if (!StoreSettings(mProcessor, GetSettings(settings))) {
             return false;
         }
@@ -348,10 +357,12 @@ bool AudioUnitInstance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
     return GuardedCall<bool>([&]{
         // Adopt the values the plug-in has been processing with, which include
-        // whatever the user changed in its own editor. Effects that don't use
-        // messages get this for free, as the realtime state copies the worker
-        // settings back; a message-based one has to bring them over itself, or
-        // the next instance starts from the values these replace.
+        // whatever the user changed in its own editor. An instance without
+        // messages (UsesMessages()) gets this for free: RealtimeEffectState::
+        // Finalize copies the worker settings back into the main settings.
+        // For a message-based instance like this one it skips that copy, so
+        // the live values have to be brought over here, or the next instance
+        // starts from the values these replace.
         FetchSettings(GetSettings(settings), true, true);
 
         for (auto& pSlave : mSlaves) {

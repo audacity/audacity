@@ -17,7 +17,6 @@
 #include <map>
 #include <set>
 #include <unordered_map>
-#include <dispatch/dispatch.h>
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
