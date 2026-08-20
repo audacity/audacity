@@ -18,6 +18,8 @@
 #include "au3-module-manager/ModuleManager.h"
 #include "au3-components/PluginProvider.h"
 
+#include <dispatch/dispatch.h>
+
 #include <wx/osx/core/private.h>
 #include <wx/log.h>
 

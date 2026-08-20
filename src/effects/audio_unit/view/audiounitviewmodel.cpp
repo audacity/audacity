@@ -189,9 +189,18 @@ void au::effects::AudioUnitViewModel::settingsToView()
         return;
     }
 
-    m_instance->Initialize();
+    if (!m_instance->IsInitialized()) {
+        m_instance->Initialize();
+    }
 
     m_instance->StoreSettings(m_instance->mProcessor, AudioUnitInstance::GetSettings(m_settingsAccess->Get()));
+
+    AudioUnitParameter aup = {};
+    aup.mAudioUnit = m_instance->GetAudioUnit();
+    aup.mParameterID = kAUParameterListener_AnyParameter;
+    aup.mScope = kAudioUnitScope_Global;
+    aup.mElement = 0;
+    AUParameterListenerNotify(m_eventListenerRef.get(), nullptr, &aup);
 }
 
 void au::effects::AudioUnitViewModel::settingsFromView()
