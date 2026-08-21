@@ -10,6 +10,7 @@ set( SOURCES
 )
 set( LIBRARIES
    au3-network-manager-interface
+   au3-strings-interface # Languages
    PRIVATE
    rapidjson::rapidjson
 )
