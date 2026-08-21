@@ -86,7 +86,9 @@ void Au3CloudActionsController::openCreateAccountDialog(const muse::actions::Act
 void Au3CloudActionsController::showTourPage()
 {
     if (!authorization()->isAuthorized()) {
-        const muse::UriQuery uri(SIGNIN_URI);
+        muse::UriQuery uri(SIGNIN_URI);
+        uri.addParam(createAccountModeParam, muse::Val(true));
+
         const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
         if (!rv.ret) {
             LOGW() << "Sign in cancelled: " << rv.ret.toString();
@@ -104,10 +106,11 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
     }
 
     const bool sync = query.param("sync").toBool();
-    const bool isCreateAccountMode = query.param(createAccountModeParam, muse::Val(false)).toBool();
 
     muse::UriQuery uri(SIGNIN_URI);
-    uri.addParam(createAccountModeParam, muse::Val(isCreateAccountMode));
+    if (query.contains(createAccountModeParam)) {
+        uri.addParam(createAccountModeParam, query.param(createAccountModeParam));
+    }
 
     if (sync) {
         const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
