@@ -16,10 +16,16 @@ namespace au::shared {
 inline muse::TranslatableString workspaceTitle(const std::string& name)
 {
     if (name == "Classic") {
+        //: The name of a built-in workspace (an interface layout);
+        //: an adjective in languages where that applies
         return muse::TranslatableString("workspace", "Classic");
     } else if (name == "Modern") {
+        //: The name of a built-in workspace (an interface layout);
+        //: an adjective in languages where that applies
         return muse::TranslatableString("workspace", "Modern");
     } else if (name == "Music") {
+        //: The name of a built-in workspace (an interface layout);
+        //: an adjective in languages where that applies
         return muse::TranslatableString("workspace", "Music");
     }
 
