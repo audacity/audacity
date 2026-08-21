@@ -378,7 +378,7 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
     const auto effectName = getEffectName(*state);
     const auto trackName = effectTrackName(*tId);
     muse::String description;
-    if (oldIndex < newIndex) {
+    if (newIndex < oldIndex) {
         //: History entry. %1 is an effect name, %2 is a track name,
         //: e.g. "Moved Compressor up in Track 1"
         description = muse::mtrc("effects", "Moved %1 up in %2");
