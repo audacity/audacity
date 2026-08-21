@@ -23,8 +23,6 @@
 #ifndef AU_APPSHELL_APPSHELLTYPES_H
 #define AU_APPSHELL_APPSHELLTYPES_H
 
-#include "muse_framework_config.h"
-
 #include <QString>
 
 namespace au::appshell {
@@ -51,10 +49,7 @@ enum class StartupModeType
     StartWithNewProject,
     StartWithProject,
     Recovery,
-    FirstLaunch,
-#ifdef MUSE_MODULE_TESTFLOW
-    TestflowHeadless,
-#endif
+    FirstLaunch
 };
 }
 

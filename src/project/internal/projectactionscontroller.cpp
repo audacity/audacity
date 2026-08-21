@@ -580,18 +580,14 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
     bool result = true;
 
     if (project->hasUnsavedChanges()) {
-        if (qEnvironmentVariableIsSet("AU_SKIP_SAVE_PROJECT_PROMPT")) {
-            result = true;
-        } else {
-            IInteractive::Button btn = askAboutSavingProject(project);
+        IInteractive::Button btn = askAboutSavingProject(project);
 
-            if (btn == IInteractive::Button::Cancel) {
-                result = false;
-            } else if (btn == IInteractive::Button::Save) {
-                result = saveProject();
-            } else if (btn == IInteractive::Button::DontSave) {
-                result = true;
-            }
+        if (btn == IInteractive::Button::Cancel) {
+            result = false;
+        } else if (btn == IInteractive::Button::Save) {
+            result = saveProject();
+        } else if (btn == IInteractive::Button::DontSave) {
+            result = true;
         }
     }
 

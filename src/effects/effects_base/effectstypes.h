@@ -67,6 +67,12 @@ enum class EffectUIMode {
     FallbackUI = 1,   // Use Audacity's fallback UI
 };
 
+//! What to do with third-party plugins discovered at startup
+enum class StartupPluginValidationPolicy {
+    AskUser,
+    Skip, // register them, but skip validation
+};
+
 // Parameter types for auto-generated UI
 enum class ParameterType {
     Unknown = -1,

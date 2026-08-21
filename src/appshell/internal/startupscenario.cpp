@@ -59,12 +59,6 @@ static StartupModeType modeTypeFromString(const std::string& str)
         return StartupModeType::StartWithProject;
     }
 
-#ifdef MUSE_MODULE_TESTFLOW
-    if ("testflow-headless" == str) {
-        return StartupModeType::TestflowHeadless;
-    }
-#endif
-
     return StartupModeType::StartEmpty;
 }
 
@@ -149,11 +143,7 @@ void StartupScenario::runAfterSplashScreen()
     m_startupCompleted = true;
 
     StartupModeType modeType = resolveStartupModeType();
-    const bool canOverrideStartupMode = multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget()
-#ifdef MUSE_MODULE_TESTFLOW
-                                        && modeType != StartupModeType::TestflowHeadless
-#endif
-    ;
+    const bool canOverrideStartupMode = allowsStartupModeOverride();
     if (canOverrideStartupMode && sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
     }
@@ -174,6 +164,11 @@ void StartupScenario::runAfterSplashScreen()
 bool StartupScenario::startupCompleted() const
 {
     return m_startupCompleted;
+}
+
+bool StartupScenario::allowsStartupModeOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
 }
 
 bool StartupScenario::hasExplicitStartupTarget() const
@@ -222,9 +217,6 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 
     switch (modeType) {
     case StartupModeType::StartEmpty:
-#ifdef MUSE_MODULE_TESTFLOW
-    case StartupModeType::TestflowHeadless:
-#endif
         break;
     case StartupModeType::StartWithNewProject:
         dispatcher()->dispatch("file-new");
@@ -247,19 +239,11 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     }
 }
 
-void StartupScenario::showStartupDialogsIfNeed(StartupModeType modeType)
+void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
 {
-    if (!multiwindowsProvider()->isFirstWindow()
-#ifdef MUSE_MODULE_TESTFLOW
-        || modeType == StartupModeType::TestflowHeadless
-#endif
-        ) {
+    if (!multiwindowsProvider()->isFirstWindow()) {
         return;
     }
-
-#ifndef MUSE_MODULE_TESTFLOW
-    Q_UNUSED(modeType);
-#endif
 
     const auto showWelcomePage = [this]() {
         const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());

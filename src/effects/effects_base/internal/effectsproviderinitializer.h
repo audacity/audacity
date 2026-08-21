@@ -22,6 +22,10 @@ public:
 
     ~EffectsProviderInitializer() override = default;
 
+    void setStartupPluginValidationPolicy(StartupPluginValidationPolicy policy) override;
     void callAfterSplashScreen() override;
+
+private:
+    StartupPluginValidationPolicy m_validationPolicy = StartupPluginValidationPolicy::AskUser;
 };
 }
