@@ -104,10 +104,11 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
     }
 
     const bool sync = query.param("sync").toBool();
-    const bool isCreateAccountMode = query.param(createAccountModeParam, muse::Val(false)).toBool();
 
     muse::UriQuery uri(SIGNIN_URI);
-    uri.addParam(createAccountModeParam, muse::Val(isCreateAccountMode));
+    if (query.contains(createAccountModeParam)) {
+        uri.addParam(createAccountModeParam, query.param(createAccountModeParam));
+    }
 
     if (sync) {
         const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);

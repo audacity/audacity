@@ -11,7 +11,7 @@ import Audacity.AppShell
 Page {
     id: root
 
-    property bool isCreateAccountMode: false
+    property bool isCreateAccountMode: true
 
     title: qsTrc("appshell/gettingstarted", "Connect to your audio.com account")
     titleTopMargin: 16
