@@ -23,12 +23,14 @@ using namespace muse;
 using namespace au::effects;
 
 void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
+                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                               StartupPluginValidationPolicy validationPolicy)
 {
-    const auto doScanThirdPartyPlugins = [&interactive]() {
-        if (qEnvironmentVariableIsSet("AU_SKIP_PLUGIN_VALIDATION_PROMPT")) {
+    const auto shouldValidateThirdPartyPlugins = [&interactive, validationPolicy]() {
+        if (validationPolicy == StartupPluginValidationPolicy::Defer) {
             return false;
         }
+
         auto ret = interactive.questionSync(muse::trc("appshell", "Validate audio plugins"),
                                             muse::trc(
                                                 "appshell",
@@ -46,7 +48,7 @@ void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::II
         return ret.standardButton() == muse::IInteractive::Button::Apply;
     };
 
-    doScanPlugins(ctx, registerAudioPluginsScenario, doScanThirdPartyPlugins);
+    doScanPlugins(ctx, registerAudioPluginsScenario, shouldValidateThirdPartyPlugins);
 
     // Providers must be available in ModuleManager for on-demand plugin loading.
     ModuleManager::Get().DiscoverProviders();

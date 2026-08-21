@@ -13,6 +13,9 @@
 
 #include "framework/testflow/itestflow.h"
 
+#include "appshell/testflowstartup.h"
+#include "effects/effects_base/ieffectsproviderinitializer.h"
+
 #include "log.h"
 
 using namespace au::app;
@@ -28,6 +31,21 @@ namespace {
 {
     std::_Exit(code);
 }
+}
+
+void TestflowRunner::prepare(const muse::modularity::ContextPtr& ctx, const AudacityCmdOptions::Testflow& options)
+{
+    if (options.testCaseNameOrFile.isEmpty()) {
+        return;
+    }
+
+    au::appshell::installTestflowStartupScenario(ctx);
+
+    auto effectsInitializer = muse::modularity::ioc(ctx)->resolve<au::effects::IEffectsProviderInitializer>("app");
+    IF_ASSERT_FAILED(effectsInitializer) {
+        return;
+    }
+    effectsInitializer->setStartupPluginValidationPolicy(au::effects::StartupPluginValidationPolicy::Defer);
 }
 
 void TestflowRunner::runIfRequested(const muse::modularity::ContextPtr& ctx, const AudacityCmdOptions::Testflow& options)

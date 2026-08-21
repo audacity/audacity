@@ -71,25 +71,22 @@ void GuiApp::showContextSplash(const muse::modularity::ContextPtr& ctxId)
 
 void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
 {
-    auto startupScenario = muse::modularity::ioc(ctxId)->resolve<IStartupScenario>("app");
-    IF_ASSERT_FAILED(startupScenario) {
-        return;
-    }
-
     const std::shared_ptr<AudacityCmdOptions> options
         = std::dynamic_pointer_cast<AudacityCmdOptions>(contextData(ctxId).options);
     IF_ASSERT_FAILED(options) {
         return;
     }
 
-    std::optional<std::string> startupType = options->startup.type;
 #ifdef MUSE_MODULE_TESTFLOW
-    if (!options->testflow.testCaseNameOrFile.isEmpty()) {
-        startupType = "testflow-headless";
-    }
+    TestflowRunner::prepare(ctxId, options->testflow);
 #endif
-    startupScenario->setStartupType(startupType);
 
+    auto startupScenario = muse::modularity::ioc(ctxId)->resolve<IStartupScenario>("app");
+    IF_ASSERT_FAILED(startupScenario) {
+        return;
+    }
+
+    startupScenario->setStartupType(options->startup.type);
     if (options->startup.projectUrl.has_value()) {
         project::ProjectFile file;
         file.url = options->startup.projectUrl.value();
@@ -133,21 +130,6 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     if (options->app.revertToFactorySettings) {
         appshellConfiguration()->revertToFactorySettings();
     }
-
-#ifdef MUSE_MODULE_TESTFLOW
-    if (!options->testflow.testCaseNameOrFile.isEmpty()) {
-        // Avoid blocking dialogs.
-        // TODO: This is a temporary workaround. The proper implementation seems to be
-        // 1. Reorganize start-up so that `TestflowInteractive`'s lifespan encompasses
-        // all dialogs (plugin-scan, save-project-on-close, etc),
-        // 2. Override `TestflowInteractive` methods with something other than just
-        // forwarding to the real IInteractive implementation.
-        appshellConfiguration()->setHasCompletedFirstLaunchSetup(true);
-        appshellConfiguration()->setWelcomeDialogShowOnStartup(false);
-        qputenv("AU_SKIP_PLUGIN_VALIDATION_PROMPT", "1");
-        qputenv("AU_SKIP_SAVE_PROJECT_PROMPT", "1");
-    }
-#endif
 }
 
 void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)

@@ -60,6 +60,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
+    virtual ~StartupScenario() = default;
 
     void setStartupType(const std::optional<std::string>& type) override;
 
@@ -77,12 +78,17 @@ public:
     void runAfterSplashScreen() override;
     bool startupCompleted() const override;
 
-private:
-    void onStartupPageOpened(StartupModeType modeType);
-    void showStartupDialogsIfNeed(StartupModeType modeType);
+protected:
+    virtual StartupModeType resolveStartupModeType() const;
+    //! NOTE Whether session restore or first launch setup may replace the resolved mode
+    virtual bool allowsStartupModeOverride() const;
+    virtual void showStartupDialogsIfNeed(StartupModeType modeType);
 
     bool hasExplicitStartupTarget() const;
-    StartupModeType resolveStartupModeType() const;
+
+private:
+    void onStartupPageOpened(StartupModeType modeType);
+
     muse::Uri startupPageUri(StartupModeType modeType) const;
 
     void openProject(const au::project::ProjectFile& file);
