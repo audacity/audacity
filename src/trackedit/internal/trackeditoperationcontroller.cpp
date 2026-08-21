@@ -35,6 +35,7 @@ bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::T
 {
     if (tracksInteraction()->trimTracksData(tracksIds, begin, end)) {
         projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are positions in seconds
             muse::qtrc("trackedit", "Trim selected audio tracks from %1 seconds to %2 seconds")
             .arg(begin.to_double()).arg(end.to_double()).toStdString(),
             muse::trc("trackedit", "Trim Audio"));
@@ -47,6 +48,7 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
 {
     if (tracksInteraction()->silenceTracksData(tracksIds, begin, end)) {
         projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are positions in seconds
             muse::qtrc("trackedit", "Silenced selected tracks from %1 seconds to %2 seconds")
             .arg(begin.to_double()).arg(end.to_double()).toStdString(),
             muse::trc("trackedit", "Silence"));
@@ -1121,6 +1123,8 @@ muse::Progress TrackeditOperationController::progress() const
 void TrackeditOperationController::pushProjectHistoryJoinState(secs_t start, secs_t duration)
 {
     projectHistory()->pushHistoryState(
+        //: History entry. %1 is a duration in seconds,
+        //: %2 is the position in seconds it starts at
         muse::qtrc("trackedit", "Joined %1 seconds at %2")
         .arg(duration.to_double()).arg(start.to_double()).toStdString(),
         muse::trc("trackedit", "Join"));
@@ -1139,6 +1143,8 @@ void TrackeditOperationController::pushProjectHistorySplitDeleteState()
 void TrackeditOperationController::pushProjectHistoryDeleteState(secs_t start, secs_t duration)
 {
     projectHistory()->pushHistoryState(
+        //: History entry. %1 is a duration in seconds,
+        //: %2 is the position in seconds it starts at
         muse::qtrc("trackedit", "Delete %1 seconds at %2")
         .arg(duration.to_double()).arg(start.to_double()).toStdString(),
         muse::trc("trackedit", "Delete"));
