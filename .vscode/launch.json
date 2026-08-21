@@ -75,8 +75,8 @@
             // Runs a testflow script without UI, like on CI: offscreen Qt platform
             // and a fresh isolated profile (reset by the preLaunchTask).
             // Exits with its result (0 = passed, 1 = failed, 2 = script not found).
-            // Points at the source scripts so edits take effect without an install.
-            "name": "Run testflow test case headless (lldb - Linux)",
+            // For a plain run use the "testflow: run all test cases" task
+            "name": "Debug testflow test case headless (lldb - Linux)",
             "type": "lldb",
             "request": "launch",
             "preLaunchTask": "testflow: reset headless profile",
@@ -84,7 +84,7 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [
                 "--test-case",
-                "${workspaceFolder}/share/testflowscripts/${input:testflowScript}",
+                "${input:testflowScript}",
                 "--test-case-speed",
                 "Fast" // Default | Fast | Normal | Slow
             ],
@@ -95,6 +95,8 @@
                 // QT_QPA_PLATFORM selects the offscreen plugin
                 "AU_QT_QPA_PLATFORM": "offscreen",
                 "QT_QPA_PLATFORM": "offscreen",
+                // Run the source scripts, so edits need no rebuild or install
+                "MUSE_TESTFLOW_SCRIPTS_PATH": "${workspaceFolder}/share/testflowscripts",
                 // Fresh profile per run, like CI
                 "XDG_CONFIG_HOME": "${config:au4.testflowProfileDir}/config",
                 "XDG_DATA_HOME": "${config:au4.testflowProfileDir}/data",
@@ -128,19 +130,10 @@
     ],
     "inputs": [
         {
+            // A hardcoded list would drift out of date
             "id": "testflowScript",
-            "type": "pickString",
-            "description": "Testflow script to run (from share/testflowscripts)",
-            "options": [
-                "TC1.1_BasicTest.js",
-                "TC1.2_BasicTest.js",
-                "TC1.2_ClipEditingMode.js",
-                "TC1.2_EnterClipEditingMode.js",
-                "TC1.3_Workspaces.js",
-                "TC1.5_Effects_Shortcut.js",
-                "TC1.6_Effects_Shortcut_Disabled.js",
-                "TC2.1_CutDeleteActions.js"
-            ],
+            "type": "promptString",
+            "description": "Testflow script to run (see share/testflowscripts)",
             "default": "TC1.1_BasicTest.js"
         }
     ]
