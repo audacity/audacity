@@ -5,6 +5,8 @@
 
 #include "framework/global/modularity/imoduleinterface.h"
 
+#include "effectstypes.h"
+
 namespace au::effects {
 class IEffectsProviderInitializer : MODULE_EXPORT_INTERFACE
 {
@@ -13,6 +15,8 @@ class IEffectsProviderInitializer : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IEffectsProviderInitializer() = default;
 
+    //! NOTE Set before callAfterSplashScreen(); defaults to AskUser.
+    virtual void setStartupPluginValidationPolicy(StartupPluginValidationPolicy policy) = 0;
     virtual void callAfterSplashScreen() = 0;
 };
 }

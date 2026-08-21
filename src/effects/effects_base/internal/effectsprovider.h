@@ -36,7 +36,8 @@ public:
     void deinit();
 
     void initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                  muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
+                  muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                  StartupPluginValidationPolicy validationPolicy) override;
 
     EffectMetaList effectMetaList() const override;
     muse::async::Notification effectMetaListChanged() const override;

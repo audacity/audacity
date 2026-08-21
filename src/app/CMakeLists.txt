@@ -172,6 +172,10 @@ else()
     list(APPEND AUDACITY_APPEND_SRC internal/platform/stub/backgroundprocess.cpp)
 endif()
 
+if (MUSE_MODULE_TESTFLOW)
+    list(APPEND AUDACITY_APPEND_SRC testflowrunner.cpp testflowrunner.h)
+endif()
+
 if (OS_IS_WIN)
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_ICONS_RC})
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_VERSION_RC})

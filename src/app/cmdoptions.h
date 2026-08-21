@@ -37,6 +37,7 @@ struct AudacityCmdOptions : public muse::CmdOptions {
         QString testCaseContextValue;
         QString testCaseFunc;
         QString testCaseFuncArgs;
+        QString testCaseSpeed;
     } testflow;
 
     struct AudioPluginRegistration {
