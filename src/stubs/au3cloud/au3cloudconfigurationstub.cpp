@@ -14,7 +14,7 @@ void Au3CloudConfigurationStub::setCloudProjectsPath(const muse::io::path_t&)
 {
 }
 
-std::vector<std::string> Au3CloudConfigurationStub::preferredAudioFormats() const
+std::vector<std::string> Au3CloudConfigurationStub::preferredAudioFormats(bool) const
 {
     return {};
 }

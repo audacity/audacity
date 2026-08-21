@@ -1487,8 +1487,13 @@ void ProjectActionsController::doUpdateCloudAudioPreview(const IAudacityProjectP
             }
 
             if (result.ret.success()) {
-                interactive()->info(trc("cloud", "Cloud audio preview updated"),
-                                    trc("cloud", "The audio preview has been uploaded to audio.com"));
+                const std::string url = result.val.toString();
+                if (url.empty()) {
+                    LOGE() << "Cannot open cloud project page: empty URL";
+                    return;
+                }
+
+                platformInteractive()->openUrl(url);
                 return;
             }
 
