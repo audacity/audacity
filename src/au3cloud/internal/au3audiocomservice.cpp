@@ -840,6 +840,15 @@ std::string Au3AudioComService::getCloudProfilePage() const
     return oauthService.MakeAudioComAuthorizeURL(userId, profilePage);
 }
 
+std::string Au3AudioComService::getTourPage() const
+{
+    auto& oauthService = GetOAuthService();
+    const auto& serviceConfig = GetServiceConfig();
+
+    const auto userId = GetUserService().GetUserId().ToStdString();
+    return oauthService.MakeAudioComAuthorizeURL(userId, serviceConfig.GetTourPage());
+}
+
 muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std::string& audioId)
 {
     if (audioId.empty()) {
