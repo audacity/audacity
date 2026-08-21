@@ -22,28 +22,12 @@
 using namespace muse;
 using namespace au::effects;
 
-void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
+void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive&,
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
-    const auto doScanThirdPartyPlugins = [&interactive]() {
-        auto ret = interactive.questionSync(muse::trc("appshell", "Validate audio plugins"),
-                                            muse::trc(
-                                                "appshell",
-                                                "Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?"),
-                                            { muse::IInteractive::ButtonData(
-                                                  muse::IInteractive::Button::Cancel,
-                                                  muse::trc("appshell", "Skip this time"),
-                                                  false),
-                                              muse::IInteractive::ButtonData(
-                                                  muse::IInteractive::Button::Apply, muse::trc("appshell", "Validate"),
-                                                  true) },
-                                            int(muse::IInteractive::Button::NoButton),
-                                            {},
-                                            muse::trc("appshell", "Audio plugin validation"));
-        return ret.standardButton() == muse::IInteractive::Button::Apply;
-    };
-
-    doScanPlugins(ctx, registerAudioPluginsScenario, doScanThirdPartyPlugins);
+    // Third-party plugins are validated in the background (see #11746): no
+    // validation dialog at startup, effects appear as their results arrive.
+    doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Background);
 
     // Providers must be available in ModuleManager for on-demand plugin loading.
     ModuleManager::Get().DiscoverProviders();
@@ -64,7 +48,7 @@ void EffectsProvider::forgetPlugins(const EffectFilter& forget)
 void EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
-    if (doScanPlugins(ctx, registerAudioPluginsScenario) == NewPluginsRegistered::No) {
+    if (doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Interactive) == NewPluginsRegistered::No) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
     }
 }
@@ -72,16 +56,18 @@ void EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx, mus
 EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     const muse::modularity::ContextPtr& ctx,
     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-    const std::function<bool()>& doScanThirdPartyPlugins)
+    ScanMode scanMode)
 {
     muse::audioplugins::PluginScanResult scanResult;
-    {
+    if (scanMode == ScanMode::Interactive) {
         au3::ProgressDialog progressDialog(ctx, muse::trc("audio", "Validating audio plugins"));
         // Scanners publish through `muse::Progress` directly (not via
         // Poll), so the QML dialog wouldn't mount on its own. Open it
         // explicitly before exposing the channel.
         progressDialog.start();
         scanResult = registerAudioPluginsScenario.scanPlugins(&progressDialog.museProgress());
+    } else {
+        scanResult = registerAudioPluginsScenario.scanPlugins();
     }
 
     muse::io::paths_t& thirdPartyPluginPaths = scanResult.newPluginPaths;
@@ -126,8 +112,9 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     }
 
     if (!thirdPartyPluginPaths.empty()) {
-        const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
-        const muse::Ret ret = registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
+        const muse::Ret ret = scanMode == ScanMode::Background
+                              ? registerAudioPluginsScenario.registerNewPluginsAsync(thirdPartyPluginPaths)
+                              : registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, /*validate*/ true);
         if (!ret) {
             LOGE() << "Failed to register new plugins: " << ret.toString();
         }
