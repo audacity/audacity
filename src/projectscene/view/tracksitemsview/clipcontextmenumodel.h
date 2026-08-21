@@ -39,7 +39,6 @@ private:
 
     muse::uicomponents::MenuItemList makeClipColourItems();
     void updateColorCheckedState();
-    void updateColorMenu();
 
     ClipKey m_clipKey;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;

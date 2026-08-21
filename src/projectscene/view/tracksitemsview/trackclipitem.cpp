@@ -18,6 +18,7 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_title = clip.title;
     m_color = configuration()->clipColor(clip.colorIndex).toQColor();
     m_selectedColor = configuration()->clipSelectedColor(clip.colorIndex).toQColor();
+    m_headerHoverColor = configuration()->clipHeaderHoverColor(clip.colorIndex).toQColor();
     m_groupId = clip.groupId;
     m_pitch = clip.pitch;
     m_speed = clip.speed;

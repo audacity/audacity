@@ -31,12 +31,17 @@ Rectangle {
     required property int headerHeight
     property color clipColor: ui.theme.extra["clip_color_1"]
     property color clipSelectedColor: ui.theme.extra["clip_selected_color_1"]
+    property color clipHeaderHoverColor: ui.theme.extra["clip_header_hover_color_1"]
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
-    property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
-    property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.8) : classicHeaderHoveredColor
-    property color selectedHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.2) : classicHeaderHoveredColor
+    property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.theme.extra["white_color"] : classicHeaderColor
+    property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipHeaderHoverColor : classicHeaderHoveredColor
+    //! NOTE A selected header does not react to hover in either style - it keeps its selected colour.
+    property color selectedHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.theme.extra["white_color"] : classicHeaderColor
     readonly property color classicHeaderColor: ui.theme.extra["classic_clip_header_color"]
     readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
+    //! NOTE Colorful headers are always light (clip colour or white), so their text stays black.
+    //! Classic headers follow the theme, so their text colour comes from the theme too.
+    readonly property color headerTextColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.theme.extra["black_color"] : ui.theme.extra["classic_clip_header_text_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
     property bool isGrouped: false
     property bool clipSelected: false
@@ -593,8 +598,12 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: waveView.transformColor(clipColor)
-                visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
+                //! NOTE Colorful derives the band from the clip's own colour. Classic has no
+                //! clip colour to derive from, so it takes the band straight from the theme.
+                color: root.currentClipStyle == ClipStyle.COLORFUL
+                       ? waveView.transformColor(root.clipColor)
+                       : ui.theme.extra["classic_clip_header_selection_color"]
+                visible: root.isDataSelected
             }
 
             MouseArea {
@@ -820,8 +829,11 @@ Rectangle {
 
                     menuModel: (root.multiClipsSelected || root.isGrouped) ? multiClipContextMenuModel : singleClipContextMenuModel
 
-                    accentColor: root.clipColor
-                    hoverHitColor: root.clipSelectedColor
+                    //! NOTE The Classic style does not use the clip colour palette, so the menu
+                    //! button falls back to the standard theme colours there rather than tinting
+                    //! itself with a colour the clip never shows.
+                    accentColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : ui.theme.accentColor
+                    hoverHitColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipSelectedColor : ui.theme.buttonColor
 
                     visible: header.width > (60 + menuBtn.implicitWidth)
 
@@ -1202,21 +1214,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: ui.theme.extra["black_color"]
+                color: root.headerTextColor
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: ui.theme.extra["black_color"]
+                iconColor: root.headerTextColor
             }
         },
         State {
@@ -1228,21 +1240,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: ui.theme.extra["black_color"]
+                color: root.headerTextColor
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: ui.theme.extra["black_color"]
+                iconColor: root.headerTextColor
             }
         },
         State {
@@ -1254,21 +1266,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: ui.theme.extra["black_color"]
+                color: root.headerTextColor
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: ui.theme.extra["black_color"]
+                iconColor: root.headerTextColor
             }
         },
         State {
@@ -1280,21 +1292,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: ui.theme.extra["black_color"]
+                color: root.headerTextColor
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
+                textColor: root.headerTextColor
+                iconColor: root.headerTextColor
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: ui.theme.extra["black_color"]
+                iconColor: root.headerTextColor
             }
         }
     ]
