@@ -203,19 +203,15 @@ void Au3CloudService::syncUsageInfoPrefs()
 
 void Au3CloudService::openBrowserSession()
 {
+    if (m_replyHandler->hasPendingSocket()) {
+        m_replyHandler->sendRedirect();
+        return;
+    }
+
     auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
     auto& authService = audacity::cloud::audiocom::GetOAuthService();
-
-    const auto landingPage = m_accountInfo.userSlug.empty()
-                             ? serviceConfig.GetTourPage()
-                             : serviceConfig.GetProfilePagePath(m_accountInfo.userSlug, AudiocomTrace::ignore);
-    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, landingPage);
-
-    if (m_replyHandler->hasPendingSocket()) {
-        m_replyHandler->sendRedirect(QUrl(QString::fromStdString(url)));
-    } else {
-        platformInteractive()->openUrl(url);
-    }
+    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, serviceConfig.GetTourPage());
+    platformInteractive()->openUrl(url);
 }
 
 std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)

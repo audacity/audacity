@@ -59,6 +59,7 @@ void AccountModel::openSignInDialog() const
 {
     muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
     query.addParam("sync", muse::Val(true));
+    query.addParam("isCreateAccountMode", muse::Val(false));
 
     dispatcher()->dispatch(query);
 }

@@ -27,7 +27,7 @@ public:
 
     bool hasPendingSocket();
     void setRedirectUrl(const QUrl& url);
-    void sendRedirect(const QUrl& url);
+    void sendRedirect(const QUrl& url = {});
     void sendError();
 
 signals:
