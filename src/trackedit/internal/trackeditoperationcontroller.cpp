@@ -34,9 +34,11 @@ muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> Track
 bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->trimTracksData(tracksIds, begin, end)) {
-        std::stringstream ss;
-        ss << "Trim selected audio tracks from " << begin << " seconds to " << end << " seconds";
-        projectHistory()->pushHistoryState(ss.str(), "Trim Audio");
+        projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are positions in seconds
+            muse::qtrc("trackedit", "Trim selected audio tracks from %1 seconds to %2 seconds")
+            .arg(begin.to_double()).arg(end.to_double()).toStdString(),
+            muse::trc("trackedit", "Trim Audio"));
         return true;
     }
     return false;
@@ -45,9 +47,11 @@ bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::T
 bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->silenceTracksData(tracksIds, begin, end)) {
-        std::stringstream ss;
-        ss << "Silenced selected tracks for " << begin << " seconds at " << end << "seconts";
-        projectHistory()->pushHistoryState(ss.str(), "Silence");
+        projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are positions in seconds
+            muse::qtrc("trackedit", "Silenced selected tracks from %1 seconds to %2 seconds")
+            .arg(begin.to_double()).arg(end.to_double()).toStdString(),
+            muse::trc("trackedit", "Silence"));
         return true;
     }
     return false;
@@ -65,7 +69,7 @@ bool TrackeditOperationController::silenceClips(const ClipKeyList& clipKeyList)
     }
 
     if (anySilenced) {
-        projectHistory()->pushHistoryState("Silenced selected clips", "Silence");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Silenced selected clips"), muse::trc("trackedit", "Silence"));
     }
     return anySilenced;
 }
@@ -78,7 +82,7 @@ bool TrackeditOperationController::tracksDataIsSilent(const std::vector<trackedi
 bool TrackeditOperationController::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
     if (tracksInteraction()->changeTrackTitle(trackId, title)) {
-        projectHistory()->pushHistoryState("Track Title", "Changed Track Title");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Track Title"), muse::trc("trackedit", "Changed Track Title"));
         return true;
     }
     return false;
@@ -87,7 +91,7 @@ bool TrackeditOperationController::changeTrackTitle(const trackedit::TrackId tra
 bool TrackeditOperationController::changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle)
 {
     if (clipsInteraction()->changeClipTitle(clipKey, newTitle)) {
-        projectHistory()->pushHistoryState("Clip Title", "Changed clip title");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Clip Title"), muse::trc("trackedit", "Changed clip title"));
         return true;
     }
     return false;
@@ -96,7 +100,7 @@ bool TrackeditOperationController::changeClipTitle(const ClipKey& clipKey, const
 bool TrackeditOperationController::changeClipPitch(const ClipKey& clipKey, int pitch)
 {
     if (clipsInteraction()->changeClipPitch(clipKey, pitch)) {
-        projectHistory()->pushHistoryState("Pitch Shift", "Changed Pitch Shift");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Pitch Shift"), muse::trc("trackedit", "Changed Pitch Shift"));
         return true;
     }
     return false;
@@ -105,7 +109,7 @@ bool TrackeditOperationController::changeClipPitch(const ClipKey& clipKey, int p
 bool TrackeditOperationController::resetClipPitch(const ClipKey& clipKey)
 {
     if (clipsInteraction()->resetClipPitch(clipKey)) {
-        projectHistory()->pushHistoryState("Reset Clip Pitch", "Reset Clip Pitch");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Reset Clip Pitch"), muse::trc("trackedit", "Reset Clip Pitch"));
         return true;
     }
     return false;
@@ -114,7 +118,7 @@ bool TrackeditOperationController::resetClipPitch(const ClipKey& clipKey)
 bool TrackeditOperationController::changeClipSpeed(const ClipKey& clipKey, double speed)
 {
     if (clipsInteraction()->changeClipSpeed(clipKey, speed)) {
-        projectHistory()->pushHistoryState("Changed Speed", "Changed Speed");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed Speed"), muse::trc("trackedit", "Changed Speed"));
         return true;
     }
     return false;
@@ -123,7 +127,7 @@ bool TrackeditOperationController::changeClipSpeed(const ClipKey& clipKey, doubl
 bool TrackeditOperationController::resetClipSpeed(const ClipKey& clipKey)
 {
     if (clipsInteraction()->resetClipSpeed(clipKey)) {
-        projectHistory()->pushHistoryState("Reset Clip Speed", "Reset Clip Speed");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Reset Clip Speed"), muse::trc("trackedit", "Reset Clip Speed"));
         return true;
     }
     return false;
@@ -137,7 +141,7 @@ bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, ClipC
 bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
     if (tracksInteraction()->changeTracksColor(tracksIds, colorIndex)) {
-        projectHistory()->pushHistoryState("Changed track color", "Changed track color");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed track color"), muse::trc("trackedit", "Changed track color"));
         return true;
     }
     return false;
@@ -153,7 +157,8 @@ bool TrackeditOperationController::resetClipPitchAndSpeed(const ClipKey& clipKey
     const bool pitchOk = clipsInteraction()->resetClipPitch(clipKey);
     const bool speedOk = clipsInteraction()->resetClipSpeed(clipKey);
     if (pitchOk || speedOk) {
-        projectHistory()->pushHistoryState("Reset Clip Pitch and Speed", "Reset Clip Pitch and Speed");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Reset Clip Pitch and Speed"),
+                                           muse::trc("trackedit", "Reset Clip Pitch and Speed"));
         return true;
     }
     return false;
@@ -162,7 +167,7 @@ bool TrackeditOperationController::resetClipPitchAndSpeed(const ClipKey& clipKey
 bool TrackeditOperationController::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     if (clipsInteraction()->renderClipPitchAndSpeed(clipKey)) {
-        projectHistory()->pushHistoryState("Rendered time-stretched audio", "Render");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Rendered time-stretched audio"), muse::trc("trackedit", "Render"));
         return true;
     }
     return false;
@@ -201,7 +206,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
     if (ret) {
         //! NOTE Importing files pushes its own "Import" history state
         if (!pastingFromSystemClipboard) {
-            projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
+            projectHistory()->pushHistoryState(muse::trc("trackedit", "Pasted from the clipboard"), muse::trc("trackedit", "Paste"));
         }
 
         if (recreateRangeSelection) {
@@ -223,7 +228,7 @@ bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
         return false;
     }
     clipboard()->addTrackData(std::move(data));
-    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Cut to the clipboard"), muse::trc("trackedit", "Cut"));
     return true;
 }
 
@@ -243,7 +248,7 @@ bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& t
         clipboard()->addTrackData(std::move(trackData));
     }
     clipboard()->setRangeSelectionCopy(isRangeSelection);
-    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Cut to the clipboard"), muse::trc("trackedit", "Cut"));
     return true;
 }
 
@@ -302,8 +307,9 @@ bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, b
             labelsInteraction()->removeLabels(selectedLabels(), moveClips);
         }
 
-        const std::string msg = hasLabels ? "Remove multiple items" : "Remove multiple clips";
-        projectHistory()->pushHistoryState("Remove", msg);
+        const std::string msg
+            = hasLabels ? muse::trc("trackedit", "Remove multiple items") : muse::trc("trackedit", "Remove multiple clips");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Remove"), msg);
         return true;
     }
     return false;
@@ -312,7 +318,7 @@ bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, b
 bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
     if (tracksInteraction()->removeTracksData(tracksIds, begin, end, moveClips)) {
-        projectHistory()->pushHistoryState("Delete", "Delete and close gap");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Delete"), muse::trc("trackedit", "Delete and close gap"));
         return true;
     }
     return false;
@@ -357,8 +363,8 @@ muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyL
             globalContext()->currentTrackeditProject()->reload();
         }
     } else if (completed) {
-        const std::string msg = !selectedLabels.empty() ? "Items moved" : "Clip moved";
-        projectHistory()->pushHistoryState(msg, "Move clip");
+        const std::string msg = !selectedLabels.empty() ? muse::trc("trackedit", "Items moved") : muse::trc("trackedit", "Clip moved");
+        projectHistory()->pushHistoryState(msg, muse::trc("trackedit", "Move clip"));
     }
     return result;
 }
@@ -406,7 +412,7 @@ bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset,
         selectionController()->dataSelectedEndTime() + clampedOffset, false);
 
     if (completed) {
-        projectHistory()->pushHistoryState("Items moved", "Move items");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Items moved"), muse::trc("trackedit", "Move items"));
     }
 
     return true;
@@ -426,7 +432,7 @@ void TrackeditOperationController::cancelItemDragEdit()
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
     if (tracksInteraction()->splitTracksAt(tracksIds, pivots)) {
-        projectHistory()->pushHistoryState("Split", "Split");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split"), muse::trc("trackedit", "Split"));
         return true;
     }
     return false;
@@ -435,7 +441,7 @@ bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, s
 bool TrackeditOperationController::splitClipsAtSilences(const ClipKeyList& clipKeyList)
 {
     if (clipsInteraction()->splitClipsAtSilences(clipKeyList)) {
-        projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split clips at silence"), muse::trc("trackedit", "Split at silence"));
         return true;
     }
     return false;
@@ -444,7 +450,7 @@ bool TrackeditOperationController::splitClipsAtSilences(const ClipKeyList& clipK
 bool TrackeditOperationController::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->splitRangeSelectionAtSilences(tracksIds, begin, end)) {
-        projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split clips at silence"), muse::trc("trackedit", "Split at silence"));
         return true;
     }
     return false;
@@ -453,7 +459,7 @@ bool TrackeditOperationController::splitRangeSelectionAtSilences(const TrackIdLi
 bool TrackeditOperationController::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->splitRangeSelectionIntoNewTracks(tracksIds, begin, end)) {
-        projectHistory()->pushHistoryState("Split into new track", "Split into new track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split into new track"), muse::trc("trackedit", "Split into new track"));
         return true;
     }
     return false;
@@ -462,7 +468,7 @@ bool TrackeditOperationController::splitRangeSelectionIntoNewTracks(const TrackI
 bool TrackeditOperationController::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
 {
     if (clipsInteraction()->splitClipsIntoNewTracks(clipKeyList)) {
-        projectHistory()->pushHistoryState("Split into new track", "Split into new track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split into new track"), muse::trc("trackedit", "Split into new track"));
         return true;
     }
     return false;
@@ -508,7 +514,7 @@ bool TrackeditOperationController::clipSplitCut(const ClipKey& clipKey)
         return false;
     }
     clipboard()->addTrackData(std::move(data));
-    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Split-cut to the clipboard"), muse::trc("trackedit", "Split cut"));
     return true;
 }
 
@@ -531,7 +537,7 @@ bool TrackeditOperationController::splitCutSelectedOnTracks(const TrackIdList tr
         clipboard()->addTrackData(std::move(trackData));
     }
     clipboard()->setRangeSelectionCopy(true);
-    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Split-cut to the clipboard"), muse::trc("trackedit", "Split cut"));
     return true;
 }
 
@@ -561,8 +567,8 @@ bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList,
     }
 
     if (completed) {
-        std::string msg = hasLabels ? "Trim items left" : "Trim clip left";
-        projectHistory()->pushHistoryState("Trim", msg, type);
+        std::string msg = hasLabels ? muse::trc("trackedit", "Trim items left") : muse::trc("trackedit", "Trim clip left");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Trim"), msg, type);
     }
     return success;
 }
@@ -583,8 +589,8 @@ bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList
         labelsInteraction()->stretchLabelsRight(labelKeys, -deltaSec, completed);
     }
     if (completed) {
-        std::string msg = hasLabels ? "Trim items right" : "Trim clip right";
-        projectHistory()->pushHistoryState("Trim", msg, type);
+        std::string msg = hasLabels ? muse::trc("trackedit", "Trim items right") : muse::trc("trackedit", "Trim clip right");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Trim"), msg, type);
     }
     return success;
 }
@@ -673,7 +679,7 @@ muse::Ret TrackeditOperationController::makeRoomForClip(const ClipKey& clipKey)
 bool TrackeditOperationController::newMonoTrack()
 {
     if (tracksInteraction()->newMonoTrack()) {
-        projectHistory()->pushHistoryState("Created new mono track", "New mono track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Created new mono track"), muse::trc("trackedit", "New mono track"));
         return true;
     }
     return false;
@@ -682,7 +688,7 @@ bool TrackeditOperationController::newMonoTrack()
 bool TrackeditOperationController::newStereoTrack()
 {
     if (tracksInteraction()->newStereoTrack()) {
-        projectHistory()->pushHistoryState("Created new stereo track", "New stereo track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Created new stereo track"), muse::trc("trackedit", "New stereo track"));
         return true;
     }
     return false;
@@ -692,7 +698,7 @@ muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::St
 {
     auto track = tracksInteraction()->newLabelTrack(title);
     if (track.ret.success()) {
-        projectHistory()->pushHistoryState("Created label track", "New label track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Created label track"), muse::trc("trackedit", "New label track"));
     }
     return track;
 }
@@ -700,7 +706,7 @@ muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::St
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
 {
     if (tracksInteraction()->deleteTracks(trackIds)) {
-        projectHistory()->pushHistoryState("Delete track", "Delete track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Delete track"), muse::trc("trackedit", "Delete track"));
         return true;
     }
     return false;
@@ -709,7 +715,7 @@ bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
 bool TrackeditOperationController::duplicateTracks(const TrackIdList& trackIds)
 {
     if (tracksInteraction()->duplicateTracks(trackIds)) {
-        projectHistory()->pushHistoryState("Duplicate track", "Duplicate track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Duplicate track"), muse::trc("trackedit", "Duplicate track"));
         return true;
     }
     return false;
@@ -718,14 +724,14 @@ bool TrackeditOperationController::duplicateTracks(const TrackIdList& trackIds)
 void TrackeditOperationController::moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction)
 {
     if (tracksInteraction()->moveTracks(trackIds, direction)) {
-        projectHistory()->pushHistoryState("Move track", "Move track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Move track"), muse::trc("trackedit", "Move track"));
     }
 }
 
 void TrackeditOperationController::moveTracksTo(const TrackIdList& trackIds, int pos)
 {
     if (tracksInteraction()->moveTracksTo(trackIds, pos)) {
-        projectHistory()->pushHistoryState("Move track", "Move track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Move track"), muse::trc("trackedit", "Move track"));
     }
 }
 
@@ -796,13 +802,13 @@ void TrackeditOperationController::setClipGroupId(const trackedit::ClipKey& clip
 void TrackeditOperationController::groupClips(const trackedit::ClipKeyList& clipKeyList)
 {
     clipsInteraction()->groupClips(clipKeyList);
-    projectHistory()->pushHistoryState("Clips grouped", "Clips grouped");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Clips grouped"), muse::trc("trackedit", "Clips grouped"));
 }
 
 void TrackeditOperationController::ungroupClips(const trackedit::ClipKeyList& clipKeyList)
 {
     clipsInteraction()->ungroupClips(clipKeyList);
-    projectHistory()->pushHistoryState("Clips ungrouped", "Clips ungrouped");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Clips ungrouped"), muse::trc("trackedit", "Clips ungrouped"));
 }
 
 ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
@@ -813,7 +819,7 @@ ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
 bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
     if (tracksInteraction()->changeTracksFormat(tracksIds, format)) {
-        projectHistory()->pushHistoryState("Changed track format", "Changed track format");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed track format"), muse::trc("trackedit", "Changed track format"));
         return true;
     }
     return false;
@@ -822,7 +828,7 @@ bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksI
 bool TrackeditOperationController::changeTracksRate(const TrackIdList& tracksIds, int rate)
 {
     if (tracksInteraction()->changeTracksRate(tracksIds, rate)) {
-        projectHistory()->pushHistoryState("Changed track rate", "Changed track rate");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed track rate"), muse::trc("trackedit", "Changed track rate"));
         return true;
     }
     return false;
@@ -831,7 +837,8 @@ bool TrackeditOperationController::changeTracksRate(const TrackIdList& tracksIds
 bool TrackeditOperationController::swapStereoChannels(const TrackIdList& tracksIds)
 {
     if (tracksInteraction()->swapStereoChannels(tracksIds)) {
-        projectHistory()->pushHistoryState("Swapped stereo channels", "Swapped stereo channels");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Swapped stereo channels"),
+                                           muse::trc("trackedit", "Swapped stereo channels"));
         return true;
     }
     return false;
@@ -840,7 +847,8 @@ bool TrackeditOperationController::swapStereoChannels(const TrackIdList& tracksI
 bool TrackeditOperationController::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
 {
     if (tracksInteraction()->splitStereoTracksToLRMono(tracksIds)) {
-        projectHistory()->pushHistoryState("Split stereo tracks to L/R mono", "Split stereo tracks to L/R mono");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split stereo tracks to L/R mono"),
+                                           muse::trc("trackedit", "Split stereo tracks to L/R mono"));
         return true;
     }
     return false;
@@ -849,7 +857,8 @@ bool TrackeditOperationController::splitStereoTracksToLRMono(const TrackIdList& 
 bool TrackeditOperationController::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
 {
     if (tracksInteraction()->splitStereoTracksToCenterMono(tracksIds)) {
-        projectHistory()->pushHistoryState("Split stereo tracks to center mono", "Split stereo tracks to center mono");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Split stereo tracks to center mono"),
+                                           muse::trc("trackedit", "Split stereo tracks to center mono"));
         return true;
     }
     return false;
@@ -858,7 +867,7 @@ bool TrackeditOperationController::splitStereoTracksToCenterMono(const TrackIdLi
 bool TrackeditOperationController::makeStereoTrack(const TrackId left, const TrackId right)
 {
     if (tracksInteraction()->makeStereoTrack(left, right)) {
-        projectHistory()->pushHistoryState("Make stereo track", "Make stereo track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Make stereo track"), muse::trc("trackedit", "Make stereo track"));
         return true;
     }
     return false;
@@ -867,7 +876,7 @@ bool TrackeditOperationController::makeStereoTrack(const TrackId left, const Tra
 bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, int rate)
 {
     if (tracksInteraction()->resampleTracks(tracksIds, rate)) {
-        projectHistory()->pushHistoryState("Resampled audio track(s)", "Resample track");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Resampled audio track(s)"), muse::trc("trackedit", "Resample track"));
         return true;
     }
     return false;
@@ -877,7 +886,7 @@ muse::RetVal<LabelKey> TrackeditOperationController::addLabel(const TrackId& toT
 {
     muse::RetVal<LabelKey> retVal = labelsInteraction()->addLabel(toTrackId);
     if (retVal.ret) {
-        projectHistory()->pushHistoryState("Label added", "Add label");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label added"), muse::trc("trackedit", "Add label"));
     }
 
     return retVal;
@@ -886,7 +895,7 @@ muse::RetVal<LabelKey> TrackeditOperationController::addLabel(const TrackId& toT
 bool TrackeditOperationController::addLabelToSelection()
 {
     if (labelsInteraction()->addLabelToSelection()) {
-        projectHistory()->pushHistoryState("Label added", "Add label");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label added"), muse::trc("trackedit", "Add label"));
         return true;
     }
     return false;
@@ -895,7 +904,7 @@ bool TrackeditOperationController::addLabelToSelection()
 bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
 {
     if (labelsInteraction()->changeLabelTitle(labelKey, title)) {
-        projectHistory()->pushHistoryState("Label title changed", "Changed label title");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label title changed"), muse::trc("trackedit", "Changed label title"));
         return true;
     }
     return false;
@@ -904,7 +913,8 @@ bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, co
 bool TrackeditOperationController::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
 {
     if (labelsInteraction()->changeLabelLowFrequency(labelKey, frequency)) {
-        projectHistory()->pushHistoryState("Label low frequency changed", "Change label low frequency");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label low frequency changed"),
+                                           muse::trc("trackedit", "Change label low frequency"));
         return true;
     }
     return false;
@@ -913,7 +923,8 @@ bool TrackeditOperationController::changeLabelLowFrequency(const LabelKey& label
 bool TrackeditOperationController::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
 {
     if (labelsInteraction()->changeLabelHighFrequency(labelKey, frequency)) {
-        projectHistory()->pushHistoryState("Label high frequency changed", "Change label high frequency");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label high frequency changed"),
+                                           muse::trc("trackedit", "Change label high frequency"));
         return true;
     }
     return false;
@@ -927,7 +938,7 @@ bool TrackeditOperationController::cutLabel(const LabelKey& labelKey)
     }
 
     clipboard()->addTrackData(std::move(data));
-    projectHistory()->pushHistoryState("Cut", "Cut label");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Cut"), muse::trc("trackedit", "Cut label"));
     return true;
 }
 
@@ -944,7 +955,7 @@ bool TrackeditOperationController::copyLabel(const LabelKey& labelKey)
 bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
 {
     if (labelsInteraction()->removeLabel(labelKey)) {
-        projectHistory()->pushHistoryState("Remove", "Remove label");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Remove"), muse::trc("trackedit", "Remove label"));
         return true;
     }
     return false;
@@ -959,9 +970,9 @@ bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, b
         }
 
         if (hasClips) {
-            projectHistory()->pushHistoryState("Remove", "Remove multiple items");
+            projectHistory()->pushHistoryState(muse::trc("trackedit", "Remove"), muse::trc("trackedit", "Remove multiple items"));
         } else {
-            projectHistory()->pushHistoryState("Remove", "Remove multiple labels");
+            projectHistory()->pushHistoryState(muse::trc("trackedit", "Remove"), muse::trc("trackedit", "Remove multiple labels"));
         }
 
         return true;
@@ -997,8 +1008,8 @@ bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, sec
 
     muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, 0);
     if (retVal.ret && completed) {
-        const std::string msg = !selectedClips.empty() ? "Move items" : "Move labels";
-        projectHistory()->pushHistoryState("Move", msg);
+        const std::string msg = !selectedClips.empty() ? muse::trc("trackedit", "Move items") : muse::trc("trackedit", "Move labels");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Move"), msg);
     }
     return retVal.ret;
 }
@@ -1019,8 +1030,8 @@ muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelK
     }
 
     if (completed) {
-        const std::string msg = clipsSelected ? "Move items" : "Movel labels";
-        projectHistory()->pushHistoryState("Move", msg);
+        const std::string msg = clipsSelected ? muse::trc("trackedit", "Move items") : muse::trc("trackedit", "Move labels");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Move"), msg);
     }
 
     return retVal;
@@ -1031,7 +1042,7 @@ muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabelsToTrack(const
 {
     muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabelsToTrack(labelKeys, toTrackId);
     if (retVal.ret && completed) {
-        projectHistory()->pushHistoryState("Labels moved", "Move labels");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Labels moved"), muse::trc("trackedit", "Move labels"));
     }
     return retVal;
 }
@@ -1040,7 +1051,7 @@ bool TrackeditOperationController::stretchLabelLeft(const LabelKey& labelKey, se
 {
     bool success = labelsInteraction()->stretchLabelLeft(labelKey, newStartTime, completed);
     if (success && completed) {
-        projectHistory()->pushHistoryState("Label stretched", "Stretch label left");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label stretched"), muse::trc("trackedit", "Stretch label left"));
     }
     return success;
 }
@@ -1060,8 +1071,9 @@ bool TrackeditOperationController::stretchLabelsLeft(const LabelKeyList& labelKe
     }
 
     if (completed) {
-        const std::string msg = clipsSelected ? "Stretch items left" : "Stretch labels left";
-        projectHistory()->pushHistoryState("Stretch", msg);
+        const std::string msg
+            = clipsSelected ? muse::trc("trackedit", "Stretch items left") : muse::trc("trackedit", "Stretch labels left");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Stretch"), msg);
     }
 
     return success;
@@ -1071,7 +1083,7 @@ bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, s
 {
     bool success = labelsInteraction()->stretchLabelRight(labelKey, newEndTime, completed);
     if (success && completed) {
-        projectHistory()->pushHistoryState("Label stretched", "Stretch label right");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Label stretched"), muse::trc("trackedit", "Stretch label right"));
     }
     return success;
 }
@@ -1091,8 +1103,9 @@ bool TrackeditOperationController::stretchLabelsRight(const LabelKeyList& labelK
     }
 
     if (completed) {
-        const std::string msg = clipsSelected ? "Stretch items right" : "Stretch labels right";
-        projectHistory()->pushHistoryState("Stretch", msg);
+        const std::string msg = clipsSelected ? muse::trc("trackedit", "Stretch items right") : muse::trc("trackedit",
+                                                                                                          "Stretch labels right");
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Stretch"), msg);
     }
     return success;
 }
@@ -1109,26 +1122,32 @@ muse::Progress TrackeditOperationController::progress() const
 
 void TrackeditOperationController::pushProjectHistoryJoinState(secs_t start, secs_t duration)
 {
-    std::stringstream ss;
-    ss << "Joined " << duration << " seconds at " << start;
-    projectHistory()->pushHistoryState(ss.str(), "Join");
+    projectHistory()->pushHistoryState(
+        //: History entry. %1 is a duration in seconds,
+        //: %2 is the position in seconds it starts at
+        muse::qtrc("trackedit", "Joined %1 seconds at %2")
+        .arg(duration.to_double()).arg(start.to_double()).toStdString(),
+        muse::trc("trackedit", "Join"));
 }
 
 void TrackeditOperationController::pushProjectHistoryDuplicateState()
 {
-    projectHistory()->pushHistoryState("Duplicated", "Duplicate");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Duplicated"), muse::trc("trackedit", "Duplicate"));
 }
 
 void TrackeditOperationController::pushProjectHistorySplitDeleteState()
 {
-    projectHistory()->pushHistoryState("Split-deleted clips", "Split delete");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Split-deleted clips"), muse::trc("trackedit", "Split delete"));
 }
 
 void TrackeditOperationController::pushProjectHistoryDeleteState(secs_t start, secs_t duration)
 {
-    std::stringstream ss;
-    ss << "Delete " << duration << " seconds at " << start;
-    projectHistory()->pushHistoryState(ss.str(), "Delete");
+    projectHistory()->pushHistoryState(
+        //: History entry. %1 is a duration in seconds,
+        //: %2 is the position in seconds it starts at
+        muse::qtrc("trackedit", "Delete %1 seconds at %2")
+        .arg(duration.to_double()).arg(start.to_double()).toStdString(),
+        muse::trc("trackedit", "Delete"));
 }
 
 std::optional<secs_t> TrackeditOperationController::shortestLabelDuration(const LabelKeyList& labelKeys) const
