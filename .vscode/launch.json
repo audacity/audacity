@@ -75,8 +75,8 @@
             // Runs a testflow script without UI, like on CI: offscreen Qt platform
             // and a fresh isolated profile (reset by the preLaunchTask).
             // Exits with its result (0 = passed, 1 = failed, 2 = script not found).
-            // Points at the source scripts so edits take effect without an install.
-            "name": "Run testflow test case headless (lldb - Linux)",
+            // For a plain run use the "testflow: run all test cases" task
+            "name": "Debug testflow test case headless (lldb - Linux)",
             "type": "lldb",
             "request": "launch",
             "preLaunchTask": "testflow: reset headless profile",
@@ -84,7 +84,7 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [
                 "--test-case",
-                "${workspaceFolder}/share/testflowscripts/${input:testflowScript}",
+                "${input:testflowScript}",
                 "--test-case-speed",
                 "Fast" // Default | Fast | Normal | Slow
             ],
@@ -95,6 +95,8 @@
                 // QT_QPA_PLATFORM selects the offscreen plugin
                 "AU_QT_QPA_PLATFORM": "offscreen",
                 "QT_QPA_PLATFORM": "offscreen",
+                // Run the source scripts, so edits need no rebuild or install
+                "MUSE_TESTFLOW_SCRIPTS_PATH": "${workspaceFolder}/share/testflowscripts",
                 // Fresh profile per run, like CI
                 "XDG_CONFIG_HOME": "${config:au4.testflowProfileDir}/config",
                 "XDG_DATA_HOME": "${config:au4.testflowProfileDir}/data",
