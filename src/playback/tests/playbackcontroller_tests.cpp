@@ -116,10 +116,10 @@ public:
         m_controller->togglePlayStopAction();
     }
 
-    //! NOTE: Shift+Spacebar — play from cursor, ignoring selection (pause while playing)
-    void togglePlayFromCursor()
+    //! NOTE: X — play/stop, keeping the stop position for the next play
+    void togglePlayStopAndSetCursor()
     {
-        m_controller->togglePlayFromCursorAction();
+        m_controller->togglePlayStopAndSetCursorAction();
     }
 
     void playSelection()
@@ -193,7 +193,7 @@ public:
 
     void playFromCurrentState()
     {
-        m_controller->doPlay(false);
+        m_controller->doPlay();
     }
 
     void rescanAudioDevices()
@@ -445,35 +445,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 }
 
 /**
- * @brief Toggle play with ignore selection
- * @details User clicked play with Shift modifier
- *          Playback should be started from previous seek position
- */
-TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
-{
-    //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
-
-    //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .Times(0);
-
-    //! [THEN] Expect that playback region will be reseted and playback will be seek to previous seek position
-    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion()))
-    .Times(1);
-    EXPECT_CALL(*m_player, seek(_, _))
-    .Times(1);
-
-    //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play(_))
-    .Times(1);
-
-    //! [WHEN] Toggle play
-    togglePlayFromCursor();
-}
-
-/**
  * @brief Toggle play when already playing
  * @details User clicked play again for pause
  *          Playback should be paused
@@ -549,6 +520,46 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
 }
 
 /**
+ * @brief Toggle play/stop-select while playing, then play again
+ * @details User pressed X during playback: playback stops and the stop position
+ *          becomes the new start position, so the next play continues from where
+ *          playback stopped instead of the old start position
+ */
+TEST_F(PlaybackControllerTests, TogglePlayStopSelect_StopsAndNextPlayContinuesFromStopPosition)
+{
+    //! [GIVEN] Playback started from 5 secs and is running
+    m_controller->setLastPlaybackSeekTime(5.0);
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] The playhead is at 42 secs
+    const secs_t stopPosition = 42.0;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(stopPosition));
+
+    //! [THEN] Playback stops
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+
+    //! [WHEN] Toggle play/stop and set cursor
+    togglePlayStopAndSetCursor();
+
+    //! [THEN] The stop position became the new start position
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), stopPosition);
+
+    //! [GIVEN] Playback is stopped now
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] The next play continues from the stop position, not the old start position
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(stopPosition)))
+    .Times(1);
+
+    //! [WHEN] Toggle play/stop-select again
+    togglePlayStopAndSetCursor();
+}
+
+/**
  * @brief Toggle play when paused
  * @details User clicked play again for resume
  *          Playback should resume
@@ -601,37 +612,6 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithActiveLoop_Resumes)
 
     //! [WHEN] Toggle play
     togglePlayStop();
-}
-
-/**
- * @brief Toggle play when paused with skiping selection
- * @details User clicked play with Shift modifier
- *          Playback should resume from current position with ignoring selection
- */
-TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
-{
-    //! [GIVEN] Playback is paused
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Paused));
-
-    //! [THEN] Expect that playbeck should run from current position
-    secs_t currentPosition = 10.0;
-    EXPECT_CALL(*m_player, playbackPosition())
-    .WillRepeatedly(Return(currentPosition));
-    EXPECT_CALL(*m_player, seek(currentPosition, false))
-    .WillRepeatedly(Return());
-
-    //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .Times(0);
-
-    //! [THEN] Player should start playing without an explicit start time —
-    //! the player asserts that no start time is passed when resuming from pause
-    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(std::nullopt)))
-    .Times(1);
-
-    //! [WHEN] Toggle play
-    togglePlayFromCursor();
 }
 
 /**
@@ -865,12 +845,12 @@ TEST_F(PlaybackControllerTests, Rewind_ToEnd_CheckSelectionReset)
 }
 
 /**
- * @brief Seek then stopSeekAndUpdatePlaybackRegion should keep the cursor.
- * @details User clicks the cursor at 42s, then triggers a stop-and-update
- *          (e.g. via Shift+Space while playing). The playback region forwarded
- *          to the player should be the cursor, not an empty region.
+ * @brief Seek then stop should keep the cursor.
+ * @details User clicks the cursor at 42s, then presses Stop. The playback
+ *          region forwarded to the player should be the cursor, not an
+ *          empty region.
  */
-TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPosition)
+TEST_F(PlaybackControllerTests, Stop_PreservesSeekPosition)
 {
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
@@ -887,7 +867,7 @@ TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPos
     EXPECT_CALL(*m_player, seek(cursor, false))
     .Times(2);
 
-    //! [THEN] stopSeekAndUpdatePlaybackRegion stops the player
+    //! [THEN] Stop stops the player
     EXPECT_CALL(*m_player, stop())
     .Times(1);
 
@@ -898,8 +878,8 @@ TEST_F(PlaybackControllerTests, StopSeekAndUpdatePlaybackRegion_PreservesSeekPos
     //! [WHEN] User clicks the cursor at 42s
     seek(cursor, false);
 
-    //! [WHEN] Then triggers a stop-and-update
-    m_controller->stopSeekAndUpdatePlaybackRegion();
+    //! [WHEN] Then presses Stop
+    stop();
 }
 
 /**
@@ -1547,9 +1527,9 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopBu
     //! [GIVEN] Recording is running
     setRecording(true);
 
-    //! [THEN] Space and Shift+Space are blocked, the toolbar button is not
+    //! [THEN] Space and X are blocked, the toolbar button is not
     EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
+    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 
@@ -1560,7 +1540,7 @@ TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogg
 
     //! [THEN] All toggle-play actions are available
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-from-cursor"));
+    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
     EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 }

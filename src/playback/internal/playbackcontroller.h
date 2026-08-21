@@ -74,7 +74,6 @@ public:
     bool isStopped() const override;
 
     void stop() override;
-    void stopSeekAndUpdatePlaybackRegion() override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 
@@ -94,8 +93,6 @@ public:
     void setLastPlaybackSeekTime(muse::secs_t secs) override;
     muse::async::Notification lastPlaybackSeekTimeChanged() const override;
 
-    muse::Progress loadingProgress() const override;
-
     audio::AudioStreamRestorer suspendForAudioConfiguration(
         audio::AudioStreamKind streamKind) override;
 
@@ -105,8 +102,6 @@ private:
     friend class PlaybackControllerTests;
 
     IPlayerPtr player() const;
-
-    bool isLoaded() const;
 
     bool loopBoundariesSet() const;
 
@@ -124,16 +119,19 @@ private:
     enum class TogglePlayMode {
         PlayPause,      //!< pause while playing; resume/replay when not
         PlayStop,       //!< stop while playing; play when not
-        PlayFromCursor  //!< pause while playing; play from the cursor, clearing the playback region, when not
+        PlayStopAndSetCursor, //!< stop and seek to the stop position while playing, so the next play continues from there; play when not
     };
 
     void togglePlay(TogglePlayMode mode);
 
+    void stopSeekAndUpdatePlaybackRegion();
+    void stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
+
     void togglePlayPauseAction();
     void togglePlayStopAction();
-    void togglePlayFromCursorAction();
+    void togglePlayStopAndSetCursorAction();
     void playSelectionAction();
-    void doPlay(bool clearPlaybackRegion);
+    void doPlay();
     void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
     void rewindToStartAction();
@@ -204,9 +202,6 @@ private:
     muse::async::Channel<playback::TrackId> m_trackRemoved;
 
     muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
-
-    muse::Progress m_loadingProgress;
-    size_t m_loadingTrackCount = 0;
 
     bool m_isExportingAudio = false;
     bool m_isRangeSelection = false;

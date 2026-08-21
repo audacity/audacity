@@ -13,7 +13,7 @@ using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/toggle-play-stop");
-static const ActionQuery PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY("action://playback/toggle-play-from-cursor");
+static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY("action://playback/toggle-play-stop-and-set-cursor");
 static const ActionQuery PLAYBACK_PLAY_SELECTION_QUERY("action://playback/play-selection");
 static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
@@ -78,7 +78,7 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
     dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_QUERY, this, &PlaybackController::togglePlayStopAction);
-    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY, this, &PlaybackController::togglePlayFromCursorAction);
+    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY, this, &PlaybackController::togglePlayStopAndSetCursorAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_SELECTION_QUERY, this, &PlaybackController::playSelectionAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
@@ -195,11 +195,6 @@ bool PlaybackController::isStopped() const
     return player()->playbackStatus() == PlaybackStatus::Stopped;
 }
 
-bool PlaybackController::isLoaded() const
-{
-    return m_loadingTrackCount == 0;
-}
-
 bool PlaybackController::isLoopRegionActive() const
 {
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
@@ -269,6 +264,16 @@ void PlaybackController::stopSeekAndUpdatePlaybackRegion()
     stop();
 
     seek(lastPlaybackSeekTime(), false);
+    updatePlaybackRegion();
+}
+
+void PlaybackController::stopSeekToPlaybackPositionAndUpdatePlaybackRegion()
+{
+    const muse::secs_t stopPosition = playbackPosition();
+
+    stop();
+
+    doSeek(stopPosition, false);
     updatePlaybackRegion();
 }
 
@@ -345,9 +350,9 @@ void PlaybackController::togglePlayStopAction()
     togglePlay(TogglePlayMode::PlayStop);
 }
 
-void PlaybackController::togglePlayFromCursorAction()
+void PlaybackController::togglePlayStopAndSetCursorAction()
 {
-    togglePlay(TogglePlayMode::PlayFromCursor);
+    togglePlay(TogglePlayMode::PlayStopAndSetCursor);
 }
 
 void PlaybackController::togglePlay(TogglePlayMode mode)
@@ -357,10 +362,10 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
         return;
     }
 
-    const bool clearPlaybackRegion = mode == TogglePlayMode::PlayFromCursor;
-
     if (isPlaying()) {
-        if (mode == TogglePlayMode::PlayStop) {
+        if (mode == TogglePlayMode::PlayStopAndSetCursor) {
+            stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
+        } else if (mode == TogglePlayMode::PlayStop) {
             stopSeekAndUpdatePlaybackRegion();
         } else {
             doPause();
@@ -373,11 +378,7 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
         if (isPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
-            doPlay(false);
-        } else if (clearPlaybackRegion) {
-            //! NOTE: set the current position as start position
-            doSeek(playbackPosition(), false);
-            doPlay(true /* clearPlaybackRegion */);
+            doPlay();
         } else {
             doResume();
         }
@@ -396,11 +397,11 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
             doSeek(playbackPosition(), false);
         }
 
-        doPlay(clearPlaybackRegion);
+        doPlay();
     }
 }
 
-void PlaybackController::doPlay(bool clearPlaybackRegion)
+void PlaybackController::doPlay()
 {
     IF_ASSERT_FAILED(player()) {
         return;
@@ -420,20 +421,14 @@ void PlaybackController::doPlay(bool clearPlaybackRegion)
         }
     }
 
-    if (!clearPlaybackRegion) {
-        //! NOTE: play from the cursor to the project end
-        const muse::secs_t end = totalPlayTime();
-        const muse::secs_t start = lastPlaybackSeekTime();
-        if (end > start) {
-            doChangePlaybackRegion({ start, end });
-        } else {
-            LOGW() << "playback region is not valid";
-            updatePlaybackRegion();
-        }
+    //! NOTE: play from the cursor to the project end
+    const muse::secs_t end = totalPlayTime();
+    const muse::secs_t start = lastPlaybackSeekTime();
+    if (end > start) {
+        doChangePlaybackRegion({ start, end });
     } else {
-        //! NOTE: no playback region; play from the cursor with no defined end
-        doChangePlaybackRegion({});
-        doSeek(lastPlaybackSeekTime(), false);
+        LOGW() << "playback region is not valid";
+        updatePlaybackRegion();
     }
 
     if (!isPlaybackStartPositionValid()) {
@@ -1090,11 +1085,6 @@ Notification PlaybackController::totalPlayTimeChanged() const
     return m_totalPlayTimeChanged;
 }
 
-muse::Progress PlaybackController::loadingProgress() const
-{
-    return m_loadingProgress;
-}
-
 bool PlaybackController::canReceiveAction(const ActionCode& code) const
 {
     // note that we currently do toString() on the NAMED_CODE because those are ActionQuery, and we don't have
@@ -1106,7 +1096,7 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
     //! NOTE: toggle-play-pause stays available while recording — it pauses the recorder.
     //! Starting or restarting playback outright must not be possible while recording.
     if (code == PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString()
-        || code == PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString()) {
+        || code == PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY.toString()) {
         return !recordController()->isRecording();
     }
 
