@@ -304,14 +304,14 @@ MenuItem* AppMenuModel::makeEditMenu()
 MenuItem* AppMenuModel::makeSelectMenu()
 {
     //! NOTE: audio sub-menu to be implemented
-    auto audioClipsMenu = makeMenu(TranslatableString("appshell-menu-select", "Audio clips"),
-                                   makeAudioClipsSelectionItems(), "menu-selection-audio-clips");
-    audioClipsMenu->setState(audioClipsMenu->state().make_disabled());
+    // auto audioClipsMenu = makeMenu(TranslatableString("appshell-menu-select", "Audio clips"),
+    //                                makeAudioClipsSelectionItems(), "menu-selection-audio-clips");
+    // audioClipsMenu->setState(audioClipsMenu->state().make_disabled());
 
     //! NOTE: spectral tools are not implemented yet
-    auto spectralMenu = makeMenu(TranslatableString("appshell-menu-select", "Spectral"),
-                                 makeSpectralSelectionItems(), "menu-selection-spectral");
-    spectralMenu->setState(spectralMenu->state().make_disabled());
+    // auto spectralMenu = makeMenu(TranslatableString("appshell-menu-select", "Spectral"),
+    //                              makeSpectralSelectionItems(), "menu-selection-spectral");
+    // spectralMenu->setState(spectralMenu->state().make_disabled());
 
     MenuItemList selectItems {
         makeMenuItem("select-all"),
@@ -319,8 +319,8 @@ MenuItem* AppMenuModel::makeSelectMenu()
         makeMenuItem("select-all-tracks"),
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
-        audioClipsMenu,
-        spectralMenu,
+        // audioClipsMenu,
+        // spectralMenu,
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-select", "Looping"), makeLoopingItems(), "menu-looping"),
         makeMenuItem("zero-cross"),
@@ -340,7 +340,7 @@ MenuItem* AppMenuModel::makeViewMenu()
 
     MenuItemList viewItems {
         makeMenu(TranslatableString("appshell-menu-zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
-        makeMenu(TranslatableString("appshell-menu-skip", "Skip to"), makeSkipToItems(), "menu-skip", false),
+        // makeMenu(TranslatableString("appshell-menu-skip", "Skip to"), makeSkipToItems(), "menu-skip", false),
     };
 
     if (effectsItem) {
@@ -392,13 +392,13 @@ MenuItem* AppMenuModel::makeTracksMenu()
         makeMenuItem("new-stereo-track"),
         makeMenuItem("new-label-track"),
         makeSeparator(),
-        makeMenuItem("duplicate-track"),
-        makeMenuItem("remove-tracks"),
-        makeSeparator(),
-        makeMenuItem("mixdown-to"),
-        makeSeparator(),
-        makeMenu(TranslatableString("appshell-menu-align", "Align content"), makeAlignItems(), "menu-align", false),
-        makeMenu(TranslatableString("appshell-menu-sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
+        makeMenuItem("track-duplicate"),
+        // makeMenuItem("remove-tracks"),
+        // makeSeparator(),
+        // makeMenuItem("mixdown-to"),
+        // makeSeparator(),
+        // makeMenu(TranslatableString("appshell-menu-align", "Align content"), makeAlignItems(), "menu-align", false),
+        // makeMenu(TranslatableString("appshell-menu-sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
     };
 
     return makeMenu(TranslatableString("appshell-menu-tracks", "&Tracks"), tracksItems, "menu-tracks");
@@ -494,12 +494,12 @@ MenuItem* AppMenuModel::makeExtraMenu()
 MenuItem* AppMenuModel::makeHelpMenu()
 {
     MenuItemList helpItems {
-        makeMenuItem("tutorials"),
+        // makeMenuItem("tutorials"),
         makeMenuItem("online-handbook"),
         makeSeparator(),
-        makeMenu(TranslatableString("appshell-menu-diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
-        makeSeparator(),
-        makeMenuItem("link-account"),
+        // makeMenu(TranslatableString("appshell-menu-diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
+        // makeSeparator(),
+        // makeMenuItem("link-account"),
         makeMenuItem("about-audacity"),
         makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
         makeSeparator(),
@@ -602,12 +602,12 @@ MenuItemList AppMenuModel::makeExportItems()
         makeMenuItem("export-labels")
     };
 
-    MenuItem* exportMidi = makeMenuItem("export-midi");
-    UiActionState exportMidiState = exportMidi->state();
-    exportMidiState.enabled = false;
-    exportMidi->setState(exportMidiState);
+    // MenuItem* exportMidi = makeMenuItem("export-midi");
+    // UiActionState exportMidiState = exportMidi->state();
+    // exportMidiState.enabled = false;
+    // exportMidi->setState(exportMidiState);
 
-    items << exportMidi;
+    // items << exportMidi;
 
     return items;
 }
@@ -619,7 +619,7 @@ MenuItemList AppMenuModel::makeClipItems()
 
     MenuItemList items {
         renameClipItem,
-        makeMenuItem("trim-clip"),
+        // makeMenuItem("trim-clip"),
         makeSeparator(),
         makeMenuItem("split"),
         makeMenuItem("split-into-new-track"),
@@ -641,7 +641,7 @@ MenuItemList AppMenuModel::makeLabelItems()
     MenuItemList items {
         makeMenuItem("label-add"),
         renameLabelItem,
-        makeMenuItem("paste-new-label"),
+        // makeMenuItem("paste-new-label"),
         makeSeparator(),
         makeMenuItem("open-label-editor", TranslatableString("action", "Manage labels")),
     };
@@ -707,8 +707,8 @@ MenuItemList AppMenuModel::makeZoomItems()
         makeMenuItem("zoom-toggle"),
         makeSeparator(),
         makeMenuItem("zoom-to-fit-project"),
-        makeMenuItem("collapse-all-tracks"),
-        makeMenuItem("expand-all-tracks")
+        // makeMenuItem("collapse-all-tracks"),
+        // makeMenuItem("expand-all-tracks")
     };
 
     return items;
@@ -926,9 +926,9 @@ MenuItemList AppMenuModel::makeToolItems()
     MenuItemList items {
         makeMenuItem("plugin-manager"),
         makeSeparator(),
-        makeMenuItem("manage-macros"),
-        makeMenu(TranslatableString("appshell-menu-macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
-        makeSeparator(),
+        // makeMenuItem("manage-macros"),
+        // makeMenu(TranslatableString("appshell-menu-macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
+        // makeSeparator(),
     };
 
     const muse::uicomponents::MenuItemList toolMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
@@ -943,13 +943,13 @@ MenuItemList AppMenuModel::makeToolItems()
     const muse::uicomponents::MenuItemList extensionItems = makeExtensionItems();
     items << extensionItems;
 
-    if (!extensionItems.empty()) {
-        items << makeSeparator();
-    }
+    // if (!extensionItems.empty()) {
+    //     items << makeSeparator();
+    // }
 
-    items << makeMenuItem("raw-data-import")
-          << makeSeparator()
-          << makeMenuItem("reset-configuration");
+    // items << makeMenuItem("raw-data-import")
+    //       << makeSeparator();
+    // items << makeMenuItem("reset-configuration");
 
     return items;
 }
@@ -959,9 +959,9 @@ MenuItemList AppMenuModel::makeAnalyzeItems()
     MenuItemList items {
         makeMenuItem("plugin-manager"),
         makeSeparator(),
-        makeMenuItem("contrast-analyzer"),
-        makeMenuItem("plot-spectrum"),
-        makeSeparator(),
+        // makeMenuItem("contrast-analyzer"),
+        // makeMenuItem("plot-spectrum"),
+        // makeSeparator(),
     };
 
     const muse::uicomponents::MenuItemList analyzeMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
