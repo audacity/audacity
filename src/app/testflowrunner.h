@@ -16,6 +16,8 @@ class TestflowRunner : public muse::async::Asyncable
     muse::GlobalInject<muse::testflow::ITestflowConfiguration> configuration;
 
 public:
+    //! NOTE Call before the startup scenario is resolved
+    static void prepare(const muse::modularity::ContextPtr& ctx, const AudacityCmdOptions::Testflow& options);
     static void runIfRequested(const muse::modularity::ContextPtr& ctx, const AudacityCmdOptions::Testflow& options);
 
 private:
