@@ -68,9 +68,20 @@ private:
         No,
     };
 
+    enum class ScanMode {
+        // no dialogs; third-party plugins are validated in the background and
+        // become available as their results arrive
+        Background,
+        // modal progress dialog, blocks until validation is complete
+        Interactive,
+        // no dialogs; third-party plugins are registered but left unvalidated
+        // (StartupPluginValidationPolicy::Skip, e.g. test flows)
+        SkipValidation,
+    };
+
     NewPluginsRegistered doScanPlugins(const muse::modularity::ContextPtr& ctx,
                                        muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                       const std::function<bool()>& shouldValidateThirdPartyPlugins = nullptr);
+                                       ScanMode scanMode);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     EffectMetaList m_effects;
