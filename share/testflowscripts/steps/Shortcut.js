@@ -55,7 +55,7 @@ module.exports = {
     {
         api.keyboard.key("Ctrl+V")
     },
-    openEffects: function()
+    toggleEffects: function()
     {
         api.keyboard.key("E")
     },

@@ -136,8 +136,7 @@
                 "TC1.2_BasicTest.js",
                 "TC1.2_ClipEditingMode.js",
                 "TC1.2_EnterClipEditingMode.js",
-                "TC1.3_ClassicWorkspace.js",
-                "TC1.4_AdvancedWorkspace.js",
+                "TC1.3_Workspaces.js",
                 "TC1.5_Effects_Shortcut.js",
                 "TC1.6_Effects_Shortcut_Disabled.js",
                 "TC2.1_CutDeleteActions.js"
