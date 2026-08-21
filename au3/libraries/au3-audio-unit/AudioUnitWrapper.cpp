@@ -18,8 +18,14 @@
 #include "au3-module-manager/ModuleManager.h"
 #include "au3-components/PluginProvider.h"
 
+#include <dispatch/dispatch.h>
+
 #include <wx/osx/core/private.h>
 #include <wx/log.h>
+
+#include <atomic>
+#include <chrono>
+#include <thread>
 
 AudioUnitEffectSettings&
 AudioUnitWrapper::GetSettings(EffectSettings& settings)
@@ -268,10 +274,64 @@ bool AudioUnitWrapper::MoveSettingsContents(
     return true;
 }
 
+AudioUnitWrapper::~AudioUnitWrapper()
+{
+    // Disposing a plug-in removes the run loop timers it registered on the
+    // thread that created it, so it has to happen on the main thread. The
+    // destructor itself can run on any thread, hence the dispatch; it is
+    // asynchronous so that an unresponsive out-of-process plug-in cannot
+    // block the caller.
+    if (AudioUnit unit = mUnit.release()) {
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            AudioComponentInstanceDispose(unit);
+        });
+    }
+}
+
 bool AudioUnitWrapper::CreateAudioUnit()
 {
-    AudioUnit unit{};
-    auto result = AudioComponentInstanceNew(mComponent, &unit);
+    // Some plug-ins don't run inside our process: macOS hosts them in a
+    // separate service process (e.g. Intel-only plug-ins on Apple silicon).
+    // Creating an instance of such a plug-in is a request to that service,
+    // and while handling it the service may in turn ask us - on our main
+    // thread - about the plug-in's embedded view. So the main thread must
+    // keep handling events while the instance is being created; the blocking
+    // AudioComponentInstanceNew would deadlock here (we wait for the service,
+    // the service waits for us). Instead, use the asynchronous
+    // AudioComponentInstantiate and keep running the event loop until its
+    // completion handler delivers the result.
+    // The wait below pumps the current thread's run loop but wakes the main
+    // one; both are only the same - and the pumping only meaningful - on the
+    // main thread, which is where all instantiation happens
+    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
+    struct InstantiationState {
+        std::atomic<bool> done { false };
+        OSStatus status = noErr;
+        AudioComponentInstance instance = nullptr;
+    };
+    auto state = std::make_shared<InstantiationState>();
+
+    // ^ (...) {} == [](){}
+    // Apple invented this note-format before C++ had lambdas and it is
+    // the only type AudioComponentInstantiate function accepts.
+    // So basically we're passing instructions to be done after the plugin is ready.
+    AudioComponentInstantiate(mComponent, AudioComponentInstantiationOptions {},
+                              ^ (AudioComponentInstance instance, OSStatus status) {
+        state->instance = instance;
+        state->status = status;
+        state->done.store(true);
+        CFRunLoopWakeUp(CFRunLoopGetMain());
+    });
+
+    while (!state->done.load()) {
+        if (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, true) == kCFRunLoopRunFinished) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+
+    AudioUnit unit = state->instance;
+    auto result = state->status;
     if (!result) {
         mUnit.reset(unit);
         if (&mParameters == &mOwnParameters && !mOwnParameters) {
