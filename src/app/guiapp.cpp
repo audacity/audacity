@@ -19,14 +19,7 @@
 #include "commandlineparser.h"
 
 #ifdef MUSE_MODULE_TESTFLOW
-#include <cstdlib>
-#include <iostream>
-
-#include <QDir>
-#include <QFileInfo>
-#include <QTimer>
-
-#include "testflow/itestflow.h"
+#include "testflowrunner.h"
 #endif
 
 #include "log.h"
@@ -122,7 +115,9 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
         }
         startupScenario->runAfterSplashScreen();
 
-        runTestflowIfRequired(ctxId, options);
+#ifdef MUSE_MODULE_TESTFLOW
+        TestflowRunner::runIfRequested(ctxId, options->testflow);
+#endif
     }, Qt::QueuedConnection);
 }
 
@@ -222,111 +217,4 @@ void GuiApp::onSecondInstanceArgs(const QStringList& args)
                              muse::actions::ActionData::make_arg2<QStringList, bool>(
                                  files, parsed->startup.removeMediaFilesAfterImport));
     }
-}
-
-namespace {
-//! NOTE Ends the process immediately, skipping the regular teardown: actions
-//! queued by the last test steps would be delivered mid-teardown, where
-//! late-rejected Interactive::openSync promises write to dead stack frames
-//! and crash (muse framework issue). Callers must have flushed any output
-//! they care about (std::_Exit flushes nothing).
-[[noreturn]] void exitWithoutTeardown(int code)
-{
-    std::_Exit(code);
-}
-
-muse::io::path_t resolveScriptPath(const QString& nameOrFile, const muse::io::paths_t& scriptsDirs)
-{
-    if (QFileInfo::exists(nameOrFile)) {
-        return muse::io::path_t(QFileInfo(nameOrFile).absoluteFilePath());
-    }
-
-    for (const muse::io::path_t& dir : scriptsDirs) {
-        for (const QString& candidate : { nameOrFile, nameOrFile + ".js" }) {
-            muse::io::path_t path = muse::io::path_t(dir.toQString() + "/" + candidate);
-            if (QFileInfo::exists(path.toQString())) {
-                return path;
-            }
-        }
-    }
-
-    return {};
-}
-}
-
-void GuiApp::runTestflowIfRequired(const muse::modularity::ContextPtr& ctxId, const std::shared_ptr<AudacityCmdOptions>& options)
-{
-#ifdef MUSE_MODULE_TESTFLOW
-    const QString nameOrFile = options->testflow.testCaseNameOrFile;
-    if (nameOrFile.isEmpty()) {
-        return;
-    }
-
-    const muse::io::path_t scriptPath = resolveScriptPath(nameOrFile, testflowConfiguration()->scriptsDirPaths());
-
-    if (scriptPath.empty()) {
-        std::cout << "[testflow] FAILED: script not found: " << nameOrFile.toStdString() << std::endl;
-        exitWithoutTeardown(2);
-    }
-
-    std::cout << "[testflow] running script=" << QDir::cleanPath(scriptPath.toQString()).toStdString() << std::endl;
-
-    //! NOTE There is no reliable "QML fully loaded" signal
-    //! (IStartupScenario::startupCompleted is set before the startup page opens),
-    //! so give the UI time to settle before the first step fires.
-    // TODO: can `StartupScenario::startupCompleted()` return a notification and be used here?
-    // (Bearing in mind that `StartupScenario` isn't global)
-    const int settleMs = qEnvironmentVariableIsSet("AU_TESTFLOW_STARTUP_DELAY_MS")
-                         ? qEnvironmentVariableIntValue("AU_TESTFLOW_STARTUP_DELAY_MS")
-                         : 3000;
-
-    QTimer::singleShot(settleMs, qApp, [this, ctxId, options, scriptPath]() {
-        auto testflow = muse::modularity::ioc(ctxId)->resolve<muse::testflow::ITestflow>("app");
-        IF_ASSERT_FAILED(testflow) {
-            exitWithoutTeardown(2);
-        }
-
-        if (!options->testflow.testCaseSpeed.isEmpty()) {
-            testflow->setSpeedMode(muse::testflow::speedModeFromString(options->testflow.testCaseSpeed));
-        }
-
-        muse::testflow::ITestflow::Options opt;
-        opt.context = muse::io::path_t(options->testflow.testCaseContextNameOrFile);
-        opt.contextVal = options->testflow.testCaseContextValue.toStdString();
-        opt.func = options->testflow.testCaseFunc.toStdString();
-        opt.funcArgs = options->testflow.testCaseFuncArgs.toStdString();
-
-        //! NOTE A script that fails to load (syntax error, no main()) or never
-        //! runs a test case still ends with status Finished. Workaround: count the steps executed.
-        // TODO handle this in `Testflow` impl
-        auto startedSteps = std::make_shared<int>(0);
-        testflow->stepStatusChanged().onReceive(this, [startedSteps](const muse::testflow::StepInfo& step, const muse::Ret&) {
-            if (step.status == muse::testflow::StepStatus::Started) {
-                ++(*startedSteps);
-            }
-        });
-
-        testflow->execScript(scriptPath, opt);
-
-        const muse::testflow::ITestflow::Status status = testflow->status();
-        const bool ok = status == muse::testflow::ITestflow::Status::Finished && *startedSteps > 0;
-
-        std::cout << "[testflow] " << (ok ? "PASSED" : "FAILED")
-                  << " status=" << muse::testflow::ITestflow::statusToString(status).toStdString()
-                  << " steps=" << *startedSteps
-                  << " script=" << scriptPath.toStdString()
-                  << " reports=" << testflowConfiguration()->reportsPath().toStdString() << std::endl;
-        if (*startedSteps == 0) {
-            std::cout << "[testflow] no steps were executed"
-                      << " - does the script define main() and run a test case?" << std::endl;
-        }
-
-        //! NOTE The verdict is already reported and the report file flushed,
-        //! so the process can end here.
-        exitWithoutTeardown(ok ? 0 : 1);
-    });
-#else
-    UNUSED(ctxId);
-    UNUSED(options);
-#endif
 }
