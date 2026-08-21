@@ -146,6 +146,23 @@ void WelcomeDialogModel::activateCurrentItem()
     }
 }
 
+void WelcomeDialogModel::setCurrentIndex(int index)
+{
+    if (index < 0 || index >= count()) {
+        return;
+    }
+
+    const size_t newIndex = static_cast<size_t>(index);
+    if (newIndex == m_currentIndex) {
+        return;
+    }
+
+    m_currentIndex = newIndex;
+    configuration()->setWelcomeDialogLastShownIndex(index);
+
+    emit currentItemChanged();
+}
+
 void WelcomeDialogModel::nextItem()
 {
     IF_ASSERT_FAILED(!m_items.empty()) {
