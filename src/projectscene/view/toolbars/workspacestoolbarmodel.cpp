@@ -3,6 +3,8 @@
 */
 #include "workspacestoolbarmodel.h"
 
+#include "shared/types/workspacetitles.h"
+
 #include "muse_framework_config.h"
 
 #ifdef MUSE_MODULE_WORKSPACE
@@ -19,37 +21,6 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 using namespace muse::ui;
-
-namespace {
-//! NOTE Workspace names are file names, so they exist only as data and cannot
-//! be extracted for translation. Give the workspaces we ship a translated title;
-muse::TranslatableString workspaceTitle(const std::string& name)
-{
-    if (name == "Classic") {
-        return muse::TranslatableString("workspace", "Classic");
-    } else if (name == "Modern") {
-        return muse::TranslatableString("workspace", "Modern");
-    } else if (name == "Music") {
-        return muse::TranslatableString("workspace", "Music");
-    }
-
-    return muse::TranslatableString::untranslatable(muse::String::fromStdString(name));
-}
-
-void translateWorkspaceTitles(const muse::uicomponents::MenuItemList& items)
-{
-    for (muse::uicomponents::MenuItem* item : items) {
-        const muse::actions::ActionData args = item->args();
-        if (args.empty()) {
-            continue;
-        }
-
-        muse::ui::UiAction action = item->action();
-        action.title = workspaceTitle(args.arg<std::string>(0));
-        item->setAction(action);
-    }
-}
-}
 
 WorkspacesToolBarModel::WorkspacesToolBarModel(QObject* parent)
     : muse::uicomponents::AbstractToolBarModel(parent)
@@ -107,7 +78,7 @@ void WorkspacesToolBarModel::updateState()
 
     muse::TranslatableString currentWorkspaceName;
 
-    translateWorkspaceTitles(m_workspacesMenuModel->items());
+    au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items());
 
     for (const MenuItem* menuItem : m_workspacesMenuModel->items()) {
         if (menuItem->selected()) {
