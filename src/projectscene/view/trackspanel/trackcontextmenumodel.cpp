@@ -48,6 +48,9 @@ muse::actions::ActionQuery makeTrackRateChangeAction(uint64_t rate)
 MenuItem* TrackContextMenuModel::makeItemWithArg(const ActionCode& actionCode)
 {
     MenuItem* item = makeMenuItem(actionCode);
+    if (!item) {
+        return nullptr;
+    }
     item->setArgs(ActionData::make_arg1<trackedit::TrackId>(m_trackId));
     return item;
 }
