@@ -4,6 +4,9 @@
 #include "builtincollectionloader.h"
 
 #include <QtQml>
+#if defined(AU_BUILD_SPEECH_SWIFT_EFFECT)
+#include <QOperatingSystemVersion>
+#endif
 
 #include "global/translation.h"
 #include "global/log.h"
@@ -74,6 +77,9 @@
 #include "changepitch/changepitcheffect.h"
 #include "changepitch/changepitchviewmodel.h"
 #endif
+#if defined(AU_BUILD_SPEECH_SWIFT_EFFECT)
+#include "deepfilternet3/deepfilternet3effect.h"
+#endif
 
 using namespace au::effects;
 
@@ -107,6 +113,12 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
     static BuiltinEffectsModule::Registration< CompressorEffect > regCompressor;
     static BuiltinEffectsModule::Registration< LimiterEffect > regLimiter;
+#if defined(AU_BUILD_SPEECH_SWIFT_EFFECT) && (defined(__arm64__) || defined(__aarch64__))
+    const QOperatingSystemVersion macOS15(QOperatingSystemVersion::MacOS, 15);
+    if (QOperatingSystemVersion::current() >= macOS15) {
+        static BuiltinEffectsModule::Registration< DeepFilterNet3Effect > regDeepFilterNet3;
+    }
+#endif
 }
 
 void BuiltinCollectionLoader::init()
