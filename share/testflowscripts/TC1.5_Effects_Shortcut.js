@@ -5,9 +5,8 @@
 var Home = require("steps/Home.js")
 var Shortcut = require("steps/Shortcut.js")
 
-// The realtime effects section registers these navigation controls whether
-// the panel is shown or hidden; their enabled flags flip with the panel's
-// visibility, which makes the count of enabled controls a usable signal.
+// The controls exist whether the panel is shown or not, but their enabled
+// flags follow its visibility, so the count of enabled ones tracks the panel
 function effectsPanelState() {
     var controls = api.navigation.controls("AddNewTrackSection", "RealtimeEffectsSectionPanel")
     var enabled = 0
@@ -19,7 +18,7 @@ function effectsPanelState() {
     return enabled
 }
 
-var hiddenState = -1
+var stateBeforeShortcut = -1
 
 var testCase = {
     name: "TC1.5: Real Time Effects Shortcut",
@@ -34,27 +33,23 @@ var testCase = {
         {
             name: "Create new project with a track", func: function () {
                 Home.createNewProject()
-                // The project page loads asynchronously, and querying a
-                // navigation panel before it exists crashes the app
+                // Querying a navigation panel before the project page exists crashes the app
                 api.testflow.sleep(2000)
                 api.dispatcher.dispatch("new-mono-track")
                 api.testflow.sleep(500)
             }
         },
         {
-            name: "Hide the effects panel to start from a known state", func: function () {
-                // The panel is visible by default on a fresh profile
-                api.dispatcher.dispatch("toggle-effects")
-                api.testflow.sleep(800)
-                hiddenState = effectsPanelState()
+            name: "Read the effects panel state", func: function () {
+                stateBeforeShortcut = effectsPanelState()
             }
         },
         {
-            name: "Open the effects panel with the shortcut", func: function () {
-                Shortcut.openEffects()
+            name: "Toggle the effects panel with the shortcut", func: function () {
+                Shortcut.toggleEffects()
                 api.testflow.sleep(800)
                 var state = effectsPanelState()
-                if (state === hiddenState) {
+                if (state === stateBeforeShortcut) {
                     api.testflow.error("Pressing E did not toggle the effects panel (state still " + state + ")")
                 }
             }
