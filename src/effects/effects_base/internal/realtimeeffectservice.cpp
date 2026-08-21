@@ -275,8 +275,11 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
         projectHistory()->pushHistoryState(
+            //: History entry. %1 is an effect name, %2 is a track name,
+            //: e.g. "Added Compressor to Track 1"
             muse::mtrc("effects", "Added %1 to %2")
             .arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
+            //: Undo entry name. %1 is an effect name, e.g. "Add Compressor"
             muse::mtrc("effects", "Add %1").arg(muse::String::fromStdString(effectName)).toStdString());
         return state;
     }
@@ -313,8 +316,11 @@ void RealtimeEffectService::removeRealtimeEffect(TrackId trackId, const Realtime
     const auto effectName = getEffectName(*state);
     const auto trackName = effectTrackName(trackId);
     projectHistory()->pushHistoryState(
+        //: History entry. %1 is an effect name, %2 is a track name,
+        //: e.g. "Removed Compressor from Track 1"
         muse::mtrc("effects", "Removed %1 from %2")
         .arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
+        //: Undo entry name. %1 is an effect name, e.g. "Remove Compressor"
         muse::mtrc("effects", "Remove %1").arg(muse::String::fromStdString(effectName)).toStdString());
 }
 
@@ -334,8 +340,11 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         const auto oldEffectName = getEffectName(*oldState);
         const auto newEffectName = getEffectName(*newState);
         projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are effect names,
+            //: e.g. "Replaced Compressor with Limiter"
             muse::mtrc("effects", "Replaced %1 with %2")
             .arg(muse::String::fromStdString(oldEffectName)).arg(muse::String::fromStdString(newEffectName)).toStdString(),
+            //: Undo entry name. %1 is an effect name, e.g. "Replace Compressor"
             muse::mtrc("effects", "Replace %1").arg(muse::String::fromStdString(oldEffectName)).toStdString());
         return newState;
     }
@@ -368,11 +377,18 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
 
     const auto effectName = getEffectName(*state);
     const auto trackName = effectTrackName(*tId);
+    muse::String description;
+    if (oldIndex < newIndex) {
+        //: History entry. %1 is an effect name, %2 is a track name,
+        //: e.g. "Moved Compressor up in Track 1"
+        description = muse::mtrc("effects", "Moved %1 up in %2");
+    } else {
+        //: History entry. %1 is an effect name, %2 is a track name,
+        //: e.g. "Moved Compressor down in Track 1"
+        description = muse::mtrc("effects", "Moved %1 down in %2");
+    }
     projectHistory()->pushHistoryState(
-        (oldIndex < newIndex
-         ? muse::mtrc("effects", "Moved %1 up in %2")
-         : muse::mtrc("effects", "Moved %1 down in %2"))
-        .arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
+        description.arg(muse::String::fromStdString(effectName)).arg(muse::String::fromStdString(trackName.value_or(""))).toStdString(),
         muse::trc("effects", "Change effect order"));
 }
 

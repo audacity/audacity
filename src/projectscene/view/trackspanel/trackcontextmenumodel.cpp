@@ -381,6 +381,7 @@ void TrackContextMenuModel::updateTrackRateState()
     customRateItem.setChecked(!isOnAvailableRates);
 
     MenuItem& menu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
+    //: %1 is a sample rate in hertz, e.g. "44100 Hz"
     menu.setTitle(muse::TranslatableString("trackcontextmenu", "Rate: %1 Hz")
                   .arg(muse::String::number(static_cast<int>(track.value().rate))));
 }
@@ -449,7 +450,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
     const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
     for (const auto& info : colorInfos) {
         items << makeMenuItem(makeTrackColorChangeAction(info.index).toString(),
-                              muse::TranslatableString("trackcontextmenu", muse::String::fromStdString(info.name)));
+                              info.title);
         m_colorChangeActionCodeList.push_back(makeTrackColorChangeAction(info.index).toString());
     }
 
@@ -471,7 +472,8 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
     muse::uicomponents::MenuItemList items;
     for (const auto& rate : audioDriverController()->sampleRates()) {
         items << makeMenuItem(makeTrackRateChangeAction(rate).toString(),
-                              muse::TranslatableString("trackcontextmenu", muse::String::number(static_cast<int>(rate)) + " Hz"));
+                              //: %1 is a sample rate in hertz, e.g. "44100 Hz"
+                              muse::TranslatableString("trackcontextmenu", "%1 Hz").arg(muse::String::number(static_cast<int>(rate))));
     }
     items << makeSeparator();
     items << makeItemWithArg("track-change-rate-custom");
