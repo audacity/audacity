@@ -13,10 +13,6 @@
 #include "framework/ui/internal/guiapplication.h"
 
 #include "muse_framework_config.h"
-#ifdef MUSE_MODULE_TESTFLOW
-#include "framework/testflow/itestflow.h"
-#include "framework/testflow/itestflowconfiguration.h"
-#endif
 
 #include "appshell/iappshellconfiguration.h"
 
@@ -30,9 +26,6 @@ namespace au::app {
 class GuiApp : public muse::ui::GuiApplication, public muse::async::Asyncable
 {
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
-#ifdef MUSE_MODULE_TESTFLOW
-    muse::GlobalInject<muse::testflow::ITestflowConfiguration> testflowConfiguration;
-#endif
 
 public:
     GuiApp(const std::shared_ptr<AudacityCmdOptions>& options);
@@ -46,7 +39,6 @@ private:
     void applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& options) override;
 
     void onSecondInstanceArgs(const QStringList& args);
-    void runTestflowIfRequired(const muse::modularity::ContextPtr& ctxId, const std::shared_ptr<AudacityCmdOptions>& options);
 
     appshell::SplashScreen* m_splashScreen = nullptr;
     muse::mi::SingleInstanceListener m_singleInstance;
