@@ -6,6 +6,8 @@
 
 #include <CoreAudio/CoreAudio.h>
 
+#include "framework/global/log.h"
+
 using namespace au::au3audio;
 
 namespace {
@@ -18,8 +20,22 @@ const AudioObjectPropertyAddress LISTENED_PROPERTIES[] = {
     { kAudioHardwarePropertyDefaultOutputDevice, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster },
 };
 
-OSStatus devicesChangedCallback(AudioObjectID, UInt32, const AudioObjectPropertyAddress*, void* clientData)
+const char* propertyName(AudioObjectPropertySelector selector)
 {
+    switch (selector) {
+    case kAudioHardwarePropertyDevices: return "devices list";
+    case kAudioHardwarePropertyDefaultInputDevice: return "default input device";
+    case kAudioHardwarePropertyDefaultOutputDevice: return "default output device";
+    default: return "unknown";
+    }
+}
+
+OSStatus devicesChangedCallback(AudioObjectID, UInt32 nAddresses, const AudioObjectPropertyAddress* addresses, void* clientData)
+{
+    for (UInt32 i = 0; i < nAddresses; ++i) {
+        LOGW() << "CoreAudio event: " << propertyName(addresses[i].mSelector) << " changed";
+    }
+
     auto* self = reinterpret_cast<MacosSystemAudioDevicesListener*>(clientData);
     QMetaObject::invokeMethod(self, [self]() {
         self->onSystemDevicesChanged();
@@ -34,6 +50,7 @@ MacosSystemAudioDevicesListener::MacosSystemAudioDevicesListener()
     m_debounceTimer.setSingleShot(true);
     m_debounceTimer.setInterval(DEBOUNCE_INTERVAL_MS);
     QObject::connect(&m_debounceTimer, &QTimer::timeout, this, [this]() {
+        LOGW() << "debounce settled, notifying system devices changed";
         m_systemDevicesChanged.notify();
     });
 }
@@ -74,10 +91,6 @@ muse::async::Notification MacosSystemAudioDevicesListener::systemDevicesChanged(
 
 void MacosSystemAudioDevicesListener::onSystemDevicesChanged()
 {
-    // bursts of CoreAudio notifications (e.g. plugging a headset changes
-    // the device list and both defaults) collapse into one notification;
-    // restarting the timer would let a continuous stream starve it forever
-    if (!m_debounceTimer.isActive()) {
-        m_debounceTimer.start();
-    }
+    LOGW() << (m_debounceTimer.isActive() ? "debounce timer restarted" : "debounce timer started");
+    m_debounceTimer.start();
 }
