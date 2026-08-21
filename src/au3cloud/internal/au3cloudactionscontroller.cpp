@@ -14,7 +14,6 @@ using namespace au::au3cloud;
 
 namespace {
 const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
-const char* TOUR_PAGE_URL { "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg" };
 
 const muse::actions::ActionQuery SHOW_TOUR_PAGE_ACTION("audacity://cloud/show-tour-page");
 const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/open-signin-dialog");
@@ -90,11 +89,12 @@ void Au3CloudActionsController::showTourPage()
         const muse::UriQuery uri(SIGNIN_URI);
         const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
         if (!rv.ret) {
+            LOGW() << "Sign in cancelled: " << rv.ret.toString();
             return;
         }
     }
 
-    platformInteractive()->openUrl(TOUR_PAGE_URL);
+    platformInteractive()->openUrl(audioComService()->getTourPage());
 }
 
 void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuery& query)

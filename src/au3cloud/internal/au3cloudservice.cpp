@@ -26,9 +26,7 @@ void Au3CloudService::init()
         syncUsageInfoPrefs();
     });
 
-    auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
     m_replyHandler = new OAuthHttpServerReplyHandler(this);
-    m_replyHandler->setRedirectUrl(QUrl(serviceConfig.GetTourPage().c_str()));
     connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
             this, [this](const QVariantMap& data) {
         // Extract authorization code from callback
@@ -205,17 +203,14 @@ void Au3CloudService::openBrowserSession()
 {
     auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
     auto& authService = audacity::cloud::audiocom::GetOAuthService();
-
-    const auto landingPage = m_accountInfo.userSlug.empty()
-                             ? serviceConfig.GetTourPage()
-                             : serviceConfig.GetProfilePagePath(m_accountInfo.userSlug, AudiocomTrace::ignore);
-    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, landingPage);
+    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, serviceConfig.GetTourPage());
 
     if (m_replyHandler->hasPendingSocket()) {
-        m_replyHandler->sendRedirect(QUrl(QString::fromStdString(url)));
-    } else {
-        platformInteractive()->openUrl(url);
+        m_replyHandler->sendRedirect(QString::fromStdString(url));
+        return;
     }
+
+    platformInteractive()->openUrl(url);
 }
 
 std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)
