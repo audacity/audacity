@@ -2,6 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 #include "generatedeffectviewermodel.h"
+
+#include "internal/effectsutils.h"
 #include "effectparameterslistmodel.h"
 
 #include "au3-effects/EffectPlugin.h"
@@ -49,7 +51,7 @@ QString GeneratedEffectViewerModel::computeEffectName(EffectInstanceId instanceI
     EffectMeta meta = provider->meta(effectId);
 
     if (meta.isValid()) {
-        return meta.title.toQString();
+        return utils::effectDisplayTitle(meta).toQString();
     }
     return muse::qtrc("effects", "Unknown effect");
 }
