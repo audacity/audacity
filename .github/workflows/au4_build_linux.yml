@@ -18,10 +18,6 @@ on:
         description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
         required: false
         default: ''
-      testflow_reuse_run_id:
-        description: 'Run only the testflow jobs, reusing the AppImage artifact of this workflow run ID (skips the build)'
-        required: false
-        default: ''
 
   workflow_call:
     inputs:
@@ -60,9 +56,6 @@ env:
 
 jobs:
   au4_build_linux:
-    # Skipped when a dispatch asks to reuse a previous run's AppImage
-    # (inputs is empty on non-dispatch events, so this is true for PRs)
-    if: inputs.testflow_reuse_run_id == ''
     strategy:
       fail-fast: false
       matrix:
@@ -283,125 +276,21 @@ jobs:
         APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
         QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
 
-  testflow-discover:
-    # Lists the test scripts so that testflow-linux can fan out one job per
-    # script. Reads the repo (same commit the AppImage is built from) instead
-    # of the artifact, so it runs in parallel with the build.
-    runs-on: ubuntu-22.04
-    outputs:
-      scripts: ${{ steps.list.outputs.scripts }}
-    steps:
-    - name: Clone repository
-      uses: actions/checkout@v6
-      with:
-        repository: ${{ inputs.app_repo || job.workflow_repository }}
-        ref: ${{ inputs.app_ref || job.workflow_sha }}
-        persist-credentials: false
-        # These are gitignore-style patterns; a trailing "# comment" would
-        # become part of the pattern. buildscripts/ci/tools is needed for
-        # list_testflow_scripts.sh.
-        sparse-checkout: |
-          share/testflowscripts
-          buildscripts/ci/tools
-
-    - name: List test scripts
-      id: list
-      # Disabled test cases are listed in share/testflowscripts/disabled.json
-      run: |
-        scripts=$(bash ${CI_DIR}/tools/list_testflow_scripts.sh)
-        echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
-        echo "Discovered: $scripts"
-
-  testflow-linux:
-    needs: [au4_build_linux, testflow-discover]
-    # Run when the build succeeded, or when reusing a previous run's AppImage
-    # (in which case the build job is skipped)
+  testflow:
+    needs: au4_build_linux
+    # Stable builds have testflow compiled out, so there is nothing to run
     if: >-
       !cancelled()
-      && needs.testflow-discover.result == 'success'
-      && (needs.au4_build_linux.result == 'success' || inputs.testflow_reuse_run_id != '')
-    runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false # let sibling test cases finish even if one fails
-      # A job-level `if` cannot see the matrix context (it is evaluated before
-      # the matrix expands), so disabled test cases are handled with step-level
-      # conditions instead: their job runs, labeled DISABLED, with every step
-      # skipped.
-      matrix: ${{ fromJSON(needs.testflow-discover.outputs.scripts) }}
-    steps:
-    # No checkout: everything this job runs comes from the AppImage artifact.
+      && needs.au4_build_linux.result == 'success'
+      && (inputs.build_mode || github.event.inputs.build_mode || 'devel_build') != 'stable_build'
+    uses: ./.github/workflows/au4_testflow.yml
+    with:
+      app_repo: ${{ inputs.app_repo || '' }}
+      app_ref: ${{ inputs.app_ref || '' }}
 
-    - name: Report disabled test case
-      if: matrix.status == 'DISABLED'
-      env:
-        SCRIPT: ${{ matrix.script }}
-      run: echo "::warning title=Test case disabled::$SCRIPT is disabled - see share/testflowscripts/disabled.json for the reason"
-
-    - name: Setup environment
-      if: matrix.status != 'DISABLED'
-      # The AppImage bundles Qt and most libraries; this installs a virtual
-      # display plus exactly the libraries the AppImage excludelist leaves to
-      # the host: the full GLVND family (the app links libOpenGL/libGLX
-      # directly), X client libs, fontconfig/freetype, and ALSA.
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends \
-          xvfb openbox dbus-x11 \
-          libgl1 libglx0 libopengl0 libegl1 \
-          libx11-6 libx11-xcb1 libxcb1 \
-          libfontconfig1 libfreetype6 libexpat1 \
-          libasound2
-
-    - name: Download AppImage artifact
-      if: matrix.status != 'DISABLED'
-      # The artifact name is dynamic (AU4_<build_number>_Lin_x86_64_<info>),
-      # so match it by pattern. run-id defaults to this run; a dispatch with
-      # testflow_reuse_run_id points it at a previous run's artifact instead.
-      uses: actions/download-artifact@v6
-      with:
-        pattern: AU4_*_Lin_x86_64_*
-        merge-multiple: true
-        path: ./build.artifacts
-        run-id: ${{ inputs.testflow_reuse_run_id || github.run_id }}
-        github-token: ${{ github.token }}
-
-    - name: Run testflow test case
-      if: matrix.status != 'DISABLED'
-      env:
-        SCRIPT: ${{ matrix.script }}
-      run: |
-        APPIMAGE=$(find ./build.artifacts -type f -name '*.AppImage' -print -quit)
-        test -n "$APPIMAGE" || { echo "AppImage not found in artifact"; exit 1; }
-        chmod +x "$APPIMAGE"
-        # Extract instead of mounting, so the runner doesn't need libfuse2
-        "$APPIMAGE" --appimage-extract > /dev/null
-        APP_BIN="$PWD/squashfs-root/AppRun"
-        SCRIPTS_DIR=$(find "$PWD/squashfs-root" -type d -name "testflowscripts" -print -quit)
-        test -n "$SCRIPTS_DIR" || { echo "testflowscripts not found in AppImage (release build?)"; exit 1; }
-
-        tc="$SCRIPTS_DIR/$SCRIPT"
-        test -f "$tc" || { echo "script not in AppImage: $SCRIPT"; exit 1; }
-
-        # A leftover instance would swallow the args and exit 0 = false PASS
-        export AU_ALLOW_MULTIPLE_PROCESSES=1
-        export MUSE_TESTFLOW_DATA_PATH="$PWD/testflow_data"
-        # Fresh profile: no settings/recent-projects/session-restore leakage
-        SANDBOX=$(mktemp -d)
-        export XDG_CONFIG_HOME="$SANDBOX/config" XDG_DATA_HOME="$SANDBOX/data" \
-               XDG_CACHE_HOME="$SANDBOX/cache" XDG_STATE_HOME="$SANDBOX/state"
-
-        # Let run 5mn, then kill it after 15s if it doesn't exit on its own
-        rc=0
-        timeout -k 15 300 xvfb-run -a -s "-screen 0 1600x1000x24" \
-          "$APP_BIN" --test-case "$tc" --test-case-speed Fast || rc=$?
-        # Forward testflow output to the job log
-        find "$PWD/testflow_data" -name '*.txt' -exec sh -c 'echo "--- $1"; cat "$1"' _ {} \; 2>/dev/null || true
-        test "$rc" -eq 124 && echo "timed out"
-        exit $rc
 
   delete-selftest-artifacts:
-    # testflow-linux consumes the packaged artifact, not the selftest one,
-    # so only the self-test job needs to be waited for
+    # Only the self-test job uses this artifact, testflow takes the packaged one
     needs: [plugin-registration-self-test]
     if: always()
     runs-on: ubuntu-latest
