@@ -21,6 +21,7 @@
  */
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
@@ -100,10 +101,23 @@ FocusScope {
                 id: thumbnail
                 anchors.fill: parent
 
-                opacity: 0.9
+                clip: true
 
                 property int borderWidth: 0
+                property color borderColor: ui.theme.strokeColor
                 readonly property int radius: 3
+
+                layer.enabled: true
+                layer.smooth: true
+                layer.textureSize: Qt.size(thumbnail.width * Screen.devicePixelRatio,
+                                           thumbnail.height * Screen.devicePixelRatio)
+                layer.effect: RoundedCornersEffect {
+                    radius: thumbnail.radius
+                }
+
+                HoverHandler {
+                    id: hoverHandler
+                }
 
                 Loader {
                     id: loader
@@ -121,11 +135,6 @@ FocusScope {
 
                         return projectItemComp
                     }
-
-                    layer.enabled: true
-                    layer.effect: RoundedCornersEffect {
-                        radius: thumbnail.radius
-                    }
                 }
 
                 Rectangle {
@@ -140,28 +149,28 @@ FocusScope {
                         padding: 2
                     }
 
-                    border.color: ui.theme.strokeColor
+                    border.color: parent.borderColor
                     border.width: parent.borderWidth
                 }
 
                 states: [
                     State {
                         name: "NORMAL"
-                        when: !mouseArea.containsMouse && !mouseArea.pressed
+                        when: !hoverHandler.hovered && !mouseArea.pressed
 
                         PropertyChanges {
                             target: thumbnail
-                            borderWidth: ui.theme.borderWidth
+                            borderWidth: 1
                         }
                     },
                     State {
                         name: "HOVERED"
-                        when: mouseArea.containsMouse && !mouseArea.pressed
+                        when: hoverHandler.hovered && !mouseArea.pressed
 
                         PropertyChanges {
                             target: thumbnail
-                            opacity: 1
                             borderWidth: 1
+                            borderColor: ui.theme.accentColor
                         }
                     },
                     State {
@@ -170,7 +179,8 @@ FocusScope {
 
                         PropertyChanges {
                             target: thumbnail
-                            opacity: 0.5
+                            borderWidth: 1
+                            borderColor: ui.theme.strokeColor
                         }
                     }
                 ]
@@ -272,7 +282,7 @@ FocusScope {
 
         Rectangle {
             anchors.fill: parent
-            color: ui.theme.extra["white_color"]
+            color: ui.theme.backgroundSecondaryColor
 
             StyledIconLabel {
                 anchors.centerIn: parent
@@ -280,7 +290,7 @@ FocusScope {
                 iconCode: IconCode.PLUS
 
                 font.pixelSize: 50
-                color: ui.theme.extra["black_color"]
+                color: ui.theme.fontPrimaryColor
             }
         }
     }
@@ -308,7 +318,7 @@ FocusScope {
 
             backgroundColor: ui.theme.backgroundSecondaryColor
             lineColor: Qt.alpha(ui.theme.fontPrimaryColor, 0.8)
-            borderColor: ui.theme.strokeColor
+            borderColor: "transparent"
         }
     }
 }
