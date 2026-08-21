@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 #
-# Lists the testflow test scripts as a GitHub Actions matrix include array:
+# Lists the testflow test cases as a GitHub Actions matrix include array:
 #
-#   {"include":[{"script":"TC1.1_BasicTest.js"},
-#               {"script":"TC1.6_....js","status":"DISABLED"}, ...]}
+#   {"include":[{"script":"TC1.1_BasicTest.js"},{"script":"TC1.6_...js","status":"DISABLED"}]}
 #
 # Every top-level .js in share/testflowscripts is a test case (helpers live
 # in steps/), so new scripts fan out automatically rather than being silently
@@ -14,11 +13,6 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS_DIR="$HERE/../../../share/testflowscripts"
-
-# Maps disabled test case filenames to the reason for their disabling.
-# Disabled test cases still get a matrix job, but it is labeled DISABLED in
-# its name and skips all steps. This keeps disabled tests visible in the
-# checks UI rather than silently absent.
 DISABLED_FILE="$SCRIPTS_DIR/disabled.json"
 
 list_script_filenames() {
@@ -37,7 +31,7 @@ to_json_array() {
 to_matrix_include() {
     # ["a.js",...] -> {"include":[{"script":"a.js"},...]}, tagging entries of
     # the disabled.json map with status: DISABLED, which GitHub appends to
-    # the job name, e.g. "testflow-linux (TC1.6_....js, DISABLED)".
+    # the job name, e.g. "run (TC1.6_...js, DISABLED)".
     jq --compact-output --slurpfile disabled "$DISABLED_FILE" '
         $disabled[0] as $off
         | { include: map(. as $s | { script: $s } + (if $off | has($s) then { status: "DISABLED" } else {} end)) }'
