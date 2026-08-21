@@ -598,6 +598,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
     }
 
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+    trackProgress(progress);
 
     if (auto oldProgress = std::exchange(m_audioPreviewProgress, progress)) {
         oldProgress->cancel();
@@ -847,6 +848,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std:
     }
 
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+    trackProgress(progress);
 
     auto progressCallback = [progress](double p) -> bool {
         if (progress->isCanceled()) {
@@ -858,6 +860,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std:
     };
 
     auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+    progress->canceled().onNotify(this, [cancellationContext]() {
+        cancellationContext->Cancel();
+    });
+
     auto future = CloudSyncService::Get().DownloadCloudAudio(audioId, std::move(progressCallback), cancellationContext);
 
     // Blocked is resolved synchronously (another download is already in progress)
@@ -921,6 +927,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
     }
 
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+    trackProgress(progress);
 
     auto progressCallback = [progress](double p) -> bool {
         if (progress->isCanceled()) {
@@ -932,6 +939,9 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
     };
 
     auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+    progress->canceled().onNotify(this, [cancellationContext]() {
+        cancellationContext->Cancel();
+    });
 
     std::thread([weak = weak_from_this(), progress, dbProjectData, cloudProjectId, snapshotId, forceOverwrite,
                  cancellationContext, progressCallback = std::move(progressCallback)]() mutable {
@@ -977,6 +987,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
 muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string& title)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+    trackProgress(progress);
 
     std::thread([weak = weak_from_this(), title, progress]() {
         auto self = weak.lock();
@@ -1116,9 +1127,19 @@ muse::Ret Au3AudioComService::checkUnsyncedProject(const std::string& cloudProje
     return make_ret(hasValidSnapshot ? Err::CloudProjectNotFullySynced : Err::CloudProjectNeverSynced);
 }
 
+void Au3AudioComService::trackProgress(const muse::ProgressPtr& progress)
+{
+    m_activeProgresses.erase(std::remove_if(m_activeProgresses.begin(), m_activeProgresses.end(),
+                                            [](const std::weak_ptr<muse::Progress>& p) { return p.expired(); }),
+                             m_activeProgresses.end());
+
+    m_activeProgresses.push_back(progress);
+}
+
 muse::ProgressPtr Au3AudioComService::createSyncProgress()
 {
     auto oldProgress = std::exchange(m_syncInProgress, std::make_shared<muse::Progress>());
+    trackProgress(m_syncInProgress);
 
     std::weak_ptr<muse::Progress> weakProgress = m_syncInProgress;
 
@@ -1148,5 +1169,17 @@ muse::ProgressPtr Au3AudioComService::createSyncProgress()
 
 void Au3AudioComService::deinit()
 {
+    stopProjectSync();
+
+    for (const std::weak_ptr<muse::Progress>& weakProgress : m_activeProgresses) {
+        muse::ProgressPtr progress = weakProgress.lock();
+        if (progress && !progress->isCanceled()) {
+            progress->cancel();
+        }
+    }
+    m_activeProgresses.clear();
+
+    m_downloadManager->cancelAll();
+
     audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
 }
