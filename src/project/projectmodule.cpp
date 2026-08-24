@@ -91,6 +91,7 @@ void ProjectModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://project/new"), "Audacity/Project/NewProjectDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://project/asksavelocationtype"), "Audacity/Project/AskSaveLocationTypeDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://project/askexportlocationtype"), "Audacity/Project/AskExportLocationTypeDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://project/savetocloud"), "Audacity/Project/SaveToCloudDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://project/cloudprojectsyncing"), "Audacity/Project/CloudProjectSyncDialog.qml");
     }
