@@ -28,11 +28,6 @@
 #else
 #include "framework/stubs/update/updatestubmodule.h"
 #endif
-#ifdef MUSE_MODULE_LEARN
-#include "framework/learn/learnmodule.h"
-#else
-#include "framework/stubs/learn/learnmodule.h"
-#endif
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
 
@@ -143,7 +138,6 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new muse::accessibility::AccessibilityModule());
     app->addModule(new muse::interactive::InteractiveModule());
     app->addModule(new muse::mi::MultiWindowsModule());
-    app->addModule(new muse::learn::LearnModule());
     app->addModule(new muse::languages::LanguagesModule());
     app->addModule(new muse::ui::UiModule());
     app->addModule(new muse::uicomponents::UiComponentsModule());

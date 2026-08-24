@@ -12,6 +12,7 @@
 
 #include "framework/global/io/path.h"
 #include "framework/global/log.h"
+#include "framework/global/processspawnguard.h"
 
 namespace au::effects {
 Au3EffectLoader::Au3EffectLoader(PluginProvider& provider, EffectFamily family)
@@ -72,6 +73,10 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
     // sentinel on disk so the plugin gets marked as broken at the next launch
     // if we don't survive this (see IAudioPluginsLoadGuard).
     loadGuard()->beginLoad(effectId.toStdString());
+
+    // dlopen below must not interleave with the background plugin
+    // validation forking subprocesses (see muse::processSpawnMutex)
+    std::unique_lock spawnGuard(muse::processSpawnMutex());
 
     // We need the complete effect's path, e.g. in VST a .vst3 bundle (one path) may contain several effects.
     // Hence an effect's UUID is appended to the .vst3 path for disambiguation.
