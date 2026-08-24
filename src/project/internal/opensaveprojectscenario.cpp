@@ -112,6 +112,8 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 {
     SaveLocationType type = preselectedType;
 
+    const bool shouldUpdateLastUsed = configuration()->shouldAskSaveLocationType();
+
     if (type == SaveLocationType::Undefined) {
         RetVal<SaveLocationType> askedType = saveLocationType();
         if (!askedType.ret) {
@@ -127,7 +129,9 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 
     // The user may switch between Local and Cloud as often as they want
     for (;;) {
-        configuration()->setLastUsedSaveLocationType(type);
+        if (shouldUpdateLastUsed) {
+            configuration()->setLastUsedSaveLocationType(type);
+        }
 
         switch (type) {
         case SaveLocationType::Undefined:

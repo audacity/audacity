@@ -215,6 +215,9 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::MUSIC_NOTES,
                  "Preferences/MusicPreferencesPage.qml"),
 
+        makeItem("export", QT_TRANSLATE_NOOP("preferences", "Export"), IconCode::Code::SHARE_FILE,
+                 "Preferences/ExportPreferencesPage.qml"),
+
         // makeItem("cloud", QT_TRANSLATE_NOOP("preferences", "Cloud"), IconCode::Code::CLOUD, ""),
 
         makeItem("shortcuts", QT_TRANSLATE_NOOP("preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,

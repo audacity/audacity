@@ -29,6 +29,10 @@ public:
     virtual void setTrimBlankSpace(bool trim) = 0;
     virtual muse::async::Notification trimBlankSpaceChanged() const = 0;
 
+    virtual bool askExportLocationType() const = 0;
+    virtual void setAskExportLocationType(bool ask) = 0;
+    virtual muse::async::Notification askExportLocationTypeChanged() const = 0;
+
     virtual muse::io::path_t directoryPath() const = 0;
     virtual void setDirectoryPath(const muse::io::path_t& path) = 0;
     virtual muse::async::Notification directoryPathChanged() const = 0;

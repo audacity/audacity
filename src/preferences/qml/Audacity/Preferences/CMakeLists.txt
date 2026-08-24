@@ -12,6 +12,8 @@ qt_add_qml_module(preferences_qml
         commonaudioapiconfigurationmodel.h
         editpreferencesmodel.cpp
         editpreferencesmodel.h
+        exportpreferencespagemodel.cpp
+        exportpreferencespagemodel.h
         generalpreferencesmodel.cpp
         generalpreferencesmodel.h
         musicpreferencesmodel.cpp
@@ -35,6 +37,7 @@ qt_add_qml_module(preferences_qml
         AppearancePreferencesPage.qml
         AudioPreferencesPage.qml
         EditPreferencesPage.qml
+        ExportPreferencesPage.qml
         GeneralPreferencesPage.qml
         internal/AccentColorsSection.qml
         internal/AdvancedTopSection.qml
@@ -55,6 +58,7 @@ qt_add_qml_module(preferences_qml
         internal/DeleteBehaviorSection.qml
         internal/EffectBehaviorSection.qml
         internal/EffectOptionsSection.qml
+        internal/ExportBehaviorSection.qml
         internal/ExtensionPreferencesSection.qml
         internal/FFmpegLibrarySection.qml
         internal/FoldersSection.qml
@@ -79,6 +83,7 @@ qt_add_qml_module(preferences_qml
         internal/RecordingBehaviorSection.qml
         internal/RemoteControlSection.qml
         internal/SampleRateSection.qml
+        internal/SaveBehaviorSection.qml
         internal/SaveToCloudSection.qml
         internal/ScrollPagesSection.qml
         internal/SpectrogramAlgorithmSection.qml
