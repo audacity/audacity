@@ -349,7 +349,7 @@ void TrackContextMenuModel::updateTrackFormatState()
         item.setChecked(true);
         MenuItem& menu = findMenu(QString::fromUtf8(TRACK_FORMAT_MENU_ID));
         menu.setTitle(muse::TranslatableString("trackcontextmenu", "Format: %1")
-                      .arg(muse::String(formatInfo.description)));
+                      .arg(formatInfo.description));
     }
 }
 
@@ -462,7 +462,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
     muse::uicomponents::MenuItemList items;
     for (const auto& formatInfo : trackedit::availableTrackFormats()) {
         items << makeMenuItem(makeTrackFormatChangeAction(formatInfo.format).toString(),
-                              muse::TranslatableString("trackcontextmenu", muse::String(formatInfo.description)));
+                              formatInfo.description);
     }
     return items;
 }
