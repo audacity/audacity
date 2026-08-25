@@ -23,6 +23,11 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
     {
         emit isActiveChanged();
     });
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]
+    {
+        emit availabilityChanged();
+    });
 }
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()

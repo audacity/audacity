@@ -37,7 +37,7 @@ ListItemBlank {
 
     QtObject {
         id: prv
-        property string title: root.item ? root.item.effectName() : ""
+        property string title: root.item ? root.item.name : ""
     }
 
     Timer {
@@ -338,7 +338,7 @@ ListItemBlank {
                 anchors.rightMargin: 6
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
-                text: root.item ? root.item.effectName() : ""
+                text: root.item ? root.item.name : ""
             }
 
             onClicked: {
