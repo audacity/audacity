@@ -116,6 +116,16 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
 
         syncFocusedItem(activePanel, activeControl);
     });
+
+    if (interactive()) {
+        interactive()->currentUri().ch.onReceive(this, [this](const muse::Uri&) {
+            //! WindowView restores the dialog's saved parent control after emitting
+            //! closed(), so retry the pending track activation on the next event-loop turn.
+            QMetaObject::invokeMethod(this, [this]() {
+                updatePendingNavigation();
+            }, Qt::QueuedConnection);
+        });
+    }
 }
 
 void TrackNavigationModel::load()
@@ -539,6 +549,10 @@ void TrackNavigationModel::requestNavigation(const TrackItemKey& itemKey, bool h
 void TrackNavigationModel::updatePendingNavigation()
 {
     if (!m_pendingNavigation) {
+        return;
+    }
+
+    if (interactive() && interactive()->isCurrentUriDialog().val) {
         return;
     }
 
