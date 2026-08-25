@@ -5,7 +5,7 @@
 	<key>NSPrincipalClass</key>
     <string>NSApplication</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>en-US</string>
 	<!-- UTI declarations for OS X >= 10.4	-->
 	<key>UTExportedTypeDeclarations</key>
 	<array>
