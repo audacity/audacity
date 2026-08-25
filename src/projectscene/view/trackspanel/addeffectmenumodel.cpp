@@ -21,9 +21,16 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
     }
 
     const auto effectId = effects::effectIdFromAction(menuItem.id());
-    if (const auto state = realtimeEffectService()->addRealtimeEffect(*tId, effectId)) {
-        effectViewController()->showEffect(state);
-    }
+    // first use of a plugin in this session validates it in the background first
+    effectsProvider()->loadEffectAsync(effectId).onResolve(this, [this, trackId = *tId, effectId](bool loaded) {
+        if (!loaded) {
+            LOGW() << "effect not available: " << effectId;
+            return;
+        }
+        if (const auto state = realtimeEffectService()->addRealtimeEffect(trackId, effectId)) {
+            effectViewController()->showEffect(state);
+        }
+    });
 }
 
 muse::uicomponents::MenuItem* AddEffectMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
