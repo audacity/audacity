@@ -49,9 +49,16 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
         realtimeEffectService()->removeRealtimeEffect(*tId, m_effectState);
     } else {
         const auto effectId = effects::effectIdFromAction(menuItem.id());
-        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, m_effectState, effectId)) {
-            effectViewController()->showEffect(newState);
-        }
+        // first use of a plugin in this session validates it in the background first
+        effectsProvider()->loadEffectAsync(effectId).onResolve(this, [this, trackId = *tId, effectId](bool loaded) {
+            if (!loaded || !m_effectState) {
+                LOGW() << "effect not available: " << effectId;
+                return;
+            }
+            if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(trackId, m_effectState, effectId)) {
+                effectViewController()->showEffect(newState);
+            }
+        });
     }
 }
 

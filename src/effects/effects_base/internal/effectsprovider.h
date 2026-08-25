@@ -4,6 +4,10 @@
 #pragma once
 
 #include "framework/global/async/asyncable.h"
+
+#include <functional>
+#include <map>
+#include <vector>
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/audioplugins/iaudiopluginmetareaderregister.h"
@@ -43,6 +47,7 @@ public:
 
     EffectMeta meta(const EffectId& effectId) const override;
     bool loadEffect(const EffectId& effectId) const override;
+    muse::async::Promise<bool> loadEffectAsync(const EffectId& effectId) override;
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
     std::string effectName(const effects::RealtimeEffectState& state) const override;
@@ -76,9 +81,19 @@ private:
     };
 
     NewPluginsRegistered doScanPlugins(const muse::modularity::ContextPtr& ctx,
-                                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                       ScanMode scanMode);
+                                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario, ScanMode scanMode);
     void doSave(EffectFilter removeFromConfig = nullptr);
+
+    // Validate-on-first-use (#11746): a third-party plugin is validated in a
+    // subprocess before its first in-process load in this session.
+    bool needsFirstUseValidation(const EffectMeta& meta) const;
+    void requestFirstUseValidation(const EffectMeta& meta) const;
+    void onPluginValidationFinished(const muse::io::path_t& pluginPath);
+
+    // set by initOnce; the app-wide scenario outlives this provider's use of it
+    muse::audioplugins::IRegisterAudioPluginsScenario* m_registerAudioPluginsScenario = nullptr;
+    // loadEffectAsync continuations waiting for a path's validation
+    std::map<muse::io::path_t, std::vector<std::function<void()> > > m_pendingLoads;
 
     EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;

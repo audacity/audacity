@@ -7,6 +7,7 @@
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/global/async/notification.h"
+#include "framework/global/async/promise.h"
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -37,7 +38,12 @@ public:
 
     virtual muse::async::Notification effectMetaListChanged() const = 0;
 
+    // Non-blocking. Returns false if the plugin still needs its first-use
+    // validation in this session (see #11746); the validation is then started
+    // in the background and a later call succeeds once it has passed.
     virtual bool loadEffect(const EffectId& effectId) const = 0;
+    // Runs the first-use validation if needed, then loads; resolves with the load result.
+    virtual muse::async::Promise<bool> loadEffectAsync(const EffectId& effectId) = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
 

@@ -25,6 +25,11 @@ using namespace au::effects;
 void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive&,
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
+    m_registerAudioPluginsScenario = &registerAudioPluginsScenario;
+    registerAudioPluginsScenario.pluginValidationFinished().onReceive(this, [this](const muse::io::path_t& pluginPath) {
+        onPluginValidationFinished(pluginPath);
+    });
+
     // Third-party plugins are validated in the background (see #11746): no
     // validation dialog at startup, effects appear as their results arrive.
     doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Background);
@@ -202,7 +207,82 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
     if (!loader) {
         return false;
     }
+
+    const EffectMeta effectMeta = meta(effectId);
+    if (needsFirstUseValidation(effectMeta)) {
+        // don't block: the caller (or AU3's lazy instance factory) retries once validated
+        requestFirstUseValidation(effectMeta);
+        return false;
+    }
+
     return loader->ensurePluginIsLoaded(effectId);
+}
+
+muse::async::Promise<bool> EffectsProvider::loadEffectAsync(const EffectId& effectId)
+{
+    return muse::async::make_promise<bool>([this, effectId](auto resolve) {
+        const EffectMeta effectMeta = meta(effectId);
+        if (!needsFirstUseValidation(effectMeta)) {
+            return resolve(loadEffect(effectId));
+        }
+
+        requestFirstUseValidation(effectMeta);
+        m_pendingLoads[effectMeta.path].push_back([this, effectId, resolve]() {
+            resolve(loadEffect(effectId));
+        });
+        return muse::async::Promise<bool>::dummy_result();
+    });
+}
+
+bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) const
+{
+    // in-process families are trusted, only third-party binaries get a subprocess check
+    switch (effectMeta.family) {
+    case EffectFamily::Builtin:
+    case EffectFamily::Nyquist:
+    case EffectFamily::Extension:
+        return false;
+    default:
+        break;
+    }
+
+    if (!m_registerAudioPluginsScenario) {
+        // not initialised (e.g. tests): nothing to validate against
+        return false;
+    }
+
+    using muse::audioplugins::AudioPluginState;
+    // Validated: known from a previous session, re-check it before loading.
+    // Discovered: the startup validation is still in flight, wait for it.
+    // Anything else isn't loadable anyway, ensurePluginIsLoaded reports it.
+    if (effectMeta.state != AudioPluginState::Validated && effectMeta.state != AudioPluginState::Discovered) {
+        return false;
+    }
+
+    return !m_registerAudioPluginsScenario->isValidatedInSession(effectMeta.path);
+}
+
+void EffectsProvider::requestFirstUseValidation(const EffectMeta& effectMeta) const
+{
+    IF_ASSERT_FAILED(m_registerAudioPluginsScenario) {
+        return;
+    }
+    LOGI() << "Validating plugin before its first use in this session: " << effectMeta.id;
+    m_registerAudioPluginsScenario->validatePluginAsync(effectMeta.path);
+}
+
+void EffectsProvider::onPluginValidationFinished(const muse::io::path_t& pluginPath)
+{
+    const auto it = m_pendingLoads.find(pluginPath);
+    if (it == m_pendingLoads.end()) {
+        return;
+    }
+    // detach first: a continuation may itself request another load
+    const std::vector<std::function<void()> > continuations = std::move(it->second);
+    m_pendingLoads.erase(it);
+    for (const auto& continuation : continuations) {
+        continuation();
+    }
 }
 
 std::string EffectsProvider::effectPath(const std::string& effectId) const

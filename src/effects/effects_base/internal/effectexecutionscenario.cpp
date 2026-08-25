@@ -49,8 +49,14 @@ static bool isNyquistPrompt(const Effect& effect)
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
-    au3::Au3Project& project = projectRef();
-    return performEffectWithShowError(project, effectId, 0);
+    // First use of a plugin in this session validates it in the background
+    // first; the (synchronous) execution flow runs once that has finished.
+    effectsProvider()->loadEffectAsync(effectId).onResolve(this, [this, effectId](bool) {
+        // on a failed load performEffectWithShowError reports the error
+        au3::Au3Project& project = projectRef();
+        performEffectWithShowError(project, effectId, 0);
+    });
+    return muse::make_ok();
 }
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
@@ -75,8 +81,11 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const
         return make_ret(Err::EffectNotFound);
     }
 
-    au3::Au3Project& project = projectRef();
-    return performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
+    effectsProvider()->loadEffectAsync(resolved).onResolve(this, [this, resolved, params](bool) {
+        au3::Au3Project& project = projectRef();
+        performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
+    });
+    return muse::make_ok();
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()

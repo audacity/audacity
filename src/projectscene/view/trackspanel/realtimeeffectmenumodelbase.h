@@ -9,6 +9,7 @@
 #include "effects/effects_base/ieffectviewcontroller.h"
 #include "effects/effects_base/ieffectsmenuprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/effectstypes.h"
 #include <QObject>
 
@@ -34,6 +35,7 @@ protected:
 
     muse::ContextInject<effects::IEffectViewController> effectViewController{ this };
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
 
 signals:
     void isMasterTrackChanged();
