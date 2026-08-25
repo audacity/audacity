@@ -13,6 +13,7 @@
 #include "global/modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "interactive/iinteractive.h"
 #include "ui/inavigationcontroller.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
 
@@ -23,6 +24,7 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<ITrackNavigationController> tracksNavigationController{ this };
 
