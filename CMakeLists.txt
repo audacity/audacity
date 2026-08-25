@@ -204,6 +204,11 @@ endif()
 
 add_subdirectory(${MUSE_FRAMEWORK_SRC_PATH})
 add_subdirectory(src)
+
+option(AU_BUILD_TEST_VST3_GATE_PLUGIN "Build the gated test VST3 plugin (developer tool, see tools/test-vst3-gate)" OFF)
+if (AU_BUILD_TEST_VST3_GATE_PLUGIN)
+    add_subdirectory(tools/test-vst3-gate)
+endif()
 add_subdirectory(share)
 
 if (MSVC)
