@@ -46,24 +46,6 @@ QString effectDisplayName(const EffectMeta& meta)
            : meta.id.toQString();
 }
 
-QString pluginStateToString(muse::audioplugins::AudioPluginState state)
-{
-    using muse::audioplugins::AudioPluginState;
-    switch (state) {
-    case AudioPluginState::Validated:
-        return muse::qtrc("effects", "OK");
-    case AudioPluginState::Discovered:
-        //: The plugin was found but the user chose to validate it later
-        return muse::qtrc("effects", "Not validated");
-    case AudioPluginState::Missing:
-        return muse::qtrc("effects", "Missing");
-    case AudioPluginState::Error:
-    case AudioPluginState::Undefined:
-    default:
-        return muse::qtrc("effects", "Broken");
-    }
-}
-
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
 
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)

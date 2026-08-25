@@ -11,6 +11,7 @@
 #include "framework/global/types/string.h"
 #include "framework/global/types/ratio.h"
 #include "framework/actions/actiontypes.h"
+#include "framework/global/translation.h"
 #include "framework/audioplugins/audiopluginstypes.h"
 
 class Effect;
@@ -277,6 +278,23 @@ inline EffectId effectIdFromAction(const muse::actions::ActionQuery& action)
 inline EffectId effectIdFromAction(const QString& action)
 {
     return effectIdFromAction(muse::actions::ActionQuery { action });
+}
+
+inline QString pluginStateToString(muse::audioplugins::AudioPluginState state)
+{
+    switch (state) {
+    case muse::audioplugins::AudioPluginState::Validated:
+        return muse::qtrc("effects", "OK");
+    case muse::audioplugins::AudioPluginState::Discovered:
+        //: The plugin was found but the user chose to validate it later
+        return muse::qtrc("effects", "Not validated");
+    case muse::audioplugins::AudioPluginState::Missing:
+        return muse::qtrc("effects", "Missing");
+    case muse::audioplugins::AudioPluginState::Error:
+    case muse::audioplugins::AudioPluginState::Undefined:
+    default:
+        return muse::qtrc("effects", "Broken");
+    }
 }
 
 using PresetId = wxString;

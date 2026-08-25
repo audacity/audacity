@@ -56,14 +56,14 @@ QString RealtimeEffectListItemModel::effectName() const
     }
 
     const auto effectId = state->GetID().ToStdString();
-    const auto name = effectsProvider()->effectName(effectId);
-    const auto isValid = effectsProvider()->meta(muse::String::fromStdString(effectId)).isValid();
+    const auto name = QString::fromStdString(effectsProvider()->effectName(effectId));
+    const auto meta = effectsProvider()->meta(muse::String::fromStdString(effectId));
 
-    if (!isValid) {
-        //: %1 is the name of the effect that is missing/unavailable
-        return muse::qtrc("effects", "Missing - “%1”").arg(name);
+    if (meta.isValid() && meta.isLoadable()) {
+        return name;
     }
-    return QString::fromStdString(name);
+
+    return muse::qtrc("effects", "%1 - “%2”").arg(effects::pluginStateToString(meta.state)).arg(name);
 }
 
 QString RealtimeEffectListItemModel::effectState() const
