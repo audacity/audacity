@@ -64,6 +64,7 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
     Q_PROPERTY(
         bool alsoRescanBrokenPlugins READ alsoRescanBrokenPlugins WRITE setAlsoRescanBrokenPlugins NOTIFY alsoRescanBrokenPluginsChanged)
+    Q_PROPERTY(bool isScanning READ isScanning NOTIFY isScanningChanged)
 
     Q_PROPERTY(au::uicomponents::TableSortFilterProxyModel * sortFilterProxy READ sortFilterProxy CONSTANT)
 
@@ -96,6 +97,7 @@ public:
     int totalWidth() const;
 
     bool alsoRescanBrokenPlugins() const { return m_alsoRescanBrokenPlugins; }
+    bool isScanning() const { return m_isScanning; }
     void setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins);
 
     au::uicomponents::TableSortFilterProxyModel* sortFilterProxy() const;
@@ -117,6 +119,7 @@ signals:
     void effectTypeSelectedIndexChanged();
     void statusSelectedIndexChanged();
     void alsoRescanBrokenPluginsChanged();
+    void isScanningChanged();
 
 private:
     friend class PluginManagerSortFilterProxy;
@@ -150,6 +153,9 @@ private:
     EffectFilter m_acceptEnabledDisabledState = allPassFilter;
 
     bool m_alsoRescanBrokenPlugins = false;
+    bool m_isScanning = false;
+
+    void setIsScanning(bool scanning);
 
     int m_effectFamilySelectedIndex = 0;
     EffectFilter m_acceptFamily = allPassFilter;

@@ -14,7 +14,6 @@ class EffectsProviderInitializer : public IEffectsProviderInitializer, public mu
 {
     muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
-    muse::Inject<muse::IInteractive> interactive { this };
 
 public:
     EffectsProviderInitializer(const muse::modularity::ContextPtr& ctx)

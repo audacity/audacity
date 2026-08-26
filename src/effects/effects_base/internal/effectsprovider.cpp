@@ -22,7 +22,7 @@
 using namespace muse;
 using namespace au::effects;
 
-void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive&,
+void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx,
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
     m_registerAudioPluginsScenario = &registerAudioPluginsScenario;
@@ -30,9 +30,7 @@ void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::II
         onPluginValidationFinished(pluginPath);
     });
 
-    // Third-party plugins are validated in the background (see #11746): no
-    // validation dialog at startup, effects appear as their results arrive.
-    doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Background);
+    doScanPlugins(ctx, registerAudioPluginsScenario);
 
     // Providers must be available in ModuleManager for on-demand plugin loading.
     ModuleManager::Get().DiscoverProviders();
@@ -50,29 +48,24 @@ void EffectsProvider::forgetPlugins(const EffectFilter& forget)
     });
 }
 
-void EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                                    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
+NewPluginsRegistered EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx,
+                                                    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
-    if (doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Interactive) == NewPluginsRegistered::No) {
-        interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
-    }
+    return doScanPlugins(ctx, registerAudioPluginsScenario);
 }
 
-EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
+NewPluginsRegistered EffectsProvider::doScanPlugins(
     const muse::modularity::ContextPtr& ctx,
-    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-    ScanMode scanMode)
+    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
     muse::audioplugins::PluginScanResult scanResult;
-    if (scanMode == ScanMode::Interactive) {
+    {
         au3::ProgressDialog progressDialog(ctx, muse::trc("audio", "Validating audio plugins"));
         // Scanners publish through `muse::Progress` directly (not via
         // Poll), so the QML dialog wouldn't mount on its own. Open it
         // explicitly before exposing the channel.
         progressDialog.start();
         scanResult = registerAudioPluginsScenario.scanPlugins(&progressDialog.museProgress());
-    } else {
-        scanResult = registerAudioPluginsScenario.scanPlugins();
     }
 
     muse::io::paths_t& thirdPartyPluginPaths = scanResult.newPluginPaths;
@@ -117,9 +110,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     }
 
     if (!thirdPartyPluginPaths.empty()) {
-        const muse::Ret ret = scanMode == ScanMode::Background
-                              ? registerAudioPluginsScenario.registerNewPluginsAsync(thirdPartyPluginPaths)
-                              : registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, /*validate*/ true);
+        const muse::Ret ret = registerAudioPluginsScenario.registerNewPluginsAsync(thirdPartyPluginPaths);
         if (!ret) {
             LOGE() << "Failed to register new plugins: " << ret.toString();
         }
@@ -224,12 +215,19 @@ muse::async::Promise<bool> EffectsProvider::validate(const EffectId& effectId)
             return resolve(effectMeta.isLoadable());
         }
 
-        requestFirstUseValidation(effectMeta);
+        IF_ASSERT_FAILED(m_registerAudioPluginsScenario) {
+            return resolve(false);
+        }
+
+        LOGI() << "Validating plugin before its first use in this session: " << effectMeta.id;
+        m_registerAudioPluginsScenario->validatePluginAsync(effectMeta.path);
+
         m_pendingValidations[effectMeta.path].push_back([this, effectId, resolve]() {
             // resolved later, from onPluginValidationFinished: the body already
             // returned dummy_result(), so discard the Result token here
             (void)resolve(meta(effectId).isLoadable());
         });
+
         return muse::async::Promise<bool>::dummy_result();
     });
 }
@@ -262,24 +260,18 @@ bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) cons
     return !m_registerAudioPluginsScenario->isValidatedInSession(effectMeta.path);
 }
 
-void EffectsProvider::requestFirstUseValidation(const EffectMeta& effectMeta) const
-{
-    IF_ASSERT_FAILED(m_registerAudioPluginsScenario) {
-        return;
-    }
-    LOGI() << "Validating plugin before its first use in this session: " << effectMeta.id;
-    m_registerAudioPluginsScenario->validatePluginAsync(effectMeta.path);
-}
-
 void EffectsProvider::onPluginValidationFinished(const muse::io::path_t& pluginPath)
 {
     const auto it = m_pendingValidations.find(pluginPath);
     if (it == m_pendingValidations.end()) {
         return;
     }
-    // detach first: a continuation may itself request another validation
+
+    // detach first: in case a caller's resolve lambda invokes `validate(somePath)` again,
+    // we'd be executing a lambda of this map while the map gets modified.
     const std::vector<std::function<void()> > continuations = std::move(it->second);
     m_pendingValidations.erase(it);
+
     for (const auto& continuation : continuations) {
         continuation();
     }

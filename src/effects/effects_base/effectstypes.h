@@ -231,6 +231,11 @@ enum class EffectType {
     _count
 };
 
+enum class NewPluginsRegistered {
+    Yes,
+    No,
+};
+
 struct EffectMeta {
     EffectId id;
     EffectFamily family = EffectFamily::Unknown;
