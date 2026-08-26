@@ -18,15 +18,27 @@ on:
         type: string
         required: false
         default: ''
+      suite:
+        description: 'testflow (the test cases) or uichecks (screenshot comparisons)'
+        type: string
+        required: false
+        default: 'testflow'
 
   workflow_dispatch:
     inputs:
       reuse_run_id:
         description: 'Workflow run ID of an [AU4] Build: Linux run to take the AppImage artifact from'
         required: true
+      suite:
+        description: 'Scripts to run'
+        type: choice
+        options: [testflow, uichecks]
+        default: testflow
 
 env:
   CI_DIR: buildscripts/ci
+  # Subdirectory of share/testflowscripts holding the suite's scripts ('' = the test cases)
+  SCRIPTS_SUBDIR: ${{ inputs.suite == 'uichecks' && 'uichecks' || '' }}
 
 jobs:
   discover:
@@ -49,7 +61,7 @@ jobs:
     - name: List test scripts
       id: list
       run: |
-        scripts=$(bash ${CI_DIR}/tools/list_testflow_scripts.sh)
+        scripts=$(bash ${CI_DIR}/tools/list_testflow_scripts.sh "share/testflowscripts${SCRIPTS_SUBDIR:+/$SCRIPTS_SUBDIR}")
         echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
         echo "Discovered: $scripts"
 
@@ -78,7 +90,11 @@ jobs:
         repository: ${{ inputs.app_repo || job.workflow_repository }}
         ref: ${{ inputs.app_ref || job.workflow_sha }}
         persist-credentials: false
-        sparse-checkout: buildscripts/ci/tools
+        # gitignore-style patterns, a trailing "# comment" becomes part of the pattern.
+        # The UI checks' references are compared from the checkout, not the artifact.
+        sparse-checkout: |
+          buildscripts/ci/tools
+          share/testflowscripts/uichecks
 
     - name: Setup environment
       if: matrix.status != 'DISABLED'
@@ -90,7 +106,8 @@ jobs:
           libgl1 libglx0 libopengl0 libegl1 \
           libx11-6 libx11-xcb1 libxcb1 \
           libfontconfig1 libfreetype6 libexpat1 \
-          libasound2
+          libasound2 \
+          fonts-dejavu-core imagemagick
 
     - name: Download AppImage artifact
       if: matrix.status != 'DISABLED'
@@ -106,4 +123,18 @@ jobs:
       if: matrix.status != 'DISABLED'
       env:
         SCRIPT: ${{ matrix.script }}
-      run: bash ${CI_DIR}/tools/run_testflow_case.sh "$SCRIPT"
+      run: bash ${CI_DIR}/tools/run_testflow_case.sh "$SCRIPT" "$SCRIPTS_SUBDIR"
+
+    - name: Compare screenshots with the references
+      if: always() && inputs.suite == 'uichecks' && matrix.status != 'DISABLED'
+      env:
+        SCRIPT: ${{ matrix.script }}
+      run: bash ${CI_DIR}/tools/compare_screenshots.sh "$SCRIPT"
+
+    - name: Upload expected/actual/diff screenshots
+      if: failure() && inputs.suite == 'uichecks' && matrix.status != 'DISABLED'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ui-checks-${{ matrix.script }}
+        path: ui_checks_diff/
+        if-no-files-found: ignore

@@ -51,6 +51,8 @@ target_sources(appshell PRIVATE
 
 if (MUSE_MODULE_TESTFLOW)
     target_sources(appshell PRIVATE
+        api/screenshotapi.cpp
+        api/screenshotapi.h
         testflowstartup.h
         internal/testflowstartupscenario.cpp
         internal/testflowstartupscenario.h

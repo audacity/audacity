@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 #
-# Lists the testflow test cases as a GitHub Actions matrix include array:
+# Lists the testflow scripts of a directory as a GitHub Actions matrix include array:
 #
 #   {"include":[{"script":"TC1.1_BasicTest.js"},{"script":"TC1.6_...js","status":"DISABLED"}]}
 #
-# Every top-level .js is a test case, helpers live in steps/.
+# Usage: list_testflow_scripts.sh [<dir relative to the repo root>]
+# Default: share/testflowscripts (the test cases). Every top-level .js of the
+# directory is a script, helpers live in steps/. Disabled scripts are read from
+# the directory's disabled.json.
 
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTS_DIR="$HERE/../../../share/testflowscripts"
+SCRIPTS_DIR="$HERE/../../../${1:-share/testflowscripts}"
 DISABLED_FILE="$SCRIPTS_DIR/disabled.json"
 
 list_script_filenames() {
