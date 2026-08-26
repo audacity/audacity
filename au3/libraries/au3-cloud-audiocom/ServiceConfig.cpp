@@ -55,7 +55,7 @@ StringSetting audioComFinishUploadPage {
 
 StringSetting audioComTourPage {
     L"/CloudServices/AudioCom/TourPage",
-    L"https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg"
+    L"https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg&mtm_source={version_number}"
 };
 
 StringSetting audioComAuthWithRedirectURL {
@@ -174,7 +174,13 @@ std::string ServiceConfig::GetOAuthRedirectURL() const
 
 std::string ServiceConfig::GetTourPage() const
 {
-    return mTourPage;
+    const std::string versionLabel = AUDACITY_VERSION_LABEL;
+    std::string version = audacity::ToUTF8(AUDACITY_VERSION_STRING);
+    if (!versionLabel.empty()) {
+        version += "-" + versionLabel;
+    }
+
+    return Substitute(mTourPage, { { "version_number", version } });
 }
 
 std::string ServiceConfig::GetAuthWithRedirectURL() const

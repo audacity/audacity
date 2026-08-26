@@ -72,6 +72,7 @@ public:
     virtual std::string getCloudProjectPage(const muse::io::path_t& projectPath) const = 0;
     virtual std::string getCloudAudioPage(const std::string& slug) const = 0;
     virtual std::string getCloudProfilePage() const = 0;
+    virtual std::string getTourPage() const = 0;
 
     virtual muse::Ret deleteCloudProject(const muse::io::path_t& localPath) = 0;
 
