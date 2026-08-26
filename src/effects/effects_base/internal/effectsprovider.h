@@ -39,7 +39,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 public:
     void deinit();
 
-    void initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
+    void initOnce(const muse::modularity::ContextPtr& ctx,
                   muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
                   StartupPluginValidationPolicy validationPolicy) override;
 
@@ -59,8 +59,8 @@ public:
 
     bool hasEffectFamily(EffectFamily family) const override;
 
-    void rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
+    NewPluginsRegistered rescanPlugins(const muse::modularity::ContextPtr& ctx,
+                                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
     void forgetPlugins(const EffectFilter& forget = nullptr) override;
     void save() override;
 
@@ -68,30 +68,23 @@ private:
     void reloadEffects();
     IEffectLoaderPtr loader(const EffectId& effectId) const;
 
-    enum NewPluginsRegistered {
-        Yes,
-        No,
-    };
-
     enum class ScanMode {
-        // no dialogs; third-party plugins are validated in the background and
-        // become available as their results arrive
+        // third-party plugins are validated in the background and become
+        // available as their results arrive
         Background,
-        // modal progress dialog, blocks until validation is complete
-        Interactive,
-        // no dialogs; third-party plugins are registered but left unvalidated
+        // third-party plugins are registered but left unvalidated
         // (StartupPluginValidationPolicy::Skip, e.g. test flows)
         SkipValidation,
     };
 
-    NewPluginsRegistered doScanPlugins(const muse::modularity::ContextPtr& ctx,
-                                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario, ScanMode scanMode);
+    NewPluginsRegistered doScanPlugins(
+        const muse::modularity::ContextPtr& ctx, muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+        ScanMode scanMode);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     // Validate-on-first-use (#11746): a third-party plugin is validated in a
     // subprocess before its first in-process load in this session.
     bool needsFirstUseValidation(const EffectMeta& meta) const;
-    void requestFirstUseValidation(const EffectMeta& meta) const;
     void onPluginValidationFinished(const muse::io::path_t& pluginPath);
 
     // set by initOnce; the app-wide scenario outlives this provider's use of it

@@ -4,6 +4,7 @@
 
  #include "pluginmanagertableviewmodel.h"
 
+#include "effectstypes.h"
  #include "internal/effectsutils.h"
  #include "pluginmanagertableviewverticalheader.h"
  #include "pluginmanagersortfilterproxy.h"
@@ -88,6 +89,12 @@ void PluginManagerTableViewModel::componentComplete()
             }
         }
         rebuildSourceTable(std::move(effects));
+    });
+
+    // Rescan runs asynchronously now; clear the busy state when the background
+    // validation scan reports it has fully finished.
+    registerAudioPluginsScenario()->pluginValidationScanFinished().onNotify(this, [this] {
+        setIsScanning(false);
     });
 }
 
@@ -386,9 +393,26 @@ void PluginManagerTableViewModel::rescanPlugins()
         });
     }
 
-    effectsProvider()->rescanPlugins(iocContext(), *interactive(), *registerAudioPluginsScenario());
+    if (effectsProvider()->rescanPlugins(iocContext(), *registerAudioPluginsScenario()) == NewPluginsRegistered::No) {
+        interactive()->infoSync(muse::trc("audio", "Audio plugins scan completed"),
+                                muse::trc("audio", "All audio plugins are up to date."));
+    }
+
+    // If new/changed plugins were queued, validation now runs in the background
+    // and the table updates live; reflect that in the button. If nothing needed
+    // validating, rescanPlugins() already showed the "up to date" message.
+    setIsScanning(registerAudioPluginsScenario()->isValidating());
 
     rebuildSourceTable(effectsProvider()->effectMetaList());
+}
+
+void PluginManagerTableViewModel::setIsScanning(bool scanning)
+{
+    if (m_isScanning == scanning) {
+        return;
+    }
+    m_isScanning = scanning;
+    emit isScanningChanged();
 }
 
 void PluginManagerTableViewModel::accept()
