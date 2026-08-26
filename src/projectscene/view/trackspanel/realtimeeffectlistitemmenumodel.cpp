@@ -50,8 +50,8 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
     } else {
         const auto effectId = effects::effectIdFromAction(menuItem.id());
         // first use of a plugin in this session validates it in the background first
-        effectsProvider()->loadEffectAsync(effectId).onResolve(this, [this, trackId = *tId, effectId](bool loaded) {
-            if (!loaded || !m_effectState) {
+        effectsProvider()->validate(effectId).onResolve(this, [this, trackId = *tId, effectId](bool loadable) {
+            if (!loadable || !m_effectState) {
                 LOGW() << "effect not available: " << effectId;
                 return;
             }

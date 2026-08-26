@@ -466,7 +466,12 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     IF_ASSERT_FAILED(provider) {
         return nullptr;
     }
-    if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
+    const EffectId effectId = EffectId::fromStdString(id.ToStdString());
+    if (!provider->loadEffect(effectId)) {
+        // Not loadable yet: kick off first-use validation (if applicable) in the
+        // background. The realtime engine re-queries this factory once the plugin
+        // becomes available - whether that's here at project open or during playback.
+        provider->validate(effectId);
         return nullptr;
     }
     return EffectManager::GetInstanceFactory(id, [provider](const PluginID& id) -> EffectSettingsManager* {

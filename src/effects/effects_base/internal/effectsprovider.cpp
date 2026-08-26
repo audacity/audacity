@@ -208,27 +208,27 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
         return false;
     }
 
-    const EffectMeta effectMeta = meta(effectId);
-    if (needsFirstUseValidation(effectMeta)) {
-        // don't block: the caller (or AU3's lazy instance factory) retries once validated
-        requestFirstUseValidation(effectMeta);
+    if (needsFirstUseValidation(meta(effectId))) {
+        LOGE() << "Effect not yet validated: " << effectId;
         return false;
     }
 
     return loader->ensurePluginIsLoaded(effectId);
 }
 
-muse::async::Promise<bool> EffectsProvider::loadEffectAsync(const EffectId& effectId)
+muse::async::Promise<bool> EffectsProvider::validate(const EffectId& effectId)
 {
     return muse::async::make_promise<bool>([this, effectId](auto resolve) {
         const EffectMeta effectMeta = meta(effectId);
         if (!needsFirstUseValidation(effectMeta)) {
-            return resolve(loadEffect(effectId));
+            return resolve(effectMeta.isLoadable());
         }
 
         requestFirstUseValidation(effectMeta);
-        m_pendingLoads[effectMeta.path].push_back([this, effectId, resolve]() {
-            resolve(loadEffect(effectId));
+        m_pendingValidations[effectMeta.path].push_back([this, effectId, resolve]() {
+            // resolved later, from onPluginValidationFinished: the body already
+            // returned dummy_result(), so discard the Result token here
+            (void)resolve(meta(effectId).isLoadable());
         });
         return muse::async::Promise<bool>::dummy_result();
     });
@@ -273,13 +273,13 @@ void EffectsProvider::requestFirstUseValidation(const EffectMeta& effectMeta) co
 
 void EffectsProvider::onPluginValidationFinished(const muse::io::path_t& pluginPath)
 {
-    const auto it = m_pendingLoads.find(pluginPath);
-    if (it == m_pendingLoads.end()) {
+    const auto it = m_pendingValidations.find(pluginPath);
+    if (it == m_pendingValidations.end()) {
         return;
     }
-    // detach first: a continuation may itself request another load
+    // detach first: a continuation may itself request another validation
     const std::vector<std::function<void()> > continuations = std::move(it->second);
-    m_pendingLoads.erase(it);
+    m_pendingValidations.erase(it);
     for (const auto& continuation : continuations) {
         continuation();
     }

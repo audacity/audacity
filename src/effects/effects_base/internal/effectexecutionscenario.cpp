@@ -47,23 +47,22 @@ static bool isNyquistPrompt(const Effect& effect)
     return effect.GetSymbol().Internal() == NYQUIST_PROMPT_ID;
 }
 
-muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
+void EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
-    // First use of a plugin in this session validates it in the background
-    // first; the (synchronous) execution flow runs once that has finished.
-    effectsProvider()->loadEffectAsync(effectId).onResolve(this, [this, effectId](bool) {
-        // on a failed load performEffectWithShowError reports the error
+    effectsProvider()->validate(effectId).onResolve(this, [this, effectId](bool) {
         au3::Au3Project& project = projectRef();
-        performEffectWithShowError(project, effectId, 0);
+        const muse::Ret ret = performEffectWithShowError(project, effectId, 0);
+        if (!ret) {
+            LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
+        }
     });
-    return muse::make_ok();
 }
 
-muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
+void EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
 {
     EffectId resolved;
     EffectId titleFallback;
-    // Search effect by id with a conviniece fallback to title for scripting
+    // Search effect by id with a convenience fallback to title for scripting
     for (const auto& meta : effectsProvider()->effectMetaList()) {
         if (meta.id == effectId) {
             resolved = meta.id;
@@ -78,14 +77,16 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const
     }
     if (resolved.empty()) {
         LOGE() << "no effect found for symbol: " << effectId;
-        return make_ret(Err::EffectNotFound);
+        return;
     }
 
-    effectsProvider()->loadEffectAsync(resolved).onResolve(this, [this, resolved, params](bool) {
+    effectsProvider()->validate(resolved).onResolve(this, [this, resolved, params, effectId](bool) {
         au3::Au3Project& project = projectRef();
-        performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
+        const muse::Ret ret = performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
+        if (!ret) {
+            LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
+        }
     });
-    return muse::make_ok();
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()

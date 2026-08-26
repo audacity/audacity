@@ -108,10 +108,7 @@ void EffectsActionsController::applyEffect(const muse::actions::ActionQuery& q)
     LOGI() << "applyEffect: effectId=" << effectId << ", params=" << params.ToStdString(wxConvUTF8);
 
     playbackController()->stop();
-    const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, params.ToStdString(wxConvUTF8));
-    if (!ret) {
-        LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
-    }
+    effectExecutionScenario()->performEffect(effectId, params.ToStdString(wxConvUTF8));
 }
 
 void EffectsActionsController::repeatLastEffect()

@@ -47,7 +47,7 @@ public:
 
     EffectMeta meta(const EffectId& effectId) const override;
     bool loadEffect(const EffectId& effectId) const override;
-    muse::async::Promise<bool> loadEffectAsync(const EffectId& effectId) override;
+    muse::async::Promise<bool> validate(const EffectId& effectId) override;
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
     std::string effectName(const effects::RealtimeEffectState& state) const override;
@@ -92,8 +92,7 @@ private:
 
     // set by initOnce; the app-wide scenario outlives this provider's use of it
     muse::audioplugins::IRegisterAudioPluginsScenario* m_registerAudioPluginsScenario = nullptr;
-    // loadEffectAsync continuations waiting for a path's validation
-    std::map<muse::io::path_t, std::vector<std::function<void()> > > m_pendingLoads;
+    std::map<muse::io::path_t, std::vector<std::function<void()> > > m_pendingValidations;
 
     EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
