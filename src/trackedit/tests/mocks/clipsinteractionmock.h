@@ -66,6 +66,5 @@ public:
 
     MOCK_METHOD(bool, clipTransferNeedsDownmixing, (const std::vector<ITrackDataPtr>&, const TrackIdList&), (const, override));
     MOCK_METHOD(bool, userIsOkWithDownmixing, (), (const, override));
-    MOCK_METHOD(bool, singleClipOnTrack, (const TrackId), (const, override));
 };
 }

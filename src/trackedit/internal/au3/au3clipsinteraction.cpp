@@ -1432,13 +1432,3 @@ bool Au3ClipsInteraction::userIsOkWithDownmixing() const
 
     return result.standardButton() == muse::IInteractive::Button::Yes;
 }
-
-bool Au3ClipsInteraction::singleClipOnTrack(const TrackId trackId) const
-{
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    return waveTrack->Intervals().size() == 1;
-}
