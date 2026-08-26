@@ -131,6 +131,14 @@ void PlaybackController::init()
         m_actionCheckedChanged.send("toggle-selection-follows-loop-region");
     });
 
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
+        onSelectionChanged();
+    });
+
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t) {
+        onSelectionChanged();
+    });
+
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
     });
@@ -295,9 +303,21 @@ void PlaybackController::onProjectChanged()
     }
 }
 
+void PlaybackController::onSelectionChanged()
+{
+    if (isStopped() || !m_isPlayingSelection) {
+        return;
+    }
+
+    const PlaybackRegion selection = selectionPlaybackRegion();
+    if (selection.isValid()) {
+        doChangePlaybackRegion(selection);
+    }
+}
+
 void PlaybackController::onPlaybackPositionChanged()
 {
-    if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+    if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionAtOrAfterPlaybackRegionEnd()) {
         //! NOTE: just stop, without seek
         player()->stop();
     }
@@ -360,7 +380,7 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
         if (isPlaybackPositionOnTheEndOfProject()) {
             //! NOTE: reached the project end — restart from the beginning
             doSeek(0.0, false);
-        } else if (isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+        } else if (isPlaybackPositionAtOrAfterPlaybackRegionEnd()) {
             //! NOTE: reached the end of a played selection/region — continue from the
             //! playhead rather than the region start, so the next play resumes where it
             //! left off instead of jumping back
@@ -390,6 +410,8 @@ void PlaybackController::doPlay()
             return;
         }
     }
+
+    m_isPlayingSelection = false;
 
     //! NOTE: play from the cursor to the project end
     const muse::secs_t end = totalPlayTime();
@@ -444,6 +466,8 @@ void PlaybackController::playSelectionAction()
     } else {
         player()->play();
     }
+
+    m_isPlayingSelection = true;
 }
 
 void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
@@ -535,6 +559,7 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
     seek(secs, applyIfPlaying);
     setLastPlaybackSeekTime(secs);
     m_pauseShouldStopPlayback = false;
+    m_isPlayingSelection = false;
 }
 
 void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
@@ -556,7 +581,7 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 {
     m_pausedResumePos.reset();
 
-    if (isStopped()) {
+    if (isStopped() || m_isPlayingSelection) {
         player()->setPlaybackRegion(region);
     }
 
@@ -604,6 +629,7 @@ void PlaybackController::stop()
     }
     m_pauseShouldStopPlayback = false;
     m_pausedResumePos.reset();
+    m_isPlayingSelection = false;
     player()->stop();
 }
 
@@ -989,10 +1015,12 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfProject() const
     return isEqualToPlaybackPosition(totalPlayTime());
 }
 
-bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
+bool PlaybackController::isPlaybackPositionAtOrAfterPlaybackRegionEnd() const
 {
-    PlaybackRegion playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !isLoopRegionActive();
+    const PlaybackRegion playbackRegion = player()->playbackRegion();
+    return playbackRegion.isValid()
+           && playbackPosition() >= playbackRegion.end - TIME_EPS
+           && !isLoopRegionActive();
 }
 
 bool PlaybackController::isPlaybackStartPositionValid() const

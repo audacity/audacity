@@ -173,7 +173,7 @@ private:
 
     bool isEqualToPlaybackPosition(muse::secs_t position) const;
     bool isPlaybackPositionOnTheEndOfProject() const;
-    bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
+    bool isPlaybackPositionAtOrAfterPlaybackRegionEnd() const;
     bool isPlaybackStartPositionValid() const;
     bool isSeekPositionValid(const muse::secs_t& seekTime) const;
     muse::secs_t playbackPosition() const;
@@ -193,6 +193,7 @@ private:
     muse::async::Notification m_currentSequenceIdChanged;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
     bool m_pauseShouldStopPlayback = false;
+    bool m_isPlayingSelection = false;
     std::optional<muse::secs_t> m_pausedResumePos;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;

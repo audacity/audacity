@@ -96,6 +96,13 @@ public:
         EXPECT_CALL(*m_recordController, isRecording())
         .WillRepeatedly(Return(false));
 
+        //! NOTE: use persistent channels so tests can inject selection changes
+        ON_CALL(*m_selectionController, dataSelectedStartTimeChanged())
+        .WillByDefault(Return(m_selectionStartTimeChanged));
+
+        ON_CALL(*m_selectionController, dataSelectedEndTimeChanged())
+        .WillByDefault(Return(m_selectionEndTimeChanged));
+
         m_controller->init();
     }
 
@@ -155,6 +162,30 @@ public:
         q.addParam("seekTime", muse::Val(seekTime));
         q.addParam("triggerPlay", muse::Val(triggerPlay));
         m_controller->onSeekAction(q);
+    }
+
+    void setTimeSelection(const secs_t start, const secs_t end)
+    {
+        ON_CALL(*m_selectionController, timeSelectionIsEmpty())
+        .WillByDefault(Return(false));
+        ON_CALL(*m_selectionController, dataSelectedStartTime())
+        .WillByDefault(Return(start));
+        ON_CALL(*m_selectionController, dataSelectedEndTime())
+        .WillByDefault(Return(end));
+    }
+
+    void dragSelectionStart(const secs_t start)
+    {
+        ON_CALL(*m_selectionController, dataSelectedStartTime())
+        .WillByDefault(Return(start));
+        m_selectionStartTimeChanged.send(start);
+    }
+
+    void dragSelectionEnd(const secs_t end)
+    {
+        ON_CALL(*m_selectionController, dataSelectedEndTime())
+        .WillByDefault(Return(end));
+        m_selectionEndTimeChanged.send(end);
     }
 
     void rewindToStart()
@@ -218,6 +249,8 @@ public:
     std::shared_ptr<PlayerMock> m_player;
 
     muse::async::Channel<muse::secs_t> m_playbackPositionChanged;
+    muse::async::Channel<trackedit::secs_t> m_selectionStartTimeChanged;
+    muse::async::Channel<trackedit::secs_t> m_selectionEndTimeChanged;
 };
 
 /**
@@ -909,6 +942,162 @@ TEST_F(PlaybackControllerTests, ChangePlaybackRegion_WhileRegularPlayback_OnlyMo
     //! [THEN] The seek anchor is at the new start and the change was notified
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
     EXPECT_TRUE(seekTimeChangeNotified);
+}
+
+/**
+ * @brief Dragging the selection end while playing it updates the playback region live
+ * @details A selection is being played and the user drags its end: the new selection
+ *          is pushed to the player as the playback region without stopping or
+ *          restarting playback
+ */
+TEST_F(PlaybackControllerTests, SelectionEndChange_WhilePlayingSelection_UpdatesPlaybackRegion)
+{
+    //! [GIVEN] The selection {10, 20} is being played
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    setTimeSelection(secs_t(10.0), secs_t(20.0));
+    playSelection();
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [THEN] The new selection is pushed as the playback region — no stop, no restart
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(10.0), secs_t(25.0) }))
+    .Times(1);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    //! [WHEN] User drags the selection end to 25
+    dragSelectionEnd(secs_t(25.0));
+}
+
+/**
+ * @brief Selection changes during regular playback do not affect it
+ * @details Playback is running from the cursor to the project end (no selection is
+ *          being played): dragging a selection neither re-bounds the played region
+ *          nor stops playback
+ */
+TEST_F(PlaybackControllerTests, SelectionChange_WhileRegularPlayback_DoesNotTouchPlaybackRegion)
+{
+    //! [GIVEN] Regular playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    togglePlayStop();
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [GIVEN] The selection is {10, 20}
+    setTimeSelection(secs_t(10.0), secs_t(20.0));
+
+    //! [THEN] Nothing is pushed to the player and playback keeps running
+    EXPECT_CALL(*m_player, setPlaybackRegion(_))
+    .Times(0);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+
+    //! [WHEN] User drags the selection end to 25
+    dragSelectionEnd(secs_t(25.0));
+}
+
+/**
+ * @brief Dragging the selection start while playing moves the seek anchor
+ * @details The user drags the selection start during playback: the new selection is
+ *          pushed to the player as the playback region and the seek anchor follows
+ *          the new start, so stopping returns the playhead there
+ */
+TEST_F(PlaybackControllerTests, SelectionStartChange_WhilePlayingSelection_MovesSeekAnchor)
+{
+    //! [GIVEN] The selection {10, 25} is being played (the anchor is at its start)
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    setTimeSelection(secs_t(10.0), secs_t(25.0));
+    playSelection();
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [THEN] The new selection is pushed as the playback region — no stop, no restart
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(5.0), secs_t(25.0) }))
+    .Times(1);
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    bool seekTimeChangeNotified = false;
+    m_controller->lastPlaybackSeekTimeChanged().onNotify(nullptr, [&seekTimeChangeNotified]() {
+        seekTimeChangeNotified = true;
+    });
+
+    //! [WHEN] User drags the selection start to 5
+    dragSelectionStart(secs_t(5.0));
+
+    //! [THEN] The seek anchor follows the new start and the change was notified
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(5.0));
+    EXPECT_TRUE(seekTimeChangeNotified);
+}
+
+/**
+ * @brief Selection changes while stopped do not touch the playback region
+ * @details The playback region is derived from the selection when playback starts;
+ *          only an active playback follows selection changes live
+ */
+TEST_F(PlaybackControllerTests, SelectionChange_WhenStopped_DoesNotTouchPlaybackRegion)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] The selection is {10, 20}
+    setTimeSelection(secs_t(10.0), secs_t(20.0));
+
+    //! [THEN] Nothing is pushed to the player
+    EXPECT_CALL(*m_player, setPlaybackRegion(_))
+    .Times(0);
+
+    //! [WHEN] User drags the selection end to 25
+    dragSelectionEnd(secs_t(25.0));
+}
+
+/**
+ * @brief Shrinking the selection behind the playhead stops selection playback
+ * @details A selection is being played and its end is dragged to before the
+ *          current playback position, so the next position update stops the player
+ */
+TEST_F(PlaybackControllerTests, SelectionShrunkBehindPlayhead_WhilePlayingSelection_Stops)
+{
+    //! [GIVEN] The selection {10, 60} is being played and the playhead is at 50
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    setTimeSelection(secs_t(10.0), secs_t(60.0));
+    playSelection();
+
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(50.0)));
+
+    //! [THEN] The shrunken selection reaches the player as the playback region
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { secs_t(10.0), secs_t(20.0) }))
+    .Times(1);
+
+    //! [WHEN] User drags the selection end to 20, behind the playhead
+    dragSelectionEnd(secs_t(20.0));
+
+    //! [GIVEN] The player now reports the shrunken region
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(10.0), secs_t(20.0) }));
+
+    //! [THEN] Player is stopped on the next position update
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+
+    //! [WHEN] Playback position changed
+    m_playbackPositionChanged.send(secs_t(50.0));
 }
 
 /**
