@@ -110,8 +110,6 @@ private:
     bool loopBoundariesSet() const;
 
     PlaybackRegion selectionPlaybackRegion() const;
-    bool isPlaybackRegionChanged() const;
-    void updatePlaybackRegion();
 
     void onProjectChanged();
     void onPlaybackPositionChanged();
@@ -128,8 +126,8 @@ private:
 
     void togglePlay(TogglePlayMode mode);
 
-    void stopSeekAndUpdatePlaybackRegion();
-    void stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
+    void stopSeekToLastSeekTime();
+    void stopSeekToPlaybackPosition();
 
     void togglePlayPauseAction();
     void togglePlayStopAction();
@@ -204,7 +202,6 @@ private:
 
     muse::async::Notification m_currentSequenceIdChanged;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
-    PlaybackRegion m_lastPlaybackRegion;
     bool m_pauseShouldStopPlayback = false;
     std::optional<muse::secs_t> m_pausedResumePos;
 
