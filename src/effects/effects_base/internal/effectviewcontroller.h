@@ -4,6 +4,7 @@
 #pragma once
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
 #include "../ieffectviewlaunchregister.h"
 
@@ -16,7 +17,7 @@ class EffectSettingsAccess;
 class TrackList;
 
 namespace au::effects {
-class EffectViewController : public IEffectViewController, public muse::Contextable
+class EffectViewController : public IEffectViewController, public muse::Contextable, public muse::async::Asyncable
 {
     muse::GlobalInject<IEffectsProvider> effectsProvider;
 
