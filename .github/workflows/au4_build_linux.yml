@@ -278,6 +278,9 @@ jobs:
 
   testflow:
     needs: au4_build_linux
+    permissions:  
+      actions: read  
+      contents: read
     # Stable builds have testflow compiled out, so there is nothing to run
     if: >-
       !cancelled()
