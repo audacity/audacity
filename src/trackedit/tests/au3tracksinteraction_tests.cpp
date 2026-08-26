@@ -1705,7 +1705,6 @@ TEST_F(Au3TracksInteractionTests, PasteClipAtStartOfItselfIntoExistingClipDoesNo
     //! [GIVEN] The track is selected and "paste into existing clip" mode is on
     ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { trackId }));
     ON_CALL(*m_configuration, pasteAsNewClip()).WillByDefault(Return(false));
-    ON_CALL(*m_clipsInteraction, singleClipOnTrack(_)).WillByDefault(Return(true));
 
     //! [WHEN] Pasting at the exact start of the existing clip
     constexpr auto moveClips = false;

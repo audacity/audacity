@@ -350,7 +350,7 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
                 dstWaveTrack->InsertInterval(interval, false);
             }
         } else if (pasteIntoExistingClip
-                   && clipsInteraction()->singleClipOnTrack(trackToPaste->GetId())
+                   && trackToPaste->Intervals().size() == 1
                    && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             double joinStart = begin;
             WaveTrack::IntervalHolder rightClip;
@@ -1673,7 +1673,7 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
         // if paste into existing clip and there is a single clip to paste,
         // we need to make room for the clip to be extended
         if (pasteIntoExistingClip
-            && clipsInteraction()->singleClipOnTrack(trackToPaste->GetId())
+            && trackToPaste->Intervals().size() == 1
             && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
