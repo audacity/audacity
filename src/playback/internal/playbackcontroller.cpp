@@ -212,23 +212,6 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
     return PlaybackRegion();
 }
 
-bool PlaybackController::isPlaybackRegionChanged() const
-{
-    if (isLoopRegionActive()) {
-        //! NOTE: with an active loop region the player's play region is the loop region,
-        //! not the last requested playback region — the comparison below would always
-        //! report a change and resuming from pause would restart playback instead
-        return false;
-    }
-
-    return m_lastPlaybackRegion.isValid() && m_lastPlaybackRegion != player()->playbackRegion();
-}
-
-void PlaybackController::updatePlaybackRegion()
-{
-    player()->setPlaybackRegion(m_lastPlaybackRegion);
-}
-
 Notification PlaybackController::isPlayingChanged() const
 {
     return m_isPlayingChanged;
@@ -259,22 +242,20 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
     player()->seek(secs, applyIfPlaying);
 }
 
-void PlaybackController::stopSeekAndUpdatePlaybackRegion()
+void PlaybackController::stopSeekToLastSeekTime()
 {
     stop();
 
     seek(lastPlaybackSeekTime(), false);
-    updatePlaybackRegion();
 }
 
-void PlaybackController::stopSeekToPlaybackPositionAndUpdatePlaybackRegion()
+void PlaybackController::stopSeekToPlaybackPosition()
 {
     const muse::secs_t stopPosition = playbackPosition();
 
     stop();
 
     doSeek(stopPosition, false);
-    updatePlaybackRegion();
 }
 
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
@@ -306,7 +287,7 @@ void PlaybackController::onProjectChanged()
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         prj->aboutCloseBegin().onNotify(this, [this]() {
-            stopSeekAndUpdatePlaybackRegion();
+            stopSeekToLastSeekTime();
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
@@ -319,10 +300,6 @@ void PlaybackController::onPlaybackPositionChanged()
     if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
         //! NOTE: just stop, without seek
         player()->stop();
-        if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
-            // we want to update the playback region in case user made new selection during playback
-            updatePlaybackRegion();
-        }
     }
 }
 
@@ -364,9 +341,9 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
 
     if (isPlaying()) {
         if (mode == TogglePlayMode::PlayStopAndSetCursor) {
-            stopSeekToPlaybackPositionAndUpdatePlaybackRegion();
+            stopSeekToPlaybackPosition();
         } else if (mode == TogglePlayMode::PlayStop) {
-            stopSeekAndUpdatePlaybackRegion();
+            stopSeekToLastSeekTime();
         } else {
             doPause();
         }
@@ -375,14 +352,7 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
     }
 
     if (isPaused()) {
-        if (isPlaybackRegionChanged()) {
-            //! NOTE: just stop, without seek
-            player()->stop();
-            doPlay();
-        } else {
-            doResume();
-        }
-
+        doResume();
         return;
     }
 
@@ -428,7 +398,6 @@ void PlaybackController::doPlay()
         doChangePlaybackRegion({ start, end });
     } else {
         LOGW() << "playback region is not valid";
-        updatePlaybackRegion();
     }
 
     if (!isPlaybackStartPositionValid()) {
@@ -508,7 +477,7 @@ void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
 void PlaybackController::rewindToStartAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
-    stopSeekAndUpdatePlaybackRegion();
+    stopSeekToLastSeekTime();
 
     doSeek(0.0, false);
 
@@ -519,8 +488,7 @@ void PlaybackController::rewindToEndAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     setLastPlaybackSeekTime(totalPlayTime());
-    m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
-    stopSeekAndUpdatePlaybackRegion();
+    stopSeekToLastSeekTime();
 
     selectionController()->resetTimeSelection();
 }
@@ -566,7 +534,6 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
 {
     seek(secs, applyIfPlaying);
     setLastPlaybackSeekTime(secs);
-    m_lastPlaybackRegion = { secs, secs };
     m_pauseShouldStopPlayback = false;
 }
 
@@ -588,14 +555,13 @@ void PlaybackController::onChangePlaybackRegionAction(const muse::actions::Actio
 void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 {
     m_pausedResumePos.reset();
-    m_lastPlaybackRegion = region;
 
     if (isStopped()) {
-        updatePlaybackRegion();
+        player()->setPlaybackRegion(region);
     }
 
     if (region.isValid()) {
-        setLastPlaybackSeekTime(m_lastPlaybackRegion.start);
+        setLastPlaybackSeekTime(region.start);
     }
 }
 
@@ -612,7 +578,7 @@ void PlaybackController::doPause()
 
     if (m_pauseShouldStopPlayback && isPlaying()) {
         m_pauseShouldStopPlayback = false;
-        stopSeekAndUpdatePlaybackRegion();
+        stopSeekToLastSeekTime();
         return;
     }
 
@@ -628,7 +594,7 @@ void PlaybackController::stopAction()
         return;
     }
 
-    stopSeekAndUpdatePlaybackRegion();
+    stopSeekToLastSeekTime();
 }
 
 void PlaybackController::stop()
@@ -1031,17 +997,7 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
 
 bool PlaybackController::isPlaybackStartPositionValid() const
 {
-    muse::secs_t totalPlayTime = this->totalPlayTime();
-
-    if (lastPlaybackSeekTime() >= totalPlayTime) {
-        return false;
-    }
-
-    if (m_lastPlaybackRegion.start >= totalPlayTime) {
-        return false;
-    }
-
-    return true;
+    return lastPlaybackSeekTime() < totalPlayTime();
 }
 
 bool PlaybackController::isSeekPositionValid(const muse::secs_t& seekTime) const
