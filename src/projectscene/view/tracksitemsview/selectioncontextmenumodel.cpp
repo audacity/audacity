@@ -67,6 +67,7 @@ MenuItemList SelectionContextMenuModel::makeItems()
         makeMenuItem("disjoin",
                      muse::TranslatableString("selection", "Split at silences")),
         makeMenuItem("join",
+                     //: Verb: context menu command that joins the selected audio
                      muse::TranslatableString("selection", "Join"))
     };
 
