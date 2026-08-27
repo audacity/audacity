@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <QPointer>
 #include <QQuickItem>
 
@@ -11,6 +13,7 @@
 #include "global/modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "interactive/iinteractive.h"
 #include "ui/inavigationcontroller.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
 
@@ -21,6 +24,7 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<ITrackNavigationController> tracksNavigationController{ this };
 
@@ -78,6 +82,12 @@ private:
         muse::ui::NavigationPanel* items = nullptr;
     };
 
+    struct NavigationRequest
+    {
+        TrackItemKey itemKey;
+        bool highlight = false;
+    };
+
     void load();
     void cleanup();
     void clearPanels();
@@ -92,6 +102,8 @@ private:
     QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
     void updateNavigationActive(const muse::ui::INavigationPanel* activePanel);
     void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);
+    void requestNavigation(const TrackItemKey& itemKey, bool highlight);
+    void updatePendingNavigation();
 
     void addDefaultNavigation();
     void disableDefaultNavigation();
@@ -113,6 +125,7 @@ private:
     QPointer<QQuickItem> m_trackViewItem;
 
     bool m_activateDefaultNavigationRequested = false;
+    std::optional<NavigationRequest> m_pendingNavigation;
     bool m_isFocusSyncing = false;
 
     int m_lastActivePanelOrder = -1;
