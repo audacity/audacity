@@ -53,6 +53,11 @@ public:
         return m_inner->isCanceled() ? BasicUI::ProgressResult::Cancelled : BasicUI::ProgressResult::Success;
     }
 
+    bool Cancelled() const override
+    {
+        return m_inner && m_inner->isCanceled();
+    }
+
     void SetMessage(const ::TranslatableString&) override {}
     void SetDialogTitle(const ::TranslatableString&) override {}
     void Reinit() override {}

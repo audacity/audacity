@@ -105,6 +105,8 @@ struct AudioUnitWrapper
     {
     }
 
+    ~AudioUnitWrapper();
+
     // Supply most often used values as defaults for scope and element
     template<typename T>
     OSStatus GetFixedSizeProperty(AudioUnitPropertyID inID, T& property,
