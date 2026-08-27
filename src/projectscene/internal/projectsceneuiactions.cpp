@@ -19,138 +19,178 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("clip-gain",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Clip gain"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Clip gain"),
              IconCode::Code::AUTOMATION
              ),
     UiAction("split-tool",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Split tool"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Split tool"),
              IconCode::Code::SPLIT_TOOL
              ),
     UiAction("zoom-in",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Zoom in"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Zoom in"),
              IconCode::Code::ZOOM_IN
              ),
     UiAction("zoom-out",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Zoom out"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Zoom out"),
              IconCode::Code::ZOOM_OUT
              ),
     UiAction("zoom-default",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Zoom default"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Zoom default")
              ),
     UiAction("zoom-to-selection",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Zoom to selection"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Zoom to selection"),
              IconCode::Code::FIT_SELECTION
              ),
     UiAction("zoom-to-fit-project",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Zoom to fit project"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
              ),
     UiAction("zoom-toggle",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Zoom toggle"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Zoom toggle"),
              IconCode::Code::ZOOM_TOGGLE
              ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Center view on playhead"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Center view on playhead")
              ),
     UiAction("action://trackedit/global-view-spectrogram",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Toggle spectral view"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Toggle spectral view"),
              IconCode::Code::SPECTROGRAM
              ),
     UiAction("spectral-box-select",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Spectral box select"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Spectral box select"),
              IconCode::Code::SPECTROGRAM_BOX_SELECTION
              ),
     UiAction("spectral-brush",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Spectral box select"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Spectral box select"),
              IconCode::Code::BRUSH
              ),
     UiAction("snap",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Snapping"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Snapping"),
              IconCode::Code::MAGNET
              ),
     UiAction("minutes-seconds-ruler",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Minutes && seconds"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Minutes && seconds"),
              Checkable::Yes
              ),
     UiAction("beats-measures-ruler",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Beats && measures"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Beats && measures"),
              Checkable::Yes
              ),
     UiAction("toggle-vertical-rulers",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show vertical rulers"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show vertical rulers"),
              Checkable::Yes
              ),
     UiAction("show-master-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show master track"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show master track"),
              Checkable::Yes
              ),
     UiAction("toggle-update-display-while-playing",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Update display while playing"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Update display while playing"),
              Checkable::Yes
              ),
     UiAction("toggle-pinned-play-head",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Pinned playhead"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Pinned playhead"),
              Checkable::Yes
              ),
     UiAction("toggle-playback-on-ruler-click-enabled",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Click ruler to start playback"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Click ruler to start playback"),
              Checkable::Yes
              ),
@@ -158,13 +198,17 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("clip-properties",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Clip properties"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show clip properties")
              ),
     UiAction("action://delete",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Delete"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Delete"),
              IconCode::Code::DELETE_TANK,
              Checkable::Yes
@@ -172,82 +216,108 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("action://trackedit/clip/change-color-auto",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Follow track color"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Follow track color"),
              Checkable::Yes
              ),
     UiAction("play-position-decrease",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Move playhead left"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Move playhead left")
              ),
     UiAction("play-position-increase",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Move playhead right"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Move playhead right")
              ),
     UiAction("sel-ext-left",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Extend selection left"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Extend selection left")
              ),
     UiAction("sel-ext-right",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Extend selection right"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Extend selection right")
              ),
     UiAction("sel-cntr-left",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Contract selection from left"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Contract selection from left")
              ),
     UiAction("sel-cntr-right",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Contract selection from right"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Contract selection from right")
              ),
     UiAction("curs-sel-start",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Move playhead to selection start"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Move playhead to selection start")
              ),
     UiAction("curs-sel-end",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Move playhead to selection end"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Move playhead to selection end")
              ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Pitch and speed"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Pitch and speed")
              ),
     UiAction("toggle-rms-in-waveform",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show RMS in waveform"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show RMS in waveform"),
              Checkable::Yes
              ),
     UiAction("toggle-clipping-in-waveform",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show clipping in waveform"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show clipping in waveform"),
              Checkable::Yes
              ),
     UiAction("action://projectscene/track-view-half-wave",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Half-wave"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Half-wave"),
              IconCode::Code::WAVEFORM_HALFWAVE,
              Checkable::Yes
@@ -255,19 +325,25 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("open-label-editor",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show label editor"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show label editor")
              ),
     UiAction("realtime-effect-move-up",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Move realtime effect up"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Move realtime effect up")
              ),
     UiAction("realtime-effect-move-down",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Move realtime effect down"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Move realtime effect down")
              )
 };

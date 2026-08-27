@@ -26,62 +26,80 @@ const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Record"),
              IconCode::Code::RECORD_FILL
              ),
     UiAction(RECORD_PAUSE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Pause"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
     UiAction(RECORD_STOP_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Stop"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Stop record"),
              IconCode::Code::STOP_FILL
              ),
     UiAction(RECORD_LEVEL_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record level"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Set record level"),
              IconCode::Code::MICROPHONE
              ),
     UiAction(RECORD_TOGGLE_MIC_METERING.toString(),
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show mic metering"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show mic metering"),
              Checkable::Yes
              ),
     UiAction(RECORD_TOGGLE_INPUT_MONITORING.toString(),
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Turn on input monitoring"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Turn on input monitoring"),
              Checkable::Yes
              ),
     UiAction(RECORD_LEAD_IN_RECORDING_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Lead-in Recording"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Start lead-in recording"),
              IconCode::Code::RECORD_FILL
              ),
     UiAction("record-on-current-track",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record on current track"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Record on current track")
              ),
     UiAction("record-on-new-track",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record on new track"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Record on new track")
              ),
 };
