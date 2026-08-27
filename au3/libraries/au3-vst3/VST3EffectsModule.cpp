@@ -233,7 +233,7 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager,
         }
     }
 #elif __WXMAC__
-    pathList.push_back("~/Library/Audio/Plug-ins/VST3/");
+    pathList.push_back(wxGetHomeDir() + "/Library/Audio/Plug-ins/VST3/");
     pathList.push_back("/Library/Audio/Plug-ins/VST3/");
     pathList.push_back("/Network/Library/Audio/Plug-ins/VST3/");
 #elif __WXGTK__
