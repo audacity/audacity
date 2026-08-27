@@ -48,6 +48,7 @@ using TrackId = long;
 using EffectChainLinkIndex = int;
 
 static const muse::String EFFECT_TITLE_ATTRIBUTE(u"title");
+static const muse::String EFFECT_TITLE_CONTEXT_ATTRIBUTE(u"titleContext");
 static const muse::String EFFECT_DESCRIPTION_ATTRIBUTE(u"description");
 static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
 static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
@@ -234,6 +235,7 @@ struct EffectMeta {
     EffectFamily family = EffectFamily::Unknown;
     EffectType type = EffectType::Unknown;
     muse::String title;
+    muse::String titleContext;
     muse::String description;
     muse::String vendor;
     muse::String version;
