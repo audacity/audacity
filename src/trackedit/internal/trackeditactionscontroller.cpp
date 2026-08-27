@@ -700,7 +700,9 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
+    //: Title of an error dialog shown when an action requires selected audio
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             //: Message of an error dialog shown when an action requires selected audio
                              muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 

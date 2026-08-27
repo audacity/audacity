@@ -460,6 +460,7 @@ MenuItem* AppMenuModel::makeExtraMenu()
 {
     MenuItemList extraItems {
         //! TODO AU4
+        //: Title of the Play menu; a noun rather than a verb
         makeMenu(TranslatableString("appshell-menu-play", "Play"), makeVolumeAndCompressionItems(), "menu-play", false),
         makeMenu(TranslatableString("appshell-menu-scrubbing", "Scrubbing"), makeVolumeAndCompressionItems(), "menu-scrubbing", false),
         makeMenu(TranslatableString("appshell-menu-extratools", "Tools"), makeVolumeAndCompressionItems(), "menu-extra-tools", false),

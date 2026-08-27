@@ -23,51 +23,64 @@ static UiActionList STATIC_ACTIONS = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              REPEAT_LAST_EFFECT_DEF_TITLE,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Repeat last effect")
              ),
     UiAction("realtimeeffect-remove",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Remove realtime effect"),
-             TranslatableString("action", "Remove realtime effect")
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Remove realtime effect")
              ),
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Apply preset")
              ),
     UiAction("action://effects/presets/save_as",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Save preset as…")
              ),
     UiAction("action://effects/presets/save",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Save preset")
              ),
     UiAction("action://effects/presets/delete",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Delete preset"),
              IconCode::Code::DELETE_TANK
              ),
     UiAction("action://effects/presets/import",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Import…"),
-             TranslatableString("action", "Import preset")
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Import preset")
              ),
     UiAction("action://effects/presets/export",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Export…"),
-             TranslatableString("action", "Export preset")
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Export preset")
              ),
     UiAction("action://effects/toggle_vendor_ui",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("effects", "Use vendor UI"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
              Checkable::Yes
              )

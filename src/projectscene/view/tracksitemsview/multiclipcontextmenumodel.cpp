@@ -48,6 +48,7 @@ MenuItemList MultiClipContextMenuModel::makeItems()
         makeMenu(muse::TranslatableString("multiclip", "Delete and…"), deleteAndItems, "menu-delete-and"),
         makeSeparator(),
         makeMenuItem("join",
+                     //: Verb: context menu command that joins the selected clips
                      muse::TranslatableString("multiclip", "Join")),
         makeSeparator(),
         makeMenuItem("group-clips"),

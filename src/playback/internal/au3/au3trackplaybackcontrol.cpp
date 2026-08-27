@@ -64,6 +64,7 @@ void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool co
 
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("playback", "Moved pan dial"),
+                                           //: Undo history entry name; shown after Undo and Redo in the Edit menu
                                            muse::trc("playback", "Pan"),
                                            trackedit::UndoPushType::CONSOLIDATE);
     }

@@ -8,6 +8,7 @@ import Audacity.BuiltinEffectsCollection
 BuiltinEffectBase {
     id: root
 
+    //: Title of the Normalize effect dialog
     property string title: qsTrc("effects/normalize", "Normalize")
     property bool isApplyAllowed: removeDcCheckbox.checked || normalizePeakAmplitudeCheckbox.checked
 
