@@ -1,5 +1,7 @@
 import QtQuick 2.15
+
 import Audacity.ProjectScene
+import Audacity.UiComponents
 
 import Muse.UiComponents
 
@@ -82,9 +84,12 @@ Item {
                 navigationCtrl: navCtrl
             }
 
-            VolumeTooltip {
+            ValueTooltip {
                 id: tooltip
-                volume: root.value
+
+                value: root.value
+                unitText: "dB"
+                sizingText: "-60.0dB"
 
                 // A rather long showDelay, so that the user falls less often
                 // in the situation described above - if the tooltip hasn't yet
