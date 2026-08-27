@@ -89,6 +89,12 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         return desc.GetID();
     });
 
+    if (au3path.empty()) {
+        loadGuard()->endLoad(effectId.toStdString());
+        LOGE() << "Failed to find plugin path for effect: " << effectId;
+        return false;
+    }
+
     m_loadedInterfaces.emplace(effectId, m_pluginProvider.LoadPlugin(au3path));
 
     loadGuard()->endLoad(effectId.toStdString());
