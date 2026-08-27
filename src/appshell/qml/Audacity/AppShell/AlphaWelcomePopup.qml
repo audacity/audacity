@@ -142,6 +142,7 @@ release of Audacity 4.0<br><br>
             spacing: 12
 
             FlatButton {
+                //: Label of a dialog button
                 text: qsTrc("global", "OK")
 
                 accentButton: true

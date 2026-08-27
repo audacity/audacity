@@ -604,6 +604,7 @@ Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io
             const int saveToCloudBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
             IInteractive::ButtonDatas buttons {
                 interactive()->buttonData(IInteractive::Button::Cancel),
+                //: Label of a dialog button
                 IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), false, false,
                                          IInteractive::ButtonRole::ApplyRole),
                 IInteractive::ButtonData(saveToCloudBtn, trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
