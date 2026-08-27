@@ -344,6 +344,7 @@ Item {
 
         icon: IconCode.SETTINGS_COG
         iconFont: ui.theme.iconsFont
+        //: Tooltip of the toolbar customization button
         toolTipTitle: qsTrc("projectscene", "Customize toolbar")
         toolTipDescription: qsTrc("projectscene", "Show/hide toolbar buttons")
 

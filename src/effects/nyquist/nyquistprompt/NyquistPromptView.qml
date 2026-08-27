@@ -90,6 +90,7 @@ BuiltinEffectBase {
 
             currentText: viewModel.commandText
 
+            //: Placeholder text of the Nyquist code editor
             hint: qsTrc("effects", "Enter Nyquist code here…")
 
             onTextEditingFinished: function (newText) {
