@@ -18,7 +18,7 @@ static const muse::ui::UiActionList STATIC_ACTIONS = {
                        //: Action title: shown as a menu item or a button label; keep it short
                        muse::TranslatableString("action", "Spectrogram settings…"),
                        //: Action description: shown as a tooltip; can be a full sentence
-                       muse::TranslatableString("action", "Spectrogram settings…")
+                       muse::TranslatableString("action_description", "Spectrogram settings…")
                        )
 };
 }

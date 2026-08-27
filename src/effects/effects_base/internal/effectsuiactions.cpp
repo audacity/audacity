@@ -32,7 +32,7 @@ static UiActionList STATIC_ACTIONS = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Remove realtime effect"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Remove realtime effect")
+             TranslatableString("action_description", "Remove realtime effect")
              ),
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
@@ -65,7 +65,7 @@ static UiActionList STATIC_ACTIONS = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Import…"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Import preset")
+             TranslatableString("action_description", "Import preset")
              ),
     UiAction("action://effects/presets/export",
              au::context::UiCtxAny,
@@ -73,7 +73,7 @@ static UiActionList STATIC_ACTIONS = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Export…"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Export preset")
+             TranslatableString("action_description", "Export preset")
              ),
     UiAction("action://effects/toggle_vendor_ui",
              au::context::UiCtxAny,

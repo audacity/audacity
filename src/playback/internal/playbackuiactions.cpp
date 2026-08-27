@@ -39,7 +39,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play/Pause"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Play/Pause"),
+             TranslatableString("action_description", "Play/Pause"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(),
@@ -48,7 +48,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play/Stop"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Play/Stop"),
+             TranslatableString("action_description", "Play/Stop"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString(),
@@ -57,7 +57,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play/Pause from cursor"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Play/Pause from cursor"),
+             TranslatableString("action_description", "Play/Pause from cursor"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PLAY_SELECTION_QUERY.toString(),
@@ -66,7 +66,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play selection"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Play the selected time range"),
+             TranslatableString("action_description", "Play the selected time range"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PLAYBACK_PAUSE_QUERY.toString(),
@@ -75,7 +75,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Pause"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Pause"),
+             TranslatableString("action_description", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
     UiAction(PLAYBACK_STOP_QUERY.toString(),
@@ -84,7 +84,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Stop"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Stop playback"),
+             TranslatableString("action_description", "Stop playback"),
              IconCode::Code::STOP_FILL
              ),
     UiAction(PLAYBACK_REWIND_START_QUERY.toString(),
@@ -93,7 +93,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Rewind to start"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Rewind to start"),
+             TranslatableString("action_description", "Rewind to start"),
              IconCode::Code::REWIND_START_FILL
              ),
     UiAction(PLAYBACK_REWIND_END_QUERY.toString(),
@@ -102,7 +102,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Rewind to end"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Rewind to end"),
+             TranslatableString("action_description", "Rewind to end"),
              IconCode::Code::REWIND_END_FILL
              ),
     UiAction("toggle-loop-region",
@@ -111,7 +111,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Loop playback"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Toggle ‘Loop playback’"),
+             TranslatableString("action_description", "Toggle ‘Loop playback’"),
              IconCode::Code::LOOP,
              Checkable::Yes
              ),
@@ -121,7 +121,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Audio setup"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Open audio setup context menu"),
+             TranslatableString("action_description", "Open audio setup context menu"),
              IconCode::Code::CONFIGURE
              ),
     UiAction("get-effects",
@@ -130,7 +130,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Get effects"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Open Get effects dialog"),
+             TranslatableString("action_description", "Open Get effects dialog"),
              IconCode::Code::PLUGIN
              ),
     UiAction("audio-settings",
@@ -139,7 +139,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Audio settings"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Open audio setup dialog")
+             TranslatableString("action_description", "Open audio setup dialog")
              ),
     UiAction("rescan-devices",
              au::context::UiCtxProjectOpened,
@@ -147,7 +147,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Rescan audio devices"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Rescan audio devices")
+             TranslatableString("action_description", "Rescan audio devices")
              ),
     UiAction("metronome",
              au::context::UiCtxProjectOpened,
@@ -155,7 +155,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Metronome"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Toggle metronome playback"),
+             TranslatableString("action_description", "Toggle metronome playback"),
              IconCode::Code::METRONOME,
              Checkable::Yes
              ),
@@ -165,7 +165,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Timecode"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set playback time"),
+             TranslatableString("action_description", "Set playback time"),
              IconCode::Code::CLOCK
              ),
     UiAction("playback-bpm",
@@ -174,7 +174,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Tempo"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set playback tempo"),
+             TranslatableString("action_description", "Set playback tempo"),
              IconCode::Code::BPM
              ),
     UiAction("playback-time-signature",
@@ -183,7 +183,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Time signature"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set playback time signature"),
+             TranslatableString("action_description", "Set playback time signature"),
              IconCode::Code::TIME_SIGNATURE
              ),
     UiAction(PLAYBACK_LEVEL_QUERY.toString(),
@@ -192,7 +192,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Playback level"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set playback level"),
+             TranslatableString("action_description", "Set playback level"),
              IconCode::Code::AUDIO
              ),
     UiAction(PLAYBACK_CHANGE_AUDIO_API_QUERY.toString(),
@@ -201,7 +201,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Change audio host"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Change audio host"),
+             TranslatableString("action_description", "Change audio host"),
              Checkable::Yes
              ),
     UiAction(PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString(),
@@ -210,7 +210,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Change playback device"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Change playback device"),
+             TranslatableString("action_description", "Change playback device"),
              Checkable::Yes
              ),
     UiAction(PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString(),
@@ -219,7 +219,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Change recording device"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Change recording device"),
+             TranslatableString("action_description", "Change recording device"),
              Checkable::Yes
              ),
     UiAction(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString(),
@@ -228,7 +228,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Change input channels"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Change input channels"),
+             TranslatableString("action_description", "Change input channels"),
              Checkable::Yes
              ),
     UiAction("toggle-loop-region",
@@ -237,7 +237,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Toggle loop region"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Toggle loop region"),
+             TranslatableString("action_description", "Toggle loop region"),
              IconCode::Code::LOOP
              ),
     UiAction("clear-loop-region",
@@ -246,7 +246,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Clear loop region"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Clear loop region")
+             TranslatableString("action_description", "Clear loop region")
              ),
     UiAction("set-loop-region-to-selection",
              au::context::UiCtxAny,
@@ -254,7 +254,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Set loop region to selection"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set loop region to selection")
+             TranslatableString("action_description", "Set loop region to selection")
              ),
     UiAction("set-selection-to-loop",
              au::context::UiCtxAny,
@@ -262,7 +262,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Set selection to loop"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set selection to loop")
+             TranslatableString("action_description", "Set selection to loop")
              ),
     UiAction("set-loop-region-in-out",
              au::context::UiCtxAny,
@@ -270,7 +270,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Set loop region in out"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set loop region in out")
+             TranslatableString("action_description", "Set loop region in out")
              ),
     UiAction("toggle-selection-follows-loop-region",
              au::context::UiCtxAny,
@@ -278,7 +278,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Creating a loop also selects audio"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Creating a loop also selects audio"),
+             TranslatableString("action_description", "Creating a loop also selects audio"),
              Checkable::Yes
              ),
 };
@@ -290,7 +290,7 @@ const UiActionList PlaybackUiActions::m_settingsActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play repeats"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Play repeats"),
+             TranslatableString("action_description", "Play repeats"),
              IconCode::Code::PLAY_REPEATS,
              Checkable::Yes
              ),
@@ -300,7 +300,7 @@ const UiActionList PlaybackUiActions::m_settingsActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Pan automatically"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Pan automatically during playback"),
+             TranslatableString("action_description", "Pan automatically during playback"),
              IconCode::Code::PAN_SCORE,
              Checkable::Yes
              ),
