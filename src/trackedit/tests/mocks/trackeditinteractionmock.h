@@ -108,7 +108,7 @@ public:
     MOCK_METHOD(bool, resampleTracks, (const TrackIdList&, int), (override));
 
     MOCK_METHOD(muse::RetVal<LabelKey>, addLabel, (const TrackId&), (override));
-    MOCK_METHOD(bool, addLabelToSelection, (), (override));
+    MOCK_METHOD(muse::RetVal<LabelKey>, addLabelToSelection, (), (override));
 
     MOCK_METHOD(bool, changeLabelTitle, (const LabelKey&, const muse::String&), (override));
     MOCK_METHOD(bool, changeLabelLowFrequency, (const LabelKey&, double), (override));

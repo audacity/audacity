@@ -60,7 +60,7 @@ muse::RetVal<LabelKey> Au3LabelsInteraction::addLabel(const TrackId& toTrackId)
     return muse::RetVal<LabelKey>::make_ok({ labelTrack->GetId(), newLabelId });
 }
 
-bool Au3LabelsInteraction::addLabelToSelection()
+muse::RetVal<LabelKey> Au3LabelsInteraction::addLabelToSelection()
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
@@ -116,7 +116,7 @@ bool Au3LabelsInteraction::addLabelToSelection()
 
     selectionController()->setSelectedLabels({ { labelTrack->GetId(), newLabel->GetId() } });
 
-    return true;
+    return muse::RetVal<LabelKey>::make_ok({ labelTrack->GetId(), newLabel->GetId() });
 }
 
 bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
