@@ -69,13 +69,13 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void checkUpdateForCurrentLanguage();
 
-    Q_INVOKABLE void setNumberFormat(int format);
-
     QString temporaryDir() const;
     Q_INVOKABLE void setTemporaryDir(const QString& path);
 
     QVariantList languages() const;
     QString currentLanguageCode() const;
+
+    QString systemLanguageName() const;
 
     QStringList keyboardLayouts() const;
     QString currentKeyboardLayout() const;

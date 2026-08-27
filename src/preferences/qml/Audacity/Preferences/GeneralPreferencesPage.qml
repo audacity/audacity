@@ -78,26 +78,6 @@ PreferencesPage {
             }
         }
 
-        NumberFormatSection {
-            id: numberFormatSection
-
-            numberFormats: ["System (English)"] //! TODO AU4: implement formats model
-            currentNumberFormatCode: "System (English)"
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 2
-
-            onNumberFormatSelected: function (numberFormatCode) {
-                preferencesModel.setNumberFormat(numberFormatCode)
-            }
-
-            onFocusChanged: {
-                if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
-                }
-            }
-        }
-
         SeparatorLine {}
 
         AutomaticUpdateSection {
