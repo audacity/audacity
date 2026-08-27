@@ -63,6 +63,9 @@ set( AUDACITY_VERSION_DEFS
     -DAUDACITY_REVISION=${MUSE_APP_VERSION_PATCH}
     -DAUDACITY_MODLEVEL=0
 
+    # Pre-release label from version.cmake; empty for dev and final releases
+    -DAUDACITY_VERSION_LABEL="${MUSE_APP_VERSION_LABEL}"
+
     # Version string for visual display
     -DAUDACITY_VERSION_STRING=L"${MUSE_APP_VERSION_MAJOR}.${MUSE_APP_VERSION_MINOR}.${MUSE_APP_VERSION_PATCH}${AUDACITY_SUFFIX}"
 
