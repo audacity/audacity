@@ -28,7 +28,6 @@
         <file>qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/KnobControl.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml</file>
-        <file>qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureMeter.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureRuler.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeSlider.qml</file>
