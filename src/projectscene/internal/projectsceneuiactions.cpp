@@ -212,6 +212,18 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Contract selection from right"),
              TranslatableString("action", "Contract selection from right")
              ),
+    UiAction("sel-start",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Selection to start"),
+             TranslatableString("action", "Extend selection to project start")
+             ),
+    UiAction("sel-end",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Selection to end"),
+             TranslatableString("action", "Extend selection to project end")
+             ),
     UiAction("curs-sel-start",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
