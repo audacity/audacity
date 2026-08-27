@@ -240,22 +240,14 @@ void PluginManager::FindFilesInPathList(const wxString& pattern,
     ff.AppendDir(wxT("nyquist-plug-ins"));
     paths.push_back(ff.GetPath());
 
-    // Weed out duplicates
-    for (const auto& filePath : pathList) {
-        ff = filePath;
-        const wxString path{ ff.GetFullPath() };
-        if (paths.Index(path, wxFileName::IsCaseSensitive()) == wxNOT_FOUND) {
-            paths.push_back(path);
-        }
-    }
+    std::copy(pathList.begin(), pathList.end(), std::back_inserter(paths));
+    FileNames::RemoveDuplicatesFromPathList(paths);
 
     // Find all matching files in each path
     for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
         ff = paths[i] + wxFILE_SEP_PATH + pattern;
         wxDir::GetAllFiles(ff.GetPath(), &files, ff.GetFullName(), directories ? wxDIR_DEFAULT : wxDIR_FILES);
     }
-
-    return;
 }
 
 bool PluginManager::HasConfigGroup(ConfigurationType type, const PluginID& ID,
