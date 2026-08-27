@@ -29,7 +29,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Record"),
+             TranslatableString("action_description", "Record"),
              IconCode::Code::RECORD_FILL
              ),
     UiAction(RECORD_PAUSE_QUERY.toString(),
@@ -38,7 +38,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Pause"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Pause"),
+             TranslatableString("action_description", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
     UiAction(RECORD_STOP_QUERY.toString(),
@@ -47,7 +47,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Stop"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Stop record"),
+             TranslatableString("action_description", "Stop record"),
              IconCode::Code::STOP_FILL
              ),
     UiAction(RECORD_LEVEL_QUERY.toString(),
@@ -56,7 +56,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record level"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Set record level"),
+             TranslatableString("action_description", "Set record level"),
              IconCode::Code::MICROPHONE
              ),
     UiAction(RECORD_TOGGLE_MIC_METERING.toString(),
@@ -65,7 +65,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show mic metering"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Show mic metering"),
+             TranslatableString("action_description", "Show mic metering"),
              Checkable::Yes
              ),
     UiAction(RECORD_TOGGLE_INPUT_MONITORING.toString(),
@@ -74,7 +74,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Turn on input monitoring"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Turn on input monitoring"),
+             TranslatableString("action_description", "Turn on input monitoring"),
              Checkable::Yes
              ),
     UiAction(RECORD_LEAD_IN_RECORDING_QUERY.toString(),
@@ -83,7 +83,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Lead-in Recording"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Start lead-in recording"),
+             TranslatableString("action_description", "Start lead-in recording"),
              IconCode::Code::RECORD_FILL
              ),
     UiAction("record-on-current-track",
@@ -92,7 +92,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record on current track"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Record on current track")
+             TranslatableString("action_description", "Record on current track")
              ),
     UiAction("record-on-new-track",
              au::context::UiCtxProjectOpened,
@@ -100,7 +100,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Record on new track"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Record on new track")
+             TranslatableString("action_description", "Record on new track")
              ),
 };
 

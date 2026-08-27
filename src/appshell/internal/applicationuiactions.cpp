@@ -46,7 +46,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Exit"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Exit")
+             TranslatableString("action_description", "Exit")
              ),
     UiAction("restart",
              au::context::UiCtxAny,
@@ -60,7 +60,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Full screen"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Full screen"),
+             TranslatableString("action_description", "Full screen"),
              Checkable::Yes
              ),
     UiAction("about-audacity",
@@ -81,7 +81,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Online &handbook"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Open online handbook")
+             TranslatableString("action_description", "Open online handbook")
              ),
     UiAction("ask-help",
              au::context::UiCtxAny,
@@ -95,7 +95,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Revert to &factory settings"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Revert to factory settings")
+             TranslatableString("action_description", "Revert to factory settings")
              ),
 
     // Docking
@@ -105,7 +105,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Restore the &default layout"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Restore the default layout")
+             TranslatableString("action_description", "Restore the default layout")
              ),
 
     // Toolbars
@@ -115,7 +115,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Playback controls"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Show/hide playback controls"),
+             TranslatableString("action_description", "Show/hide playback controls"),
              Checkable::Yes
              ),
     // Vertical panels
@@ -125,7 +125,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Tracks"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Show/hide tracks"),
+             TranslatableString("action_description", "Show/hide tracks"),
              Checkable::Yes
              ),
     // Status bar
@@ -135,7 +135,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Status bar"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Show/hide status bar"),
+             TranslatableString("action_description", "Show/hide status bar"),
              Checkable::Yes
              ),
 
@@ -145,7 +145,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Preferences"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Preferences…")
+             TranslatableString("action_description", "Preferences…")
              ),
     UiAction("action://copy",
              { "action://trackedit/copy" },
@@ -154,7 +154,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Copy"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Copy"),
+             TranslatableString("action_description", "Copy"),
              IconCode::Code::COPY
              ),
     UiAction("action://cut",
@@ -164,7 +164,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Cut"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Cut"),
+             TranslatableString("action_description", "Cut"),
              IconCode::Code::CUT
              ),
     UiAction("action://paste",
@@ -174,7 +174,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Paste"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Paste"),
+             TranslatableString("action_description", "Paste"),
              IconCode::Code::PASTE
              ),
     UiAction("action://undo",
@@ -184,7 +184,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Undo"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Undo"),
+             TranslatableString("action_description", "Undo"),
              IconCode::Code::UNDO
              ),
     UiAction("action://redo",
@@ -194,7 +194,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Redo"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Redo"),
+             TranslatableString("action_description", "Redo"),
              IconCode::Code::REDO
              ),
     UiAction("action://delete",
@@ -204,7 +204,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "De&lete"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Delete"),
+             TranslatableString("action_description", "Delete"),
              IconCode::Code::DELETE_TANK
              ),
     UiAction("action://cancel",
@@ -213,7 +213,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Cancel"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Cancel"),
+             TranslatableString("action_description", "Cancel"),
              IconCode::Code::DELETE_TANK
              ),
     UiAction("action://trigger",
@@ -222,7 +222,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Trigger"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Trigger")
+             TranslatableString("action_description", "Trigger")
              ),
     UiAction("action://enter",
              au::context::UiCtxAny,
@@ -230,7 +230,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Enter"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action", "Trigger the focused control or select the focused track item")
+             TranslatableString("action_description", "Trigger the focused control or select the focused track item")
              ),
 };
 
