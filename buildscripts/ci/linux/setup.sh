@@ -123,7 +123,9 @@ sudo apt-get install -y --no-install-recommends \
 # COMPILER
 if [ "$COMPILER" == "gcc" ]; then
 
-  gcc_version="11"
+  gcc_version="13"
+  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  sudo apt-get update
   sudo apt install -y --no-install-recommends "g++-${gcc_version}"
   sudo update-alternatives \
     --install /usr/bin/gcc gcc "/usr/bin/gcc-${gcc_version}" 40 \
