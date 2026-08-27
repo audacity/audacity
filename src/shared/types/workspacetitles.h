@@ -6,7 +6,7 @@
 #include <string>
 
 #include "framework/global/types/translatablestring.h"
-#include "framework/rcommand/commandtypes.h"
+#include "framework/actions/actiontypes.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
 
 namespace au::shared {
@@ -34,12 +34,14 @@ inline muse::TranslatableString workspaceTitle(const std::string& name)
 inline const muse::uicomponents::MenuItemList& translateWorkspaceTitles(const muse::uicomponents::MenuItemList& items)
 {
     for (muse::uicomponents::MenuItem* item : items) {
-        const muse::rcommand::CommandQuery query = item->commandQuery();
-        if (!query.contains("name")) {
+        // Workspace entries carry the workspace name as the action arg;
+        // the configure/create items and separators have no args.
+        const muse::actions::ActionData args = item->args();
+        if (args.count() < 1) {
             continue;
         }
 
-        item->setTitle(workspaceTitle(query.param("name").toString()));
+        item->setTitle(workspaceTitle(args.arg<std::string>(0)));
     }
 
     return items;
