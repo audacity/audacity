@@ -21,6 +21,8 @@
  */
 #include "appmenumodel.h"
 
+#include "shared/types/workspacetitles.h"
+
 #include "global/containers.h"
 #include "types/translatablestring.h"
 
@@ -125,6 +127,7 @@ void AppMenuModel::setupConnections()
 #ifdef MUSE_MODULE_WORKSPACE
     connect(m_workspacesMenuModel.get(), &workspace::WorkspacesMenuModel::itemsChanged, this, [this](){
         MenuItem& workspacesItem = findMenu("menu-workspaces");
+        au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items());
         workspacesItem.setSubitems(m_workspacesMenuModel->items());
     });
 #endif
@@ -351,7 +354,8 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem("toggle-history")
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
-        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces")
+        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),
+                    au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items()), "menu-workspaces")
         << makeSeparator()
 #endif
 #ifndef Q_OS_MAC

@@ -17,6 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/axis/axislabel.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/types/decibel.h
+    ${CMAKE_CURRENT_LIST_DIR}/types/workspacetitles.h
     ${CMAKE_CURRENT_LIST_DIR}/types/decibel.cpp
 )
 

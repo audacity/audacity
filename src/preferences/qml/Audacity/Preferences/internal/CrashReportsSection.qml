@@ -36,7 +36,7 @@ BaseSection {
     StyledTextLabel {
         width: parent.width
 
-        text: qsTrc("appshell/preferences", "Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don't contain your audio or personal information. See our <a href=\"%1\">privacy policy</a> for more info.").arg(root.privacyPolicyUrl).replace("\n", "<br>")
+        text: qsTrc("appshell/preferences", "Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our <a href=\"%1\">privacy policy</a> for more info.").arg(root.privacyPolicyUrl).replace("\n", "<br>")
 
         horizontalAlignment: Qt.AlignLeft
         wrapMode: Text.WordWrap
