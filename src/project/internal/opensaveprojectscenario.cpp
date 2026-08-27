@@ -231,7 +231,8 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::saveLocationType() const
 
 RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
 {
-    UriQuery query("audacity://project/asksavelocationtype");
+    UriQuery query("audacity://project/asklocationtype");
+    query.addParam("purpose", Val(std::string("save")));
     bool shouldAsk = configuration()->shouldAskSaveLocationType();
     query.addParam("askAgain", Val(shouldAsk));
 
@@ -245,7 +246,7 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
     bool askAgain = vals["askAgain"].toBool();
     configuration()->setShouldAskSaveLocationType(askAgain);
 
-    SaveLocationType type = static_cast<SaveLocationType>(vals["saveLocationType"].toInt());
+    SaveLocationType type = static_cast<SaveLocationType>(vals["locationType"].toInt());
     return RetVal<SaveLocationType>::make_ok(type);
 }
 
