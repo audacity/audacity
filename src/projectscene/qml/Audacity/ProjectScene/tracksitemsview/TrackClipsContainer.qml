@@ -359,6 +359,7 @@ TrackItemsContainer {
                                 title: itemData.title
                                 clipColor: itemData.color
                                 clipSelectedColor: itemData.selectedColor
+                                clipHeaderHoverColor: itemData.headerHoverColor
                                 isGrouped: itemData.isGrouped
                                 clipKey: itemData.key
                                 clipTime: itemData.time

@@ -228,6 +228,36 @@ muse::Color ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorInd
     return muse::Color::fromQColor(color);
 }
 
+muse::Color ProjectSceneConfiguration::clipHeaderHoverColor(trackedit::ClipColorIndex index) const
+{
+    QString key = QString("clip_header_hover_color_%1").arg(index);
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_header_hover_color_1"].value<QColor>();
+    }
+    return muse::Color::fromQColor(color);
+}
+
+ClassicClipColors ProjectSceneConfiguration::classicClipColors() const
+{
+    auto read = [this](const char* key, const QColor& fallback) {
+        QColor color = uiConfiguration()->currentTheme().extra[QString::fromLatin1(key)].value<QColor>();
+        return muse::Color::fromQColor(color.isValid() ? color : fallback);
+    };
+
+    //! NOTE Fallbacks are the AU3 light-theme values these colours originally came from
+    ClassicClipColors colors;
+    colors.background = read("classic_clip_background_color", QColor(240, 243, 255));
+    colors.backgroundSelected = read("classic_clip_background_selected_color", QColor(170, 195, 242));
+    colors.samples = read("classic_clip_samples_color", QColor(100, 100, 211));
+    colors.samplesSelected = read("classic_clip_samples_selected_color", QColor(103, 124, 228));
+    colors.rms = read("classic_clip_rms_color", QColor(151, 151, 253));
+    colors.clipping = read("classic_clip_clipping_color", QColor(239, 71, 111));
+    colors.sampleEmphasis = read("classic_clip_sample_emphasis_color", QColor(0, 0, 0));
+
+    return colors;
+}
+
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const
 {
     return muse::settings()->value(CLIP_STYLE).toEnum<ClipStyles::Style>();

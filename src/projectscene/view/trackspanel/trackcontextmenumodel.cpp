@@ -61,7 +61,6 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track visualization"), makeTrackVisualizationItems()),
-        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeItemWithArg("toggle-vertical-rulers"),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
@@ -73,6 +72,14 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
         makeItemWithArg("track-resample"),
     };
+
+    //! NOTE Clips in the Classic style do not use the colour palette, so the track colour
+    //! submenu is left out there. Label tracks keep it unconditionally - labels use these
+    //! colours in both styles.
+    if (projectSceneConfiguration()->clipStyle() == ClipStyles::Style::COLORFUL) {
+        items.insert(6, makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"),
+                                 makeTrackColorItems(), TRACK_COLOR_MENU_ID));
+    }
 
     return items;
 }
@@ -86,7 +93,6 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track visualization"), makeTrackVisualizationItems()),
-        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeItemWithArg("toggle-vertical-rulers"),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
@@ -96,6 +102,14 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
         makeItemWithArg("track-resample"),
     };
+
+    //! NOTE Clips in the Classic style do not use the colour palette, so the track colour
+    //! submenu is left out there. Label tracks keep it unconditionally - labels use these
+    //! colours in both styles.
+    if (projectSceneConfiguration()->clipStyle() == ClipStyles::Style::COLORFUL) {
+        items.insert(6, makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"),
+                                 makeTrackColorItems(), TRACK_COLOR_MENU_ID));
+    }
 
     return items;
 }
