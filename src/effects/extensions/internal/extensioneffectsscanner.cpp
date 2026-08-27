@@ -26,7 +26,12 @@ ExtensionEffectsScanner::ExtensionEffectsScanner(std::shared_ptr<muse::extension
 muse::io::paths_t ExtensionEffectsScanner::scanPlugins(muse::Progress*) const
 {
     m_extensionsProvider->reloadExtensions();
-    if (m_repository->reload(m_extensionsProvider->manifestList())) {
+    return updateRepository();
+}
+
+muse::io::paths_t ExtensionEffectsScanner::updateRepository() const
+{
+    if (m_repository->reload(m_extensionsProvider->manifestList(muse::extensions::Filter::Enabled))) {
         m_effectLoader->retireAll();
     }
     return m_repository->pluginPaths();
@@ -35,7 +40,7 @@ muse::io::paths_t ExtensionEffectsScanner::scanPlugins(muse::Progress*) const
 void ExtensionEffectsScanner::refreshPlugins(
     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) const
 {
-    const muse::io::paths_t paths = scanPlugins();
+    const muse::io::paths_t paths = updateRepository();
     for (const auto& path : paths) {
         if (!knownPlugins()->exists(path)) {
             const muse::Ret result = registerAudioPluginsScenario.registerPlugin(path);

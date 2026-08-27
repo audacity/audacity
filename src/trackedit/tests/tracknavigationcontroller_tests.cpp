@@ -170,7 +170,7 @@ public:
     static auto isPanelCommand(const muse::rcommand::Command& command)
     {
         return ::testing::Truly([command](const muse::rcommand::Request& request) {
-            return request.query.uri() == command;
+            return request.command == command;
         });
     }
 

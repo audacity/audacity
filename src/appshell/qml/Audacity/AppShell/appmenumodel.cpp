@@ -25,6 +25,7 @@
 
 #include "global/containers.h"
 #include "types/translatablestring.h"
+#include "extensions/extensionscommands.h"
 
 #include "muse_framework_config.h"
 
@@ -161,7 +162,7 @@ void AppMenuModel::setupConnections()
         findMenu("menu-tools").setSubitems(makeToolItems());
     });
 
-    extensionsProvider()->manifestChanged().onReceive(this, [this](const Manifest&) {
+    extensionsProvider()->enabledChanged().onReceive(this, [this](const ExtensionUri&) {
         findMenu("menu-tools").setSubitems(makeToolItems());
     });
 
@@ -432,7 +433,7 @@ MenuItemList AppMenuModel::makeExtensionItems()
         if (manifest.actions.size() == 1) {
             const muse::extensions::Action& action = manifest.actions.front();
             if (action.showOnAppmenu) {
-                items << makeMenuItem(makeActionQuery(manifest.uri, action.code).toString(),
+                items << makeMenuItem(makeCommand(manifest.uri, action.code).toString(),
                                       TranslatableString::untranslatable(action.title.empty() ? manifest.title : action.title));
             }
             continue;
@@ -441,7 +442,7 @@ MenuItemList AppMenuModel::makeExtensionItems()
         MenuItemList actions;
         for (const muse::extensions::Action& action : manifest.actions) {
             if (action.showOnAppmenu) {
-                actions << makeMenuItem(makeActionQuery(manifest.uri, action.code).toString(),
+                actions << makeMenuItem(makeCommand(manifest.uri, action.code).toString(),
                                         TranslatableString::untranslatable(action.title));
             }
         }
