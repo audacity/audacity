@@ -308,6 +308,7 @@ Item {
                 width: 143
                 height: 28
 
+                //: Noun: label of the snapping control in the playback toolbar
                 title: qsTrc("projectscene", "Snap")
                 toggleAccessibleName: qsTrc("projectscene", "Snapping")
                 dropdownAccessibleName: qsTrc("projectscene", "Snap to")

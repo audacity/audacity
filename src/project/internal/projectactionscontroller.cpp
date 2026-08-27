@@ -801,6 +801,7 @@ muse::io::paths_t ProjectActionsController::selectOpeningFiles()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
+    //: Title of a file picker dialog
     io::paths_t filePaths = interactive()->selectOpeningFilesSync(muse::trc("project",
                                                                             "Open"), defaultDir, filter,
                                                                   QFileDialog::HideNameFilterDetails);

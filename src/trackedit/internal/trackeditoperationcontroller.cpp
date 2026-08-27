@@ -318,6 +318,7 @@ bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, b
 bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
     if (tracksInteraction()->removeTracksData(tracksIds, begin, end, moveClips)) {
+        //: Undo history entry name; shown after Undo and Redo in the Edit menu
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Delete"), muse::trc("trackedit", "Delete and close gap"));
         return true;
     }
@@ -432,6 +433,7 @@ void TrackeditOperationController::cancelItemDragEdit()
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
     if (tracksInteraction()->splitTracksAt(tracksIds, pivots)) {
+        //: Undo history entry name; shown after Undo and Redo in the Edit menu
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Split"), muse::trc("trackedit", "Split"));
         return true;
     }
@@ -568,6 +570,7 @@ bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList,
 
     if (completed) {
         std::string msg = hasLabels ? muse::trc("trackedit", "Trim items left") : muse::trc("trackedit", "Trim clip left");
+        //: Undo history entry name; shown after Undo and Redo in the Edit menu
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Trim"), msg, type);
     }
     return success;
@@ -1127,12 +1130,15 @@ void TrackeditOperationController::pushProjectHistoryJoinState(secs_t start, sec
         //: %2 is the position in seconds it starts at
         muse::qtrc("trackedit", "Joined %1 seconds at %2")
         .arg(duration.to_double()).arg(start.to_double()).toStdString(),
+        //: Undo history entry name; shown after Undo and Redo in the Edit menu
         muse::trc("trackedit", "Join"));
 }
 
 void TrackeditOperationController::pushProjectHistoryDuplicateState()
 {
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Duplicated"), muse::trc("trackedit", "Duplicate"));
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Duplicated"),
+                                       /*: Undo history entry name; shown after Undo and Redo in the Edit menu */
+                                       muse::trc("trackedit", "Duplicate"));
 }
 
 void TrackeditOperationController::pushProjectHistorySplitDeleteState()
