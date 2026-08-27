@@ -675,6 +675,22 @@ void FileNames::AddMultiPathsToPathList(const wxString& multiPathStringArg,
     }
 }
 
+void FileNames::RemoveDuplicatesFromPathList(FilePaths& pathList)
+{
+    FilePaths uniquePaths;
+    FilePaths normalizedPaths;
+    for (const auto& path : pathList) {
+        wxFileName dir = wxFileName::DirName(path);
+        dir.MakeAbsolute();
+        const wxString normalized = dir.GetFullPath();
+        if (normalizedPaths.Index(normalized, wxFileName::IsCaseSensitive()) == wxNOT_FOUND) {
+            normalizedPaths.push_back(normalized);
+            uniquePaths.push_back(path);
+        }
+    }
+    pathList = std::move(uniquePaths);
+}
+
 #include <wx/log.h>
 
 // static
