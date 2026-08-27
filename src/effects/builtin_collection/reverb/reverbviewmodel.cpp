@@ -36,6 +36,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList["RoomSize"] = makeItem("RoomSize",
                                         muse::qtrc("effects/reverb", "Room size"),
+                                        //: Percent sign, used as a unit suffix
                                         muse::qtrc("global", "%"),
                                         rs.mRoomSize,
                                         ReverbEffect::RoomSize.min,

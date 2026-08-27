@@ -397,6 +397,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
 {
     auto* projectCloudExtension = cloudExtension(project);
     if (!projectCloudExtension) {
+        //: Error message of a failed cloud operation
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project"));
     }
 
@@ -476,6 +477,7 @@ void Au3AudioComService::startNewSnapshotUpload(au::project::IAudacityProjectPtr
                  projectSaveCallback = std::move(projectSaveCallback)]() mutable {
         auto self = weak.lock();
         if (!self) {
+            //: Error message shown when a cloud operation is interrupted by the application closing
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Service destroyed")));
             return;
         }

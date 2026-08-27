@@ -151,6 +151,7 @@ void PluginManagerTableViewModel::toggleColumnSort(int column)
 muse::uicomponents::MenuItemList PluginManagerTableViewModel::enabledDisabledOptions()
 {
     return utils::toMenuItemList({
+            //: Filter option in the Plugin Manager dropdowns that shows every entry
             { "all", muse::qtrc("effects", "All") },
             { "disabled", muse::qtrc("effects", "Disabled") },
             { "enabled", muse::qtrc("effects", "Enabled") },
