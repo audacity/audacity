@@ -94,12 +94,6 @@ Item {
                     "title": qsTrc("appshell", "Project"),
                     "icon": IconCode.NEW_FILE,
                     "enabled": true
-                },
-                {
-                    "name": "learn",
-                    "title": qsTrc("appshell", "Learn"),
-                    "icon": IconCode.MORTAR_BOARD,
-                    "enabled": false
                 }
             ]
 
