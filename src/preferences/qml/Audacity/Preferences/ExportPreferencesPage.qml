@@ -12,12 +12,14 @@ import Audacity.Preferences
 PreferencesPage {
     id: root
 
+    readonly property int navigationOrderEnd: saveBehaviorSection.navigationOrderEnd
+
     ExportPreferencesPageModel {
         id: exportPreferencesModel
     }
 
     Component.onCompleted: {
-        exportPreferencesModel.init();
+        exportPreferencesModel.init()
     }
 
     Column {
@@ -34,7 +36,7 @@ PreferencesPage {
 
             onFocusChanged: {
                 if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height));
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
                 }
             }
         }
@@ -51,7 +53,7 @@ PreferencesPage {
 
             onFocusChanged: {
                 if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height));
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
                 }
             }
         }

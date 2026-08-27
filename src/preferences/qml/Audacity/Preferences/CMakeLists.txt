@@ -1,5 +1,9 @@
 muse_create_qml_module(preferences_qml FOR preferences)
 
+if (AU_BUILD_CLOUD_AUDIOCOM)
+    target_compile_definitions(preferences_qml PRIVATE AU_BUILD_CLOUD_AUDIOCOM)
+endif()
+
 qt_add_qml_module(preferences_qml
     URI Audacity.Preferences
     VERSION 1.0

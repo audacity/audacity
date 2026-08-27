@@ -15,6 +15,8 @@ BaseSection {
 
     navigation.name: "ExportBehaviorSection"
 
+    navigationOrderEnd: root.navigation.order
+
     required property var exportPreferencesModel
 
     CheckBox {
@@ -29,7 +31,7 @@ BaseSection {
         navigation.row: 0
 
         onClicked: {
-            root.exportPreferencesModel.askExportLocationType = !checked;
+            root.exportPreferencesModel.askExportLocationType = !checked
         }
     }
 }

@@ -29,7 +29,7 @@ static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 static const muse::Uri SAVE_TO_CLOUD_URI("audacity://project/savetocloud");
 static const muse::Uri EXPORT_URI("audacity://project/export");
-static const muse::Uri ASK_EXPORT_LOCATION_TYPE_URI("audacity://project/askexportlocationtype");
+static const muse::Uri ASK_LOCATION_TYPE_URI("audacity://project/asklocationtype");
 static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
 static const muse::Uri METADATA_DIALOG_URI("audacity://project/export/metadata");
 static const muse::Uri EXPORT_LABELS_URI("audacity://project/export/labels");
@@ -1595,7 +1595,8 @@ bool ProjectActionsController::dispatchAudioPreviewToWindowWithProject(const mus
 void ProjectActionsController::exportAudio()
 {
     if (audioComService()->enabled() && exportConfiguration()->askExportLocationType()) {
-        muse::UriQuery query(ASK_EXPORT_LOCATION_TYPE_URI);
+        muse::UriQuery query(ASK_LOCATION_TYPE_URI);
+        query.addParam("purpose", Val(std::string("export")));
         query.addParam("askAgain", Val(true));
 
         RetVal<Val> rv = interactive()->openSync(query);
@@ -1606,7 +1607,7 @@ void ProjectActionsController::exportAudio()
         QVariantMap vals = rv.val.toQVariant().toMap();
         exportConfiguration()->setAskExportLocationType(vals["askAgain"].toBool());
 
-        if (static_cast<SaveLocationType>(vals["exportLocationType"].toInt()) == SaveLocationType::Cloud) {
+        if (static_cast<SaveLocationType>(vals["locationType"].toInt()) == SaveLocationType::Cloud) {
             shareAudio();
             return;
         }

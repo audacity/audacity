@@ -11,8 +11,7 @@
         <file>qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/ProjectThumbnail.qml</file>
-        <file>qml/Audacity/Project/AskSaveLocationTypeDialog.qml</file>
-        <file>qml/Audacity/Project/AskExportLocationTypeDialog.qml</file>
+        <file>qml/Audacity/Project/AskLocationTypeDialog.qml</file>
         <file>qml/Audacity/Project/SaveToCloudDialog.qml</file>
         <file>qml/Audacity/Project/CloudProjectSyncDialog.qml</file>
         <file>qml/Audacity/Project/internal/NewProject/GeneralInfoItem.qml</file>
