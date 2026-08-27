@@ -243,6 +243,13 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avformat/62/AVFormatImpl.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/60/AVUtilImpl.cpp
 
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/ffmpeg-9.0.0-single-header.h
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/61/avconfig.h
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/63/AVCodecIDLookup.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/63/AVCodecImpl.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avformat/63/AVFormatImpl.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/61/AVUtilImpl.cpp
+
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/AVCodecFunctionsLoader.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/AVCodecFunctionsLoader.h
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/lib-ffmpeg-support/impl/avformat/AVFormatFunctionsLoader.cpp
