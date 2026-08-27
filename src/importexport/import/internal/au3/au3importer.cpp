@@ -134,7 +134,7 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     const std::string ext = suffix(filePath);
     for (const std::string& labelExt : labelsImporter()->supportedExtensions()) {
         if (labelExt == ext) {
-            return labelsImporter()->importData(filePath).success();
+            return labelsImporter()->importData(filePath).ret.success();
         }
     }
 

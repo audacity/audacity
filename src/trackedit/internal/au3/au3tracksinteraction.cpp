@@ -1407,6 +1407,10 @@ void Au3TracksInteraction::removeDragAddedTracks(size_t numTracksWhenDragStarted
     for (auto i = numTracksWhenDragStarted; i < tracks.size(); ++i) {
         const auto& track = tracks[i];
         Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
+        if (!waveTrack) {
+            // non-wave tracks (e.g. label tracks imported during the drag) are not drag-added
+            continue;
+        }
         if (!emptyOnly || waveTrack->IsEmpty()) {
             const auto clips = prj->clipList(track.id);
             ::TrackList::Get(projectRef()).Remove(*waveTrack);

@@ -92,6 +92,6 @@ private:
     muse::RetVal<QString> createNewLabelTrack(int currentRow);
 
     muse::io::path_t selectFileForExport();
-    muse::io::path_t selectFileForImport();
+    muse::io::paths_t selectFilesForImport();
 };
 }

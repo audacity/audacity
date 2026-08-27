@@ -17,7 +17,7 @@ public:
     Au3LabelsImporter(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
-    muse::Ret importData(const muse::io::path_t& filePath) override;
+    muse::RetVal<trackedit::TrackId> importData(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId) override;
     std::vector<std::string> supportedExtensions() const override;
 };
 }

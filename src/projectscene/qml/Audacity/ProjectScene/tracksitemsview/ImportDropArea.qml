@@ -98,6 +98,7 @@ DropArea {
         dropController.removeDragAddedTracks(trackId, trackCount)
 
         let tracksIds = dropController.draggedTracksIds(trackId, trackCount)
+        dropController.updateLabelPreviewTracks(tracksIds)
         tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
         const durations = dropController.lastProbedDurations()
         const titles = dropController.lastProbedFileNames()
