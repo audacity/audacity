@@ -187,10 +187,6 @@ ColumnLayout {
 
                                 return c.role ? c.name + ", " + c.role : c.name
                             }).join("<br>")
-
-                            onLinkActivated: function (link) {
-                                Qt.openUrlExternally(link)
-                            }
                         }
                     }
                 }
@@ -201,10 +197,6 @@ ColumnLayout {
                         return qsTrc("appshell/about", "Audacity website: %1").arg('<a href="' + websiteUrl.url + '">' + websiteUrl.displayName + '</a>')
                     }
                     font: ui.theme.bodyFont
-
-                    onLinkActivated: function (link) {
-                        Qt.openUrlExternally(link)
-                    }
                 }
 
                 Column {
