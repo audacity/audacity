@@ -15,7 +15,9 @@ static const muse::ui::UiActionList STATIC_ACTIONS = {
     muse::ui::UiAction(TRACK_SPECTROGRAM_SETTINGS_ACTION,
                        au::context::UiCtxAny,
                        au::context::CTX_ANY,
+                       //: Action title: shown as a menu item or a button label; keep it short
                        muse::TranslatableString("action", "Spectrogram settings…"),
+                       //: Action description: shown as a tooltip; can be a full sentence
                        muse::TranslatableString("action", "Spectrogram settings…")
                        )
 };

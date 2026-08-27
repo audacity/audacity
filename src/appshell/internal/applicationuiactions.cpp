@@ -43,46 +43,58 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("quit",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Exit"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Exit")
              ),
     UiAction("restart",
              au::context::UiCtxAny,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Restart")
              ),
     UiAction(FULL_SCREEN_CODE,
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Full screen"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Full screen"),
              Checkable::Yes
              ),
     UiAction("about-audacity",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&About Audacity…")
              ),
     UiAction("about-qt",
              au::context::UiCtxAny,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "About &Qt…")
              ),
     UiAction("online-handbook",
              au::context::UiCtxUnknown,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Online &handbook"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Open online handbook")
              ),
     UiAction("ask-help",
              au::context::UiCtxAny,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "As&k for help")
              ),
     UiAction("revert-factory",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Revert to &factory settings"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Revert to factory settings")
              ),
 
@@ -90,7 +102,9 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("dock-restore-default-layout",
              au::context::UiCtxAny,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Restore the &default layout"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Restore the default layout")
              ),
 
@@ -98,7 +112,9 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("toggle-transport",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Playback controls"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show/hide playback controls"),
              Checkable::Yes
              ),
@@ -106,7 +122,9 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("toggle-tracks",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Tracks"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show/hide tracks"),
              Checkable::Yes
              ),
@@ -114,7 +132,9 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("toggle-statusbar",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Status bar"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Show/hide status bar"),
              Checkable::Yes
              ),
@@ -122,14 +142,18 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("preference-dialog",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Preferences"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Preferences…")
              ),
     UiAction("action://copy",
              { "action://trackedit/copy" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Copy"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Copy"),
              IconCode::Code::COPY
              ),
@@ -137,7 +161,9 @@ const UiActionList ApplicationUiActions::m_actions = {
              { "action://trackedit/cut" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Cut"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Cut"),
              IconCode::Code::CUT
              ),
@@ -145,7 +171,9 @@ const UiActionList ApplicationUiActions::m_actions = {
              { "action://trackedit/paste-default" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Paste"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Paste"),
              IconCode::Code::PASTE
              ),
@@ -153,7 +181,9 @@ const UiActionList ApplicationUiActions::m_actions = {
              { "action://trackedit/undo" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Undo"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Undo"),
              IconCode::Code::UNDO
              ),
@@ -161,7 +191,9 @@ const UiActionList ApplicationUiActions::m_actions = {
              { "action://trackedit/redo" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Redo"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Redo"),
              IconCode::Code::REDO
              ),
@@ -169,27 +201,35 @@ const UiActionList ApplicationUiActions::m_actions = {
              { "action://trackedit/delete" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "De&lete"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Delete"),
              IconCode::Code::DELETE_TANK
              ),
     UiAction("action://cancel",
              au::context::UiCtxAny,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Cancel"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Cancel"),
              IconCode::Code::DELETE_TANK
              ),
     UiAction("action://trigger",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Trigger"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Trigger")
              ),
     UiAction("action://enter",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Enter"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action", "Trigger the focused control or select the focused track item")
              ),
 };
