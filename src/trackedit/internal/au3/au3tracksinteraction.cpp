@@ -350,13 +350,22 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
                 dstWaveTrack->InsertInterval(interval, false);
             }
         } else if (pasteIntoExistingClip
-                   && clipsInteraction()->singleClipOnTrack(trackToPaste->GetId())
+                   && trackToPaste->Intervals().size() == 1
                    && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
-            auto [leftClip, rightClip] = dstWaveTrack->SplitAt(begin);
+            double joinStart = begin;
+            WaveTrack::IntervalHolder rightClip;
+            if (dstWaveTrack->SplitsSomeClip(begin)) {
+                auto [leftClip, right] = dstWaveTrack->SplitAt(begin);
+                joinStart = leftClip->GetPlayStartTime();
+                rightClip = right;
+            } else {
+                // `begin` is exactly at the clip's start: nothing to split, the whole clip is pushed to the right
+                rightClip = dstWaveTrack->GetIntervalAtTime(begin);
+            }
             rightClip->SetPlayStartTime(begin + trackToPaste->GetClip(0)->GetPlayDuration());
             dstWaveTrack->Paste(begin, *trackToPaste, false);
             ProgressReporter dummyProgressReporter;
-            dstWaveTrack->Join(leftClip->GetPlayStartTime(), rightClip->GetPlayEndTime(), dummyProgressReporter,
+            dstWaveTrack->Join(joinStart, rightClip->GetPlayEndTime(), dummyProgressReporter,
                                true /* evenIfPitchOrSpeedMismatch */);
         } else {
             dstWaveTrack->Paste(begin, *trackToPaste, moveClips);
@@ -1664,7 +1673,7 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
         // if paste into existing clip and there is a single clip to paste,
         // we need to make room for the clip to be extended
         if (pasteIntoExistingClip
-            && clipsInteraction()->singleClipOnTrack(trackToPaste->GetId())
+            && trackToPaste->Intervals().size() == 1
             && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
