@@ -698,6 +698,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
                              muse::ui::IconCode::Code::TICK,
                              dismissable,
         {
+            //: Label of the button that dismisses a notification
             { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
             { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
         }
@@ -1468,6 +1469,7 @@ void ProjectActionsController::doUpdateCloudAudioPreview(const IAudacityProjectP
             onFinished();
         }
 
+        //: Title of an error dialog shown when generating the audio preview fails
         interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
         return;
     }
