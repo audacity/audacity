@@ -59,6 +59,7 @@ TrackItem {
                     navigation.panel: root.headerNavigationPanel
                     navigation.order: root.extraControlsNavigationStart
                     navigation.enabled: !root.collapsed
+                    //: Noun: accessibility name of the pan knob
                     navigation.accessible.name: qsTrc("projectscene", "Pan")
 
                     onNewPanRequested: function (newValue, completed) {
@@ -246,6 +247,7 @@ TrackItem {
 
                 navigation.panel: root.headerNavigationPanel
                 navigation.order: root.headerTrailingControlsNavigationStart
+                //: Accessibility name of the mute button
                 navigation.accessible.name: qsTrc("projectscene", "Mute")
                 navigation.accessible.role: MUAccessible.CheckBox
 
@@ -267,6 +269,7 @@ TrackItem {
 
                 navigation.panel: root.headerNavigationPanel
                 navigation.order: muteButton.navigation.order + 1
+                //: Accessibility name of the solo button
                 navigation.accessible.name: qsTrc("projectscene", "Solo")
                 navigation.accessible.role: MUAccessible.CheckBox
 

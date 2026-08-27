@@ -119,6 +119,7 @@ public:
         constexpr long long ProgressSteps = 1000ul;
 
         if (!mProgressDialog) {
+            //: Title of the export progress dialog
             mProgressDialog = BasicUI::MakeProgress(::TranslatableString("import-export", "Export"), mStatus);
         } else {
             mProgressDialog->SetMessage(mStatus);

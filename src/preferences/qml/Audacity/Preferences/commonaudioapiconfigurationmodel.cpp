@@ -160,6 +160,7 @@ bool CommonAudioApiConfigurationModel::apply()
             {},
             muse::qtrc("preferences", "The audio stream could not be restored after changing the audio settings."));
         if (!notice.isEmpty() && interactive()) {
+            //: Used as the title of the Audio settings preferences page and of related warning dialogs
             interactive()->warning(muse::qtrc("preferences", "Audio settings").toStdString(),
                                    notice.toStdString());
         }

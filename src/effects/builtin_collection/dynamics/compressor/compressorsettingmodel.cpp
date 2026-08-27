@@ -10,11 +10,15 @@
 namespace au::effects {
 CompressorSettingModel::CompressorSettingModel(QObject* parent, int instanceId)
     : EffectSettingModelImpl<CompressorEffect>(parent, instanceId, {
-        { "thresholdDb", { muse::qtrc("effects", "Threshold"), muse::qtrc("effects", "dB") } },
+        { "thresholdDb", { muse::qtrc("effects", "Threshold"),
+                           /*: Abbreviation of decibels, used as a unit suffix */
+                           muse::qtrc("effects", "dB") } },
         { "makeupGainDb", { muse::qtrc("effects", "Make-up gain"), muse::qtrc("effects", "dB") } },
         { "kneeWidthDb", { muse::qtrc("effects", "Knee width"), muse::qtrc("effects", "dB") } },
         { "compressionRatio", { muse::qtrc("effects", "Ratio"), QString() } },
-        { "lookaheadMs", { muse::qtrc("effects", "Lookahead"), muse::qtrc("effects", "ms") } },
+        { "lookaheadMs", { muse::qtrc("effects", "Lookahead"),
+                           /*: Abbreviation of milliseconds, used as a unit suffix */
+                           muse::qtrc("effects", "ms") } },
         { "attackMs", { muse::qtrc("effects", "Attack"), muse::qtrc("effects", "ms") } },
         { "releaseMs", { muse::qtrc("effects", "Release"), muse::qtrc("effects", "ms") } },
         // We deliberately leave out the "show" parameters: these are overridden in the UI anyway.

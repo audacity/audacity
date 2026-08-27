@@ -32,13 +32,6 @@ set( LIBRARIES
    wxBase
 )
 
-if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")
-   set( DEFINES
-      PUBLIC
-         -DUNCAUGHT_EXCEPTIONS_UNAVAILABLE
-   )
-endif()
-
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" ""
 )

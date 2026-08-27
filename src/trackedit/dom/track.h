@@ -7,6 +7,7 @@
 
 #include "../trackedittypes.h"
 #include "global/types/string.h"
+#include "global/types/translatablestring.h"
 
 #include "clip.h" // IWYU pragma: export
 #include "label.h" // IWYU pragma: export
@@ -41,15 +42,18 @@ enum class TrackViewType : int {
 
 struct TrackFormatInfo {
     TrackFormat format;
-    const char* description;
+    muse::TranslatableString description;
 };
 
 inline const std::array<TrackFormatInfo, 3>& availableTrackFormats()
 {
-    static constexpr std::array<TrackFormatInfo, 3> AVAILABLE_TRACK_FORMATS = { {
-        { au::trackedit::TrackFormat::Int16, "16-bit PCM" },
-        { au::trackedit::TrackFormat::Int24, "24-bit PCM" },
-        { au::trackedit::TrackFormat::Float32, "32-bit Float" }
+    static const std::array<TrackFormatInfo, 3> AVAILABLE_TRACK_FORMATS = { {
+        //: The format of the audio samples on a track
+        { au::trackedit::TrackFormat::Int16, muse::TranslatableString("trackcontextmenu", "16-bit PCM") },
+        //: The format of the audio samples on a track
+        { au::trackedit::TrackFormat::Int24, muse::TranslatableString("trackcontextmenu", "24-bit PCM") },
+        //: The format of the audio samples on a track
+        { au::trackedit::TrackFormat::Float32, muse::TranslatableString("trackcontextmenu", "32-bit Float") }
     } };
     return AVAILABLE_TRACK_FORMATS;
 }

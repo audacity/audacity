@@ -968,7 +968,9 @@ void Au3Record::cancelRecording()
 
 void Au3Record::commitRecording()
 {
-    projectHistory()->pushHistoryState(trc("record", "Recorded audio"), trc("record", "Record"));
+    projectHistory()->pushHistoryState(trc("record", "Recorded audio"),
+                                       /*: Undo history entry name; shown after Undo and Redo in the Edit menu */
+                                       trc("record", "Record"));
 }
 
 bool Au3Record::canStopAudioStream() const
