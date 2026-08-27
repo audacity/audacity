@@ -24,6 +24,7 @@
 
 #include "../iuicontextresolver.h"
 
+#include "framework/extensions/iextensioncontextresolver.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
@@ -37,7 +38,8 @@
 #endif
 
 namespace au::context {
-class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable, public muse::Contextable
+class UiContextResolver : public muse::ui::IUiContextResolver, public muse::extensions::IExtensionContextResolver,
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<IGlobalContext> globalContext { this };
@@ -59,6 +61,9 @@ public:
     bool matchWithCurrent(const muse::ui::UiContext& ctx) const override;
 
     bool isShortcutContextAllowed(const std::string& scContext) const override;
+
+    bool isContextAllowed(const std::string& context) const override;
+    muse::async::Notification contextChanged() const override;
 
 private:
     muse::ui::UiContext resolveUiContext() const;
