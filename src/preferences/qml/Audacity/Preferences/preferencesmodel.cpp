@@ -215,7 +215,7 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::MUSIC_NOTES,
                  "Preferences/MusicPreferencesPage.qml"),
 
-        makeItem("cloud", QT_TRANSLATE_NOOP("preferences", "Cloud"), IconCode::Code::CLOUD, ""),
+        // makeItem("cloud", QT_TRANSLATE_NOOP("preferences", "Cloud"), IconCode::Code::CLOUD, ""),
 
         makeItem("shortcuts", QT_TRANSLATE_NOOP("preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
                  "Preferences/ShortcutsPreferencesPage.qml"),
@@ -223,7 +223,7 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("plugin", QT_TRANSLATE_NOOP("preferences",
                                              "Plugins"), IconCode::Code::PLUGIN, "Preferences/PluginPreferencesPage.qml"),
 
-        makeItem("advanced", QT_TRANSLATE_NOOP("preferences", "Advanced options"), IconCode::Code::SETTINGS_COG, ""),
+        // makeItem("advanced", QT_TRANSLATE_NOOP("preferences", "Advanced options"), IconCode::Code::SETTINGS_COG, ""),
     };
 
     for (PreferencePageItem* item: items) {
