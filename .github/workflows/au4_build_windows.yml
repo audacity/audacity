@@ -224,7 +224,7 @@ jobs:
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |
-        cmake -DSIGN_ENABLE=OFF -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake
+        cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake
 
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
