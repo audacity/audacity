@@ -1,0 +1,60 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // A crashed run can leave session state behind, which flips the next
+            // startup into Recovery mode
+            "label": "testflow: reset headless profile",
+            "type": "shell",
+            // Seeded with the same deterministic UI settings as CI (see run_testflow_case.sh);
+            // development builds read Audacity4Development.ini, the others Audacity4.ini
+            "command": "rm -rf '${config:au4.testflowProfileDir}' && mkdir -p '${config:au4.testflowProfileDir}'/{config/Audacity,data,cache,state} && for app in Audacity4 Audacity4Development; do cp buildscripts/ci/tools/testflow_profile.ini \"${config:au4.testflowProfileDir}/config/Audacity/$app.ini\"; done",
+            "options": { "cwd": "${workspaceFolder}" },
+            "dependsOn": ["CMake: install"],
+            "problemMatcher": []
+        },
+        {
+            // Like CI: xcb under Xvfb, software renderer, seeded fresh profile.
+            // Needs xvfb (and imagemagick to compare with the references)
+            "label": "uichecks: run all",
+            "type": "shell",
+            "command": "buildscripts/tools/run_uicheck.sh --all",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": { "BUILD_DIR": "${config:au4.testflowBuildDir}" }
+            },
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "uichecks: run one",
+            "type": "shell",
+            "command": "buildscripts/tools/run_uicheck.sh ${input:uicheckScript}",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": { "BUILD_DIR": "${config:au4.testflowBuildDir}" }
+            },
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "testflow: run all test cases",
+            "type": "shell",
+            "command": "buildscripts/tools/run_testflow.sh --all",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": { "BUILD_DIR": "${config:au4.testflowBuildDir}" }
+            },
+            "group": { "kind": "test", "isDefault": true },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "uicheckScript",
+            "type": "promptString",
+            "description": "UI check to run (see share/testflowscripts/uichecks)",
+            "default": "HomePage.js"
+        }
+    ]
+}

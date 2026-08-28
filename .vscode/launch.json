@@ -62,7 +62,6 @@
                 // "https://wasted.audio/software/wstd_flangr"
                 // "--gtest_filter=*.tracksInRange*"
             ],
-            "initCommands": ["settings set target.load-cwd-lldbinit true"],
             // If you need to debug a plugin, you can do something like this.
             "postRunCommands": [
                 // "target symbols add /usr/lib/lv2/meters.lv2/meters.so",
@@ -70,6 +69,41 @@
             ],
             "env": {
                 "LD_LIBRARY_PATH": "${command:cmake.launchTargetDirectory}/lib"
+            }
+        },
+        {
+            // Runs a testflow script without UI, like on CI: offscreen Qt platform
+            // and a fresh isolated profile (reset by the preLaunchTask).
+            // Exits with its result (0 = passed, 1 = failed, 2 = script not found).
+            // For a plain run use the "testflow: run all test cases" task
+            "name": "Debug testflow test case headless (lldb - Linux)",
+            "type": "lldb",
+            "request": "launch",
+            "preLaunchTask": "testflow: reset headless profile",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                "--test-case",
+                "${input:testflowScript}",
+                "--test-case-speed",
+                "Fast" // Default | Fast | Normal | Slow
+            ],
+            "env": {
+                "LD_LIBRARY_PATH": "${command:cmake.launchTargetDirectory}/lib",
+                "AU_ALLOW_MULTIPLE_PROCESSES": "1",
+                // Both are needed: AU_QT_QPA_PLATFORM stops main.cpp forcing xcb,
+                // QT_QPA_PLATFORM selects the offscreen plugin
+                "AU_QT_QPA_PLATFORM": "offscreen",
+                "QT_QPA_PLATFORM": "offscreen",
+                // Run the source scripts, so edits need no rebuild or install
+                "MUSE_TESTFLOW_SCRIPTS_PATH": "${workspaceFolder}/share/testflowscripts",
+                // Fresh profile per run, like CI
+                "XDG_CONFIG_HOME": "${config:au4.testflowProfileDir}/config",
+                "XDG_DATA_HOME": "${config:au4.testflowProfileDir}/data",
+                "XDG_CACHE_HOME": "${config:au4.testflowProfileDir}/cache",
+                "XDG_STATE_HOME": "${config:au4.testflowProfileDir}/state",
+                // Keep reports outside the wiped profile
+                "MUSE_TESTFLOW_DATA_PATH": "${workspaceFolder}/build/testflow_data"
             }
         },
         {
@@ -92,6 +126,15 @@
                     "value": "${env:LD_LIBRARY_PATH}:${command:cmake.launchTargetDirectory}/lib"
                 }
             ]
+        }
+    ],
+    "inputs": [
+        {
+            // A hardcoded list would drift out of date
+            "id": "testflowScript",
+            "type": "promptString",
+            "description": "Testflow script to run (see share/testflowscripts)",
+            "default": "TC1.1_BasicTest.js"
         }
     ]
 }

@@ -30,6 +30,12 @@
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/ui/iuiactionsregister.h"
 
+#include "muse_framework_config.h"
+#ifdef MUSE_MODULE_TESTFLOW
+#include "framework/global/api/iapiregister.h"
+#include "api/screenshotapi.h"
+#endif
+
 #include "internal/applicationuiactions.h"
 #include "internal/applicationactioncontroller.h"
 #include "internal/appshellconfiguration.h"
@@ -70,6 +76,13 @@ void AppShellModule::registerExports()
 
 void AppShellModule::resolveImports()
 {
+#ifdef MUSE_MODULE_TESTFLOW
+    auto apiRegister = globalIoc()->resolve<muse::api::IApiRegister>(mname);
+    if (apiRegister) {
+        apiRegister->regApiCreator(mname, "Audacity.Screenshot", new muse::api::ApiCreator<api::ScreenshotApi>());
+    }
+#endif
+
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
         ir->registerPageUri(muse::Uri("audacity://home"));

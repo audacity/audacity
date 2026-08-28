@@ -49,6 +49,16 @@ target_sources(appshell PRIVATE
     internal/splashscreen/newinstanceloadingscreenview.h
 )
 
+if (MUSE_MODULE_TESTFLOW)
+    target_sources(appshell PRIVATE
+        api/screenshotapi.cpp
+        api/screenshotapi.h
+        testflowstartup.h
+        internal/testflowstartupscenario.cpp
+        internal/testflowstartupscenario.h
+    )
+endif()
+
 if (OS_IS_MAC)
     target_sources(appshell PRIVATE
         internal/platform/macos/macosappmenumodelhook.mm

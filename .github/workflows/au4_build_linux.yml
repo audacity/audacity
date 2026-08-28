@@ -276,8 +276,41 @@ jobs:
         APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
         QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
 
+  testflow:
+    needs: au4_build_linux
+    # Stable builds have testflow compiled out, so there is nothing to run
+    if: >-
+      !cancelled()
+      && needs.au4_build_linux.result == 'success'
+      && (inputs.build_mode || github.event.inputs.build_mode || 'devel_build') != 'stable_build'
+    uses: ./.github/workflows/au4_testflow.yml
+    with:
+      app_repo: ${{ inputs.app_repo || '' }}
+      app_ref: ${{ inputs.app_ref || '' }}
+
+  ui-checks:
+    needs: au4_build_linux
+    if: >-
+      !cancelled()
+      && needs.au4_build_linux.result == 'success'
+      && (inputs.build_mode || github.event.inputs.build_mode || 'devel_build') != 'stable_build'
+    uses: ./.github/workflows/au4_testflow.yml
+    with:
+      app_repo: ${{ inputs.app_repo || '' }}
+      app_ref: ${{ inputs.app_ref || '' }}
+      suite: uichecks
+
+
+  delete-selftest-artifacts:
+    # Only the self-test job uses this artifact, testflow takes the packaged one
+    needs: [plugin-registration-self-test]
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+    steps:
     - name: Delete self-test artifact
-      if: always()
       uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
       with:
         failOnError: false

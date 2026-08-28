@@ -1,0 +1,140 @@
+name: '[AU4] Test: Testflow'
+
+on:
+  workflow_call:
+    inputs:
+      app_repo:
+        description: 'owner/repo to source the test scripts from (default: this repo)'
+        type: string
+        required: false
+        default: ''
+      app_ref:
+        description: 'Ref to check the test scripts out from (default: ref of triggering event)'
+        type: string
+        required: false
+        default: ''
+      reuse_run_id:
+        description: 'Workflow run ID to take the AppImage artifact from (default: this run)'
+        type: string
+        required: false
+        default: ''
+      suite:
+        description: 'testflow (the test cases) or uichecks (screenshot comparisons)'
+        type: string
+        required: false
+        default: 'testflow'
+
+  workflow_dispatch:
+    inputs:
+      reuse_run_id:
+        description: 'Workflow run ID of an [AU4] Build: Linux run to take the AppImage artifact from'
+        required: true
+      suite:
+        description: 'Scripts to run'
+        type: choice
+        options: [testflow, uichecks]
+        default: testflow
+
+env:
+  CI_DIR: buildscripts/ci
+  # Subdirectory of share/testflowscripts holding the suite's scripts ('' = the test cases)
+  SCRIPTS_SUBDIR: ${{ inputs.suite == 'uichecks' && 'uichecks' || '' }}
+
+jobs:
+  discover:
+    # Reads the repo rather than the artifact, so it runs in parallel with the build
+    runs-on: ubuntu-22.04
+    outputs:
+      scripts: ${{ steps.list.outputs.scripts }}
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v6
+      with:
+        repository: ${{ inputs.app_repo || job.workflow_repository }}
+        ref: ${{ inputs.app_ref || job.workflow_sha }}
+        persist-credentials: false
+        # gitignore-style patterns, a trailing "# comment" becomes part of the pattern
+        sparse-checkout: |
+          share/testflowscripts
+          buildscripts/ci/tools
+
+    - name: List test scripts
+      id: list
+      run: |
+        scripts=$(bash ${CI_DIR}/tools/list_testflow_scripts.sh "share/testflowscripts${SCRIPTS_SUBDIR:+/$SCRIPTS_SUBDIR}")
+        echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
+        echo "Discovered: $scripts"
+
+  run:
+    needs: discover
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read # to list the artifacts of another run when reusing one
+      contents: read
+    strategy:
+      fail-fast: false # let sibling test cases finish even if one fails
+      # A job-level `if` cannot see the matrix, hence the step-level ones below
+      matrix: ${{ fromJSON(needs.discover.outputs.scripts) }}
+    steps:
+    - name: Report disabled test case
+      if: matrix.status == 'DISABLED'
+      env:
+        SCRIPT: ${{ matrix.script }}
+      run: echo "::warning title=Test case disabled::$SCRIPT is disabled - see share/testflowscripts/disabled.json for the reason"
+
+    # Before the artifact download: actions/checkout cleans the workspace
+    - name: Clone repository
+      if: matrix.status != 'DISABLED'
+      uses: actions/checkout@v6
+      with:
+        repository: ${{ inputs.app_repo || job.workflow_repository }}
+        ref: ${{ inputs.app_ref || job.workflow_sha }}
+        persist-credentials: false
+        # gitignore-style patterns, a trailing "# comment" becomes part of the pattern.
+        # The UI checks' references are compared from the checkout, not the artifact.
+        sparse-checkout: |
+          buildscripts/ci/tools
+          share/testflowscripts/uichecks
+
+    - name: Setup environment
+      if: matrix.status != 'DISABLED'
+      # A virtual display, plus the libraries the AppImage excludelist leaves to the host
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          xvfb openbox dbus-x11 \
+          libgl1 libglx0 libopengl0 libegl1 \
+          libx11-6 libx11-xcb1 libxcb1 \
+          libfontconfig1 libfreetype6 libexpat1 \
+          libasound2 \
+          fonts-dejavu-core imagemagick
+
+    - name: Download AppImage artifact
+      if: matrix.status != 'DISABLED'
+      uses: actions/download-artifact@v7
+      with:
+        pattern: AU4_*_Lin_x86_64_*
+        merge-multiple: true
+        path: ./build.artifacts
+        run-id: ${{ inputs.reuse_run_id || github.run_id }}
+        github-token: ${{ github.token }}
+
+    - name: Run testflow test case
+      if: matrix.status != 'DISABLED'
+      env:
+        SCRIPT: ${{ matrix.script }}
+      run: bash ${CI_DIR}/tools/run_testflow_case.sh "$SCRIPT" "$SCRIPTS_SUBDIR"
+
+    - name: Compare screenshots with the references
+      if: always() && inputs.suite == 'uichecks' && matrix.status != 'DISABLED'
+      env:
+        SCRIPT: ${{ matrix.script }}
+      run: bash ${CI_DIR}/tools/compare_screenshots.sh "$SCRIPT"
+
+    - name: Upload expected/actual/diff screenshots
+      if: failure() && inputs.suite == 'uichecks' && matrix.status != 'DISABLED'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ui-checks-${{ matrix.script }}
+        path: ui_checks_diff/
+        if-no-files-found: ignore
