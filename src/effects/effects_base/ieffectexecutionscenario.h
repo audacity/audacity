@@ -26,6 +26,7 @@ public:
     virtual muse::async::Notification lastProcessorIsNowAvailable() const = 0;
     virtual muse::async::Channel<EffectId> lastProcessorIdChanged() const = 0;
     virtual muse::Ret repeatLastProcessor() = 0;
+    virtual bool isBusy() const = 0;
 
     virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) = 0;
     virtual void stopPreview() = 0;

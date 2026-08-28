@@ -5,6 +5,7 @@
  */
 
 var Project = require("Audacity.Project")
+var Effects = require("Audacity.Effects")
 
 var EPSILON = 0.001
 
@@ -24,10 +25,31 @@ function undo()        { run("action://undo") }
 function sleep(ms)     { api.testflow.sleep(ms) }
 function fail(msg)     { api.testflow.error(msg) }
 
+function waitUntil(pred, timeoutMs, pollMs) {
+    timeoutMs = timeoutMs || 120000 // TODO must be > than the validation timeout. How do we keep this in sync?
+    pollMs = pollMs || 20
+    for (var waited = 0; waited <= timeoutMs; waited += pollMs) {
+        if (pred()) return
+        sleep(pollMs)
+    }
+    fail("waitUntil: timed out after " + timeoutMs + "ms")
+}
+
+// Wait until an effect with the given title is validated and loadable. On a
+// blank-config first run a third-party plugin is validated in the background,
+// so its title only appears once validation finishes; call this before
+// applying such a plugin by title.
+function waitForEffect(title, timeoutMs) {
+    waitUntil(function () { return Effects.isAvailable(title) }, timeoutMs)
+}
+
 function effect(id, params) {
     var q = "action://effects/apply?effectId=" + id
     for (var k in params) { q += "&" + k + "=" + params[k] }
     api.dispatcher.dispatch(q)
+    // Applying an effect is asynchronous (validate-on-first-use then apply);
+    // wait for it to finish so the next step sees the result.
+    waitUntil(function () { return !Effects.isApplying() })
 }
 
 // project queries
@@ -69,6 +91,8 @@ module.exports = {
     undo: undo,
     sleep: sleep,
     fail: fail,
+    waitUntil: waitUntil,
+    waitForEffect: waitForEffect,
     effect: effect,
     clips: clips,
     clipCount: clipCount,

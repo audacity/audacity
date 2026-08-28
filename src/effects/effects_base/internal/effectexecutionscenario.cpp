@@ -49,12 +49,14 @@ static bool isNyquistPrompt(const Effect& effect)
 
 void EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
+    ++m_runningCount;
     effectsProvider()->validate(effectId).onResolve(this, [this, effectId](bool) {
         au3::Au3Project& project = projectRef();
         const muse::Ret ret = performEffectWithShowError(project, effectId, 0);
         if (!ret) {
             LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
         }
+        --m_runningCount;
     });
 }
 
@@ -80,13 +82,20 @@ void EffectExecutionScenario::performEffect(const EffectId& effectId, const std:
         return;
     }
 
+    ++m_runningCount;
     effectsProvider()->validate(resolved).onResolve(this, [this, resolved, params, effectId](bool) {
         au3::Au3Project& project = projectRef();
         const muse::Ret ret = performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
         if (!ret) {
             LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
         }
+        --m_runningCount;
     });
+}
+
+bool EffectExecutionScenario::isBusy() const
+{
+    return m_runningCount > 0;
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()
