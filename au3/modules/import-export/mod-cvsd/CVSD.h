@@ -7,41 +7,39 @@ struct CVSD_CONFIG {
     // 16 bit config for CVSD
     unsigned int num_bits = 1;
 
-    // J
-    // unsigned int bitref = 4;
+    // J (bit history window size for syllabic companding)
+    static constexpr unsigned int bitref = 4;
 
-    // This value can either be 1 or 0.
-    // 0 = -1, 1 = 1
-    // b(k) = sgn{x(k)−ˆx(k−1)}
-    // Is the incoming signal higher than the current set to true. If so, increase
+    // b(k) = sgn{x(k) - y(k-1)}
+    // Is the incoming signal higher than the current accumulator?
     bool b = false;
 
-    // ⍺ -> = 1 if {bitref} bits in the last {bitref} output bits are equal then true, otherwise false.
+    // alpha = 1 if {bitref} bits in the last {bitref} output bits are equal, otherwise 0.
     bool alpha = false;
 
-    // The total output so far for a sample
+    // The predicted output so far for a sample
     // y(k)
     float accumulator = 0.0f;
 
-    // y_min & y_max
-    float accumulatorStepSize = 1.0f;
-    float minAccumulatorSize = INT16_MIN;
-    float maxAccumulatorSize = INT16_MAX;
+    // Current step size (δ(k)) - start at minimum valid value
+    // This ensures the step size is always within bounds from the first iteration
+    float accumulatorStepSize = 10.0f;
 
+    // Accumulator bounds (matches 16-bit PCM range)
+    float minAccumulatorSize = -32768.0f;
+    float maxAccumulatorSize = 32767.0f;
 
-    // Taken from https://www.gnuradio.org/doc/doxygen/classgr_1_1vocoder_1_1cvsd__decode__bs.html?__cf_chl_f_tk=sgZxzWwlkhsQJcfRONKl5AqE6SjLQc8vOLtXNGa27PU-1782994519-1.0.1.1-nRVjQ1gW.dyVPxNcMPPKzjgkPqx6duVcZdelbd27rE8#a19f056bc2da0301fd36aeb31148d21f3
-    // β
-    double stepSizeDecay =  0.9990234375;
-    // h
-    double accumulatorDecay = 96875;
+    // β (step size decay factor) - applied when bits are not homogenous
+    double stepSizeDecay = 0.9990234375;
 
-    // α
-    float syllabicCompandingFactor = 0.0f;
+    // α (syllabic companding factor) - applied when last 4 bits are all 0s or all 1s
+    double syllabicCompandingFactor = 1.0009765625;
 
-    // Accumulator step size (δ(k))
+    // Accumulator step size limits (δ_min and δ_max)
     int minAccumulatorStepSize = 10;
     int maxAccumulatorStepSize = 1280;
 
+    // Bit history for syllabic companding (stores last 4 bits)
     u_int8_t bitHistory = 0;
 
 };

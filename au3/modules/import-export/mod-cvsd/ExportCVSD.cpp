@@ -1,72 +1,64 @@
 #include "ExportCVSD.h"
 
-std::vector<u_int8_t> CVSDEncode(constSamplePtr temp, CVSD_CONFIG& current_config, size_t temp_size)
+std::vector<u_int8_t> CVSDEncode(std::vector<int16_t> temp, CVSD_CONFIG& current_config, size_t numSamples)
 {
-    // get the raw floating bits
-    float* audioBuffer = (float*)temp;
-    std::vector<u_int8_t> EncoderOuput;
+    auto audioBuffer = temp;
+    std::vector<u_int8_t> EncoderOutput;
     u_int8_t currentByte = 0;
     int bitCount = 0;
-    for (size_t i = 0; i < temp_size; ++i)
-    {
-        float x = audioBuffer[i];
-        float encoder_input_bit_from_the_float_sample = current_config.accumulatorDecay * current_config.accumulator;
-        current_config.b = (x >= encoder_input_bit_from_the_float_sample);
 
-        // update history
-        // syllabic Companding
-        current_config.bitHistory <<= 1;
-        current_config.bitHistory |= current_config.b ? 1 : 0;
-        current_config.bitHistory &= 0x0F;
+    // process sample-by-sample
+    for (size_t i = 0; i < numSamples; ++i) {
+        int16_t x = audioBuffer[i];
 
-        // update alpha
-        current_config.alpha =  (current_config.bitHistory == 0x00 ||
-            current_config.bitHistory == 0x0F);
+        // 1. Compute current bit:
+        current_config.b = (x >= current_config.accumulator);
 
-        // update delta
+        // 2. Check if last 4 bits are all 0s or all 1s
+        current_config.alpha = (current_config.bitHistory == 0x00 || current_config.bitHistory == 0x0F);
+
+        // 3. Update step size (δ(k)) based on PREVIOUS J bits
         if (current_config.alpha) {
-            current_config.accumulatorStepSize =
-                std::min(
-                    current_config.accumulatorStepSize +
-                    current_config.minAccumulatorStepSize,
-                    (float)current_config.maxAccumulatorStepSize);
+            current_config.accumulatorStepSize = std::min(
+                current_config.accumulatorStepSize * static_cast<float>(current_config.syllabicCompandingFactor),
+                static_cast<float>(current_config.maxAccumulatorStepSize));
         } else {
-            current_config.accumulatorStepSize =
-                std::max(
-                    (float)(current_config.stepSizeDecay *
-                    current_config.accumulatorStepSize),
-                    (float)current_config.minAccumulatorStepSize);
+            current_config.accumulatorStepSize = std::max(
+                current_config.accumulatorStepSize * static_cast<float>(current_config.stepSizeDecay),
+                static_cast<float>(current_config.minAccumulatorStepSize));
         }
 
-        // emit one CVSD bit
-        float encoderPredictedOutput = encoder_input_bit_from_the_float_sample +
-            (current_config.b ? 1.0f : -1.0f) * current_config.accumulatorStepSize;
+        // 4. Update bit history (J-bit window for syllabic companding)
+        current_config.bitHistory <<= 1;
+        current_config.bitHistory |= current_config.b ? 1 : 0;
+        current_config.bitHistory &= 0x0F;  // Keep only last 4 bits
 
-        // push the bit
-        // pack output bit
+        // 5. Pack the bit
         currentByte <<= 1;
         currentByte |= current_config.b ? 1 : 0;
         bitCount++;
 
-        // bit packing works
+        // 6. Push full bytes
         if (bitCount == 8) {
-            EncoderOuput.push_back(currentByte);
+            EncoderOutput.push_back(currentByte);
             currentByte = 0;
             bitCount = 0;
         }
-        if(bitCount){
-            currentByte <<= (8-bitCount);
-            EncoderOuput.push_back(currentByte);
-        }
 
-        // update accumulator
-        current_config.accumulator =
-            std::clamp(
-                encoderPredictedOutput,
-                current_config.minAccumulatorSize,
-                current_config.maxAccumulatorSize);
-        }
-    return EncoderOuput;
+        // 7. Update accumulator: y(k) = y(k-1) + b(k) * δ(k)
+        current_config.accumulator += (current_config.b ? 1.0f : -1.0f) * current_config.accumulatorStepSize;
+        current_config.accumulator = std::clamp(
+            current_config.accumulator,
+            current_config.minAccumulatorSize,
+            current_config.maxAccumulatorSize);
+    }
+
+    // Push remaining bits at the end
+    if (bitCount > 0) {
+        currentByte <<= (8 - bitCount);
+        EncoderOutput.push_back(currentByte);
+    }
+    return EncoderOutput;
 };
 
 void CVSDDecode(std::unique_ptr<wxFFile> openedFile)
@@ -104,7 +96,7 @@ std::string ExportOptionCVSDEditor::GetName() const
 
 int ExportOptionCVSDEditor::GetOptionsCount() const
 {
-    return 1;
+    return 0;
 }
 
 bool ExportOptionCVSDEditor::GetOption(int, ExportOption& option) const
@@ -129,7 +121,7 @@ bool ExportOptionCVSDEditor::SetValue(ExportOptionID, const ExportValue& value)
 
 ExportOptionCVSDEditor::SampleRateList ExportOptionCVSDEditor::GetSampleRateList() const
 {
-    return {44000};
+    return {64000};
 }
 
 void ExportOptionCVSDEditor::Load(const audacity::BasicSettings& config)
@@ -160,7 +152,8 @@ bool ExportCVSDProcessor::Initialize(AudacityProject& project,
     context.t0 = t0;
     context.t1 = t1;
     context.channels = 1;
-    context.max_block_len = 44100*5;
+    // sampling rate 64kHz
+    context.max_block_len = 64000*1;
 
     if (!context.mfile->IsOpened()) {
         return false;
@@ -186,23 +179,32 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
     auto exportResult = ExportResult::Success;
     {
         int eos = 0;
-        while (exportResult == ExportResult::Success && !eos)
-        {
-            // get the samples
-            auto samplesThisRun = context.mMixer->Process();
-            if (samplesThisRun == 0 ) {
+        while (exportResult == ExportResult::Success) {
+            // get the number of samples
+            auto pcmNumSamples = context.mMixer->Process();
+            if (pcmNumSamples == 0 ) {
                 context.status = TranslatableString("import-export", "Exporting is done");
                 delegate.SetStatusString(context.status);
                 break;
-            } else {
-                for (size_t i = 0; i < context.channels; i++) {
-                    constSamplePtr temp = context.mMixer->GetBuffer(i);
-                    std::vector<u_int8_t> EncoderOuputFromBuffer;
-                    EncoderOuputFromBuffer = CVSDEncode(temp, config, sizeof(temp));
-                    context.mfile->Write( EncoderOuputFromBuffer.data(),
-                        EncoderOuputFromBuffer.size());
-                }
             }
+
+            // we receive interleaved audio
+            // GetBuffer spits out char*
+            float* pcmBuffer = (float*)context.mMixer->GetBuffer();
+            std::vector<int16_t> LinearPCMBuffer = {};
+
+            std::vector<u_int8_t> EncoderOuputFromBuffer;
+            // convert the sample buffer to Linear 16 bit PCM
+            for (int i=0; i<pcmNumSamples; i++)
+            {
+                const float sample = pcmBuffer[i];
+                // Map float range [-1.0, 1.0] to int16 range [-32768, 32767]
+                int16_t linearSample = static_cast<int16_t>(std::clamp(sample * 32768.0f, -32768.0f, 32767.0f));
+                LinearPCMBuffer.push_back(linearSample);
+            }
+            EncoderOuputFromBuffer = CVSDEncode(LinearPCMBuffer, config, pcmNumSamples);
+            context.mfile->Write( EncoderOuputFromBuffer.data(),
+                EncoderOuputFromBuffer.size());
         }
     }
 
