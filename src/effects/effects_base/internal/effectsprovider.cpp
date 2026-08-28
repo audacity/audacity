@@ -207,7 +207,7 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
     return loader->ensurePluginIsLoaded(effectId);
 }
 
-muse::async::Promise<bool> EffectsProvider::validate(const EffectId& effectId)
+muse::async::Promise<bool> EffectsProvider::validateEffect(const EffectId& effectId)
 {
     return muse::async::make_promise<bool>([this, effectId](auto resolve) {
         const EffectMeta effectMeta = meta(effectId);
@@ -230,6 +230,11 @@ muse::async::Promise<bool> EffectsProvider::validate(const EffectId& effectId)
 
         return muse::async::Promise<bool>::dummy_result();
     });
+}
+
+bool EffectsProvider::validationOngoing() const
+{
+    return !m_pendingValidations.empty();
 }
 
 bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) const
@@ -263,7 +268,7 @@ bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) cons
 void EffectsProvider::onPluginValidationFinished(const muse::io::path_t& pluginPath)
 {
     const auto it = m_pendingValidations.find(pluginPath);
-    if (it == m_pendingValidations.end()) {
+    IF_ASSERT_FAILED(it != m_pendingValidations.end()) {
         return;
     }
 

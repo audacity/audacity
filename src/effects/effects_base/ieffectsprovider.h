@@ -37,8 +37,10 @@ public:
 
     virtual muse::async::Notification effectMetaListChanged() const = 0;
 
+    virtual muse::async::Promise<bool> validateEffect(const EffectId& effectId) = 0;
+    virtual bool validationOngoing() const = 0;
+
     virtual bool loadEffect(const EffectId& effectId) const = 0;
-    virtual muse::async::Promise<bool> validate(const EffectId& effectId) = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
 

@@ -46,8 +46,12 @@ public:
     muse::async::Notification effectMetaListChanged() const override;
 
     EffectMeta meta(const EffectId& effectId) const override;
+
+    muse::async::Promise<bool> validateEffect(const EffectId& effectId) override;
+    bool validationOngoing() const override;
+
     bool loadEffect(const EffectId& effectId) const override;
-    muse::async::Promise<bool> validate(const EffectId& effectId) override;
+
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
     std::string effectName(const effects::RealtimeEffectState& state) const override;
