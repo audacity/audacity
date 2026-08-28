@@ -112,7 +112,7 @@ jobs:
           title: "Update in-repo translations from Transifex"
           body: "Run `tx pull`"
           labels: "translation / i18n"
-          reviewers: kryksyh
+          reviewers: kryksyh, saintmatthieu, embarc-gabriel, grliszas14, luapmartin
 
       - name: Add PR link to job summary
         if: steps.configure.outputs.DO_CREATE_PR == 'true' && steps.create-pr.outputs.pull-request-number

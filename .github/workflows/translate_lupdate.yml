@@ -53,4 +53,4 @@ jobs:
           title: "Update in-repo translation source files"
           body: "Run `lupdate` with arguments `${{ env.LUPDATE_ARGS }}`"
           labels: "translation / i18n"
-          reviewers: kryksyh
+          reviewers: kryksyh, saintmatthieu, embarc-gabriel, grliszas14, luapmartin
