@@ -18,7 +18,9 @@
 
 #include "commandlineparser.h"
 
-#include "muse_framework_config.h"
+#ifdef MUSE_MODULE_TESTFLOW
+#include "testflowrunner.h"
+#endif
 
 #include "log.h"
 
@@ -69,14 +71,18 @@ void GuiApp::showContextSplash(const muse::modularity::ContextPtr& ctxId)
 
 void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
 {
-    auto startupScenario = muse::modularity::ioc(ctxId)->resolve<IStartupScenario>("app");
-    IF_ASSERT_FAILED(startupScenario) {
-        return;
-    }
-
     const std::shared_ptr<AudacityCmdOptions> options
         = std::dynamic_pointer_cast<AudacityCmdOptions>(contextData(ctxId).options);
     IF_ASSERT_FAILED(options) {
+        return;
+    }
+
+#ifdef MUSE_MODULE_TESTFLOW
+    TestflowRunner::prepare(ctxId, options->testflow);
+#endif
+
+    auto startupScenario = muse::modularity::ioc(ctxId)->resolve<IStartupScenario>("app");
+    IF_ASSERT_FAILED(startupScenario) {
         return;
     }
 
@@ -98,13 +104,17 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
 
     startupScenario->runOnSplashScreen();
 
-    QMetaObject::invokeMethod(qApp, [this, startupScenario]() {
+    QMetaObject::invokeMethod(qApp, [this, ctxId, startupScenario, options]() {
         if (m_splashScreen) {
             m_splashScreen->close();
             delete m_splashScreen;
             m_splashScreen = nullptr;
         }
         startupScenario->runAfterSplashScreen();
+
+#ifdef MUSE_MODULE_TESTFLOW
+        TestflowRunner::runIfRequested(ctxId, options->testflow);
+#endif
     }, Qt::QueuedConnection);
 }
 
