@@ -115,6 +115,8 @@ static const ActionCode SELECT_TRACK_START_TO_END("select-track-start-to-end");
 static const ActionQuery SET_SELECTION("action://trackedit/set-selection");
 static const ActionQuery SELECT_TRACK("action://trackedit/select-track");
 static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
+static const ActionCode CURSOR_TO_TRACK_START("cursor-to-track-start");
+static const ActionCode CURSOR_TO_TRACK_END("cursor-to-track-end");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
@@ -299,6 +301,9 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SELECT_TRACK_START_TO_END, this, &TrackeditActionsController::selectTrackStartToEnd);
     dispatcher()->reg(this, SET_SELECTION, this, &TrackeditActionsController::setSelection);
     dispatcher()->reg(this, SELECT_TRACK, this, &TrackeditActionsController::selectTrackByIndex);
+
+    dispatcher()->reg(this, CURSOR_TO_TRACK_START, this, &TrackeditActionsController::moveCursorToTrackStart);
+    dispatcher()->reg(this, CURSOR_TO_TRACK_END, this, &TrackeditActionsController::moveCursorToTrackEnd);
     dispatcher()->reg(this, SELECT_ZERO_CROSSING, this, &TrackeditActionsController::moveCursorToClosestZeroCrossing);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -2005,6 +2010,32 @@ void TrackeditActionsController::selectTrackByIndex(const muse::actions::ActionQ
     auto ids = prj->trackIdList();
     if (trackIndex >= 0 && trackIndex < static_cast<int>(ids.size())) {
         selectionController()->setSelectedTracks({ ids[trackIndex] }, true);
+    }
+}
+
+void TrackeditActionsController::moveCursorToTrackStart()
+{
+    std::optional<secs_t> trackStartTime = selectionController()->selectedTracksStartTime();
+
+    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+    if (trackStartTime.has_value()) {
+        q.addParam("seekTime", muse::Val(trackStartTime->to_double()));
+    } else {
+        q.addParam("seekTime", muse::Val(0.0f));
+    }
+    q.addParam("triggerPlay", muse::Val(false));
+    dispatcher()->dispatch(q);
+}
+
+void TrackeditActionsController::moveCursorToTrackEnd()
+{
+    std::optional<secs_t> trackEndTime = selectionController()->selectedTracksEndTime();
+
+    if (trackEndTime.has_value()) {
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(trackEndTime->to_double()));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
     }
 }
 
