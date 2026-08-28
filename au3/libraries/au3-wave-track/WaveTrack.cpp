@@ -3460,6 +3460,12 @@ void WaveTrack::Split(double t0, double t1)
     }
 }
 
+bool WaveTrack::SplitsSomeClip(double t) const
+{
+    const auto intervals = Intervals();
+    return std::any_of(intervals.begin(), intervals.end(), [t](const auto& interval){ return interval->SplitsPlayRegion(t); });
+}
+
 /*! @excsafety{Weak} */
 auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
 {

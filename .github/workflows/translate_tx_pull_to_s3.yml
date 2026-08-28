@@ -2,11 +2,7 @@ name: '[AU4] Translations: Pull from Transifex and push to S3'
 
 on:
   schedule:
-    # Every 15 minutes, but only on Sunday at 12:00 a PR is created
-    - cron: "*/15 * * * 1-6"           # Every 15 minutes, Mon–Sat (except on Sunday)
-    - cron: "*/15 0-11,13-23 * * 0"    # Every 15 minutes on Sunday, except 12:xx (between 12:00 and 12:59)
-    - cron: "15,30,45 12 * * 0"        # At 12:15, 12:30, 12:45 on Sunday
-    - cron: "0 12 * * Sun"             # At 12:00 on Sunday (triggers PR creation)
+    - cron: "0 9 * * *"                # Every day at 09:00 UTC (pushes to S3 and creates PR)
   workflow_dispatch:
     inputs:
       create_pull_request:
@@ -47,7 +43,7 @@ jobs:
           DO_PUSH_TO_S3='false'
 
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            DO_CREATE_PR="${{ github.event.schedule == '0 12 * * Sun'}}"
+            DO_CREATE_PR='true'
             DO_PUSH_TO_S3='true'
           else
             if [[ "${{ inputs.create_pull_request }}" == "true" ]]; then
@@ -112,7 +108,7 @@ jobs:
           title: "Update in-repo translations from Transifex"
           body: "Run `tx pull`"
           labels: "translation / i18n"
-          reviewers: kryksyh
+          reviewers: kryksyh, saintmatthieu, embarc-gabriel, grliszas14, luapmartin
 
       - name: Add PR link to job summary
         if: steps.configure.outputs.DO_CREATE_PR == 'true' && steps.create-pr.outputs.pull-request-number

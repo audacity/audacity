@@ -604,6 +604,8 @@ public:
     IntervalConstHolder GetClipAtTime(double time) const;
     IntervalConstHolder GetSortedClipByIndex(size_t index) const;
 
+    bool SplitsSomeClip(double time) const;
+
 private:
     void CopyWholeClip(
         const Interval& clip, double t0, bool forClipboard, bool backup);
