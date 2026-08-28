@@ -1,80 +1,13 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr">
 <context>
-    <name>KDDockWidgets::Debug::DebugWindow</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
-        <source>DockWidget unique name</source>
-        <translation>DockWidget&apos;ın benzersiz ismi</translation>
-    </message>
-</context>
-<context>
-    <name>KDDockWidgets::DockWidgetBase</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
-        <source>Dock</source>
-        <translation>Yapışık</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
-        <source>Detach</source>
-        <translation>Ayır</translation>
-    </message>
-</context>
-<context>
-    <name>KDDockWidgets::TitleBar</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
-        <source>Dock window</source>
-        <translation>Pencereyi yapıştır</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
-        <source>Undock window</source>
-        <translation>Pencereyi ayır</translation>
-    </message>
-</context>
-<context>
-    <name>KDDockWidgets::TitleBarWidget</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
-        <source>Minimize</source>
-        <translation>Küçült</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
-        <source>Close</source>
-        <translation>Kapat</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
-        <source>Auto-hide</source>
-        <translation>Otomatik-gizle</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
-        <source>Disable auto-hide</source>
-        <translation>Otomatik-gizlemeyi kapat</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
-        <source>Restore</source>
-        <translation>Eski haline getir</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
-        <source>Maximize</source>
-        <translation>Büyüt</translation>
-    </message>
-</context>
-<context>
     <name>Playback</name>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="72"/>
         <source>Meter style</source>
         <translation>Ölçer biçemi</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="96"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
         <source>Meter type</source>
         <translation>Ölçer türü</translation>
     </message>
@@ -103,1804 +36,1847 @@
 <context>
     <name>action</name>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çık</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
         <source>Restart</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yeniden başlat</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="57"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
         <source>&amp;Full screen</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Tam ekran</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="58"/>
         <source>Full screen</source>
-        <translation>Tam ekran</translation>
+        <translation type="vanished">Tam ekran</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Qt hakkında…</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çevrim içi &amp;rehber</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="75"/>
         <source>Open online handbook</source>
-        <translation>Çevrim içi rehberi aç</translation>
+        <translation type="vanished">Çevrim içi rehberi aç</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="80"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
         <source>As&amp;k for help</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Yardım iste</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="85"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="96"/>
         <source>Revert to &amp;factory settings</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Fabrika ayarlarına dön</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="86"/>
         <source>Revert to factory settings</source>
-        <translation>Fabrika ayarlarına dön</translation>
+        <translation type="vanished">Fabrika ayarlarına dön</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ö&amp;n tanımlı yerleşime dön</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="94"/>
         <source>Restore the default layout</source>
-        <translation>Ön tanımlı yerleşime dön</translation>
+        <translation type="vanished">Ön tanımlı yerleşime dön</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
         <source>&amp;Playback controls</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Oynatma denetimleri</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="102"/>
         <source>Show/hide playback controls</source>
-        <translation>Oynatma denetimlerini görüntüle/gizle</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
-        <source>&amp;Tracks</source>
-        <translation>İ&amp;zler</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
-        <source>Show/hide tracks</source>
-        <translation>İzleri görüntüle/gizle</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="64"/>
-        <source>&amp;About Audacity…</source>
-        <translation>Audacity &amp;hakkında…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="117"/>
-        <source>&amp;Status bar</source>
-        <translation>&amp;Durum çubuğu</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
-        <source>Show/hide status bar</source>
-        <translation>Durum çubuğunu görüntüle/gizle</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
-        <source>&amp;Preferences</source>
-        <translation>&amp;Ayarlar</translation>
+        <translation type="vanished">Oynatma denetimlerini görüntüle/gizle</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
-        <source>Preferences…</source>
-        <translation>Ayarlar…</translation>
+        <source>&amp;Tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>İ&amp;zler</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="133"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="24"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
+        <source>Show/hide tracks</source>
+        <translation type="vanished">İzleri görüntüle/gizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
+        <source>&amp;About Audacity…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Audacity &amp;hakkında…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
+        <source>&amp;Status bar</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Durum çubuğu</translation>
+    </message>
+    <message>
+        <source>Show/hide status bar</source>
+        <translation type="vanished">Durum çubuğunu görüntüle/gizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
+        <source>&amp;Preferences</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Ayarlar</translation>
+    </message>
+    <message>
+        <source>Preferences…</source>
+        <translation type="vanished">Ayarlar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="33"/>
         <source>Copy</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kopyala</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="140"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="141"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="31"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="32"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="42"/>
         <source>Cut</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kes</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="175"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="336"/>
         <source>&amp;Paste</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ya&amp;pıştır</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="149"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Paste</source>
-        <translation>Yapıştır</translation>
+        <translation type="vanished">Yapıştır</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="156"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="38"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="185"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="51"/>
         <source>&amp;Undo</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Geri al</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="167"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="39"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="195"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>Geri al</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="45"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
         <source>&amp;Redo</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Yinele</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="173"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="46"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="201"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>Yinele</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="52"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="205"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="69"/>
         <source>De&amp;lete</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Si&amp;l</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="173"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="175"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="165"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="210"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="217"/>
         <source>Delete</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sil</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="179"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="214"/>
         <source>&amp;Cancel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İ&amp;ptal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="180"/>
         <source>Cancel</source>
-        <translation>İptal</translation>
+        <translation type="vanished">İptal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Tetikle</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <source>Trigger</source>
-        <translation>Tetikle</translation>
+        <translation type="vanished">Tetikle</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="168"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
+        <source>&amp;Enter</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Trigger the focused control or select the focused track item</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>‘%1’ işlemini geri al</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="174"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>‘%1’ işlemini yinele</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <source>Silence audio</source>
+        <translation>Sesi sustur</translation>
+    </message>
+    <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Projeyi audio.com üzerinde görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="21"/>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="22"/>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>audio.com üzerinde görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="24"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Son etkiyi yinele</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="29"/>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="30"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
         <source>Remove realtime effect</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Gerçek zamanlı etkiyi kaldır</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
         <source>&amp;Apply preset</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Hazır ayarı &amp;uygula</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="40"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
         <source>Save preset as…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Hazır ayarı farklı kaydet…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
         <source>&amp;Save preset</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Hazır ayarı &amp;kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
         <source>&amp;Delete preset</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Hazır ayarı &amp;sil</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İçe &amp;aktar…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="57"/>
         <source>Import preset</source>
-        <translation>Hazır ayarı içe aktar</translation>
+        <translation type="vanished">Hazır ayarı içe aktar</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="62"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="63"/>
         <source>Export preset</source>
-        <translation>Hazır ayarı dışa aktar</translation>
+        <translation type="vanished">Hazır ayarı dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="35"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="36"/>
-        <source>Play</source>
-        <translation>&amp;Oynat</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="43"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="36"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="37"/>
-        <source>Pause</source>
-        <translation>Duraklat</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="43"/>
-        <source>Stop</source>
-        <translation>Durdur</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="50"/>
-        <source>Stop playback</source>
-        <translation>Oynatmayı durdur</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="56"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
-        <source>Rewind to start</source>
-        <translation>Başa sar</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="63"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="64"/>
-        <source>Rewind to end</source>
-        <translation>Sona sar</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="70"/>
-        <source>Loop playback</source>
-        <translation>Yinelemeli oynat</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="71"/>
-        <source>Toggle ‘Loop playback’</source>
-        <translation>’Yinelemeli oynatmayı’ aç/kapat</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
-        <source>Audio setup</source>
-        <translation>Ses ayarları</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="79"/>
-        <source>Open audio setup context menu</source>
-        <translation>Ses ayarları sağ tık menüsünü aç</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
-        <source>Get effects</source>
-        <translation>Etkileri al</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="86"/>
-        <source>Open Get effects dialog</source>
-        <translation>Etkileri al iletişim kutusunu aç</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="92"/>
-        <source>Audio settings</source>
-        <translation>Ses ayarları</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
-        <source>Open audio setup dialog</source>
-        <translation>Ses ayarları iletişim kutusunu aç</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
-        <source>Rescan audio devices</source>
-        <translation>Ses aygıtlarını yeniden tara</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
-        <source>Metronome</source>
-        <translation>Metronom</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
-        <source>Toggle metronome playback</source>
-        <translation>Metronom oynatmayı aç/kapat</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
-        <source>Timecode</source>
-        <translation>Zaman kodu</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="113"/>
-        <source>Set playback time</source>
-        <translation>Oynatma süresini ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
-        <source>Tempo</source>
-        <translation>Tempo</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="120"/>
-        <source>Set playback tempo</source>
-        <translation>Oynatma temposunu ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="126"/>
-        <source>Time signature</source>
-        <translation>Zaman imzası</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="127"/>
-        <source>Set playback time signature</source>
-        <translation>Oynatma zaman imzasını ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
-        <source>Playback level</source>
-        <translation>Oynatma düzeyi</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="134"/>
-        <source>Set playback level</source>
-        <translation>Oynatma düzeyini ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
-        <source>Change audio host</source>
-        <translation>Ses sunucunu değiştir</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
-        <source>Change playback device</source>
-        <translation>Oynatma aygıtını değiştir</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
-        <source>Change recording device</source>
-        <translation>Kayıt aygıtını değiştir</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="162"/>
-        <source>Change input channels</source>
-        <translation>Giriş kanallarını değiştir</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="169"/>
-        <source>Toggle loop region</source>
-        <translation>Yineleme bölgesini aç/kapat</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="176"/>
-        <source>Clear loop region</source>
-        <translation>Yineleme bölgesini temizle</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="182"/>
-        <source>Set loop region to selection</source>
-        <translation>Yineleme bölgesini seçime ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="187"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="188"/>
-        <source>Set selection to loop</source>
-        <translation>Seçimi yinelemeye ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="194"/>
-        <source>Set loop region in out</source>
-        <translation>Yineleme bölgesi giriş çıkış ayarla</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="200"/>
-        <source>Creating a loop also selects audio</source>
-        <translation>Bir yineleme oluşturulduğunda ses de seçilir</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="209"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
-        <source>Play repeats</source>
-        <translation>Oynatma yinelemeleri</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
-        <source>Pan automatically</source>
-        <translation>Otomatik kaydır</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="218"/>
-        <source>Pan automatically during playback</source>
-        <translation>Oynatılırken otomatik kaydır</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="23"/>
-        <source>&amp;New…</source>
-        <translation>&amp;Yeni…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="24"/>
-        <source>New…</source>
-        <translation>Yeni…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
-        <source>&amp;Open…</source>
-        <translation>&amp;Aç…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="30"/>
-        <source>Open…</source>
-        <translation>Aç…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
-        <source>Open recent</source>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
+        <source>Play/Pause</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
+        <source>Play/Stop</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
+        <source>Play/Pause from cursor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
+        <source>Play selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Play the selected time range</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
+        <source>Pause</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Duraklat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
+        <source>Stop</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Durdur</translation>
+    </message>
+    <message>
+        <source>Stop playback</source>
+        <translation type="vanished">Oynatmayı durdur</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
+        <source>Rewind to start</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Başa sar</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
+        <source>Rewind to end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Sona sar</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
+        <source>Loop playback</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yinelemeli oynat</translation>
+    </message>
+    <message>
+        <source>Toggle ‘Loop playback’</source>
+        <translation type="vanished">’Yinelemeli oynatmayı’ aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
+        <source>Audio setup</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ses ayarları</translation>
+    </message>
+    <message>
+        <source>Open audio setup context menu</source>
+        <translation type="vanished">Ses ayarları sağ tık menüsünü aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
+        <source>Get effects</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Etkileri al</translation>
+    </message>
+    <message>
+        <source>Open Get effects dialog</source>
+        <translation type="vanished">Etkileri al iletişim kutusunu aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
+        <source>Audio settings</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ses ayarları</translation>
+    </message>
+    <message>
+        <source>Open audio setup dialog</source>
+        <translation type="vanished">Ses ayarları iletişim kutusunu aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
+        <source>Rescan audio devices</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ses aygıtlarını yeniden tara</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
+        <source>Metronome</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Metronom</translation>
+    </message>
+    <message>
+        <source>Toggle metronome playback</source>
+        <translation type="vanished">Metronom oynatmayı aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
+        <source>Timecode</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Zaman kodu</translation>
+    </message>
+    <message>
+        <source>Set playback time</source>
+        <translation type="vanished">Oynatma süresini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
+        <source>Tempo</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tempo</translation>
+    </message>
+    <message>
+        <source>Set playback tempo</source>
+        <translation type="vanished">Oynatma temposunu ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
+        <source>Time signature</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Zaman imzası</translation>
+    </message>
+    <message>
+        <source>Set playback time signature</source>
+        <translation type="vanished">Oynatma zaman imzasını ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
+        <source>Playback level</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Oynatma düzeyi</translation>
+    </message>
+    <message>
+        <source>Set playback level</source>
+        <translation type="vanished">Oynatma düzeyini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
+        <source>Change audio host</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ses sunucunu değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
+        <source>Change playback device</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Oynatma aygıtını değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
+        <source>Change recording device</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Kayıt aygıtını değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
+        <source>Change input channels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Giriş kanallarını değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
+        <source>Toggle loop region</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yineleme bölgesini aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
+        <source>Clear loop region</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yineleme bölgesini temizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
+        <source>Set loop region to selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yineleme bölgesini seçime ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
+        <source>Set selection to loop</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçimi yinelemeye ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
+        <source>Set loop region in out</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yineleme bölgesi giriş çıkış ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
+        <source>Creating a loop also selects audio</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Bir yineleme oluşturulduğunda ses de seçilir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
+        <source>Play repeats</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Oynatma yinelemeleri</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
+        <source>Pan automatically</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Otomatik kaydır</translation>
+    </message>
+    <message>
+        <source>Pan automatically during playback</source>
+        <translation type="vanished">Oynatılırken otomatik kaydır</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
+        <source>&amp;New…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Yeni…</translation>
+    </message>
+    <message>
+        <source>New…</source>
+        <translation type="vanished">Yeni…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
+        <source>&amp;Open…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Aç…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation type="vanished">Aç…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
+        <source>Open recent</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Open recent project</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="55"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="56"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="62"/>
-        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="32"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="33"/>
         <source>Open</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Aç</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="67"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
         <source>&amp;Clear recent files</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Son kullanılan dosyaları temizle</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="68"/>
         <source>Clear recent files</source>
-        <translation>Son kullanılan dosyaları temizle</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
-        <source>Save &amp;as…</source>
-        <translation>&amp;Farklı kaydet…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="86"/>
-        <source>Save as…</source>
-        <translation>Farklı kaydet…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
-        <source>&amp;Export labels</source>
-        <translation>&amp;Etiketleri dışa aktar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
-        <source>Export labels</source>
-        <translation>Etiketleri dışa aktar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
-        <source>&amp;Export MIDI</source>
-        <translation>&amp;MIDI olarak dışa aktar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
-        <source>Export MIDI</source>
-        <translation>MIDI olarak dışa aktar</translation>
+        <translation type="vanished">Son kullanılan dosyaları temizle</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
-        <source>&amp;Close project</source>
-        <translation>Projeyi &amp;kapat</translation>
+        <source>Save &amp;as…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Farklı kaydet…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
-        <source>Close project</source>
-        <translation>Projeyi kapat</translation>
+        <source>Save as…</source>
+        <translation type="vanished">Farklı kaydet…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="118"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="312"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="313"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="146"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="147"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="159"/>
-        <source>Duplicate</source>
-        <translation>Çoğalt</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
+        <source>&amp;Export labels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Etiketleri dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
-        <source>Insert</source>
-        <translation>Ekle</translation>
+        <source>Export labels</source>
+        <translation type="vanished">Etiketleri dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="130"/>
-        <source>Rename item</source>
-        <translation>Ögeyi yeniden adlandır</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
+        <source>&amp;Export MIDI</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;MIDI olarak dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="136"/>
-        <source>Trim clip</source>
-        <translation>Parçayı buda</translation>
+        <source>Export MIDI</source>
+        <translation type="vanished">MIDI olarak dışa aktar</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="142"/>
+        <source>&amp;Close project</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Projeyi &amp;kapat</translation>
+    </message>
+    <message>
+        <source>Close project</source>
+        <translation type="vanished">Projeyi kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="192"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
+        <source>Duplicate</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
+        <source>Insert</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ekle</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
+        <source>Trim clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Parçayı buda</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
         <source>Split into new track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yeni ize ayır</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="147"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="148"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
         <source>Paste new label</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yeni etiket yapıştır</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="647"/>
         <source>Manage labels</source>
         <translation>Etiketleri yönet</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="295"/>
         <source>Metadata editor</source>
         <translation>Üst veri düzenleyici</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="154"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="155"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="61"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="192"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tümünü seç</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="160"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
         <source>Select all tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tüm izleri seç</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="166"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Left of playback position</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Oynatma konumunun solu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="172"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="173"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="216"/>
         <source>Right of playback position</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Oynatma konumunun sağı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="179"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="224"/>
         <source>Track start to cursor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İz başlangıcından imlece</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
         <source>Cursor to track end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İmleçten iz sonuna</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="191"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
         <source>Track start to end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İz başangıcından sonuna</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="197"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="248"/>
         <source>Previous clip boundary to cursor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Önceki parça sınırından imlece</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="203"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
         <source>Cursor to next clip boundary</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İmleçten sonraki parça sınırına</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="209"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
         <source>Previous clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Önceki parça</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="215"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Next clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sonraki parça</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="221"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
         <source>Toggle spectral selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spektral seçimi tersine çevir</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="227"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="288"/>
         <source>Move cursor to closest zero crossing</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İmleci en yakın sıfır geçişine taşı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="41"/>
         <source>Zoom in</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yakınlaştır</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <source>Zoom out</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Uzaklaştır</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="59"/>
         <source>Zoom default</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ön tanımlı yakınlaştırma</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="67"/>
         <source>Zoom to selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Seçime yakınlaştır</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="70"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
         <source>Zoom toggle</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yakınlaştırmayı aç/kapat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
         <source>Collapse all tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tüm izleri daralt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="241"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="306"/>
         <source>Expand all tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tüm izleri genişlet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="246"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="247"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
         <source>Skip to selection start</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Seçim başlangıcına atla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="252"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="253"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="322"/>
         <source>Skip to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Seçim bitişine atla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="265"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
         <source>Show metadata editor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Üst veri düzenleyicyi görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="271"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
         <source>Show history</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Geçmişi görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="281"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Geçerli ize kaydedilsin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="286"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="287"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yeni ize kaydedilsin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="292"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
         <source>Set up timed recording</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Zamanlanmış kayıt ayarla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="299"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
         <source>Enable sound activating recording</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ses etkinleştirmeli kaydı aç</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="374"/>
         <source>Set sound activation level</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ses etkinleştirme düzeyini ayarla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <source>Remove tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzleri kaldır</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="325"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Mix-down to…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Şuna indirge…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="331"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
         <source>Align end to end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Bitişten bitişe hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="336"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="337"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
         <source>Align together</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Birlikte hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="342"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="343"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
         <source>Align start to zero</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Başlangıcı sıfıra hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="348"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Align start to playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Başlangıcı oynatma kafasına hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="354"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="355"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
         <source>Align start to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Başlangıcı seçimin bitişine hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="361"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
         <source>Align end to playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Bitişi oynatma kafasına hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="367"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
         <source>Align end to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Bitişi seçimin bitişine hizala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="372"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="373"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
         <source>Sort by time</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tarihe göre sırala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="378"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="379"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
         <source>Sort by name</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ada göre sırala</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="391"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Eklenti yönetimi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="405"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="406"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Fav effect #1</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sık kullanılan etki 1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="411"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="412"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="515"/>
         <source>Fav effect #2</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sık kullanılan etki 2</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="417"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
         <source>Fav effect #3</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sık kullanılan etki 3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="73"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="74"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
         <source>Import…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İçe aktar…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
         <source>Show in Finder</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="40"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="51"/>
         <source>Show in Explorer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="43"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Show in File Manager</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
         <source>&amp;Save</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="80"/>
         <source>Save</source>
-        <translation>Kaydet</translation>
+        <translation type="vanished">Kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="91"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Sesi dışa aktar…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="92"/>
         <source>Export audio…</source>
-        <translation>Sesi dışa aktar…</translation>
+        <translation type="vanished">Sesi dışa aktar…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="259"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
         <source>Show effects panel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="480"/>
         <source>Keep tracks synchronized</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzleri eşitlenmiş tut</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="399"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="499"/>
         <source>Add track effects</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
         <source>Contrast analyzer</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Karşıtlık inceleyici</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="431"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
         <source>Plot spectrum</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spektrum çiz</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
         <source>Manage macros</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Makro yönetimi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="445"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="446"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
         <source>Apply macros palette</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Makrolar paletini uygula</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="451"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="452"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
         <source>Macro fade ends</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Makro kısma bitişi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="457"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
         <source>Macro MP3 conversion</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Makro MP3 dönüştürme</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="463"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Nyquist eklentisi kurucu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="469"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="470"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
         <source>Nyquist prompt</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Nyquist komutu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="475"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
         <source>Sample data export</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Örnek veri dışa aktarımı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="481"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Sample data import</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Örnek veri içe aktarımı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="487"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="488"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
         <source>Raw data import</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ham veri içe aktarımı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="493"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
         <source>Reset configuration</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yapılandırmayı sıfırla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="502"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="633"/>
         <source>Previous window</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Önceki pencere</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="508"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="641"/>
         <source>Next window</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sonraki pencere</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="513"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="514"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
         <source>Benchmark</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Hız sınaması</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="519"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="520"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="657"/>
         <source>Regular interval labels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Normal aralık etiketleri</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="527"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="528"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
         <source>Tutorials</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Öğreticiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="534"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="675"/>
         <source>Device info</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Aygıt bilgileri</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="539"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="540"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="683"/>
         <source>MIDI device info</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>MIDI aygıtı bilgileri</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="545"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="546"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="691"/>
         <source>Log</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Günlük</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="552"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
         <source>Crash report</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çökme bildirimi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="557"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="558"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
         <source>Raise segfault</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ayırma hatası</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="563"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="564"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="715"/>
         <source>Throw exception</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İstisna durumu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="570"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
         <source>Violate assertion</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İhlal iddiası</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="576"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="731"/>
         <source>Menu tree</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Menü ağacı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="581"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="582"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="739"/>
         <source>Frame statistics</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kare istatistikleri</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="587"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="747"/>
         <source>Link account</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Hesap bağla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
         <source>Save to clo&amp;ud…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Buluta kaydet…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="594"/>
         <source>Save to cloud…</source>
-        <translation>Buluta kaydet…</translation>
+        <translation type="vanished">Buluta kaydet…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="600"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
         <source>Share audio</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ses paylaş</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="608"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="781"/>
+        <source>Update audio preview</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="790"/>
         <source>Project propert&amp;ies…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Proje ö&amp;zellikleri…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
         <source>Project properties…</source>
-        <translation>Proje özellikleri…</translation>
+        <translation type="vanished">Proje özellikleri…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="22"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="23"/>
         <source>Clip gain</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Parça kazancı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="29"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="30"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="32"/>
         <source>Split tool</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ayırma aracı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="64"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="76"/>
         <source>Zoom to fit project</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Projeyi sığdır</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="94"/>
         <source>Center view on playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Görüntüyü oynatma kafasına ortala</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="83"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="84"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="102"/>
         <source>Toggle spectral view</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spektral görünümü aç/kapat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="90"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="91"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="97"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="98"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="120"/>
         <source>Spectral box select</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spektral kutu seçimi</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="129"/>
         <source>Snapping</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yapışma</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="112"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="138"/>
         <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Dakika ve saniye</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="118"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="119"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
         <source>Beats &amp;&amp; measures</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Vuruş ve ölçü</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="125"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="126"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
         <source>Show vertical rulers</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Dikey cetvelleri görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="132"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="133"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="165"/>
         <source>Show master track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ana izi görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="139"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
         <source>Update display while playing</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Oynatırken ekranı güncelle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="146"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
-        <source>Pinned play head</source>
-        <translation>Sanitlenmiş oynatma kafası</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="153"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="154"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="192"/>
         <source>Click ruler to start playback</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Oynatmayı başlatmak için cetvele tıklayın</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="161"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
         <source>Clip properties</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Parça özellikleri</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="162"/>
         <source>Show clip properties</source>
-        <translation>Parça özelliklerini görüntüle</translation>
+        <translation type="vanished">Parça özelliklerini görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
-        <source>Rename clip</source>
-        <translation>Parçayı yeniden adlandır</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
         <source>Follow track color</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İz rengini izle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="189"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="190"/>
-        <source>Move play cursor left</source>
-        <translation>Oynatma imlecini sola taşı</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
+        <source>Pinned playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="195"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="196"/>
-        <source>Move play cursor right</source>
-        <translation>Oynatma imlecini sağa taşı</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="229"/>
+        <source>Move playhead left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="201"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
-        <source>Extend selection left</source>
-        <translation>Seçimi sola genişlet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="207"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="208"/>
-        <source>Extend selection right</source>
-        <translation>Seçimi sağa genişlet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="213"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="214"/>
-        <source>Contract selection from left</source>
-        <translation>Seçimi soldan örtüştür</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="219"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
-        <source>Contract selection from right</source>
-        <translation>Seçimi sağdan örtüştür</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="225"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="226"/>
-        <source>Pitch and speed</source>
-        <translation>Perde ve tempo</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
-        <source>Show RMS in waveform</source>
-        <translation>Dalga şeklinde RMS görüntülensin</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
-        <source>Show clipping in waveform</source>
-        <translation>Dalga şeklinde kırpılma görüntülensin</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="237"/>
+        <source>Move playhead right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
+        <source>Extend selection left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçimi sola genişlet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
+        <source>Extend selection right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçimi sağa genişlet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="261"/>
+        <source>Contract selection from left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçimi soldan örtüştür</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="269"/>
+        <source>Contract selection from right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçimi sağdan örtüştür</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="277"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="285"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="293"/>
+        <source>Pitch and speed</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Perde ve tempo</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dalga şeklinde RMS görüntülensin</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="310"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dalga şeklinde kırpılma görüntülensin</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="319"/>
         <source>Half-wave</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yarım dalga</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="329"/>
         <source>Show label editor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Etiket düzenleyiciyi görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="258"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="259"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="337"/>
         <source>Move realtime effect up</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Gerçek zamanlı etkiyi yukarı taşı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="264"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="265"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="345"/>
         <source>Move realtime effect down</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Gerçek zamanlı etkiyi aşağı taşı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="289"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="290"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="372"/>
         <source>Change clip color</source>
         <translation>Parça rengini değiştir</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="302"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="384"/>
         <source>Change track color</source>
         <translation>İz rengini değiştir</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="29"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="44"/>
         <source>Stop record</source>
-        <translation>Kaydı durdur</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
-        <source>Record level</source>
-        <translation>Kayıt düzeyi</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="51"/>
-        <source>Set record level</source>
-        <translation>Kayıt düzeyini ayarla</translation>
+        <translation type="vanished">Kaydı durdur</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="58"/>
+        <source>Record level</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Kayıt düzeyi</translation>
+    </message>
+    <message>
+        <source>Set record level</source>
+        <translation type="vanished">Kayıt düzeyini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
         <source>Show mic metering</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Mikrofon ölçümünü görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="64"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="65"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
         <source>Turn on input monitoring</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Giriş izlemeyi aç</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="71"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="84"/>
         <source>Lead-in Recording</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Giriş payıyla kayıt</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="72"/>
         <source>Start lead-in recording</source>
-        <translation>Giriş payıyla kaydı başlat</translation>
+        <translation type="vanished">Giriş payıyla kaydı başlat</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="18"/>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="19"/>
         <source>Spectrogram settings…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spektrogram ayarları…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="66"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="67"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
         <source>Clear selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Seçimi temizle</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="72"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="73"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
         <source>Cut and leave gap</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kes ve boşluk bırak</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="80"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="104"/>
         <source>Cut and close gap (per clip)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kes ve boşluğu kapat (her parça)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="86"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
         <source>Cut and close gap (per track)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kes ve boşluğu kapat (her iz)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="93"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="94"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
         <source>Cut and close gap (all tracks)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kes ve boşluğu kapat (tüm izler)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="100"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="101"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="131"/>
         <source>Delete and leave gap</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sil ve boşluk bırak</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="107"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="108"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
         <source>Delete and close gap (per clip)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sil ve boşluğu kapat (her parça)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="114"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
         <source>Delete and close gap (per track)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sil ve boşluğu kapat (her iz)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="158"/>
         <source>Delete and close gap (all tracks)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Sil ve boşluğu kapat (tüm izler)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="128"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="129"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
         <source>Split</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ayır</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="134"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="135"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="176"/>
         <source>Join selected clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Seçilmiş parçaları birleştir</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="141"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
         <source>Split clips at silences</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Parçaları sessizliklerde ayır</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="201"/>
         <source>Rename</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Yeniden adlandır</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
-        <translation>İzi yeniden adlandır</translation>
+        <translation type="vanished">İzi yeniden adlandır</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
         <source>Duplicate track</source>
-        <translation>İzi çoğalt</translation>
+        <translation type="vanished">İzi çoğalt</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="166"/>
         <source>Delete track</source>
-        <translation>İzi sil</translation>
+        <translation type="vanished">İzi sil</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="171"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="172"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
         <source>Move track up</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzi yukarı taşı</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="177"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
         <source>Move track down</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzi aşağı taşı</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="183"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
         <source>Move track to top</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzi en üste taşı</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="189"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="190"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Move track to bottom</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzi en alta taşı</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="195"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="196"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Other…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Diğer…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="266"/>
         <source>Make stereo track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzi çift kanallı yap</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="274"/>
         <source>Swap stereo channels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Kanalların yerini değiştir</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="215"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="282"/>
         <source>Split stereo to L/R mono</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çift kanallıyı tek kanallıya ayır</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="220"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="221"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
         <source>Split stereo to center mono</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çift kanallıyı merkez tek kanallıya ayır</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="226"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="298"/>
         <source>Resample track…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>İzi yeniden örnekle…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="232"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
         <source>Waveform</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Dalga şekli</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="240"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
         <source>Spectrogram</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spektrogram</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="586"/>
         <source>Above item</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ögenin üstünde</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="465"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="594"/>
         <source>Below item</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ögenin altında</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="326"/>
         <source>Multi-view</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çoklu görünüm</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="264"/>
-        <source>Paste (pushes clips on selected track)</source>
-        <translation>Yapıştır (parçaları seçilmiş ize iter)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="270"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="271"/>
-        <source>Paste (overlaps other clips)</source>
-        <translation>Yapıştır (diğer parçalar ile örtüşür)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="277"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="278"/>
-        <source>Paste (preserves synchronization on all tracks)</source>
-        <translation>Yapıştır (tüm izlerle eşitlemeyi korur)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="285"/>
-        <source>Merge selected clips</source>
-        <translation>Seçilmiş parçaları birleştir</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="291"/>
-        <source>Duplicate selected</source>
-        <translation>Seçilmişi çoğalt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="296"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="297"/>
-        <source>Duplicate clip</source>
-        <translation>Parçayı çoğalt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="302"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="303"/>
-        <source>Export clip</source>
-        <translation>Parçayı dışa aktar</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="309"/>
-        <source>Stretch with tempo changes</source>
-        <translation>Tempo değişiklikleri ile esnet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="315"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
-        <source>Open pitch and speed dialog</source>
-        <translation>Perde ve tempo iletişim kutusunu aç</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="321"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="322"/>
-        <source>Render pitch and speed</source>
-        <translation>Oluşturma perdesi ve temposu</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="327"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
-        <source>Reset pitch and speed</source>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="333"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="334"/>
-        <source>New mono track</source>
-        <translation>Yeni tek kanallı iz</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="339"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="340"/>
-        <source>New stereo track</source>
-        <translation>Yeni çift kanallı iz</translation>
-    </message>
-    <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="346"/>
-        <source>New label track</source>
-        <translation>Yeni etiket izi</translation>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yapıştır (parçaları seçilmiş ize iter)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="351"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="352"/>
-        <source>Add label</source>
-        <translation>Etiket ekle</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="354"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yapıştır (diğer parçalar ile örtüşür)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="357"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="358"/>
-        <source>Trim</source>
-        <translation>Buda</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="363"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yapıştır (tüm izlerle eşitlemeyi korur)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="364"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
-        <source>Silence</source>
-        <translation>Sessizlik</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="371"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="372"/>
-        <source>Group clips</source>
-        <translation>Parçaları grupla</translation>
+        <source>Merge selected clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçilmiş parçaları birleştir</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="377"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="378"/>
-        <source>Ungroup clips</source>
-        <translation>Parça grubunu dağıt</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="380"/>
+        <source>Duplicate selected</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Seçilmişi çoğalt</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="383"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="384"/>
-        <source>Move item left</source>
-        <translation>Ögeyi sola taşı</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="388"/>
+        <source>Duplicate clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Parçayı çoğalt</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="389"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="390"/>
-        <source>Move item right</source>
-        <translation>Ögeyi sağa taşı</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="395"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="396"/>
-        <source>Extend item left</source>
-        <translation>Ögeyi sola uzat</translation>
+        <source>Export clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Parçayı dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="401"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="402"/>
-        <source>Extend item right</source>
-        <translation>Ögeyi sağa uzat</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="407"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="408"/>
-        <source>Reduce item left</source>
-        <translation>Ögeyi soldan kısalt</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="404"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tempo değişiklikleri ile esnet</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="413"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="414"/>
-        <source>Reduce item right</source>
-        <translation>Ögeyi sağdan kısalt</translation>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Perde ve tempo iletişim kutusunu aç</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="419"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="420"/>
-        <source>Move item up</source>
-        <translation>Ögeyi yukarı taşı</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="421"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Oluşturma perdesi ve temposu</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="425"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="426"/>
-        <source>Move item down</source>
-        <translation>Ögeyi aşağı taşı</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="429"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="433"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="434"/>
-        <source>Next panel</source>
-        <translation>Sonraki pano</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="437"/>
+        <source>New mono track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yeni tek kanallı iz</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="440"/>
-        <source>Previous panel</source>
-        <translation>Önceki pano</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="445"/>
+        <source>New stereo track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yeni çift kanallı iz</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
-        <source>Next item</source>
-        <translation>Sonraki öge</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="452"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
-        <source>Previous item</source>
-        <translation>Önceki öge</translation>
+        <source>New label track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Yeni etiket izi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
-        <source>First track</source>
-        <translation>İlk iz</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="461"/>
+        <source>Add label</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Etiket ekle</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="469"/>
+        <source>Trim</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Buda</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="479"/>
-        <source>Last track</source>
-        <translation>Son iz</translation>
+        <source>Silence</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Sessizlik</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="485"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="486"/>
-        <source>Select track/track item</source>
-        <translation>İzi/iz ögesini seçin</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="487"/>
+        <source>Group clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Parçaları grupla</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="491"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="492"/>
-        <source>Track range selection</source>
-        <translation>İz aralığı seçimi</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="498"/>
-        <source>Multi track selection previous</source>
-        <translation>Çok iz seçimi önceki</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="495"/>
+        <source>Ungroup clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Parça grubunu dağıt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="503"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="504"/>
+        <source>Move item left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi sola taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="511"/>
+        <source>Move item right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi sağa taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="519"/>
+        <source>Extend item left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi sola uzat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="527"/>
+        <source>Extend item right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi sağa uzat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="535"/>
+        <source>Reduce item left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi soldan kısalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="543"/>
+        <source>Reduce item right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi sağdan kısalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="551"/>
+        <source>Move item up</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi yukarı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="559"/>
+        <source>Move item down</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ögeyi aşağı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="569"/>
+        <source>Next panel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Sonraki pano</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="577"/>
+        <source>Previous panel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Önceki pano</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="603"/>
+        <source>First track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>İlk iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="611"/>
+        <source>Last track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Son iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="620"/>
+        <source>Select track/track item</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>İzi/iz ögesini seçin</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="628"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="636"/>
+        <source>Track range selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>İz aralığı seçimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="644"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Çok iz seçimi önceki</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="652"/>
         <source>Multi track selection next</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Çok iz seçimi sonraki</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="510"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="511"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
         <source>Open item’s context menu</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ögenin sağ tık menüsünü aç</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="531"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="532"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="684"/>
         <source>Change track format</source>
         <translation>İz biçimini değiştir</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="544"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="545"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="697"/>
         <source>Change track sample rate</source>
         <translation>İzin örnekleme hızını değiştir</translation>
     </message>
@@ -2010,6 +1986,16 @@
         <translation>Eylem listesini göster</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
+        <source>Show &amp;rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
+        <source>Show rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
         <source>&amp;Manage plugins…</source>
         <translation>Eklentileri &amp;yönet…</translation>
@@ -2028,16 +2014,6 @@
         <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
         <source>&amp;Multiinstances</source>
         <translation>Çoklu örnekle&amp;r</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
-        <source>Check MuseSampler</source>
-        <translation>MuseSampler&apos;ı denetle</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
-        <source>Reload MuseSampler</source>
-        <translation>MuseSampler&apos;ı yeniden yükle</translation>
     </message>
     <message>
         <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
@@ -2086,6 +2062,1578 @@
     </message>
 </context>
 <context>
+    <name>action_description</name>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
+        <source>Exit</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çık</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
+        <source>Full screen</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tam ekran</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
+        <source>Open online handbook</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çevrim içi rehberi aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
+        <source>Revert to factory settings</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Fabrika ayarlarına dön</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
+        <source>Restore the default layout</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ön tanımlı yerleşime dön</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
+        <source>Show/hide playback controls</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma denetimlerini görüntüle/gizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="128"/>
+        <source>Show/hide tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzleri görüntüle/gizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
+        <source>Show/hide status bar</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Durum çubuğunu görüntüle/gizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
+        <source>Preferences…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ayarlar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="35"/>
+        <source>Copy</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kopyala</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="167"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="44"/>
+        <source>Cut</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kes</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="177"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
+        <source>Paste</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yapıştır</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
+        <source>Undo</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Geri al</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="197"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="62"/>
+        <source>Redo</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yinele</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="207"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="212"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="71"/>
+        <source>Delete</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sil</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="216"/>
+        <source>Cancel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İptal</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
+        <source>Trigger</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tetikle</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
+        <source>Trigger the focused control or select the focused track item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
+        <source>View project on audio.com</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Projeyi audio.com üzerinde görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
+        <source>View on audio.com</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>audio.com üzerinde görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
+        <source>Remove realtime effect</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Gerçek zamanlı etkiyi kaldır</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
+        <source>Import preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Hazır ayarı içe aktar</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
+        <source>Export preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Hazır ayarı dışa aktar</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
+        <source>Play/Pause</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="51"/>
+        <source>Play/Stop</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
+        <source>Play/Pause from cursor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
+        <source>Play the selected time range</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
+        <source>Pause</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Duraklat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
+        <source>Stop playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatmayı durdur</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
+        <source>Rewind to start</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Başa sar</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
+        <source>Rewind to end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sona sar</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
+        <source>Toggle ‘Loop playback’</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>’Yinelemeli oynatmayı’ aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
+        <source>Open audio setup context menu</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses ayarları sağ tık menüsünü aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
+        <source>Open Get effects dialog</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Etkileri al iletişim kutusunu aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
+        <source>Open audio setup dialog</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses ayarları iletişim kutusunu aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
+        <source>Rescan audio devices</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses aygıtlarını yeniden tara</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
+        <source>Toggle metronome playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Metronom oynatmayı aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
+        <source>Set playback time</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma süresini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
+        <source>Set playback tempo</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma temposunu ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
+        <source>Set playback time signature</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma zaman imzasını ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
+        <source>Set playback level</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma düzeyini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
+        <source>Change audio host</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses sunucunu değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
+        <source>Change playback device</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma aygıtını değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
+        <source>Change recording device</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kayıt aygıtını değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
+        <source>Change input channels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Giriş kanallarını değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
+        <source>Toggle loop region</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yineleme bölgesini aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
+        <source>Clear loop region</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yineleme bölgesini temizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
+        <source>Set loop region to selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yineleme bölgesini seçime ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
+        <source>Set selection to loop</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçimi yinelemeye ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
+        <source>Set loop region in out</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yineleme bölgesi giriş çıkış ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
+        <source>Creating a loop also selects audio</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Bir yineleme oluşturulduğunda ses de seçilir</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
+        <source>Play repeats</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma yinelemeleri</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
+        <source>Pan automatically during playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatılırken otomatik kaydır</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="31"/>
+        <source>New…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
+        <source>Open…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Aç…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
+        <source>Show in Finder</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
+        <source>Open recent project</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
+        <source>Open</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
+        <source>Clear recent files</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Son kullanılan dosyaları temizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
+        <source>Import…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İçe aktar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
+        <source>Save</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
+        <source>Save as…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Farklı kaydet…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
+        <source>Export audio…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sesi dışa aktar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
+        <source>Export labels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Etiketleri dışa aktar</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
+        <source>Export MIDI</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>MIDI olarak dışa aktar</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
+        <source>Close project</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Projeyi kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="386"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
+        <source>Duplicate</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
+        <source>Insert</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ekle</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
+        <source>Trim clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parçayı buda</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
+        <source>Split into new track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni ize ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
+        <source>Paste new label</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni etiket yapıştır</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
+        <source>Select all</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tümünü seç</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
+        <source>Select all tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tüm izleri seç</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
+        <source>Left of playback position</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma konumunun solu</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="218"/>
+        <source>Right of playback position</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatma konumunun sağı</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
+        <source>Track start to cursor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İz başlangıcından imlece</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
+        <source>Cursor to track end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İmleçten iz sonuna</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="242"/>
+        <source>Track start to end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İz başangıcından sonuna</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
+        <source>Previous clip boundary to cursor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Önceki parça sınırından imlece</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
+        <source>Cursor to next clip boundary</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İmleçten sonraki parça sınırına</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
+        <source>Previous clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Önceki parça</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
+        <source>Next clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sonraki parça</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
+        <source>Toggle spectral selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektral seçimi tersine çevir</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="290"/>
+        <source>Move cursor to closest zero crossing</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İmleci en yakın sıfır geçişine taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
+        <source>Collapse all tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tüm izleri daralt</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
+        <source>Expand all tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tüm izleri genişlet</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="316"/>
+        <source>Skip to selection start</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçim başlangıcına atla</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
+        <source>Skip to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçim bitişine atla</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
+        <source>Show effects panel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="341"/>
+        <source>Show metadata editor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Üst veri düzenleyicyi görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
+        <source>Show history</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Geçmişi görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
+        <source>Set up timed recording</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Zamanlanmış kayıt ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="368"/>
+        <source>Enable sound activating recording</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses etkinleştirmeli kaydı aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
+        <source>Set sound activation level</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses etkinleştirme düzeyini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="394"/>
+        <source>Remove tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzleri kaldır</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
+        <source>Mix-down to…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Şuna indirge…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
+        <source>Align end to end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Bitişten bitişe hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
+        <source>Align together</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Birlikte hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
+        <source>Align start to zero</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Başlangıcı sıfıra hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="434"/>
+        <source>Align start to playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Başlangıcı oynatma kafasına hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
+        <source>Align start to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Başlangıcı seçimin bitişine hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="450"/>
+        <source>Align end to playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Bitişi oynatma kafasına hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
+        <source>Align end to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Bitişi seçimin bitişine hizala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
+        <source>Sort by time</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tarihe göre sırala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="474"/>
+        <source>Sort by name</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ada göre sırala</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
+        <source>Keep tracks synchronized</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzleri eşitlenmiş tut</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
+        <source>Plugin manager</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Eklenti yönetimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
+        <source>Add track effects</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
+        <source>Fav effect #1</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sık kullanılan etki 1</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
+        <source>Fav effect #2</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sık kullanılan etki 2</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="525"/>
+        <source>Fav effect #3</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sık kullanılan etki 3</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
+        <source>Contrast analyzer</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Karşıtlık inceleyici</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="543"/>
+        <source>Plot spectrum</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektrum çiz</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="553"/>
+        <source>Manage macros</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Makro yönetimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
+        <source>Apply macros palette</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Makrolar paletini uygula</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
+        <source>Macro fade ends</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Makro kısma bitişi</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
+        <source>Macro MP3 conversion</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Makro MP3 dönüştürme</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
+        <source>Nyquist plugin installer</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nyquist eklentisi kurucu</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
+        <source>Nyquist prompt</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nyquist komutu</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
+        <source>Sample data export</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Örnek veri dışa aktarımı</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
+        <source>Sample data import</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Örnek veri içe aktarımı</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
+        <source>Raw data import</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ham veri içe aktarımı</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="625"/>
+        <source>Reset configuration</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yapılandırmayı sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="635"/>
+        <source>Previous window</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Önceki pencere</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="643"/>
+        <source>Next window</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sonraki pencere</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="651"/>
+        <source>Benchmark</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Hız sınaması</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="659"/>
+        <source>Regular interval labels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Normal aralık etiketleri</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="669"/>
+        <source>Tutorials</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öğreticiler</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="677"/>
+        <source>Device info</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Aygıt bilgileri</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="685"/>
+        <source>MIDI device info</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>MIDI aygıtı bilgileri</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
+        <source>Log</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Günlük</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="701"/>
+        <source>Crash report</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çökme bildirimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="709"/>
+        <source>Raise segfault</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ayırma hatası</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="717"/>
+        <source>Throw exception</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İstisna durumu</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="725"/>
+        <source>Violate assertion</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İhlal iddiası</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="733"/>
+        <source>Menu tree</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Menü ağacı</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="741"/>
+        <source>Frame statistics</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kare istatistikleri</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="749"/>
+        <source>Link account</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Hesap bağla</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="757"/>
+        <source>Save to cloud…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Buluta kaydet…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
+        <source>Share audio</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ses paylaş</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
+        <source>Update audio preview</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="792"/>
+        <source>Project properties…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Proje özellikleri…</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="25"/>
+        <source>Clip gain</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parça kazancı</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="34"/>
+        <source>Split tool</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ayırma aracı</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
+        <source>Zoom in</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yakınlaştır</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="52"/>
+        <source>Zoom out</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Uzaklaştır</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="61"/>
+        <source>Zoom default</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ön tanımlı yakınlaştırma</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="69"/>
+        <source>Zoom to selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçime yakınlaştır</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
+        <source>Zoom to fit project</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Projeyi sığdır</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="87"/>
+        <source>Zoom toggle</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yakınlaştırmayı aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="96"/>
+        <source>Center view on playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Görüntüyü oynatma kafasına ortala</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
+        <source>Toggle spectral view</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektral görünümü aç/kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="113"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="122"/>
+        <source>Spectral box select</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektral kutu seçimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="131"/>
+        <source>Snapping</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yapışma</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
+        <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dakika ve saniye</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="149"/>
+        <source>Beats &amp;&amp; measures</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Vuruş ve ölçü</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="158"/>
+        <source>Show vertical rulers</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dikey cetvelleri görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
+        <source>Show master track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ana izi görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
+        <source>Update display while playing</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatırken ekranı güncelle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="185"/>
+        <source>Pinned playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
+        <source>Click ruler to start playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oynatmayı başlatmak için cetvele tıklayın</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="204"/>
+        <source>Show clip properties</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parça özelliklerini görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="222"/>
+        <source>Follow track color</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İz rengini izle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
+        <source>Move playhead left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
+        <source>Move playhead right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="247"/>
+        <source>Extend selection left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçimi sola genişlet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="255"/>
+        <source>Extend selection right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçimi sağa genişlet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="263"/>
+        <source>Contract selection from left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçimi soldan örtüştür</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="271"/>
+        <source>Contract selection from right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçimi sağdan örtüştür</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="279"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="287"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="295"/>
+        <source>Pitch and speed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Perde ve tempo</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="303"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dalga şeklinde RMS görüntülensin</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="312"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dalga şeklinde kırpılma görüntülensin</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="321"/>
+        <source>Half-wave</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yarım dalga</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="331"/>
+        <source>Show label editor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Etiket düzenleyiciyi görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="339"/>
+        <source>Move realtime effect up</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Gerçek zamanlı etkiyi yukarı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="347"/>
+        <source>Move realtime effect down</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Gerçek zamanlı etkiyi aşağı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="371"/>
+        <source>Change clip color</source>
+        <translation>Parça rengini değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="383"/>
+        <source>Change track color</source>
+        <translation>İz rengini değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
+        <source>Record</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
+        <source>Stop record</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kaydı durdur</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
+        <source>Set record level</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kayıt düzeyini ayarla</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
+        <source>Show mic metering</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Mikrofon ölçümünü görüntüle</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="77"/>
+        <source>Turn on input monitoring</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Giriş izlemeyi aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="86"/>
+        <source>Start lead-in recording</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Giriş payıyla kaydı başlat</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
+        <source>Record on current track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Geçerli ize kaydedilsin</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
+        <source>Record on new track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni ize kaydedilsin</translation>
+    </message>
+    <message>
+        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
+        <source>Spectrogram settings…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektrogram ayarları…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="27"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="89"/>
+        <source>Clear selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçimi temizle</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
+        <source>Cut and leave gap</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kes ve boşluk bırak</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="106"/>
+        <source>Cut and close gap (per clip)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kes ve boşluğu kapat (her parça)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
+        <source>Cut and close gap (per track)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kes ve boşluğu kapat (her iz)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="124"/>
+        <source>Cut and close gap (all tracks)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kes ve boşluğu kapat (tüm izler)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
+        <source>Delete and leave gap</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sil ve boşluk bırak</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="142"/>
+        <source>Delete and close gap (per clip)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sil ve boşluğu kapat (her parça)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
+        <source>Delete and close gap (per track)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sil ve boşluğu kapat (her iz)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
+        <source>Delete and close gap (all tracks)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sil ve boşluğu kapat (tüm izler)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
+        <source>Split</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
+        <source>Join selected clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçilmiş parçaları birleştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="186"/>
+        <source>Split clips at silences</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parçaları sessizliklerde ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
+        <source>Rename track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi yeniden adlandır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
+        <source>Duplicate track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
+        <source>Delete track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi sil</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
+        <source>Move track up</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi yukarı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
+        <source>Move track down</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi aşağı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
+        <source>Move track to top</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi en üste taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="251"/>
+        <source>Move track to bottom</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi en alta taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="259"/>
+        <source>Other…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Diğer…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="268"/>
+        <source>Make stereo track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi çift kanallı yap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
+        <source>Swap stereo channels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kanalların yerini değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
+        <source>Split stereo to L/R mono</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çift kanallıyı tek kanallıya ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="292"/>
+        <source>Split stereo to center mono</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çift kanallıyı merkez tek kanallıya ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="300"/>
+        <source>Resample track…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi yeniden örnekle…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
+        <source>Waveform</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dalga şekli</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="318"/>
+        <source>Spectrogram</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
+        <source>Multi-view</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çoklu görünüm</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="347"/>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yapıştır (parçaları seçilmiş ize iter)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="356"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yapıştır (diğer parçalar ile örtüşür)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yapıştır (tüm izlerle eşitlemeyi korur)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="374"/>
+        <source>Merge selected clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçilmiş parçaları birleştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="382"/>
+        <source>Duplicate selected</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Seçilmişi çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="390"/>
+        <source>Duplicate clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parçayı çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="398"/>
+        <source>Export clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parçayı dışa aktar</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="406"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tempo değişiklikleri ile esnet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="415"/>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Perde ve tempo iletişim kutusunu aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="423"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Oluşturma perdesi ve temposu</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="431"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
+        <source>New mono track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni tek kanallı iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
+        <source>New stereo track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni çift kanallı iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="455"/>
+        <source>New label track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Yeni etiket izi</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="463"/>
+        <source>Add label</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Etiket ekle</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
+        <source>Trim</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Buda</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
+        <source>Silence</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sessizlik</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="489"/>
+        <source>Group clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parçaları grupla</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
+        <source>Ungroup clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Parça grubunu dağıt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="505"/>
+        <source>Move item left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi sola taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="513"/>
+        <source>Move item right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi sağa taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="521"/>
+        <source>Extend item left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi sola uzat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="529"/>
+        <source>Extend item right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi sağa uzat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="537"/>
+        <source>Reduce item left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi soldan kısalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="545"/>
+        <source>Reduce item right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi sağdan kısalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="553"/>
+        <source>Move item up</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi yukarı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="561"/>
+        <source>Move item down</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögeyi aşağı taşı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="571"/>
+        <source>Next panel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sonraki pano</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="579"/>
+        <source>Previous panel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Önceki pano</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="588"/>
+        <source>Above item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögenin üstünde</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="596"/>
+        <source>Below item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögenin altında</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="605"/>
+        <source>First track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İlk iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="613"/>
+        <source>Last track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Son iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="622"/>
+        <source>Select track/track item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İzi/iz ögesini seçin</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="630"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="638"/>
+        <source>Track range selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>İz aralığı seçimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="646"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çok iz seçimi önceki</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="654"/>
+        <source>Multi track selection next</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Çok iz seçimi sonraki</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
+        <source>Open item’s context menu</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ögenin sağ tık menüsünü aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
+        <source>Change track format</source>
+        <translation>İz biçimini değiştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
+        <source>Change track sample rate</source>
+        <translation>İzin örnekleme hızını değiştir</translation>
+    </message>
+</context>
+<context>
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
@@ -2105,9 +3653,8 @@
         <translation>Proje</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="100"/>
         <source>Learn</source>
-        <translation>Öğren</translation>
+        <translation type="vanished">Öğren</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
@@ -2126,7 +3673,7 @@
         <translation>Kategori:</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="138"/>
         <source>All</source>
         <extracomment>The title of an option to display the plugins from all categories.</extracomment>
         <translation>Tümü</translation>
@@ -2138,42 +3685,42 @@
         <translation>Ana araç çubuğu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="71"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="59"/>
         <source>Application menu</source>
         <translation>Uygulama menüsü</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="157"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="160"/>
         <source>Project toolbar</source>
         <translation>Proje araç çubuğu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="180"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
         <source>Workspaces toolbar</source>
         <translation>Çalışma alanları araç çubuğu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="203"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
         <source>Undo/redo toolbar</source>
         <translation>Geri alma/Yineleme araç çubuğu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="225"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
         <source>Play toolbar</source>
         <translation>Oynatma araç çubuğu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
         <source>Tracks</source>
         <translation>İzler</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="387"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
         <source>Playback meter</source>
         <translation>Oynatma ölçer</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="406"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
         <source>History</source>
         <translation>Geçmiş</translation>
     </message>
@@ -2183,12 +3730,12 @@
         <translation>Alıcı destekliyorsa MIDI 2.0 çıktısı oluşturur</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Fabrika ayarlarına dönmek istediğinize emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -2196,29 +3743,34 @@ This action will not delete any of your projects.</source>
 Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
         <source>Revert</source>
         <translation>Geri al</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Revert to factory settings</source>
         <translation>Fabrika ayarlarına dön</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Audacity şimdi yeniden başlatılsın mı?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Değişikliklerin etkili olması için Audacity yeniden başlatılmalı</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
         <source>Restart</source>
         <translation>Yeniden başlat</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
+        <source>Restart Audacity</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
@@ -2246,27 +3798,27 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Proje yükleniyor…‎</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="28"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
         <source>Validate audio plugins</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="34"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Skip this time</source>
         <translation>Şimdilik atla</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="37"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
         <source>Validate</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
         <source>Audio plugin validation</source>
         <translation type="unfinished"/>
     </message>
@@ -2281,14 +3833,14 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Önceki oturum geri yüklensin mi?</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="300"/>
+        <source>Restore session</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
         <source>Home</source>
         <translation>Giriş</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="96"/>
-        <source>Publish</source>
-        <translation>Yayınla</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="99"/>
@@ -2296,16 +3848,8 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Geliştirici araçları</translation>
     </message>
     <message>
-        <source>Audacity 4</source>
-        <translation>Audacity 4</translation>
-    </message>
-    <message>
-        <source>%1 %2- Audacity 4</source>
-        <translation>%1 %2- Audacity 4</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="96"/>
         <source>Audacity</source>
         <translation>Audacity</translation>
     </message>
@@ -2320,6 +3864,11 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectStatusBar.qml" line="43"/>
+        <source>Selection status</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
         <source>Accounts</source>
         <translation>Hesaplar</translation>
@@ -2328,15 +3877,14 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-align</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="349"/>
         <source>Align content</source>
-        <translation>İçeriği hizala</translation>
+        <translation type="vanished">İçeriği hizala</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="368"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="420"/>
         <source>&amp;Analyze</source>
         <translation>İn&amp;cele</translation>
     </message>
@@ -2344,12 +3892,12 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="242"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
         <source>Clip</source>
         <translation>Parça</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="618"/>
         <source>Rename clip</source>
         <translation>Parçayı yeniden adlandır</translation>
     </message>
@@ -2357,7 +3905,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-cursor</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="393"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
         <source>Cursor</source>
         <translation>İmleç</translation>
     </message>
@@ -2365,7 +3913,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-device</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="471"/>
         <source>Device</source>
         <translation>Aygıt</translation>
     </message>
@@ -2373,17 +3921,17 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="785"/>
         <source>&amp;System</source>
         <translation>&amp;Sistem</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="795"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Erişilebilirlik</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="711"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="802"/>
         <source>Test&amp;flow</source>
         <translation>&amp;Deneme akışı</translation>
     </message>
@@ -2391,37 +3939,36 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-diagnostics</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
-        <translation>Tanılama</translation>
+        <translation type="vanished">Tanılama</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="528"/>
         <source>&amp;System</source>
         <translation>&amp;Sistem</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="550"/>
         <source>A&amp;ctions</source>
         <translation>İş&amp;lemler</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Erişilebilirlik</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
         <source>E&amp;xtensions</source>
         <translation>Eklentile&amp;r</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
         <source>Test&amp;flow</source>
         <translation>&amp;Deneme akışı</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="474"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="558"/>
         <source>&amp;Diagnostics</source>
         <translation>&amp;Tanılama</translation>
     </message>
@@ -2429,7 +3976,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="250"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="302"/>
         <source>&amp;Edit</source>
         <translation>Düz&amp;enle</translation>
     </message>
@@ -2437,7 +3984,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="363"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
         <source>&amp;Effect</source>
         <translation>&amp;Etki</translation>
     </message>
@@ -2445,15 +3992,14 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-export-other</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="211"/>
         <source>&amp;Export other</source>
-        <translation>&amp;Başka dışa aktarma</translation>
+        <translation type="vanished">&amp;Başka dışa aktarma</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
         <source>&amp;Extra</source>
         <translation>&amp;Ek</translation>
     </message>
@@ -2461,7 +4007,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-extraedit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="384"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Edit</source>
         <translation>Düzenle</translation>
     </message>
@@ -2469,7 +4015,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-extraselect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="388"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Select</source>
         <translation>Seç</translation>
     </message>
@@ -2477,7 +4023,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-extratools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="382"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>Tools</source>
         <translation>Araçlar</translation>
     </message>
@@ -2485,12 +4031,12 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
         <source>Open &amp;recent</source>
         <translation>&amp;Son kullanılanları aç</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="269"/>
         <source>&amp;File</source>
         <translation>&amp;Dosya</translation>
     </message>
@@ -2498,7 +4044,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-focus</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="392"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
         <source>Focus</source>
         <translation>Odaklan</translation>
     </message>
@@ -2506,7 +4052,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="410"/>
         <source>&amp;Generate</source>
         <translation>&amp;Oluştur</translation>
     </message>
@@ -2514,7 +4060,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="431"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="515"/>
         <source>&amp;Help</source>
         <translation>&amp;Yardım</translation>
     </message>
@@ -2522,7 +4068,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-images</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="399"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="483"/>
         <source>Images</source>
         <translation>Görseller</translation>
     </message>
@@ -2530,23 +4076,27 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Label</source>
         <translation>Etiket</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="639"/>
+        <source>Rename label</source>
+        <translation>Etiketi yeniden adlandır</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-macros</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="840"/>
         <source>&amp;Macros</source>
-        <translation>&amp;Makrolar</translation>
+        <translation type="vanished">&amp;Makrolar</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="383"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Mixer</source>
         <translation>Karıştırıcı</translation>
     </message>
@@ -2554,15 +4104,16 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-play</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="380"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="464"/>
         <source>Play</source>
+        <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
         <translation>&amp;Oynat</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-playatspeed</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="385"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Play at speed</source>
         <translation>Şu hızda oynat</translation>
     </message>
@@ -2570,7 +4121,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="334"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="386"/>
         <source>&amp;Record</source>
         <translation>&amp;Kaydet</translation>
     </message>
@@ -2578,7 +4129,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-scriptables1</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="395"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Scriptables1</source>
         <translation>Betik tabloları 1</translation>
     </message>
@@ -2586,7 +4137,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-scriptables2</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="397"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="481"/>
         <source>Scriptables2</source>
         <translation>Betik tabloları 2</translation>
     </message>
@@ -2594,7 +4145,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-scrubbing</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="381"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
         <source>Scrubbing</source>
         <translation>Sarma</translation>
     </message>
@@ -2602,27 +4153,25 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-select</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="256"/>
         <source>Audio clips</source>
-        <translation>Ses parçaları</translation>
+        <translation type="vanished">Ses parçaları</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="261"/>
         <source>Spectral</source>
-        <translation>Spektral</translation>
+        <translation type="vanished">Spektral</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="322"/>
         <source>Region</source>
         <translation>Bölge</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="274"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="326"/>
         <source>Looping</source>
         <translation>Yineleniyor</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="278"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="330"/>
         <source>&amp;Select</source>
         <translation>&amp;Seç</translation>
     </message>
@@ -2630,7 +4179,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-settings</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="402"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="486"/>
         <source>Settings</source>
         <translation>Ayarlar</translation>
     </message>
@@ -2638,23 +4187,21 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-skip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Skip to</source>
-        <translation>Şuraya atla</translation>
+        <translation type="vanished">Şuraya atla</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-sort</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="350"/>
         <source>Sort tracks</source>
-        <translation>İzleri sırala</translation>
+        <translation type="vanished">İzleri sırala</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="425"/>
         <source>&amp;Tools</source>
         <translation>&amp;Araçlar</translation>
     </message>
@@ -2662,7 +4209,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-track</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="394"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
         <source>Track</source>
         <translation>İz</translation>
     </message>
@@ -2670,7 +4217,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="353"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
         <source>&amp;Tracks</source>
         <translation>İ&amp;zler</translation>
     </message>
@@ -2678,12 +4225,12 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="306"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
         <source>W&amp;orkspaces</source>
         <translation>Ç&amp;alışma alanları</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="319"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="372"/>
         <source>&amp;View</source>
         <translation>&amp;Görünüm</translation>
     </message>
@@ -2691,33 +4238,13 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="343"/>
         <source>Zoom</source>
         <translation>Yakınlaştır</translation>
     </message>
 </context>
 <context>
     <name>appshell/about</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
-        <source>About MusicXML</source>
-        <translation>MusicXML hakkında</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="59"/>
-        <source>MusicXML is an open file format for exchanging digital sheet music, supported by many applications.</source>
-        <translation>MusicXML, birçok uygulama tarafından desteklenen dijital nota alışverişi için kullanılan açık bir dosya biçimidir.</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="71"/>
-        <source>Copyright © 2004-2021 the Contributors to the MusicXML Specification, published by the Music Notation Community Group under the W3C Community Final Specification Agreement (FSA):</source>
-        <translation>Telif Hakkı © 2004-2021 W3C Topluluk Son Şartname Anlaşması (FSA) kapsamında Müzik Notasyonu Topluluk Grubu tarafından yayınlanan MusicXML teknik özelliklerine katkıda bulunanlar:</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="95"/>
-        <source>A human-readable summary is available:</source>
-        <translation>İnsan tarafından okunabilen bir özet kullanılabilir:</translation>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="14"/>
         <source>Audacity 4</source>
@@ -2729,9 +4256,54 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>%1 için kararsız yayın öncesi sürümü</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="339"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
+        <source>Audacity Team Members</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
+        <source>Emeritus</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
+        <source>Distinguished Audacity Team members, not currently active</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
+        <source>Contributors</source>
+        <translation>Katkıda bulunanlar</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="334"/>
+        <source>Website and Graphics</source>
+        <translation>Site ve görseller</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
         <translation>çevirmen_kredileri</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
+        <source>Translators</source>
+        <translation>Çevirmenler</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="346"/>
+        <source>Libraries</source>
+        <translation>Kitaplıklar</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
+        <source>Audacity includes code from the following projects:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
+        <source>Special Thanks</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -2759,17 +4331,17 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Emeği geçenler</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="201"/>
         <source>Audacity website: %1</source>
         <translation>Audacity sitesi: %1</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="215"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
         <translation>&lt;b&gt;Audacity®&lt;/b&gt; yazılımının telif hakkı © 1999-%1 Audacity Ekibi.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="220"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
         <translation>&lt;b&gt;Audacity&lt;/b&gt; adı kayıtlı bir markadır.</translation>
     </message>
@@ -2793,19 +4365,16 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <name>appshell/dock</name>
     <message>
         <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
-        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
         <source>Close</source>
         <translation>Kapat</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
-        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Dock</source>
         <translation>Yapışık</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
-        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Undock</source>
         <translation>Ayrılmış</translation>
     </message>
@@ -2813,44 +4382,67 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 <context>
     <name>appshell/gettingstarted</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
         <source>Preferences → Application</source>
-        <translation>Ayarlar → Uygulama</translation>
+        <translation type="vanished">Ayarlar → Uygulama</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="37"/>
         <source>App Updates</source>
-        <translation>Uygulama güncellemeleri</translation>
+        <translation type="vanished">Uygulama güncellemeleri</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
         <translation>Yeni bir sürüm indirilebilir olduğunda Audacity sizi uygulama içinde bilgilendirir.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
         <translation>Bunu istediğiniz zaman %1 içinden kapatabilirsiniz.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Usage Info</source>
-        <translation>Kullanım bilgileri</translation>
+        <translation type="vanished">Kullanım bilgileri</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
+        <source>Preferences → General</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
+        <source>App updates</source>
+        <translation>Uygulama güncellemeleri</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
+        <source>Crash reports</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
+        <source>Audacity automatically sends crash reports to help us improve product quality.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
+        <source>Usage info</source>
+        <translation>Kullanım bilgileri</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="46"/>
         <source>privacy policy</source>
         <translation>gizlilik ilkesi</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="45"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.</source>
         <translation>İnsanların Audacity uygulamasını ne sıklıkla kullandığını anlamamıza yardımcı olması amacıyla her kurulum için rastgele bir kimlik (UUID) oluşturuyoruz. Bu kimlikte sizi kişisel olarak tanımlayabilecek herhangi bir bilgi bulunmaz. Ayrıntılı bilgi almak için %1 bölümüne bakabilirsiniz.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="48"/>
         <source>You can disable this anytime in %1.</source>
-        <translation>Bunu istediğiniz zaman kapatabilirsiniz.</translation>
+        <translation>Bunu istediğiniz zaman %1 bölümünden kapatabilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="49"/>
@@ -2865,7 +4457,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/DoublePage.qml" line="48"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/Page.qml" line="70"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/Page.qml" line="71"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="132"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="139"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
@@ -2975,22 +4567,22 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Parolamı unuttum</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="297"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="301"/>
         <source>Password field</source>
         <translation>Parola alanı</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="342"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="346"/>
         <source>Form action</source>
         <translation>Form işlemi</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
         <source>Sign in link</source>
         <translation>Oturum açma bağlantısı</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
         <source>Create account link</source>
         <translation>Hesap aç bağlantısı</translation>
     </message>
@@ -3288,375 +4880,56 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Seçilmiş çalışma alanı yerleşiminin arayüz bileşenlerinin düzenini gösteren ön izlemesi</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="46"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
         <source>Authorization failed</source>
         <translation>Kimlik doğrulanamadı</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="57"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="62"/>
         <source>No access token</source>
         <translation>Bir erişim kodu bulunamadı</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="98"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="112"/>
         <source>Not authorized</source>
         <translation>İzin verilmemiş</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="114"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="121"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="129"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="136"/>
         <source>Registration failed. Please try again.</source>
         <translation>Kayıt yapılamadı. Lütfen yeniden deneyin.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="135"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="150"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation>E-posta adresi ya da parola yanlış. Lütfen yeniden deneyin.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="143"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="158"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Kimlik doğrulanamadı. Lütfen yeniden deneyin.</translation>
     </message>
 </context>
 <context>
-    <name>appshell/menu/align</name>
-    <message>
-        <source>Align content</source>
-        <translation>İçeriği hizala</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/analyze</name>
-    <message>
-        <source>&amp;Analyze</source>
-        <translation>İn&amp;cele</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/clip</name>
-    <message>
-        <source>Clip</source>
-        <translation>Parça</translation>
-    </message>
-    <message>
-        <source>Rename clip</source>
-        <translation>Parçayı yeniden adlandır</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/cursor</name>
-    <message>
-        <source>Cursor</source>
-        <translation>İmleç</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/device</name>
-    <message>
-        <source>Device</source>
-        <translation>Aygıt</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/diagnostic</name>
-    <message>
-        <source>&amp;System</source>
-        <translation>&amp;Sistem</translation>
-    </message>
-    <message>
-        <source>&amp;Accessibility</source>
-        <translation>&amp;Erişilebilirlik</translation>
-    </message>
-    <message>
-        <source>Test&amp;flow</source>
-        <translation>&amp;Deneme akışı</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/diagnostics</name>
-    <message>
-        <source>Diagnostics</source>
-        <translation>Tanılama</translation>
-    </message>
-    <message>
-        <source>&amp;System</source>
-        <translation>&amp;Sistem</translation>
-    </message>
-    <message>
-        <source>A&amp;ctions</source>
-        <translation>İş&amp;lemler</translation>
-    </message>
-    <message>
-        <source>&amp;Accessibility</source>
-        <translation>&amp;Erişilebilirlik</translation>
-    </message>
-    <message>
-        <source>E&amp;xtensions</source>
-        <translation>Eklentile&amp;r</translation>
-    </message>
-    <message>
-        <source>Test&amp;flow</source>
-        <translation>&amp;Deneme akışı</translation>
-    </message>
-    <message>
-        <source>&amp;Diagnostics</source>
-        <translation>&amp;Tanılama</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/edit</name>
-    <message>
-        <source>&amp;Edit</source>
-        <translation>Düz&amp;enle</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/effect</name>
-    <message>
-        <source>&amp;Effect</source>
-        <translation>&amp;Etki</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/export-other</name>
-    <message>
-        <source>&amp;Export other</source>
-        <translation>&amp;Başka dışa aktarma</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extra</name>
-    <message>
-        <source>&amp;Extra</source>
-        <translation>&amp;Ek</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extraedit</name>
-    <message>
-        <source>Edit</source>
-        <translation>Düzenle</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extraselect</name>
-    <message>
-        <source>Select</source>
-        <translation>Seç</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extratools</name>
-    <message>
-        <source>Tools</source>
-        <translation>Araçlar</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/file</name>
-    <message>
-        <source>Open &amp;recent</source>
-        <translation>&amp;Son kullanılanları aç</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Dosya</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/focus</name>
-    <message>
-        <source>Focus</source>
-        <translation>Odaklan</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/generate</name>
-    <message>
-        <source>&amp;Generate</source>
-        <translation>&amp;Oluştur</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/help</name>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Yardım</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/images</name>
-    <message>
-        <source>Images</source>
-        <translation>Görseller</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/label</name>
-    <message>
-        <source>Label</source>
-        <translation>Etiket</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/macros</name>
-    <message>
-        <source>&amp;Macros</source>
-        <translation>&amp;Makrolar</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/mixer</name>
-    <message>
-        <source>Mixer</source>
-        <translation>Karıştırıcı</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/play</name>
-    <message>
-        <source>Play</source>
-        <translation>&amp;Oynat</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/playatspeed</name>
-    <message>
-        <source>Play at speed</source>
-        <translation>Şu hızda oynat</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/record</name>
-    <message>
-        <source>&amp;Record</source>
-        <translation>&amp;Kaydet</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/scriptables1</name>
-    <message>
-        <source>Scriptables1</source>
-        <translation>Betik tabloları 1</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/scriptables2</name>
-    <message>
-        <source>Scriptables2</source>
-        <translation>Betik tabloları 2</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/scrubbing</name>
-    <message>
-        <source>Scrubbing</source>
-        <translation>Sarma</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/select</name>
-    <message>
-        <source>Audio clips</source>
-        <translation>Ses parçaları</translation>
-    </message>
-    <message>
-        <source>Spectral</source>
-        <translation>Spektral</translation>
-    </message>
-    <message>
-        <source>Region</source>
-        <translation>Bölge</translation>
-    </message>
-    <message>
-        <source>Looping</source>
-        <translation>Yineleniyor</translation>
-    </message>
-    <message>
-        <source>&amp;Select</source>
-        <translation>&amp;Seç</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/settings</name>
-    <message>
-        <source>Settings</source>
-        <translation>Ayarlar</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/skip</name>
-    <message>
-        <source>Skip to</source>
-        <translation>Şuraya atla</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/sort</name>
-    <message>
-        <source>Sort tracks</source>
-        <translation>İzleri sırala</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/tools</name>
-    <message>
-        <source>&amp;Tools</source>
-        <translation>&amp;Araçlar</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/track</name>
-    <message>
-        <source>Track</source>
-        <translation>İz</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/tracks</name>
-    <message>
-        <source>&amp;Tracks</source>
-        <translation>İ&amp;zler</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/view</name>
-    <message>
-        <source>W&amp;orkspaces</source>
-        <translation>Ç&amp;alışma alanları</translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation>&amp;Görünüm</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/zoom</name>
-    <message>
-        <source>Zoom</source>
-        <translation>Yakınlaştır</translation>
-    </message>
-</context>
-<context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
         <source>Edit metadata</source>
         <translation>Üst verileri düzenle</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="309"/>
         <source>Use LPC</source>
         <translation>LPC kullanılsın</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="234"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="279"/>
         <source>Bit reservoir</source>
         <translation>Bit deposu</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="246"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="294"/>
         <source>VBL</source>
         <translation>VBL</translation>
     </message>
@@ -3683,7 +4956,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
         <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>Güncelleme denetimi için ağ erişimi gereklidir. Gizliliğinizi korumak için Audacity hiçbir kişisel bilgiyi saklamaz. Asyrıntılı bilgi almak için gizlilik ilkemize bakabilirsiniz.</translation>
+        <translation>Güncelleme denetimi için ağ erişimi gereklidir. Gizliliğinizi korumak için Audacity hiçbir kişisel bilgiyi saklamaz. Ayrıntılı bilgi almak için &lt;a href=&quot;%1&quot;&gt;gizlilik ilkemize&lt;/a&gt; bakabilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3694,6 +4967,11 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
         <source>Auto save every</source>
         <translation>Otomatik kayıt sıklığı</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="78"/>
+        <source>Auto save every %1 %2</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
@@ -3749,6 +5027,11 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="33"/>
         <source>Keyboard layout</source>
         <translation>Klavye yerleşimi</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="49"/>
+        <source>Keyboard layout %1</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="32"/>
@@ -3878,7 +5161,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Program başlangıcı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="81"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="80"/>
         <source>Choose starting project</source>
         <translation>Başlangıçtaki projeyi seçin</translation>
     </message>
@@ -3908,17 +5191,17 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Sayfaları kaydır</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
         <source>Horizontal</source>
         <translation>Yatay</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="55"/>
         <source>Vertical</source>
         <translation>Dikey</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="82"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="88"/>
         <source>Limit scroll area to page borders</source>
         <translation>Kaydırma alanı sayfa kenarlıkları ile sınırlansın</translation>
     </message>
@@ -4052,6 +5335,25 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <source>Max Zoom</source>
         <translation>En fazla yakınlaştırma</translation>
     </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
+        <source>Automatic crash reports</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="25"/>
+        <source>Send crash reports</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="39"/>
+        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>appshell/preferences/spectrogram</name>
@@ -4094,19 +5396,14 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Sonraki öge</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="256"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
         <source>Don’t show welcome dialog on startup</source>
         <translation>Açılışta karşılama iletişim kutusu görüntülenmesin</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="46"/>
-        <source>Tutorial: what’s different in Audacity 4?</source>
-        <translation>Öğretici: Audacity 4 sürümünde neler farklı?</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="48"/>
-        <source>In this video, we walk you through the most important differences between version 3 and version 4.</source>
-        <translation>Bu görüntülü öğretici ile, sürüm 3 ile sürüm 4 arasındaki en önemli farkları gösteriyoruz.</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="47"/>
+        <source>Video: find out what’s new in Audacity 4</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
@@ -4119,63 +5416,58 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Audacity bulut kurulumunuzu audio.com ile tamamlayın</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="58"/>
-        <source>This integration allows you to save and access your Audacity projects on any device</source>
-        <translation>Bu bütünleştirme, Audacity projelerinizi herhangi bir aygıttan kaydetmenizi ve erişmenizi sağlar</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="75"/>
+        <source>Help us decide the future of Audacity</source>
+        <translation>Audacity&apos;nin geleceğine karar vermemize yardımcı olun</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="60"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
+        <source>Take part in survey</source>
+        <translation>Ankete katılın</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
+        <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
+        <translation>Soap Voice Cleaner: stüdyo kalitesinde seslendirme</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="87"/>
+        <source>Get it on MuseHub</source>
+        <translation>MuseHub üzerinden al</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
         <source>Continue</source>
         <translation>İlerle</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation>Sesinizi şekillendirmek için ücretsiz eklentileri keşfedin</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="71"/>
-        <source>There are tons of powerful plugins available that you can install for free on MuseHub</source>
-        <translation>MuseHub üzerinde ücretsiz olarak kurabileceğiniz tonlarca güçlü eklenti var</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="73"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
         <source>View free plugins</source>
         <translation>Ücretsiz eklentileri görüntüleyin</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="79"/>
-        <source>Get 25th anniversary merchandise!</source>
-        <translation>25. yıl ürünlerini alın!</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="81"/>
-        <source>A collection of merchandise that commemorates Audacity’s original appearance and branding</source>
-        <translation>Özgün Audacity görünümünü ve markasını yansıtan ürünler</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="83"/>
-        <source>Visit now</source>
-        <translation>Ziyaret edin</translation>
     </message>
 </context>
 <context>
     <name>au/uicomponents</name>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="47"/>
-        <source>Up</source>
-        <translation>Yukarı</translation>
+        <source>Increase BPM</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="66"/>
-        <source>Down</source>
-        <translation>Aşağı</translation>
+        <source>Decrease BPM</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="688"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="712"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -4195,103 +5487,80 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
-        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
-        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
-        <source>Scanning audio plugins</source>
-        <translation>Ses eklentileri aranıyor</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
-        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
-        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
-        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
-        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
-        <source>System default</source>
-        <translation>Sistem varsayılanı</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
-        <source>Do you want to add SoundFont %1?</source>
-        <translation>%1 SoundFont&apos;unu eklemek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
-        <source>File already exists. Do you want to overwrite it?</source>
-        <translation>Dosya zaten var. Üstüne yazılmasını ister misiniz?</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
-        <source>File path: %1</source>
-        <translation>Dosya yolu: %1</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
-        <source>SoundFont installed</source>
-        <translation>SoundFont yüklendi</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
-        <source>You can assign soundfonts to instruments using the mixer panel.</source>
-        <translation>Karıştırıcı panelini kullanarak çalgılara soundfont&apos;lar atayabilirsiniz.</translation>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
+        <source>Validating audio plugins</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>audio setup</name>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="50"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="59"/>
         <source>Host</source>
         <translation>Sunucu</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="51"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="60"/>
         <source>Playback device</source>
         <translation>Oynatma aygıtı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="52"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="61"/>
         <source>Recording device</source>
         <translation>Kaydetme aygıtı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="53"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="62"/>
         <source>Recording channels</source>
         <translation>Kaydetme kanalları</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="119"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="169"/>
+        <source>System default</source>
+        <extracomment>%1 is the device the system default currently resolves to</extracomment>
+        <translation>Sistem varsayılanı</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="120"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="170"/>
+        <source>System default: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>audio-devices</name>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="804"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="833"/>
         <source>Stream is active … unable to gather information.
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="817"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
         <source>Default recording device number: %1
 </source>
         <translation>Varsayılan kayıt aygıtının numarası: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="818"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
         <source>Default playback device number: %1
 </source>
         <translation>Varsayılan oynatma aygıtının numarası: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="826"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="855"/>
         <source>No devices found
 </source>
         <translation>Herhangi bir aygıt bulunamadı
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="838"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="867"/>
         <source>Device info unavailable for: %1
 </source>
         <extracomment>%1 is the device index number</extracomment>
@@ -4299,70 +5568,70 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="843"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
         <source>Device ID: %1
 </source>
         <translation>Aygıt kodu: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="844"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="873"/>
         <source>Device name: %1
 </source>
         <translation>Aygıt adı: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="845"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="874"/>
         <source>Host name: %1
 </source>
         <translation>Sunucu adı: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="875"/>
         <source>Recording channels: %1
 </source>
         <translation>Kayıt kanalları: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="876"/>
         <source>Playback channels: %1
 </source>
         <translation>Oynatma kanalları: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="848"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
         <source>Low Recording Latency: %1
 </source>
         <translation>Düşük kayıt gecikmesi: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="849"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="878"/>
         <source>Low Playback Latency: %1
 </source>
         <translation>Düşük oynatma gecikmesi: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="850"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="879"/>
         <source>High Recording Latency: %1
 </source>
         <translation>Yüksek kayıt gecikmesi: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="880"/>
         <source>High Playback Latency: %1
 </source>
         <translation>Yüksek oynatma gecikmesi: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="857"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="886"/>
         <source>Supported Playback Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
@@ -4370,7 +5639,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="867"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="896"/>
         <source>Supported Capture Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
@@ -4378,7 +5647,7 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="897"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="926"/>
         <source>Selected recording device: %1 - %2
 </source>
         <extracomment>%1 is the recording device number, %2 is the device name</extracomment>
@@ -4386,13 +5655,13 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="899"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="928"/>
         <source>No recording device found for “%1”.
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="904"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="933"/>
         <source>Selected playback device: %1 - %2
 </source>
         <extracomment>%1 is the playback device number, %2 is the device name</extracomment>
@@ -4400,27 +5669,27 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="906"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="935"/>
         <source>No playback device found for “%1”.
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="914"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="943"/>
         <source>Supported Rates:
 </source>
         <translation>Desteklenen hızlar:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="919"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
         <source>Cannot check mutual sample rates without both devices.
 </source>
         <translation>İki aygıtın örnekleme hızları karşılıklı olarak denetlenemedi.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="977"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1006"/>
         <source>Received %1 while opening devices
 </source>
         <extracomment>%1 is a PortAudio error code returned while opening the devices</extracomment>
@@ -4428,23 +5697,23 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="984"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1013"/>
         <source>Unable to open Portmixer
 </source>
         <translation>Portmixer açılamadı
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="990"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1019"/>
         <source>Available mixers:
 </source>
         <translation>Kullanılabilecek karıştırıcılar:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="997"/>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1006"/>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1015"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1026"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1035"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1044"/>
         <source>%1 - %2
 </source>
         <extracomment>%1 is the mixer index number, %2 is the mixer name
@@ -4456,28 +5725,28 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1001"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1030"/>
         <source>Available recording sources:
 </source>
         <translation>Kullanılabilecek kayıt aygıtları:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1010"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1039"/>
         <source>Available playback volumes:
 </source>
         <translation>Kullanılabilecek oynatma ses düzeyleri:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1037"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1066"/>
         <source>Recording volume is emulated
 </source>
         <translation>Kayıt ses düzeyi taklit ediliyor
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1038"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1067"/>
         <source>Recording volume is native
 </source>
         <translation>Kayıt ses düzeyi doğal
@@ -4513,25 +5782,25 @@ Bu işlem hiçbir projelerinizi silmez.</translation>
         <translation>Ses hazırlanırken sorun çıktı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="758"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
         <source>Audacity Audio</source>
         <translation>Audacity ses</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="875"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>Kayıt aygıtı açılırken sorun çıktı:
 Hata kodu: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="878"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
         <translation>Sorun</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1460"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1495"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
         <source>Out of memory!</source>
         <translation>Bellek doldu!</translation>
     </message>
@@ -4556,20 +5825,20 @@ Hata kodu: %1</translation>
         <translation>yok</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="467"/>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="496"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="518"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="547"/>
         <source>Couldn’t open “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="482"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="533"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="504"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="555"/>
         <source>Unable to read the preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
         <translation type="unfinished"/>
@@ -4628,44 +5897,59 @@ Hata kodu: %1</translation>
         <translation>Bileşen hazırlanamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="292"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
         <source>Failed to decode “%1” preset</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="301"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="361"/>
         <source>Failed to convert “%1” preset to internal format</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="313"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="373"/>
         <source>Failed to create property list for “%1” preset</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="319"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="379"/>
         <source>Failed to set class info for “%1” preset</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="420"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="484"/>
         <source>Failed to set preset name</source>
         <translation>Hazır ayar adı ayarlanamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="425"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="489"/>
         <source>Failed to retrieve preset content</source>
         <translation>Hazır ayar içeriği alınamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="434"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="498"/>
         <source>Failed to convert property list to XML data</source>
         <translation>Özellik listesi XML verilerine dönüştürülemedi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="439"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="503"/>
         <source>XML data is empty after conversion</source>
         <translation>Dönüştürmeden sonra XML verileri boş</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
+        <source>The plugin “%1” does not support the required block size</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
+        <source>The plugin “%1” has crashed while processing audio</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
+        <source>Realtime effect error</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5320,65 +6604,75 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
 <context>
     <name>clip</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="56"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
         <source>Cut and leave gap</source>
         <translation>Kes ve boşluk bırak</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="58"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Cut and close gap on this track</source>
         <translation>Kes ve bu izde boşluğu kapat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="60"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Kes ve tüm izlerde boşluğu kapat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="65"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
         <source>Delete and leave gap</source>
         <translation>Sil ve boşluk bırak</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="67"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and close gap on this track</source>
         <translation>Sil ve bu izde boşluğu kapat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="69"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Sil ve tüm izlerde boşluğu kapat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="74"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
         <source>Rename clip</source>
         <translation>Parçayı yeniden adlandır</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="76"/>
         <source>Clip color</source>
         <translation>Parça rengi</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="82"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
         <source>Cut and…</source>
         <translation>Kes ve…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="84"/>
         <source>Delete and…</source>
         <translation>Sil ve…</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="87"/>
+        <source>Split at silences</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="268"/>
+        <source>Same as track color</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1086"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
         <source>Select</source>
         <translation>Seç</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1086"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
         <source>Deselect</source>
         <translation>Bırak</translation>
     </message>
@@ -5391,21 +6685,21 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="51"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>Oturum açılmamış</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="136"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>Profilim</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="136"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
@@ -5413,14 +6707,14 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Oturum aç</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="164"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>Oturumu kapat</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="164"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
@@ -5435,8 +6729,8 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="604"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="724"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
         <source>Save</source>
         <translation>Kaydet</translation>
     </message>
@@ -5447,89 +6741,190 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Oturum açmamışsınız</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="291"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="296"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="353"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="401"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="470"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="487"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="565"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="582"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="631"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="751"/>
         <source>Invalid project</source>
+        <extracomment>Error message of a failed cloud operation</extracomment>
         <translation>Proje geçersiz</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="347"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="638"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="481"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="544"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="625"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="995"/>
         <source>Service destroyed</source>
+        <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation>Hizmet bozulmuş</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
+        <source>Internal error</source>
+        <translation>İç sorun</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
+        <source>Project is not saved to the cloud</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <source>Project is not synced with the cloud</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
+        <source>Failed to get audio preview upload URLs</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
         <source>Invalid audio ID</source>
         <translation>Audio kimliği geçersiz</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="562"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
         <source>Project not found in cloud database</source>
         <translation>Proje bulut veri tabanında bulunamadı</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="650"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
         <source>No valid current project</source>
         <translation>Geçerli bir proje yok</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="713"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Yükleme tamamlandı ancak veriler eksik</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="155"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
+        <source>Failed to delete cloud project from database</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="188"/>
         <source>Sign in successful! You’re good to go back to Audacity.</source>
         <translation>Oturum açıldı! Audacity uygulamasına dönebilirsiniz.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="585"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="964"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1205"/>
+        <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="200"/>
+        <source>Sign in failed. Please return to Audacity and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
         <source>View on audio.com</source>
         <translation>audio.com üzerinde görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1177"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1308"/>
         <source>Track title</source>
         <translation>İz başlığı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1178"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
         <source>Share audio</source>
         <translation>Ses paylaş</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1179"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share</source>
         <translation>Paylaş</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1200"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
         <source>Audio shared to audio.com</source>
         <translation>Ses audio.com ile paylaşıldı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1220"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1351"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Ses audio.com ile paylaşılıyor…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1279"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1410"/>
         <source>Downloading audio from cloud…</source>
         <translation>Ses buluttan indiriliyor…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="599"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="706"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="719"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
+        <source>The project must be saved before updating the audio preview</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <source>Save your changes to continue, or cancel the update.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1453"/>
+        <source>Unsaved changes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1474"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1505"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1518"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1531"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1545"/>
+        <source>Generate audio preview</source>
+        <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
+        <source>Cloud audio preview updated</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
+        <source>The audio preview has been uploaded to audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1499"/>
+        <source>Audio preview is up to date</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <source>The audio preview already matches the latest saved version of this project.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1510"/>
+        <source>Updating cloud audio preview…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <source>Could not determine the local path of the downloaded project</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="610"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="744"/>
         <source>Save to audio.com</source>
         <translation>audio.com üzerine kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <source>Audio download failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
         <source>Open audio from cloud</source>
         <translation>Buluttan ses aç</translation>
     </message>
@@ -5573,13 +6968,13 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Dosya bulunamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="352"/>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="451"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="369"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="469"/>
         <source>Project was closed before snapshot was created</source>
         <translation>Proje yedekleme noktası oluşturulamadan önce kapatılmış</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="432"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="450"/>
         <source>Invalid Response: %1</source>
         <translation>Yanıt geçersiz: %1</translation>
     </message>
@@ -5641,9 +7036,115 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Bu, geliştiricilerin yaşadığınız sorunları teşhis etmesine yardımcı olmak için MuseScore Studio kurulumunuzla ilgili bilgileri içeren bir .zip dosyası oluşturacaktır. Bu dosyanın içeriğini herhangi birine göndermeden önce inceleyebilirsiniz.</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Tanılama dosyalarını kaydet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
+        <source>Show paths…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
+        <source>Show paths</source>
+        <translation>Yolları göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
+        <source>Show profiler…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>Profil oluşturucuyu göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
+        <source>Show graphics info…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
+        <source>Show graphics info</source>
+        <translation>Grafik bilgilerini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
+        <source>Show navigation tree…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
+        <source>Show navigation tree</source>
+        <translation>Dolaşma ağacını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
+        <source>Show accessibility tree…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
+        <source>Show accessibility tree</source>
+        <translation>Erişilebilirlik ağacını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>Erişilebilirlik ağacını konsola aktar</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
+        <source>Show engraving elements</source>
+        <translation>Gravür ögelerini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
+        <source>Show engraving undo stack</source>
+        <translation>Gravür &amp;geri alma yığınını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
+        <source>Show engraving style options list</source>
+        <translation>Gravür stil seçenekleri listesini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
+        <source>Show actions list</source>
+        <translation>Eylem listesini göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <source>Show rcommands list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="118"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="119"/>
+        <source>Test query action</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="125"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="126"/>
+        <source>Test query action with params 1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="134"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="135"/>
+        <source>Test query action with params 2</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5861,31 +7362,46 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Cıvıldama</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="296"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="319"/>
         <source>Stop preview</source>
         <extracomment>Shown on a button that stops effect preview</extracomment>
         <translation>Ön izlemeyi durdur</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="298"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="321"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
         <translation>Ön izleme</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="101"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="89"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="102"/>
         <source>Select preset</source>
         <translation>Hazır ayar seçin</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="458"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="180"/>
+        <source>Reset preset</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="218"/>
+        <source>Preset options</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="462"/>
         <source>Unknown parameter type: %1</source>
         <translation>Parametre türü bilinmiyor: %1</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="163"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="48"/>
         <source>Save preset</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
         <translation>Hazır ayarı kaydet</translation>
     </message>
     <message>
@@ -5895,8 +7411,9 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="69"/>
         <source>Preset name</source>
+        <extracomment>Placeholder text of the preset name input field</extracomment>
         <translation>Hazır ayar adı</translation>
     </message>
     <message>
@@ -5910,17 +7427,18 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Hata ayıklama</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="94"/>
         <source>Enter Nyquist code here…</source>
+        <extracomment>Placeholder text of the Nyquist code editor</extracomment>
         <translation>Nyquist kodunu buraya yazın…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="107"/>
         <source>Load</source>
         <translation>Yükle</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="118"/>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="76"/>
         <source>Save</source>
         <translation>Kaydet</translation>
@@ -5932,53 +7450,55 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Eşik</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="13"/>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="15"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>dB</source>
+        <extracomment>Abbreviation of decibels, used as a unit suffix</extracomment>
         <translation>dB</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="14"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
         <source>Make-up gain</source>
         <translation>Düzeltme kazancı</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="15"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>Knee width</source>
         <translation>Diz genişliği</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
         <source>Ratio</source>
         <translation>Oran</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="17"/>
         <source>Lookahead</source>
         <translation>Öne bakma</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="21"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="23"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>ms</source>
+        <extracomment>Abbreviation of milliseconds, used as a unit suffix</extracomment>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
         <source>Attack</source>
         <translation>Kalkma</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="23"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>Release</source>
         <translation>Bırakma</translation>
@@ -6034,7 +7554,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Hazır ayar eşleşmiyor</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="384"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
         <source>Applied effect: %1</source>
         <translation>Uygulanmış etki: %1</translation>
     </message>
@@ -6044,8 +7564,10 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>“%1” hazır ayarı zaten var. Değiştirilsin mi?</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="199"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
         <source>Delete preset</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
         <translation>Hazır ayarı sil</translation>
     </message>
     <message>
@@ -6082,40 +7604,100 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>%1: Başka bir etki, oluşturucu veya inceleyici için.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
         <source>Generating %1…</source>
         <translation>%1 oluşturuluyor …</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>%1 uygulanıyor…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
+        <source>Effect preview</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
         <source>Use vendor UI</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Üretici arayüzü kullanılsın</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="69"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
         <source>Toggle between vendor UI and fallback UI</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Üretici arayüzü ile ön tanımlı arayüz arasında geçiş yapar</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="233"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
         <source>Master</source>
         <translation>Ana</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="104"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
+        <source>Added %1 to %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
+        <source>Add %1</source>
+        <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
+        <source>Removed %1 from %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
+        <source>Remove %1</source>
+        <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
+        <source>Replaced %1 with %2</source>
+        <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
+        <source>Replace %1</source>
+        <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
+        <source>Moved %1 up in %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
+        <source>Moved %1 down in %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
+        <source>Change effect order</source>
+        <translation>Etki sıralamasını değiştir</translation>
+    </message>
+    <message>
         <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="106"/>
+        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="108"/>
         <source>Default preset</source>
         <translation>Ön tanımlı hazır ayar</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="574"/>
+        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="580"/>
         <source>custom</source>
         <translation>özel</translation>
     </message>
@@ -6125,12 +7707,12 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation>Farklı kaydet…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>
+        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="56"/>
         <source>Unknown effect</source>
         <translation>Bilinmeyen etki</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="70"/>
+        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="72"/>
         <source>No parameters available for this effect</source>
         <translation>Bu etki için kullanılabilecek bir parametre yok</translation>
     </message>
@@ -6185,12 +7767,12 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="91"/>
         <source>Rescan plugins</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="106"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="107"/>
         <source>Include plugins with errors</source>
         <translation type="unfinished"/>
     </message>
@@ -6207,7 +7789,8 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="129"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="130"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="54"/>
         <source>OK</source>
         <translation>Tamam</translation>
     </message>
@@ -6223,6 +7806,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="384"/>
         <source>Unknown</source>
         <translation>Bilinmiyor</translation>
     </message>
@@ -6232,29 +7816,35 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="242"/>
         <source>Close</source>
+        <extracomment>Label of the button that closes the dialog</extracomment>
         <translation>Kapat</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="147"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="148"/>
         <source>Cancel</source>
         <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="58"/>
         <source>Show:</source>
         <translation>Görüntüle:</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="64"/>
         <source>Type:</source>
         <translation>Tür:</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="70"/>
         <source>Category:</source>
         <translation>Kategori:</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="76"/>
+        <source>Status:</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
@@ -6285,61 +7875,70 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="130"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="159"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="57"/>
+        <source>Not validated</source>
+        <extracomment>The plugin was found but the user chose to validate it later</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="59"/>
+        <source>Missing</source>
+        <translation>Eksik</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="63"/>
+        <source>Broken</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="155"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="190"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="219"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="248"/>
         <source>All</source>
+        <extracomment>Filter option in the Plugin Manager dropdowns that shows every entry</extracomment>
         <translation>Tümü</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="96"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="156"/>
         <source>Disabled</source>
         <translation>Kapalı</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="97"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="212"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="157"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="307"/>
         <source>Enabled</source>
         <translation>Açık</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="250"/>
-        <source>“%1” (broken)</source>
-        <extracomment>%1 is the name of the plugin that failed to load</extracomment>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="312"/>
+        <source>Status</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="215"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="310"/>
         <source>Name</source>
         <translation>Ad</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="217"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="314"/>
         <source>Vendor</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="219"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="316"/>
         <source>Path</source>
         <translation>Yol</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="221"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="318"/>
         <source>Type</source>
         <translation>Tür</translation>
     </message>
     <message>
-        <source>%1 (broken)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Missing - %1</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
         <translation type="unfinished"/>
@@ -6400,6 +7999,104 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <source>Mixing and rendering tracks</source>
         <translation>İzler karıştırılıp çevriliyor</translation>
     </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/BypassEffectButton.qml" line="19"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/RealtimeEffectViewerDialog.qml" line="188"/>
+        <source>Bypass effect</source>
+        <extracomment>Tooltip of the effect power button</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="55"/>
+        <location filename="../../src/effects/extensions/internal/extensioneffect.cpp" line="387"/>
+        <source>Extension</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="341"/>
+        <source>Volume and compression</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
+        <source>Fading</source>
+        <translation>Aşamalı değişim</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
+        <source>Pitch and tempo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="347"/>
+        <source>EQ and filters</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="349"/>
+        <source>Noise removal and repair</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="351"/>
+        <source>Delay and reverb</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="353"/>
+        <source>Distortion and modulation</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="355"/>
+        <source>Special</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="357"/>
+        <source>Spectral tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="359"/>
+        <source>Legacy</source>
+        <translation>Eski</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="361"/>
+        <source>Third-party</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="385"/>
+        <source>Analyzer</source>
+        <translation>İnceleyici</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="386"/>
+        <source>Generator</source>
+        <translation>Üreteç</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="387"/>
+        <source>Effect</source>
+        <translation>Etki</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="388"/>
+        <source>Tool</source>
+        <translation>Araç</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="124"/>
+        <source>Duration</source>
+        <translation>Süre</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
+        <source>Generated audio duration</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>effects-amplify</name>
@@ -6412,6 +8109,11 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="202"/>
         <source>No audio selected</source>
         <translation>Herhangi bir ses seçilmemiş</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="222"/>
+        <source>The selected audio is silent, so there is nothing to amplify.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -6484,7 +8186,7 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="832"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
         <source>Preparing preview</source>
         <translation>Ön izleme hazırlanıyor</translation>
     </message>
@@ -6636,75 +8338,76 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
 <context>
     <name>effects-normalize</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="32"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="33"/>
         <source>Normalize</source>
+        <extracomment>Name of the Normalize effect; shown in menus and dialog titles</extracomment>
         <translation>Normalleştir</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="53"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="54"/>
         <source>Sets the peak amplitude of one or more tracks</source>
         <translation>Bir ya da bir kaç izin tepe genliğini ayarlar</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="96"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="97"/>
         <source>Removing DC offset and Normalizing…
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="98"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="99"/>
         <source>Removing DC offset…
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="100"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="101"/>
         <source>Normalizing without removing DC offset…
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="102"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="103"/>
         <source>Not doing anything…
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="128"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>İnceleniyor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="132"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="133"/>
         <source>Analyzing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>Kanal çiftinin ilk izi inceleniyor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="159"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="160"/>
         <source>Analyzing second track of stereo pair: %1</source>
         <translation>Kanal çiftinin ikinci izi inceleniyor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="168"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="169"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>İşleniyor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="175"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="176"/>
         <source>Processing stereo channels independently: %1</source>
         <translation>Kanal çifti bağımsız olarak işleniyor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="182"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="183"/>
         <source>Processing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Kanal çiftinin ilk izi işleniyor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="205"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="206"/>
         <source>Processing second track of stereo pair: %1</source>
         <translation>Kanal çiftinin ikinci izi işleniyor: %1</translation>
     </message>
@@ -6773,38 +8476,38 @@ frequency range for the effect to act on.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="655"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="821"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="823"/>
         <source>Audio selection required.</source>
         <translation>Ses seçilmelidir.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1379"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1381"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1383"/>
         <source>Processing complete.</source>
         <translation>İşlem tamamlandı.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1389"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1391"/>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1398"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1410"/>
         <source>nyx_error returned from %1.
 </source>
         <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
@@ -6812,76 +8515,76 @@ frequency range for the effect to act on.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1409"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
         <source>plug-in</source>
         <translation>eklenti</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1424"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
         <source>Nyquist returned a list.</source>
         <translation>Nyquist bir liste döndürdü.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1460"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
         <source>Nyquist returned the value: %1</source>
         <translation>Nyquist sonuç değeri: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1519"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
         <source>Nyquist returned too many audio channels.
 </source>
         <translation>Nyquist sonucu çok fazla ses kanalı döndürdü.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1524"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
         <translation>Nyquist sonucu dizi olarak tek bir ses kanalı döndürdü.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1529"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1544"/>
         <source>Nyquist returned an empty array.
 </source>
         <translation>Nyquist sonucu boş bir dizi döndürdü.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1550"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1565"/>
         <source>Nyquist returned nil audio.
 </source>
         <translation>Nyquist sonucu boş bir ses döndürdü.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1595"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1613"/>
         <source>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</source>
         <translation>[Dikkat: Nyquist geçersiz UTF-8 dizgesi döndürdü, burada Latin-1 olarak dönüştürüldü]</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2035"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
         <translation>Bu Audacity sürümünde %1 sürümündeki Nyquist uygulama eki desteklenmiyor</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2290"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
         <source>Could not open file</source>
         <translation>Dosya açılamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2361"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2388"/>
         <source>Your code looks like SAL syntax, but there is no ‘return’ statement.
-            For SAL, use a return statement such as:
+For SAL, use a return statement such as:
 	return *track* * 0.1
-            or for LISP, begin with an open parenthesis such as:
+or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2599"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
         <source>untitled</source>
         <translation>adsız</translation>
     </message>
@@ -7919,444 +9622,454 @@ Sağ kanal</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
-        <source>Success.~%Files written to:~%~s~%</source>
-        <translation>Başarılı.~%Dosya şuraya yazıldı:~%~s~%</translation>
+        <source>Error~%</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
-        <source>Warning.~%Failed to copy some files:~%</source>
-        <translation>Uyarı.~%Bazı dosyalar kopyalanamadı:~%</translation>
+        <source>Success~%Files written to:~%~s~%</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
+        <source>Warning~%Failed to copy some files:~%</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
+        <source>Error~%No file selected.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
         <translation>Eklentiler kuruldu.~%(Etkileri etkinleştirmek için Eklenti yönetimi bölümüne bakın):</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
         <source>Plug-ins updated:</source>
         <translation>Eklentiler güncellendi:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Files copied to plug-ins folder:</source>
         <translation>Dosyalar plug-ins klasörüne kopyalandı:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
         <source>Not found or cannot be read:</source>
         <translation>Bulunamadı ya da okunamadı:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Unsupported file type:</source>
         <translation>Dosya türü desteklenmiyor:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
         <translation>Plug-ins klasörüne yazılamadı:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
-        <source>Error.~%No file selected.</source>
-        <translation>Hata.~%Herhangi bir dosya seçilmemiş.</translation>
-    </message>
-    <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
         <source>Pluck</source>
         <translation>Pluck</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="218"/>
         <source>David R.Sky</source>
         <translation>David R.Sky</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="218"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
         <source>Pluck MIDI pitch</source>
         <translation>Pluck MIDI perdesi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
         <source>Fade-out type</source>
         <translation>Kısma türü</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
         <source>Abrupt</source>
         <translation>Ani</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
         <source>Gradual</source>
         <translation>Kademeli</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Duration (60s max)</source>
         <translation>Süre (En Çok 60 saniye)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
         <source>Rhythm track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
         <source>Dominic Mazzoni, David R. Sky and Steve Daulton</source>
         <translation>Dominic Mazzoni, David R. Sky ve Steve Daulton</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="226"/>
         <source>Tempo (bpm)</source>
         <translation>Tempo (bpm)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="226"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
         <source>30 - 300 beats/minute</source>
         <translation>30 - 300 vuruş/dakika</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
         <source>Beats per bar</source>
         <translation>Çubuk başına vuruş</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="229"/>
         <source>1 - 20 beats/measure</source>
         <translation>1 - 20 vuruş/ölçüm</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="229"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="230"/>
         <source>Swing amount</source>
         <translation>Salınım miktarı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="230"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
         <source>+/- 1</source>
         <translation>+/- 1</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
         <source>Number of bars</source>
         <translation>Çubuk sayısı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
         <source>1 - 1000 bars</source>
         <translation>1 - 1000 bar</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
         <source>Rhythm track duration</source>
         <translation>Ritim izi süresi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
         <source>Used if ‘Number of bars’ = 0</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
         <source>Start time offset</source>
         <translation>Başlangıç zamanı kayması</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="238"/>
         <source>Silence before first beat</source>
         <translation>İlk vuruştan önceki sessizlik</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="238"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="239"/>
         <source>Beat sound</source>
         <translation>Vuruş sesi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="239"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="240"/>
         <source>Metronome Tick</source>
         <translation>Metronom tıklaması</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="240"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="241"/>
         <source>Ping (short)</source>
         <translation>Ping (kısa)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="241"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="242"/>
         <source>Ping (long)</source>
         <translation>Ping (uzun)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="242"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
         <source>Cowbell</source>
         <translation>İnek çanı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="244"/>
         <source>Resonant Noise</source>
         <translation>Rezonans gürültüsü</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="244"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="245"/>
         <source>Noise Click</source>
         <translation>Gürültü tıklaması</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="245"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="246"/>
         <source>Drip (short)</source>
         <translation>Damla (kısa)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="246"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="247"/>
         <source>Drip (long)</source>
         <translation>Damla (uzun)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="247"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="248"/>
         <source>MIDI pitch of strong beat</source>
         <translation>Güçlü vuruş MIDI perdesi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="248"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
         <source>18 - 116</source>
         <translation>18 - 116</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
         <source>MIDI pitch of weak beat</source>
         <translation>Zayıf vuruş MIDI perdesi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
         <source>Risset drum</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
         <source>Steven Jones</source>
         <translation>Steven Jones</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
         <source>Decay (seconds)</source>
         <translation>Düşme (saniye)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
         <source>Center frequency of noise (Hz)</source>
         <translation>Gürültünün merkez frekansı (Hz)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="256"/>
         <source>Width of noise band (Hz)</source>
         <translation>Gürültü bandının genişliği (Hz)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="256"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="257"/>
         <source>Amount of noise in mix (percent)</source>
         <translation>Karıştırılacak gürültü miktarı (yüzde)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="257"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Amplitude (0 - 1)</source>
         <translation>Genlik (0 - 1)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
+        <source>Measure RMS</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
         <source>dB</source>
         <translation>dB</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
         <source>Right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Stereo</source>
         <translation>Çift</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
         <source>Mono</source>
         <translation>Tek</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
         <source>Sample data export</source>
         <translation>Örnek veri dışa aktarımı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
         <source>Limit output to first</source>
         <translation>Çıkış birinci ile sınırlansın</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
         <source>samples</source>
         <translation>örnekler</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
         <source>Measurement scale</source>
         <translation>Ölçüm ölçeği</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="269"/>
         <source>Linear</source>
         <translation>Doğrusal</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="270"/>
         <source>Export data to</source>
         <translation>Verileri şuraya dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="269"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="271"/>
         <source>Select a file</source>
         <translation>Bir dosya seçin</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="270"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
         <source>CSV files</source>
         <translation>CSV dosyaları</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="271"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
         <source>HTML files</source>
         <translation>HTML dosyaları</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
         <source>Index (text files only)</source>
         <translation>Dizin (yalnızca yazı dosyaları)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="275"/>
         <source>Sample Count</source>
         <translation>Örnek sayısı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="276"/>
         <source>Time Indexed</source>
         <translation>Dizine eklenme zamanı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="275"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="277"/>
         <source>Include header information</source>
         <translation>Üst bilgi verileri katılsın</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="276"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
         <source>Minimal</source>
         <translation>En küçük</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="277"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="279"/>
         <source>Standard</source>
         <translation>Standart</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="280"/>
         <source>All</source>
         <translation>Tümü</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="279"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
         <source>Optional header text</source>
         <translation>İsteğe bağlı üst bilgi yazısı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="280"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
         <source>Channel layout for stereo</source>
         <translation>Çift kanal için kanal yerleşimi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="283"/>
         <source>L-R on Same Line</source>
         <translation>Aynı hat üzerinde sağ-sol</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="284"/>
         <source>Alternate Lines</source>
         <translation>Hatlar değişsin</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="283"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="285"/>
         <source>L Channel First</source>
         <translation>Önce sol kanal</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="284"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="286"/>
         <source>Show messages</source>
         <translation>İletileri görüntüle</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="285"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="287"/>
         <source>Errors Only</source>
         <translation>Yalnızca sorunlar</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="286"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="288"/>
         <source>[-inf]</source>
         <translation>[-inf]</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="287"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="289"/>
         <source>Left Channel.~%~%</source>
         <translation>Sol kanal.~%~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="288"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
         <source>~%~%Right Channel.~%~%</source>
         <translation>~%~%Sağ kanal.~%~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="289"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
         <source>~aData written to:~%~a</source>
         <translation>~aVeri şuraya yazıldı:~%~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
         <source>Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a</source>
         <translation>Örnekleme Hızı: ~a Hz.  Örnek değerleri ~a ölçeğinde.~%~a~%~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
         <translation>~a   ~a~%~aÖrnekleme Hızı: ~a Hz.~%İşlenen uzunluk: ~a örnek ~a saniye.~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a</source>
         <translation>~a ~a~%~aÖrnekleme Hızı: ~a Hz. Örnek değerleri ~a ölçeğinde.~%~
                      İşlenen uzunluk: ~a örnek ~a saniye.~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
         <source>~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
                   samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~
                   DC offset: ~a~a</source>
@@ -8365,117 +10078,117 @@ Sağ kanal</translation>
 DC kayma: ~a~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
         <source>~a linear, ~a dB.</source>
         <translation>~a doğrusal, ~a dB.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="297"/>
         <source>Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.</source>
         <translation>Sol: ~a doğrusal, ~a dB | Sağ: ~a doğrusal, ~a dB.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="298"/>
         <source>Sample Data Export</source>
         <translation>Örnek veri dışa aktarımı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="297"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
         <source>~a samples.</source>
         <translation>~a örnek.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="298"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
         <source>~a seconds.</source>
         <translation>~a saniye.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
         <source>Audio data analysis:</source>
         <translation>Ses verisi incelemesi:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="302"/>
         <source>&lt;b&gt;Sample Rate:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a Hz.</source>
         <translation>&lt;b&gt;Örnekleme hızı:&lt;/b&gt;   ~a Hz.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
         <source>&lt;b&gt;Peak Amplitude:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (linear) &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>&lt;b&gt;Tepe genliği:&lt;/b&gt;   ~a (doğrusal)   ~a dB.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="302"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
         <source>&lt;b&gt;RMS&lt;/b&gt; (unweighted): &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>&lt;b&gt;RMS&lt;/b&gt; (ağırlıksız):   ~a dB.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
         <source>&lt;b&gt;DC Offset:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</source>
         <translation>&lt;b&gt;DC kayma:&lt;/b&gt;   ~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
         <source>~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>~a doğrusal,   ~a dB.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
         <source>Left: ~a lin, ~a dB | Right: ~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>Sol: ~a doğrusal, ~a dB | Sağ: ~a doğrusal,   ~a dB.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
         <source>sample data</source>
         <translation>örnek verisi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="309"/>
         <source>Sample #</source>
         <translation>Örnek no</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="310"/>
         <source>Seconds</source>
         <translation>Saniye</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="309"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
         <source>Value (linear)</source>
         <translation>Değer (doğrusal)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="310"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
         <source>Value (dB)</source>
         <translation>Değer (dB)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
         <source>audio sample value analysis</source>
         <translation>ses örnek değeri incelemesi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
         <source>Left (linear)</source>
         <translation>Sol (doğrusal)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="315"/>
         <source>Right (linear)</source>
         <translation>Sağ (doğrusal)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Left (dB)</source>
         <translation>Sol (dB)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="315"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
         <source>Right (dB)</source>
         <translation>Sağ (dB)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="318"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
 &lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
@@ -8484,218 +10197,218 @@ Daulton</source>
  Steve Daulton tarafından geliştirilmiştir</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="319"/>
         <source>linear</source>
         <translation>doğrusal</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="318"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="320"/>
         <source>2 channels (stereo)</source>
         <translation>2 kanallı (stereo)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="319"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="321"/>
         <source>1 channel (mono)</source>
         <translation>1 kanallı (mono)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="320"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="322"/>
         <source>One column per channel.~%</source>
         <translation>Her kanal için bir sütun.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="321"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="323"/>
         <source>One row per channel.~%</source>
         <translation>Her kanal için bir satır.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="322"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="324"/>
         <source>Left channel then Right channel on same line.~%</source>
         <translation>Aynı satırda önce sol sonra sağ kanal.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="323"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="325"/>
         <source>Left and right channels on alternate lines.~%</source>
         <translation>Farklı satırlarda sol ve sağ kanallar.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="324"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="326"/>
         <source>Left channel first then right channel.~%</source>
         <translation>Önce sol sonra sağ kanal.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="325"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Unspecified channel order</source>
         <translation>Kanal sıralaması belirtilmemiş</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="326"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
         <source>Error.~%“~a” cannot be written.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
         <source>Sample data Import</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
         <source>Select file</source>
         <translation>Dosyayı seçin</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="331"/>
         <source>Invalid data handling</source>
         <translation>Veri işlemesi geçersiz</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="332"/>
         <source>Throw Error</source>
         <translation>Sorun oluştur</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="331"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
         <source>Read as Zero</source>
         <translation>Sıfır olarak oku</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="332"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
         <source>Error~%~
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
         <source>Error.~%Unable to open file</source>
         <translation>Sorun.~%Dosya açılamadı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
         <source>Delete selection</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
         <source>Error.~%Track sample rate below 100 Hz is not supported.</source>
         <translation>Hata.~%100 Hz altındaki iz örnekleme hızları desteklenmiyor.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
         <source>Tremolo</source>
         <translation>Titreme</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
         <source>Waveform type</source>
         <translation>Dalga şekli türü</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
         <source>Sine</source>
         <translation>Sinüs</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="343"/>
         <source>Triangle</source>
         <translation>Üçgen</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="344"/>
         <source>Sawtooth</source>
         <translation>Testere dişi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="343"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="345"/>
         <source>Inverse Sawtooth</source>
         <translation>Ters testere dişi</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="344"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="346"/>
         <source>Square</source>
         <translation>Kare</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="345"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
         <source>Starting phase (degrees)</source>
         <translation>Başlangıç fazı (derece)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="346"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
         <source>Wet level (percent)</source>
         <translation>Islak düzey (yüzde)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
         <source>Vocoder</source>
         <translation>Vocoder</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
         <source>Edgar-RFT and Steve Daulton</source>
         <translation>Edgar-RFT ve Steve Daulton</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="351"/>
         <source>Distance: (1 to 120, default = 20)</source>
         <translation>Aralık: (1 ile 120 arasında, ön tanımlı = 20)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
         <source>Output choice</source>
         <translation>Çıkış seçeneği</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="351"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
         <source>Both Channels</source>
         <translation>İki kanal</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="354"/>
         <source>Right Only</source>
         <translation>Yalnızca sağ</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="355"/>
         <source>Number of vocoder bands</source>
         <translation>Vocoder bantlarının sayısı</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="354"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="356"/>
         <source>Amplitude of carrier wave (percent)</source>
         <translation>Taşıyıcı dalganın genliği (yüzde)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="355"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="357"/>
         <source>Amplitude of white noise (percent)</source>
         <translation>Beyaz gürültü genliği (yüzde)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="356"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="358"/>
         <source>Amplitude of Radar Needles (percent)</source>
         <translation>Radar antenlerinin genliği (yüzde)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="357"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="359"/>
         <source>Frequency of Radar Needles (Hz)</source>
         <translation>Radar antenlerinin frekansı (Hz)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="358"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="360"/>
         <source>Error.~%No modulation carrier.</source>
         <translation>Hata.~%Herhangi bir modülasyon taşıyıcısı yok.</translation>
     </message>
@@ -8991,14 +10704,42 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Yükseltme</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="77"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="79"/>
         <source>New peak amplitude</source>
         <translation>Yeni tepe genliği</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="123"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="127"/>
         <source>Allow clipping</source>
         <translation>Kırıpılabilsin</translation>
+    </message>
+</context>
+<context>
+    <name>effects/basstreble</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="13"/>
+        <source>Bass and Treble</source>
+        <translation>Bas ve tiz</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
+        <source>Auto-adjust volume to preserve loudness</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
+        <source>Bass</source>
+        <translation>Bas</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="46"/>
+        <source>Treble</source>
+        <translation>Tiz</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="55"/>
+        <source>Output volume</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -9083,22 +10824,22 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Başlangıç frekansı</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="194"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="195"/>
         <source>End frequency</source>
         <translation>Bitiş frekansı</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="243"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="244"/>
         <source>Start amplitude (0-1)</source>
         <translation>Başlangıç genliği (0-1)</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="267"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="268"/>
         <source>End amplitude (0-1)</source>
         <translation>Bitiş genliği (0-1)</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="293"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="294"/>
         <source>Duration</source>
         <translation>Süre</translation>
     </message>
@@ -9236,13 +10977,15 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Evir</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="142"/>
+        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="143"/>
         <source>Zoom in</source>
+        <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
         <translation>Yakınlaştır</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="158"/>
+        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="160"/>
         <source>Zoom out</source>
+        <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
         <translation>Uzaklaştır</translation>
     </message>
 </context>
@@ -9262,6 +11005,11 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="96"/>
         <source>Invert</source>
         <translation>Evir</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
+        <source>%1 Hz</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -9295,19 +11043,49 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>şuna</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="113"/>
+        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="114"/>
         <source>Normalize</source>
+        <extracomment>Verb: starts the sentence-like control row, e.g. &quot;Normalize perceived loudness to -23 LUFS&quot;</extracomment>
         <translation>Normalleştir</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
+        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="132"/>
         <source>Normalize stereo channels independently</source>
         <translation>Çift kanal birbirinden bağımsız normalleştirilsin</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
+        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="137"/>
         <source>Treat mono as dual mono (recommended)</source>
         <translation>Tek kanal çift tek kanal gibi değerlendirilsin (önerilir)</translation>
+    </message>
+</context>
+<context>
+    <name>effects/lv2</name>
+    <message>
+        <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
+        <source>No available UI:
+%1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
+        <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
+        <source>X11 UI refusing to be externalized</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
+        <source>Unknown reason (please report)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
+        <source>Idle UI creation failed</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -9376,36 +11154,39 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="155"/>
         <source>Noise reduction</source>
         <translation>Gürültü azaltma</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="171"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="173"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="187"/>
         <source>Sensitivity</source>
         <translation>Duyarlılık</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="200"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="203"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="217"/>
         <source>Frequency smoothing</source>
         <translation>Frekans düzeltme</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="219"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="223"/>
         <source>bands</source>
         <translation>bantlar</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="238"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="242"/>
         <source>Output</source>
         <translation>Çıkış</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="265"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="269"/>
         <source>Audio with noise removed</source>
         <translation>Gürültüsü kaldırılmış ses</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="280"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="284"/>
         <source>Noise only</source>
         <translation>Yalnızca gürültü</translation>
     </message>
@@ -9423,31 +11204,25 @@ Please select an area to repair with some audio on at least one side (the more t
 <context>
     <name>effects/normalize</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="11"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="12"/>
         <source>Normalize</source>
+        <extracomment>Title of the Normalize effect dialog</extracomment>
         <translation>Normalleştir</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="42"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
         <translation>DC kaymayı kaldır (dikeyde 0.0 üzerine ortala)</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="63"/>
         <source>Normalize peak amplitude to</source>
         <translation>Tepe genliğini şuna normalleştir </translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="99"/>
         <source>Normalize stereo channels independently</source>
         <translation>Çift kanalı birbirinden bağımsız normalleştir</translation>
-    </message>
-</context>
-<context>
-    <name>effects/nyquist</name>
-    <message>
-        <source>Nyquist prompt</source>
-        <translation>Nyquist komutu</translation>
     </message>
 </context>
 <context>
@@ -9476,7 +11251,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Yankı</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="272"/>
+        <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="269"/>
         <source>Wet only</source>
         <translation>Yalnızca ıslak</translation>
     </message>
@@ -9486,47 +11261,47 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Oda boyutu</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="47"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="48"/>
         <source>Pre-delay</source>
         <translation>Ön gecikme</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="48"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="49"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="56"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
         <source>Reverberance</source>
         <translation>Yankılanma</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="65"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="66"/>
         <source>Damping</source>
         <translation>Sönümlenme</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="74"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="75"/>
         <source>Low tone</source>
         <translation>Alçak ton</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="83"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="84"/>
         <source>High tone</source>
         <translation>Yüksek ton</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="92"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="93"/>
         <source>Wet gain</source>
         <translation>Islak kazanç</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="101"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="102"/>
         <source>Dry gain</source>
         <translation>Kuru kazanç</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="111"/>
         <source>Stereo width</source>
         <translation>Çift kanal genişliği</translation>
     </message>
@@ -9816,13 +11591,13 @@ Lütfen https://forum.audacityteam.org/ adresinden Audacity ekibini bilgilendiri
 <context>
     <name>export</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="16"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="17"/>
         <source>Custom FFmpeg options</source>
         <translation>Özel FFmpeg seçenekleri</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="355"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="388"/>
         <source>Edit mapping</source>
         <translation>Eşleştirmeyi düzenle</translation>
     </message>
@@ -9832,199 +11607,262 @@ Lütfen https://forum.audacityteam.org/ adresinden Audacity ekibini bilgilendiri
         <translation>Kanal sayısı</translation>
     </message>
     <message>
+        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
+        <source>Channel count %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="607"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
         <source>Export audio</source>
         <translation>Sesi dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="76"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
         <source>Export</source>
+        <extracomment>Section heading in the Export dialog</extracomment>
         <translation>Dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
         <source>Type</source>
         <translation>Tür</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="128"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="129"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
         <translation>Dosya</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>Dosya adı</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Klasör</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
         <source>Format</source>
         <translation>Biçim</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="282"/>
         <source>Audio options</source>
         <translation>Ses ayarları</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="266"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="299"/>
         <source>Channels</source>
         <translation>Kanallar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="324"/>
         <source>Mono</source>
         <translation>Tek</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="342"/>
         <source>Stereo</source>
         <translation>Çift</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="359"/>
         <source>Custom mapping</source>
         <translation>Özel eşleştirme</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="406"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation>Örnekleme hızı</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Özel FFmpeg biçimlendirme ayarlarını aç</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="439"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
         <source>Format:</source>
         <translation>Biçim:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="463"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
         <source>Codec:</source>
         <translation>Kodlayıcı/Çözücü:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="554"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
         <source>Effective bit rate may vary</source>
         <translation>Etkin bit hızı değişebilir</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="564"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="598"/>
         <source>Rendering</source>
         <translation>Oluşturma</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="574"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="608"/>
         <source>Trim blank space before first clip</source>
         <translation>İlk parçadan önceki boşluk kırpılsın</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="19"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
         <source>FLAC options</source>
         <translation>FLAC ayarları</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="37"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="54"/>
         <source>Compression</source>
         <translation>Sıkıştırma</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="65"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="73"/>
+        <source>Compression %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="86"/>
         <source>LPC</source>
         <translation>LPC</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="93"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="105"/>
+        <source>LPC %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="118"/>
         <source>Min. PdO</source>
         <translation>En düşük ÖS (PdO)</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="121"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="137"/>
+        <source>Min. PdO %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
         <source>Min. PtO</source>
         <translation>En düşük BS</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="160"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
+        <source>Min. PtO %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="193"/>
         <source>Frame</source>
         <translation>Kare</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="186"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="212"/>
+        <source>Frame %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="222"/>
         <source>PdO method</source>
         <translation>ÖS (PdO) yöntemi</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="208"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="238"/>
+        <source>PdO method %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="248"/>
         <source>Max. PdO</source>
         <translation>En yüksek ÖS (PdO)</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="233"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="267"/>
+        <source>Max. PdO %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
         <source>Max. PtO</source>
         <translation>En yüksek BS (PtO)</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="34"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
+        <source>Max. PtO %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="62"/>
         <source>Formats</source>
         <translation>Biçimler</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="40"/>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="100"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="68"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="145"/>
         <source>Show all</source>
         <translation>Tümünü görüntüle</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="94"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="139"/>
         <source>Codecs</source>
         <translation>Kodlayıcı/Çözücüler</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="20"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="38"/>
         <source>General options</source>
         <translation>Genel ayarlar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="39"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="56"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="70"/>
         <source>Language</source>
         <translation>Dil</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="83"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="97"/>
         <source>Tag</source>
         <translation>Etiket</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="84"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="109"/>
         <source>Quality</source>
         <translation>Kalite</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="112"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="128"/>
+        <source>Quality %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
         <source>Cutoff</source>
         <translation>Kesim</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
+        <source>Cutoff %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="184"/>
         <source>Bit rate</source>
         <translation>Bit hızı</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="203"/>
+        <source>Bit rate %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="213"/>
         <source>Bit rate (bits/second) - influences the resulting file size and quality
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
@@ -10035,9 +11873,19 @@ Bazı kodlayıcı/çözücüler yalnızca belirli değerleri kabul edebilir (128
 192000 - Önerilir</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="239"/>
+        <source>Sample rate %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="249"/>
         <source>Profile</source>
         <translation>Profil</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="265"/>
+        <source>Profile %1</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
@@ -10061,29 +11909,40 @@ Bazı kodlayıcı/çözücüler yalnızca belirli değerleri kabul edebilir (128
         <translation>Ön tanımlı olarak ayarla</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="95"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="96"/>
         <source>Delete</source>
+        <extracomment>Label of the button that deletes the selected metadata tag</extracomment>
         <translation>Sil</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="110"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="111"/>
         <source>Add tag</source>
         <translation>Etiket ekle</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="19"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="37"/>
         <source>MPEG container options</source>
         <translation>MPEG paketi ayarları</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="36"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="53"/>
         <source>Mux rate</source>
         <translation>Çoklayıcı hızı</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="74"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="72"/>
+        <source>Mux rate %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="95"/>
         <source>Packet size</source>
         <translation>Paket boyutu</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="114"/>
+        <source>Packet size %1</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
@@ -10106,77 +11965,92 @@ Bazı kodlayıcı/çözücüler yalnızca belirli değerleri kabul edebilir (128
         <translation>Katılan etiket izleri</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="58"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="60"/>
         <source>Download FFmpeg</source>
         <translation>FFmpeg indir</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="71"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="73"/>
         <source>Locate existing installation</source>
         <translation>Var olan kurulumu bul</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="231"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="266"/>
         <source>All selected audio is muted</source>
         <translation>Seçilmiş tüm sesler kapatıldı</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
+        <source>Other…</source>
+        <translation>Diğer…</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
+        <source>%1 Hz (custom)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
         <translation>Tüm proje seslerini dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="39"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
         <translation>Seçilmiş sesleri dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
         <translation>Yineleme bölgesindeki sesi dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="181"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
         <source>No loop region</source>
         <translation>Bir yineleme bölgesi yok</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="182"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>Yineleme bölgesindeki sesi dışa aktarmak için projede bir yineleme bulunmalıdır. Lütfen geri dönün, bir yineleme oluşturun ve yeniden deneyin.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="193"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
         <source>No selected audio</source>
         <translation>Seçilmiş bir ses yok</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="194"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>Seçilmiş sesi dışa aktarmak için, projede bir ses verisi seçilmesi gerekir. Lütfen projeye geri dönün, bir seçim yapın ve yeniden deneyin.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
-        <source>Unable to create destination folder</source>
-        <translation>Hedef klasör oluşturulamadı</translation>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
+        <source>Set sample rate</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="531"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
+        <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
         <source>Do you want to overwrite?</source>
         <translation>Üzerine yazılmasını ister misiniz?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="532"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
         <source>Overwrite</source>
         <translation>Üzerine yaz</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="544"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
         <source>Export error</source>
         <translation>Dışa aktarma sorunu</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="608"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -10187,7 +12061,7 @@ Ana etkiler dışa aktarmadan sonra yeniden açılır.</translation>
 <context>
     <name>extensions</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="162"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="168"/>
         <source>Reload plugins</source>
         <translation>Eklentileri yeniden yükle</translation>
     </message>
@@ -10302,22 +12176,22 @@ Ana etkiler dışa aktarmadan sonra yeniden açılır.</translation>
         <translation>Alternatif olarak, istediğiniz zaman Başlangıç &gt; Eklentiler&apos;den etkinleştirebilirsiniz.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
         <source>Composing/arranging tools</source>
         <translation>Besteleme/düzenleme araçları</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
         <source>Color notes</source>
         <translation>Renkli notalar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
         <source>Playback</source>
         <translation>Çalma</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
         <source>Lyrics</source>
         <translation>Sözler</translation>
     </message>
@@ -10541,76 +12415,86 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
 <context>
     <name>global</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="155"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="279"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="146"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="292"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Tamam</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="160"/>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="78"/>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="62"/>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="108"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="93"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="102"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="162"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="79"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="64"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="112"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="38"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="47"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="56"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="94"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="103"/>
         <source>dB</source>
+        <extracomment>Abbreviation of decibels, used as a unit suffix</extracomment>
         <translation>dB</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="179"/>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="200"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="180"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="201"/>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="84"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="102"/>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="23"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="96"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="22"/>
         <source>Hz</source>
+        <extracomment>Abbreviation of hertz, used as a unit suffix</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="324"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="102"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="131"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="94"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="620"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="348"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="654"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="531"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="669"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="341"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="105"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
+        <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Uygula</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
+        <extracomment>Label of the button that starts the export</extracomment>
         <translation>Dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="81"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Kapat</translation>
     </message>
     <message>
@@ -10620,7 +12504,6 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
@@ -10634,8 +12517,8 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <translation>dk</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="64"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="53"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="90"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="60"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
@@ -10657,17 +12540,18 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <translation>pt</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="127"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="131"/>
         <source>Don’t show again</source>
         <translation>Bu bir daha görüntülenmesin</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="123"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="124"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
+        <extracomment>Message shown when a search returns nothing</extracomment>
         <translation>Herhangi bir sonuç bulunamadı</translation>
     </message>
     <message>
@@ -10694,29 +12578,29 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Lütfen internet bağlantınızı denetleyin ya da bir süre sonra yeniden deneyin</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="127"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Back</source>
         <translation>Geri</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="138"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Next</source>
         <translation>İleri</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="150"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="148"/>
         <source>Done</source>
         <translation>Tamam</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="108"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="104"/>
         <source>Success!</source>
         <translation>Tamamlandı!</translation>
     </message>
@@ -10726,13 +12610,14 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <translation>Atla</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="39"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="66"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="75"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="84"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="111"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="40"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="58"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="67"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="76"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="85"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="112"/>
         <source>%</source>
+        <extracomment>Percent sign, used as a unit suffix</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -10741,14 +12626,14 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <translation>Tüm dosyalar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="578"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="957"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1199"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="695"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1092"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1330"/>
         <source>Success</source>
         <translation>Başarılı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1204"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
         <source>Dismiss</source>
         <translation>Yok say</translation>
     </message>
@@ -10759,9 +12644,10 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <translation>Kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
+        <extracomment>Title of a file picker dialog</extracomment>
         <translation>Aç</translation>
     </message>
     <message>
@@ -10771,8 +12657,8 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="604"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
         <source>Stop</source>
         <translation>Durdur</translation>
     </message>
@@ -10821,33 +12707,6 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
         <source>Don’t show this message again</source>
         <translation>Bu mesajı tekrar gösterme</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
-        <source>Waiting…</source>
-        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
-        <source>Add</source>
-        <translation>Ekle</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
-        <source>Clear all</source>
-        <translation>Tümünü temizle</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
-        <source>action</source>
-        <translation>eylem</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
-        <source>status</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
@@ -10902,12 +12761,12 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
         <translation>Genişlet</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="118"/>
         <source>Create</source>
         <translation>Oluştur</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="115"/>
         <source>Select</source>
         <translation>Seçiniz</translation>
     </message>
@@ -11056,11 +12915,6 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
         <source>Unpacking %1…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
-        <source>Inactive</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -12316,19 +14170,20 @@ Uygun sürücüler ile ilgili ipuçları için yardım üzerine tıklayın.</tra
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="95"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="123"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
+        <extracomment>Title of the export progress dialog</extracomment>
         <translation>Dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="66"/>
+        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="70"/>
         <source>Importing %1</source>
         <extracomment>%1 is the description of the file format being imported</extracomment>
         <translation>%1 içe aktarılıyor</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="396"/>
+        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="485"/>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
@@ -13876,42 +15731,42 @@ Libsndfile says “%2”</source>
 <context>
     <name>label-track</name>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="47"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
         <source>SubRip text file</source>
         <translation>SubRip yazı dosyası</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="49"/>
         <source>WebVTT file</source>
         <translation>WebVTT dosyası</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="53"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="54"/>
         <source>S&amp;tandard</source>
         <translation>S&amp;tandart</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="55"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="56"/>
         <source>E&amp;xtended (with frequency ranges)</source>
         <translation>&amp;Genişletilmiş (frekans aralıkları ile)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="125"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
         <source>Labels</source>
         <translation>Etiketler</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="178"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="179"/>
         <source>Label Track</source>
         <translation>Etiket izi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="757"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="758"/>
         <source>Importing WebVTT files is not currently supported.</source>
         <translation>Şu anda WebVTT dosyalarının içe aktarılması desteklenmiyor.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="782"/>
         <source>One or more saved labels could not be read.</source>
         <translation>Kaydedilmiş bir ya da bir kaç etiket okunamadı.</translation>
     </message>
@@ -13962,7 +15817,7 @@ Libsndfile says “%2”</source>
         <translation>%1 aç</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>Üzgünüz, şu anda bu videoları yükleyemiyoruz</translation>
     </message>
@@ -13973,19 +15828,19 @@ Libsndfile says “%2”</source>
         <translation>Öğrenin</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
         <source>Learn tab bar</source>
         <translation>Öğren sekmesi çubuğu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
         <source>Get started</source>
         <translation>Başlarken</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
         <source>Classes</source>
         <translation>Sınıflar</translation>
     </message>
@@ -13995,22 +15850,22 @@ Libsndfile says “%2”</source>
         <translation>Alınan çalma listesi boş.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
         <source>Instructor</source>
         <translation>Eğitmen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Yaratıcılık, MuseScore&apos;da Ustalaşmak</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -14025,7 +15880,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 Ayrıca, Mastering MuseScore, en iyi müziğinizi yaratmanıza yardımcı olacak tartışma alanları, canlı yayınlar ve diğer ilgili kurslar ve hizmetler ile destekleyici bir müzisyenler topluluğuna sahiptir. MuseScore&apos;u en tanınmış uzmanlarından birinden öğrenmek için bu fırsattan yararlanın!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
         <translation>MuseScore&apos;da Ustalaşma&apos;yı</translation>
     </message>
@@ -14357,53 +16212,6 @@ Ayrıca, Mastering MuseScore, en iyi müziğinizi yaratmanıza yardımcı olacak
     </message>
 </context>
 <context>
-    <name>midi</name>
-    <message>
-        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
-        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
-        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
-        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
-        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
-        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
-        <source>No device</source>
-        <translation>Cihaz yok</translation>
-    </message>
-</context>
-<context>
-    <name>midiremote</name>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
-        <source>MIDI remote control</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
-        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
-        <source>MIDI mapping:</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
-        <source>MIDI mapping bottom panel</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
-        <source>Assign MIDI mapping…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
-        <source>MIDI mapping top panel</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -14505,7 +16313,6 @@ It will not be loaded.</source>
 %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="478"/>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
@@ -14560,23 +16367,187 @@ It will not be loaded.</source>
         <source>Delete and…</source>
         <translation>Sil ve…</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="52"/>
+        <source>Join</source>
+        <extracomment>Verb: context menu command that joins the selected clips</extracomment>
+        <translation>Birleştir</translation>
+    </message>
 </context>
 <context>
-    <name>musesampler</name>
+    <name>multiwindows</name>
     <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
-        <source>MuseSampler library is detected, version %1</source>
-        <translation>MuseSampler kitaplığı algılandı, %1 sürümü</translation>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
+        <source>Multiinstances</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
-        <source>Installed MuseSampler library is not supported, version %1</source>
-        <translation>Yüklü MuseSampler kitaplığı desteklenmiyor, sürüm %1</translation>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
+        <source>Show multiwindows info</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>navigation</name>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
+        <source>Escape</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
-        <source>MuseSampler library is not found</source>
-        <translation>MuseSampler kitaplığı bulunamadı</translation>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
+        <source>Navigate escape</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
+        <source>Next section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
+        <source>Navigate next section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
+        <source>Previous section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
+        <source>Navigate previous section</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
+        <source>Next panel</source>
+        <translation>Sonraki pano</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
+        <source>Navigate next panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
+        <source>Previous panel</source>
+        <translation>Önceki pano</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
+        <source>Navigate previous panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
+        <source>Next tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
+        <source>Navigate next tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
+        <source>Previous tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
+        <source>Navigate previous tab</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
+        <source>Right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
+        <source>Navigate right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
+        <source>Left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
+        <source>Navigate left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
+        <source>Up</source>
+        <translation>Yukarı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
+        <source>Navigate up</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
+        <source>Down</source>
+        <translation>Aşağı</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
+        <source>Navigate down</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
+        <source>First control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
+        <source>Navigate first control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
+        <source>Last control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
+        <source>Navigate last control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
+        <source>Next row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
+        <source>Navigate next row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
+        <source>Previous row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
+        <source>Navigate previous row control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
+        <source>Trigger control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
+        <source>Navigate trigger control</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -14980,92 +16951,92 @@ It will not be loaded.</source>
 <context>
     <name>playback</name>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="32"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="34"/>
         <source>Position</source>
         <translation>Konum</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="40"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="47"/>
         <source>Top bar (horizontal)</source>
         <translation>Üst çubuk (yatay)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="44"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="51"/>
         <source>Side bar (vertical)</source>
         <translation>Yan çubuk (dikey)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="73"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="85"/>
         <source>Default</source>
         <translation>Ön tanımlı</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="77"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="89"/>
         <source>RMS</source>
         <translation>RMS</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="81"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="93"/>
         <source>Gradient</source>
         <translation>Değişim</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="104"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="121"/>
         <source>Logarithmic (dB)</source>
         <translation>Logaritmik (dB)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="125"/>
         <source>Linear (dB)</source>
         <translation>Doğrusal (dB)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="112"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="129"/>
         <source>Linear (amp)</source>
         <translation>Doğrusal (genlik)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="132"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="162"/>
         <source>dB range</source>
         <translation>dB aralığı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="20"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Low quality</source>
         <translation>Düşük kalite</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Medium quality</source>
         <translation>Orta kalite</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>High quality</source>
         <translation>Yüksek kalite</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Best quality</source>
         <translation>En iyi kalite</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="27"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>None</source>
         <translation>Yok</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="28"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Rectangle</source>
         <translation>Dikdörtgen</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="29"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Triangle</source>
         <translation>Üçgen</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="30"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Shaped</source>
         <translation>Şekilli</translation>
     </message>
@@ -15075,24 +17046,145 @@ It will not be loaded.</source>
         <translation>Zaman imzası</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="41"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
         <source>Moved volume slider</source>
         <translation>Ses düzeyi kaydırıcısı ayarlandı</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="42"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
         <translation>Ses düzeyi</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="66"/>
         <source>Moved pan dial</source>
         <translation>Pan düğmesi ayarlandı</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="69"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
         <source>Pan</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Pan</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
+        <source>Playback volume</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="27"/>
+        <source>Playback meter</source>
+        <translation>Oynatma ölçer</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="63"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="61"/>
+        <source>Playback meter settings</source>
+        <extracomment>Tooltip of the playback meter settings button</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
+        <source>Audio settings are already being changed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
+        <source>The selected audio settings are invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
+        <source>The selected audio routing is invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
+        <source>No usable audio API is available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
+        <source>No ASIO device is available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
+        <source>The active audio stream could not be stopped.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
+        <source>An internal error occurred while changing the audio settings.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
+        <source>No playback device is available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
+        <source>“%1” is now used for playback.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
+        <source>Playback device changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
+        <source>No recording device is available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
+        <source>“%1” is now used for recording.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
+        <source>Recording device changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
+        <source>The previous audio state could not be restored.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
+        <source>Unable to rescan audio devices</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
+        <source>The audio stream could not be restored after rescanning audio devices.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
+        <source>Audio devices</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
+        <source>Unable to change audio settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
+        <source>The audio stream could not be restored after changing the audio settings.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <source>Audio settings</source>
+        <translation>Ses ayarları</translation>
     </message>
 </context>
 <context>
@@ -15161,62 +17253,62 @@ It will not be loaded.</source>
         <translation>Asla</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="32"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="31"/>
         <source>Inputs and outputs</source>
         <translation>Girişler ve çıkışlar</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="49"/>
         <source>Host</source>
         <translation>Sunucu</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="33"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="32"/>
         <source>Buffer and latency</source>
         <translation>Ara bellek ve gecikme</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="45"/>
         <source>Buffer length</source>
         <translation>Ara bellek boyutu</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="71"/>
         <source>Latency compensation</source>
         <translation>Gecikme dengelemesi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="116"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="105"/>
         <source>Automatic</source>
         <translation>Otomatik</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="39"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
         <source>Clip style</source>
         <translation>Parça biçemi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="70"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
         <source>Colorful</source>
         <translation>Renkli</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="100"/>
         <source>Classic</source>
         <translation>Klasik</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="88"/>
         <source>Playback device</source>
         <translation>Oynatma aygıtı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="66"/>
         <source>Recording device</source>
         <translation>Kaydetme aygıtı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="120"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="105"/>
         <source>Recording channels</source>
         <translation>Kaydetme kanalları</translation>
     </message>
@@ -15271,6 +17363,11 @@ It will not be loaded.</source>
         <translation>FFmpeg kitaplığı bulunamadı</translation>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
+        <source>FFmpeg library path</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
         <source>Free space</source>
         <translation>Boş alan</translation>
@@ -15281,7 +17378,12 @@ It will not be loaded.</source>
         <translation>Dil</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="79"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="67"/>
+        <source>Language %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
         <source>Restart required</source>
         <translation>Yeniden başlatma gerekli</translation>
     </message>
@@ -15296,12 +17398,12 @@ It will not be loaded.</source>
         <translation>dB aralığı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="12"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="11"/>
         <source>Mono &amp; stereo conversion</source>
         <translation>Tek kanal ve çift kanal dönüşümü </translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="27"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="26"/>
         <source>Always convert to mono without prompt</source>
         <translation>Her zaman sormadan tek kanala dönüştür</translation>
     </message>
@@ -15311,7 +17413,12 @@ It will not be loaded.</source>
         <translation>Sayı biçimi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="69"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
+        <source>Number format %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
         <source>Example: 1,000,000.99</source>
         <translation>Örnek: 1.000.000,99</translation>
     </message>
@@ -15326,12 +17433,12 @@ It will not be loaded.</source>
         <translation>Oynatma başarımı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="34"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="24"/>
         <source>Playback quality</source>
         <translation>Oynatma kalitesi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="40"/>
         <source>Dithering</source>
         <translation>Titreme</translation>
     </message>
@@ -15351,44 +17458,29 @@ It will not be loaded.</source>
         <translation>Kayıt yapılmıyorken mikrofon ölçeri görüntülensin</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="33"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="32"/>
         <source>Sample rate</source>
         <translation>Örnekleme hızı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="46"/>
         <source>Default sample rate</source>
         <translation>Ön tanımlı örnekleme hızı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="66"/>
         <source>Default sample format</source>
         <translation>Ön tanımlı örnekleme biçimi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="89"/>
         <source>Custom sample rate</source>
         <translation>Özel örnekleme hızı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="116"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="110"/>
         <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
         <translation>Ön tanımlı örnekleme hızları ve biçimleri yalnızca yeni oluşturulan parçalar için geçerlidir. Var olan parçalara yapılan kayıtlarda, bunlar yerine parçanın örnekleme hızı ve biçimi kullanılır.</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="15"/>
-        <source>Solo button behavior</source>
-        <translation>Solo düğmesi davranışı</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="40"/>
-        <source>Solo can be activated for multiple tracks at the same time</source>
-        <translation>Solo aynı anda birden fazla iz için etkinleştirilebilir</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="55"/>
-        <source>When solo is activated, it deactivates solo for all other tracks</source>
-        <translation>Solo etkinleştirildiğinde, diğer tüm izler için solo etkisizleştirilir</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="17"/>
@@ -15441,28 +17533,28 @@ It will not be loaded.</source>
         <translation>Arayüz renkleri</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="49"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
         <source>Accent color</source>
         <translation>Vurgu rengi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="55"/>
         <source>Text and icons</source>
         <translation>Yazılar ve simgeler</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="60"/>
         <source>Disabled text</source>
         <translation>Etkisizleştirilmiş yazı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="52"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="65"/>
         <source>Border color</source>
         <translation>Kenarlık rengi</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="160"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="198"/>
         <source>Appearance</source>
         <translation>Görünüm</translation>
     </message>
@@ -15493,10 +17585,6 @@ It will not be loaded.</source>
         <translation>Seçilmiş yol bulunamadı.</translation>
     </message>
     <message>
-        <source>Please select a path that contains %1</source>
-        <translation>Lütfen %1 bulunan bir yol seçin</translation>
-    </message>
-    <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
@@ -15504,16 +17592,20 @@ It will not be loaded.</source>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="194"/>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="199"/>
         <source>Success</source>
         <translation>Başarılı</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="147"/>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="195"/>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="200"/>
         <source>Please restart the application for the changes to take effect.</source>
         <translation>Değişikliklerin etkili olması için uygulamayı yeniden başlatın.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
+        <source>Installation found</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
@@ -15531,31 +17623,101 @@ It will not be loaded.</source>
         <translation>FFmpeg değiştir</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="184"/>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
+        <source>FFmpeg has already been found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
         <source>Locate %1</source>
         <translation>%1 konumunu bul</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="43"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="44"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 (Tek) kayıt kanalı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="46"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="47"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 (Çift) kayıt kanalları</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="238"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="251"/>
-        <source>Other</source>
-        <translation>Diğer</translation>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
+        <source>Audio settings are already being changed.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Your version of %1 is up to date.</source>
-        <translation>%1 sürümünüz güncel.</translation>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="57"/>
+        <source>The selected audio settings are invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="59"/>
+        <source>The selected audio routing is invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
+        <source>No usable audio API is available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
+        <source>No ASIO device is available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
+        <source>The active audio stream could not be stopped.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
+        <source>An internal error occurred while changing the audio settings.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
+        <source>System default: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
+        <source>The audio stream could not be restored after changing the audio settings.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="247"/>
+        <source>The previous audio state could not be restored.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
+        <source>Unable to apply audio settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
+        <source>The audio stream could not be restored after closing the ASIO settings.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
+        <source>Unable to open ASIO settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="535"/>
+        <source>Other</source>
+        <translation>Diğer</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -15564,6 +17726,7 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="91"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="101"/>
         <source>System default</source>
         <translation>Sistem ön tanımlı değeri</translation>
@@ -15584,54 +17747,76 @@ It will not be loaded.</source>
         <translation>Geçici klasör değişikliğinin geçerli olması için Audacity yeniden başlatılmalı</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="157"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="195"/>
         <source>General</source>
         <translation>Genel</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="163"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>Audio settings</source>
+        <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>Ses ayarları</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="166"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
+        <source>The default audio settings are invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
+        <source>An internal error occurred while resetting the audio settings.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
         <source>Audio editing</source>
         <translation>Ses düzenleme</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="169"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="207"/>
         <source>Playback/Recording</source>
         <translation>Oynatma/Kaydetme</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="173"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
         <source>Spectral display</source>
         <translation>Spektral görünüm</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="177"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
         <source>Music</source>
         <translation>Müzik</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="180"/>
         <source>Cloud</source>
-        <translation>Bulut</translation>
+        <translation type="vanished">Bulut</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="182"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="220"/>
         <source>Shortcuts</source>
         <translation>Kısa yollar</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="185"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
         <source>Plugins</source>
         <translation>Eklentiler</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="188"/>
         <source>Advanced options</source>
-        <translation>Gelişmiş ayarlar</translation>
+        <translation type="vanished">Gelişmiş ayarlar</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="249"/>
+        <source>Unable to reset audio settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
+        <source>The audio stream could not be restored after resetting the audio settings.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
@@ -15674,43 +17859,53 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="75"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
         <source>Remove</source>
         <translation>Kaldır</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="78"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
         <source>Remove location</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="98"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="100"/>
         <source>The directory does not exist</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="107"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="111"/>
         <source>Add new location</source>
         <translation>Yeni konum ekle</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="80"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="81"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
+        <source>Use device sample rate</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
+        <source>Driver settings</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -15754,7 +17949,7 @@ It will not be loaded.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="70"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="17"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="16"/>
         <source>Untitled project</source>
         <translation>Adlandırılmamış proje</translation>
     </message>
@@ -15980,37 +18175,37 @@ It will not be loaded.</source>
         <translation>Başka aç…</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="120"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="116"/>
         <source>All saved changes will now update to the cloud</source>
         <translation>Kaydedilen tüm değişiklikler bulut üzerinde güncellenecek</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="162"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="158"/>
         <source>Publish your finished projects on Audio.com</source>
         <translation>Tamamlanmış projelerinizi audio.com üzerinde yayınlayın</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="187"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Create a portfolio to showcase your music</source>
         <translation>Müziğinizi sergilemek için bir portföy oluşturun</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="188"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Gain followers and receive project comments and ratings</source>
         <translation>Takipçi kazanın ve projeleriniz ile ilgili yorum ve değerlendirmeler alın</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="189"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Share your projects and collaborate with other musicians</source>
         <translation>Projelerinizi paylaşın ve diğer müzisyenler ile birlikte çalışın</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="223"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="215"/>
         <source>Watch video</source>
         <translation>Görüntüyü izle</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="251"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="243"/>
         <source>View project online</source>
         <translation>Projeyi çevrim içi görüntüle</translation>
     </message>
@@ -16025,187 +18220,232 @@ It will not be loaded.</source>
         <translation>Vurgu rengi</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="387"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="529"/>
         <source>Could not save project locally</source>
         <translation>Proje yerel olarak kaydedilemedi</translation>
     </message>
     <message>
-        <location filename="../../src/au3wrap/internal/au3project.cpp" line="151"/>
+        <location filename="../../src/au3wrap/internal/au3project.cpp" line="153"/>
         <source>Project loading failed</source>
         <translation>Proje yüklenemedi</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="485"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="665"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="712"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="787"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="836"/>
         <source>All supported files</source>
         <translation>Tüm desteklenen dosyalar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="72"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="104"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="71"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="111"/>
         <source>Imported file “%1”?</source>
         <translation>“%1” dosya içe aktarıldı mı?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="76"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="97"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="108"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="122"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="77"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="116"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Import</source>
+        <extracomment>Name of the undo history entry created by importing files</extracomment>
         <translation>İçe aktar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="97"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="122"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Imported multiple files</source>
         <translation>Birkaç dosya içe aktarıldı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="291"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="380"/>
         <source>Error opening file</source>
         <translation>Dosya açılırken sorun çıktı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="292"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
         <source>Could not open file: %1</source>
         <translation>Dosya açılamadı: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="584"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="603"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="963"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="982"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="702"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="725"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1098"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1117"/>
         <source>Dismiss</source>
+        <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Yok say</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="597"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="719"/>
         <source>Upload project to audio.com…</source>
         <translation>Projeyi audio.com üzerine yükle…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="666"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
         <source>Audacity project files</source>
         <translation>Audacity proje dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="667"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="181"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="668"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="182"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="667"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
+        <source>Cloud sync failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="626"/>
+        <source>Project unavailable</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="635"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="789"/>
+        <source>Access denied</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="657"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="769"/>
+        <source>Version conflict</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="690"/>
         <source>Visit audio.com</source>
         <translation>audio.com sitesine git</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="672"/>
         <source>Load latest</source>
         <translation>Son sürümü yükle</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="958"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="679"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="698"/>
+        <source>Project incomplete</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="806"/>
+        <source>Network error</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Kaydedilmiş tüm değişiklikler artık bulutta güncellenecek. Bu dosyayı audio.com üzerinde güncellediğiniz projeler sayfasından yönetebilirsiniz</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="669"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
         <source>Importable audio and media files</source>
         <translation>İçe aktarılabilecek ses ve ortam dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="682"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="731"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="855"/>
         <source>Open</source>
+        <extracomment>Title of a file picker dialog</extracomment>
         <translation>Aç</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="713"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
         <source>Audio files</source>
         <translation>Ses dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="714"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
         <source>Video files</source>
         <translation>Görüntü dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
         <source>Game media files</source>
         <translation>Oyun ortam dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="716"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
         <source>Streaming files</source>
         <translation>Yayın akışı dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="717"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
         <source>Animation and image files</source>
         <translation>Canlandırma ve görsel dosyaları</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="718"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
         <source>Raw files</source>
         <translation>Ham dosyalar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="747"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="871"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Projeyi kapatmadan önce değişiklikleri kaydetmek ister misiniz?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="749"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="873"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>“%1” projesini kapatmadan önce değişiklikleri kaydetmek ister misiniz?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="753"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Kaydetmezseniz değişiklikleriniz kaybolacak.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="976"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="884"/>
+        <source>Unsaved changes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1111"/>
         <source>Resuming sync to audio.com…</source>
         <translation>audio.com ile eşitleme sürdürülüyor…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="994"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1129"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1555"/>
         <source>Syncing project from cloud…</source>
         <translation>Proje bulut ile eşitleniyor…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1159"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>%1 dosyası okunamadı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1164"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1295"/>
         <source>An error occurred while reading this file.</source>
         <translation>Bu dosya okunurken bir sorun çıktı.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="701"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="726"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="742"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="782"/>
         <source>Save to computer</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Bilgisayara kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectconfiguration.cpp" line="172"/>
+        <location filename="../../src/project/internal/projectconfiguration.cpp" line="162"/>
         <source>Untitled</source>
         <translation>Adlandırılmamış</translation>
     </message>
@@ -16285,23 +18525,23 @@ Dosya özelliklerini denetleyerek yazma korumasını kaldırın, yazmaya karşı
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="430"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="458"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2169"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2650"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="563"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
         <source>Warning</source>
         <translation>Uyarı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1075"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1045"/>
+        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1114"/>
         <source>Progress</source>
         <extracomment>This title appears on a dialog that indicates the progress in doing something.</extracomment>
         <translation>İşlem</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1075"/>
+        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
         <source>Discarding undo/redo history</source>
         <translation>Geri al/yinele geçmişi siliniyor</translation>
     </message>
@@ -16340,13 +18580,13 @@ Dosya özelliklerini denetleyerek yazma korumasını kaldırın, yazmaya karşı
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1251"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2227"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
         <source>This may take several seconds</source>
         <translation>Bu işlem bir kaç saniye sürebilir</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="537"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="548"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -16354,7 +18594,7 @@ Dosya özelliklerini denetleyerek yazma korumasını kaldırın, yazmaya karşı
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="540"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="551"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
@@ -16362,7 +18602,7 @@ Dosya özelliklerini denetleyerek yazma korumasını kaldırın, yazmaya karşı
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="624"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="638"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -16372,8 +18612,8 @@ Dosya özelliklerini denetleyerek yazma korumasını kaldırın, yazmaya karşı
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="648"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="671"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="662"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="685"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -16383,7 +18623,7 @@ Dosya özelliklerini denetleyerek yazma korumasını kaldırın, yazmaya karşı
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="432"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="462"/>
         <source>There is very little free disk space left on %1
 Please select a bigger temporary directory location in
 Directories Preferences.</source>
@@ -16393,12 +18633,12 @@ Klasör Ayarları bölümünden daha büyük bir geçici
 klasör konumu seçin.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="457"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="487"/>
         <source>Failed to open the project’s database</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="517"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="547"/>
         <source>Failed to open database file:
 
 %1</source>
@@ -16408,17 +18648,17 @@ klasör konumu seçin.</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="576"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="606"/>
         <source>Failed to discard connection</source>
         <translation>Bağlantı kesilemedi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="606"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="636"/>
         <source>Failed to restore connection</source>
         <translation>Bağlantı yeniden kurulamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="651"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="681"/>
         <source>Failed to execute a project file command:
 
 %1</source>
@@ -16428,7 +18668,7 @@ klasör konumu seçin.</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="724"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="773"/>
         <source>Project is in a read only directory
 (Unable to create the required temporary files)</source>
         <extracomment>An error message.</extracomment>
@@ -16436,12 +18676,12 @@ klasör konumu seçin.</translation>
 (Gerekli geçici dosyalar oluşturulamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="745"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="794"/>
         <source>This is not an Audacity project file</source>
         <translation>Bu bir Audacity projesi dosyası değil</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="761"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="810"/>
         <source>This project was created with a newer version of Audacity.
 
 You will need to upgrade to open it.</source>
@@ -16450,18 +18690,25 @@ You will need to upgrade to open it.</source>
 Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="780"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="824"/>
+        <source>Failed to upgrade the project schema.
+
+File might be corrupted or read only.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
         <source>Unable to initialize the project file</source>
         <translation>Proje dosyası hazırlanamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="834"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="899"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="852"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="917"/>
         <source>Project is read only
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16469,7 +18716,7 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="855"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="920"/>
         <source>Project is locked
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16477,7 +18724,7 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="858"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="923"/>
         <source>Project is busy
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16485,7 +18732,7 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="861"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="926"/>
         <source>Project is corrupt
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16493,7 +18740,7 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="864"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="929"/>
         <source>Some permissions issue
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16501,7 +18748,7 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="867"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="932"/>
         <source>A disk I/O error
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16509,7 +18756,7 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="870"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="935"/>
         <source>Not authorized
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16517,35 +18764,35 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 (Blok dosyaları ile çalışamaz)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="873"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="938"/>
         <source>Unable to work with the blockfiles</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
         <translation>Blok dosyaları ile çalışamaz</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="883"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="948"/>
         <source>Total orphan blocks deleted %1</source>
         <extracomment>%1 is the number of deleted orphan blocks</extracomment>
         <translation>Toplam %1 sahipsiz blok silindi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="964"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1029"/>
         <source>Failed to rollback transaction during import</source>
         <translation>İçe aktarma sırasında işlemler geri alınamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="988"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1053"/>
         <source>Unable to attach destination database</source>
         <translation>Hedef veri tabanı bağlanamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="999"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1064"/>
         <source>Unable to switch to fast journaling mode</source>
         <translation>Hızlı günlük tutma kipine geçilemedi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1037"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1856"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1106"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1964"/>
         <source>Unable to prepare project file command:
 
 %1</source>
@@ -16555,13 +18802,13 @@ Dosyayı açabilmek için uygulamayı güncellemelisiniz.</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1070"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1139"/>
         <source>Failed to bind SQL parameter</source>
         <translation>SQL parametresi ile bağlantı kurulamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1085"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1881"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1154"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1989"/>
         <source>Failed to update the project file.
 The following command failed:
 
@@ -16573,22 +18820,27 @@ The following command failed:
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1127"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
+        <source>Failed to copy the project history.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
         <source>Destination project could not be detached</source>
         <translation>Hedef proje ayrılamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1251"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
         <source>Copying Project</source>
         <translation>Proje kopyalanıyor</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1265"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1348"/>
         <source>Error Writing to File</source>
         <translation>Dosyaya yazılırken sorun çıktı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1267"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1350"/>
         <source>Audacity failed to write file %1.
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
@@ -16598,29 +18850,29 @@ For tips on freeing up space, click the help button.</source>
 Boş alan açmakla ilgili ipuçları için yardım üzerine tıklayın.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1479"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1583"/>
         <source>Compacting project</source>
         <translation>Proje sıkıştırılıyor</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1578"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1685"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1580"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
         <source>&lt;untitled&gt;</source>
         <translation>&lt;adsız&gt;</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1591"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
         <translation>(Kurtarıldı)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1691"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
         <source>This file was saved using Audacity %1.
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</source>
         <extracomment>%1 is the Audacity version that saved the file, %2 is the running version.</extracomment>
@@ -16628,53 +18880,58 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
 Audacity %2 sürümünü kullanıyorsunuz. Bu dosyayı açmak için daha yeni bir sürüme yükseltmelisiniz.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1695"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1802"/>
         <source>Can’t open project file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1811"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1918"/>
         <source>Failed to remove the autosave information from the project file.</source>
         <translation>Proje dosyasından otomatik kaydetme bilgileri silinemedi.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1874"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1924"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1934"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1947"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1982"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2032"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2042"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2055"/>
         <source>Unable to bind to blob</source>
         <translation>Blob bağlantısı kurulamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2058"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
+        <source>The project file is read-only</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
         <source>Unable to parse project information.</source>
         <translation>Proje bilgileri işlenemedi.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2170"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2186"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
         <source>Saving project</source>
         <translation>Proje kaydediliyor</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2188"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2242"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2262"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2304"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2363"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2383"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
         <source>Error Saving Project</source>
         <translation>Proje kaydedilirken sorun çıktı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2227"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
         <source>Syncing</source>
         <translation>Eşleştiriliyor</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2244"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -16686,7 +18943,7 @@ boş alan çok az.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2264"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -16697,12 +18954,12 @@ on the storage device.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2330"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2451"/>
         <source>Backing up project</source>
         <translation>Proje yedekleniyor</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2649"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2770"/>
         <source>Automatic database backup failed.</source>
         <translation>Veri tabanı otomatik olarak yedeklenemedi.</translation>
     </message>
@@ -16797,47 +19054,57 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="480"/>
-        <source>Legacy project file</source>
-        <translation>Eski proje dosyası</translation>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <source>Audacity 3 project</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Bir Audacity 3 projesi açtınız. Bu proje Audacity 4 ile kullanılmadan önce dönüştürülmelidir. </translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>Cancel</source>
         <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="489"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
         <source>Save as new project</source>
         <translation>Yeni proje olarak kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="516"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <source>Legacy project</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
         <source>The project was saved as “%1”</source>
         <translation>Proje “%1” olarak kaydedildi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="521"/>
         <source>Continue</source>
         <translation>İlerle</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1020"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
+        <source>Project saved</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
         <source>Time Track not supported</source>
         <translation>Zaman izi desteklenmiyor</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1021"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Projede, henüz Audacity 4 tarafından desteklenmeyen bir zaman izi var ve kaldırılması gerekiyor. Bu işlem özgün Audacity 3 projenizi etkilemez.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1025"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1160"/>
         <source>OK</source>
         <translation>Tamam</translation>
     </message>
@@ -16865,12 +19132,13 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>API düzeyi:</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="67"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="68"/>
         <source>Property</source>
+        <extracomment>Placeholder text of an empty project property field</extracomment>
         <translation>Özellik</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="87"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="88"/>
         <source>Value</source>
         <translation>Değer</translation>
     </message>
@@ -16883,102 +19151,103 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
 <context>
     <name>project/save</name>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="60"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="62"/>
         <source>How would you like to save?</source>
         <translation>Nasıl kaydetmek istersiniz?</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="81"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>Projeniz audio.com üzerinde gizli olarak yedekleniyor. Çalışmanıza herhangi bir aygıt üzerinden erişebilir ve projeniz üzerinde başkalarıyla iş birliği yapabilirsiniz. Buluta kaydetme özelliği sınırlı sayıda proje için ücretsizdir.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="82"/>
         <source>Save to cloud</source>
         <translation>Buluta kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="86"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="88"/>
         <source>Save to the cloud (free)</source>
         <translation>Buluta kaydet (ücretsiz)</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="95"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
         <source>On your computer</source>
         <translation>Bilgisayarınızda</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="96"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="98"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
         <translation>Dosyalarınızı bilgisayarınıza kaydetmek isterseniz buradan yapabilirsiniz.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="99"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
         <source>Save to computer</source>
         <translation>Bilgisayara kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="103"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="105"/>
         <source>Save on your computer</source>
         <translation>Bilgisayarınıza kaydedin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="34"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="168"/>
         <source>Save project</source>
         <translation>Projeyi kaydet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="173"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>kopya</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="176"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>seçim</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="265"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>Müziğinizi paylaşmak için audio.com üzerinde hesap ya da oturum açın.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Yayınla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
         <source>Publish changes online?</source>
         <translation>Değişiklikler çevrim içi yayınlansın mı?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="533"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Kaydedilmiş değişiklikleriniz herkese açık olarak görülebilir. Herkese açık olarak çalınması için ayrıca yeni bir MP3 oluşturacağız.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="568"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="548"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="572"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Lütfen internet bağlantınızı denetleyin ya da bir süre sonra yeniden deneyin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="547"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="557"/>
         <source>Unable to connect to the cloud</source>
         <translation>Bulut ile bağlantı kurulamadı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="571"/>
         <source>Unable to connect to Audio.com</source>
         <translation>audio.com ile bağlantı kurulamadı</translation>
     </message>
@@ -17038,34 +19307,34 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="853"/>
         <source>Your audio could not be shared</source>
         <translation>Sesiniz paylaşılamadı</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="829"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="861"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>audio.com hesabınızın doğrulanması gerekiyor. Lütfen etkinleştirme e-postasındaki bağlantıyı kullanarak hesabınızı etkinleştirin.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="835"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="867"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>audio.com bilinmeyen bir hata kodu ile yanıt verdi: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="838"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="870"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>audio.com bilinmeyen bir hata kodu ile yanıt verdi.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="840"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="847"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="879"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Lütfen bir süre sonra yeniden deneyin ya da bu sorun ile ilgili olarak audio.com üzerinden yardım isteyin.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="843"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>audio.com ile bağlantı kurulamadı. Lütfen internet bağlantınızı denetleyin ya da bir süre sonra yeniden deneyin</translation>
     </message>
@@ -17073,7 +19342,7 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
 <context>
     <name>projectScene</name>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistmodel.cpp" line="289"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistmodel.cpp" line="294"/>
         <source>Master</source>
         <translation>Ana</translation>
     </message>
@@ -17101,45 +19370,46 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Süre</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/EffectCard.qml" line="128"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
         <source>Get it on MuseHub</source>
         <translation>MuseHub üzerinden al</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="13"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
         <translation>Etkileri al</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="96"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="52"/>
         <source>Please wait…</source>
         <translation>Lütfen bekleyin…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="109"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="68"/>
         <source>Connection error</source>
         <translation>Bağlantı hatası</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="116"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="76"/>
         <source>Audacity is unable to connect to MuseHub.com. Please check your connection and try again.</source>
         <translation>Audacity, MuseHub.com ile bağlantı kuramadı. Lütfen bağlantınızı denetleyin ve yeniden deneyin.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="123"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="83"/>
         <source>Try again</source>
         <translation>Yeniden dene</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="176"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="122"/>
         <source>Become a partner</source>
         <translation>İş ortağı olun</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml" line="43"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="334"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="341"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="348"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
         <source>Customize toolbar</source>
+        <extracomment>Tooltip of the toolbar customization button</extracomment>
         <translation>Araç çubuğunu özelleştir</translation>
     </message>
     <message>
@@ -17148,32 +19418,38 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Oynatma araç çubuğu</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="301"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
+        <source>Playback position:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
         <source>Snap</source>
+        <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
         <translation>Yapış</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="335"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="313"/>
+        <source>Snapping</source>
+        <translation>Yapışma</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
+        <source>Snap to</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
         <source>Show/hide toolbar buttons</source>
         <translation>Araç çubuğ düğmelerini görüntüle/gizle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
-        <source>Project toolbar</source>
-        <translation>Proje araç çubuğu</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
-        <source>Undo/redo toolbar</source>
-        <translation>Geri alma/Yineleme araç çubuğu</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
-        <source>Workspaces toolbar</source>
-        <translation>Çalışma alanları araç çubuğu</translation>
+        <source>Workspace selection</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="59"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
         <source>Workspace</source>
         <translation>Çalışma alanı</translation>
     </message>
@@ -17184,12 +19460,12 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Yeni etiket izi</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="63"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="66"/>
         <source>Label track name</source>
         <translation>Etiket izi adı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="109"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="112"/>
         <source>Confirm</source>
         <translation>Onayla</translation>
     </message>
@@ -17204,22 +19480,25 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Etiketler</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="71"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="72"/>
         <source>Import</source>
+        <extracomment>Label of the button that imports labels from a file</extracomment>
         <translation>İçe aktar</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="89"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="90"/>
         <source>Export</source>
+        <extracomment>Label of the button that exports labels to a file</extracomment>
         <translation>Dışa aktar</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="108"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="110"/>
         <source>Delete</source>
+        <extracomment>Label of the button that deletes the selected labels</extracomment>
         <translation>Sil</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="125"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="127"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/LabelTrackItem.qml" line="20"/>
         <source>Add label</source>
         <translation>Etiket ekle</translation>
@@ -17265,17 +19544,17 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Hız</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="42"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="45"/>
         <source>Mono</source>
         <translation>Tek</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="43"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="51"/>
         <source>Stereo</source>
         <translation>Çift</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="44"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="57"/>
         <source>Label</source>
         <translation>Etiket</translation>
     </message>
@@ -17290,44 +19569,101 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Pan:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="127"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <source>Toggle all master effects</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <source>Toggle all effects</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="132"/>
         <source>Add effect</source>
         <translation>Etki ekle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="153"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <source>Add master effect</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
         <translation>Gerçek zamanlı etkiler yapıyı bozmaz ve istenildiği an değiştirilebilir.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Görüntüyü izle&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="72"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
+        <source>Real-time effects panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
         <source>Realtime effects</source>
         <translation>Gerçek zamanlı etkiler</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="127"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="155"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
+        <source>Close real-time effects panel</source>
+        <extracomment>Tooltip of the button that closes the panel</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
         <source>Add track</source>
         <translation>İz ekle</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="135"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
         <source>Tracks</source>
         <translation>İzler</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="91"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="63"/>
+        <source>Pan</source>
+        <extracomment>Noun: accessibility name of the pan knob</extracomment>
+        <translation>Pan</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
+        <source>Track volume</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="104"/>
         <source>Effects</source>
         <translation>Etkiler</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="231"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
+        <source>Opens effects panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
+        <source>Mute</source>
+        <extracomment>Accessibility name of the mute button</extracomment>
+        <translation>Kıs</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="273"/>
+        <source>Solo</source>
+        <extracomment>Accessibility name of the solo button</extracomment>
+        <translation>Solo</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="232"/>
         <source>Separator line</source>
         <translation>Ayraç çizgisi</translation>
     </message>
@@ -17476,6 +19812,151 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <source>Remove effect</source>
         <translation>Etkiyi kaldır</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
+        <source>Audio setup and sharing</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
+        <source>Undo and redo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
+        <source>Clip: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
+        <source>Clip name: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
+        <source>Clip menu</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
+        <source>Label: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
+        <source>Track name: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
+        <source>Reorder effect</source>
+        <extracomment>Tooltip of the drag handle used to reorder effects</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
+        <source>Bypass %1</source>
+        <extracomment>Tooltip of the effect power button; %1 is an effect name</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="323"/>
+        <source>Open %1</source>
+        <extracomment>Tooltip of the button that opens the effect dialog; %1 is an effect name</extracomment>
+        <translation>%1 aç</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="365"/>
+        <source>Replace %1</source>
+        <extracomment>Tooltip of the button that replaces the effect; %1 is an effect name</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
+        <source>Track menu</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <source>Track %1: %2, audio track, selected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <source>Track %1: %2, audio track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
+        <source>Press Enter to select or deselect</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <source>Track %1: %2, label track, selected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <source>Track %1: %2, label track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
+        <source>Moved Samples</source>
+        <translation>Taşınan Örnekler</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
+        <source>Sample Edit</source>
+        <translation>Örnek düzenleme</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="197"/>
+        <source>Blue</source>
+        <translation>Mavi</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
+        <source>Violet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="199"/>
+        <source>Magenta</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
+        <source>Red</source>
+        <translation>Kırmızı</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
+        <source>Orange</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="202"/>
+        <source>Yellow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
+        <source>Green</source>
+        <translation>Yeşil</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="204"/>
+        <source>Turquoise</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="205"/>
+        <source>Cyan</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>projectscene/silence</name>
@@ -17493,13 +19974,13 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
 <context>
     <name>projectscene/toolbars</name>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="151"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="209"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 (Tek) kayıt kanalı</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="154"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="212"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 (Çift) kayıt kanalları</translation>
@@ -17513,61 +19994,75 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <translation>Mikrofon düzeyi</translation>
     </message>
     <message>
-        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="184"/>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="156"/>
+        <source>Recording level</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
         <source>Note: this control is tied to your computer’s main mic volume</source>
         <translation>Not: Bu denetim bilgisayarınızın ana mikrofon ses düzeyine bağlıdır</translation>
     </message>
     <message>
-        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="212"/>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="213"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
         <translation>Giriş izlemeyi aç (kayıt sırasında kendinizi duyun)</translation>
     </message>
     <message>
-        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="229"/>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="230"/>
         <source>Show mic metering when not recording</source>
         <translation>Kayıt yapılmıyorken mikrofon ölçeri görüntülensin</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="942"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
         <source>Record</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Kayıt</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="942"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
         <source>Recorded audio</source>
         <translation>Kaydedilmiş ses</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="99"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="114"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="129"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="118"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="150"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="170"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="185"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="200"/>
         <source>Recording error</source>
+        <extracomment>Title of an error dialog</extracomment>
         <translation>Kayıt sorunu</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="149"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
         <source>Lead-in Recording error</source>
         <translation>Giriş payıyla kayıt hatası</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="35"/>
+        <location filename="../../src/record/recorderrors.h" line="37"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>Kayıt aygıtı açılırken sorun çıktı:
 Hata kodu: %1</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="36"/>
+        <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>Cannot stop recording</source>
         <translation>Kayıt durdurulamadı</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="38"/>
+        <location filename="../../src/record/recorderrors.h" line="39"/>
+        <source>Cannot resume recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
         <translation>Kayıt için seçilmiş izlerin tümünün örnekleme hızı aynı olmalıdır</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="41"/>
+        <location filename="../../src/record/recorderrors.h" line="44"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
         <translation>Bu örnekleme hızında kayıt için çok az sayıda iz seçilmiş.
@@ -17575,12 +20070,18 @@ Hata kodu: %1</translation>
 iki kanal ister)</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="45"/>
+        <location filename="../../src/record/recorderrors.h" line="48"/>
+        <source>No recording device available.
+Please connect an input device and rescan.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="52"/>
         <source>Please select a time within a clip.</source>
         <translation>Lütfen bir parça içinden bir zaman seçin.</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="48"/>
+        <location filename="../../src/record/recorderrors.h" line="55"/>
         <source>Please select a track for lead-in recording.</source>
         <translation>Giriş payıyla kayıt için bir iz seçin.</translation>
     </message>
@@ -17691,6 +20192,17 @@ iki kanal ister)</translation>
         <source>Delete and…</source>
         <translation>Sil ve…</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="68"/>
+        <source>Split at silences</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="71"/>
+        <source>Join</source>
+        <extracomment>Verb: context menu command that joins the selected audio</extracomment>
+        <translation>Birleştir</translation>
+    </message>
 </context>
 <context>
     <name>shortcuts</name>
@@ -17765,24 +20277,6 @@ iki kanal ister)</translation>
         <translation>Klavye kısayolunu tanımlayın</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
-        <source>Note %1</source>
-        <extracomment>A MIDI remote event, namely a note event</extracomment>
-        <translation>Nota %1</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
-        <source>CC %1</source>
-        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
-        <translation>CC %1</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
-        <source>None</source>
-        <extracomment>No MIDI remote event</extracomment>
-        <translation>Hiçbiri</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
         <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Bu kısayol zaten şuraya atanmış: &lt;b&gt;%1&lt;/b&gt;</translation>
@@ -17798,17 +20292,17 @@ iki kanal ister)</translation>
         <translation>Kısayolu yeniden ata</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>MuseScore Studio kısayol dosyası</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
         <translation>Kısayolları içe aktar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>Kısayolları dışa aktar</translation>
     </message>
@@ -18141,17 +20635,18 @@ iki kanal ister)</translation>
         <translation>Sıfır aralık çarpanı</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="93"/>
+        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="94"/>
         <source>Gain</source>
+        <extracomment>Noun: label of the spectrogram color gain slider</extracomment>
         <translation>Kazanç</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
+        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="96"/>
         <source>Range</source>
         <translation>Aralık</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
+        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="98"/>
         <source>High boost</source>
         <translation>Yüksek güçlendirme</translation>
     </message>
@@ -18484,6 +20979,19 @@ iki kanal ister)</translation>
     </message>
 </context>
 <context>
+    <name>testflow</name>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
+        <source>Show scripts</source>
+        <translation>Komut dosyalarını göster</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
+        <source>Show scripts…</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>time-frequency-selection</name>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
@@ -18501,50 +21009,87 @@ iki kanal ister)</translation>
     </message>
 </context>
 <context>
-    <name>toast</name>
-    <message numerus="yes">
-        <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
-        <source>%n hour(s) remaining</source>
-        <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
-        <source>%n minute(s) remaining</source>
-        <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
-        <source>%n second(s) remaining</source>
-        <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
-    </message>
-</context>
-<context>
-    <name>tours</name>
-    <message>
-        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
-        <source>Watch video</source>
-        <translation>Video izle</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
-        <source>Got it</source>
-        <translation>Anladım</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
-        <source>Next</source>
-        <translation>Sonraki</translation>
-    </message>
-</context>
-<context>
     <name>track</name>
     <message>
         <location filename="../../au3/libraries/au3-track/Track.cpp" line="879"/>
         <source>Generic Track</source>
         <translation>Genel iz</translation>
+    </message>
+</context>
+<context>
+    <name>trackcontextmenu</name>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="60"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
+        <source>Move track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
+        <source>Track visualization</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
+        <source>Track color</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
+        <source>Meters &amp;&amp; monitoring</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
+        <source>Format:</source>
+        <translation>Biçim:</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
+        <source>Rate:</source>
+        <translation>Hız:</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
+        <source>Format: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
+        <source>Rate: %1 Hz</source>
+        <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
+        <source>%1 Hz</source>
+        <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/dom/track.h" line="52"/>
+        <source>16-bit PCM</source>
+        <extracomment>The format of the audio samples on a track</extracomment>
+        <translation>16-bit PCM</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/dom/track.h" line="54"/>
+        <source>24-bit PCM</source>
+        <extracomment>The format of the audio samples on a track</extracomment>
+        <translation>24-bit PCM</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/dom/track.h" line="56"/>
+        <source>32-bit Float</source>
+        <extracomment>The format of the audio samples on a track</extracomment>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -18572,38 +21117,38 @@ iki kanal ister)</translation>
         <translation>Zarflanmış nokta sürüklendi</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="641"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
         <source>Set looping region in/out</source>
         <translation>Yineleme bölgesi girişini/çıkışını ayarlayın</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="47"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation>Tek kanala indirgeniyor…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="264"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
         <source>Rendering pitch and speed…</source>
         <translation>Perde ve hız oluşturuluyor…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1409"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
         <source>Mix down to mono</source>
         <translation>Tek kanala indirge</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1410"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation>Bu işlem, bir ya da birkaç parçanın tek kanala dönüştürülmesini gerektirir. İlerlemek istiyor musunuz?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1477"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1564"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Tek kanallı izleri çift kanallı olarak birleştir</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1478"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1565"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -18616,44 +21161,564 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
 İlerlemek istiyor musunuz?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="666"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="700"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="723"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="746"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="777"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
+        <source>Playback position</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="827"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="850"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="873"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
         <source>No audio selected</source>
+        <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Herhangi bir ses seçilmemiş</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="667"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="701"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="724"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="747"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="778"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="828"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="851"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="874"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="905"/>
         <source>Select the audio to delete and try again.</source>
+        <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Silinecek sesi seçip yeniden deneyin.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1142"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1156"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1170"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1340"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
         <source>Paste error</source>
         <translation>Yapıştırma sorunu</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1901"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
         <source>Set rate</source>
         <translation>Hızı ayarla</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2058"/>
-        <source>Resample</source>
-        <translation>Yeniden örnekle</translation>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <source>Resample track</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="733"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
+        <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
+        <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
+        <source>Trim Audio</source>
+        <translation>Sesi buda</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
+        <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
+        <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
+        <source>Silence</source>
+        <translation>Sessizlik</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
+        <source>Silenced selected clips</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
+        <source>Track Title</source>
+        <translation>İz adı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
+        <source>Changed Track Title</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
+        <source>Clip Title</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
+        <source>Changed clip title</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
+        <source>Pitch Shift</source>
+        <translation>Perde kayması</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
+        <source>Changed Pitch Shift</source>
+        <translation>Değiştirilmiş perde kayması</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
+        <source>Reset Clip Pitch</source>
+        <translation>Parça perdesini sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
+        <source>Changed Speed</source>
+        <translation>Değiştirilmiş tempo</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="130"/>
+        <source>Reset Clip Speed</source>
+        <translation>Parça temposunu sıfırla</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
+        <source>Changed track color</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="161"/>
+        <source>Reset Clip Pitch and Speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
+        <source>Rendered time-stretched audio</source>
+        <translation>Oluşturulan zamanı esnetilmiş ses</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
+        <source>Render</source>
+        <translation>Çevir</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
+        <source>Pasted from the clipboard</source>
+        <translation>Panodan yapıştırılan</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
+        <source>Paste</source>
+        <translation>Yapıştır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
+        <source>Cut to the clipboard</source>
+        <translation>Panoya kes</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <source>Cut</source>
+        <translation>Kes</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <source>Remove multiple items</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
+        <source>Remove multiple clips</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
+        <source>Delete</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Sil</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
+        <source>Delete and close gap</source>
+        <translation>Sil ve boşluğu kapat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <source>Items moved</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <source>Clip moved</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
+        <source>Move clip</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <source>Move items</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
+        <source>Split</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <source>Split clips at silence</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <source>Split at silence</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
+        <source>Split into new track</source>
+        <translation>Yeni ize ayır</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <source>Split-cut to the clipboard</source>
+        <translation>Panoya ayır ve kes</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <source>Split cut</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <source>Trim items left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <source>Trim clip left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="596"/>
+        <source>Trim</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Buda</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <source>Trim items right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <source>Trim clip right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
+        <source>Changed speed to: %1%</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
+        <source>Stretch Left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <source>Stretch items left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <source>Stretch clips left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
+        <source>Stretch Right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <source>Stretch items right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <source>Stretch clips right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <source>Created new mono track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <source>New mono track</source>
+        <translation>Yeni tek kanallı iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <source>Created new stereo track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <source>New stereo track</source>
+        <translation>Yeni çift kanallı iz</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <source>Created label track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <source>New label track</source>
+        <translation>Yeni etiket izi</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
+        <source>Delete track</source>
+        <translation>İzi sil</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
+        <source>Duplicate track</source>
+        <translation>İzi çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
+        <source>Move track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
         <source>Insert silence</source>
         <translation>Sessizlik ekle</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <source>Clips grouped</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
+        <source>Clips ungrouped</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
+        <source>Changed track format</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
+        <source>Changed track rate</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
+        <source>Swapped stereo channels</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
+        <source>Split stereo tracks to L/R mono</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
+        <source>Split stereo tracks to center mono</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
+        <source>Make stereo track</source>
+        <translation>İzi çift kanallı yap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <source>Resampled audio track(s)</source>
+        <translation>Ses izleri yeniden örneklendi</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <source>Label added</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <source>Add label</source>
+        <translation>Etiket ekle</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <source>Label title changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <source>Changed label title</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
+        <source>Label low frequency changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
+        <source>Change label low frequency</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
+        <source>Label high frequency changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
+        <source>Change label high frequency</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <source>Cut label</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <source>Remove label</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <source>Remove multiple labels</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <source>Move labels</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
+        <source>Move</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <source>Labels moved</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <source>Label stretched</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <source>Stretch label left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <source>Stretch labels left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
+        <source>Stretch</source>
+        <translation>Esnetme</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <source>Stretch label right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <source>Stretch labels right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
+        <source>Joined %1 seconds at %2</source>
+        <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
+        <source>Join</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Birleştir</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
+        <source>Duplicated</source>
+        <translation>Çoğaltıldı</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
+        <source>Duplicate</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Çoğalt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <source>Split-deleted clips</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <source>Split delete</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
+        <source>Delete %1 seconds at %2</source>
+        <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -18661,8 +21726,23 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
         <translation>Parçanın yapıştırılacağı yeterli boşluk yok</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="252"/>
+        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="366"/>
         <source>Tracks: Empty</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
+        <source>Tempo changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
+        <source>Upper time signature changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
+        <source>Lower time signature changed</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -18696,7 +21776,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="58"/>
         <source>You can change this at any time in %1.</source>
-        <translation>Bunu istediğiniz zaman değiştirebilirsiniz.</translation>
+        <translation>Bunu istediğiniz zaman %1 bölümünden değiştirebilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="60"/>
@@ -18777,7 +21857,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
 <context>
     <name>trackedit/rate</name>
     <message>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="47"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="46"/>
         <source>New sample rate (Hz):</source>
         <translation>Yeni örnekleme hızı (Hz):</translation>
     </message>
@@ -18785,7 +21865,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
 <context>
     <name>trackedit/time</name>
     <message>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="39"/>
         <source>Position:</source>
         <translation>Konum:</translation>
     </message>
@@ -18824,6 +21904,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
 <context>
     <name>ui</name>
     <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
         <translation>Araştırma</translation>
@@ -18873,7 +21954,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -18882,7 +21963,7 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -18957,13 +22038,18 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
         <translation>Değer</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
+        <source>Other</source>
+        <translation>Diğer</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>Değer listesi başlık paneli</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>Değer listesi paneli</translation>
@@ -19016,6 +22102,16 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
         <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
         <source>direction is both</source>
         <translation>iki yönede</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
+        <source>expanded</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
+        <source>collapsed</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -19319,25 +22415,59 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
         <translation>Üzgünüm, lütfen daha sonra tekrar deneyin</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
+        <source>Check for update</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
         <source>Close</source>
         <translation>Kapat</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
-        <source>Updating MuseScore Studio</source>
-        <translation>MuseScore Studio güncelleniyor</translation>
+        <source>Updating %1</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
-        <source>Downloading MuseScore Studio %1</source>
-        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
-        <translation>MuseScore Studio %1 indiriliyor</translation>
+        <source>Downloading %1 %2</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>vst</name>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
+        <source>Use old view</source>
+        <translation>Eski görünümü kullan</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
+        <source>Use new view</source>
+        <translation>Yeni görünümü kullan</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
+        <source>Open FX editor</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
+        <source>Open instrument editor</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -19384,18 +22514,18 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
         <translation>VST3 modülü hatası: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="714"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
         <source>Unable to apply VST3 preset file %1</source>
         <translation>%1 VST3 hazır ayar dosyası uygulanamadı</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="715"/>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="732"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
         <source>Error</source>
         <translation>Sorun</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="731"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
         <source>Failed to save VST3 preset to file</source>
         <translation>VST3 hazır ayarı dosyaya kaydedilemedi</translation>
     </message>
@@ -19403,14 +22533,14 @@ Bu işlem, herhangi bir gerçek zamanlı etkinin dalga şekline uygulanmasına v
 <context>
     <name>wave-track</name>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1010"/>
+        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1011"/>
         <source>Sequence has block file exceeding maximum %1 samples per block.
 Truncating to this maximum length.</source>
         <translation>Sıralamada %1 uzunluğunu aşan bir blok dosyası var.
 Blok bu değere budanıyor.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1015"/>
+        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1017"/>
         <source>Warning - Truncating Overlong Block File</source>
         <translation>Uyarı - Budanan uzun blok dosyası</translation>
     </message>
@@ -19420,7 +22550,7 @@ Blok bu değere budanıyor.</translation>
         <translation>Ön işleme</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="67"/>
+        <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="38"/>
         <source>Rendering Clip</source>
         <translation>Parça oluşturuluyor</translation>
     </message>
@@ -19430,13 +22560,13 @@ Blok bu değere budanıyor.</translation>
         <translation>Ç&amp;oklu görünüm</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1895"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
         <source>Resampling failed.</source>
         <translation>Yeniden örnekleme yapılamadı.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1896"/>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="340"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="341"/>
         <source>Warning</source>
         <translation>Uyarı</translation>
     </message>
@@ -19461,12 +22591,12 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2817"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2823"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>Bir izin örnek sıralaması bozulmuş.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="339"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="340"/>
         <source>There is not enough room available to expand the cut line</source>
         <translation>Kesim hattını genişletmek için yeterli alan yok</translation>
     </message>
@@ -19561,9 +22691,20 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Sıfırla</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
+        <source>New workspace</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
         <source>Workspace name:</source>
         <translation>Çalışma alanı adı:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
+        <source>Edit workspaces</source>
+        <translation>Çalışma alanını düzenle</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
@@ -19592,18 +22733,58 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="232"/>
         <source>Reset workspace</source>
         <translation>Çalışma alanını sıfırla</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="263"/>
         <source>Name cannot be empty</source>
         <translation>İsim boş bırakılamaz</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="274"/>
         <source>Name already exists</source>
         <translation>Bu isim zaten var</translation>
+    </message>
+    <message>
+        <location filename="../../src/shared/types/workspacetitles.h" line="20"/>
+        <source>Classic</source>
+        <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
+        <translation>Klasik</translation>
+    </message>
+    <message>
+        <location filename="../../src/shared/types/workspacetitles.h" line="24"/>
+        <source>Modern</source>
+        <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
+        <translation>Modern</translation>
+    </message>
+    <message>
+        <location filename="../../src/shared/types/workspacetitles.h" line="28"/>
+        <source>Music</source>
+        <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
+        <translation>Müzik</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
+        <source>Select workspace</source>
+        <translation>Çalışma alanını seçin</translation>
+    </message>
+    <message>
+        <source>Edit workspaces…</source>
+        <translation type="vanished">Çalışma alanını düzenle...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
+        <source>Edit workspaces...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
+        <source>Create new workspace</source>
+        <translation>Yeni çalışma alanı oluştur</translation>
     </message>
 </context>
 <context>

@@ -1,80 +1,13 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
 <context>
-    <name>KDDockWidgets::Debug::DebugWindow</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
-        <source>DockWidget unique name</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>KDDockWidgets::DockWidgetBase</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
-        <source>Dock</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
-        <source>Detach</source>
-        <translation>Від’єднати</translation>
-    </message>
-</context>
-<context>
-    <name>KDDockWidgets::TitleBar</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
-        <source>Dock window</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
-        <source>Undock window</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>KDDockWidgets::TitleBarWidget</name>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
-        <source>Minimize</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
-        <source>Close</source>
-        <translation>Закрити</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
-        <source>Auto-hide</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
-        <source>Disable auto-hide</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
-        <source>Restore</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
-        <source>Maximize</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
     <name>Playback</name>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="72"/>
         <source>Meter style</source>
         <translation>Стиль</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="96"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
         <source>Meter type</source>
         <translation>Тип</translation>
     </message>
@@ -97,1810 +30,1853 @@
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation type="unfinished"/>
+        <translation>%1 панель</translation>
     </message>
 </context>
 <context>
     <name>action</name>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вийти</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
         <source>Restart</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Перезапустити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="57"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
         <source>&amp;Full screen</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Повноекранний режим</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="58"/>
         <source>Full screen</source>
-        <translation>Повноекранний режим</translation>
+        <translation type="vanished">Повноекранний режим</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Про &amp;Qt…</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Підручник у інтернеті</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="75"/>
         <source>Open online handbook</source>
-        <translation>Відкрити підручник в інтернеті</translation>
+        <translation type="vanished">Відкрити підручник в інтернеті</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="80"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
         <source>As&amp;k for help</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>П&amp;опросити про допомогу</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="85"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="96"/>
         <source>Revert to &amp;factory settings</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Повернутися до &amp;початкових параметрів</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="86"/>
         <source>Revert to factory settings</source>
-        <translation>Повернутися до початкових параметрів</translation>
+        <translation type="vanished">Повернутися до початкових параметрів</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Відновити &amp;типове компонування</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="94"/>
         <source>Restore the default layout</source>
-        <translation>Відновити типове компонування</translation>
+        <translation type="vanished">Відновити типове компонування</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
         <source>&amp;Playback controls</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Керування відтворенням</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="102"/>
         <source>Show/hide playback controls</source>
-        <translation>Показати або приховати засоби керування відтворенням</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
-        <source>&amp;Tracks</source>
-        <translation>Д&amp;оріжки</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
-        <source>Show/hide tracks</source>
-        <translation>Показати/Приховати доріжки</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="64"/>
-        <source>&amp;About Audacity…</source>
-        <translation>&amp;Про Audacity…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="117"/>
-        <source>&amp;Status bar</source>
-        <translation>С&amp;мужка стану</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
-        <source>Show/hide status bar</source>
-        <translation>Показати або приховати смужку стану</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
-        <source>&amp;Preferences</source>
-        <translation>&amp;Налаштування</translation>
+        <translation type="vanished">Показати або приховати засоби керування відтворенням</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
-        <source>Preferences…</source>
-        <translation>Налаштування…</translation>
+        <source>&amp;Tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Д&amp;оріжки</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="133"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="24"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
+        <source>Show/hide tracks</source>
+        <translation type="vanished">Показати/Приховати доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
+        <source>&amp;About Audacity…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Про Audacity…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
+        <source>&amp;Status bar</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>С&amp;мужка стану</translation>
+    </message>
+    <message>
+        <source>Show/hide status bar</source>
+        <translation type="vanished">Показати або приховати смужку стану</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
+        <source>&amp;Preferences</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Налаштування</translation>
+    </message>
+    <message>
+        <source>Preferences…</source>
+        <translation type="vanished">Налаштування…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="33"/>
         <source>Copy</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Копіювати</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="140"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="141"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="31"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="32"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="42"/>
         <source>Cut</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирізати</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="175"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="336"/>
         <source>&amp;Paste</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вст&amp;авити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="149"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Paste</source>
-        <translation>Вставити</translation>
+        <translation type="vanished">Вставити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="156"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="38"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="185"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="51"/>
         <source>&amp;Undo</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>В&amp;ернути</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="167"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="39"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="195"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="45"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
         <source>&amp;Redo</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Повт&amp;орити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="173"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="46"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="201"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>Повторити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="52"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="205"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="69"/>
         <source>De&amp;lete</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>В&amp;илучити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="173"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="175"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="165"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="210"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="217"/>
         <source>Delete</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="179"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="214"/>
         <source>&amp;Cancel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Скасувати</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="180"/>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation type="vanished">Скасувати</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Перемикач</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <source>Trigger</source>
-        <translation>Перемикач</translation>
+        <translation type="vanished">Перемикач</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="168"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
+        <source>&amp;Enter</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Ввести</translation>
+    </message>
+    <message>
+        <source>Trigger the focused control or select the focused track item</source>
+        <translation type="vanished">Перемкнути фокусований засіб керування або вибрати фокусований запис доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>Скасувати «%1»</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="174"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>Повторити «%1»</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <source>Silence audio</source>
+        <translation>Заповнити тишею</translation>
+    </message>
+    <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Переглянути проєкт на audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="21"/>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="22"/>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Переглянути на audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="24"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Повторити попередній ефект</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="29"/>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="30"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
         <source>Remove realtime effect</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити ефект реального часу</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
         <source>&amp;Apply preset</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Застосувати шаблон</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="40"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
         <source>Save preset as…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Зберегти шаблон як…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
         <source>&amp;Save preset</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>З&amp;берегти шаблон</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
         <source>&amp;Delete preset</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Вилучити шаблон</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Імпортувати…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="57"/>
         <source>Import preset</source>
-        <translation>Імпортувати шаблон</translation>
+        <translation type="vanished">Імпортувати шаблон</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="62"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Експортувати…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="63"/>
         <source>Export preset</source>
-        <translation>Експортувати шаблон</translation>
+        <translation type="vanished">Експортувати шаблон</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="35"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="36"/>
-        <source>Play</source>
-        <translation>Відтворити</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="43"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="36"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="37"/>
-        <source>Pause</source>
-        <translation>Призупинити</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
+        <source>Play/Pause</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відтворити/Призупинити</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="43"/>
-        <source>Stop</source>
-        <translation>Зупинити</translation>
+        <source>Play/Stop</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відтворити/Зупинити</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="50"/>
-        <source>Stop playback</source>
-        <translation>Зупинити відтворення</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
+        <source>Play/Pause from cursor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відтворити/Призупинити від курсора</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="56"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
-        <source>Rewind to start</source>
-        <translation>Перемотати до початку</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
+        <source>Play selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відтворити позначене</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="63"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="64"/>
-        <source>Rewind to end</source>
-        <translation>Перемотати до кінця</translation>
+        <source>Play the selected time range</source>
+        <translation type="vanished">Відтворити позначений часовий діапазон</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="70"/>
-        <source>Loop playback</source>
-        <translation>Циклічне відтворення</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="71"/>
-        <source>Toggle ‘Loop playback’</source>
-        <translation>Увімкнути або вимкнути «Циклічне відтворення»</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
-        <source>Audio setup</source>
-        <translation>Налаштування звуку</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="79"/>
-        <source>Open audio setup context menu</source>
-        <translation>Відкрити контекстне меню налаштовування звуку</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
+        <source>Pause</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Призупинити</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
-        <source>Get effects</source>
-        <translation>Отримати ефекти</translation>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
+        <source>Stop</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Зупинити</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="86"/>
-        <source>Open Get effects dialog</source>
-        <translation>Відкрити вікно отримання ефектів</translation>
+        <source>Stop playback</source>
+        <translation type="vanished">Зупинити відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="92"/>
-        <source>Audio settings</source>
-        <translation>Параметри звуку</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
+        <source>Rewind to start</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Перемотати до початку</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
-        <source>Open audio setup dialog</source>
-        <translation>Відкрити вікно налаштовування звуку</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
-        <source>Rescan audio devices</source>
-        <translation>Повторно виявити звукові пристрої</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
-        <source>Metronome</source>
-        <translation>Метроном</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
-        <source>Toggle metronome playback</source>
-        <translation>Увімкнути або вимкнути відтворення метронома</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
+        <source>Rewind to end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Перемотати до кінця</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
-        <source>Timecode</source>
-        <translation>Часова позначка</translation>
+        <source>Loop playback</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Циклічне відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="113"/>
-        <source>Set playback time</source>
-        <translation>Встановити час відтворення</translation>
+        <source>Toggle ‘Loop playback’</source>
+        <translation type="vanished">Увімкнути або вимкнути «Циклічне відтворення»</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
-        <source>Tempo</source>
-        <translation>Темп</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
+        <source>Audio setup</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Налаштування звуку</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="120"/>
-        <source>Set playback tempo</source>
-        <translation>Встановити темп відтворення</translation>
+        <source>Open audio setup context menu</source>
+        <translation type="vanished">Відкрити контекстне меню налаштовування звуку</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="126"/>
-        <source>Time signature</source>
-        <translation>Часовий підпис</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
+        <source>Get effects</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Отримати ефекти</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="127"/>
-        <source>Set playback time signature</source>
-        <translation>Встановити часовий підпис відтворення</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
-        <source>Playback level</source>
-        <translation>Рівень відтворення</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="134"/>
-        <source>Set playback level</source>
-        <translation>Встановити рівень відтворення</translation>
+        <source>Open Get effects dialog</source>
+        <translation type="vanished">Відкрити вікно отримання ефектів</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
-        <source>Change audio host</source>
-        <translation>Змінити вузол обробки звуку</translation>
+        <source>Audio settings</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Параметри звуку</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
+        <source>Open audio setup dialog</source>
+        <translation type="vanished">Відкрити вікно налаштовування звуку</translation>
+    </message>
+    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
-        <source>Change playback device</source>
-        <translation>Змінити пристрій для відтворення</translation>
+        <source>Rescan audio devices</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Повторно виявити звукові пристрої</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
-        <source>Change recording device</source>
-        <translation>Змінити пристрій для запису</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
+        <source>Metronome</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Метроном</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="162"/>
-        <source>Change input channels</source>
-        <translation>Змінити вхідні канали</translation>
+        <source>Toggle metronome playback</source>
+        <translation type="vanished">Увімкнути або вимкнути відтворення метронома</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="169"/>
-        <source>Toggle loop region</source>
-        <translation>Увімкнути/Вимкнути циклічність ділянки</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
+        <source>Timecode</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Часова позначка</translation>
+    </message>
+    <message>
+        <source>Set playback time</source>
+        <translation type="vanished">Встановити час відтворення</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="176"/>
-        <source>Clear loop region</source>
-        <translation>Зняти зацикленість ділянки</translation>
+        <source>Tempo</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Темп</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="182"/>
-        <source>Set loop region to selection</source>
-        <translation>Позначити зациклену ділянку</translation>
+        <source>Set playback tempo</source>
+        <translation type="vanished">Встановити темп відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="187"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="188"/>
-        <source>Set selection to loop</source>
-        <translation>Зациклити позначене</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
+        <source>Time signature</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Часовий підпис</translation>
+    </message>
+    <message>
+        <source>Set playback time signature</source>
+        <translation type="vanished">Встановити часовий підпис відтворення</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="194"/>
+        <source>Playback level</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Рівень відтворення</translation>
+    </message>
+    <message>
+        <source>Set playback level</source>
+        <translation type="vanished">Встановити рівень відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
+        <source>Change audio host</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Змінити вузол обробки звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
+        <source>Change playback device</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Змінити пристрій для відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
+        <source>Change recording device</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Змінити пристрій для запису</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
+        <source>Change input channels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Змінити вхідні канали</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
+        <source>Toggle loop region</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Увімкнути/Вимкнути циклічність ділянки</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
+        <source>Clear loop region</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Зняти зацикленість ділянки</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
+        <source>Set loop region to selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Позначити зациклену ділянку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
+        <source>Set selection to loop</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Зациклити позначене</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
         <source>Set loop region in out</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Встановити вхід-вихід циклу</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="200"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
         <source>Creating a loop also selects audio</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Створення циклу призводить до позначення звукових даних</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="209"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
         <source>Play repeats</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Відтворення повторюється</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
         <source>Pan automatically</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Панорамувати автоматично</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="218"/>
         <source>Pan automatically during playback</source>
-        <translation>Панорамувати автоматично під час відтворення</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="23"/>
-        <source>&amp;New…</source>
-        <translation>С&amp;творити…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="24"/>
-        <source>New…</source>
-        <translation>Створити…</translation>
+        <translation type="vanished">Панорамувати автоматично під час відтворення</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
+        <source>&amp;New…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>С&amp;творити…</translation>
+    </message>
+    <message>
+        <source>New…</source>
+        <translation type="vanished">Створити…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
         <source>&amp;Open…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Відкрити…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="30"/>
         <source>Open…</source>
-        <translation>Відкрити…</translation>
+        <translation type="vanished">Відкрити…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
-        <source>Open recent</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
-        <source>Open recent project</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="55"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="56"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="62"/>
-        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="32"/>
+        <source>Open recent</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відкрити недавні</translation>
+    </message>
+    <message>
+        <source>Open recent project</source>
+        <translation type="vanished">Відкрити недавній проєкт</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="33"/>
         <source>Open</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Відкрити</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="67"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
         <source>&amp;Clear recent files</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Очистити недавні файли</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="68"/>
         <source>Clear recent files</source>
-        <translation>Очистити недавні файли</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
-        <source>Save &amp;as…</source>
-        <translation>Зберегти &amp;як…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="86"/>
-        <source>Save as…</source>
-        <translation>Зберегти як…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
-        <source>&amp;Export labels</source>
-        <translation>Експортувати &amp;мітки</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
-        <source>Export labels</source>
-        <translation>Експортувати мітки</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
-        <source>&amp;Export MIDI</source>
-        <translation>&amp;Експортувати до MIDI</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
-        <source>Export MIDI</source>
-        <translation>Експортувати до MIDI</translation>
+        <translation type="vanished">Очистити недавні файли</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
-        <source>&amp;Close project</source>
-        <translation>З&amp;акрити проєкт</translation>
+        <source>Save &amp;as…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Зберегти &amp;як…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
-        <source>Close project</source>
-        <translation>Закрити проєкт</translation>
+        <source>Save as…</source>
+        <translation type="vanished">Зберегти як…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="118"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="312"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="313"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="146"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="147"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="159"/>
-        <source>Duplicate</source>
-        <translation>Дублювати</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
+        <source>&amp;Export labels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Експортувати &amp;мітки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
-        <source>Insert</source>
-        <translation>Вставити</translation>
+        <source>Export labels</source>
+        <translation type="vanished">Експортувати мітки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="130"/>
-        <source>Rename item</source>
-        <translation>Перейменувати елемент</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
+        <source>&amp;Export MIDI</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Експортувати до MIDI</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="136"/>
-        <source>Trim clip</source>
-        <translation>Обрізати кліп</translation>
+        <source>Export MIDI</source>
+        <translation type="vanished">Експортувати до MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="142"/>
+        <source>&amp;Close project</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>З&amp;акрити проєкт</translation>
+    </message>
+    <message>
+        <source>Close project</source>
+        <translation type="vanished">Закрити проєкт</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="192"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
+        <source>Duplicate</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Дублювати</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
+        <source>Insert</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Вставити</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
+        <source>Trim clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Обрізати кліп</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
         <source>Split into new track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Розділити до нової доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="147"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="148"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
         <source>Paste new label</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вставити нову мітку</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="647"/>
         <source>Manage labels</source>
         <translation>Керування мітками</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="295"/>
         <source>Metadata editor</source>
         <translation>Редактор метаданих</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="154"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="155"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="61"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="192"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Позначити все</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="160"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
         <source>Select all tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Позначити всі доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="166"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Left of playback position</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ліворуч від поточної позиції</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="172"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="173"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="216"/>
         <source>Right of playback position</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Праворуч від поточної позиції</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="179"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="224"/>
         <source>Track start to cursor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Від початку до курсора</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
         <source>Cursor to track end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Від курсора до кінця доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="191"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
         <source>Track start to end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Від початку доріжки до кінця</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="197"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="248"/>
         <source>Previous clip boundary to cursor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Від межі попереднього кліпу до курсора</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="203"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
         <source>Cursor to next clip boundary</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Від курсора до межі наступного кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="209"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
         <source>Previous clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Попередній кліп</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="215"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Next clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Наступний кліп</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="221"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
         <source>Toggle spectral selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Увімкнути або вимкнути спектральний вибір</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="227"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="288"/>
         <source>Move cursor to closest zero crossing</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути курсор до найближчого перетину нуля</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="41"/>
         <source>Zoom in</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Збільшити</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <source>Zoom out</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Зменшити</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="59"/>
         <source>Zoom default</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Типовий масштаб</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="67"/>
         <source>Zoom to selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Збільшити позначену область</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="70"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
         <source>Zoom toggle</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Перемикання масштабу</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
         <source>Collapse all tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Згорнути всі доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="241"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="306"/>
         <source>Expand all tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Розгорнути усі доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="246"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="247"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
         <source>Skip to selection start</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Прокрутити до початку позначеного</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="252"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="253"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="322"/>
         <source>Skip to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Прокрутити до кінця позначено</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="265"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
         <source>Show metadata editor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Показати редактор метаданих</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="271"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
         <source>Show history</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Показати журнал</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="281"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Записати на поточну доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="286"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="287"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Записати на нову доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="292"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
         <source>Set up timed recording</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Налаштувати відкладений запис</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="299"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
         <source>Enable sound activating recording</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Увімкнути активацію запису звуком</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="374"/>
         <source>Set sound activation level</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Встановити рівень активації звуком</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <source>Remove tracks</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="325"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Mix-down to…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Мікшувати вниз…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="331"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
         <source>Align end to end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирівняти за кінцями</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="336"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="337"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
         <source>Align together</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Спільне вирівнювання</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="342"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="343"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
         <source>Align start to zero</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирівняти початок до нуля</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="348"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Align start to playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирівняти початок до позиції відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="354"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="355"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
         <source>Align start to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирівняти початок до кінця позначеного</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="361"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
         <source>Align end to playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирівняти кінець до позиції відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="367"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
         <source>Align end to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирівняти кінець до кінця позначеного</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="372"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="373"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
         <source>Sort by time</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Упорядкувати за часом</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="378"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="379"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
         <source>Sort by name</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Упорядкувати за назвою</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="391"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Керування додатками</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="405"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="406"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Fav effect #1</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Улюблений ефект 1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="411"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="412"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="515"/>
         <source>Fav effect #2</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Улюблений ефект 2</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="417"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
         <source>Fav effect #3</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Улюблений ефект 3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="73"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="74"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
         <source>Import…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Імпортувати…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"/>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Показати у Finder</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="40"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="51"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"/>
+        <translation>Показати у Провіднику</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="43"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>Показати у менеджері файлів</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
         <source>&amp;Save</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Зберегти</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="80"/>
         <source>Save</source>
-        <translation>Зберегти</translation>
+        <translation type="vanished">Зберегти</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="91"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Експортувати звук…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="92"/>
         <source>Export audio…</source>
-        <translation>Експортувати звук…</translation>
+        <translation type="vanished">Експортувати звук…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="259"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
         <source>Show effects panel</source>
-        <translation type="unfinished"/>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Показати панель ефектів</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="480"/>
         <source>Keep tracks synchronized</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Синхронізувати доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="399"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="499"/>
         <source>Add track effects</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
-        <source>Contrast analyzer</source>
-        <translation>Аналізатор контрастності</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="431"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
-        <source>Plot spectrum</source>
-        <translation>Побудувати графік спектра…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
-        <source>Manage macros</source>
-        <translation>Керування макросами</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="445"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="446"/>
-        <source>Apply macros palette</source>
-        <translation>Застосувати палітру макросів</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="451"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="452"/>
-        <source>Macro fade ends</source>
-        <translation>Макрос кінців згасання</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="457"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
-        <source>Macro MP3 conversion</source>
-        <translation>Макрос перетворення MP3</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="463"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
-        <source>Nyquist plugin installer</source>
-        <translation>Засіб встановлення додатків Nyquist</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="469"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="470"/>
-        <source>Nyquist prompt</source>
-        <translation>Запит до Nyquist</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="475"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
-        <source>Sample data export</source>
-        <translation>Експортування даних семплу</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="481"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
-        <source>Sample data import</source>
-        <translation>Імпортування даних семплів</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="487"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="488"/>
-        <source>Raw data import</source>
-        <translation>Імпортування необроблених даних</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="493"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
-        <source>Reset configuration</source>
-        <translation>Скинути налаштування</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="502"/>
-        <source>Previous window</source>
-        <translation>Попереднє вікно</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="508"/>
-        <source>Next window</source>
-        <translation>Наступне вікно</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="513"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="514"/>
-        <source>Benchmark</source>
-        <translation>Тестування</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="519"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="520"/>
-        <source>Regular interval labels</source>
-        <translation>Регулярні мітки інтервалів</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="527"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="528"/>
-        <source>Tutorials</source>
-        <translation>Підручники</translation>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Додати ефекти доріжки</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="534"/>
-        <source>Device info</source>
-        <translation>Дані щодо пристрою</translation>
+        <source>Contrast analyzer</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Аналізатор контрастності</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="539"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="540"/>
-        <source>MIDI device info</source>
-        <translation>Дані щодо пристрою MIDI</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="545"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="546"/>
-        <source>Log</source>
-        <translation>Журнал</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
+        <source>Plot spectrum</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Побудувати графік спектра…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="552"/>
-        <source>Crash report</source>
-        <translation>Звіт щодо аварії</translation>
+        <source>Manage macros</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Керування макросами</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="557"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="558"/>
-        <source>Raise segfault</source>
-        <translation>Показати помилку сегментування</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
+        <source>Apply macros palette</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Застосувати палітру макросів</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="563"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="564"/>
-        <source>Throw exception</source>
-        <translation>Надіслати виключення</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="570"/>
-        <source>Violate assertion</source>
-        <translation>Порушити твердження</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
+        <source>Macro fade ends</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Макрос кінців згасання</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="576"/>
+        <source>Macro MP3 conversion</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Макрос перетворення MP3</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
+        <source>Nyquist plugin installer</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Засіб встановлення додатків Nyquist</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
+        <source>Nyquist prompt</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Запит до Nyquist</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
+        <source>Sample data export</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Експортування даних семплу</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
+        <source>Sample data import</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Імпортування даних семплів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
+        <source>Raw data import</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Імпортування необроблених даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
+        <source>Reset configuration</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Скинути налаштування</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="633"/>
+        <source>Previous window</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Попереднє вікно</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="641"/>
+        <source>Next window</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Наступне вікно</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
+        <source>Benchmark</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Тестування</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="657"/>
+        <source>Regular interval labels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Регулярні мітки інтервалів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
+        <source>Tutorials</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Підручники</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="675"/>
+        <source>Device info</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Дані щодо пристрою</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="683"/>
+        <source>MIDI device info</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Дані щодо пристрою MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="691"/>
+        <source>Log</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Журнал</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
+        <source>Crash report</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Звіт щодо аварії</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
+        <source>Raise segfault</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Показати помилку сегментування</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="715"/>
+        <source>Throw exception</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Надіслати виключення</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
+        <source>Violate assertion</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Порушити твердження</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="731"/>
         <source>Menu tree</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Ієрархія меню</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="581"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="582"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="739"/>
         <source>Frame statistics</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Статистика кадрів</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="587"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="747"/>
         <source>Link account</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пов&apos;язати обліковий запис</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
         <source>Save to clo&amp;ud…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Зберегти до &amp;хмари…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="594"/>
         <source>Save to cloud…</source>
-        <translation>Зберегти до хмари…</translation>
+        <translation type="vanished">Зберегти до хмари…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="600"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
         <source>Share audio</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Оприлюднити аудіо</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="608"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Оновити дані попереднього прослуховування у хмарі</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="781"/>
+        <source>Update audio preview</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Оновити дані попереднього перегляду</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="790"/>
         <source>Project propert&amp;ies…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>В&amp;ластивості проєкту…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
         <source>Project properties…</source>
-        <translation>Властивості проєкту…</translation>
+        <translation type="vanished">Властивості проєкту…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="22"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="23"/>
         <source>Clip gain</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Підсилення кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="29"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="30"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="32"/>
         <source>Split tool</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Інструмент поділу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="64"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="76"/>
         <source>Zoom to fit project</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Підігнати за розміром, щоб умістився весь проєкт</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="94"/>
         <source>Center view on playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Центрувати перегляд за позицією відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="83"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="84"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="102"/>
         <source>Toggle spectral view</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Увімкнути або вимкнути спектральний перегляд</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="90"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="91"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="97"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="98"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="120"/>
         <source>Spectral box select</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вибір спектральної ділянки</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="129"/>
         <source>Snapping</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Прилипання</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="112"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="138"/>
         <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Хвилини і секунди</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="118"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="119"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
         <source>Beats &amp;&amp; measures</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Такти і розміри</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="125"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="126"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
         <source>Show vertical rulers</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Показати вертикальні лінійки</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="132"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="133"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="165"/>
         <source>Show master track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Показати основну доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="139"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
         <source>Update display while playing</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Оновлювати відображення під час відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="146"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
-        <source>Pinned play head</source>
-        <translation>Пришпилений початок відтворення</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="153"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="154"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="192"/>
         <source>Click ruler to start playback</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Натисніть на лінійці, щоб розпочати відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="161"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
         <source>Clip properties</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Властивості кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="162"/>
         <source>Show clip properties</source>
-        <translation>Показати властивості кліпу</translation>
+        <translation type="vanished">Показати властивості кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
-        <source>Rename clip</source>
-        <translation>Перейменувати кліп</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
         <source>Follow track color</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Відповідно до кольору доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="189"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="190"/>
-        <source>Move play cursor left</source>
-        <translation>Пересунути курсор відтворення ліворуч</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
+        <source>Pinned playhead</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пришпилений початок відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="195"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="196"/>
-        <source>Move play cursor right</source>
-        <translation>Пересунути курсор відтворення праворуч</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="229"/>
+        <source>Move playhead left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути позицію відтворення ліворуч</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="201"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
-        <source>Extend selection left</source>
-        <translation>Розширити позначене ліворуч</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="207"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="208"/>
-        <source>Extend selection right</source>
-        <translation>Розширити позначене праворуч</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="213"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="214"/>
-        <source>Contract selection from left</source>
-        <translation>Стиснути позначене зліва</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="219"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
-        <source>Contract selection from right</source>
-        <translation>Стиснути позначене справа</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="225"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="226"/>
-        <source>Pitch and speed</source>
-        <translation>Тон і швидкість</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
-        <source>Show RMS in waveform</source>
-        <translation>Показувати СКВ на формі хвилі</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
-        <source>Show clipping in waveform</source>
-        <translation>Показувати зрізання на формі хвилі</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="237"/>
+        <source>Move playhead right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути позицію відтворення праворуч</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
+        <source>Extend selection left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Розширити позначене ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
+        <source>Extend selection right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Розширити позначене праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="261"/>
+        <source>Contract selection from left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Стиснути позначене зліва</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="269"/>
+        <source>Contract selection from right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Стиснути позначене справа</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="277"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути позицію відтворення на початок позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="285"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути позицію відтворення на кінець позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="293"/>
+        <source>Pitch and speed</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Тон і швидкість</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Показувати СКВ на формі хвилі</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="310"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Показувати зрізання на формі хвилі</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="319"/>
         <source>Half-wave</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Півхвиля</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="329"/>
         <source>Show label editor</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Показати редактор міток</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="258"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="259"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="337"/>
         <source>Move realtime effect up</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути ефект реального часу вище</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="264"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="265"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="345"/>
         <source>Move realtime effect down</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути ефект реального часу нижче</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="289"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="290"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="372"/>
         <source>Change clip color</source>
         <translation>Змінити колір кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="302"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="384"/>
         <source>Change track color</source>
         <translation>Змінити колір доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="29"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Записати</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="44"/>
         <source>Stop record</source>
-        <translation>Зупинити записування</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
-        <source>Record level</source>
-        <translation>Рівень записування</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="51"/>
-        <source>Set record level</source>
-        <translation>Встановити рівень записування</translation>
+        <translation type="vanished">Зупинити записування</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="58"/>
+        <source>Record level</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Рівень записування</translation>
+    </message>
+    <message>
+        <source>Set record level</source>
+        <translation type="vanished">Встановити рівень записування</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
         <source>Show mic metering</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Показати індикатор мікрофона</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="64"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="65"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
         <source>Turn on input monitoring</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Увімкнути стеження за вхідними даними</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="71"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="84"/>
         <source>Lead-in Recording</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вступний запис</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="72"/>
         <source>Start lead-in recording</source>
-        <translation>Розпочати вступний запис</translation>
+        <translation type="vanished">Розпочати вступний запис</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="18"/>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="19"/>
         <source>Spectrogram settings…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Параметри спектрограми…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="66"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="67"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
         <source>Clear selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Спорожнити позначене</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="72"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="73"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
         <source>Cut and leave gap</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирізати і лишити прогалину</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="80"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="104"/>
         <source>Cut and close gap (per clip)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирізати і закрити прогалину (на кліп)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="86"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
         <source>Cut and close gap (per track)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирізати і закрити прогалину (на доріжку)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="93"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="94"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
         <source>Cut and close gap (all tracks)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вирізати і закрити прогалину (усі доріжки)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="100"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="101"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="131"/>
         <source>Delete and leave gap</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити і лишити прогалину</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="107"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="108"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
         <source>Delete and close gap (per clip)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити і закрити прогалину (на кліп)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="114"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
         <source>Delete and close gap (per track)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити і закрити прогалину (на доріжку)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="158"/>
         <source>Delete and close gap (all tracks)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Вилучити і закрити прогалину (усі доріжки)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="128"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="129"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
         <source>Split</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Розділити</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="134"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="135"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="176"/>
         <source>Join selected clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>З&apos;єднати позначені кліпи</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="141"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
         <source>Split clips at silences</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Розділити кліпи за тишею</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="201"/>
         <source>Rename</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Перейменувати</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
-        <translation>Перейменувати доріжку</translation>
+        <translation type="vanished">Перейменувати доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
         <source>Duplicate track</source>
-        <translation>Дублювати доріжку</translation>
+        <translation type="vanished">Дублювати доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="166"/>
         <source>Delete track</source>
-        <translation>Вилучити доріжку</translation>
+        <translation type="vanished">Вилучити доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="171"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="172"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
         <source>Move track up</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути доріжку вище</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="177"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
         <source>Move track down</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути доріжку нижче</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="183"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
         <source>Move track to top</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути доріжку на гору</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="189"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="190"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Move track to bottom</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Пересунути доріжку у кінець</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="195"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="196"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Other…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Інше…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="266"/>
         <source>Make stereo track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Зробити доріжку стереофонічною</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="274"/>
         <source>Swap stereo channels</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Поміняти місцями канали стерео</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="215"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="282"/>
         <source>Split stereo to L/R mono</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Поділити стерео на моно «ліво-право»</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="220"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="221"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
         <source>Split stereo to center mono</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Розділити стерео за центральним моно</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="226"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="298"/>
         <source>Resample track…</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Змінити частоту дискретизації…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="232"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
         <source>Waveform</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Форма сигналу</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="240"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
         <source>Spectrogram</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Спектрограма</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="586"/>
         <source>Above item</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Над записом</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="465"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="594"/>
         <source>Below item</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Під записом</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="326"/>
         <source>Multi-view</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Мультиперегляд</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="264"/>
-        <source>Paste (pushes clips on selected track)</source>
-        <translation>Вставити (пересуває кліпи на вибраній доріжці)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="270"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="271"/>
-        <source>Paste (overlaps other clips)</source>
-        <translation>Вставити (перекриває інші кліпи)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="277"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="278"/>
-        <source>Paste (preserves synchronization on all tracks)</source>
-        <translation>Вставити (зберігає синхронізацію на усіх доріжках)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="285"/>
-        <source>Merge selected clips</source>
-        <translation>Об&apos;єднати позначені кліпи</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="291"/>
-        <source>Duplicate selected</source>
-        <translation>Дублювати позначене</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="296"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="297"/>
-        <source>Duplicate clip</source>
-        <translation>Дублювати кліп</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="302"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="303"/>
-        <source>Export clip</source>
-        <translation>Експортувати кліпи</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="309"/>
-        <source>Stretch with tempo changes</source>
-        <translation>Розтягнути зі зміною темпу</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="315"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
-        <source>Open pitch and speed dialog</source>
-        <translation>Відкрити вікно тональності і швидкості</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="321"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="322"/>
-        <source>Render pitch and speed</source>
-        <translation>Обробити тон і швидкість</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="327"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
-        <source>Reset pitch and speed</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="333"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="334"/>
-        <source>New mono track</source>
-        <translation>Нова монодоріжка</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="339"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="340"/>
-        <source>New stereo track</source>
-        <translation>Нова стереодоріжка</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Перейменувати запис (кліп/мітку)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="346"/>
-        <source>New label track</source>
-        <translation>Нова доріжка міток</translation>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Вставити (пересуває кліпи на вибраній доріжці)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="351"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="352"/>
-        <source>Add label</source>
-        <translation>Додати мітку</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="354"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Вставити (перекриває інші кліпи)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="357"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="358"/>
-        <source>Trim</source>
-        <translation>Обрізати</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="363"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Вставити (зберігає синхронізацію на усіх доріжках)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="364"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
-        <source>Silence</source>
-        <translation>Тиша</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="371"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="372"/>
-        <source>Group clips</source>
-        <translation>Згрупувати кліпи</translation>
+        <source>Merge selected clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Об&apos;єднати позначені кліпи</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="377"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="378"/>
-        <source>Ungroup clips</source>
-        <translation>Розгрупувати кліпи</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="380"/>
+        <source>Duplicate selected</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Дублювати позначене</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="383"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="384"/>
-        <source>Move item left</source>
-        <translation>Пересунути запис ліворуч</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="388"/>
+        <source>Duplicate clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Дублювати кліп</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="389"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="390"/>
-        <source>Move item right</source>
-        <translation>Пересунути запис праворуч</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="395"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="396"/>
-        <source>Extend item left</source>
-        <translation>Розширити запис ліворуч</translation>
+        <source>Export clip</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Експортувати кліпи</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="401"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="402"/>
-        <source>Extend item right</source>
-        <translation>Розширити запис праворуч</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="407"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="408"/>
-        <source>Reduce item left</source>
-        <translation>Зменшити запис ліворуч</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="404"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Розтягнути зі зміною темпу</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="413"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="414"/>
-        <source>Reduce item right</source>
-        <translation>Зменшити запис праворуч</translation>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відкрити вікно тональності і швидкості</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="419"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="420"/>
-        <source>Move item up</source>
-        <translation>Пересунути запис вище</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="421"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Обробити тон і швидкість</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="425"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="426"/>
-        <source>Move item down</source>
-        <translation>Пересунути запис нижче</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="429"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Відновити тон і швидкість</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="433"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="434"/>
-        <source>Next panel</source>
-        <translation>Наступна панель</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="437"/>
+        <source>New mono track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Нова монодоріжка</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="440"/>
-        <source>Previous panel</source>
-        <translation>Попередня панель</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="445"/>
+        <source>New stereo track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Нова стереодоріжка</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
-        <source>Next item</source>
-        <translation>Наступний запис</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="452"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
-        <source>Previous item</source>
-        <translation>Попередній запис</translation>
+        <source>New label track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Нова доріжка міток</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
-        <source>First track</source>
-        <translation>Перша доріжка</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="461"/>
+        <source>Add label</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Додати мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="469"/>
+        <source>Trim</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Обрізати</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="479"/>
-        <source>Last track</source>
-        <translation>Остання доріжка</translation>
+        <source>Silence</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Тиша</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="485"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="486"/>
-        <source>Select track/track item</source>
-        <translation>Вибрати доріжку/запис доріжки</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="487"/>
+        <source>Group clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Згрупувати кліпи</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="491"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="492"/>
-        <source>Track range selection</source>
-        <translation>Вибір діапазону доріжки</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="498"/>
-        <source>Multi track selection previous</source>
-        <translation>Попереднє позначення мультидоріжки</translation>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="495"/>
+        <source>Ungroup clips</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Розгрупувати кліпи</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="503"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="504"/>
+        <source>Move item left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути запис ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="511"/>
+        <source>Move item right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути запис праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="519"/>
+        <source>Extend item left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Розширити запис ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="527"/>
+        <source>Extend item right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Розширити запис праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="535"/>
+        <source>Reduce item left</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Зменшити запис ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="543"/>
+        <source>Reduce item right</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Зменшити запис праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="551"/>
+        <source>Move item up</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути запис вище</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="559"/>
+        <source>Move item down</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Пересунути запис нижче</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="569"/>
+        <source>Next panel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Наступна панель</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="577"/>
+        <source>Previous panel</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Попередня панель</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="603"/>
+        <source>First track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Перша доріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="611"/>
+        <source>Last track</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Остання доріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="620"/>
+        <source>Select track/track item</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Вибрати доріжку/запис доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="628"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Додати доріжку або елемент доріжки до позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="636"/>
+        <source>Track range selection</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Вибір діапазону доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="644"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Попереднє позначення мультидоріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="652"/>
         <source>Multi track selection next</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Наступне позначення мультидоріжки</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="510"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="511"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
         <source>Open item’s context menu</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Відкрити контекстне меню запису</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="531"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="532"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="684"/>
         <source>Change track format</source>
         <translation>Змінити формат доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="544"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="545"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="697"/>
         <source>Change track sample rate</source>
         <translation>Змінити частоту дискретизації доріжки</translation>
     </message>
@@ -1912,102 +1888,112 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
         <source>Show p&amp;aths…</source>
-        <translation type="unfinished"/>
+        <translation>Показати &amp;шляхи…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
         <source>Show paths</source>
-        <translation type="unfinished"/>
+        <translation>Показати шляхи</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
         <source>Show pr&amp;ofiler…</source>
-        <translation type="unfinished"/>
+        <translation>Показати пр&amp;офілювання…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation type="unfinished"/>
+        <translation>Показати профілювання</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
         <source>Show g&amp;raphics info…</source>
-        <translation type="unfinished"/>
+        <translation>Показати дані щодо &amp;графіки…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
         <source>Show graphics info</source>
-        <translation type="unfinished"/>
+        <translation>Показати дані щодо графіки</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
         <source>Show &amp;navigation tree…</source>
-        <translation type="unfinished"/>
+        <translation>Показати ієрархію &amp;навігації…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
         <source>Show navigation tree</source>
-        <translation type="unfinished"/>
+        <translation>Показати ієрархію навігації</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
         <source>Show &amp;accessibility tree…</source>
-        <translation type="unfinished"/>
+        <translation>Показати ієрархію д&amp;оступності…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
         <source>Show accessibility tree</source>
-        <translation type="unfinished"/>
+        <translation>Показати ієрархію доступності</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
         <source>&amp;Dump accessibility tree to console</source>
-        <translation type="unfinished"/>
+        <translation>Створити &amp;дамп ієрархії доступності у консолі</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
         <source>Dump accessibility tree to console</source>
-        <translation type="unfinished"/>
+        <translation>Створити дамп ієрархії доступності у консолі</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
         <source>Show engraving &amp;elements</source>
-        <translation type="unfinished"/>
+        <translation>Показати &amp;елементи гравірування</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
         <source>Show engraving elements</source>
-        <translation type="unfinished"/>
+        <translation>Показати елементи гравірування</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
         <source>Show engraving &amp;undo stack</source>
-        <translation type="unfinished"/>
+        <translation>Показати стос с&amp;касування гравірування</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
         <source>Show engraving undo stack</source>
-        <translation type="unfinished"/>
+        <translation>Показати стос скасування гравірування</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
         <source>Show engraving &amp;style options list</source>
-        <translation type="unfinished"/>
+        <translation>Показати список параметрів с&amp;тилю гравірування</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
         <source>Show engraving style options list</source>
-        <translation type="unfinished"/>
+        <translation>Показати список параметрів стилю гравірування</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
         <source>Show &amp;actions list</source>
-        <translation type="unfinished"/>
+        <translation>Показати список д&amp;ій</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
         <source>Show actions list</source>
-        <translation type="unfinished"/>
+        <translation>Показати список дій</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
+        <source>Show &amp;rcommands list</source>
+        <translation>Показати список &amp;r-команд</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
+        <source>Show rcommands list</source>
+        <translation>Показати список r-команд</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
@@ -2022,47 +2008,37 @@
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
         <source>Show API dump</source>
-        <translation type="unfinished"/>
+        <translation>Показати дамп програмного інтерфейсу</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
         <source>&amp;Multiinstances</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
-        <source>Check MuseSampler</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
-        <source>Reload MuseSampler</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Мультиекземпляри</translation>
     </message>
     <message>
         <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
         <source>Show &amp;scripts…</source>
-        <translation type="unfinished"/>
+        <translation>Показати с&amp;крипти…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
         <source>Show scripts</source>
-        <translation type="unfinished"/>
+        <translation>Показати скрипти</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
         <source>Check for &amp;update</source>
-        <translation type="unfinished"/>
+        <translation>Шукати &amp;оновлення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
         <source>Use old view</source>
-        <translation type="unfinished"/>
+        <translation>Використати застарілий режим перегляду</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
         <source>Use new view</source>
-        <translation type="unfinished"/>
+        <translation>Використати новий режим перегляду</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
@@ -2072,17 +2048,1589 @@
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
         <source>Edit workspaces…</source>
-        <translation type="unfinished"/>
+        <translation>Редагувати робочі простори…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
         <source>Edit workspaces</source>
-        <translation type="unfinished"/>
+        <translation>Редагувати робочі простори</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
         <source>Create new workspace</source>
         <translation>Створити новий робочий простір</translation>
+    </message>
+</context>
+<context>
+    <name>action_description</name>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
+        <source>Exit</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вийти</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
+        <source>Full screen</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Повноекранний режим</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
+        <source>Open online handbook</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити підручник в інтернеті</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
+        <source>Revert to factory settings</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Повернутися до початкових параметрів</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
+        <source>Restore the default layout</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відновити типове компонування</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
+        <source>Show/hide playback controls</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати або приховати засоби керування відтворенням</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="128"/>
+        <source>Show/hide tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати/Приховати доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
+        <source>Show/hide status bar</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати або приховати смужку стану</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
+        <source>Preferences…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Налаштування…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="35"/>
+        <source>Copy</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Копіювати</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="167"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="44"/>
+        <source>Cut</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирізати</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="177"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
+        <source>Paste</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вставити</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
+        <source>Undo</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Скасувати</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="197"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="62"/>
+        <source>Redo</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Повторити</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="207"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="212"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="71"/>
+        <source>Delete</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="216"/>
+        <source>Cancel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Скасувати</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
+        <source>Trigger</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перемикач</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
+        <source>Trigger the focused control or select the focused track item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перемкнути фокусований засіб керування або вибрати фокусований запис доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
+        <source>View project on audio.com</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Переглянути проєкт на audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
+        <source>View on audio.com</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Переглянути на audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
+        <source>Remove realtime effect</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити ефект реального часу</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
+        <source>Import preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Імпортувати шаблон</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
+        <source>Export preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Експортувати шаблон</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
+        <source>Play/Pause</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відтворити/Призупинити</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="51"/>
+        <source>Play/Stop</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відтворити/Зупинити</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
+        <source>Play/Pause from cursor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відтворити/Призупинити від курсора</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
+        <source>Play the selected time range</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відтворити позначений часовий діапазон</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
+        <source>Pause</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Призупинити</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
+        <source>Stop playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зупинити відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
+        <source>Rewind to start</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перемотати до початку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
+        <source>Rewind to end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перемотати до кінця</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
+        <source>Toggle ‘Loop playback’</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути або вимкнути «Циклічне відтворення»</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
+        <source>Open audio setup context menu</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити контекстне меню налаштовування звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
+        <source>Open Get effects dialog</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити вікно отримання ефектів</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
+        <source>Open audio setup dialog</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити вікно налаштовування звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
+        <source>Rescan audio devices</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Повторно виявити звукові пристрої</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
+        <source>Toggle metronome playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути або вимкнути відтворення метронома</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
+        <source>Set playback time</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити час відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
+        <source>Set playback tempo</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити темп відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
+        <source>Set playback time signature</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити часовий підпис відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
+        <source>Set playback level</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити рівень відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
+        <source>Change audio host</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Змінити вузол обробки звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
+        <source>Change playback device</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Змінити пристрій для відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
+        <source>Change recording device</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Змінити пристрій для запису</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
+        <source>Change input channels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Змінити вхідні канали</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
+        <source>Toggle loop region</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути/Вимкнути циклічність ділянки</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
+        <source>Clear loop region</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зняти зацикленість ділянки</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
+        <source>Set loop region to selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Позначити зациклену ділянку</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
+        <source>Set selection to loop</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зациклити позначене</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
+        <source>Set loop region in out</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити вхід-вихід циклу</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
+        <source>Creating a loop also selects audio</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Створення циклу призводить до позначення звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
+        <source>Play repeats</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відтворення повторюється</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
+        <source>Pan automatically during playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Панорамувати автоматично під час відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="31"/>
+        <source>New…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Створити…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
+        <source>Open…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
+        <source>Show in Finder</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати у Finder</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
+        <source>Open recent project</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити недавній проєкт</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
+        <source>Open</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
+        <source>Clear recent files</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Очистити недавні файли</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
+        <source>Import…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Імпортувати…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
+        <source>Save</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зберегти</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
+        <source>Save as…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зберегти як…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
+        <source>Export audio…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Експортувати звук…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
+        <source>Export labels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Експортувати мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
+        <source>Export MIDI</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Експортувати до MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
+        <source>Close project</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Закрити проєкт</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="386"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
+        <source>Duplicate</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Дублювати</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
+        <source>Insert</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вставити</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
+        <source>Trim clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Обрізати кліп</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
+        <source>Split into new track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розділити до нової доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
+        <source>Paste new label</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вставити нову мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
+        <source>Select all</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Позначити все</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
+        <source>Select all tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Позначити всі доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
+        <source>Left of playback position</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ліворуч від поточної позиції</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="218"/>
+        <source>Right of playback position</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Праворуч від поточної позиції</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
+        <source>Track start to cursor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Від початку до курсора</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
+        <source>Cursor to track end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Від курсора до кінця доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="242"/>
+        <source>Track start to end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Від початку доріжки до кінця</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
+        <source>Previous clip boundary to cursor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Від межі попереднього кліпу до курсора</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
+        <source>Cursor to next clip boundary</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Від курсора до межі наступного кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
+        <source>Previous clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Попередній кліп</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
+        <source>Next clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Наступний кліп</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
+        <source>Toggle spectral selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути або вимкнути спектральний вибір</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="290"/>
+        <source>Move cursor to closest zero crossing</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути курсор до найближчого перетину нуля</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
+        <source>Collapse all tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Згорнути всі доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
+        <source>Expand all tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розгорнути усі доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="316"/>
+        <source>Skip to selection start</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Прокрутити до початку позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
+        <source>Skip to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Прокрутити до кінця позначено</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
+        <source>Show effects panel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати панель ефектів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="341"/>
+        <source>Show metadata editor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати редактор метаданих</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
+        <source>Show history</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати журнал</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
+        <source>Set up timed recording</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Налаштувати відкладений запис</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="368"/>
+        <source>Enable sound activating recording</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути активацію запису звуком</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
+        <source>Set sound activation level</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити рівень активації звуком</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="394"/>
+        <source>Remove tracks</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
+        <source>Mix-down to…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Мікшувати вниз…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
+        <source>Align end to end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирівняти за кінцями</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
+        <source>Align together</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Спільне вирівнювання</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
+        <source>Align start to zero</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирівняти початок до нуля</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="434"/>
+        <source>Align start to playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирівняти початок до позиції відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
+        <source>Align start to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирівняти початок до кінця позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="450"/>
+        <source>Align end to playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирівняти кінець до позиції відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
+        <source>Align end to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирівняти кінець до кінця позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
+        <source>Sort by time</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Упорядкувати за часом</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="474"/>
+        <source>Sort by name</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Упорядкувати за назвою</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
+        <source>Keep tracks synchronized</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Синхронізувати доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
+        <source>Plugin manager</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Керування додатками</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
+        <source>Add track effects</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Додати ефекти доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
+        <source>Fav effect #1</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Улюблений ефект 1</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
+        <source>Fav effect #2</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Улюблений ефект 2</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="525"/>
+        <source>Fav effect #3</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Улюблений ефект 3</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
+        <source>Contrast analyzer</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Аналізатор контрастності</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="543"/>
+        <source>Plot spectrum</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Побудувати графік спектра…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="553"/>
+        <source>Manage macros</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Керування макросами</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
+        <source>Apply macros palette</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Застосувати палітру макросів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
+        <source>Macro fade ends</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Макрос кінців згасання</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
+        <source>Macro MP3 conversion</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Макрос перетворення MP3</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
+        <source>Nyquist plugin installer</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Засіб встановлення додатків Nyquist</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
+        <source>Nyquist prompt</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Запит до Nyquist</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
+        <source>Sample data export</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Експортування даних семплу</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
+        <source>Sample data import</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Імпортування даних семплів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
+        <source>Raw data import</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Імпортування необроблених даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="625"/>
+        <source>Reset configuration</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Скинути налаштування</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="635"/>
+        <source>Previous window</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Попереднє вікно</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="643"/>
+        <source>Next window</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Наступне вікно</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="651"/>
+        <source>Benchmark</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Тестування</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="659"/>
+        <source>Regular interval labels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Регулярні мітки інтервалів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="669"/>
+        <source>Tutorials</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Підручники</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="677"/>
+        <source>Device info</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Дані щодо пристрою</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="685"/>
+        <source>MIDI device info</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Дані щодо пристрою MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
+        <source>Log</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Журнал</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="701"/>
+        <source>Crash report</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Звіт щодо аварії</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="709"/>
+        <source>Raise segfault</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати помилку сегментування</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="717"/>
+        <source>Throw exception</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Надіслати виключення</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="725"/>
+        <source>Violate assertion</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Порушити твердження</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="733"/>
+        <source>Menu tree</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ієрархія меню</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="741"/>
+        <source>Frame statistics</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Статистика кадрів</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="749"/>
+        <source>Link account</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пов&apos;язати обліковий запис</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="757"/>
+        <source>Save to cloud…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зберегти до хмари…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
+        <source>Share audio</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Оприлюднити звукові дані</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Оновити дані попереднього прослуховування у хмарі</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
+        <source>Update audio preview</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Оновити дані попереднього перегляду</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="792"/>
+        <source>Project properties…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Властивості проєкту…</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="25"/>
+        <source>Clip gain</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Підсилення кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="34"/>
+        <source>Split tool</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Інструмент поділу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
+        <source>Zoom in</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Збільшити</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="52"/>
+        <source>Zoom out</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зменшити</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="61"/>
+        <source>Zoom default</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Типовий масштаб</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="69"/>
+        <source>Zoom to selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Збільшити позначену область</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
+        <source>Zoom to fit project</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Підігнати за розміром, щоб умістився весь проєкт</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="87"/>
+        <source>Zoom toggle</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перемикання масштабу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="96"/>
+        <source>Center view on playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Центрувати перегляд за позицією відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
+        <source>Toggle spectral view</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути або вимкнути спектральний перегляд</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="113"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="122"/>
+        <source>Spectral box select</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вибір спектральної ділянки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="131"/>
+        <source>Snapping</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Прилипання</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
+        <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Хвилини і секунди</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="149"/>
+        <source>Beats &amp;&amp; measures</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Такти і розміри</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="158"/>
+        <source>Show vertical rulers</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати вертикальні лінійки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
+        <source>Show master track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати основну доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
+        <source>Update display while playing</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Оновлювати відображення під час відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="185"/>
+        <source>Pinned playhead</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пришпилений початок відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
+        <source>Click ruler to start playback</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Натисніть на лінійці, щоб розпочати відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="204"/>
+        <source>Show clip properties</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати властивості кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="222"/>
+        <source>Follow track color</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відповідно до кольору доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
+        <source>Move playhead left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути позицію відтворення ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
+        <source>Move playhead right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути позицію відтворення праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="247"/>
+        <source>Extend selection left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розширити позначене ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="255"/>
+        <source>Extend selection right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розширити позначене праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="263"/>
+        <source>Contract selection from left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Стиснути позначене зліва</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="271"/>
+        <source>Contract selection from right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Стиснути позначене справа</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="279"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути позицію відтворення на початок позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="287"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути позицію відтворення на кінець позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="295"/>
+        <source>Pitch and speed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Тон і швидкість</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="303"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показувати СКВ на формі хвилі</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="312"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показувати зрізання на формі хвилі</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="321"/>
+        <source>Half-wave</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Півхвиля</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="331"/>
+        <source>Show label editor</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати редактор міток</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="339"/>
+        <source>Move realtime effect up</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути ефект реального часу вище</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="347"/>
+        <source>Move realtime effect down</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути ефект реального часу нижче</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="371"/>
+        <source>Change clip color</source>
+        <translation>Змінити колір кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="383"/>
+        <source>Change track color</source>
+        <translation>Змінити колір доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
+        <source>Record</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Записати</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
+        <source>Stop record</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зупинити записування</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
+        <source>Set record level</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Встановити рівень записування</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
+        <source>Show mic metering</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Показати індикатор мікрофона</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="77"/>
+        <source>Turn on input monitoring</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Увімкнути стеження за вхідними даними</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="86"/>
+        <source>Start lead-in recording</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розпочати вступний запис</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
+        <source>Record on current track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Записати на поточну доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
+        <source>Record on new track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Записати на нову доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
+        <source>Spectrogram settings…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Параметри спектрограми…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="27"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перейменувати запис (кліп/мітку)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="89"/>
+        <source>Clear selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Спорожнити позначене</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
+        <source>Cut and leave gap</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирізати і лишити прогалину</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="106"/>
+        <source>Cut and close gap (per clip)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирізати і закрити прогалину (на кліп)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
+        <source>Cut and close gap (per track)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирізати і закрити прогалину (на доріжку)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="124"/>
+        <source>Cut and close gap (all tracks)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вирізати і закрити прогалину (усі доріжки)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
+        <source>Delete and leave gap</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити і лишити прогалину</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="142"/>
+        <source>Delete and close gap (per clip)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити і закрити прогалину (на кліп)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
+        <source>Delete and close gap (per track)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити і закрити прогалину (на доріжку)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
+        <source>Delete and close gap (all tracks)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити і закрити прогалину (усі доріжки)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
+        <source>Split</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розділити</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
+        <source>Join selected clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>З&apos;єднати позначені кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="186"/>
+        <source>Split clips at silences</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розділити кліпи за тишею</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
+        <source>Rename track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перейменувати доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
+        <source>Duplicate track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Дублювати доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
+        <source>Delete track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вилучити доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
+        <source>Move track up</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути доріжку вище</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
+        <source>Move track down</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути доріжку нижче</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
+        <source>Move track to top</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути доріжку на гору</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="251"/>
+        <source>Move track to bottom</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути доріжку у кінець</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="259"/>
+        <source>Other…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Інше…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="268"/>
+        <source>Make stereo track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зробити доріжку стереофонічною</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
+        <source>Swap stereo channels</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Поміняти місцями канали стерео</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
+        <source>Split stereo to L/R mono</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Поділити стерео на моно «ліво-право»</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="292"/>
+        <source>Split stereo to center mono</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розділити стерео за центральним моно</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="300"/>
+        <source>Resample track…</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Змінити частоту дискретизації…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
+        <source>Waveform</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Форма сигналу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="318"/>
+        <source>Spectrogram</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Спектрограма</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
+        <source>Multi-view</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Мультиперегляд</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="347"/>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вставити (пересуває кліпи на вибраній доріжці)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="356"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вставити (перекриває інші кліпи)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вставити (зберігає синхронізацію на усіх доріжках)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="374"/>
+        <source>Merge selected clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Об&apos;єднати позначені кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="382"/>
+        <source>Duplicate selected</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Дублювати позначене</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="390"/>
+        <source>Duplicate clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Дублювати кліп</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="398"/>
+        <source>Export clip</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Експортувати кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="406"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розтягнути зі зміною темпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="415"/>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити вікно тональності і швидкості</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="423"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Обробити тон і швидкість</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="431"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відновити тон і швидкість</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
+        <source>New mono track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Нова монодоріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
+        <source>New stereo track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Нова стереодоріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="455"/>
+        <source>New label track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Нова доріжка міток</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="463"/>
+        <source>Add label</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Додати мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
+        <source>Trim</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Обрізати</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
+        <source>Silence</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Тиша</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="489"/>
+        <source>Group clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Згрупувати кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
+        <source>Ungroup clips</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розгрупувати кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="505"/>
+        <source>Move item left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути запис ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="513"/>
+        <source>Move item right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути запис праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="521"/>
+        <source>Extend item left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розширити запис ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="529"/>
+        <source>Extend item right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Розширити запис праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="537"/>
+        <source>Reduce item left</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зменшити запис ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="545"/>
+        <source>Reduce item right</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Зменшити запис праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="553"/>
+        <source>Move item up</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути запис вище</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="561"/>
+        <source>Move item down</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Пересунути запис нижче</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="571"/>
+        <source>Next panel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Наступна панель</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="579"/>
+        <source>Previous panel</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Попередня панель</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="588"/>
+        <source>Above item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Над записом</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="596"/>
+        <source>Below item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Під записом</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="605"/>
+        <source>First track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Перша доріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="613"/>
+        <source>Last track</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Остання доріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="622"/>
+        <source>Select track/track item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вибрати доріжку/запис доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="630"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Додати доріжку або елемент доріжки до позначеного</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="638"/>
+        <source>Track range selection</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Вибір діапазону доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="646"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Попереднє позначення мультидоріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="654"/>
+        <source>Multi track selection next</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Наступне позначення мультидоріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
+        <source>Open item’s context menu</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Відкрити контекстне меню запису</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
+        <source>Change track format</source>
+        <translation>Змінити формат доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
+        <source>Change track sample rate</source>
+        <translation>Змінити частоту дискретизації доріжки</translation>
     </message>
 </context>
 <context>
@@ -2105,9 +3653,8 @@
         <translation>Проєкт</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="100"/>
         <source>Learn</source>
-        <translation>Навчання</translation>
+        <translation type="vanished">Навчання</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
@@ -2126,7 +3673,7 @@
         <translation>Категорія:</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="138"/>
         <source>All</source>
         <extracomment>The title of an option to display the plugins from all categories.</extracomment>
         <translation>Всі</translation>
@@ -2138,42 +3685,42 @@
         <translation>Головна панель</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="71"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="59"/>
         <source>Application menu</source>
         <translation>Меню програм</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="157"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="160"/>
         <source>Project toolbar</source>
         <translation>Панель інструментів проєкту</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="180"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
         <source>Workspaces toolbar</source>
         <translation>Панель робочих просторів</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="203"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
         <source>Undo/redo toolbar</source>
         <translation>Панель інструментів скасування/повторення</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="225"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
         <source>Play toolbar</source>
         <translation>Панель інструментів відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
         <source>Tracks</source>
         <translation>Доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="387"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
         <source>Playback meter</source>
         <translation>Індикатор відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="406"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
         <source>History</source>
         <translation>Журнал</translation>
     </message>
@@ -2183,12 +3730,12 @@
         <translation>Вивести у MIDI 2.0, якщо передбачено підтримку отримувачем</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Ви справді хочете повернутися до початкових значень параметрів?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -2197,29 +3744,34 @@ This action will not delete any of your projects.</source>
 У результаті виконання цієї дії не буде вилучено жодного з ваших проєктів.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
         <source>Revert</source>
         <translation>Повернутися</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Revert to factory settings</source>
         <translation>Повернутися до початкових параметрів</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Хочете перезапустити Audacity зараз?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Щоб ці зміни набули чинності, Audacity слід перезапустити.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
         <source>Restart</source>
         <translation>Перезапустити</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
+        <source>Restart Audacity</source>
+        <translation>Перезапустити Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
@@ -2247,29 +3799,29 @@ This action will not delete any of your projects.</source>
         <translation>Завантаження проєкту…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="28"/>
-        <source>Validate audio plugins</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
-        <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation type="unfinished"/>
+        <source>Validate audio plugins</source>
+        <translation>Перевірити звукові додатки</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="34"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
+        <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
+        <translation>Audacity виявлено додатки, які потребують перевірки, перш ніж ними можна буде скористатися. Хочете виконати перевірку зараз чи пропустити її?</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Skip this time</source>
         <translation>Пропустити цього разу</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="37"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
         <source>Validate</source>
-        <translation type="unfinished"/>
+        <translation>Перевірити</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
         <source>Audio plugin validation</source>
-        <translation type="unfinished"/>
+        <translation>Перевірка звукових додатків</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
@@ -2282,14 +3834,14 @@ This action will not delete any of your projects.</source>
         <translation>Хочете відновити сеанс?</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="300"/>
+        <source>Restore session</source>
+        <translation>Відновити сеанс</translation>
+    </message>
+    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
         <source>Home</source>
         <translation>Домівка</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="96"/>
-        <source>Publish</source>
-        <translation>Оприлюднити</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="99"/>
@@ -2297,28 +3849,25 @@ This action will not delete any of your projects.</source>
         <translation>Інструменти розробника</translation>
     </message>
     <message>
-        <source>Audacity 4</source>
-        <translation>Audacity 4</translation>
-    </message>
-    <message>
-        <source>%1 %2- Audacity 4</source>
-        <translation>%1 %2- Audacity 4</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="96"/>
         <source>Audacity</source>
         <translation>Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 - %3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
-        <translation type="unfinished"/>
+        <translation>*</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectStatusBar.qml" line="43"/>
+        <source>Selection status</source>
+        <translation>Стан позначення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
@@ -2329,15 +3878,14 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-align</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="349"/>
         <source>Align content</source>
-        <translation>Вирівняти вміст</translation>
+        <translation type="vanished">Вирівняти вміст</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="368"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="420"/>
         <source>&amp;Analyze</source>
         <translation>&amp;Аналіз</translation>
     </message>
@@ -2345,12 +3893,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="242"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
         <source>Clip</source>
         <translation>Кліп</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="618"/>
         <source>Rename clip</source>
         <translation>Перейменувати кліп</translation>
     </message>
@@ -2358,7 +3906,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-cursor</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="393"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
         <source>Cursor</source>
         <translation>Курсор</translation>
     </message>
@@ -2366,7 +3914,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-device</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="471"/>
         <source>Device</source>
         <translation>Пристрій</translation>
     </message>
@@ -2374,17 +3922,17 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="785"/>
         <source>&amp;System</source>
         <translation>С&amp;истема</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="795"/>
         <source>&amp;Accessibility</source>
         <translation>Д&amp;оступність</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="711"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="802"/>
         <source>Test&amp;flow</source>
         <translation>&amp;Тестування</translation>
     </message>
@@ -2392,37 +3940,36 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-diagnostics</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
-        <translation>Діагностика</translation>
+        <translation type="vanished">Діагностика</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="528"/>
         <source>&amp;System</source>
         <translation>С&amp;истема</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="550"/>
         <source>A&amp;ctions</source>
         <translation>Д&amp;ії</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
         <source>&amp;Accessibility</source>
         <translation>Д&amp;оступність</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
         <source>E&amp;xtensions</source>
         <translation>&amp;Розширення</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
         <source>Test&amp;flow</source>
         <translation>&amp;Тестування</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="474"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="558"/>
         <source>&amp;Diagnostics</source>
         <translation>Діа&amp;гностика</translation>
     </message>
@@ -2430,7 +3977,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="250"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="302"/>
         <source>&amp;Edit</source>
         <translation>З&amp;міни</translation>
     </message>
@@ -2438,7 +3985,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="363"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
         <source>&amp;Effect</source>
         <translation>&amp;Ефект</translation>
     </message>
@@ -2446,15 +3993,14 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-export-other</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="211"/>
         <source>&amp;Export other</source>
-        <translation>Експортувати інше</translation>
+        <translation type="vanished">Експортувати інше</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
         <source>&amp;Extra</source>
         <translation>Дод&amp;атково</translation>
     </message>
@@ -2462,7 +4008,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extraedit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="384"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Edit</source>
         <translation>Редагування</translation>
     </message>
@@ -2470,7 +4016,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extraselect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="388"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Select</source>
         <translation>Позначення</translation>
     </message>
@@ -2478,7 +4024,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extratools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="382"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>Tools</source>
         <translation>Інструменти</translation>
     </message>
@@ -2486,12 +4032,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
         <source>Open &amp;recent</source>
         <translation>Відкрити &amp;недавні</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="269"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
@@ -2499,7 +4045,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-focus</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="392"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
         <source>Focus</source>
         <translation>Фокусування</translation>
     </message>
@@ -2507,7 +4053,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="410"/>
         <source>&amp;Generate</source>
         <translation>&amp;Створення</translation>
     </message>
@@ -2515,7 +4061,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="431"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="515"/>
         <source>&amp;Help</source>
         <translation>&amp;Довідка</translation>
     </message>
@@ -2523,7 +4069,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-images</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="399"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="483"/>
         <source>Images</source>
         <translation>Зображення</translation>
     </message>
@@ -2531,23 +4077,27 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Label</source>
         <translation>Мітка</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="639"/>
+        <source>Rename label</source>
+        <translation>Перейменувати мітку</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-macros</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="840"/>
         <source>&amp;Macros</source>
-        <translation>&amp;Макроси</translation>
+        <translation type="vanished">&amp;Макроси</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="383"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Mixer</source>
         <translation>Мікшер</translation>
     </message>
@@ -2555,15 +4105,16 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-play</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="380"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="464"/>
         <source>Play</source>
+        <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
         <translation>Відтворити</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-playatspeed</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="385"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Play at speed</source>
         <translation>Відтворення на швидкості</translation>
     </message>
@@ -2571,7 +4122,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="334"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="386"/>
         <source>&amp;Record</source>
         <translation>&amp;Записати</translation>
     </message>
@@ -2579,7 +4130,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-scriptables1</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="395"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Scriptables1</source>
         <translation>Скрипти1</translation>
     </message>
@@ -2587,7 +4138,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-scriptables2</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="397"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="481"/>
         <source>Scriptables2</source>
         <translation>Скрипти2</translation>
     </message>
@@ -2595,7 +4146,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-scrubbing</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="381"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
         <source>Scrubbing</source>
         <translation>Прокручування</translation>
     </message>
@@ -2603,27 +4154,25 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-select</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="256"/>
         <source>Audio clips</source>
-        <translation>Звукові кліпи</translation>
+        <translation type="vanished">Звукові кліпи</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="261"/>
         <source>Spectral</source>
-        <translation>Spectral</translation>
+        <translation type="vanished">Spectral</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="322"/>
         <source>Region</source>
         <translation>Область</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="274"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="326"/>
         <source>Looping</source>
         <translation>Цикл</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="278"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="330"/>
         <source>&amp;Select</source>
         <translation>&amp;Вибір</translation>
     </message>
@@ -2631,7 +4180,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-settings</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="402"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="486"/>
         <source>Settings</source>
         <translation>Параметри</translation>
     </message>
@@ -2639,23 +4188,21 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-skip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Skip to</source>
-        <translation>Перестрибнути до</translation>
+        <translation type="vanished">Перестрибнути до</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-sort</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="350"/>
         <source>Sort tracks</source>
-        <translation>Впорядкувати доріжки</translation>
+        <translation type="vanished">Впорядкувати доріжки</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="425"/>
         <source>&amp;Tools</source>
         <translation>&amp;Інструменти</translation>
     </message>
@@ -2663,7 +4210,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-track</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="394"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
         <source>Track</source>
         <translation>Доріжка</translation>
     </message>
@@ -2671,7 +4218,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="353"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
         <source>&amp;Tracks</source>
         <translation>Д&amp;оріжки</translation>
     </message>
@@ -2679,12 +4226,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="306"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
         <source>W&amp;orkspaces</source>
         <translation>&amp;Робочі простори</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="319"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="372"/>
         <source>&amp;View</source>
         <translation>П&amp;ерегляд</translation>
     </message>
@@ -2692,33 +4239,13 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="343"/>
         <source>Zoom</source>
         <translation>Масштабування</translation>
     </message>
 </context>
 <context>
     <name>appshell/about</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
-        <source>About MusicXML</source>
-        <translation>Про MusicXML</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="59"/>
-        <source>MusicXML is an open file format for exchanging digital sheet music, supported by many applications.</source>
-        <translation>MusicXML є відкритим форматом файлів для обміну цифровими нотним станами, підтримку яких передбачено у багатьох програмах.</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="71"/>
-        <source>Copyright © 2004-2021 the Contributors to the MusicXML Specification, published by the Music Notation Community Group under the W3C Community Final Specification Agreement (FSA):</source>
-        <translation>© Учасники розробки специфікації MusicXML, 2004-2021, оприлюднено Music Notation Community Group за умов дотримання Final Specification Agreement (FSA) спільноти W3C:</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="95"/>
-        <source>A human-readable summary is available:</source>
-        <translation>Доступне зручне для читання резюме:</translation>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="14"/>
         <source>Audacity 4</source>
@@ -2730,12 +4257,57 @@ This action will not delete any of your projects.</source>
         <translation>Нестабільний тестовий випуск %1</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="339"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
+        <source>Audacity Team Members</source>
+        <translation>Учасники команди Audacity</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
+        <source>Emeritus</source>
+        <translation>Заслужені колишні учасники:</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
+        <source>Distinguished Audacity Team members, not currently active</source>
+        <translation>Визначні учасники команди розробників Audacity, які припинили участь у проєкті</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
+        <source>Contributors</source>
+        <translation>Учасники розробки</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="334"/>
+        <source>Website and Graphics</source>
+        <translation>Сайт та графіка</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
         <translation>Переклад українською:&lt;br /&gt;
 &lt;a href=&quot;mailto:dziumanenko@gmail.com&quot;&gt;Максим Дзюманенко&lt;/a&gt;,&lt;br /&gt;
 &lt;a href=&quot;mailto:alahush@yahoo.com&quot;&gt;Андрій Лагуш&lt;/a&gt;,&lt;br /&gt;
 &lt;a href=&quot;mailto:yurchor@ukr.net&quot;&gt;Юрій Чорноіван&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
+        <source>Translators</source>
+        <translation>Перекладачі</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="346"/>
+        <source>Libraries</source>
+        <translation>Бібліотеки</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
+        <source>Audacity includes code from the following projects:</source>
+        <translation>В Audacity міститься код з таких проєктів:</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
+        <source>Special Thanks</source>
+        <translation>Особливі подяки</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -2765,17 +4337,17 @@ This action will not delete any of your projects.</source>
         <translation>Подяки</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="201"/>
         <source>Audacity website: %1</source>
         <translation>Сайт Audacity: %1</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="215"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
         <translation>Авторські права на &lt;b&gt;Audacity®&lt;/b&gt; належать © Команда Audacity, 1999-%1.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="220"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
         <translation>Назва &lt;b&gt;Audacity&lt;/b&gt; є зареєстрованою торговельною маркою.</translation>
     </message>
@@ -2800,62 +4372,82 @@ This action will not delete any of your projects.</source>
     <name>appshell/dock</name>
     <message>
         <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
-        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
         <source>Close</source>
         <translation>Закрити</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
-        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Dock</source>
-        <translation type="unfinished"/>
+        <translation>Пришвартувати</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
-        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Undock</source>
-        <translation type="unfinished"/>
+        <translation>Відшвартувати</translation>
     </message>
 </context>
 <context>
     <name>appshell/gettingstarted</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
         <source>Preferences → Application</source>
-        <translation>Налаштування → Програма</translation>
+        <translation type="vanished">Налаштування → Програма</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="37"/>
         <source>App Updates</source>
-        <translation>Оновлення програми</translation>
+        <translation type="vanished">Оновлення програми</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
         <translation>Audacity сповістить вас у самій програмі про можливість отримати нову версію.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
         <translation>Ви можете будь-коли це вимкнути на сторінці %1.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Usage Info</source>
-        <translation>Дані щодо користування</translation>
+        <translation type="vanished">Дані щодо користування</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
+        <source>Preferences → General</source>
+        <translation>Налаштування → Загальне</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
+        <source>App updates</source>
+        <translation>Оновлення програми</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
+        <source>Crash reports</source>
+        <translation>Звіти щодо аварії</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
+        <source>Audacity automatically sends crash reports to help us improve product quality.</source>
+        <translation>Audacity автоматично надсилає звіти щодо аварій з метою допомогти нам підвищити якість продукту.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
+        <source>Usage info</source>
+        <translation>Дані щодо користування</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="46"/>
         <source>privacy policy</source>
         <translation>правила конфіденційності</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="45"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.</source>
         <translation>Щоб ми могли зрозуміти, як часто люди використовують Audacity, ми генеруємо випадковий ідентифікатор (UUID) для кожної встановленої версії Цей ідентифікатор не містить жодної особистої інформації. Хочете дізнатися більше? Перегляньте наші %1.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="48"/>
         <source>You can disable this anytime in %1.</source>
         <translation>Ви можете будь-коли це вимкнути на сторінці %1.</translation>
     </message>
@@ -2872,7 +4464,7 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/DoublePage.qml" line="48"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/Page.qml" line="70"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/Page.qml" line="71"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="132"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="139"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
@@ -2982,22 +4574,22 @@ This action will not delete any of your projects.</source>
         <translation>Не пам&apos;ятаю пароль</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="297"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="301"/>
         <source>Password field</source>
         <translation>Поле пароля</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="342"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="346"/>
         <source>Form action</source>
         <translation>Дія форми</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
         <source>Sign in link</source>
         <translation>Посилання на вхід</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
         <source>Create account link</source>
         <translation>Створити посилання на обліковий запис</translation>
     </message>
@@ -3294,375 +4886,56 @@ This action will not delete any of your projects.</source>
         <translation>Попередній перегляд вибраного компонування робочого простору, де показано розташування елементів інтерфейсу</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="46"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
         <source>Authorization failed</source>
         <translation>Не вдалося пройти розпізнавання</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="57"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="62"/>
         <source>No access token</source>
         <translation>Немає жетона доступу</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="98"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="112"/>
         <source>Not authorized</source>
         <translation>Не уповноважено</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="114"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="121"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="129"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="136"/>
         <source>Registration failed. Please try again.</source>
         <translation>Не вдалося зареєструватися. Будь ласка, повторіть спробу пізніше.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="135"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="150"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation>Помилкова адреса електронної пошти або пароль. Будь ласка, повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="143"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="158"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Помилка розпізнавання. Будь ласка, повторіть спробу.</translation>
     </message>
 </context>
 <context>
-    <name>appshell/menu/align</name>
-    <message>
-        <source>Align content</source>
-        <translation>Вирівняти вміст</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/analyze</name>
-    <message>
-        <source>&amp;Analyze</source>
-        <translation>&amp;Аналіз</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/clip</name>
-    <message>
-        <source>Clip</source>
-        <translation>Кліп</translation>
-    </message>
-    <message>
-        <source>Rename clip</source>
-        <translation>Перейменувати кліп</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/cursor</name>
-    <message>
-        <source>Cursor</source>
-        <translation>Курсор</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/device</name>
-    <message>
-        <source>Device</source>
-        <translation>Пристрій</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/diagnostic</name>
-    <message>
-        <source>&amp;System</source>
-        <translation>&amp;Система</translation>
-    </message>
-    <message>
-        <source>&amp;Accessibility</source>
-        <translation>Д&amp;оступність</translation>
-    </message>
-    <message>
-        <source>Test&amp;flow</source>
-        <translation>&amp;Тестування</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/diagnostics</name>
-    <message>
-        <source>Diagnostics</source>
-        <translation>Діагностика</translation>
-    </message>
-    <message>
-        <source>&amp;System</source>
-        <translation>С&amp;истема</translation>
-    </message>
-    <message>
-        <source>A&amp;ctions</source>
-        <translation>Д&amp;ії</translation>
-    </message>
-    <message>
-        <source>&amp;Accessibility</source>
-        <translation>Д&amp;оступність</translation>
-    </message>
-    <message>
-        <source>E&amp;xtensions</source>
-        <translation>&amp;Розширення</translation>
-    </message>
-    <message>
-        <source>Test&amp;flow</source>
-        <translation>&amp;Тестування</translation>
-    </message>
-    <message>
-        <source>&amp;Diagnostics</source>
-        <translation>Діа&amp;гностика</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/edit</name>
-    <message>
-        <source>&amp;Edit</source>
-        <translation>З&amp;міни</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/effect</name>
-    <message>
-        <source>&amp;Effect</source>
-        <translation>&amp;Ефект</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/export-other</name>
-    <message>
-        <source>&amp;Export other</source>
-        <translation>Експортувати інше</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extra</name>
-    <message>
-        <source>&amp;Extra</source>
-        <translation>Дод&amp;атково</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extraedit</name>
-    <message>
-        <source>Edit</source>
-        <translation>Редагування</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extraselect</name>
-    <message>
-        <source>Select</source>
-        <translation>Позначення</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/extratools</name>
-    <message>
-        <source>Tools</source>
-        <translation>Інструменти</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/file</name>
-    <message>
-        <source>Open &amp;recent</source>
-        <translation>Відкрити &amp;недавні</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Файл</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/focus</name>
-    <message>
-        <source>Focus</source>
-        <translation>Фокусування</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/generate</name>
-    <message>
-        <source>&amp;Generate</source>
-        <translation>&amp;Створення</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/help</name>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Довідка</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/images</name>
-    <message>
-        <source>Images</source>
-        <translation>Зображення</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/label</name>
-    <message>
-        <source>Label</source>
-        <translation>Мітка</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/macros</name>
-    <message>
-        <source>&amp;Macros</source>
-        <translation>&amp;Макроси</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/mixer</name>
-    <message>
-        <source>Mixer</source>
-        <translation>Мікшер</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/play</name>
-    <message>
-        <source>Play</source>
-        <translation>Відтворити</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/playatspeed</name>
-    <message>
-        <source>Play at speed</source>
-        <translation>Відтворення на швидкості</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/record</name>
-    <message>
-        <source>&amp;Record</source>
-        <translation>&amp;Записати</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/scriptables1</name>
-    <message>
-        <source>Scriptables1</source>
-        <translation>Скрипти1</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/scriptables2</name>
-    <message>
-        <source>Scriptables2</source>
-        <translation>Скрипти2</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/scrubbing</name>
-    <message>
-        <source>Scrubbing</source>
-        <translation>Прокручування</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/select</name>
-    <message>
-        <source>Audio clips</source>
-        <translation>Звукові кліпи</translation>
-    </message>
-    <message>
-        <source>Spectral</source>
-        <translation>Spectral</translation>
-    </message>
-    <message>
-        <source>Region</source>
-        <translation>Область</translation>
-    </message>
-    <message>
-        <source>Looping</source>
-        <translation>Цикл</translation>
-    </message>
-    <message>
-        <source>&amp;Select</source>
-        <translation>&amp;Вибір</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/settings</name>
-    <message>
-        <source>Settings</source>
-        <translation>Параметри</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/skip</name>
-    <message>
-        <source>Skip to</source>
-        <translation>Перестрибнути до</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/sort</name>
-    <message>
-        <source>Sort tracks</source>
-        <translation>Впорядкувати доріжки</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/tools</name>
-    <message>
-        <source>&amp;Tools</source>
-        <translation>&amp;Інструменти</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/track</name>
-    <message>
-        <source>Track</source>
-        <translation>Доріжка</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/tracks</name>
-    <message>
-        <source>&amp;Tracks</source>
-        <translation>Д&amp;оріжки</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/view</name>
-    <message>
-        <source>W&amp;orkspaces</source>
-        <translation>&amp;Робочі простори</translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation>П&amp;ерегляд</translation>
-    </message>
-</context>
-<context>
-    <name>appshell/menu/zoom</name>
-    <message>
-        <source>Zoom</source>
-        <translation>Масштабування</translation>
-    </message>
-</context>
-<context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
         <source>Edit metadata</source>
         <translation>Редагувати метадані</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="309"/>
         <source>Use LPC</source>
         <translation>Використовувати LPC</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="234"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="279"/>
         <source>Bit reservoir</source>
         <translation>Буфер бітів</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="246"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="294"/>
         <source>VBL</source>
         <translation>VBL</translation>
     </message>
@@ -3701,6 +4974,11 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
         <source>Auto save every</source>
         <translation>Автозбереження кожні</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="78"/>
+        <source>Auto save every %1 %2</source>
+        <translation>Автозбереження кожні %1 %2</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
@@ -3756,6 +5034,11 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="33"/>
         <source>Keyboard layout</source>
         <translation>Розкладка клавіатури</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="49"/>
+        <source>Keyboard layout %1</source>
+        <translation>Розкладка клавіатури %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="32"/>
@@ -3885,7 +5168,7 @@ This action will not delete any of your projects.</source>
         <translation>Запуск програми</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="81"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="80"/>
         <source>Choose starting project</source>
         <translation>Вибір початкового проєкту</translation>
     </message>
@@ -3915,17 +5198,17 @@ This action will not delete any of your projects.</source>
         <translation>Гортати сторінки</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
         <source>Horizontal</source>
         <translation>Горизонтально</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="55"/>
         <source>Vertical</source>
         <translation>Вертикально</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="82"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="88"/>
         <source>Limit scroll area to page borders</source>
         <translation>Обмежити область гортання межами сторінки</translation>
     </message>
@@ -4059,6 +5342,25 @@ This action will not delete any of your projects.</source>
         <source>Max Zoom</source>
         <translation>Макс. масштаб</translation>
     </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
+        <source>Automatic crash reports</source>
+        <translation>Автоматичні звіти щодо аварій</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="25"/>
+        <source>Send crash reports</source>
+        <translation>Надсилати звіти щодо аварій</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="39"/>
+        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation>Звіти щодо аварій потребують доступу до мережі. Коли Audacity завершує роботу в аварійному режимі, програма надсилає звіт, який допомагає нам знайти причину помилки і усунути її. У цих звітах не міститься ваших звукових даних і особистих відомостей. Ознайомтеся з нашими &lt;a href=&quot;%1&quot;&gt;правилами конфіденційності&lt;/a&gt;, щоб дізнатися більше.</translation>
+    </message>
+    <message>
+        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation type="vanished">Звіти щодо аварій потребують доступу до мережі. Коли Audacity завершує роботу в аварійному режимі, програма надсилає звіт, який допомагає нам знайти причину помилки і усунути її. У цих звітах не міститься ваших звукових даних і особистих відомостей. Ознайомтеся з нашими &lt;a href=&quot;%1&quot;&gt;правилами конфіденційності&lt;/a&gt;, щоб дізнатися більше.</translation>
+    </message>
 </context>
 <context>
     <name>appshell/preferences/spectrogram</name>
@@ -4101,19 +5403,14 @@ This action will not delete any of your projects.</source>
         <translation>Наступний запис</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="256"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
         <source>Don’t show welcome dialog on startup</source>
         <translation>Не показувати вітального вікна під час запуску</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="46"/>
-        <source>Tutorial: what’s different in Audacity 4?</source>
-        <translation>Підручник: що нового у Audacity 4?</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="48"/>
-        <source>In this video, we walk you through the most important differences between version 3 and version 4.</source>
-        <translation>У цьому відео ми оповідаємо про найважливіші відмінності між версією 3 і версією 4.</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="47"/>
+        <source>Video: find out what’s new in Audacity 4</source>
+        <translation>Відео: знайомимося із новим в Audacity 4</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
@@ -4126,67 +5423,62 @@ This action will not delete any of your projects.</source>
         <translation>Завершіть налаштування вашої «хмари» Audacity за допомогою Audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="58"/>
-        <source>This integration allows you to save and access your Audacity projects on any device</source>
-        <translation>Ця інтеграція надає вам змогу зберігати проєкти Audacity на будь-якому пристрої і отримувати до них доступ</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="75"/>
+        <source>Help us decide the future of Audacity</source>
+        <translation>Допоможіть нам створити майбутнє Audacity</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="60"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
+        <source>Take part in survey</source>
+        <translation>Взяти участь в опитуванні</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
+        <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
+        <translation>Soap Voice Cleaner: студійна якість накладного звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="87"/>
+        <source>Get it on MuseHub</source>
+        <translation>Отримати на MuseHub</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
         <source>Continue</source>
         <translation>Продовжити</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation>Вивчіть вільні додатки для надання форми вашому звуку</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="71"/>
-        <source>There are tons of powerful plugins available that you can install for free on MuseHub</source>
-        <translation>На MuseHub ви знайдете безліч потужних додатків, які ви можете встановити безкоштовно</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="73"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
         <source>View free plugins</source>
         <translation>Переглянути безкоштовні додатки</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="79"/>
-        <source>Get 25th anniversary merchandise!</source>
-        <translation>Отримайте товари 25-ої річниці!</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="81"/>
-        <source>A collection of merchandise that commemorates Audacity’s original appearance and branding</source>
-        <translation>Збірка товарів, у яких використано пам&apos;ятні символи та бренди оригінальної Audacity</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="83"/>
-        <source>Visit now</source>
-        <translation>Відвідати зараз</translation>
     </message>
 </context>
 <context>
     <name>au/uicomponents</name>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="47"/>
-        <source>Up</source>
-        <translation>Вище</translation>
+        <source>Increase BPM</source>
+        <translation>Збільшити частоту тактів</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="66"/>
-        <source>Down</source>
-        <translation>Вище</translation>
+        <source>Decrease BPM</source>
+        <translation>Зменшити частоту тактів</translation>
     </message>
 </context>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="688"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="712"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
 </context>
 <context>
@@ -4194,111 +5486,89 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>Audio plugins scan completed</source>
-        <translation type="unfinished"/>
+        <translation>Пошук звукових додатків завершено</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>All audio plugins are up to date.</source>
-        <translation type="unfinished"/>
+        <translation>Усі звукові додатки є актуальними.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
-        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
-        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
-        <source>Scanning audio plugins</source>
-        <translation>Пошук звукових додатків</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
-        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
-        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
-        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
-        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
-        <source>System default</source>
-        <translation>Типовий системний</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
-        <source>Do you want to add SoundFont %1?</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
-        <source>File already exists. Do you want to overwrite it?</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
-        <source>File path: %1</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
-        <source>SoundFont installed</source>
-        <translation>Звуковий шрифт встановлено</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
-        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
-        <source>You can assign soundfonts to instruments using the mixer panel.</source>
-        <translation type="unfinished"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
+        <source>Validating audio plugins</source>
+        <translation>Перевірка звукових додатків</translation>
     </message>
 </context>
 <context>
     <name>audio setup</name>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="50"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="59"/>
         <source>Host</source>
         <translation>Вузол</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="51"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="60"/>
         <source>Playback device</source>
         <translation>Пристрій відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="52"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="61"/>
         <source>Recording device</source>
         <translation>Пристрій запису</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="53"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="62"/>
         <source>Recording channels</source>
         <translation>Канали запису</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="119"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="169"/>
+        <source>System default</source>
+        <extracomment>%1 is the device the system default currently resolves to</extracomment>
+        <translation>Типовий системний</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="120"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="170"/>
+        <source>System default: %1</source>
+        <translation>Типовий системний: %1</translation>
     </message>
 </context>
 <context>
     <name>audio-devices</name>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="804"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="833"/>
         <source>Stream is active … unable to gather information.
 </source>
-        <translation type="unfinished"/>
+        <translation>Активне потокове надсилання даних… неможливо зібрати дані.
+</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="817"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
         <source>Default recording device number: %1
 </source>
         <translation>Номер типового пристрою записування: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="818"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
         <source>Default playback device number: %1
 </source>
         <translation>Номер типового пристрою відтворення: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="826"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="855"/>
         <source>No devices found
 </source>
         <translation>Пристроїв не знайдено
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="838"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="867"/>
         <source>Device info unavailable for: %1
 </source>
         <extracomment>%1 is the device index number</extracomment>
@@ -4306,70 +5576,70 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="843"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
         <source>Device ID: %1
 </source>
         <translation>Ідентифікатор пристрою: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="844"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="873"/>
         <source>Device name: %1
 </source>
         <translation>Назва пристрою: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="845"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="874"/>
         <source>Host name: %1
 </source>
         <translation>Назва вузла: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="875"/>
         <source>Recording channels: %1
 </source>
         <translation>Канали запису: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="876"/>
         <source>Playback channels: %1
 </source>
         <translation>Канали відтворення: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="848"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
         <source>Low Recording Latency: %1
 </source>
         <translation>Низька латентність запису: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="849"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="878"/>
         <source>Low Playback Latency: %1
 </source>
         <translation>Низька латентність відтворення: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="850"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="879"/>
         <source>High Recording Latency: %1
 </source>
         <translation>Висока латентність запису: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="880"/>
         <source>High Playback Latency: %1
 </source>
         <translation>Висока латентність відтворення: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="857"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="886"/>
         <source>Supported Playback Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
@@ -4377,7 +5647,7 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="867"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="896"/>
         <source>Supported Capture Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
@@ -4385,7 +5655,7 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="897"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="926"/>
         <source>Selected recording device: %1 - %2
 </source>
         <extracomment>%1 is the recording device number, %2 is the device name</extracomment>
@@ -4393,13 +5663,14 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="899"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="928"/>
         <source>No recording device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>Не знайдено пристрою записування для «%1».
+</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="904"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="933"/>
         <source>Selected playback device: %1 - %2
 </source>
         <extracomment>%1 is the playback device number, %2 is the device name</extracomment>
@@ -4407,27 +5678,28 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="906"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="935"/>
         <source>No playback device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>Не знайдено пристрою відтворення для «%1».
+</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="914"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="943"/>
         <source>Supported Rates:
 </source>
         <translation>Підтримувані частоти:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="919"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
         <source>Cannot check mutual sample rates without both devices.
 </source>
         <translation>Неможливо перевірити взаємні частоти дискретизації без обох пристроїв.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="977"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1006"/>
         <source>Received %1 while opening devices
 </source>
         <extracomment>%1 is a PortAudio error code returned while opening the devices</extracomment>
@@ -4435,23 +5707,23 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="984"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1013"/>
         <source>Unable to open Portmixer
 </source>
         <translation>Не вдалося відкрити Portmixer
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="990"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1019"/>
         <source>Available mixers:
 </source>
         <translation>Доступні мікшери:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="997"/>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1006"/>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1015"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1026"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1035"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1044"/>
         <source>%1 - %2
 </source>
         <extracomment>%1 is the mixer index number, %2 is the mixer name
@@ -4463,28 +5735,28 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1001"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1030"/>
         <source>Available recording sources:
 </source>
         <translation>Доступні джерела для запису:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1010"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1039"/>
         <source>Available playback volumes:
 </source>
         <translation>Доступні гучності відтворення.:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1037"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1066"/>
         <source>Recording volume is emulated
 </source>
         <translation>Гучність запису є емульованою
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1038"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1067"/>
         <source>Recording volume is native
 </source>
         <translation>Гучність запису є природною
@@ -4520,25 +5792,25 @@ This action will not delete any of your projects.</source>
         <translation>Помилка при ініціалізації звуку</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="758"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
         <source>Audacity Audio</source>
         <translation>Звук Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="875"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>Помилка під час спроби відкрити записувальний пристрій.
 Код помилки: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="878"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
         <translation>Помилка</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1460"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1495"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
         <source>Out of memory!</source>
         <translation>Не вистачає пам&apos;яті!</translation>
     </message>
@@ -4549,7 +5821,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="56"/>
         <source>Failed to encode preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося закодувати набір шаблонів з «%1»</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
@@ -4563,23 +5835,23 @@ Error code: %1</source>
         <translation>не вказано</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="467"/>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="496"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="518"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="547"/>
         <source>Couldn’t open “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося відкрити «%1»</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="482"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="533"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося записати набір шаблонів XML до «%1»</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="504"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="555"/>
         <source>Unable to read the preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося прочитати набір шаблонів з «%1».</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
@@ -4607,22 +5879,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
         <source>Audio Unit Generators</source>
-        <translation type="unfinished"/>
+        <translation>Генератори Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="196"/>
         <source>Audio Unit Mixers</source>
-        <translation type="unfinished"/>
+        <translation>Мікшери Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="197"/>
         <source>Audio Unit Music Effects</source>
-        <translation type="unfinished"/>
+        <translation>Музичні ефекти Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="198"/>
         <source>Audio Unit Panners</source>
-        <translation type="unfinished"/>
+        <translation>Панорамування Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
@@ -4635,44 +5907,59 @@ Error code: %1</source>
         <translation>Не вдалося ініціалізувати компонент</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="292"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
         <source>Failed to decode “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося декодувати набір шаблонів «%1»</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="301"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="361"/>
         <source>Failed to convert “%1” preset to internal format</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося перетворити набір шаблонів «%1» на внутрішній формат</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="313"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="373"/>
         <source>Failed to create property list for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося створити список властивостей для набору «%1»</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="319"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="379"/>
         <source>Failed to set class info for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося встановити відомості щодо класу для набору шаблонів «%1»</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="420"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="484"/>
         <source>Failed to set preset name</source>
         <translation>Не вдалося встановити назву набору шаблонів</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="425"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="489"/>
         <source>Failed to retrieve preset content</source>
         <translation>Не вдалося отримати вміст набору шаблонів</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="434"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="498"/>
         <source>Failed to convert property list to XML data</source>
         <translation>Не вдалося перетворити список властивостей до даних XML</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="439"/>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="503"/>
         <source>XML data is empty after conversion</source>
         <translation>Після перетворення дані XML є порожніми</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
+        <source>The plugin “%1” does not support the required block size</source>
+        <translation>У додатку «%1» не передбачено підтримки потрібного розміру блоку</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
+        <source>The plugin “%1” has crashed while processing audio</source>
+        <translation>Додаток «%1» завершив роботу в аварійному режимі під час обробки звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
+        <source>Realtime effect error</source>
+        <translation>Помилка ефекту реального часу</translation>
     </message>
 </context>
 <context>
@@ -4701,7 +5988,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation type="unfinished"/>
+        <translation>Зменшує (приглушує) гучність однієї або декількох доріжок у місцях, де гучність вказаної «керівної» доріжки досягає вказаного рівня</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
@@ -5039,7 +6326,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="280"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
-        <translation type="unfinished"/>
+        <translation>Для застосування вирівнювання позначте одну або декілька звукових доріжок.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="291"/>
@@ -5077,7 +6364,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
         <source>Requested curve not found, using ‘unnamed’</source>
-        <translation type="unfinished"/>
+        <translation>Потрібну вам криву не знайдено, використовуємо криву «без назви»</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
@@ -5298,7 +6585,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
         <source>Rapid tone quality variations, like that guitar sound so popular in the 1970’s</source>
-        <translation type="unfinished"/>
+        <translation>Швидкі зміни якості тону, подібні до гітарного звуку, популярного у 1970-ті</translation>
     </message>
 </context>
 <context>
@@ -5327,65 +6614,75 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>clip</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="56"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
         <source>Cut and leave gap</source>
         <translation>Вирізати і лишити прогалину</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="58"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Cut and close gap on this track</source>
         <translation>Вирізати і закрити прогалину на цій доріжці</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="60"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Вирізати і закрити прогалину на усіх доріжках</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="65"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
         <source>Delete and leave gap</source>
         <translation>Вилучити і лишити прогалину</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="67"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and close gap on this track</source>
         <translation>Вилучити і закрити прогалину на цій доріжці</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="69"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Вилучити і закрити прогалину на усіх доріжках</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="74"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
         <source>Rename clip</source>
         <translation>Перейменувати кліп</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="76"/>
         <source>Clip color</source>
         <translation>Колір кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="82"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
         <source>Cut and…</source>
         <translation>Вирізати і…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="84"/>
         <source>Delete and…</source>
         <translation>Вилучити і…</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="87"/>
+        <source>Split at silences</source>
+        <translation>Розділити за тишею</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="268"/>
+        <source>Same as track color</source>
+        <translation>Той самий колір, що і для доріжки</translation>
     </message>
 </context>
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1086"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
         <source>Select</source>
         <translation>Позначення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1086"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
         <source>Deselect</source>
         <translation>Зняти позначення</translation>
     </message>
@@ -5398,21 +6695,21 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="51"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>Не здійснено входу до системи</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="136"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>Мій профіль</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="136"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
@@ -5420,14 +6717,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Увійти</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="164"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>Вийти</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="164"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
@@ -5442,8 +6739,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="604"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="724"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
         <source>Save</source>
         <translation>Зберегти</translation>
     </message>
@@ -5454,96 +6751,197 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Ви не увійшли до системи</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="291"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="296"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="353"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="401"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="470"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="487"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="565"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="582"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="631"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="751"/>
         <source>Invalid project</source>
+        <extracomment>Error message of a failed cloud operation</extracomment>
         <translation>Некоректний проєкт</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="347"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="638"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="481"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="544"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="625"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="995"/>
         <source>Service destroyed</source>
+        <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation>Службу знищено</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
+        <source>Internal error</source>
+        <translation>Внутрішня помилка</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
+        <source>Project is not saved to the cloud</source>
+        <translation>Проєкт не збережено у «хмарі»</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <source>Project is not synced with the cloud</source>
+        <translation>Проєкт не синхронізовано з «хмарою»</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
+        <source>Failed to get audio preview upload URLs</source>
+        <translation>Не вдалося отримати адреси вивантаження попереднього перегляду звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
         <source>Invalid audio ID</source>
         <translation>Некоректний ідентифікатор звуку</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="562"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
         <source>Project not found in cloud database</source>
         <translation>У базі даних «хмари» проєкт не знайдено</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="650"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
         <source>No valid current project</source>
         <translation>Немає коректного поточного проєкту</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="713"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Вивантаження визнано успішним, але немає вмісту</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="155"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
+        <source>Failed to delete cloud project from database</source>
+        <translation>Не вдалося вилучити «хмарний» проєкт з бази даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="188"/>
         <source>Sign in successful! You’re good to go back to Audacity.</source>
         <translation>Успішний вхід! Ви можете повернутися до Audacity.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="585"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="964"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1205"/>
+        <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="200"/>
+        <source>Sign in failed. Please return to Audacity and try again.</source>
+        <translation>Не вдалося увійти. Будь ласка, поверніться до Audacity і повторіть спробу.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
         <source>View on audio.com</source>
         <translation>Переглянути на audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1177"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1308"/>
         <source>Track title</source>
         <translation>Назва доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1178"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
         <source>Share audio</source>
         <translation>Оприлюднити звукові дані</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1179"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share</source>
         <translation>Оприлюднити</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1200"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
         <source>Audio shared to audio.com</source>
         <translation>Звукові дані оприлюднено на audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1220"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1351"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Оприлюднення звукових даних на audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1279"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1410"/>
         <source>Downloading audio from cloud…</source>
         <translation>Отримання звукових даних з «хмари»…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="599"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="706"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="719"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
+        <source>The project must be saved before updating the audio preview</source>
+        <translation>До оновлення попереднього перегляду звукових даних проєкт слід зберегти</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <source>Save your changes to continue, or cancel the update.</source>
+        <translation>Збережіть зміни, щоб продовжити, або скасуйте оновлення.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1453"/>
+        <source>Unsaved changes</source>
+        <translation>Незбережені зміни</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1474"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1505"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1518"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1531"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1545"/>
+        <source>Generate audio preview</source>
+        <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
+        <translation>Створити дані попереднього перегляду звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
+        <source>Cloud audio preview updated</source>
+        <translation>Оновлено попередній перегляд звукових даних у «хмарі»</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
+        <source>The audio preview has been uploaded to audio.com</source>
+        <translation>Попередній перегляд звукових даних було вивантажено на audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1499"/>
+        <source>Audio preview is up to date</source>
+        <translation>Дані попереднього перегляду є актуальними</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <source>The audio preview already matches the latest saved version of this project.</source>
+        <translation>Попередній перегляд звукових даних вже відповідає найсвіжішій збереженій версії проєкту.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1510"/>
+        <source>Updating cloud audio preview…</source>
+        <translation>Оновлення попереднього перегляду звукових даних у «хмарі»…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <source>Could not determine the local path of the downloaded project</source>
+        <translation>Не вдалося визначити локальний шлях отриманого проєкту</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="610"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="744"/>
         <source>Save to audio.com</source>
         <translation>Зберегти на audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <source>Audio download failed</source>
+        <translation>Не вдалося отримати звукові дані</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
         <source>Open audio from cloud</source>
         <translation>Відкрити звукові дані з «хмари»</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Create an account on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Створити обліковий запис на audio.com</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
@@ -5554,7 +6952,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
         <source>Sign in buttons</source>
-        <translation type="unfinished"/>
+        <translation>Кнопки входу</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
@@ -5564,12 +6962,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
         <source>Log in</source>
-        <translation type="unfinished"/>
+        <translation>Увійти</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
         <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
-        <translation type="unfinished"/>
+        <translation>Успішний вхід! Ви можете повернутися до MuseScore Studio.</translation>
     </message>
 </context>
 <context>
@@ -5580,13 +6978,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Файл не знайдено</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="352"/>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="451"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="369"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="469"/>
         <source>Project was closed before snapshot was created</source>
         <translation>Проєкт було закрито до завершення створення знімка</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="432"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="450"/>
         <source>Invalid Response: %1</source>
         <translation>Некоректна відповідь: %1</translation>
     </message>
@@ -5645,12 +7043,118 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation type="unfinished"/>
+        <translation>У результаті буде створено файл .zip з даними щодо ваших параметрів MuseScore Studio, щоб допомогти розробникам у діагностиці ваших проблем. Ви можете оглянути вміст цього файла, перш ніж надсилати його будь-кому.</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Зберегти файли діагностики</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
+        <source>Show paths…</source>
+        <translation>Показати шляхи…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
+        <source>Show paths</source>
+        <translation>Показати шляхи</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
+        <source>Show profiler…</source>
+        <translation>Показати профілювання…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>Показати профілювання</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
+        <source>Show graphics info…</source>
+        <translation>Показати дані щодо графіки…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
+        <source>Show graphics info</source>
+        <translation>Показати дані щодо графіки</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
+        <source>Show navigation tree…</source>
+        <translation>Показати ієрархію навігації…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
+        <source>Show navigation tree</source>
+        <translation>Показати ієрархію навігації</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
+        <source>Show accessibility tree…</source>
+        <translation>Показати ієрархію доступності…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
+        <source>Show accessibility tree</source>
+        <translation>Показати ієрархію доступності</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>Створити дамп ієрархії доступності у консолі</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
+        <source>Show engraving elements</source>
+        <translation>Показати елементи гравірування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
+        <source>Show engraving undo stack</source>
+        <translation>Показати стос скасування гравірування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
+        <source>Show engraving style options list</source>
+        <translation>Показати список параметрів стилю гравірування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
+        <source>Show actions list</source>
+        <translation>Показати список дій</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <source>Show rcommands list</source>
+        <translation>Показати список r-команд</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="118"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="119"/>
+        <source>Test query action</source>
+        <translation>Перевірити дію запиту</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="125"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="126"/>
+        <source>Test query action with params 1</source>
+        <translation>Перевірити дію запиту з параметрами 1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="134"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="135"/>
+        <source>Test query action with params 2</source>
+        <translation>Перевірити дію запиту з параметрами 2</translation>
     </message>
 </context>
 <context>
@@ -5868,42 +7372,58 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Щебетання</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="296"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="319"/>
         <source>Stop preview</source>
         <extracomment>Shown on a button that stops effect preview</extracomment>
         <translation>Припинити прослуховування</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="298"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="321"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
         <translation>Перегляд</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="101"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="89"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="102"/>
         <source>Select preset</source>
         <translation>Виберіть набір налаштувань</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="458"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="180"/>
+        <source>Reset preset</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
+        <translation>Відновити початкові параметри набору налаштувань</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="218"/>
+        <source>Preset options</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
+        <translation>Параметри набору налаштувань</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="462"/>
         <source>Unknown parameter type: %1</source>
         <translation>Невідомий тип параметра: %1</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="163"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="48"/>
         <source>Save preset</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
         <translation>Зберегти набір налаштувань</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="24"/>
         <source>Preset name cannot contain %1 or %2</source>
         <extracomment>%1 is a forward slash, %2 is a backslash; neither character is allowed in a preset name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>У назві набору параметрів не може міститися %1 або %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="69"/>
         <source>Preset name</source>
+        <extracomment>Placeholder text of the preset name input field</extracomment>
         <translation>Назва набору налаштувань</translation>
     </message>
     <message>
@@ -5917,17 +7437,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Діагностика</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="94"/>
         <source>Enter Nyquist code here…</source>
+        <extracomment>Placeholder text of the Nyquist code editor</extracomment>
         <translation>Тут слід ввести код Nyquist…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="107"/>
         <source>Load</source>
         <translation>Завантажити</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="118"/>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="76"/>
         <source>Save</source>
         <translation>Зберегти</translation>
@@ -5939,53 +7460,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Порогове значення</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="13"/>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="15"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>dB</source>
+        <extracomment>Abbreviation of decibels, used as a unit suffix</extracomment>
         <translation>дБ</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="14"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
         <source>Make-up gain</source>
         <translation>Підсилення підживлення</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="15"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>Knee width</source>
         <translation>Ширина коліна</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
         <source>Ratio</source>
         <translation>Коефіцієнт</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="17"/>
         <source>Lookahead</source>
         <translation>Випередження</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="21"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="23"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>ms</source>
+        <extracomment>Abbreviation of milliseconds, used as a unit suffix</extracomment>
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
         <source>Attack</source>
         <translation>Атака</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
+        <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="23"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>Release</source>
         <translation>Відпускання</translation>
@@ -6041,7 +7564,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Невідповідність набору налаштувань</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="384"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
         <source>Applied effect: %1</source>
         <translation>Застосовано ефект: %1</translation>
     </message>
@@ -6051,8 +7574,10 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Набір налаштувань «%1» вже існує, замінити?</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="199"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
         <source>Delete preset</source>
+        <extracomment>Tooltip of a button in the effect presets bar</extracomment>
         <translation>Вилучити набір налаштувань</translation>
     </message>
     <message>
@@ -6089,40 +7614,100 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>%1: призначено для іншого ефекту, генератора або засобу аналізу.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
         <source>Generating %1…</source>
         <translation>Створення %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>Застосування %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
+        <source>Effect preview</source>
+        <translation>Попереднє прослуховування ефекту</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
         <source>Use vendor UI</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Використати інтерфейс виробника</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="69"/>
+        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
         <source>Toggle between vendor UI and fallback UI</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Перемикання між інтерфейсом виробника та резервним інтерфейсом</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="233"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
         <source>Master</source>
         <translation>Основний</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="104"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
+        <source>Added %1 to %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
+        <translation>%1 додано до %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
+        <source>Add %1</source>
+        <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
+        <translation>Додати %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
+        <source>Removed %1 from %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
+        <translation>%1 вилучено з %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
+        <source>Remove %1</source>
+        <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
+        <translation>Вилучити %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
+        <source>Replaced %1 with %2</source>
+        <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
+        <translation>%1 замінено на %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
+        <source>Replace %1</source>
+        <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
+        <translation>Заміна %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
+        <source>Moved %1 up in %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
+        <translation>%1 пересунено вище у %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
+        <source>Moved %1 down in %2</source>
+        <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
+        <translation>%1 пересунено нижче у %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
+        <source>Change effect order</source>
+        <translation>Зміна порядку ефектів</translation>
+    </message>
+    <message>
         <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="106"/>
+        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="108"/>
         <source>Default preset</source>
         <translation>Типовий набір налаштувань</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="574"/>
+        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="580"/>
         <source>custom</source>
         <translation>нетиповий</translation>
     </message>
@@ -6132,12 +7717,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Зберегти як…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>
+        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="56"/>
         <source>Unknown effect</source>
         <translation>Невідомий ефект</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="70"/>
+        <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="72"/>
         <source>No parameters available for this effect</source>
         <translation>Для цього ефектів параметрів не передбачено</translation>
     </message>
@@ -6189,95 +7774,103 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished"/>
+        <translation>Керування додатками</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="91"/>
         <source>Rescan plugins</source>
-        <translation type="unfinished"/>
+        <translation>Виконати повторний пошук додатків</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="106"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="107"/>
         <source>Include plugins with errors</source>
-        <translation type="unfinished"/>
+        <translation>Включати додатки з помилками</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished"/>
+        <translation>Не вистачає додатків</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation type="unfinished"/>
+        <translation>Деяких додатків, які використано у цьому проєкті, не знайдено. Двічі клацніть на записі, щоб переглянути його розташування.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="129"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="130"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="54"/>
         <source>OK</source>
         <translation>Гаразд</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation type="unfinished"/>
+        <translation>Параметри додатка</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
         <source>Vendor:</source>
-        <translation type="unfinished"/>
+        <translation>Виробник:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="384"/>
         <source>Unknown</source>
         <translation>Невідомий</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>Шлях:</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="242"/>
         <source>Close</source>
+        <extracomment>Label of the button that closes the dialog</extracomment>
         <translation>Закрити</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="147"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="148"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="58"/>
         <source>Show:</source>
         <translation>Показати:</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="64"/>
         <source>Type:</source>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="70"/>
         <source>Category:</source>
         <translation>Категорія:</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="76"/>
+        <source>Status:</source>
+        <translation>Стан:</translation>
+    </message>
+    <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Початкова зміна темпу</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Остаточна зміна темпу</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Початковий зсув тону</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -6289,67 +7882,76 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Остаточний зсув тону</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="130"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="159"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="57"/>
+        <source>Not validated</source>
+        <extracomment>The plugin was found but the user chose to validate it later</extracomment>
+        <translation>Не перевірено</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="59"/>
+        <source>Missing</source>
+        <translation>Не вистачає</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="63"/>
+        <source>Broken</source>
+        <translation>Пошкоджено</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="155"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="190"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="219"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="248"/>
         <source>All</source>
+        <extracomment>Filter option in the Plugin Manager dropdowns that shows every entry</extracomment>
         <translation>Всі</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="96"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="156"/>
         <source>Disabled</source>
         <translation>Вимкнено</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="97"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="212"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="157"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="307"/>
         <source>Enabled</source>
         <translation>Увімкнено</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="250"/>
-        <source>“%1” (broken)</source>
-        <extracomment>%1 is the name of the plugin that failed to load</extracomment>
-        <translation type="unfinished"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="312"/>
+        <source>Status</source>
+        <translation>Стан</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="215"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="310"/>
         <source>Name</source>
         <translation>Назва</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="217"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="314"/>
         <source>Vendor</source>
-        <translation type="unfinished"/>
+        <translation>Виробник</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="219"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="316"/>
         <source>Path</source>
         <translation>Шлях</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="221"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="318"/>
         <source>Type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <source>%1 (broken)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Missing - %1</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вистачає – «%1»</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="55"/>
@@ -6407,6 +8009,104 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>Mixing and rendering tracks</source>
         <translation>Мікшування та зведення доріжок</translation>
     </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/BypassEffectButton.qml" line="19"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/RealtimeEffectViewerDialog.qml" line="188"/>
+        <source>Bypass effect</source>
+        <extracomment>Tooltip of the effect power button</extracomment>
+        <translation>Обійти ефект</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="55"/>
+        <location filename="../../src/effects/extensions/internal/extensioneffect.cpp" line="387"/>
+        <source>Extension</source>
+        <translation>Розширення</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="341"/>
+        <source>Volume and compression</source>
+        <translation>Гучність і стискання</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
+        <source>Fading</source>
+        <translation>Згасання</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
+        <source>Pitch and tempo</source>
+        <translation>Зміна тону і темпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="347"/>
+        <source>EQ and filters</source>
+        <translation>Еквалайзер і фільтри</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="349"/>
+        <source>Noise removal and repair</source>
+        <translation>Вилучення шуму і відновлення</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="351"/>
+        <source>Delay and reverb</source>
+        <translation>Затримка і ревербація</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="353"/>
+        <source>Distortion and modulation</source>
+        <translation>Викривлення і модулювання</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="355"/>
+        <source>Special</source>
+        <translation>Спеціальні</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="357"/>
+        <source>Spectral tools</source>
+        <translation>Спектральні інструменти</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="359"/>
+        <source>Legacy</source>
+        <translation>Застарілі</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="361"/>
+        <source>Third-party</source>
+        <translation>Сторонні</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="385"/>
+        <source>Analyzer</source>
+        <translation>Аналізатор</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="386"/>
+        <source>Generator</source>
+        <translation>Генератор</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="387"/>
+        <source>Effect</source>
+        <translation>Ефект</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="388"/>
+        <source>Tool</source>
+        <translation>Інструмент</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="124"/>
+        <source>Duration</source>
+        <translation>Тривалість</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
+        <source>Generated audio duration</source>
+        <translation>Тривалість породжених звукових даних</translation>
+    </message>
 </context>
 <context>
     <name>effects-amplify</name>
@@ -6419,6 +8119,11 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="202"/>
         <source>No audio selected</source>
         <translation>Не позначено звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="222"/>
+        <source>The selected audio is silent, so there is nothing to amplify.</source>
+        <translation>Позначений фрагмент звукових даних є тишею, тому нічого підсилювати.</translation>
     </message>
 </context>
 <context>
@@ -6439,7 +8144,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished"/>
+        <translation>Засіб вилучення клацання створено для вилучення клацальних звуків зі звукових даних</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -6449,7 +8154,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation type="unfinished"/>
+        <translation>Має бути позначено не менше за 4096 семплів.</translation>
     </message>
 </context>
 <context>
@@ -6475,7 +8180,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
         <source>Reduces “dynamic range”, or differences between loud and quiet parts.</source>
-        <translation type="unfinished"/>
+        <translation>Звужує «динамічний діапазон» або різницю між голосними і тихими частинами.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitereffect.cpp" line="13"/>
@@ -6491,7 +8196,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="832"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
         <source>Preparing preview</source>
         <translation>Підготовка прослуховування</translation>
     </message>
@@ -6564,7 +8269,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
         <source>Normalizing Loudness…
 </source>
-        <translation type="unfinished"/>
+        <translation>Нормалізуємо гучність…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
@@ -6617,7 +8323,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation>Не позначено звукових даних.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6643,75 +8349,80 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>effects-normalize</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="32"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="33"/>
         <source>Normalize</source>
+        <extracomment>Name of the Normalize effect; shown in menus and dialog titles</extracomment>
         <translation>Нормалізація</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="53"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="54"/>
         <source>Sets the peak amplitude of one or more tracks</source>
         <translation>Встановлює амплітуду піків для однієї або декількох доріжок</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="96"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="97"/>
         <source>Removing DC offset and Normalizing…
 </source>
-        <translation type="unfinished"/>
+        <translation>Вилучення зміщення сталої складової та нормалізація…
+</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="98"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="99"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>Вилучення зміщення сталої складової…
+</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="100"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="101"/>
         <source>Normalizing without removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>Нормалізація без вилучення зміщення сталої складової…
+</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="102"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="103"/>
         <source>Not doing anything…
 </source>
-        <translation type="unfinished"/>
+        <translation>Завдань не виконується…
+</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="128"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>Аналіз: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="132"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="133"/>
         <source>Analyzing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>Аналізуємо першу доріжку стереопари: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="159"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="160"/>
         <source>Analyzing second track of stereo pair: %1</source>
         <translation>Аналізуємо другу доріжку стереопари: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="168"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="169"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Обробка: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="175"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="176"/>
         <source>Processing stereo channels independently: %1</source>
         <translation>Обробляємо канали стерео окремо: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="182"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="183"/>
         <source>Processing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Обробляємо першу доріжку стереопари: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="205"/>
+        <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="206"/>
         <source>Processing second track of stereo pair: %1</source>
         <translation>Обробляємо другу доріжку стереопари: %1</translation>
     </message>
@@ -6746,7 +8457,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
         <source>Applying Nyquist Effect…</source>
-        <translation type="unfinished"/>
+        <translation>Застосовуємо ефект Nyquist…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="67"/>
@@ -6777,41 +8488,46 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
-        <translation type="unfinished"/>
+        <translation>Щоб скористатися «Спектральними ефектами», позначте пункт
+«Спектральний вибір» у параметрах спектрограми доріжки і
+виберіть діапазон частот, з яким працюватиме ефект.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="655"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation type="unfinished"/>
+        <translation>помилка: файл «%1» вказано у заголовку, але не знайдено у каталозі додатків.
+</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="821"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="823"/>
         <source>Audio selection required.</source>
         <translation>Слід позначити звукові дані.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1379"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1381"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1383"/>
         <source>Processing complete.</source>
         <translation>Обробку завершено.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1389"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1391"/>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ефекти «;type tool» не можуть повертати звукові дані з Nyquist.
+</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1398"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ефекти «;type tool» не можуть повертати мітки з Nyquist.
+</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1410"/>
         <source>nyx_error returned from %1.
 </source>
         <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
@@ -6819,83 +8535,87 @@ frequency range for the effect to act on.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1409"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
         <source>plug-in</source>
         <translation>додаток</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1424"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
         <source>Nyquist returned a list.</source>
         <translation>Nyquist повернув список.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1460"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
         <source>Nyquist returned the value: %1</source>
         <translation>Nyquist повернула значення: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1519"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
         <source>Nyquist returned too many audio channels.
 </source>
         <translation>Модуль Nyquist повернув занадто багато звукових каналів.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1524"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
         <translation>Nyquist повернуто один звуковий канал у форматі масиву.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1529"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1544"/>
         <source>Nyquist returned an empty array.
 </source>
         <translation>Бібліотекою Nyquist повернуто порожній масив.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1550"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1565"/>
         <source>Nyquist returned nil audio.
 </source>
         <translation>Модуль Nyquist не повернув звукових даних.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1595"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1613"/>
         <source>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</source>
         <translation>[Попередження: Nyquist повернуто некоректний рядок UTF-8, його перетворено до кодування Latin-1]</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2035"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
         <translation>У цій версії Audacity не передбачено підтримки додатків Nyquist версії %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2290"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
         <source>Could not open file</source>
         <translation>Не вдалося відкрити файл</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2361"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2388"/>
         <source>Your code looks like SAL syntax, but there is no ‘return’ statement.
-            For SAL, use a return statement such as:
+For SAL, use a return statement such as:
 	return *track* * 0.1
-            or for LISP, begin with an open parenthesis such as:
+or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>Синтаксичні конструкції вашого коду нагадують SAL, але не вказано інструкції return. Вам слід або скористатися інструкцією return ось так:
+	return *track* * 0.1
+для SAL, або почати з дужки, ось так:
+	(mult *track* 0.1)
+як це робиться у LISP.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2599"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
         <source>untitled</source>
         <translation>без назви</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished"/>
+        <translation>Поличний фільтр</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -6940,7 +8660,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
         <source>Delete selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити центральну частоту позначеного</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
@@ -6966,7 +8686,9 @@ frequency range for the effect to act on.</source>
         <source>~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
                       or reduce the filter ‘Width’.</source>
-        <translation type="unfinished"/>
+        <translation>~aФільтрування розривів не може бути застосовано.~%~
+                      Спробуйте збільшити обмеження за нижньою частотою~%~
+                      або зменшити значення фільтра «Ширина».</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="22"/>
@@ -6976,7 +8698,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="23"/>
         <source>Amplify selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>Підсилити центральну частоту позначеного</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
@@ -7019,7 +8741,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="30"/>
         <source>Amplify selection</source>
-        <translation type="unfinished"/>
+        <translation>Підсилити позначене</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
@@ -7029,7 +8751,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished"/>
+        <translation>Студійне спадання</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -7039,7 +8761,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished"/>
+        <translation>Кориговане спадання</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -7193,7 +8915,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished"/>
+        <translation>Пошук бітів</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -7203,7 +8925,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished"/>
+        <translation>Виправлення обрізання</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -7223,7 +8945,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished"/>
+        <translation>Плавний перехід у кліпах</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -7243,7 +8965,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished"/>
+        <translation>Плавний перехід між доріжками</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -7528,7 +9250,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished"/>
+        <translation>Фільтр високих частот</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -7582,7 +9304,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished"/>
+        <translation>Позначення звуків</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -7673,7 +9395,8 @@ frequency range for the effect to act on.</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
-        <translation type="unfinished"/>
+        <translation>Звуків не знайдено.~%~
+Спробуйте менше значення «Пороговий рівень (дБ)».</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -7687,7 +9410,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished"/>
+        <translation>Застарілий обмежувач</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -7746,12 +9469,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished"/>
+        <translation>Фільтр низьких частот</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished"/>
+        <translation>Шлюзування шуму</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -7781,7 +9504,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="180"/>
         <source>Don’t Link Stereo</source>
-        <translation type="unfinished"/>
+        <translation>Не з&apos;єднувати стерео</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
@@ -7843,7 +9566,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished"/>
+        <translation>Фільтр розривів</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -7877,7 +9600,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
         <source>Browse…</source>
-        <translation type="unfinished"/>
+        <translation>Вибрати…</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
@@ -7926,444 +9649,455 @@ Right channel</source>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
-        <source>Success.~%Files written to:~%~s~%</source>
-        <translation>Успіх.~%Файли записано сюди:~%~s~%</translation>
+        <source>Error~%</source>
+        <translation>Помилка~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
-        <source>Warning.~%Failed to copy some files:~%</source>
-        <translation>Попередження.~%FНе вдалося скопіювати деякі файли:~%</translation>
+        <source>Success~%Files written to:~%~s~%</source>
+        <translation>Успіх~%Файли записано сюди:~%~s~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
+        <source>Warning~%Failed to copy some files:~%</source>
+        <translation>Попередження~%Не вдалося скопіювати деякі файли:~%</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
+        <source>Error~%No file selected.</source>
+        <translation>Помилка~%Не вибрано жодного файла.</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
         <translation>Додатки встановлено.~%(Скористайтеся сторінкою керування додатками для вмикання ефектів):</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
         <source>Plug-ins updated:</source>
         <translation>Оновлено додатки:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Files copied to plug-ins folder:</source>
         <translation>Файли скопійовано до теки додатків:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
         <source>Not found or cannot be read:</source>
         <translation>Не знайдено або не вдалося прочитати:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Unsupported file type:</source>
         <translation>Непідтримуваний тип файлів:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation type="unfinished"/>
+        <translation>Файл вже встановлено (вимкнено «Дозволити перезапис»):</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
         <translation>Не вдалося записати до теки додатків:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
-        <source>Error.~%No file selected.</source>
-        <translation>Помилка.~%Не вибрано жодного файла.</translation>
-    </message>
-    <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
         <source>Pluck</source>
         <translation>Смикання</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="218"/>
         <source>David R.Sky</source>
         <translation>David R. Sky</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="218"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
         <source>Pluck MIDI pitch</source>
         <translation>Тон MIDI для смикання</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
         <source>Fade-out type</source>
         <translation>Тип спадання</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
         <source>Abrupt</source>
         <translation>Різке</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
         <source>Gradual</source>
         <translation>Поступове</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Duration (60s max)</source>
         <translation>Тривалість (макс. — 60 с)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
         <source>Rhythm track</source>
-        <translation type="unfinished"/>
+        <translation>Доріжка ритму</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
         <source>Dominic Mazzoni, David R. Sky and Steve Daulton</source>
         <translation>Dominic Mazzoni, David R. Sky та Steve Daulton</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="226"/>
         <source>Tempo (bpm)</source>
         <translation>Ритм (бітів на хв.)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="226"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
         <source>30 - 300 beats/minute</source>
         <translation>30 — 300 біт/хвилина</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
         <source>Beats per bar</source>
         <translation>Бітів на такт</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="229"/>
         <source>1 - 20 beats/measure</source>
         <translation>1 — 20 біт/такт</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="229"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="230"/>
         <source>Swing amount</source>
         <translation>Розмах</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="230"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
         <source>+/- 1</source>
         <translation>+/- 1</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation type="unfinished"/>
+        <translation>Встановіть кількість тактів у нуль, щоб скористатися пунктом «Тривалість доріжки ритму».</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
         <source>Number of bars</source>
         <translation>Кількість тактів</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
         <source>1 - 1000 bars</source>
         <translation>1 — 1000 тактів</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
         <source>Rhythm track duration</source>
         <translation>Тривалість доріжки ритму</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
         <source>Used if ‘Number of bars’ = 0</source>
-        <translation type="unfinished"/>
+        <translation>Використовується, якщо «Кількість тактів» = 0</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
         <source>Start time offset</source>
         <translation>Зсув часу початку</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="238"/>
         <source>Silence before first beat</source>
         <translation>Тиша перед першим бітом</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="238"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="239"/>
         <source>Beat sound</source>
         <translation>Звук біту</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="239"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="240"/>
         <source>Metronome Tick</source>
         <translation>Клацання метронома</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="240"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="241"/>
         <source>Ping (short)</source>
         <translation>Дзенькіт (короткий)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="241"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="242"/>
         <source>Ping (long)</source>
         <translation>Дзенькіт (довгий)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="242"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
         <source>Cowbell</source>
         <translation>Дзвіночок</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="244"/>
         <source>Resonant Noise</source>
         <translation>Резонансний шум</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="244"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="245"/>
         <source>Noise Click</source>
         <translation>Шумне клацання</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="245"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="246"/>
         <source>Drip (short)</source>
         <translation>Крапання (коротке)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="246"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="247"/>
         <source>Drip (long)</source>
         <translation>Крапання (довге)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="247"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="248"/>
         <source>MIDI pitch of strong beat</source>
         <translation>Тон MIDI для сильного біту</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="248"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
         <source>18 - 116</source>
         <translation>18 — 116</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
         <source>MIDI pitch of weak beat</source>
         <translation>Тон MIDI для слабкого біту</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
-        <source>Risset drum</source>
-        <translation type="unfinished"/>
+        <translation>Встановіть для пункту «Кількість тактів» або~%~
+«Тривалість доріжки ритму» значення &gt; 0.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
+        <source>Risset drum</source>
+        <translation>Барабан Ріссе</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
         <source>Steven Jones</source>
         <translation>Steven Jones</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
         <source>Decay (seconds)</source>
         <translation>Затримка (у секундах)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
         <source>Center frequency of noise (Hz)</source>
         <translation>Центральна частота шуму (у Гц)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="256"/>
         <source>Width of noise band (Hz)</source>
         <translation>Ширина смуги шуму (у Гц)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="256"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="257"/>
         <source>Amount of noise in mix (percent)</source>
         <translation>Часта шуму у суміші (у відсотках)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="257"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Amplitude (0 - 1)</source>
         <translation>Амплітуда (0 — 1)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
-        <source>Left</source>
-        <translation type="unfinished"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
+        <source>Measure RMS</source>
+        <translation>Виміряти СКВ</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
+        <source>Left</source>
+        <translation>Лівий</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
         <source>dB</source>
         <translation>дБ</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation>Правий</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Stereo</source>
         <translation>Стерео</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
         <source>Mono</source>
         <translation>Моно</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
         <source>Sample data export</source>
         <translation>Експортування даних семплу</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
         <source>Limit output to first</source>
         <translation>Обмежити виведення першим</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
         <source>samples</source>
         <translation>семпли</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
         <source>Measurement scale</source>
         <translation>Шкала вимірювання</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="269"/>
         <source>Linear</source>
         <translation>Лінійна</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="270"/>
         <source>Export data to</source>
         <translation>Експортувати дані до</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="269"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="271"/>
         <source>Select a file</source>
         <translation>Виберіть файл</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="270"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
         <source>CSV files</source>
         <translation>файли CSV</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="271"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
         <source>HTML files</source>
         <translation>файли HTML</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
         <source>Index (text files only)</source>
         <translation>Покажчик (лише текстові файли)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="275"/>
         <source>Sample Count</source>
         <translation>Лічильник семплів</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="276"/>
         <source>Time Indexed</source>
         <translation>Індексований час</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="275"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="277"/>
         <source>Include header information</source>
         <translation>Включити інформацію заголовка</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="276"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
         <source>Minimal</source>
         <translation>Мінімальний</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="277"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="279"/>
         <source>Standard</source>
         <translation>Стандартна</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="280"/>
         <source>All</source>
         <translation>Всі</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="279"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
         <source>Optional header text</source>
         <translation>Необов&apos;язковий текст заголовка</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="280"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
         <source>Channel layout for stereo</source>
         <translation>Компонування каналів для стерео</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="283"/>
         <source>L-R on Same Line</source>
         <translation>Л-П на тій самій лінії</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="284"/>
         <source>Alternate Lines</source>
         <translation>Переміжні лінії</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="283"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="285"/>
         <source>L Channel First</source>
         <translation>Лівий канал перший</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="284"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="286"/>
         <source>Show messages</source>
         <translation>Показувати повідомлення</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="285"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="287"/>
         <source>Errors Only</source>
         <translation>Лише помилки</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="286"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="288"/>
         <source>[-inf]</source>
         <translation>[-inf]</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="287"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="289"/>
         <source>Left Channel.~%~%</source>
         <translation>Лівий канал.~%~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="288"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
         <source>~%~%Right Channel.~%~%</source>
         <translation>~%~%Правий канал.~%~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="289"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
         <source>~aData written to:~%~a</source>
         <translation>~aДані записано до ~%~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
         <source>Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a</source>
         <translation>Частота дискретизації: ~a Гц. Значення семплів на шкалі ~a.~%~a~%~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
         <translation>~a   ~a~%~aЧастота дискретизації: ~a Гц.~%Тривалість обробленого: ~a семплів ~a секунд.~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a</source>
         <translation>~a   ~a~%~aЧастота дискретизації: ~a Гц. Значення семплів у шкалі ~a.~%~
 Тривалість обробленого: ~a семплів ~a секунд.~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
         <source>~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
                   samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~
                   DC offset: ~a~a</source>
@@ -8372,117 +10106,117 @@ Right channel</source>
 Зміщення сталої: ~a~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
         <source>~a linear, ~a dB.</source>
         <translation>~a лінійний, ~a дБ.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="297"/>
         <source>Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.</source>
         <translation>Лівий: ~a лін, ~a дБ | Правий: ~a лін, ~a дБ.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="298"/>
         <source>Sample Data Export</source>
         <translation>Експортування даних семплу</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="297"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
         <source>~a samples.</source>
         <translation>~a семплів.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="298"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
         <source>~a seconds.</source>
         <translation>~a секунд.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
         <source>Audio data analysis:</source>
         <translation>Аналіз звукових даних:</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="302"/>
         <source>&lt;b&gt;Sample Rate:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a Hz.</source>
         <translation>&lt;b&gt;Частота дискретизації:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a Гц.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
         <source>&lt;b&gt;Peak Amplitude:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (linear) &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>&lt;b&gt;Пікова амплітуда:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (лінійна) &amp;nbsp;&amp;nbsp;~a дБ.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="302"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
         <source>&lt;b&gt;RMS&lt;/b&gt; (unweighted): &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>&lt;b&gt;СКВ&lt;/b&gt; (незважене): &amp;nbsp;&amp;nbsp;~a дБ.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
         <source>&lt;b&gt;DC Offset:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</source>
         <translation>&lt;b&gt;Зміщення сталої:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
         <source>~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>~a лінійний, &amp;nbsp;&amp;nbsp;~a дБ.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
         <source>Left: ~a lin, ~a dB | Right: ~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
         <translation>Лівий: ~a лін, ~a дБ | Правий: ~a лін, &amp;nbsp;&amp;nbsp;~a дБ.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
         <source>sample data</source>
         <translation>дані зразка</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="309"/>
         <source>Sample #</source>
         <translation>№ семплу</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="310"/>
         <source>Seconds</source>
         <translation>секунди</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="309"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
         <source>Value (linear)</source>
         <translation>Значення (лінійно)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="310"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
         <source>Value (dB)</source>
         <translation>Значення (дБ)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
         <source>audio sample value analysis</source>
         <translation>аналіз значень зразка звуку</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
         <source>Left (linear)</source>
         <translation>Лівий (лінійно)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="315"/>
         <source>Right (linear)</source>
         <translation>Правий (лінійно)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Left (dB)</source>
         <translation>Лівий (дБ)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="315"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
         <source>Right (dB)</source>
         <translation>Правий (дБ)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="318"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
 &lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
@@ -8491,218 +10225,224 @@ Daulton</source>
 Daulton</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="319"/>
         <source>linear</source>
         <translation>лінійний</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="318"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="320"/>
         <source>2 channels (stereo)</source>
         <translation>2 канали (стерео)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="319"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="321"/>
         <source>1 channel (mono)</source>
         <translation>1 канал (моно)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="320"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="322"/>
         <source>One column per channel.~%</source>
         <translation>Один стовпчик на канал.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="321"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="323"/>
         <source>One row per channel.~%</source>
         <translation>Один рядок на канал.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="322"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="324"/>
         <source>Left channel then Right channel on same line.~%</source>
         <translation>Лівий канал, потім правий канал на одній лінії.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="323"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="325"/>
         <source>Left and right channels on alternate lines.~%</source>
         <translation>Лівий канал і правий канал на переміжних лініях.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="324"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="326"/>
         <source>Left channel first then right channel.~%</source>
         <translation>Спочатку лівий канал, потім правий канал.~%</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="325"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Unspecified channel order</source>
         <translation>Невказаний порядок каналів</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="326"/>
-        <source>Error.~%“~a” cannot be written.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
-        <source>Sample data Import</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
+        <source>Error.~%“~a” cannot be written.</source>
+        <translation>Помилка.~%&quot;~a&quot; не вдалося записати.</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
+        <source>Sample data Import</source>
+        <translation>Імпортування даних семплів</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
         <source>Select file</source>
         <translation>Виберіть файл</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="331"/>
         <source>Invalid data handling</source>
         <translation>Некоректна обробка даних</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="332"/>
         <source>Throw Error</source>
         <translation>Повідомити про помилку</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="331"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
         <source>Read as Zero</source>
         <translation>Читати як нуль</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="332"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
-        <source>Error:~%~
-              The file must contain only plain ASCII text.~%~
-              (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
-        <source>Error~%~
-              Data must be numbers in plain ASCII text.~%~
-              ‘~a’ is not a numeric value.</source>
-        <translation type="unfinished"/>
+        <translation>Помилка~%~
+                          Не вдалося відкрити «~a».~%~
+                          Перевірте, чи існує цей файл.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
+        <source>Error:~%~
+              The file must contain only plain ASCII text.~%~
+              (Invalid byte ‘~a’ at byte number: ~a)</source>
+        <translation>Помилка:~%~
+                Файл має містити лише звичайний текст з символів ASCII.~%~
+                (Некоректний байт «~a» на позиції ~a)</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
+        <source>Error~%~
+              Data must be numbers in plain ASCII text.~%~
+              ‘~a’ is not a numeric value.</source>
+        <translation>Помилка~%~
+              Даними мають бути числа у тексті з символів ASCII.~%~
+              «~a» не є числовим значенням.</translation>
+    </message>
+    <message>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
         <source>Error.~%Unable to open file</source>
         <translation>Помилка.~%Не вдалося відкрити файл</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
         <source>Delete selection</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити позначене</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
         <source>Error.~%Track sample rate below 100 Hz is not supported.</source>
         <translation>Помилка.~%Підтримки частот дискретизації доріжки, які є нижчими за 100 Гц, не передбачено.</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
         <source>Tremolo</source>
         <translation>Тремоло</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
         <source>Waveform type</source>
         <translation>Тип форми хвилі</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
         <source>Sine</source>
         <translation>Синусоїдна</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="343"/>
         <source>Triangle</source>
         <translation>Трикутник</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="344"/>
         <source>Sawtooth</source>
         <translation>Зубцеподібна</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="343"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="345"/>
         <source>Inverse Sawtooth</source>
         <translation>Зворотна пилка</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="344"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="346"/>
         <source>Square</source>
         <translation>Квадратична</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="345"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
         <source>Starting phase (degrees)</source>
         <translation>Початкова фаза (у градусах)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="346"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
         <source>Wet level (percent)</source>
         <translation>Рівень теплого (у відсотках)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
         <source>Vocoder</source>
         <translation>Вокодер</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
         <source>Edgar-RFT and Steve Daulton</source>
         <translation>Edgar-RFT і Steve Daulton</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="351"/>
         <source>Distance: (1 to 120, default = 20)</source>
         <translation>Відстань: (від 1 до 120, типова = 20)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
         <source>Output choice</source>
         <translation>Вибір виведення</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="351"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
         <source>Both Channels</source>
         <translation>Обидва канали</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="354"/>
         <source>Right Only</source>
         <translation>Лише правий</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="355"/>
         <source>Number of vocoder bands</source>
         <translation>Кількість смуг вокодера</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="354"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="356"/>
         <source>Amplitude of carrier wave (percent)</source>
         <translation>Амплітуда хвилі носія (у відсотках)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="355"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="357"/>
         <source>Amplitude of white noise (percent)</source>
         <translation>Амплітуда білого шуму (у відсотках)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="356"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="358"/>
         <source>Amplitude of Radar Needles (percent)</source>
         <translation>Амплітуда голок радару (у відсотках)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="357"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="359"/>
         <source>Frequency of Radar Needles (Hz)</source>
         <translation>Частота голок радару (у Гц)</translation>
     </message>
     <message>
-        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="358"/>
+        <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="360"/>
         <source>Error.~%No modulation carrier.</source>
         <translation>Помилка.~%Немає носія модуляції.</translation>
     </message>
@@ -8717,7 +10457,7 @@ Daulton</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation type="unfinished"/>
+        <translation>Надзвичайне уповільнення призначено лише для надзвичайного уповільнення за часом або ефекту «стазису»</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -8731,7 +10471,11 @@ Daulton</translation>
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначений звуковий фрагмент є надто коротким для попереднього
+прослуховування.
+
+Спробуйте позначити принаймні %.1f секунд,
+або зменшіть значення «Роздільність за часом» принаймні до %.1f секунд.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
@@ -8740,7 +10484,10 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Попереднє прослуховування неможливе.
+
+Для поточного позначеного фрагмента, максимальним значенням
+параметра «Роздільність за часом» є %1 секунд.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
@@ -8749,7 +10496,10 @@ For the current audio selection, the maximum
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Значення «Роздільність за часом» є надто великим для позначеного фрагмента.
+
+Спробуйте позначити принаймні %1 секунд,
+або зменшіть значення «Роздільність за часом» принаймні до %2 секунд.</translation>
     </message>
 </context>
 <context>
@@ -8757,18 +10507,19 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="30"/>
         <source>Remove DC offset</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити зміщення сталої складової</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="49"/>
         <source>Removes DC offset (centers audio on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити відхилення від осі (центр звуку у 0 за вертикаллю)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="67"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>Вилучення зміщення сталої складової…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
@@ -8814,7 +10565,9 @@ Zoom in and select a tiny fraction of a second to repair.</source>
         <source>The Repair effect needs some data to go on.
 
 Please select an area to repair with some audio on at least one side (the more the better).</source>
-        <translation type="unfinished"/>
+        <translation>Для застосування ефекту «Відновлення» потрібні певні дані.
+
+Будь ласка, позначте область для відновлення з частиною звукових даних принаймні з одного боку (чим більше, тим краще).</translation>
     </message>
 </context>
 <context>
@@ -8935,7 +10688,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
         <source>Adds ambience or a “hall effect”</source>
-        <translation type="unfinished"/>
+        <translation>Додає ефект атмосфери або «ефект великої зали»</translation>
     </message>
 </context>
 <context>
@@ -8956,7 +10709,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>Зсувне розтягування</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -8998,14 +10751,42 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Підсилення</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="77"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="79"/>
         <source>New peak amplitude</source>
         <translation>Нова пікова амплітуда</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="123"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="127"/>
         <source>Allow clipping</source>
         <translation>Дозволити зрізання</translation>
+    </message>
+</context>
+<context>
+    <name>effects/basstreble</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="13"/>
+        <source>Bass and Treble</source>
+        <translation>Баси і ВЧ</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
+        <source>Auto-adjust volume to preserve loudness</source>
+        <translation>Автоматично скоригувати гучність для збеження потужності звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
+        <source>Bass</source>
+        <translation>Баси</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="46"/>
+        <source>Treble</source>
+        <translation>Високі частоти</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="55"/>
+        <source>Output volume</source>
+        <translation>Гучність результату</translation>
     </message>
 </context>
 <context>
@@ -9090,22 +10871,22 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Початкова частота</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="194"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="195"/>
         <source>End frequency</source>
         <translation>Кінцева частота</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="243"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="244"/>
         <source>Start amplitude (0-1)</source>
         <translation>Початкова амплітуда (0-1)</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="267"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="268"/>
         <source>End amplitude (0-1)</source>
         <translation>Кінцева амплітуда (0-1)</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="293"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="294"/>
         <source>Duration</source>
         <translation>Тривалість</translation>
     </message>
@@ -9225,12 +11006,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished"/>
+        <translation>Лінійна шкала частот</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
         <source>Grid lines</source>
-        <translation type="unfinished"/>
+        <translation>Лінії ґратки</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="113"/>
@@ -9243,13 +11024,15 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Інвертування</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="142"/>
+        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="143"/>
         <source>Zoom in</source>
+        <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
         <translation>Збільшити</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="158"/>
+        <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="160"/>
         <source>Zoom out</source>
+        <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
         <translation>Зменшити</translation>
     </message>
 </context>
@@ -9269,6 +11052,11 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="96"/>
         <source>Invert</source>
         <translation>Інвертування</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
+        <source>%1 Hz</source>
+        <translation>%1 Гц</translation>
     </message>
 </context>
 <context>
@@ -9302,19 +11090,50 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>до</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="113"/>
+        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="114"/>
         <source>Normalize</source>
+        <extracomment>Verb: starts the sentence-like control row, e.g. &quot;Normalize perceived loudness to -23 LUFS&quot;</extracomment>
         <translation>Нормалізація</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
+        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="132"/>
         <source>Normalize stereo channels independently</source>
         <translation>Нормалізувати канали стерео окремо</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
+        <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="137"/>
         <source>Treat mono as dual mono (recommended)</source>
         <translation>Вважати моно подвійним моно (рекомендовано)</translation>
+    </message>
+</context>
+<context>
+    <name>effects/lv2</name>
+    <message>
+        <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
+        <source>No available UI:
+%1</source>
+        <translation>Немає доступного інтерфейсу:
+%1</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
+        <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
+        <translation>Додатком не надано інтерфейсу користувача (будь ласка, повідомте про це, якщо AU3 надає інтерфейс для цього додатка)</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
+        <source>X11 UI refusing to be externalized</source>
+        <translation>Інтерфейсом X11 відмовлено у розширенні</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
+        <source>Unknown reason (please report)</source>
+        <translation>Невідома причина (будь ласка, повідомте розробникам)</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
+        <source>Idle UI creation failed</source>
+        <translation>Не вдалося створити інтерфейс користувача Idle</translation>
     </message>
 </context>
 <context>
@@ -9383,36 +11202,39 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="155"/>
         <source>Noise reduction</source>
         <translation>Зменшення шуму</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="171"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="173"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="187"/>
         <source>Sensitivity</source>
         <translation>Чутливість</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="200"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="203"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="217"/>
         <source>Frequency smoothing</source>
         <translation>Згладжування частоти</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="219"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="223"/>
         <source>bands</source>
         <translation>смуги</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="238"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="242"/>
         <source>Output</source>
         <translation>Виведення</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="265"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="269"/>
         <source>Audio with noise removed</source>
         <translation>Звук із вилученим шумом</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="280"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="284"/>
         <source>Noise only</source>
         <translation>Лише шум</translation>
     </message>
@@ -9430,31 +11252,25 @@ Please select an area to repair with some audio on at least one side (the more t
 <context>
     <name>effects/normalize</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="11"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="12"/>
         <source>Normalize</source>
+        <extracomment>Title of the Normalize effect dialog</extracomment>
         <translation>Нормалізація</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="42"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
         <translation>Вилучити відхилення від осі (центр у 0 за вертикаллю)</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="63"/>
         <source>Normalize peak amplitude to</source>
         <translation>Нормалізувати пікову амплітуду до</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="99"/>
         <source>Normalize stereo channels independently</source>
         <translation>Нормалізувати канали стерео окремо</translation>
-    </message>
-</context>
-<context>
-    <name>effects/nyquist</name>
-    <message>
-        <source>Nyquist prompt</source>
-        <translation>Запит до Nyquist</translation>
     </message>
 </context>
 <context>
@@ -9483,7 +11299,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Відлуння</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="272"/>
+        <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="269"/>
         <source>Wet only</source>
         <translation>Лише відлуння</translation>
     </message>
@@ -9493,47 +11309,47 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Розмір зали</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="47"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="48"/>
         <source>Pre-delay</source>
         <translation>Попередня затримка</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="48"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="49"/>
         <source>ms</source>
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="56"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
         <source>Reverberance</source>
         <translation>Реверберація</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="65"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="66"/>
         <source>Damping</source>
         <translation>В’язкість</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="74"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="75"/>
         <source>Low tone</source>
         <translation>Низький тон</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="83"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="84"/>
         <source>High tone</source>
         <translation>Високий тон</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="92"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="93"/>
         <source>Wet gain</source>
         <translation>Підсилення низьких частот</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="101"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="102"/>
         <source>Dry gain</source>
         <translation>Рівень оригіналу</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="111"/>
         <source>Stereo width</source>
         <translation>Ширина стерео</translation>
     </message>
@@ -9543,7 +11359,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="29"/>
         <source>Semitones (%1 → %2)</source>
-        <translation type="unfinished"/>
+        <translation>Напівтони (%1 → %2)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="61"/>
@@ -9553,27 +11369,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>Зсувне розтягування</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Початкова зміна темпу</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>Остаточна зміна темпу</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Початковий зсув тону</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Остаточний зсув тону</translation>
     </message>
 </context>
 <context>
@@ -9823,13 +11639,13 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
 <context>
     <name>export</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="16"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="17"/>
         <source>Custom FFmpeg options</source>
         <translation>Нетипові параметри FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="355"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="388"/>
         <source>Edit mapping</source>
         <translation>Редагувати прив&apos;язку</translation>
     </message>
@@ -9839,199 +11655,262 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <translation>Кількість каналів</translation>
     </message>
     <message>
+        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
+        <source>Channel count %1</source>
+        <translation>Кількість каналів %1</translation>
+    </message>
+    <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="607"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
         <source>Export audio</source>
         <translation>Експортувати звук</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="76"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
         <source>Export</source>
+        <extracomment>Section heading in the Export dialog</extracomment>
         <translation>Експорт</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
         <source>Type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="128"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="129"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>Назва файла</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Тека</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
         <source>Format</source>
         <translation>Формат</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="282"/>
         <source>Audio options</source>
         <translation>Параметри звуку</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="266"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="299"/>
         <source>Channels</source>
         <translation>Канали</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="324"/>
         <source>Mono</source>
         <translation>Моно</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="342"/>
         <source>Stereo</source>
         <translation>Стерео</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="359"/>
         <source>Custom mapping</source>
         <translation>Нетипова прив&apos;язка</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="406"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation>Частота дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Відкрити вікно нетипових параметрів форматування FFmpeg</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="439"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
         <source>Format:</source>
         <translation>Формат:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="463"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
         <source>Codec:</source>
         <translation>Кодек:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="554"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
         <source>Effective bit rate may vary</source>
         <translation>Реальна бітова швидкість може змінюватися</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="564"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="598"/>
         <source>Rendering</source>
         <translation>Обробка</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="574"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="608"/>
         <source>Trim blank space before first clip</source>
         <translation>Обрізати порожнє до першого кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="19"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
         <source>FLAC options</source>
         <translation>Параметри FLAC</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="37"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="54"/>
         <source>Compression</source>
         <translation>Стискання</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="65"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="73"/>
+        <source>Compression %1</source>
+        <translation>Стискання %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="86"/>
         <source>LPC</source>
         <translation>LPC</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="93"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="105"/>
+        <source>LPC %1</source>
+        <translation>LPC %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="118"/>
         <source>Min. PdO</source>
         <translation>Мін. передбачення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="121"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="137"/>
+        <source>Min. PdO %1</source>
+        <translation>Мін. PdO %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
         <source>Min. PtO</source>
         <translation>Мін. передбачення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="160"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
+        <source>Min. PtO %1</source>
+        <translation>Мін. PtO %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="193"/>
         <source>Frame</source>
         <translation>Кадр</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="186"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="212"/>
+        <source>Frame %1</source>
+        <translation>Кадр %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="222"/>
         <source>PdO method</source>
         <translation>Метод передбачення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="208"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="238"/>
+        <source>PdO method %1</source>
+        <translation>Метод PdO %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="248"/>
         <source>Max. PdO</source>
         <translation>Макс. передбачення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="233"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="267"/>
+        <source>Max. PdO %1</source>
+        <translation>Макс. PdO %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
         <source>Max. PtO</source>
         <translation>Макс. поділ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="34"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
+        <source>Max. PtO %1</source>
+        <translation>Макс. PtO %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="62"/>
         <source>Formats</source>
         <translation>Формати</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="40"/>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="100"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="68"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="145"/>
         <source>Show all</source>
         <translation>Показати все</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="94"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="139"/>
         <source>Codecs</source>
         <translation>Кодеки</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="20"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="38"/>
         <source>General options</source>
         <translation>Загальні параметри</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="39"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="56"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="70"/>
         <source>Language</source>
         <translation>Мова</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="83"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="97"/>
         <source>Tag</source>
         <translation>Мітка</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="84"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="109"/>
         <source>Quality</source>
         <translation>Якість</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="112"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="128"/>
+        <source>Quality %1</source>
+        <translation>Якість %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
         <source>Cutoff</source>
         <translation>Пропускання</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
+        <source>Cutoff %1</source>
+        <translation>Пропускання %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="184"/>
         <source>Bit rate</source>
         <translation>Бітова швидкість</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="203"/>
+        <source>Bit rate %1</source>
+        <translation>Бітова швидкість %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="213"/>
         <source>Bit rate (bits/second) - influences the resulting file size and quality
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
@@ -10042,9 +11921,19 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 Рекомендоване значення — 192000</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="239"/>
+        <source>Sample rate %1</source>
+        <translation>Частота дискретизації %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="249"/>
         <source>Profile</source>
         <translation>Профіль</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="265"/>
+        <source>Profile %1</source>
+        <translation>Профіль %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
@@ -10068,29 +11957,40 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <translation>Зробити типовим</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="95"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="96"/>
         <source>Delete</source>
+        <extracomment>Label of the button that deletes the selected metadata tag</extracomment>
         <translation>Вилучити</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="110"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="111"/>
         <source>Add tag</source>
         <translation>Додати мітку</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="19"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="37"/>
         <source>MPEG container options</source>
         <translation>Параметри контейнера MPEG</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="36"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="53"/>
         <source>Mux rate</source>
         <translation>Швидкість ущільнення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="74"/>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="72"/>
+        <source>Mux rate %1</source>
+        <translation>Швидкість ущільнення %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="95"/>
         <source>Packet size</source>
         <translation>Розмір пакета</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="114"/>
+        <source>Packet size %1</source>
+        <translation>Розмір пакета %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
@@ -10113,77 +12013,92 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <translation>Включені доріжки з мітками</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="58"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="60"/>
         <source>Download FFmpeg</source>
         <translation>Отримати FFmpeg</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="71"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="73"/>
         <source>Locate existing installation</source>
         <translation>Знайти наявне встановлення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="231"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="266"/>
         <source>All selected audio is muted</source>
         <translation>Всі позначені ділянки звукових доріжок замінено тишею</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
+        <source>Other…</source>
+        <translation>Інше…</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
+        <source>%1 Hz (custom)</source>
+        <translation>%1 Гц (нетипова)</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
         <translation>Експортувати усі звукові дані проєкту</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="39"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
         <translation>Експортувати позначені звукові дані</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
         <translation>Експортувати звукові дані на ділянці циклу</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="181"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
         <source>No loop region</source>
         <translation>Немає ділянки циклічного відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="182"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>Для експортування звукових даних ділянки циклу потрібен цикл у проєкті. Будь ласка, поверніться назад, створіть цикл і повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="193"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
         <source>No selected audio</source>
         <translation>Немає позначених звукових даних</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="194"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>Для експортування позначених звукових даних потрібно позначити звукові дані у проєкті. Поверніться до проєкту, позначте потрібні дані та повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
-        <source>Unable to create destination folder</source>
-        <translation>Не вдалося створити теку призначення</translation>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
+        <source>Set sample rate</source>
+        <translation>Встановити частоту дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="531"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
+        <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
+        <translation>Не вдалося експортувати до «%1»: не вдалося створити теку призначення. Перевірте, чи є коректним шлях, і чи маєте ви права доступу до запису туди.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
         <source>Do you want to overwrite?</source>
         <translation>Хочете перезаписати?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="532"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
         <source>Overwrite</source>
         <translation>Перезаписати</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="544"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
         <source>Export error</source>
         <translation>Помилка експортування</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="608"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -10195,7 +12110,7 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>extensions</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="162"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="168"/>
         <source>Reload plugins</source>
         <translation>Перезавантажити додатки</translation>
     </message>
@@ -10225,7 +12140,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
         <source>Edit shortcut</source>
         <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
-        <translation type="unfinished"/>
+        <translation>Редагувати клавіатурне скорочення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
@@ -10245,87 +12160,87 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
         <source>Could not load plugin</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося завантажити додаток</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
         <source>Plugin is not in the correct format</source>
-        <translation type="unfinished"/>
+        <translation>Формат додатка є неправильним</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
         <source>Manually</source>
-        <translation type="unfinished"/>
+        <translation>Вручну</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
         <source>Failed to install extension</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося встановити розширення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
         <source>The extension does not contain a valid manifest file.</source>
-        <translation type="unfinished"/>
+        <translation>У розширенні не міститься коректного файла маніфеста.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
         <source>The extension is already installed.</source>
-        <translation type="unfinished"/>
+        <translation>Розширення вже встановлено.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
         <source>This extension cannot be updated.</source>
-        <translation type="unfinished"/>
+        <translation>Це розширення не можна оновити.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
         <source>The currently installed version cannot be uninstalled.</source>
-        <translation type="unfinished"/>
+        <translation>Поточну встановлену версію не може бути вилучено.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
         <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
-        <translation type="unfinished"/>
+        <translation>Вже встановлено іншу версію розширення «%1» (версію %2). Хочете замінити його версією %3?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
         <source>Update extension</source>
-        <translation type="unfinished"/>
+        <translation>Оновити розширення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
         <source>Error code: %1</source>
-        <translation type="unfinished"/>
+        <translation>Код помилки: %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
-        <translation type="unfinished"/>
+        <translation>Зараз додаток «%1» вимкнено. Хочете його увімкнути?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
         <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
-        <source>Composing/arranging tools</source>
-        <translation type="unfinished"/>
+        <translation>Крім того, ви можете будь-коли його увімкнути за допомогою сторінки «Домівка &gt; Додатки».</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
-        <source>Color notes</source>
-        <translation type="unfinished"/>
+        <source>Composing/arranging tools</source>
+        <translation>Упорядковування інструментів</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Color notes</source>
+        <translation>Кольорові нотатки</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
         <source>Playback</source>
         <translation>Відтворення</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
         <source>Lyrics</source>
         <translation>Текст пісні</translation>
     </message>
@@ -10333,25 +12248,25 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation type="unfinished"/>
+        <translation>Запустити додаток %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation type="unfinished"/>
+        <translation>Запустити додаток %1: %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вказано</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
         <source>Not defined</source>
         <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не визначено</translation>
     </message>
 </context>
 <context>
@@ -10549,76 +12464,86 @@ For tips on suitable drives, click the help button.</source>
 <context>
     <name>global</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="155"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="279"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="146"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="292"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Гаразд</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="160"/>
-        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="78"/>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="62"/>
-        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="108"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="93"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="102"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="162"/>
+        <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="79"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="64"/>
+        <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="112"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="38"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="47"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="56"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="94"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="103"/>
         <source>dB</source>
+        <extracomment>Abbreviation of decibels, used as a unit suffix</extracomment>
         <translation>дБ</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="179"/>
-        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="200"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="180"/>
+        <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="201"/>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="84"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="102"/>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="23"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="96"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="22"/>
         <source>Hz</source>
+        <extracomment>Abbreviation of hertz, used as a unit suffix</extracomment>
         <translation>Гц</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="324"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="102"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="131"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="94"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="620"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="348"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="654"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="531"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="669"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="341"/>
-        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="105"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
+        <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
+        <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Застосувати</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
+        <extracomment>Label of the button that starts the export</extracomment>
         <translation>Експорт</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="81"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Закрити</translation>
     </message>
     <message>
@@ -10628,7 +12553,6 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
@@ -10642,8 +12566,8 @@ For tips on suitable drives, click the help button.</source>
         <translation>хв.</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="64"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="53"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="90"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="60"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
@@ -10665,17 +12589,18 @@ For tips on suitable drives, click the help button.</source>
         <translation>пт</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="127"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="131"/>
         <source>Don’t show again</source>
         <translation>Не показувати знову</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="123"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="124"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
+        <extracomment>Message shown when a search returns nothing</extracomment>
         <translation>Нічого не знайдено</translation>
     </message>
     <message>
@@ -10702,29 +12627,29 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Будь ласка, перевірте, чи є працездатним з&apos;єднання із інтернетом, потім повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="127"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="138"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Next</source>
         <translation>Наступний</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="150"/>
+        <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="148"/>
         <source>Done</source>
         <translation>Виконано</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="108"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="104"/>
         <source>Success!</source>
         <translation>Успіх!</translation>
     </message>
@@ -10734,13 +12659,14 @@ For tips on suitable drives, click the help button.</source>
         <translation>Пропустити</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="39"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="66"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="75"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="84"/>
-        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="111"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="40"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="58"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="67"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="76"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="85"/>
+        <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="112"/>
         <source>%</source>
+        <extracomment>Percent sign, used as a unit suffix</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -10749,14 +12675,14 @@ For tips on suitable drives, click the help button.</source>
         <translation>усі файли</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="578"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="957"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1199"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="695"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1092"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1330"/>
         <source>Success</source>
         <translation>Успіх</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1204"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
         <source>Dismiss</source>
         <translation>Відкинути</translation>
     </message>
@@ -10767,9 +12693,10 @@ For tips on suitable drives, click the help button.</source>
         <translation>Зберегти</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
+        <extracomment>Title of a file picker dialog</extracomment>
         <translation>Відкрити</translation>
     </message>
     <message>
@@ -10779,8 +12706,8 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="604"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
         <source>Stop</source>
         <translation>Зупинити</translation>
     </message>
@@ -10792,22 +12719,22 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
         <source>Error details have been copied to the clipboard.</source>
-        <translation type="unfinished"/>
+        <translation>Параметри помилки було скопійовано до буфера обміну даними.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
         <source>Hide details</source>
-        <translation type="unfinished"/>
+        <translation>Приховати подробиці</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
         <source>Show details</source>
-        <translation type="unfinished"/>
+        <translation>Показати подробиці</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
         <source>Question</source>
-        <translation type="unfinished"/>
+        <translation>Питання</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
@@ -10831,33 +12758,6 @@ For tips on suitable drives, click the help button.</source>
         <translation>Не показувати це повідомлення знову</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
-        <source>Waiting…</source>
-        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
-        <source>Add</source>
-        <translation>Додати</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
-        <source>Clear all</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
-        <source>action</source>
-        <translation>дія</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
-        <source>status</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
         <source>Delete</source>
         <translation>Вилучити</translation>
@@ -10875,7 +12775,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>Години</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
@@ -10910,12 +12810,12 @@ For tips on suitable drives, click the help button.</source>
         <translation>Розгорнути</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="118"/>
         <source>Create</source>
         <translation>Створити</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="115"/>
         <source>Select</source>
         <translation>Вибрати</translation>
     </message>
@@ -10937,7 +12837,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
         <source>Last week</source>
-        <translation type="unfinished"/>
+        <translation>Останній тиждень</translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
@@ -10947,7 +12847,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
         <source>Last month</source>
-        <translation type="unfinished"/>
+        <translation>Останній місяць</translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
@@ -10984,7 +12884,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
         <source>%Ln byte(s)</source>
         <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%Ln байт</numerusform><numerusform>%Ln байти</numerusform><numerusform>%Ln байтів</numerusform><numerusform>%Ln байт</numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
@@ -11054,22 +12954,17 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
         <source>Checking for updates…</source>
-        <translation type="unfinished"/>
+        <translation>Пошук оновлень…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
         <source>Downloading %1…</source>
-        <translation type="unfinished"/>
+        <translation>Отримання %1…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
         <source>Unpacking %1…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
-        <source>Inactive</source>
-        <translation type="unfinished"/>
+        <translation>Розпакування %1…</translation>
     </message>
 </context>
 <context>
@@ -11172,1117 +13067,1117 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="31"/>
         <source>C-1</source>
-        <translation type="unfinished"/>
+        <translation>C-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="32"/>
         <source>C♯-1</source>
-        <translation type="unfinished"/>
+        <translation>C♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="33"/>
         <source>D♭-1</source>
-        <translation type="unfinished"/>
+        <translation>D♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="34"/>
         <source>D-1</source>
-        <translation type="unfinished"/>
+        <translation>D-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="35"/>
         <source>D♯-1</source>
-        <translation type="unfinished"/>
+        <translation>D♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="36"/>
         <source>E♭-1</source>
-        <translation type="unfinished"/>
+        <translation>E♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="37"/>
         <source>E-1</source>
-        <translation type="unfinished"/>
+        <translation>E-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="38"/>
         <source>E♯-1</source>
-        <translation type="unfinished"/>
+        <translation>E♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="39"/>
         <source>F♭-1</source>
-        <translation type="unfinished"/>
+        <translation>F♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="40"/>
         <source>F-1</source>
-        <translation type="unfinished"/>
+        <translation>F-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="41"/>
         <source>F♯-1</source>
-        <translation type="unfinished"/>
+        <translation>F♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="42"/>
         <source>G♭-1</source>
-        <translation type="unfinished"/>
+        <translation>G♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="43"/>
         <source>G-1</source>
-        <translation type="unfinished"/>
+        <translation>G-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="44"/>
         <source>G♯-1</source>
-        <translation type="unfinished"/>
+        <translation>G♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="45"/>
         <source>A♭-1</source>
-        <translation type="unfinished"/>
+        <translation>A♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="46"/>
         <source>A-1</source>
-        <translation type="unfinished"/>
+        <translation>A-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="47"/>
         <source>A♯-1</source>
-        <translation type="unfinished"/>
+        <translation>A♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="48"/>
         <source>B♭-1</source>
-        <translation type="unfinished"/>
+        <translation>B♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="49"/>
         <source>B-1</source>
-        <translation type="unfinished"/>
+        <translation>B-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="50"/>
         <source>B♯-1</source>
-        <translation type="unfinished"/>
+        <translation>B♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="52"/>
         <source>C♭0</source>
-        <translation type="unfinished"/>
+        <translation>C♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="53"/>
         <source>C0</source>
-        <translation type="unfinished"/>
+        <translation>C0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="54"/>
         <source>C♯0</source>
-        <translation type="unfinished"/>
+        <translation>C♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="55"/>
         <source>D♭0</source>
-        <translation type="unfinished"/>
+        <translation>D♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="56"/>
         <source>D0</source>
-        <translation type="unfinished"/>
+        <translation>D0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="57"/>
         <source>D♯0</source>
-        <translation type="unfinished"/>
+        <translation>D♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="58"/>
         <source>E♭0</source>
-        <translation type="unfinished"/>
+        <translation>E♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="59"/>
         <source>E0</source>
-        <translation type="unfinished"/>
+        <translation>E0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="60"/>
         <source>E♯0</source>
-        <translation type="unfinished"/>
+        <translation>E♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="61"/>
         <source>F♭0</source>
-        <translation type="unfinished"/>
+        <translation>F♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="62"/>
         <source>F0</source>
-        <translation type="unfinished"/>
+        <translation>F0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="63"/>
         <source>F♯0</source>
-        <translation type="unfinished"/>
+        <translation>F♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="64"/>
         <source>G♭0</source>
-        <translation type="unfinished"/>
+        <translation>G♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="65"/>
         <source>G0</source>
-        <translation type="unfinished"/>
+        <translation>G0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="66"/>
         <source>G♯0</source>
-        <translation type="unfinished"/>
+        <translation>G♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="67"/>
         <source>A♭0</source>
-        <translation type="unfinished"/>
+        <translation>A♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="68"/>
         <source>A0</source>
-        <translation type="unfinished"/>
+        <translation>A0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="69"/>
         <source>A♯0</source>
-        <translation type="unfinished"/>
+        <translation>A♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="70"/>
         <source>B♭0</source>
-        <translation type="unfinished"/>
+        <translation>B♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="71"/>
         <source>B0</source>
-        <translation type="unfinished"/>
+        <translation>B0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="72"/>
         <source>B♯0</source>
-        <translation type="unfinished"/>
+        <translation>B♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="74"/>
         <source>C♭1</source>
-        <translation type="unfinished"/>
+        <translation>C♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="75"/>
         <source>C1</source>
-        <translation type="unfinished"/>
+        <translation>C1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="76"/>
         <source>C♯1</source>
-        <translation type="unfinished"/>
+        <translation>C♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="77"/>
         <source>D♭1</source>
-        <translation type="unfinished"/>
+        <translation>D♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="78"/>
         <source>D1</source>
-        <translation type="unfinished"/>
+        <translation>D1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="79"/>
         <source>D♯1</source>
-        <translation type="unfinished"/>
+        <translation>D♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="80"/>
         <source>E♭1</source>
-        <translation type="unfinished"/>
+        <translation>E♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="81"/>
         <source>E1</source>
-        <translation type="unfinished"/>
+        <translation>E1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="82"/>
         <source>E♯1</source>
-        <translation type="unfinished"/>
+        <translation>E♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="83"/>
         <source>F♭1</source>
-        <translation type="unfinished"/>
+        <translation>F♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="84"/>
         <source>F1</source>
-        <translation type="unfinished"/>
+        <translation>F1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="85"/>
         <source>F♯1</source>
-        <translation type="unfinished"/>
+        <translation>F♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="86"/>
         <source>G♭1</source>
-        <translation type="unfinished"/>
+        <translation>G♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="87"/>
         <source>G1</source>
-        <translation type="unfinished"/>
+        <translation>G1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="88"/>
         <source>G♯1</source>
-        <translation type="unfinished"/>
+        <translation>G♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="89"/>
         <source>A♭1</source>
-        <translation type="unfinished"/>
+        <translation>A♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="90"/>
         <source>A1</source>
-        <translation type="unfinished"/>
+        <translation>A1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="91"/>
         <source>A♯1</source>
-        <translation type="unfinished"/>
+        <translation>A♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="92"/>
         <source>B♭1</source>
-        <translation type="unfinished"/>
+        <translation>B♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="93"/>
         <source>B1</source>
-        <translation type="unfinished"/>
+        <translation>B1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="94"/>
         <source>B♯1</source>
-        <translation type="unfinished"/>
+        <translation>B♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="96"/>
         <source>C♭2</source>
-        <translation type="unfinished"/>
+        <translation>C♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="97"/>
         <source>C2</source>
-        <translation type="unfinished"/>
+        <translation>C2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="98"/>
         <source>C♯2</source>
-        <translation type="unfinished"/>
+        <translation>C♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="99"/>
         <source>D♭2</source>
-        <translation type="unfinished"/>
+        <translation>D♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="100"/>
         <source>D2</source>
-        <translation type="unfinished"/>
+        <translation>D2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="101"/>
         <source>D♯2</source>
-        <translation type="unfinished"/>
+        <translation>D♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="102"/>
         <source>E♭2</source>
-        <translation type="unfinished"/>
+        <translation>E♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="103"/>
         <source>E2</source>
-        <translation type="unfinished"/>
+        <translation>E2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="104"/>
         <source>E♯2</source>
-        <translation type="unfinished"/>
+        <translation>E♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="105"/>
         <source>F♭2</source>
-        <translation type="unfinished"/>
+        <translation>F♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="106"/>
         <source>F2</source>
-        <translation type="unfinished"/>
+        <translation>F2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="107"/>
         <source>F♯2</source>
-        <translation type="unfinished"/>
+        <translation>F♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="108"/>
         <source>G♭2</source>
-        <translation type="unfinished"/>
+        <translation>G♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="109"/>
         <source>G2</source>
-        <translation type="unfinished"/>
+        <translation>G2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="110"/>
         <source>G♯2</source>
-        <translation type="unfinished"/>
+        <translation>G♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="111"/>
         <source>A♭2</source>
-        <translation type="unfinished"/>
+        <translation>A♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="112"/>
         <source>A2</source>
-        <translation type="unfinished"/>
+        <translation>A2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="113"/>
         <source>A♯2</source>
-        <translation type="unfinished"/>
+        <translation>A♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="114"/>
         <source>B♭2</source>
-        <translation type="unfinished"/>
+        <translation>B♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="115"/>
         <source>B2</source>
-        <translation type="unfinished"/>
+        <translation>B2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="116"/>
         <source>B♯2</source>
-        <translation type="unfinished"/>
+        <translation>B♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="118"/>
         <source>C♭3</source>
-        <translation type="unfinished"/>
+        <translation>C♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="119"/>
         <source>C3</source>
-        <translation type="unfinished"/>
+        <translation>C3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="120"/>
         <source>C♯3</source>
-        <translation type="unfinished"/>
+        <translation>C♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="121"/>
         <source>D♭3</source>
-        <translation type="unfinished"/>
+        <translation>D♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="122"/>
         <source>D3</source>
-        <translation type="unfinished"/>
+        <translation>D3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="123"/>
         <source>D♯3</source>
-        <translation type="unfinished"/>
+        <translation>D♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="124"/>
         <source>E♭3</source>
-        <translation type="unfinished"/>
+        <translation>E♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="125"/>
         <source>E3</source>
-        <translation type="unfinished"/>
+        <translation>E3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="126"/>
         <source>E♯3</source>
-        <translation type="unfinished"/>
+        <translation>E♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="127"/>
         <source>F♭3</source>
-        <translation type="unfinished"/>
+        <translation>F♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="128"/>
         <source>F3</source>
-        <translation type="unfinished"/>
+        <translation>F3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="129"/>
         <source>F♯3</source>
-        <translation type="unfinished"/>
+        <translation>F♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="130"/>
         <source>G♭3</source>
-        <translation type="unfinished"/>
+        <translation>G♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="131"/>
         <source>G3</source>
-        <translation type="unfinished"/>
+        <translation>G3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="132"/>
         <source>G♯3</source>
-        <translation type="unfinished"/>
+        <translation>G♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="133"/>
         <source>A♭3</source>
-        <translation type="unfinished"/>
+        <translation>A♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="134"/>
         <source>A3</source>
-        <translation type="unfinished"/>
+        <translation>A3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="135"/>
         <source>A♯3</source>
-        <translation type="unfinished"/>
+        <translation>A♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="136"/>
         <source>B♭3</source>
-        <translation type="unfinished"/>
+        <translation>B♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="137"/>
         <source>B3</source>
-        <translation type="unfinished"/>
+        <translation>B3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="138"/>
         <source>B♯3</source>
-        <translation type="unfinished"/>
+        <translation>B♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="140"/>
         <source>C♭4</source>
-        <translation type="unfinished"/>
+        <translation>C♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="141"/>
         <source>C4</source>
-        <translation type="unfinished"/>
+        <translation>C4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="142"/>
         <source>C♯4</source>
-        <translation type="unfinished"/>
+        <translation>C♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="143"/>
         <source>D♭4</source>
-        <translation type="unfinished"/>
+        <translation>D♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="144"/>
         <source>D4</source>
-        <translation type="unfinished"/>
+        <translation>D4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="145"/>
         <source>D♯4</source>
-        <translation type="unfinished"/>
+        <translation>D♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="146"/>
         <source>E♭4</source>
-        <translation type="unfinished"/>
+        <translation>E♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="147"/>
         <source>E4</source>
-        <translation type="unfinished"/>
+        <translation>E4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="148"/>
         <source>E♯4</source>
-        <translation type="unfinished"/>
+        <translation>E♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="149"/>
         <source>F♭4</source>
-        <translation type="unfinished"/>
+        <translation>F♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="150"/>
         <source>F4</source>
-        <translation type="unfinished"/>
+        <translation>F4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="151"/>
         <source>F♯4</source>
-        <translation type="unfinished"/>
+        <translation>F♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="152"/>
         <source>G♭4</source>
-        <translation type="unfinished"/>
+        <translation>G♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="153"/>
         <source>G4</source>
-        <translation type="unfinished"/>
+        <translation>G4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="154"/>
         <source>G♯4</source>
-        <translation type="unfinished"/>
+        <translation>G♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="155"/>
         <source>A♭4</source>
-        <translation type="unfinished"/>
+        <translation>A♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="156"/>
         <source>A4</source>
-        <translation type="unfinished"/>
+        <translation>A4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="157"/>
         <source>A♯4</source>
-        <translation type="unfinished"/>
+        <translation>A♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="158"/>
         <source>B♭4</source>
-        <translation type="unfinished"/>
+        <translation>B♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="159"/>
         <source>B4</source>
-        <translation type="unfinished"/>
+        <translation>B4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="160"/>
         <source>B♯4</source>
-        <translation type="unfinished"/>
+        <translation>B♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="162"/>
         <source>C♭5</source>
-        <translation type="unfinished"/>
+        <translation>C♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="163"/>
         <source>C5</source>
-        <translation type="unfinished"/>
+        <translation>C5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="164"/>
         <source>C♯5</source>
-        <translation type="unfinished"/>
+        <translation>C♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="165"/>
         <source>D♭5</source>
-        <translation type="unfinished"/>
+        <translation>D♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="166"/>
         <source>D5</source>
-        <translation type="unfinished"/>
+        <translation>D5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="167"/>
         <source>D♯5</source>
-        <translation type="unfinished"/>
+        <translation>D♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="168"/>
         <source>E♭5</source>
-        <translation type="unfinished"/>
+        <translation>E♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="169"/>
         <source>E5</source>
-        <translation type="unfinished"/>
+        <translation>E5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="170"/>
         <source>E♯5</source>
-        <translation type="unfinished"/>
+        <translation>E♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="171"/>
         <source>F♭5</source>
-        <translation type="unfinished"/>
+        <translation>F♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="172"/>
         <source>F5</source>
-        <translation type="unfinished"/>
+        <translation>F5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="173"/>
         <source>F♯5</source>
-        <translation type="unfinished"/>
+        <translation>F♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="174"/>
         <source>G♭5</source>
-        <translation type="unfinished"/>
+        <translation>G♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="175"/>
         <source>G5</source>
-        <translation type="unfinished"/>
+        <translation>G5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="176"/>
         <source>G♯5</source>
-        <translation type="unfinished"/>
+        <translation>G♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="177"/>
         <source>A♭5</source>
-        <translation type="unfinished"/>
+        <translation>A♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="178"/>
         <source>A5</source>
-        <translation type="unfinished"/>
+        <translation>A5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="179"/>
         <source>A♯5</source>
-        <translation type="unfinished"/>
+        <translation>A♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="180"/>
         <source>B♭5</source>
-        <translation type="unfinished"/>
+        <translation>B♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="181"/>
         <source>B5</source>
-        <translation type="unfinished"/>
+        <translation>B5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="182"/>
         <source>B♯5</source>
-        <translation type="unfinished"/>
+        <translation>B♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="184"/>
         <source>C♭6</source>
-        <translation type="unfinished"/>
+        <translation>C♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="185"/>
         <source>C6</source>
-        <translation type="unfinished"/>
+        <translation>C6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="186"/>
         <source>C♯6</source>
-        <translation type="unfinished"/>
+        <translation>C♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="187"/>
         <source>D♭6</source>
-        <translation type="unfinished"/>
+        <translation>D♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="188"/>
         <source>D6</source>
-        <translation type="unfinished"/>
+        <translation>D6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="189"/>
         <source>D♯6</source>
-        <translation type="unfinished"/>
+        <translation>D♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="190"/>
         <source>E♭6</source>
-        <translation type="unfinished"/>
+        <translation>E♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="191"/>
         <source>E6</source>
-        <translation type="unfinished"/>
+        <translation>E6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="192"/>
         <source>E♯6</source>
-        <translation type="unfinished"/>
+        <translation>E♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="193"/>
         <source>F♭6</source>
-        <translation type="unfinished"/>
+        <translation>F♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="194"/>
         <source>F6</source>
-        <translation type="unfinished"/>
+        <translation>F6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="195"/>
         <source>F♯6</source>
-        <translation type="unfinished"/>
+        <translation>F♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="196"/>
         <source>G♭6</source>
-        <translation type="unfinished"/>
+        <translation>G♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="197"/>
         <source>G6</source>
-        <translation type="unfinished"/>
+        <translation>G6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="198"/>
         <source>G♯6</source>
-        <translation type="unfinished"/>
+        <translation>G♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="199"/>
         <source>A♭6</source>
-        <translation type="unfinished"/>
+        <translation>A♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="200"/>
         <source>A6</source>
-        <translation type="unfinished"/>
+        <translation>A6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="201"/>
         <source>A♯6</source>
-        <translation type="unfinished"/>
+        <translation>A♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="202"/>
         <source>B♭6</source>
-        <translation type="unfinished"/>
+        <translation>B♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="203"/>
         <source>B6</source>
-        <translation type="unfinished"/>
+        <translation>B6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="204"/>
         <source>B♯6</source>
-        <translation type="unfinished"/>
+        <translation>B♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="206"/>
         <source>C♭7</source>
-        <translation type="unfinished"/>
+        <translation>C♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="207"/>
         <source>C7</source>
-        <translation type="unfinished"/>
+        <translation>C7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="208"/>
         <source>C♯7</source>
-        <translation type="unfinished"/>
+        <translation>C♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="209"/>
         <source>D♭7</source>
-        <translation type="unfinished"/>
+        <translation>D♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="210"/>
         <source>D7</source>
-        <translation type="unfinished"/>
+        <translation>D7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="211"/>
         <source>D♯7</source>
-        <translation type="unfinished"/>
+        <translation>D♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="212"/>
         <source>E♭7</source>
-        <translation type="unfinished"/>
+        <translation>E♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="213"/>
         <source>E7</source>
-        <translation type="unfinished"/>
+        <translation>E7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="214"/>
         <source>E♯7</source>
-        <translation type="unfinished"/>
+        <translation>E♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="215"/>
         <source>F♭7</source>
-        <translation type="unfinished"/>
+        <translation>F♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="216"/>
         <source>F7</source>
-        <translation type="unfinished"/>
+        <translation>F7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="217"/>
         <source>F♯7</source>
-        <translation type="unfinished"/>
+        <translation>F♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="218"/>
         <source>G♭7</source>
-        <translation type="unfinished"/>
+        <translation>G♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="219"/>
         <source>G7</source>
-        <translation type="unfinished"/>
+        <translation>G7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="220"/>
         <source>G♯7</source>
-        <translation type="unfinished"/>
+        <translation>G♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="221"/>
         <source>A♭7</source>
-        <translation type="unfinished"/>
+        <translation>A♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="222"/>
         <source>A7</source>
-        <translation type="unfinished"/>
+        <translation>A7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="223"/>
         <source>A♯7</source>
-        <translation type="unfinished"/>
+        <translation>A♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="224"/>
         <source>B♭7</source>
-        <translation type="unfinished"/>
+        <translation>B♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="225"/>
         <source>B7</source>
-        <translation type="unfinished"/>
+        <translation>B7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="226"/>
         <source>B♯7</source>
-        <translation type="unfinished"/>
+        <translation>B♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="228"/>
         <source>C♭8</source>
-        <translation type="unfinished"/>
+        <translation>C♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="229"/>
         <source>C8</source>
-        <translation type="unfinished"/>
+        <translation>C8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="230"/>
         <source>C♯8</source>
-        <translation type="unfinished"/>
+        <translation>C♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="231"/>
         <source>D♭8</source>
-        <translation type="unfinished"/>
+        <translation>D♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="232"/>
         <source>D8</source>
-        <translation type="unfinished"/>
+        <translation>D8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="233"/>
         <source>D♯8</source>
-        <translation type="unfinished"/>
+        <translation>D♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="234"/>
         <source>E♭8</source>
-        <translation type="unfinished"/>
+        <translation>E♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="235"/>
         <source>E8</source>
-        <translation type="unfinished"/>
+        <translation>E8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="236"/>
         <source>E♯8</source>
-        <translation type="unfinished"/>
+        <translation>E♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="237"/>
         <source>F♭8</source>
-        <translation type="unfinished"/>
+        <translation>F♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="238"/>
         <source>F8</source>
-        <translation type="unfinished"/>
+        <translation>F8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="239"/>
         <source>F♯8</source>
-        <translation type="unfinished"/>
+        <translation>F♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="240"/>
         <source>G♭8</source>
-        <translation type="unfinished"/>
+        <translation>G♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="241"/>
         <source>G8</source>
-        <translation type="unfinished"/>
+        <translation>G8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="242"/>
         <source>G♯8</source>
-        <translation type="unfinished"/>
+        <translation>G♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="243"/>
         <source>A♭8</source>
-        <translation type="unfinished"/>
+        <translation>A♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="244"/>
         <source>A8</source>
-        <translation type="unfinished"/>
+        <translation>A8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="245"/>
         <source>A♯8</source>
-        <translation type="unfinished"/>
+        <translation>A♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="246"/>
         <source>B♭8</source>
-        <translation type="unfinished"/>
+        <translation>B♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="247"/>
         <source>B8</source>
-        <translation type="unfinished"/>
+        <translation>B8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="248"/>
         <source>B♯8</source>
-        <translation type="unfinished"/>
+        <translation>B♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="250"/>
         <source>C♭9</source>
-        <translation type="unfinished"/>
+        <translation>C♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="251"/>
         <source>C9</source>
-        <translation type="unfinished"/>
+        <translation>C9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="252"/>
         <source>C♯9</source>
-        <translation type="unfinished"/>
+        <translation>C♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="253"/>
         <source>D♭9</source>
-        <translation type="unfinished"/>
+        <translation>D♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="254"/>
         <source>D9</source>
-        <translation type="unfinished"/>
+        <translation>D9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="255"/>
         <source>D♯9</source>
-        <translation type="unfinished"/>
+        <translation>D♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="256"/>
         <source>E♭9</source>
-        <translation type="unfinished"/>
+        <translation>E♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="257"/>
         <source>E9</source>
-        <translation type="unfinished"/>
+        <translation>E9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="258"/>
         <source>E♯9</source>
-        <translation type="unfinished"/>
+        <translation>E♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="259"/>
         <source>F♭9</source>
-        <translation type="unfinished"/>
+        <translation>F♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="260"/>
         <source>F9</source>
-        <translation type="unfinished"/>
+        <translation>F9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="261"/>
         <source>F♯9</source>
-        <translation type="unfinished"/>
+        <translation>F♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="262"/>
         <source>G♭9</source>
-        <translation type="unfinished"/>
+        <translation>G♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="263"/>
         <source>G9</source>
-        <translation type="unfinished"/>
+        <translation>G9</translation>
     </message>
 </context>
 <context>
@@ -12324,23 +14219,24 @@ For tips on suitable drives, click the help button.</source>
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="95"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="123"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
+        <extracomment>Title of the export progress dialog</extracomment>
         <translation>Експорт</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="66"/>
+        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="70"/>
         <source>Importing %1</source>
         <extracomment>%1 is the description of the file format being imported</extracomment>
         <translation>Імпортування %1</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="396"/>
+        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="485"/>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
@@ -12377,7 +14273,9 @@ Error %1</source>
 is a not an audio file. 
 Audacity cannot open this type of file.</source>
         <extracomment>%1 is the name of the file</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» 
+не є файлом звукових даних. 
+Audacity не може відкривати файли цього типу.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
@@ -12388,7 +14286,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>Імпортування %1…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -12408,7 +14306,10 @@ Audacity cannot open audio CDs directly.
 Extract (rip) the CD tracks to an audio format that 
 Audacity can import, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є доріжкою аудіо-КД. 
+Audacity не може відкрити аудіо-КД напряму. 
+Експортуйте (виріжте) доріжки КД у імпортований 
+Audacity формат, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -12416,7 +14317,9 @@ Audacity can import, such as WAV or AIFF.</source>
 Audacity cannot open this file because it only contains links to other files. 
 You may be able to open it in a text editor and download the actual audio files.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом списку програвання.
+Audacity не може відкрити цей файл, оскільки він містить тільки посилання на файли.
+Ви можете відкрити його у текстовому редакторі та завантажити справжні звукові файли.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="712"/>
@@ -12424,7 +14327,9 @@ You may be able to open it in a text editor and download the actual audio files.
 Audacity cannot open this type of file due to patent restrictions. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом Windows Media Audio. 
+Audacity не може відкривати цей тип файлів через патентні обмеження. 
+слід перетворити цей файл на файл підтримуваного аудіоформату, такого як WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="722"/>
@@ -12432,7 +14337,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Without the optional FFmpeg library, Audacity cannot open this type of file.
 Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом вдосконаленого аудіокодування (AAC). 
+Без додаткової бібліотеки FFmpeg Audacity не може відкривати цей тип файлів.
+Слід перетворити цей файл на файл підтримуваного аудіоформату, зокрема WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="729"/>
@@ -12442,7 +14349,11 @@ Audacity cannot open this type of file due to the encryption.
 Try recording the file into Audacity, or burn it to audio CD then 
 extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є шифрованим аудіофайлом. 
+Такі зазвичай продають у магазинах. 
+Audacity не може відкривати цей тип файлів через шифрування. 
+Спробуйте записати файл у Audacity, або записати його на CD, а потім 
+копіювати доріжку CD у підтримуваний аудіоформат, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="736"/>
@@ -12450,7 +14361,9 @@ extract the CD track to a supported audio format such as WAV or AIFF.</source>
 Audacity cannot open this proprietary format. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом RealPlayer. 
+Audacity не може відкрити цей закритий формат. 
+слід перетворити цей файл у файл підтримуваного аудіоформату, такого як WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="744"/>
@@ -12459,7 +14372,10 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є нотним файлом, а не файлом аудіо. 
+Audacity не може відкривати цей тип файлів. 
+Спробуйте перетворити його на файл аудіо, на зразок WAV або AIFF, а потім 
+імпортувати, або записати за допомогою Audacity.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -12469,7 +14385,11 @@ If you think it might be an mp3 file, rename it to end with “.mp3”
 and try importing it again. Otherwise you need to convert it to a supported audio 
 format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом аудіоформату Musepack. 
+Audacity не може відкривати цей тип файлів. 
+Якщо ви впевнені, що насправді це файл mp3, змініть його суфікс назви на «.mp3»
+і ще раз спробуйте його імпортувати. У іншому випадку Вам слід спочатку перетворити цей файл на файл формату, 
+що підтримується, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="760"/>
@@ -12477,7 +14397,9 @@ format, such as WAV or AIFF.</source>
 Audacity cannot open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом аудіоформату Wavpack. 
+Audacity не може відкривати цей тип файлів. 
+Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="768"/>
@@ -12485,7 +14407,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом аудіоформату Dolby Digital. 
+Audacity на даний момент не може відкривати цей тип файлів. 
+Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="776"/>
@@ -12493,7 +14417,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом аудіо Ogg Speex. 
+Audacity на даний момент не може відкривати цей тип файлів. 
+Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="789"/>
@@ -12501,12 +14427,14 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to extract the audio to a supported format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>«%1» є файлом відео. 
+Audacity на даний момент не може відкривати цей тип файлів. 
+Вам слід спочатку видобути звукові дані до файла у форматі, що підтримується, на зразок WAV або AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="795"/>
         <source>File “%1” not found.</source>
-        <translation type="unfinished"/>
+        <translation>Файла «%1» не знайдено.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="810"/>
@@ -12514,7 +14442,9 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
 
 %2For uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Програмі не вдалося розпізнати тип файла «%1».
+
+%2Для нестиснених файлів також можна спробувати пункт меню «Файл &gt; Імпорт &gt; Необроблені дані».</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
@@ -12529,7 +14459,10 @@ Importers supposedly supporting such files are:
 %2,
 but none of them understood this file format.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity визначено тип файла «%1».
+Серед інструментів імпортування, які могли б підтримувати такі файли:
+%2,
+але жоден з інструментів не може обробити файл у цьому форматі.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
@@ -12797,30 +14730,30 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка, не вдалося визначити опис формату для файла «%1».</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка, не вдалося розмістити контекст формату виведення у пам’яті.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка, не вдалося додати потік звукових даних до файла виведення «%1».</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка — не вдалося відкрити файл «%1» для запису даних. Код помилки — %2.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка, не вдалося записати заголовки до файла результатів «%1». Код помилки — %2.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
@@ -12846,17 +14779,19 @@ Support for this codec is probably not compiled in.</source>
 
 %3</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося відкрити звуковий кодек «%1» (0x%2)
+
+%3</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка не вдалося розмістити буфер для читання даних зі звукового потоку FIFO.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg: помилка — не вдалося записати звуковий кадр до файла виведених даних.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1172"/>
@@ -12892,7 +14827,8 @@ Support for this codec is probably not compiled in.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
-        <translation type="unfinished"/>
+        <translation>Для продовження виконання дій потрібна належно налаштована бібліотека FFmpeg.
+Ви можете налаштувати цю бібліотеку за допомогою сторінки «Параметри-&gt;Загальне».</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
@@ -13040,7 +14976,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Інструментові експорту до FLAC не вдалося відкрити %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
@@ -13239,7 +15175,8 @@ Status: %1</source>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
-        <translation type="unfinished"/>
+        <translation>Було здійснено спробу з’єднатися з бібліотекою lame_enc.dll v%1.%2. Ця версія бібліотеки є несумісною з Audacity %3.%4.%5.
+Будь ласка, отримайте найсвіжішу версію бібліотеки LAME для Audacity.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
@@ -13366,7 +15303,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 кбіт/с</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
@@ -13715,7 +15652,8 @@ Audacity не зможе виконати потрібну вам дію. Екс
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Помилка під час спроби запису файла %1 (недостатньо місця?).
+Повідомлення libsndfile: «%2»</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
@@ -13792,7 +15730,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Під час декодування файла WavPack сталася %1 помилка!</numerusform><numerusform>Під час декодування файла WavPack сталося %1 помилки!</numerusform><numerusform>Під час декодування файла WavPack сталося %1 помилок!</numerusform><numerusform>Під час декодування файла WavPack сталася %1 помилка!</numerusform></translation>
     </message>
 </context>
 <context>
@@ -13884,42 +15822,42 @@ Libsndfile says “%2”</source>
 <context>
     <name>label-track</name>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="47"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
         <source>SubRip text file</source>
         <translation>текстовий файл SubRip</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="49"/>
         <source>WebVTT file</source>
         <translation>файл WebVTT</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="53"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="54"/>
         <source>S&amp;tandard</source>
         <translation>С&amp;тандартний</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="55"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="56"/>
         <source>E&amp;xtended (with frequency ranges)</source>
         <translation>Роз&amp;ширений (із діапазонами частот)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="125"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
         <source>Labels</source>
         <translation>Мітки</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="178"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="179"/>
         <source>Label Track</source>
         <translation>Позначити доріжку</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="757"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="758"/>
         <source>Importing WebVTT files is not currently supported.</source>
         <translation>У поточній версії не передбачено підтримки імпортування файлів WebVTT.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="782"/>
         <source>One or more saved labels could not be read.</source>
         <translation>Одну або декілька збережених міток не вдалося прочитати.</translation>
     </message>
@@ -13929,37 +15867,37 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
         <source>Up to date</source>
-        <translation type="unfinished"/>
+        <translation>Актуальна</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
         <source>Error while parsing response from server</source>
-        <translation type="unfinished"/>
+        <translation>Помилка під час обробки відповіді сервера</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
         <source>Error while downloading language</source>
-        <translation type="unfinished"/>
+        <translation>Помилка під час отримання мови</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
         <source>Error while writing language files</source>
-        <translation type="unfinished"/>
+        <translation>Помилка під час записування мовних файлів</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
         <source>Language not found</source>
-        <translation type="unfinished"/>
+        <translation>Мови не знайдено</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
         <source>Error while removing language directory</source>
-        <translation type="unfinished"/>
+        <translation>Помилка під час вилучення каталогу мови</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
         <source>Another operation on this language has already been started</source>
-        <translation type="unfinished"/>
+        <translation>Вже розпочато іншу дію з цією мовою</translation>
     </message>
 </context>
 <context>
@@ -13970,9 +15908,9 @@ Libsndfile says “%2”</source>
         <translation>Відкрити %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
         <source>Sorry, we are unable to load these videos right now</source>
-        <translation type="unfinished"/>
+        <translation>Вибачте, нам не вдалося завантажити ці відео зараз</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
@@ -13981,44 +15919,44 @@ Libsndfile says “%2”</source>
         <translation>Навчання</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
         <source>Learn tab bar</source>
-        <translation type="unfinished"/>
+        <translation>Панель вкладок навчання</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
         <source>Get started</source>
-        <translation type="unfinished"/>
+        <translation>Почати</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
         <source>Classes</source>
-        <translation type="unfinished"/>
+        <translation>Класи</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
         <source>The received playlist is empty.</source>
-        <translation type="unfinished"/>
+        <translation>Отриманий список відтворення порожній.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
         <source>Marc Sabatella</source>
-        <translation type="unfinished"/>
+        <translation>Марк Сабателла</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
         <source>Instructor</source>
-        <translation type="unfinished"/>
+        <translation>Інструктор</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
-        <translation type="unfinished"/>
+        <translation>Автор, Mastering MuseScore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -14026,12 +15964,18 @@ Whether you are just getting started with music notation software, or are a powe
 In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
 
 (Note: Mastering MuseScore is available in English only)</source>
-        <translation type="unfinished"/>
+        <translation>Ласкаво просимо до Mastering MuseScore – найповнішого ресурсу для вивчення найпопулярнішого у світі програмного забезпечення для роботи з нотними записами! Мене звати Марк Сабателла, і я допомагаю розробляти, підтримувати та просувати MuseScore з моменту його першого випуску понад десять років тому.
+
+Незалежно від того, чи ви тільки починаєте користуватися програмним забезпеченням для роботи з нотними записами, чи є досвідченим користувачем, який прагне дослідити передові техніки гравірування та відтворення, мій флагманський онлайн-курс Mastering MuseScore охоплює все, що вам потрібно знати, щоб отримати максимум від MuseScore.
+
+Крім того, Mastering MuseScore пропонує підтримку спільноти музикантів, з дискусійними просторами, прямими трансляціями та іншими пов&apos;язаними курсами та послугами, які допоможуть вам створити найкращу музику. Скористайтеся цією можливістю, щоб вивчити MuseScore від одного з найвизнаніших експертів!
+
+(Примітка: Mastering MuseScore доступний лише англійською мовою)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
-        <translation type="unfinished"/>
+        <translation>Mastering MuseScore</translation>
     </message>
 </context>
 <context>
@@ -14361,53 +16305,6 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     </message>
 </context>
 <context>
-    <name>midi</name>
-    <message>
-        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
-        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
-        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
-        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
-        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
-        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
-        <source>No device</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>midiremote</name>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
-        <source>MIDI remote control</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
-        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
-        <source>MIDI mapping:</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
-        <source>MIDI mapping bottom panel</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
-        <source>Assign MIDI mapping…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
-        <source>MIDI mapping top panel</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -14420,14 +16317,18 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 
 Error: %2</source>
         <extracomment>%1 is the module name, %2 is the system error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося завантажити модуль «%1».
+
+Помилка: %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>Модуль «%1» не надає даних щодо відповідної версії програми.
+
+Його не буде завантажено.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
@@ -14435,19 +16336,23 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation type="unfinished"/>
+        <translation>Модуль «%1» призначено для Audacity версії «%2».
+
+Його не буде завантажено.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>Модуль «%1» не вдалося ініціалізувати.
+
+Його не буде завантажено.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
         <source>Module “%1” found.</source>
-        <translation type="unfinished"/>
+        <translation>Знайдено модуль «%1».</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
@@ -14483,7 +16388,9 @@ Only use modules from trusted sources</source>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>Модуль «%1» не надає жодної з обов&apos;язкових функцій.
+
+Його не буде завантажено.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
@@ -14509,12 +16416,15 @@ It will not be loaded.</source>
 %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="478"/>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
         <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="vanished"><numerusform>Увімкнути цей додаток?
+</numerusform><numerusform>Увімкнути ці додатки?
+</numerusform><numerusform>Увімкнути ці додатки?
+</numerusform><numerusform>Увімкнути ці додатки?
+</numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -14564,23 +16474,187 @@ It will not be loaded.</source>
         <source>Delete and…</source>
         <translation>Вилучити і…</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="52"/>
+        <source>Join</source>
+        <extracomment>Verb: context menu command that joins the selected clips</extracomment>
+        <translation>З&apos;єднати</translation>
+    </message>
 </context>
 <context>
-    <name>musesampler</name>
+    <name>multiwindows</name>
     <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
-        <source>MuseSampler library is detected, version %1</source>
-        <translation type="unfinished"/>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
+        <source>Multiinstances</source>
+        <translation>Мультиекземпляри</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
-        <source>Installed MuseSampler library is not supported, version %1</source>
-        <translation type="unfinished"/>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
+        <source>Show multiwindows info</source>
+        <translation>Показати дані щодо мультивікон</translation>
+    </message>
+</context>
+<context>
+    <name>navigation</name>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
+        <source>Escape</source>
+        <translation>Escape</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
-        <source>MuseSampler library is not found</source>
-        <translation type="unfinished"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
+        <source>Navigate escape</source>
+        <translation>Скасування навігації</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
+        <source>Next section</source>
+        <translation>Наступний розділ</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
+        <source>Navigate next section</source>
+        <translation>Перейти до наступного розділу</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
+        <source>Previous section</source>
+        <translation>Попередній розділ</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
+        <source>Navigate previous section</source>
+        <translation>Перейти до попереднього розділу</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
+        <source>Next panel</source>
+        <translation>Наступна панель</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
+        <source>Navigate next panel</source>
+        <translation>Перейти до наступної панелі</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
+        <source>Previous panel</source>
+        <translation>Попередня панель</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
+        <source>Navigate previous panel</source>
+        <translation>Перейти до попередньої панелі</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
+        <source>Next tab</source>
+        <translation>Наступна вкладка</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
+        <source>Navigate next tab</source>
+        <translation>Перейти до наступної вкладки</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
+        <source>Previous tab</source>
+        <translation>Попередня вкладка</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
+        <source>Navigate previous tab</source>
+        <translation>Перейти до попередньої вкладки</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
+        <source>Right</source>
+        <translation>Правий</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
+        <source>Navigate right</source>
+        <translation>Перейти праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
+        <source>Left</source>
+        <translation>Лівий</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
+        <source>Navigate left</source>
+        <translation>Перейти ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
+        <source>Up</source>
+        <translation>Вище</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
+        <source>Navigate up</source>
+        <translation>Перейти вище</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
+        <source>Down</source>
+        <translation>Вище</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
+        <source>Navigate down</source>
+        <translation>Перейти нижче</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
+        <source>First control</source>
+        <translation>Перший засіб керування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
+        <source>Navigate first control</source>
+        <translation>Перейти до першого засобу керування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
+        <source>Last control</source>
+        <translation>Останній засіб керування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
+        <source>Navigate last control</source>
+        <translation>Перейти до останнього засобу керування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
+        <source>Next row control</source>
+        <translation>Засіб керування у наступному рядку</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
+        <source>Navigate next row control</source>
+        <translation>Перейти до засобу керування у наступному рядку</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
+        <source>Previous row control</source>
+        <translation>Засіб керування у попередньому рядку</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
+        <source>Navigate previous row control</source>
+        <translation>Перейти до засобу керування у попередньому рядку</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
+        <source>Trigger control</source>
+        <translation>Задіяти засіб керування</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
+        <source>Navigate trigger control</source>
+        <translation>Перейти до задіяння засобу керування</translation>
     </message>
 </context>
 <context>
@@ -14588,27 +16662,27 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
         <source>The request was aborted</source>
-        <translation type="unfinished"/>
+        <translation>Запит перервано</translation>
     </message>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
         <source>The connection to the remote server timed out</source>
-        <translation type="unfinished"/>
+        <translation>Перевищено час очікування на дані у з&apos;єднанні з віддаленим сервером</translation>
     </message>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
         <source>An unknown network-related error occurred</source>
-        <translation type="unfinished"/>
+        <translation>Сталася невідома помилка, яку пов&apos;язано із мережею</translation>
     </message>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
         <source>The I/O device was not opened for reading</source>
-        <translation type="unfinished"/>
+        <translation>Пристрій введення-виведення не відкрито для читання</translation>
     </message>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
         <source>The I/O device was not opened for writing</source>
-        <translation type="unfinished"/>
+        <translation>Пристрій введення-виведення не відкрито для запису</translation>
     </message>
 </context>
 <context>
@@ -14625,7 +16699,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
         <source>Extensions toolbar</source>
-        <translation type="unfinished"/>
+        <translation>Панелі інструментів розширень</translation>
     </message>
 </context>
 <context>
@@ -14984,92 +17058,92 @@ It will not be loaded.</source>
 <context>
     <name>playback</name>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="32"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="34"/>
         <source>Position</source>
         <translation>Розташування</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="40"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="47"/>
         <source>Top bar (horizontal)</source>
         <translation>Верхня панель (горизонтальна)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="44"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="51"/>
         <source>Side bar (vertical)</source>
         <translation>Бічна панель (вертикальна)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="73"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="85"/>
         <source>Default</source>
         <translation>Типовий</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="77"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="89"/>
         <source>RMS</source>
         <translation>СКВ</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="81"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="93"/>
         <source>Gradient</source>
         <translation>Градієнт</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="104"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="121"/>
         <source>Logarithmic (dB)</source>
         <translation>Логарифмічна (дБ)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="125"/>
         <source>Linear (dB)</source>
         <translation>Лінійна (дБ)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="112"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="129"/>
         <source>Linear (amp)</source>
         <translation>Лінійна (амп)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="132"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="162"/>
         <source>dB range</source>
         <translation>Діапазон у дБ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="20"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Low quality</source>
         <translation>Низька якість</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Medium quality</source>
         <translation>Посередня якість</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>High quality</source>
         <translation>Висока якість</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Best quality</source>
         <translation>Найвища якість</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="27"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>None</source>
         <translation>Немає</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="28"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Rectangle</source>
         <translation>Прямокутник</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="29"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Triangle</source>
         <translation>Трикутник</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="30"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Shaped</source>
         <translation>За формою</translation>
     </message>
@@ -15079,24 +17153,145 @@ It will not be loaded.</source>
         <translation>Часовий підпис</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="41"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
         <source>Moved volume slider</source>
         <translation>Пересунуто повзунок гучності</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="42"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
         <translation>Гучність</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="66"/>
         <source>Moved pan dial</source>
         <translation>Пересунуто лічильник панорамування</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="69"/>
+        <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
         <source>Pan</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Панорама</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
+        <source>Playback volume</source>
+        <translation>Гучність відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="27"/>
+        <source>Playback meter</source>
+        <translation>Індикатор відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="63"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="61"/>
+        <source>Playback meter settings</source>
+        <extracomment>Tooltip of the playback meter settings button</extracomment>
+        <translation>Параметри індикатора відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
+        <source>Audio settings are already being changed.</source>
+        <translation>Параметри звуку вже змінюються.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
+        <source>The selected audio settings are invalid.</source>
+        <translation>Вибрані параметри звуку є некоректними.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
+        <source>The selected audio routing is invalid.</source>
+        <translation>Вибрана маршрутизація звуку є некоректною.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
+        <source>No usable audio API is available.</source>
+        <translation>Немає доступного програмного звукового інтерфейсу.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
+        <source>No ASIO device is available.</source>
+        <translation>Немає доступних пристроїв ASIO.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
+        <source>The active audio stream could not be stopped.</source>
+        <translation>Активний потік звукових даних не вдалося зупинити.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
+        <source>An internal error occurred while changing the audio settings.</source>
+        <translation>Сталася внутрішня помилка під час спроби змінити параметри звукових даних.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
+        <source>No playback device is available.</source>
+        <translation>Немає доступних пристроїв відтворення.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
+        <source>“%1” is now used for playback.</source>
+        <translation>Тепер для відтворення використано «%1».</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
+        <source>Playback device changed</source>
+        <translation>Змінено пристрій відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
+        <source>No recording device is available.</source>
+        <translation>Немає доступних пристроїв для записування.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
+        <source>“%1” is now used for recording.</source>
+        <translation>Тепер для записування використано «%1».</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
+        <source>Recording device changed</source>
+        <translation>Змінено пристрій записування</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
+        <source>The previous audio state could not be restored.</source>
+        <translation>Не вдалося відновити попередній стан звукових даних.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
+        <source>Unable to rescan audio devices</source>
+        <translation>Не вдалося виконати повторний пошук звукових пристроїв</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
+        <source>The audio stream could not be restored after rescanning audio devices.</source>
+        <translation>Не вдалося відновити потік звукових даних після повторного пошуку звукових пристроїв.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
+        <source>Audio devices</source>
+        <translation>Звукові пристрої</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
+        <source>Unable to change audio settings</source>
+        <translation>Не вдалося змінити параметри звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
+        <source>The audio stream could not be restored after changing the audio settings.</source>
+        <translation>Не вдалося відновити потік звукових даних після зміни параметрів звукових даних.</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <source>Audio settings</source>
+        <translation>Параметри звуку</translation>
     </message>
 </context>
 <context>
@@ -15165,62 +17360,62 @@ It will not be loaded.</source>
         <translation>Ніколи</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="32"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="31"/>
         <source>Inputs and outputs</source>
         <translation>Вхідні і вихідні дані</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="49"/>
         <source>Host</source>
         <translation>Вузол</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="33"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="32"/>
         <source>Buffer and latency</source>
         <translation>Буфер і латентність</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="45"/>
         <source>Buffer length</source>
         <translation>Розмір буфера</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="71"/>
         <source>Latency compensation</source>
         <translation>Компенсація латентності</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="116"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="105"/>
         <source>Automatic</source>
         <translation>Автоматично</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="39"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
         <source>Clip style</source>
         <translation>Стиль кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="70"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
         <source>Colorful</source>
         <translation>Кольорова</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="100"/>
         <source>Classic</source>
         <translation>Класична</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="88"/>
         <source>Playback device</source>
         <translation>Пристрій відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="66"/>
         <source>Recording device</source>
         <translation>Пристрій запису</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="120"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="105"/>
         <source>Recording channels</source>
         <translation>Канали запису</translation>
     </message>
@@ -15275,6 +17470,11 @@ It will not be loaded.</source>
         <translation>Бібліотеки FFmpeg не знайдено</translation>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
+        <source>FFmpeg library path</source>
+        <translation>Шлях до бібліотеки FFmpeg</translation>
+    </message>
+    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
         <source>Free space</source>
         <translation>Вільне місце</translation>
@@ -15285,7 +17485,12 @@ It will not be loaded.</source>
         <translation>Мова</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="79"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="67"/>
+        <source>Language %1</source>
+        <translation>Мова %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
         <source>Restart required</source>
         <translation>Потрібен перезапуск</translation>
     </message>
@@ -15300,12 +17505,12 @@ It will not be loaded.</source>
         <translation>Діапазон у дБ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="12"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="11"/>
         <source>Mono &amp; stereo conversion</source>
         <translation>Перетворення моно і стерео</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="27"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="26"/>
         <source>Always convert to mono without prompt</source>
         <translation>Завжди перетворювати на моно без запиту</translation>
     </message>
@@ -15315,7 +17520,12 @@ It will not be loaded.</source>
         <translation>Формат чисел</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="69"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
+        <source>Number format %1</source>
+        <translation>Формат чисел %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
         <source>Example: 1,000,000.99</source>
         <translation>Приклад: 1,000,000.99</translation>
     </message>
@@ -15330,12 +17540,12 @@ It will not be loaded.</source>
         <translation>Швидкодія відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="34"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="24"/>
         <source>Playback quality</source>
         <translation>Якість відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="40"/>
         <source>Dithering</source>
         <translation>Розмиття</translation>
     </message>
@@ -15355,44 +17565,29 @@ It will not be loaded.</source>
         <translation>Показувати індикатор мікрофона, якщо не виконується записування</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="33"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="32"/>
         <source>Sample rate</source>
         <translation>Частота дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="46"/>
         <source>Default sample rate</source>
         <translation>Типова частота дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="66"/>
         <source>Default sample format</source>
         <translation>Типовий формат семплу</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="89"/>
         <source>Custom sample rate</source>
         <translation>Нетипова частота дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="116"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="110"/>
         <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
         <translation>Типові частоти дискретизації та формати застосовуються лише до щойно створених доріжок. Запис на наявні доріжки використовуватиме частоту дискретизації та формат доріжки.</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="15"/>
-        <source>Solo button behavior</source>
-        <translation>Поведінка кнопки «Соло»</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="40"/>
-        <source>Solo can be activated for multiple tracks at the same time</source>
-        <translation>Соло може бути активовано для декількох доріжок одночасно</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="55"/>
-        <source>When solo is activated, it deactivates solo for all other tracks</source>
-        <translation>Якщо активовано соло, деактивує соло для усіх інших доріжок</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="17"/>
@@ -15445,28 +17640,28 @@ It will not be loaded.</source>
         <translation>Кольори інтерфейсу</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="49"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
         <source>Accent color</source>
         <translation>Колір акценту</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="55"/>
         <source>Text and icons</source>
         <translation>Текст і піктограми</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="60"/>
         <source>Disabled text</source>
         <translation>Вимкнений текст</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="52"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="65"/>
         <source>Border color</source>
         <translation>Колір рамки</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="160"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="198"/>
         <source>Appearance</source>
         <translation>Вигляд</translation>
     </message>
@@ -15497,27 +17692,27 @@ It will not be loaded.</source>
         <translation>Вказаної теки не існує.</translation>
     </message>
     <message>
-        <source>Please select a path that contains %1</source>
-        <translation>Будь ласка, виберіть шлях, за яким міститься %1</translation>
-    </message>
-    <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Будь ласка, виберіть шлях, за яким міститься «%1»</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="194"/>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="199"/>
         <source>Success</source>
         <translation>Успіх</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="147"/>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="195"/>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="200"/>
         <source>Please restart the application for the changes to take effect.</source>
         <translation>Будь ласка, перезапустіть програму для набуття чинності змінами.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
+        <source>Installation found</source>
+        <translation>Знайдено встановлене</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
@@ -15535,39 +17730,110 @@ It will not be loaded.</source>
         <translation>Зміна FFmpeg</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="184"/>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
+        <source>FFmpeg has already been found</source>
+        <translation>FFmpeg вже знайдено</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
         <source>Locate %1</source>
         <translation>Розташування %1</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="43"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="44"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 канал запису (моно)</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="46"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="47"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 канали запису (стерео)</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="238"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="251"/>
-        <source>Other</source>
-        <translation>Інше</translation>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
+        <source>Audio settings are already being changed.</source>
+        <translation>Параметри звуку вже змінюються.</translation>
     </message>
     <message>
-        <source>Your version of %1 is up to date.</source>
-        <translation>Ваша версія %1 є актуальною.</translation>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="57"/>
+        <source>The selected audio settings are invalid.</source>
+        <translation>Вибрані параметри звуку є некоректними.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="59"/>
+        <source>The selected audio routing is invalid.</source>
+        <translation>Вибрана маршрутизація звуку є некоректною.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
+        <source>No usable audio API is available.</source>
+        <translation>Немає доступного програмного звукового інтерфейсу.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
+        <source>No ASIO device is available.</source>
+        <translation>Немає доступних пристроїв ASIO.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
+        <source>The active audio stream could not be stopped.</source>
+        <translation>Активний потік звукових даних не вдалося зупинити.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
+        <source>An internal error occurred while changing the audio settings.</source>
+        <translation>Сталася внутрішня помилка під час спроби змінити параметри звукових даних.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
+        <source>System default: %1</source>
+        <translation>Типовий системний: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
+        <source>The audio stream could not be restored after changing the audio settings.</source>
+        <translation>Не вдалося відновити потік звукових даних після зміни параметрів звукових даних.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="247"/>
+        <source>The previous audio state could not be restored.</source>
+        <translation>Не вдалося відновити попередній стан звукових даних.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
+        <source>Unable to apply audio settings</source>
+        <translation>Не вдалося застосувати параметри звукових даних</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
+        <source>The audio stream could not be restored after closing the ASIO settings.</source>
+        <translation>Не вдалося відновити потік звукових даних після закриття параметрів ASIO.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
+        <source>Unable to open ASIO settings</source>
+        <translation>Не вдалося відкрити параметри ASIO</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="535"/>
+        <source>Other</source>
+        <translation>Інше</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ваша версія «%1» є актуальною.</translation>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="91"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="101"/>
         <source>System default</source>
         <translation>Типовий системний</translation>
@@ -15588,54 +17854,76 @@ It will not be loaded.</source>
         <translation>Зміни каталогу для зберігання тимчасових файлів не наберуть сили, доки програму Audacity не буде перезавантажено.</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="157"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="195"/>
         <source>General</source>
         <translation>Загальне</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="163"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>Audio settings</source>
+        <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>Параметри звуку</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="166"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
+        <source>The default audio settings are invalid.</source>
+        <translation>Типові параметри звуку є некоректними.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
+        <source>An internal error occurred while resetting the audio settings.</source>
+        <translation>Сталася внутрішня помилка під час відновлення початкових параметрів звуку.</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
         <source>Audio editing</source>
         <translation>Редагування звукових даних</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="169"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="207"/>
         <source>Playback/Recording</source>
         <translation>Відтворення/Записування</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="173"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
         <source>Spectral display</source>
         <translation>Спектральний показ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="177"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
         <source>Music</source>
         <translation>Музика</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="180"/>
         <source>Cloud</source>
-        <translation>Хмара</translation>
+        <translation type="vanished">Хмара</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="182"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="220"/>
         <source>Shortcuts</source>
         <translation>Скорочення</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="185"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
         <source>Plugins</source>
         <translation>Додатки</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="188"/>
         <source>Advanced options</source>
-        <translation>Додаткові параметри</translation>
+        <translation type="vanished">Додаткові параметри</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="249"/>
+        <source>Unable to reset audio settings</source>
+        <translation>Не вдалося відновити початкові параметри звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
+        <source>The audio stream could not be restored after resetting the audio settings.</source>
+        <translation>Не вдалося відновити потік звукових даних після відновлення початкових параметрів звукових даних.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
@@ -15675,47 +17963,57 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation type="unfinished"/>
+        <translation>Виберіть місце зберігання додатка</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="75"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
         <source>Remove</source>
         <translation>Вилучити</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="78"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
         <source>Remove location</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити місце зберігання</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="98"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="100"/>
         <source>The directory does not exist</source>
-        <translation type="unfinished"/>
+        <translation>Каталогу не існує</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="107"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="111"/>
         <source>Add new location</source>
         <translation>Додати нове місце</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
-        <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
+        <source>Custom LV2 plugins location</source>
+        <translation>Нетипове місце зберігання додатків LV2</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Виберіть нетипове місце зберігання додатків LV2</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="80"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Нетипове місце зберігання додатків VST3</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="81"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Виберіть нетипове місце зберігання додатків VST3</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
+        <source>Use device sample rate</source>
+        <translation>Використати частоту дискретизації пристрою</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
+        <source>Driver settings</source>
+        <translation>Параметри драйвера</translation>
     </message>
 </context>
 <context>
@@ -15758,7 +18056,7 @@ It will not be loaded.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="70"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="17"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="16"/>
         <source>Untitled project</source>
         <translation>Проєкт без назви</translation>
     </message>
@@ -15805,7 +18103,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="366"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="217"/>
         <source>Project item menu</source>
-        <translation type="unfinished"/>
+        <translation>Меню пункту проєкту</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="471"/>
@@ -15984,37 +18282,37 @@ It will not be loaded.</source>
         <translation>Відкрити інший…</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="120"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="116"/>
         <source>All saved changes will now update to the cloud</source>
         <translation>Усі збережені зміни тепер синхронізуватимуться з «хмарою»</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="162"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="158"/>
         <source>Publish your finished projects on Audio.com</source>
         <translation>Оприлюднення ваших завершених проєктів на Audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="187"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Create a portfolio to showcase your music</source>
         <translation>Створити портфоліо для демонстрації вашої музики</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="188"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Gain followers and receive project comments and ratings</source>
         <translation>Знайдіть зацікавлених осіб і отримуйте коментарі до проєкту та його оцінки</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="189"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Share your projects and collaborate with other musicians</source>
         <translation>Поділіться вашими проєктами і співпрацюйте з іншими музикантами</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="223"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="215"/>
         <source>Watch video</source>
         <translation>Переглянути відео</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="251"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="243"/>
         <source>View project online</source>
         <translation>Переглянути проєкт в інтернеті</translation>
     </message>
@@ -16029,188 +18327,233 @@ It will not be loaded.</source>
         <translation>Колір акценту</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="387"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="529"/>
         <source>Could not save project locally</source>
         <translation>Не вдалося зберегти проєкт локально</translation>
     </message>
     <message>
-        <location filename="../../src/au3wrap/internal/au3project.cpp" line="151"/>
+        <location filename="../../src/au3wrap/internal/au3project.cpp" line="153"/>
         <source>Project loading failed</source>
         <translation>Не вдалося завантажити проєкт</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="485"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="665"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="712"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="787"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="836"/>
         <source>All supported files</source>
         <translation>всі файли, що підтримуються</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="72"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="104"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="71"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="111"/>
         <source>Imported file “%1”?</source>
         <translation>Імпортувати файл «%1»?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="76"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="97"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="108"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="122"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="77"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="116"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Import</source>
+        <extracomment>Name of the undo history entry created by importing files</extracomment>
         <translation>Імпорт</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="97"/>
-        <location filename="../../src/project/internal/audacityproject.cpp" line="122"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
+        <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Imported multiple files</source>
         <translation>Імпортування декількох файлів</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="291"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="380"/>
         <source>Error opening file</source>
         <translation>Помилка під час відкриття файла</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="292"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
         <source>Could not open file: %1</source>
         <translation>Не вдалося відкрити файл: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="584"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="603"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="963"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="982"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="702"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="725"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1098"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1117"/>
         <source>Dismiss</source>
+        <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Відкинути</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="597"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="719"/>
         <source>Upload project to audio.com…</source>
         <translation>Вивантаження проєкту на audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="666"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
         <source>Audacity project files</source>
         <translation>файли проєктів Audacity</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="667"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
         <source>Audacity 3 files</source>
         <translation>файли Audacity 3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="181"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="668"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="182"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
         <source>Audacity 4 files</source>
         <translation>файли Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="667"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
+        <source>Cloud sync failed</source>
+        <translation>Не вдалося синхронізувати дані з «хмарою»</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="626"/>
+        <source>Project unavailable</source>
+        <translation>Проєкт недоступний</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="635"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="789"/>
+        <source>Access denied</source>
+        <translation>Доступ заборонено</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="657"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="769"/>
+        <source>Version conflict</source>
+        <translation>Конфлікт версій</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="690"/>
         <source>Visit audio.com</source>
         <translation>Відвідати audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="672"/>
         <source>Load latest</source>
         <translation>Завантажити найсвіжіший</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="958"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="679"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="698"/>
+        <source>Project incomplete</source>
+        <translation>Проєкт не завершено</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="806"/>
+        <source>Network error</source>
+        <translation>Помилка мережі</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Усі збережені зміни буде оновлено за даними у хмарі.
 Ви можете керувати цим файлом зі сторінки ваших оновлених проєктів на audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="669"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
         <source>Importable audio and media files</source>
         <translation>Придатні до імпортування звукові і мультимедійні файли</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="682"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="731"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="855"/>
         <source>Open</source>
+        <extracomment>Title of a file picker dialog</extracomment>
         <translation>Відкрити</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="713"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
         <source>Audio files</source>
         <translation>файли звукових даних</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="714"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
         <source>Video files</source>
         <translation>відеофайли</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
         <source>Game media files</source>
         <translation>мультимедійні файли ігор</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="716"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
         <source>Streaming files</source>
         <translation>файли потоків даних</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="717"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
         <source>Animation and image files</source>
         <translation>файли анімацій і зображень</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="718"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
         <source>Raw files</source>
         <translation>файли без обробки</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="747"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="871"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Хочете зберегти зміни до проєкту до його закриття?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="749"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="873"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Хочете зберегти зміни до проєкту «%1» до його закриття?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="753"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Внесені вами зміни буде втрачено, якщо ви не збережете їх.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="976"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="884"/>
+        <source>Unsaved changes</source>
+        <translation>Незбережені зміни</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1111"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Відновлюємо синхронізацію з audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="994"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1129"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1555"/>
         <source>Syncing project from cloud…</source>
         <translation>Синхронізація проєкту з «хмари»…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1159"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Не вдалося прочитати файл %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1164"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1295"/>
         <source>An error occurred while reading this file.</source>
         <translation>Сталася помилка під час читання цього файла.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="701"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="726"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="742"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="782"/>
         <source>Save to computer</source>
+        <extracomment>Label of a dialog button</extracomment>
         <translation>Зберегти на комп&apos;ютері</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectconfiguration.cpp" line="172"/>
+        <location filename="../../src/project/internal/projectconfiguration.cpp" line="162"/>
         <source>Untitled</source>
         <translation>Без назви</translation>
     </message>
@@ -16278,7 +18621,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
         <source>Cloud project indicator</source>
-        <translation type="unfinished"/>
+        <translation>Індикатор проєкту «хмари»</translation>
     </message>
 </context>
 <context>
@@ -16290,23 +18633,23 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="430"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="458"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2169"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2650"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="563"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
         <source>Warning</source>
         <translation>Попередження</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1075"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1045"/>
+        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1114"/>
         <source>Progress</source>
         <extracomment>This title appears on a dialog that indicates the progress in doing something.</extracomment>
         <translation>Поступ</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1075"/>
+        <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
         <source>Discarding undo/redo history</source>
         <translation>Відкидаємо журнал скасування-відновлення</translation>
     </message>
@@ -16345,13 +18688,13 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1251"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2227"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
         <source>This may take several seconds</source>
         <translation>Виконання дії може тривати декілька секунд…</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="537"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="548"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -16359,7 +18702,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="540"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="551"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
@@ -16367,7 +18710,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="624"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="638"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -16377,8 +18720,8 @@ Please remove the write protection by checking the file’s properties, ensuring
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="648"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="671"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="662"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="685"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -16388,7 +18731,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="432"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="462"/>
         <source>There is very little free disk space left on %1
 Please select a bigger temporary directory location in
 Directories Preferences.</source>
@@ -16398,12 +18741,12 @@ Directories Preferences.</source>
 у налаштуваннях каталогів.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="457"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="487"/>
         <source>Failed to open the project’s database</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося відкрити базу даних проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="517"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="547"/>
         <source>Failed to open database file:
 
 %1</source>
@@ -16413,17 +18756,17 @@ Directories Preferences.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="576"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="606"/>
         <source>Failed to discard connection</source>
         <translation>Не вдалося відкинути з&apos;єднання</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="606"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="636"/>
         <source>Failed to restore connection</source>
         <translation>Не вдалося відновити з&apos;єднання</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="651"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="681"/>
         <source>Failed to execute a project file command:
 
 %1</source>
@@ -16433,7 +18776,7 @@ Directories Preferences.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="724"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="773"/>
         <source>Project is in a read only directory
 (Unable to create the required temporary files)</source>
         <extracomment>An error message.</extracomment>
@@ -16441,12 +18784,12 @@ Directories Preferences.</source>
 (Неможливо створити необхідні тимчасові файли)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="745"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="794"/>
         <source>This is not an Audacity project file</source>
         <translation>Цей файл не є файлом проєкту Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="761"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="810"/>
         <source>This project was created with a newer version of Audacity.
 
 You will need to upgrade to open it.</source>
@@ -16455,18 +18798,27 @@ You will need to upgrade to open it.</source>
 Щоб відкрити його, вам доведеться встановити новішу версію програми</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="780"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="824"/>
+        <source>Failed to upgrade the project schema.
+
+File might be corrupted or read only.</source>
+        <translation>Не вдалося оновити схему проєкту.
+
+Можливо, файл пошкоджено або призначено лише для читання.</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
         <source>Unable to initialize the project file</source>
         <translation>Не вдалося ініціалізувати файл проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="834"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="899"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося додати функцію «inset» (не вдалося перевірити ідентифікатори блоків)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="852"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="917"/>
         <source>Project is read only
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16474,7 +18826,7 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="855"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="920"/>
         <source>Project is locked
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16482,7 +18834,7 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="858"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="923"/>
         <source>Project is busy
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16490,7 +18842,7 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="861"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="926"/>
         <source>Project is corrupt
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16498,7 +18850,7 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="864"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="929"/>
         <source>Some permissions issue
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16506,7 +18858,7 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="867"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="932"/>
         <source>A disk I/O error
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16514,7 +18866,7 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="870"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="935"/>
         <source>Not authorized
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
@@ -16522,35 +18874,35 @@ You will need to upgrade to open it.</source>
 (Неможливо працювати із блоковими файлами)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="873"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="938"/>
         <source>Unable to work with the blockfiles</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
         <translation>Неможливо працювати із блоковими файлами</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="883"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="948"/>
         <source>Total orphan blocks deleted %1</source>
         <extracomment>%1 is the number of deleted orphan blocks</extracomment>
         <translation>Загалом вилучено зайвих блоків: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="964"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1029"/>
         <source>Failed to rollback transaction during import</source>
         <translation>Не вдалося скасувати дію під час імпортування</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="988"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1053"/>
         <source>Unable to attach destination database</source>
         <translation>Не вдалося долучити базу даних призначення</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="999"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1064"/>
         <source>Unable to switch to fast journaling mode</source>
         <translation>Не вдалося перемкнутися у режим швидкого журналювання</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1037"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1856"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1106"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1964"/>
         <source>Unable to prepare project file command:
 
 %1</source>
@@ -16560,13 +18912,13 @@ You will need to upgrade to open it.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1070"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1139"/>
         <source>Failed to bind SQL parameter</source>
         <translation>Не вдалося пов&apos;язати параметр SQL</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1085"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1881"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1154"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1989"/>
         <source>Failed to update the project file.
 The following command failed:
 
@@ -16578,22 +18930,27 @@ The following command failed:
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1127"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
+        <source>Failed to copy the project history.</source>
+        <translation>Не вдалося скопіювати журнал проєкту.</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
         <source>Destination project could not be detached</source>
         <translation>Не вдалося від&apos;єднати проєкт призначення</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1251"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
         <source>Copying Project</source>
         <translation>Копіювання проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1265"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1348"/>
         <source>Error Writing to File</source>
         <translation>Помилка під час спроби запису файла</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1267"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1350"/>
         <source>Audacity failed to write file %1.
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
@@ -16603,29 +18960,29 @@ For tips on freeing up space, click the help button.</source>
 Щоб дізнатися більше про вивільнення місця на диску, натисніть кнопку «Довідка».</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1479"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1583"/>
         <source>Compacting project</source>
         <translation>Ущільнення проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1578"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1685"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>[Проєкт %1] Audacity «%2»</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1580"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
         <source>&lt;untitled&gt;</source>
         <translation>&lt;без назви&gt;</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1591"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
         <translation>(Відновлено)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1691"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
         <source>This file was saved using Audacity %1.
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</source>
         <extracomment>%1 is the Audacity version that saved the file, %2 is the running version.</extracomment>
@@ -16633,53 +18990,58 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
 Ви використовуєте Audacity версії %2. Щоб відкрити цей файл, слід оновити  версію програми.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1695"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1802"/>
         <source>Can’t open project file</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося відкрити файл проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1811"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1918"/>
         <source>Failed to remove the autosave information from the project file.</source>
         <translation>Не вдалося вилучити дані автоматичного збереження з файла проєкту.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1874"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1924"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1934"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1947"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1982"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2032"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2042"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2055"/>
         <source>Unable to bind to blob</source>
         <translation>Неможливо прив&apos;язатися до бінарних даних</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2058"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
+        <source>The project file is read-only</source>
+        <translation>Файл проєкту призначено лише для читання</translation>
+    </message>
+    <message>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
         <source>Unable to parse project information.</source>
         <translation>Не вдалося обробити дані щодо проєкту.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2170"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося повторно відкрити базу даних проєкту, ймовірно, через нестачу місця на пристрої для зберігання даних.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2186"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
         <source>Saving project</source>
         <translation>Збереження проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2188"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2242"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2262"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2304"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2363"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2383"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
         <source>Error Saving Project</source>
         <translation>Помилка під час спроби збереження файла проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2227"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
         <source>Syncing</source>
         <translation>Синхронізація</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2244"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -16691,7 +19053,7 @@ on the storage device.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2264"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -16703,12 +19065,12 @@ on the storage device.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2330"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2451"/>
         <source>Backing up project</source>
         <translation>Резервне копіювання проєкту</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2649"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2770"/>
         <source>Automatic database backup failed.</source>
         <translation>Не вдалося виконати автоматичне резервне копіювання бази даних.</translation>
     </message>
@@ -16771,7 +19133,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Синхронізація з audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -16803,47 +19165,57 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="480"/>
-        <source>Legacy project file</source>
-        <translation>Застарілий файл проєкту</translation>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <source>Audacity 3 project</source>
+        <translation>Проєкт Audacity 3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Вами відкрито проєкт Audacity 3. Його дані слід перетворити, перш ніж ним можна буде користуватися в Audacity 4.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="489"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
         <source>Save as new project</source>
         <translation>Зберегти як новий проєкт</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="516"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <source>Legacy project</source>
+        <translation>Застарілий проєкт</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
         <source>The project was saved as “%1”</source>
         <translation>Проєкт було збережено до «%1»</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="521"/>
         <source>Continue</source>
         <translation>Продовжити</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1020"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
+        <source>Project saved</source>
+        <translation>Проєкт збережено</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
         <source>Time Track not supported</source>
         <translation>Підтримки часової доріжки не передбачено</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1021"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Проєкт містить часову доріжку, підтримку якої ще не передбачено в Audacity 4 і її доведеться вилучити. Це не вплине на ваш початковий проєкт Audacity 3.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1025"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1160"/>
         <source>OK</source>
         <translation>Гаразд</translation>
     </message>
@@ -16871,12 +19243,13 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Рівень API:</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="67"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="68"/>
         <source>Property</source>
+        <extracomment>Placeholder text of an empty project property field</extracomment>
         <translation>Властивість</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="87"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="88"/>
         <source>Value</source>
         <translation>Значення</translation>
     </message>
@@ -16889,102 +19262,103 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>project/save</name>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="60"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="62"/>
         <source>How would you like to save?</source>
         <translation>У який спосіб хочете зберегти?</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="81"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>Резервні конфіденційні копії вашого проєкту зберігаються на audio.com. Ви можете отримати доступ до вашої роботи з будь-якого пристрою і співпрацювати над вашими проєктом із іншими користувачами. Збереження до хмари є безкоштовним, якщо кількість проєктів обмежено.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="82"/>
         <source>Save to cloud</source>
         <translation>Зберегти до хмари</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="86"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="88"/>
         <source>Save to the cloud (free)</source>
         <translation>Зберегти до хмари (безкоштовно)</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="95"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
         <source>On your computer</source>
         <translation>На вашому комп&apos;ютері</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="96"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="98"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
         <translation>Якщо ви надаєте перевагу збереженню ваших файлів на вашому комп&apos;ютері, ви можете налаштувати це тут.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="99"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
         <source>Save to computer</source>
         <translation>Зберегти на комп&apos;ютері</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="103"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="105"/>
         <source>Save on your computer</source>
         <translation>Зберегти на вашому комп&apos;ютері</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="34"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="168"/>
         <source>Save project</source>
         <translation>Зберегти проєкт</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="173"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>копія</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="176"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>позначене</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="265"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>Увійдіть до облікового запису або створіть його на Audio.com, щоб оприлюднювати вашу музику.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Оприлюднити</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
         <source>Publish changes online?</source>
         <translation>Оприлюднити зміни в інтернеті?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="533"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Збережені вами зміни стануть доступними усім. Також вам доведеться створити новий MP3 для загальнодоступного відтворення.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="568"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="548"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="572"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Будь ласка, перевірте, чи є працездатним з&apos;єднання із інтернетом, потім повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="547"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="557"/>
         <source>Unable to connect to the cloud</source>
         <translation>Не вдалося встановити з&apos;єднання із «хмарою»</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="571"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Не вдалося встановити з&apos;єднання з Audio.com</translation>
     </message>
@@ -17033,7 +19407,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
         <source>Upload as new audio file</source>
-        <translation type="unfinished"/>
+        <translation>Вивантажити як новий звуковий файл</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
@@ -17044,34 +19418,34 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="853"/>
         <source>Your audio could not be shared</source>
         <translation>Ваші звукові дані не вдалося оприлюднити</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="829"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="861"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Спочатку потрібно підтвердити ваш обліковий запис audio.com. Будь ласка, активуйте свій обліковий запис за посиланням у електронному листі активації.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="835"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="867"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com повернуто невідомий код помилки. %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="838"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="870"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com повернуто невідомий код помилки.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="840"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="847"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="879"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Будь ласка, повторіть пізніше або спробуйте отримати допомогу у вирішення цієї проблеми на audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="843"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Не вдалося встановити з&apos;єднання з audio.com. Будь ласка, перевірте, чи є працездатним з&apos;єднання із інтернетом, потім повторіть спробу.</translation>
     </message>
@@ -17079,7 +19453,7 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>projectScene</name>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistmodel.cpp" line="289"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistmodel.cpp" line="294"/>
         <source>Master</source>
         <translation>Основний</translation>
     </message>
@@ -17107,45 +19481,46 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Тривалість</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/EffectCard.qml" line="128"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
         <source>Get it on MuseHub</source>
         <translation>Отримати на MuseHub</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="13"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
         <translation>Отримати ефекти</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="96"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="52"/>
         <source>Please wait…</source>
         <translation>Будь ласка, зачекайте…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="109"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="68"/>
         <source>Connection error</source>
         <translation>Помилка з&apos;єднання</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="116"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="76"/>
         <source>Audacity is unable to connect to MuseHub.com. Please check your connection and try again.</source>
         <translation>Audacity не вдалося встановити з&apos;єднання з MuseHub.com. Будь ласка, перевірте працездатність з&apos;єднання і повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="123"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="83"/>
         <source>Try again</source>
         <translation>Спробувати ще раз</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="176"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="122"/>
         <source>Become a partner</source>
         <translation>Стати партнером</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml" line="43"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="334"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="341"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="348"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
         <source>Customize toolbar</source>
+        <extracomment>Tooltip of the toolbar customization button</extracomment>
         <translation>Налаштувати панель інструментів</translation>
     </message>
     <message>
@@ -17154,32 +19529,38 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Панель відтворення</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="301"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
+        <source>Playback position:</source>
+        <translation>Позиція відтворення:</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
         <source>Snap</source>
+        <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
         <translation>Прилипати</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="335"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="313"/>
+        <source>Snapping</source>
+        <translation>Прилипання</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
+        <source>Snap to</source>
+        <translation>Прилипання до</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
         <source>Show/hide toolbar buttons</source>
         <translation>Показати/Приховати кнопки панелі інструментів</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
-        <source>Project toolbar</source>
-        <translation>Панель інструментів проєкту</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
-        <source>Undo/redo toolbar</source>
-        <translation>Панель інструментів скасування/повторення</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
-        <source>Workspaces toolbar</source>
-        <translation>Панель робочих просторів</translation>
+        <source>Workspace selection</source>
+        <translation>Позначене у робочому просторі</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="59"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
         <source>Workspace</source>
         <translation>Робочий простір</translation>
     </message>
@@ -17190,12 +19571,12 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Нова доріжка міток</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="63"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="66"/>
         <source>Label track name</source>
         <translation>Назва доріжки міток</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="109"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="112"/>
         <source>Confirm</source>
         <translation>Підтвердити</translation>
     </message>
@@ -17210,22 +19591,25 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Мітки</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="71"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="72"/>
         <source>Import</source>
+        <extracomment>Label of the button that imports labels from a file</extracomment>
         <translation>Імпорт</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="89"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="90"/>
         <source>Export</source>
+        <extracomment>Label of the button that exports labels to a file</extracomment>
         <translation>Експорт</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="108"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="110"/>
         <source>Delete</source>
+        <extracomment>Label of the button that deletes the selected labels</extracomment>
         <translation>Вилучити</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="125"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="127"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/LabelTrackItem.qml" line="20"/>
         <source>Add label</source>
         <translation>Додати мітку</translation>
@@ -17271,17 +19655,17 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Швидкість</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="42"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="45"/>
         <source>Mono</source>
         <translation>Моно</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="43"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="51"/>
         <source>Stereo</source>
         <translation>Стерео</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="44"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="57"/>
         <source>Label</source>
         <translation>Мітка</translation>
     </message>
@@ -17296,44 +19680,101 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Панорамування:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="127"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <source>Toggle all master effects</source>
+        <translation>Увімкнути/Вимкнути усі основні ефекти</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <source>Toggle all effects</source>
+        <translation>Увімкнути/Вимкнути усі ефекти</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="132"/>
         <source>Add effect</source>
         <translation>Додати ефект</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="153"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <source>Add master effect</source>
+        <translation>Додати основний ефект</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
         <translation>Ефекти реального часу є неруйнівними, їхні параметри можна будь-коли змінити.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Переглянути відео&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="72"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
+        <source>Real-time effects panel</source>
+        <translation>Панель ефектів реального часу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
         <source>Realtime effects</source>
         <translation>Ефекти реального часу</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="127"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="155"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
+        <source>Close real-time effects panel</source>
+        <extracomment>Tooltip of the button that closes the panel</extracomment>
+        <translation>Закрити панель ефектів реального часу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
         <source>Add track</source>
         <translation>Додати доріжку</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="135"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
         <source>Tracks</source>
         <translation>Доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="91"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="63"/>
+        <source>Pan</source>
+        <extracomment>Noun: accessibility name of the pan knob</extracomment>
+        <translation>Панорама</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
+        <source>Track volume</source>
+        <translation>Гучність доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="104"/>
         <source>Effects</source>
         <translation>Ефекти</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="231"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
+        <source>Opens effects panel</source>
+        <translation>Відкриває панель ефектів</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
+        <source>Mute</source>
+        <extracomment>Accessibility name of the mute button</extracomment>
+        <translation>Тиша</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="273"/>
+        <source>Solo</source>
+        <extracomment>Accessibility name of the solo button</extracomment>
+        <translation>Соло</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="232"/>
         <source>Separator line</source>
         <translation>Лінія розділювача</translation>
     </message>
@@ -17482,6 +19923,151 @@ You need to run that version of Audacity to recover the project.</source>
         <source>Remove effect</source>
         <translation>Вилучити ефект</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
+        <source>Audio setup and sharing</source>
+        <translation>Налаштування і оприлюднення звуку</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
+        <source>Undo and redo</source>
+        <translation>Скасування і повторення</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
+        <source>Clip: %1</source>
+        <translation>Кліп: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
+        <source>Clip name: %1</source>
+        <translation>Назва кліпу: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
+        <source>Clip menu</source>
+        <translation>Меню кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
+        <source>Label: %1</source>
+        <translation>Мітка: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
+        <source>Track name: %1</source>
+        <translation>Назва доріжки: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
+        <source>Reorder effect</source>
+        <extracomment>Tooltip of the drag handle used to reorder effects</extracomment>
+        <translation>Перевпорядкувати ефект</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
+        <source>Bypass %1</source>
+        <extracomment>Tooltip of the effect power button; %1 is an effect name</extracomment>
+        <translation>Обійти %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="323"/>
+        <source>Open %1</source>
+        <extracomment>Tooltip of the button that opens the effect dialog; %1 is an effect name</extracomment>
+        <translation>Відкрити %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="365"/>
+        <source>Replace %1</source>
+        <extracomment>Tooltip of the button that replaces the effect; %1 is an effect name</extracomment>
+        <translation>Заміна %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
+        <source>Track menu</source>
+        <translation>Меню доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <source>Track %1: %2, audio track, selected</source>
+        <translation>Доріжка %1: %2, звукова доріжка, позначено</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <source>Track %1: %2, audio track</source>
+        <translation>Доріжка %1: %2, звукова доріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
+        <source>Press Enter to select or deselect</source>
+        <translation>Натисніть Enter для позначення або зняття позначення</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <source>Track %1: %2, label track, selected</source>
+        <translation>Доріжка %1: %2, доріжка мітки, позначено</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <source>Track %1: %2, label track</source>
+        <translation>Доріжка %1: %2, доріжка мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
+        <source>Moved Samples</source>
+        <translation>Пересунуті семли</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
+        <source>Sample Edit</source>
+        <translation>Редагування семплу</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="197"/>
+        <source>Blue</source>
+        <translation>Блакитний</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
+        <source>Violet</source>
+        <translation>Фіолетовий</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="199"/>
+        <source>Magenta</source>
+        <translation>Малиновий</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
+        <source>Red</source>
+        <translation>Червоний</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
+        <source>Orange</source>
+        <translation>Помаранчевий</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="202"/>
+        <source>Yellow</source>
+        <translation>Жовтий</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
+        <source>Green</source>
+        <translation>Зелений</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="204"/>
+        <source>Turquoise</source>
+        <translation>Бірюзовий</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="205"/>
+        <source>Cyan</source>
+        <translation>Блакитний</translation>
+    </message>
 </context>
 <context>
     <name>projectscene/silence</name>
@@ -17499,13 +20085,13 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>projectscene/toolbars</name>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="151"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="209"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 канал запису (моно)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="154"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="212"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 канали запису (стерео)</translation>
@@ -17519,72 +20105,93 @@ You need to run that version of Audacity to recover the project.</source>
         <translation>Рівень мікрофона</translation>
     </message>
     <message>
-        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="184"/>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="156"/>
+        <source>Recording level</source>
+        <translation>Рівень записування</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
         <source>Note: this control is tied to your computer’s main mic volume</source>
         <translation>Зауваження: цей засіб керування напряму пов&apos;язано із гучність на основному мікрофоні комп&apos;ютера</translation>
     </message>
     <message>
-        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="212"/>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="213"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
         <translation>Увімкнути стеження за вхідними даними (чути себе під час записування)</translation>
     </message>
     <message>
-        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="229"/>
+        <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="230"/>
         <source>Show mic metering when not recording</source>
         <translation>Показувати індикатор мікрофона, якщо не виконується записування</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="942"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
         <source>Record</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Записати</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="942"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
         <source>Recorded audio</source>
         <translation>Записаний звук</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="99"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="114"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="129"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="118"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="150"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="170"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="185"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="200"/>
         <source>Recording error</source>
+        <extracomment>Title of an error dialog</extracomment>
         <translation>Помилка записування</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="149"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
         <source>Lead-in Recording error</source>
         <translation>Помилка вхідного запису</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="35"/>
+        <location filename="../../src/record/recorderrors.h" line="37"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>Помилка під час спроби відкрити записувальний пристрій.
 Код помилки: %1</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="36"/>
+        <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>Cannot stop recording</source>
         <translation>Не вдалося зупинити запис</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="38"/>
+        <location filename="../../src/record/recorderrors.h" line="39"/>
+        <source>Cannot resume recording</source>
+        <translation>Не вдалося відновити записування</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
         <translation>Доріжки, які позначено для запису, повинні мати однакову частоту дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="41"/>
+        <location filename="../../src/record/recorderrors.h" line="44"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
         <translation>Позначено надто мало доріжок для запису із цією частотою дискретизації. (Audacity потрібні два канали із однаковою частотою дискретизації для кожної стерео-доріжки)</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="45"/>
+        <location filename="../../src/record/recorderrors.h" line="48"/>
+        <source>No recording device available.
+Please connect an input device and rescan.</source>
+        <translation>Немає доступних пристроїв записування.
+Будь ласка, з&apos;єднайте пристрій вхідних даних і повторіть пошук.</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="52"/>
         <source>Please select a time within a clip.</source>
         <translation>Будь ласка, виберіть момент часу у кліпі.</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="48"/>
+        <location filename="../../src/record/recorderrors.h" line="55"/>
         <source>Please select a track for lead-in recording.</source>
         <translation>Будь ласка, виберіть доріжку для вхідного запису.</translation>
     </message>
@@ -17695,6 +20302,17 @@ Error code: %1</source>
         <source>Delete and…</source>
         <translation>Вилучити і…</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="68"/>
+        <source>Split at silences</source>
+        <translation>Розділити за тишею</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="71"/>
+        <source>Join</source>
+        <extracomment>Verb: context menu command that joins the selected audio</extracomment>
+        <translation>З&apos;єднати</translation>
+    </message>
 </context>
 <context>
     <name>shortcuts</name>
@@ -17716,7 +20334,7 @@ Error code: %1</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
         <source>Shortcuts bottom panel</source>
-        <translation type="unfinished"/>
+        <translation>Нижня панель скорочень</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
@@ -17746,7 +20364,7 @@ Error code: %1</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
         <source>Shortcuts top panel</source>
-        <translation type="unfinished"/>
+        <translation>Верхня панель скорочень</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
@@ -17769,24 +20387,6 @@ Error code: %1</source>
         <translation>Призначити клавіатурне скорочення</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
-        <source>Note %1</source>
-        <extracomment>A MIDI remote event, namely a note event</extracomment>
-        <translation>Нота %1</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
-        <source>CC %1</source>
-        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
-        <translation>CC %1</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
-        <source>None</source>
-        <extracomment>No MIDI remote event</extracomment>
-        <translation>Відсутній</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
         <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Це клавіатурне скорочення вже призначено для дії: &lt;b&gt;%1&lt;/b&gt;</translation>
@@ -17802,17 +20402,17 @@ Error code: %1</source>
         <translation>Перепризначити скорочення</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>Файл клавіатурних скорочень MuseScoreStudio</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
         <translation>Імпортувати клавіатурні скорочення</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>Експортувати клавіатурні скорочення</translation>
     </message>
@@ -18145,17 +20745,18 @@ Error code: %1</source>
         <translation>Нульовий коефіцієнт полів</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="93"/>
+        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="94"/>
         <source>Gain</source>
+        <extracomment>Noun: label of the spectrogram color gain slider</extracomment>
         <translation>Гучність</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
+        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="96"/>
         <source>Range</source>
         <translation>Діапазон</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
+        <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="98"/>
         <source>High boost</source>
         <translation>Підсилення високих</translation>
     </message>
@@ -18488,6 +21089,19 @@ Error code: %1</source>
     </message>
 </context>
 <context>
+    <name>testflow</name>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
+        <source>Show scripts</source>
+        <translation>Показати скрипти</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
+        <source>Show scripts…</source>
+        <translation>Показати скрипти…</translation>
+    </message>
+</context>
+<context>
     <name>time-frequency-selection</name>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
@@ -18505,50 +21119,87 @@ Error code: %1</source>
     </message>
 </context>
 <context>
-    <name>toast</name>
-    <message numerus="yes">
-        <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
-        <source>%n hour(s) remaining</source>
-        <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
-        <source>%n minute(s) remaining</source>
-        <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
-        <source>%n second(s) remaining</source>
-        <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
-    </message>
-</context>
-<context>
-    <name>tours</name>
-    <message>
-        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
-        <source>Watch video</source>
-        <translation>Дивитись відео</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
-        <source>Got it</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
-        <source>Next</source>
-        <translation>Далі</translation>
-    </message>
-</context>
-<context>
     <name>track</name>
     <message>
         <location filename="../../au3/libraries/au3-track/Track.cpp" line="879"/>
         <source>Generic Track</source>
         <translation>Загальна доріжка</translation>
+    </message>
+</context>
+<context>
+    <name>trackcontextmenu</name>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="60"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
+        <source>Move track</source>
+        <translation>Пересунути доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
+        <source>Track visualization</source>
+        <translation>Візуалізація доріжок</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
+        <source>Track color</source>
+        <translation>Колір доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
+        <source>Meters &amp;&amp; monitoring</source>
+        <translation>Індикація і моніторинг</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
+        <source>Format:</source>
+        <translation>Формат:</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
+        <source>Rate:</source>
+        <translation>Частота</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
+        <source>Format: %1</source>
+        <translation>Формат: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
+        <source>Rate: %1 Hz</source>
+        <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
+        <translation>Частота: %1 Гц</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
+        <source>%1 Hz</source>
+        <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
+        <translation>%1 Гц</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/dom/track.h" line="52"/>
+        <source>16-bit PCM</source>
+        <extracomment>The format of the audio samples on a track</extracomment>
+        <translation>16-бітовий PCM</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/dom/track.h" line="54"/>
+        <source>24-bit PCM</source>
+        <extracomment>The format of the audio samples on a track</extracomment>
+        <translation>24-бітовий PCM</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/dom/track.h" line="56"/>
+        <source>32-bit Float</source>
+        <extracomment>The format of the audio samples on a track</extracomment>
+        <translation>32-бітовий float</translation>
     </message>
 </context>
 <context>
@@ -18576,38 +21227,38 @@ Error code: %1</source>
         <translation>Пересунуто точку обгортки</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="641"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
         <source>Set looping region in/out</source>
         <translation>Встановити вхід-вихід циклу</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="47"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation>Мікшування у моно…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="264"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
         <source>Rendering pitch and speed…</source>
         <translation>Тор і швидкість обробки…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1409"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
         <source>Mix down to mono</source>
         <translation>Змікшувати у моно</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1410"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation>У результаті виконання цієї дії один або декілька кліпів буде перетворено на моно. Хочете продовжити виконання дії?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1477"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1564"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Поєднати монодоріжки у стерео</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1478"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1565"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -18620,44 +21271,564 @@ Do you wish to continue?</source>
 Хочете продовжувати?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="666"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="700"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="723"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="746"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="777"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
+        <source>Playback position</source>
+        <translation>Позиція відтворення</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="827"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="850"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="873"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
         <source>No audio selected</source>
+        <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Не позначено звукових даних</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="667"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="701"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="724"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="747"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="778"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="828"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="851"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="874"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="905"/>
         <source>Select the audio to delete and try again.</source>
+        <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Виберіть звукові дані, які слід вилучити, і повторіть спробу.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1142"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1156"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1170"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1340"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
         <source>Paste error</source>
         <translation>Помилка вставлення</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1901"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
         <source>Set rate</source>
         <translation>Встановити частоту дискретизації</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2058"/>
-        <source>Resample</source>
-        <translation>Змінити частоту</translation>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <source>Resample track</source>
+        <translation>Змінити частоту дискретизації доріжки</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="733"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
+        <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
+        <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
+        <translation>Обрізати позначені звукові доріжки з %1 секунд до %2 секунд</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
+        <source>Trim Audio</source>
+        <translation>Обрізати звук</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
+        <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
+        <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
+        <translation>Заглушити позначені доріжки з %1 секунд до %2 секунд</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
+        <source>Silence</source>
+        <translation>Тиша</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
+        <source>Silenced selected clips</source>
+        <translation>Заглушено позначені кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
+        <source>Track Title</source>
+        <translation>Назва доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
+        <source>Changed Track Title</source>
+        <translation>Змінено заголовок доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
+        <source>Clip Title</source>
+        <translation>Заголовок кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
+        <source>Changed clip title</source>
+        <translation>Змінено заголовок кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
+        <source>Pitch Shift</source>
+        <translation>Зсув тону</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
+        <source>Changed Pitch Shift</source>
+        <translation>Змінено зсув тону</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
+        <source>Reset Clip Pitch</source>
+        <translation>Скинути тон кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
+        <source>Changed Speed</source>
+        <translation>Змінено швидкість</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="130"/>
+        <source>Reset Clip Speed</source>
+        <translation>Скинути швидкість кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
+        <source>Changed track color</source>
+        <translation>Змінено колір доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="161"/>
+        <source>Reset Clip Pitch and Speed</source>
+        <translation>Відновити тон і швидкість кліпу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
+        <source>Rendered time-stretched audio</source>
+        <translation>Оброблено розтягнуті за часом звукові дані</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
+        <source>Render</source>
+        <translation>Обробити</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
+        <source>Pasted from the clipboard</source>
+        <translation>Вставка з буферу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
+        <source>Paste</source>
+        <translation>Вставити</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
+        <source>Cut to the clipboard</source>
+        <translation>Вирізати у буфер</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <source>Cut</source>
+        <translation>Вирізати</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <source>Remove multiple items</source>
+        <translation>Вилучити декілька елементів</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
+        <source>Remove multiple clips</source>
+        <translation>Вилучити декілька кліпів</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <source>Remove</source>
+        <translation>Вилучити</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
+        <source>Delete</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Вилучити</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
+        <source>Delete and close gap</source>
+        <translation>Вилучити і закрити прогалину</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <source>Items moved</source>
+        <translation>Елементи пересунуто</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <source>Clip moved</source>
+        <translation>Кліп пересунуто</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
+        <source>Move clip</source>
+        <translation>Пересунути кліп</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <source>Move items</source>
+        <translation>Пересунуто елементи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
+        <source>Split</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Розділити</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <source>Split clips at silence</source>
+        <translation>Поділити кліпи за тишею</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <source>Split at silence</source>
+        <translation>Розділити за тишею</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
+        <source>Split into new track</source>
+        <translation>Розділити до нової доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <source>Split-cut to the clipboard</source>
+        <translation>Вирізати без склеювання у буфер</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <source>Split cut</source>
+        <translation>Розділити розрізанням</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <source>Trim items left</source>
+        <translation>Обрізати елементи ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <source>Trim clip left</source>
+        <translation>Обрізати кліп ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="596"/>
+        <source>Trim</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Обрізати</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <source>Trim items right</source>
+        <translation>Обрізати елементи праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <source>Trim clip right</source>
+        <translation>Обрізати кліп праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
+        <source>Changed speed to: %1%</source>
+        <translation>Швидкість змінено до %1%</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
+        <source>Stretch Left</source>
+        <translation>Видовження ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <source>Stretch items left</source>
+        <translation>Видовження елементів ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <source>Stretch clips left</source>
+        <translation>Видовження кліпів ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
+        <source>Stretch Right</source>
+        <translation>Видовження праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <source>Stretch items right</source>
+        <translation>Видовження елементів праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <source>Stretch clips right</source>
+        <translation>Видовження кліпів праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <source>Created new mono track</source>
+        <translation>Створено монодоріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <source>New mono track</source>
+        <translation>Нова монодоріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <source>Created new stereo track</source>
+        <translation>Створено стереодоріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <source>New stereo track</source>
+        <translation>Нова стереодоріжка</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <source>Created label track</source>
+        <translation>Створено доріжку для позначок</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <source>New label track</source>
+        <translation>Нова доріжка міток</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
+        <source>Delete track</source>
+        <translation>Вилучити доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
+        <source>Duplicate track</source>
+        <translation>Дублювати доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
+        <source>Move track</source>
+        <translation>Пересунути доріжку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
         <source>Insert silence</source>
         <translation>Вставити тишу</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <source>Clips grouped</source>
+        <translation>Кліпи згруповано</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
+        <source>Clips ungrouped</source>
+        <translation>Кліпи розгруповано</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
+        <source>Changed track format</source>
+        <translation>Змінено формат доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
+        <source>Changed track rate</source>
+        <translation>Змінено частоту доріжки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
+        <source>Swapped stereo channels</source>
+        <translation>Змінено порядок каналів стерео</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
+        <source>Split stereo tracks to L/R mono</source>
+        <translation>Розділити стереодоріжки на ліве-праве моно</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
+        <source>Split stereo tracks to center mono</source>
+        <translation>Розділити стереодоріжки на центральне моно</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
+        <source>Make stereo track</source>
+        <translation>Зробити доріжку стереофонічною</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <source>Resampled audio track(s)</source>
+        <translation>Звукові доріжки зі зміненою частотою</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <source>Label added</source>
+        <translation>Додано мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <source>Add label</source>
+        <translation>Додати мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <source>Label title changed</source>
+        <translation>Змінено заголовок мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <source>Changed label title</source>
+        <translation>Змінено заголовок мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
+        <source>Label low frequency changed</source>
+        <translation>Змінено нижню частоту мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
+        <source>Change label low frequency</source>
+        <translation>Змінити нижню частоту мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
+        <source>Label high frequency changed</source>
+        <translation>Змінено верхню частоту мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
+        <source>Change label high frequency</source>
+        <translation>Змінити верхню частоту мітки</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <source>Cut label</source>
+        <translation>Обрізати мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <source>Remove label</source>
+        <translation>Вилучити мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <source>Remove multiple labels</source>
+        <translation>Вилучити декілька міток</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <source>Move labels</source>
+        <translation>Пересунути мітку</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
+        <source>Move</source>
+        <translation>Пересунути</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <source>Labels moved</source>
+        <translation>Мітки пересунуто</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <source>Label stretched</source>
+        <translation>Мітку розтягнуто</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <source>Stretch label left</source>
+        <translation>Розтягнути мітку ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <source>Stretch labels left</source>
+        <translation>Розтягнути мітки ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
+        <source>Stretch</source>
+        <translation>Розтягнути</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <source>Stretch label right</source>
+        <translation>Розтягнути мітку праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <source>Stretch labels right</source>
+        <translation>Розтягнути мітки праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
+        <source>Joined %1 seconds at %2</source>
+        <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
+        <translation>З&apos;єднано %1 секунд з часу %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
+        <source>Join</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>З&apos;єднати</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
+        <source>Duplicated</source>
+        <translation>Продубльовано</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
+        <source>Duplicate</source>
+        <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
+        <translation>Дублювати</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <source>Split-deleted clips</source>
+        <translation>Розділено-вилучені кліпи</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <source>Split delete</source>
+        <translation>Розділити вилученням</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
+        <source>Delete %1 seconds at %2</source>
+        <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
+        <translation>Вилучити %1 секунд з часу %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -18665,9 +21836,24 @@ Do you wish to continue?</source>
         <translation>Недостатньо місця для вставлення кліпу</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="252"/>
+        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="366"/>
         <source>Tracks: Empty</source>
-        <translation type="unfinished"/>
+        <translation>Доріжки: порожньо</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
+        <source>Tempo changed</source>
+        <translation>Змінено темп</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
+        <source>Upper time signature changed</source>
+        <translation>Змінено верхній часовий підпис</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
+        <source>Lower time signature changed</source>
+        <translation>Змінено нижній часовий підпис</translation>
     </message>
 </context>
 <context>
@@ -18781,7 +21967,7 @@ Do you wish to continue?</source>
 <context>
     <name>trackedit/rate</name>
     <message>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="47"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="46"/>
         <source>New sample rate (Hz):</source>
         <translation>Нова частота дискретизації (Гц):</translation>
     </message>
@@ -18789,7 +21975,7 @@ Do you wish to continue?</source>
 <context>
     <name>trackedit/time</name>
     <message>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="39"/>
         <source>Position:</source>
         <translation>Позиція:</translation>
     </message>
@@ -18817,7 +22003,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="30"/>
         <source>Database error.  Sorry, but we don’t have more details.</source>
-        <translation type="unfinished"/>
+        <translation>Помилка бази даних. Вибачте, ніяких подробиць надати не можемо.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
@@ -18828,9 +22014,10 @@ Do you wish to continue?</source>
 <context>
     <name>ui</name>
     <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
-        <translation type="unfinished"/>
+        <translation>Навігація</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
@@ -18852,7 +22039,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
         <source>Directories actions</source>
         <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
-        <translation type="unfinished"/>
+        <translation>Дії з каталогами</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
@@ -18877,7 +22064,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -18886,7 +22073,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -18961,16 +22148,21 @@ Do you wish to continue?</source>
         <translation>Значення</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
-        <source>Value list header panel</source>
-        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
-        <translation type="unfinished"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
+        <source>Other</source>
+        <translation>Інше</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation>Панель заголовків списку значень</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Панель списку значень</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
@@ -19020,6 +22212,16 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
         <source>direction is both</source>
         <translation>напрям — обидва</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
+        <source>expanded</source>
+        <translation>розгорнуто</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
+        <source>collapsed</source>
+        <translation>згорнуто</translation>
     </message>
 </context>
 <context>
@@ -19142,7 +22344,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
         <source>No button</source>
-        <translation type="unfinished"/>
+        <translation>Немає кнопки</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
@@ -19275,7 +22477,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
         <source>A new version of %1 is available!</source>
-        <translation type="unfinished"/>
+        <translation>Доступна нова версія %1!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
@@ -19305,7 +22507,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
-        <translation type="unfinished"/>
+        <translation>У вас встановлено найновішу версію %1. Будь ласка, відвідайте &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;, щоб дізнатися про майбутні версії.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
@@ -19323,25 +22525,59 @@ Do you wish to continue?</source>
         <translation>Вибачте, спробуйте повторити спробу пізніше</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
-        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
-        <translation type="unfinished"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
+        <source>Check for update</source>
+        <translation>Шукати оновлення</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation>%1 доведеться закрити для завершення встановлення. Якщо якісь зміни не було збережено, програма попросить вас зберегти їх до завершення роботи %1.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
         <source>Close</source>
         <translation>Закрити</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
-        <source>Updating MuseScore Studio</source>
-        <translation>Оновлення MuseScore Studio</translation>
+        <source>Updating %1</source>
+        <translation>Оновлення %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
-        <source>Downloading MuseScore Studio %1</source>
-        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
-        <translation>Йде завантаження MuseScore Studio %1</translation>
+        <source>Downloading %1 %2</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
+        <translation>Отримання %1 %2</translation>
+    </message>
+</context>
+<context>
+    <name>vst</name>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
+        <source>Use old view</source>
+        <translation>Використати застарілий режим перегляду</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
+        <source>Use new view</source>
+        <translation>Використати новий режим перегляду</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
+        <source>Open FX editor</source>
+        <translation>Відкрити редактор ефектів</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
+        <source>Open instrument editor</source>
+        <translation>Відкрити редактор інструментів</translation>
     </message>
 </context>
 <context>
@@ -19360,7 +22596,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
         <source>Searching VST3 in: %1</source>
-        <translation type="unfinished"/>
+        <translation>Пошук VST3 у %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
@@ -19380,7 +22616,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
         <source>Looking in: %1</source>
-        <translation type="unfinished"/>
+        <translation>Шукаємо у %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
@@ -19388,18 +22624,18 @@ Do you wish to continue?</source>
         <translation>Помилка модуля VST3: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="714"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
         <source>Unable to apply VST3 preset file %1</source>
         <translation>Не вдалося застосувати файл набору шаблонів VST3 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="715"/>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="732"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
         <source>Error</source>
         <translation>Помилка</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="731"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
         <source>Failed to save VST3 preset to file</source>
         <translation>Не вдалося зберегти набір шаблонів VST3 до файла</translation>
     </message>
@@ -19407,14 +22643,14 @@ Do you wish to continue?</source>
 <context>
     <name>wave-track</name>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1010"/>
+        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1011"/>
         <source>Sequence has block file exceeding maximum %1 samples per block.
 Truncating to this maximum length.</source>
         <translation>У послідовності даних є блок-файл, у якому перевищено максимальне припустиме значення у %1 семплів на блок.
 Обрізаємо до цієї максимальної довжини.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1015"/>
+        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1017"/>
         <source>Warning - Truncating Overlong Block File</source>
         <translation>Попередження: обрізаємо надто довгий блок-файл</translation>
     </message>
@@ -19424,7 +22660,7 @@ Truncating to this maximum length.</source>
         <translation>Попередня обробка</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="67"/>
+        <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="38"/>
         <source>Rendering Clip</source>
         <translation>Обробляємо кліп</translation>
     </message>
@@ -19434,13 +22670,13 @@ Truncating to this maximum length.</source>
         <translation>&amp;Мультиперегляд</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1895"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
         <source>Resampling failed.</source>
         <translation>Не вдалося змінити частоту дискретизації.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1896"/>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="340"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="341"/>
         <source>Warning</source>
         <translation>Попередження</translation>
     </message>
@@ -19462,15 +22698,15 @@ Truncating to this maximum length.</source>
         <extracomment>Template for clip name generation on copy-paste
 ----------
 Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1.%2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2817"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2823"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>На доріжці пошкоджено послідовність частот дискретизації.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="339"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="340"/>
         <source>There is not enough room available to expand the cut line</source>
         <translation>Недостатньо простору для поширення лінії вирізання</translation>
     </message>
@@ -19552,12 +22788,12 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
         <source>Save layout as new workspace</source>
-        <translation type="unfinished"/>
+        <translation>Зберегти компонування як новий робочий простір</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
         <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
-        <translation type="unfinished"/>
+        <translation>За допомогою робочих просторів ви можете вибирати різні налаштування інтерфейсу %1. Ви також можете зберігати ваші власні унікальні конфігурації як нові робочі простори.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
@@ -19565,9 +22801,20 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Скинути</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
+        <source>New workspace</source>
+        <translation>Новий робочий простір</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
         <source>Workspace name:</source>
         <translation>Назва робочого простору:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
+        <source>Edit workspaces</source>
+        <translation>Редагувати робочі простори</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
@@ -19587,27 +22834,67 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
         <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
-        <translation type="unfinished"/>
+        <translation>У результаті буде відновлено типове початкове компонування. Наслідки дії не може бути скасовано. Хочете виконати дію?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
         <source>Resetting workspaces</source>
-        <translation type="unfinished"/>
+        <translation>Відновлення початкових робочих просторів</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="232"/>
         <source>Reset workspace</source>
-        <translation type="unfinished"/>
+        <translation>Відновлення початкових параметрів робочого простору</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="263"/>
         <source>Name cannot be empty</source>
-        <translation type="unfinished"/>
+        <translation>Назва не може бути порожньою</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="274"/>
         <source>Name already exists</source>
-        <translation type="unfinished"/>
+        <translation>Таку назву вже використано</translation>
+    </message>
+    <message>
+        <location filename="../../src/shared/types/workspacetitles.h" line="20"/>
+        <source>Classic</source>
+        <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
+        <translation>Класична</translation>
+    </message>
+    <message>
+        <location filename="../../src/shared/types/workspacetitles.h" line="24"/>
+        <source>Modern</source>
+        <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
+        <translation>Сучасний</translation>
+    </message>
+    <message>
+        <location filename="../../src/shared/types/workspacetitles.h" line="28"/>
+        <source>Music</source>
+        <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
+        <translation>Музика</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
+        <source>Select workspace</source>
+        <translation>Вибрати робочий простір</translation>
+    </message>
+    <message>
+        <source>Edit workspaces…</source>
+        <translation type="vanished">Редагувати робочі простори…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
+        <source>Edit workspaces...</source>
+        <translation>Редагувати робочі простори…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
+        <source>Create new workspace</source>
+        <translation>Створити новий робочий простір</translation>
     </message>
 </context>
 <context>
@@ -19615,7 +22902,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося відкрити файл: «%1»</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
@@ -19628,7 +22915,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Не вдалося завантажити файл: «%1»</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>
