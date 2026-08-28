@@ -81,7 +81,6 @@ qt_add_resources(appshell appshell_resources
         resources/Colorful.svg
         resources/LoadingScreen.svg
         resources/GoogleLogo.png
-        resources/FacebookLogo.png
         resources/win_opengl_buglist.json
         resources/welcomedialog/Audacity40Video.png
         resources/welcomedialog/Audacity_Feature_Survey.png
