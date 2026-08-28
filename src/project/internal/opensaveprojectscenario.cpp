@@ -112,6 +112,8 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 {
     SaveLocationType type = preselectedType;
 
+    const bool shouldUpdateLastUsed = configuration()->shouldAskSaveLocationType();
+
     if (type == SaveLocationType::Undefined) {
         RetVal<SaveLocationType> askedType = saveLocationType();
         if (!askedType.ret) {
@@ -127,7 +129,9 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 
     // The user may switch between Local and Cloud as often as they want
     for (;;) {
-        configuration()->setLastUsedSaveLocationType(type);
+        if (shouldUpdateLastUsed) {
+            configuration()->setLastUsedSaveLocationType(type);
+        }
 
         switch (type) {
         case SaveLocationType::Undefined:
@@ -227,7 +231,8 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::saveLocationType() const
 
 RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
 {
-    UriQuery query("audacity://project/asksavelocationtype");
+    UriQuery query("audacity://project/asklocationtype");
+    query.addParam("purpose", Val(std::string("save")));
     bool shouldAsk = configuration()->shouldAskSaveLocationType();
     query.addParam("askAgain", Val(shouldAsk));
 
@@ -241,7 +246,7 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
     bool askAgain = vals["askAgain"].toBool();
     configuration()->setShouldAskSaveLocationType(askAgain);
 
-    SaveLocationType type = static_cast<SaveLocationType>(vals["saveLocationType"].toInt());
+    SaveLocationType type = static_cast<SaveLocationType>(vals["locationType"].toInt());
     return RetVal<SaveLocationType>::make_ok(type);
 }
 
