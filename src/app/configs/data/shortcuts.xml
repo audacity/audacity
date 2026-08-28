@@ -591,6 +591,14 @@
         <key>store-cursor-position</key>
     </SC>
     <SC>
+        <key>cursor-to-track-start</key>
+        <seq>J</seq>
+    </SC>
+    <SC>
+        <key>cursor-to-track-end</key>
+        <seq>K</seq>
+    </SC>
+    <SC>
         <key>zero-cross</key>
         <seq>Z</seq>
     </SC>

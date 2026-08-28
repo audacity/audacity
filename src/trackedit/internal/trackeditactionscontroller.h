@@ -184,6 +184,8 @@ private:
     void setSelection(const muse::actions::ActionQuery& query);
     void selectTrackByIndex(const muse::actions::ActionQuery& query);
     void moveCursorToClosestZeroCrossing();
+    void moveCursorToTrackStart();
+    void moveCursorToTrackEnd();
 
     void setClipColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);

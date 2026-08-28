@@ -325,7 +325,7 @@ MenuItem* AppMenuModel::makeSelectMenu()
         // spectralMenu,
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-select", "Looping"), makeLoopingItems(), "menu-looping"),
-        makeMenuItem("zero-cross"),
+        makeMenu(TranslatableString("appshell-menu-select", "Cursor to"), makeCursorToItems(), "menu-cursor-to")
     };
 
     return makeMenu(TranslatableString("appshell-menu-select", "&Select"), selectItems, "menu-select");
@@ -694,6 +694,17 @@ MenuItemList AppMenuModel::makeLoopingItems()
         makeMenuItem("set-loop-region-to-selection"),
         makeSeparator(),
         makeMenuItem("set-loop-region-in-out"),
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeCursorToItems()
+{
+    MenuItemList items {
+        makeMenuItem("cursor-to-track-start"),
+        makeMenuItem("cursor-to-track-end"),
+        makeMenuItem("zero-cross")
     };
 
     return items;
