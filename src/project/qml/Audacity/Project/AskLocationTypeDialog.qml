@@ -31,21 +31,28 @@ import "internal/SaveToCloud"
 StyledDialogView {
     id: root
 
-    title: qsTrc("project/save", "Save project")
+    title: prv.isExport ? qsTrc("project/export", "Export audio") : qsTrc("project/save", "Save project")
 
     contentHeight: 600
     contentWidth: 900
 
-    objectName: "AskSaveLocationTypeDialog"
+    objectName: "AskLocationTypeDialog"
 
     property bool askAgain: true
+    property string purpose: "save"
 
-    function done(saveLocationType) {
+    QtObject {
+        id: prv
+
+        readonly property bool isExport: root.purpose === "export"
+    }
+
+    function done(locationType) {
         root.ret = {
             errcode: 0,
             value: {
                 askAgain: root.askAgain,
-                saveLocationType: saveLocationType
+                locationType: locationType
             }
         }
 
@@ -59,7 +66,7 @@ StyledDialogView {
 
         StyledTextLabel {
             Layout.fillWidth: true
-            text: qsTrc("project/save", "How would you like to save?")
+            text: prv.isExport ? qsTrc("project/export", "How would you like to export?") : qsTrc("project/save", "How would you like to save?")
             font: ui.theme.headerBoldFont
         }
 
@@ -69,7 +76,7 @@ StyledDialogView {
 
             NavigationPanel {
                 id: optionsNavPanel
-                name: "SaveLocationOptionsButtons"
+                name: "LocationOptionsButtons"
                 enabled: optionsRowLayout.enabled && optionsRowLayout.visible
                 direction: NavigationPanel.Horizontal
                 section: root.navigationSection
@@ -77,15 +84,15 @@ StyledDialogView {
             }
 
             SaveLocationOption {
-                title: qsTrc("project/save", "Save to the cloud (free)")
-                description: qsTrc("project/save", "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.")
-                buttonText: qsTrc("project/save", "Save to cloud")
+                title: prv.isExport ? qsTrc("project/export", "Share to audio.com") : qsTrc("project/save", "Save to the cloud (free)")
+                description: prv.isExport ? qsTrc("project/export", "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.") : qsTrc("project/save", "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.")
+                buttonText: prv.isExport ? qsTrc("project/export", "Share to audio.com") : qsTrc("project/save", "Save to cloud")
 
                 imageSource: "qrc:/SaveToCloud/images/Cloud.png"
 
                 navigation.panel: optionsNavPanel
                 navigation.column: 1
-                navigation.accessible.name: qsTrc("project/save", "Save to the cloud (free)")
+                navigation.accessible.name: title
                 navigation.accessible.description: description
 
                 onButtonClicked: {
@@ -95,14 +102,14 @@ StyledDialogView {
 
             SaveLocationOption {
                 title: qsTrc("project/save", "On your computer")
-                description: qsTrc("project/save", "If you prefer to save your files on your computer, you can do that here.")
-                buttonText: qsTrc("project/save", "Save to computer")
+                description: prv.isExport ? qsTrc("project/export", "Export MP3s, WAVs, FLACs and other formats to your computer.") : qsTrc("project/save", "If you prefer to save your files on your computer, you can do that here.")
+                buttonText: prv.isExport ? qsTrc("project/export", "Export to computer") : qsTrc("project/save", "Save to computer")
 
                 imageSource: "qrc:/SaveToCloud/images/Laptop.png"
 
                 navigation.panel: optionsNavPanel
                 navigation.column: 2
-                navigation.accessible.name: qsTrc("project/save", "Save on your computer")
+                navigation.accessible.name: title
                 navigation.accessible.description: description
 
                 onButtonClicked: {

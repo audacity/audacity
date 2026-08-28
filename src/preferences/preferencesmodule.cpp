@@ -8,6 +8,8 @@
 
 #include "importexport/import/types/importtypes.h"
 
+#include "types/preferencestypes.h"
+
 using namespace au::preferences;
 
 std::string PreferencesModule::moduleName() const
@@ -19,6 +21,8 @@ void PreferencesModule::registerUiTypes()
 {
     qmlRegisterUncreatableType<au::importexport::TempoDetectionPref>(
         "Audacity.Preferences", 1, 0, "TempoDetection", "Not creatable from QML");
+    qmlRegisterUncreatableType<au::preferences::SaveBehaviorPref>(
+        "Audacity.Preferences", 1, 0, "SaveBehavior", "Not creatable from QML");
 }
 
 void PreferencesModule::resolveImports()
