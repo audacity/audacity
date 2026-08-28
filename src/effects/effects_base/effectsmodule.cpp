@@ -9,6 +9,7 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/global/api/iapiregister.h"
 #include "framework/diagnostics/idiagnosticspathsregister.h"
 
 #include "internal/effectconfigsettings.h"
@@ -41,6 +42,8 @@
 #include "view/dropdownoptionsmodel.h"
 #include "view/pluginmanagertableviewmodel.h"
 
+#include "api/effectsapi.h"
+
 using namespace au::effects;
 
 static const std::string mname("effects_base");
@@ -69,6 +72,11 @@ void EffectsModule::registerExports()
 
 void EffectsModule::resolveImports()
 {
+    auto ar = globalIoc()->resolve<muse::api::IApiRegister>(mname);
+    if (ar) {
+        ar->regApiCreator(mname, "Audacity.Effects", new muse::api::ApiCreator<EffectsApi>());
+    }
+
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://effects/destructive_viewer"), "Audacity/Effects/DestructiveEffectsViewerDialog.qml");
