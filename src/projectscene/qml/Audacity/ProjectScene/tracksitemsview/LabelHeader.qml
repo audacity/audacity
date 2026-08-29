@@ -33,7 +33,7 @@ Rectangle {
     signal headerHoveredChanged(bool value)
 
     property int contentWidth: Math.max(50, Math.min(400, titleLoader.contentWidth + 8))
-    property int contentHeight: titleLoader.isEditState && titleLoader.item ? titleLoader.item.contentHeight : 14
+    property int contentHeight: titleLoader.isEditState && titleLoader.item ? titleLoader.item.contentHeight : 20
 
     x: root.isPoint ? root.earWidth + 3 : 0
     y: 0
