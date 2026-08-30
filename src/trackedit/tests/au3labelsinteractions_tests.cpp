@@ -1391,12 +1391,12 @@ TEST_F(Au3LabelsInteractionsTests, StretchLabelLeftBeyondEndTime)
     //! [THEN] The operation succeeds
     ASSERT_TRUE(result) << "Stretching label left beyond end time should succeed";
 
-    //! [THEN] The label has inverted times (start > end)
+    //! [THEN] The label is shrunk to a point (start == end)
     const Au3Label* stretchedLabel = labelTrack->GetLabel(0);
     ASSERT_NE(stretchedLabel, nullptr) << "Label should exist";
     ASSERT_EQ(stretchedLabel->GetId(), labelId) << "Label should have correct ID";
     ASSERT_DOUBLE_EQ(stretchedLabel->getT0(), 5.0) << "Label start time should be 5.0";
-    ASSERT_DOUBLE_EQ(stretchedLabel->getT1(), 6.0) << "Label end time should be 6.0";
+    ASSERT_DOUBLE_EQ(stretchedLabel->getT1(), 5.0) << "Label end time should be 5.0";
 }
 
 TEST_F(Au3LabelsInteractionsTests, StretchLabelRightBeforeStartTime)
@@ -1425,11 +1425,11 @@ TEST_F(Au3LabelsInteractionsTests, StretchLabelRightBeforeStartTime)
     //! [THEN] The operation succeeds
     ASSERT_TRUE(result) << "Stretching label right before start time should succeed";
 
-    //! [THEN] The label has inverted times (end < start)
+    //! [THEN] The label is shrunk to a point (start == end)
     const Au3Label* stretchedLabel = labelTrack->GetLabel(0);
     ASSERT_NE(stretchedLabel, nullptr) << "Label should exist";
     ASSERT_EQ(stretchedLabel->GetId(), labelId) << "Label should have correct ID";
-    ASSERT_DOUBLE_EQ(stretchedLabel->getT0(), 2.0) << "Label start time should be 2.0";
+    ASSERT_DOUBLE_EQ(stretchedLabel->getT0(), 3.0) << "Label start time should be 3.0";
     ASSERT_DOUBLE_EQ(stretchedLabel->getT1(), 3.0) << "Label end time should be 3.0";
 }
 
@@ -1474,9 +1474,9 @@ TEST_F(Au3LabelsInteractionsTests, StretchLabelRightInverse)
     bool result3 = m_labelsInteraction->stretchLabelRight(labelKey, 1.5, true);
     ASSERT_TRUE(result3) << "Third stretch should succeed";
 
-    //! [THEN] Anchor should still be at original left edge 3.0
+    //! [THEN] Anchor should still be at original left edge 3.0, the label becomes a point.
     const Au3Label* label3 = labelTrack->GetLabel(0);
-    ASSERT_DOUBLE_EQ(label3->getT0(), 1.5) << "After swap, T0 should be 1.5";
+    ASSERT_DOUBLE_EQ(label3->getT0(), 3.0) << "After swap, T0 should be 3.0";
     ASSERT_DOUBLE_EQ(label3->getT1(), 3.0) << "After swap, T1 should still be original left edge 3.0";
 }
 
@@ -1521,10 +1521,10 @@ TEST_F(Au3LabelsInteractionsTests, StretchLabelLeftInverse)
     bool result3 = m_labelsInteraction->stretchLabelLeft(labelKey, 7.5, true);
     ASSERT_TRUE(result3) << "Third stretch should succeed";
 
-    //! [THEN] Anchor should still be at original right edge 6.0
+    //! [THEN] Anchor should still be at original right edge 6.0, the label becomes a point.
     const Au3Label* label3 = labelTrack->GetLabel(0);
     ASSERT_DOUBLE_EQ(label3->getT0(), 6.0) << "After swap, T0 should still be original right edge 6.0";
-    ASSERT_DOUBLE_EQ(label3->getT1(), 7.5) << "After swap, T1 should be 7.5";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 6.0) << "After swap, T1 should be 6.0";
 }
 
 TEST_F(Au3LabelsInteractionsTests, StretchOppositeEdgeAfterInterruptedStretch)
