@@ -33,6 +33,8 @@ public:
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                      const std::string& snapshotId = {}, bool forceOverwrite = false) override;
     muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+    muse::ValCh<bool> syncingInProgressChanged() const override;
+    void stopProjectSync() override;
 
     muse::Ret deleteCloudProject(const muse::io::path_t& localPath) override;
 

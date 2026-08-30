@@ -64,6 +64,15 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::resumeProjectSync(au::pr
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
+muse::ValCh<bool> Au3AudioComServiceStub::syncingInProgressChanged() const
+{
+    return {};
+}
+
+void Au3AudioComServiceStub::stopProjectSync()
+{
+}
+
 muse::async::Channel<std::string, muse::io::path_t> Au3AudioComServiceStub::audioThumbnailFileUpdated() const
 {
     return {};
