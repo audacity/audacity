@@ -155,6 +155,7 @@ elseif(BUILD_TYPE STREQUAL "RELEASE_INSTALL")
 
 elseif(BUILD_TYPE STREQUAL "APPIMAGE")
 
+    set(BUILD_CONFIGURATION "app-portable")
     set(INSTALL_SUFFIX "4portable${INSTALL_SUFFIX}") # e.g. "4portable" or "4portablenightly"
     set(SKIP_RPATH ON)
     set(BUILD_DIR build.release)

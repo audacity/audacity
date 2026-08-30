@@ -6,28 +6,29 @@ endif()
 
 set(DESKTOP_LAUNCHER_NAME "${MUSE_APP_NAME_VERSION} Portable")
 
-# Build portable AppImage as per https://github.com/probonopd/AppImageKit
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/portable)
-
-execute_process(COMMAND echo ${CMAKE_INSTALL_PREFIX} OUTPUT_FILE PREFIX.txt)
-
-# Prepare portable scripts:
-configure_file(${CMAKE_CURRENT_LIST_DIR}/portable/AppRun.in AppRun @ONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/portable/portable-utils.in portable-utils @ONLY)
-install(PROGRAMS ${PROJECT_BINARY_DIR}/AppRun DESTINATION . COMPONENT portable)
-install(PROGRAMS ${PROJECT_BINARY_DIR}/portable-utils
-    ${CMAKE_CURRENT_LIST_DIR}/portable/ldd-recursive
-    ${CMAKE_CURRENT_LIST_DIR}/portable/rm-empty-dirs DESTINATION bin COMPONENT portable)
-
-install(FILES ${CMAKE_CURRENT_LIST_DIR}/portable/qt.conf DESTINATION bin COMPONENT portable)
-
-install(PROGRAMS ${CMAKE_CURRENT_LIST_DIR}/portable/wrappers/xdg-open DESTINATION wrappers COMPONENT portable)
-
-
 # Identify App's main window so that it receives the correct name
 # and icon in the OS dock / taskbar. Run `xprop WM_CLASS` and click on
 # App's main window to find out what string to use here.
 set(WINDOW_MANAGER_CLASS ${MUSE_APP_NAME_VERSION})
+
+if (AU4_BUILD_CONFIGURATION STREQUAL "app-portable")
+    # Build portable AppImage as per https://github.com/probonopd/AppImageKit
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/portable)
+
+    execute_process(COMMAND echo ${CMAKE_INSTALL_PREFIX} OUTPUT_FILE PREFIX.txt)
+
+    # Prepare portable scripts:
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/portable/AppRun.in AppRun @ONLY)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/portable/portable-utils.in portable-utils @ONLY)
+    install(PROGRAMS ${PROJECT_BINARY_DIR}/AppRun DESTINATION . COMPONENT portable)
+    install(PROGRAMS ${PROJECT_BINARY_DIR}/portable-utils
+        ${CMAKE_CURRENT_LIST_DIR}/portable/ldd-recursive
+        ${CMAKE_CURRENT_LIST_DIR}/portable/rm-empty-dirs DESTINATION bin COMPONENT portable)
+
+    install(FILES ${CMAKE_CURRENT_LIST_DIR}/portable/qt.conf DESTINATION bin COMPONENT portable)
+
+    install(PROGRAMS ${CMAKE_CURRENT_LIST_DIR}/portable/wrappers/xdg-open DESTINATION wrappers COMPONENT portable)
+endif()
 
 # Install desktop file (perform variable substitution first)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacityteam.Audacity.desktop.in org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop)
