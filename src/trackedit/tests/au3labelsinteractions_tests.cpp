@@ -211,6 +211,13 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
+    //! [GIVEN] Playback is not active at position 3.5 seconds
+    const double playbackPosition = 3.5;
+    ON_CALL(*m_playbackState, isPlaying())
+        .WillByDefault(Return(false));
+    ON_CALL(*m_playbackState, playbackPosition())
+        .WillByDefault(Return(playbackPosition));
+
     //! [EXPECT] The project is notified about a new track and a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
@@ -230,11 +237,11 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     ASSERT_NE(labelTrack, nullptr) << "Label track should exist";
     ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
 
-    //! [THEN] The label is a point label (same start and end time)
+    //! [THEN] The label is a point label (same start and end time), at the playback position
     const Au3Label* label = labelTrack->GetLabel(0);
     ASSERT_NE(label, nullptr) << "Label should exist";
-    ASSERT_DOUBLE_EQ(label->getT0(), cursorPosition) << "Label start should be at cursor position";
-    ASSERT_DOUBLE_EQ(label->getT1(), cursorPosition) << "Label end should be at cursor position";
+    ASSERT_DOUBLE_EQ(label->getT0(), playbackPosition) << "Label start should be at playback position";
+    ASSERT_DOUBLE_EQ(label->getT1(), playbackPosition) << "Label end should be at playback position";
 }
 
 TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
