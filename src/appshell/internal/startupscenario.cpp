@@ -192,6 +192,13 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
+    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
+        appUpdateScenario()->checkInProgressChanged().onNotify(this, [this, modeType]() {
+            appUpdateScenario()->checkInProgressChanged().disconnect(this);
+            showStartupDialogsIfNeed(modeType);
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+
     showStartupDialogsIfNeed(modeType);
 
     if (!m_startupMediaFiles.empty()) {
@@ -240,34 +247,55 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         return;
     }
 
-    const auto showWelcomePage = [this]() {
-        const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
-        const std::string currentAudacityVersion(configuration()->audacityVersion());
+    // Delay popups until update check finished
+    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
+        return;
+    }
 
-        if (welcomeDialogLastShownVersion < currentAudacityVersion) {
-            configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
-            configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+    const auto showWelcomeDialogIfNeed = [this]() {
+        const auto showWelcomePage = [this]() {
+            const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
+            const std::string currentAudacityVersion(configuration()->audacityVersion());
+
+            if (welcomeDialogLastShownVersion < currentAudacityVersion) {
+                configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
+                configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+            }
+
+            if (!configuration()->welcomeDialogShowOnStartup()) {
+                return;
+            }
+
+            muse::UriQuery query(WELCOME_DIALOG_URI);
+            query.set("modal", false);
+            query.set("floating", true);
+            interactive()->open(query);
+
+            configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
+        };
+
+        if (!configuration()->hasCompletedFirstLaunchSetup()) {
+            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
+                return resolve();
+            });
+        } else {
+            showWelcomePage();
         }
-
-        if (!configuration()->welcomeDialogShowOnStartup()) {
-            return;
-        }
-
-        muse::UriQuery query(WELCOME_DIALOG_URI);
-        query.set("modal", false);
-        query.set("floating", true);
-        interactive()->open(query);
-
-        configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
     };
 
-    if (!configuration()->hasCompletedFirstLaunchSetup()) {
-        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
-            return resolve();
-        });
-    } else {
-        showWelcomePage();
+    if (!appUpdateScenario() || !appUpdateScenario()->hasUpdate()) {
+        showWelcomeDialogIfNeed();
+        return;
     }
+
+    auto promise = appUpdateScenario()->showUpdate();
+    promise.onResolve(this, [showWelcomeDialogIfNeed](const muse::Ret& ret) {
+        // Ok means close the app and install the update
+        if (ret.code() == static_cast<int>(muse::Ret::Code::Ok)) {
+            return;
+        }
+        showWelcomeDialogIfNeed();
+    });
 }
 
 muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
