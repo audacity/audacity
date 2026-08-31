@@ -52,7 +52,7 @@ void FirstLaunchSetupModel::load()
     }
 
     if (au3CloudService()->enabled()) {
-        m_pages.append(Page { SIGNIN_AUDIO_COM_PAGE, "audacity://project" });
+        m_pages.append(Page { SIGNIN_AUDIO_COM_PAGE, "audacity://project", { { "isCreateAccountMode", true } } });
         m_pages.append(Page { APP_UPDATES_AND_USAGE_INFO_PAGE, "audacity://project" });
     }
 
@@ -74,6 +74,7 @@ QVariantMap FirstLaunchSetupModel::Page::toMap() const
 {
     return {
         { "url", m_url },
+        { "properties", m_properties },
     };
 }
 

@@ -100,7 +100,14 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.preferredHeight: 366
-            source: model.currentPage.url
+
+            Connections {
+                target: model
+
+                function onCurrentPageChanged() {
+                    pageLoader.setSource(model.currentPage.url, model.currentPage.properties)
+                }
+            }
 
             onLoaded: {
                 item.navigationSection = root.navigationSection
