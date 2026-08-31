@@ -132,7 +132,6 @@ endif()
 # CONFIGURE: UTest
 ###########################################
 if(BUILD_CONFIGURE MATCHES "UTEST")
-    set(MUSE_ENABLE_UNIT_TESTS ON)
     set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL ON)
     set(MUSE_MODULE_AUDIO OFF)
     if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
@@ -159,26 +158,6 @@ set(QT_SUPPORT ON)
 
 if (NOT MUSE_MODULE_UI)
     set(MUE_BUILD_APPSHELL_MODULE OFF) # hard dependency
-endif()
-
-###########################################
-# Unit tests
-###########################################
-if (NOT MUSE_ENABLE_UNIT_TESTS)
-
-    set(AU_BUILD_APPSHELL_TESTS OFF)
-    set(AU_BUILD_AUTOMATION_TESTS OFF)
-    set(AU_BUILD_CONTEXT_TESTS OFF)
-    set(AU_BUILD_EFFECTS_TESTS OFF)
-    set(AU_BUILD_PLAYBACK_TESTS OFF)
-    set(AU_BUILD_PREFERENCES_TESTS OFF)
-    set(AU_BUILD_PROJECT_TESTS OFF)
-    set(AU_BUILD_PROJECTSCENE_TESTS OFF)
-    set(AU_BUILD_RECORD_TESTS OFF)
-    set(AU_BUILD_SHARED_TESTS OFF)
-    set(AU_BUILD_TRACKEDIT_TESTS OFF)
-    set(AU_BUILD_UICOMPONENTS_TESTS OFF)
-
 endif()
 
 ###########################################
