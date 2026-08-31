@@ -25,7 +25,9 @@ void ProjectToolBarModel::load()
         itemsCodes.push_back("file-share-audio");
     }
 
+#ifndef Q_OS_LINUX
     itemsCodes.push_back("get-effects");
+#endif
 
     ToolBarItemList items;
     for (const ActionCode& code : itemsCodes) {
