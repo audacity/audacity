@@ -441,6 +441,8 @@ void PlaybackController::playSelectionAction()
         stop();
     }
 
+    m_isPlayingSelection = false;
+
     const PlaybackRegion selection = selectionPlaybackRegion();
     if (!selection.isValid()) {
         return;
