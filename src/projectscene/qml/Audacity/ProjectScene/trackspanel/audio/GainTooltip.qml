@@ -15,7 +15,7 @@ StyledPopupView {
     openPolicies: PopupView.NoActivateFocus
 
     property var gain
-    property rect contentRect: fontMetrics.boundingRect(minValue.toFixed(root.decimalPlaces) + unitText)
+    property rect contentRect: fontMetrics.boundingRect(minValue.toLocaleString(Qt.locale(), 'f', root.decimalPlaces) + unitText)
 
     property int decimalPlaces: 1
     property string unitText: "dB"
@@ -40,7 +40,7 @@ StyledPopupView {
                     return `${root.gain}${root.unitText}`
                 }
 
-                let value = g.toFixed(root.decimalPlaces)
+                let value = g.toLocaleString(Qt.locale(), 'f', root.decimalPlaces)
                 return `${value}${root.unitText}`
             }
         }

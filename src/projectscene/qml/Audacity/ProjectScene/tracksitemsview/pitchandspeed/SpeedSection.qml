@@ -47,10 +47,7 @@ Column {
 
         title: qsTrc("projectscene", "Speed")
 
-        currentValue: {
-            var result = parseFloat(root.speedPercentage)
-            return +result.toFixed(speedProperty.decimals)
-        }
+        currentValue: ui.df.roundReal(root.speedPercentage, speedProperty.decimals)
 
         minValue: 1.0
         maxValue: 1000.0

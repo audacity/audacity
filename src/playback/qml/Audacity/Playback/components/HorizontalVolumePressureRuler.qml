@@ -59,13 +59,13 @@ Item {
 
     Text {
         id: leftText
-        text: "0.00"
+        text: (0).toLocaleString(Qt.locale(), 'f', 2)
         font.pixelSize: 10
         visible: false
     }
     Text {
         id: rightText
-        text: "1.00"
+        text: (1).toLocaleString(Qt.locale(), 'f', 2)
         font.pixelSize: 10
         visible: false
     }

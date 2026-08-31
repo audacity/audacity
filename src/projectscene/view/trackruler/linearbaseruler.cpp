@@ -7,6 +7,8 @@
 
 #include "framework/global/realfn.h"
 
+#include <QLocale>
+
 #include "linearbaseruler.h"
 
 using namespace au::projectscene;
@@ -54,9 +56,7 @@ std::string LinearBaseRuler::sampleToText(double sample) const
     const int precision = std::clamp(getPrecision(increments.first), MIN_PRECISION, MAX_PRECISION);
     const double rounded = muse::RealRound(std::abs(sample), precision);
 
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(precision) << rounded;
-    return ss.str();
+    return QLocale().toString(rounded, 'f', precision).toStdString();
 }
 
 bool LinearBaseRuler::isBold(double value) const

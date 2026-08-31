@@ -4,6 +4,8 @@
 
 #include "linearmeter.h"
 
+#include <QLocale>
+
 #include "framework/global/types/ratio.h"
 
 #include <sstream>
@@ -72,9 +74,7 @@ double LinearMeter::positionToSample(double position) const
 
 std::string LinearMeter::sampleToText(double sample) const
 {
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(2) << std::abs(sample);
-    return ss.str();
+    return QLocale().toString(std::abs(sample), 'f', 2).toStdString();
 }
 
 std::vector<double> LinearMeter::fullSteps(int meterSize) const

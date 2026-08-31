@@ -674,9 +674,11 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
         mProps += wxString::Format(
             wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
+        // Internat's separator is set by the app from its effective locale
+        // (wx locale machinery is not initialized in AU4)
         mProps += wxString::Format(
             wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"),
-            wxNumberFormatter::GetDecimalSeparator());
+            Internat::GetDecimalSeparator());
 
         mProps += wxString::Format(
             wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"),

@@ -23,6 +23,7 @@
 
 #include "languages/languageserrors.h"
 
+#include <QLocale>
 #include <QStorageInfo>
 
 #include "log.h"
@@ -98,10 +99,24 @@ QVariantList GeneralPreferencesModel::languages() const
 
     QVariantMap systemLanguageObj;
     systemLanguageObj["code"] = SYSTEM_LANGUAGE_CODE;
-    systemLanguageObj["name"] = muse::qtrc("preferences", "System default");
+    const QString systemLanguageName = this->systemLanguageName();
+    systemLanguageObj["name"] = systemLanguageName.isEmpty()
+                                ? muse::qtrc("preferences", "System default")
+                                : muse::qtrc("preferences", "System default: %1").arg(systemLanguageName);
     result.prepend(systemLanguageObj);
 
     return result;
+}
+
+QString GeneralPreferencesModel::systemLanguageName() const
+{
+    // Name of the language the system would resolve to, preferring the
+    // translated name from the languages list
+    const Language lang = languagesService()->language(SYSTEM_LANGUAGE_CODE);
+    if (!lang.name.isEmpty()) {
+        return lang.name;
+    }
+    return QLocale::system().nativeLanguageName();
 }
 
 QString GeneralPreferencesModel::currentLanguageCode() const
@@ -182,7 +197,7 @@ QString GeneralPreferencesModel::availableSpace() const
     QStorageInfo storage(path);
 
     QString msg = muse::qtrc("preferences", "%1 GB")
-                  .arg(QString::number(storage.bytesAvailable() / (1024 * 1024 * 1024)));
+                  .arg(QLocale().toString(storage.bytesAvailable() / (1024 * 1024 * 1024)));
 
     return msg;
 }
@@ -204,10 +219,4 @@ void GeneralPreferencesModel::setTemporaryDir(const QString& path)
     QString title = muse::qtrc("preferences", "Temp directory update");
     QString msg = muse::qtrc("preferences", "Changes to temporary directory will not take effect until Audacity is restarted");
     interactive()->info(title.toStdString(), msg.toStdString());
-}
-
-void GeneralPreferencesModel::setNumberFormat(int format)
-{
-    Q_UNUSED(format);
-    NOT_IMPLEMENTED;
 }

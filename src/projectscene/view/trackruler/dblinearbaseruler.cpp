@@ -4,6 +4,8 @@
 #include <iomanip>
 
 #include "framework/global/types/ratio.h"
+
+#include <QLocale>
 #include "framework/global/realfn.h"
 
 #include "dblinearbaseruler.h"
@@ -45,15 +47,11 @@ void DbLinearBaseRuler::setDbRange(double dbRange)
 
 std::string DbLinearBaseRuler::sampleToText(double sample) const
 {
-    std::stringstream ss;
-
     if (muse::RealIsEqual(sample, m_dbRange)) {
-        ss << "\u221E";
-    } else {
-        ss << std::fixed << std::setprecision(0) << std::abs(sample);
+        return "\u221E";
     }
 
-    return ss.str();
+    return QLocale().toString(std::abs(sample), 'f', 0).toStdString();
 }
 
 int DbLinearBaseRuler::computeLowestFullStepValue(double height) const

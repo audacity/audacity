@@ -776,7 +776,7 @@ Rectangle {
                     text: {
                         let semis = Math.trunc(root.pitch / 100)
                         let cents = Math.abs(root.pitch % 100).toString().padStart(2, "0")
-                        return semis + (cents > "00" ? "." + cents : "")
+                        return semis + (cents > "00" ? Qt.locale().decimalPoint + cents : "")
                     }
                     icon: root.pitch > 0 ? IconCode.ARROW_UP : IconCode.ARROW_DOWN
 
@@ -797,7 +797,7 @@ Rectangle {
                     mouseArea.visible: root.enableCursorInteraction
 
                     icon: IconCode.CLOCK
-                    text: root.speedPercentage + "%"
+                    text: root.speedPercentage.toLocaleString(Qt.locale(), 'f', 0) + "%"
 
                     visible: root.isSpeedModified && header.width > (60 + speedBtn.implicitWidth + menuBtn.implicitWidth)
 
@@ -1043,7 +1043,7 @@ Rectangle {
                             return "-∞"
 
                         let db = 20 * Math.log10(g)
-                        return db.toFixed(1)
+                        return db.toLocaleString(Qt.locale(), 'f', 1)
                     }
                 }
             }

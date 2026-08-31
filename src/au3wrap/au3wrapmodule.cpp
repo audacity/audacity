@@ -10,6 +10,7 @@
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
+#include "au3-strings/Internat.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-module-manager/ModuleManager.h"
 
@@ -92,6 +93,13 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
 void Au3WrapModule::onAllInited(const muse::IApplication::RunMode& mode)
 {
+    // The languages service has applied the effective QLocale by now;
+    // hand its decimal separator to the AU3 side (Internat::Init is not called)
+    const QString decimalPoint = QLocale().decimalPoint();
+    if (!decimalPoint.isEmpty()) {
+        Internat::SetDecimalSeparator(decimalPoint.at(0).unicode());
+    }
+
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
     ExportPluginRegistry::Get().Initialize();
