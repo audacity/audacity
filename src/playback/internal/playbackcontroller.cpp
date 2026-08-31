@@ -1019,7 +1019,7 @@ bool PlaybackController::isPlaybackPositionAtOrAfterPlaybackRegionEnd() const
 {
     const PlaybackRegion playbackRegion = player()->playbackRegion();
     return playbackRegion.isValid()
-           && playbackPosition() >= playbackRegion.end - TIME_EPS
+           && (isEqualToPlaybackPosition(playbackRegion.end) || playbackPosition() > playbackRegion.end)
            && !isLoopRegionActive();
 }
 
