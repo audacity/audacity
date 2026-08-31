@@ -19,13 +19,13 @@
 namespace
 {
    constexpr auto RestorePasswordURL = "https://audio.com/auth/forgot-password";
+   constexpr auto ContentWidth = 420;
 
    enum
    {
       ID_SIGNIN,
       ID_CREATE_ACCOUNT,
-      ID_WITH_GOOGLE,
-      ID_WITH_FACEBOOK
+      ID_WITH_GOOGLE
    };
 
    auto DialogNameForMode(LoginDialog::Mode mode)
@@ -48,8 +48,8 @@ namespace
       button->SetFrameMid(2);
       button->SetIcon(theTheme.Image(imageId));
       button->SetLabel(label);
-      button->SetMinSize({206, 40});
-      button->SetSize(206, 40);
+      button->SetMinSize({ContentWidth, 40});
+      button->SetSize(ContentWidth, 40);
       button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
       return button;
    }
@@ -93,7 +93,6 @@ BEGIN_EVENT_TABLE(LoginDialog, wxDialogWrapper)
    EVT_HYPERLINK(ID_CREATE_ACCOUNT, LoginDialog::OnCreateAccount)
    EVT_BUTTON(wxID_OK, LoginDialog::OnContinue)
    EVT_BUTTON(ID_WITH_GOOGLE, LoginDialog::OnContinueWithGoogle)
-   EVT_BUTTON(ID_WITH_FACEBOOK, LoginDialog::OnContinueWithFacebook)
 END_EVENT_TABLE()
 
 LoginDialog::LoginDialog(wxWindow* parent, wxWindowID id, Mode mode)
@@ -147,14 +146,11 @@ void LoginDialog::LayoutControls()
 
    topSizer->Add(title, 0, wxALL | wxEXPAND, 16);
 
-   {
-      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      hSizer->Add(MakeLoginButton(this, ID_WITH_GOOGLE, bmpGoogleLogo, XO("Continue with Google")), 1, wxEXPAND);
-      hSizer->AddSpacer(8);
-      hSizer->Add(MakeLoginButton(this, ID_WITH_FACEBOOK, bmpFacebookLogo, XO("Continue with Facebook")), 1, wxEXPAND);
-      title->Wrap(hSizer->GetMinSize().GetWidth());
-      topSizer->Add(hSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
-   }
+   title->Wrap(ContentWidth);
+
+   topSizer->Add(
+      MakeLoginButton(this, ID_WITH_GOOGLE, bmpGoogleLogo, XO("Continue with Google")),
+      0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
@@ -250,11 +246,6 @@ void LoginDialog::OnContinue(wxCommandEvent&)
 void LoginDialog::OnContinueWithGoogle(wxCommandEvent&)
 {
    ContinueAuthorize("google");
-}
-
-void LoginDialog::OnContinueWithFacebook(wxCommandEvent&)
-{
-   ContinueAuthorize("facebook");
 }
 
 void LoginDialog::onUserCredentialsChange(wxCommandEvent&)
