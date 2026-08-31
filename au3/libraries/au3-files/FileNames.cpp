@@ -23,7 +23,10 @@ used throughout Audacity into this one place.
 #include "FileNames.h"
 #include "PathList.h"
 
+#include <algorithm>
+#include <filesystem>
 #include <memory>
+#include <system_error>
 
 #include <wx/defs.h>
 #include <wx/filename.h>
@@ -675,6 +678,31 @@ void FileNames::AddMultiPathsToPathList(const wxString& multiPathStringArg,
     }
 }
 
+namespace {
+std::filesystem::path FilesystemPath(const wxString& path)
+{
+#if defined(__WXMSW__)
+    return std::filesystem::path { path.ToStdWstring() };
+#else
+    return std::filesystem::path { std::string { path.utf8_str() } };
+#endif
+}
+
+bool SameDirectory(const wxString& lhs, const wxString& rhs)
+{
+    // Case sensitivity is a property of the volume, not of the OS, so ask the
+    // file system itself whether the two spellings name the same directory
+    // (this also sees through symlinks). It can only answer for directories
+    // that exist; for the rest an exact comparison suffices, since a
+    // nonexistent directory contributes no files however often it is scanned.
+
+    // Use std::error_code to avoid throwing if the directories do not exist.
+    std::error_code ec;
+    return std::filesystem::equivalent(FilesystemPath(lhs), FilesystemPath(rhs), ec)
+           || lhs == rhs;
+}
+}
+
 void FileNames::RemoveDuplicatesFromPathList(FilePaths& pathList)
 {
     FilePaths uniquePaths;
@@ -683,7 +711,10 @@ void FileNames::RemoveDuplicatesFromPathList(FilePaths& pathList)
         wxFileName dir = wxFileName::DirName(path);
         dir.MakeAbsolute();
         const wxString normalized = dir.GetFullPath();
-        if (normalizedPaths.Index(normalized, wxFileName::IsCaseSensitive()) == wxNOT_FOUND) {
+        const bool isDuplicate = std::any_of(normalizedPaths.begin(), normalizedPaths.end(), [&](const wxString& kept) {
+            return SameDirectory(normalized, kept);
+        });
+        if (!isDuplicate) {
             normalizedPaths.push_back(normalized);
             uniquePaths.push_back(path);
         }

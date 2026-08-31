@@ -259,7 +259,6 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager,
     }
 
     // VST3 paths are filesystem paths: we can use this helper to remove duplicates.
-    // On Windows, the deduplication is case-insensitive.
     FileNames::RemoveDuplicatesFromPathList(pathList);
 
     PluginPaths result;
