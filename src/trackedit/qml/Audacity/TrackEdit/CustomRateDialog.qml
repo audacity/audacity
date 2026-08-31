@@ -85,7 +85,7 @@ StyledDialogView {
                     onClicked: {
                         menuLoader.toggleOpened(availableRates.map(function (rate) {
                             return {
-                                "title": rate.toString(),
+                                "title": rate.toLocaleString(Qt.locale(), 'f', 0),
                                 "id": rate.toString()
                             }
                         }))

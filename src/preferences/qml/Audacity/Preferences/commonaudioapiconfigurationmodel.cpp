@@ -22,6 +22,8 @@
 
 #include "commonaudioapiconfigurationmodel.h"
 
+#include <QLocale>
+
 #include <QFontMetrics>
 
 #include "containers.h"
@@ -34,7 +36,8 @@ using namespace au::appshell;
 namespace {
 QString toSampleRateName(uint64_t sampleRate)
 {
-    return QString::number(sampleRate) + " Hz";
+    // Display name; selection resolves through m_sampleRateMapping
+    return QLocale().toString(static_cast<qulonglong>(sampleRate)) + " Hz";
 }
 
 QString channelName(int channelNumber)

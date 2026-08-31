@@ -2,6 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 #include "changepitchviewmodel.h"
+
+#include <QLocale>
 #include "changepitcheffect.h"
 
 #include "../common/measureunits.h"
@@ -34,7 +36,7 @@ QString ChangePitchViewModel::estimatedStartPitch() const
     return muse::qtrc("effects/changepitch", "Estimated start pitch: %1%2 (%3 Hz)")
            .arg(pitchName)
            .arg(e.m_nFromOctave)
-           .arg(QString::number(frequency, 'f', 3));
+           .arg(QLocale().toString(frequency, 'f', 3));
 }
 
 // From Pitch

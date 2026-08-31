@@ -15,7 +15,7 @@ StyledPopupView {
     openPolicies: PopupView.NoActivateFocus
 
     property double volume
-    property rect contentRect: fontMetrics.boundingRect(minValue.toFixed(root.decimalPlaces) + unitText)
+    property rect contentRect: fontMetrics.boundingRect(minValue.toLocaleString(Qt.locale(), 'f', root.decimalPlaces) + unitText)
 
     property int decimalPlaces: 1
     property string unitText: "dB"
@@ -34,7 +34,7 @@ StyledPopupView {
 
             anchors.horizontalCenter: parent.horizontalCenter
             text: {
-                let value = root.volume.toFixed(root.decimalPlaces)
+                let value = root.volume.toLocaleString(Qt.locale(), 'f', root.decimalPlaces)
                 return `${value}${root.unitText}`
             }
         }

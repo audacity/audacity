@@ -254,7 +254,7 @@ BuiltinEffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.toneDuration * 1000))
+                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.toneDuration * 1000).toLocaleString(Qt.locale(), 'f', 0))
                         font.bold: true
                     }
                 }
@@ -268,7 +268,7 @@ BuiltinEffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.silenceDuration * 1000))
+                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.silenceDuration * 1000).toLocaleString(Qt.locale(), 'f', 0))
                         font.bold: true
                     }
                 }

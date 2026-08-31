@@ -39,7 +39,7 @@ StyledPopupView {
             text: {
                 let value = Math.round(root.value)
                 let direction = value < 0 ? 'L' : value > 0 ? 'R' : ''
-                return `${Math.abs(value)}${direction}`
+                return `${Math.abs(value).toLocaleString(Qt.locale(), 'f', 0)}${direction}`
             }
         }
     }
