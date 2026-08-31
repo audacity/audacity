@@ -145,7 +145,6 @@ private:
     void pauseAction();
     void doPause();
     void doResume();
-    void seek(const muse::secs_t secs, bool applyIfPlaying);
     bool ensurePhysicalStreamStopped();
 
     void togglePlayRepeats();
