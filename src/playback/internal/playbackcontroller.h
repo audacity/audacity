@@ -197,10 +197,5 @@ private:
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
-
-    muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
-
-    bool m_isExportingAudio = false;
-    bool m_isRangeSelection = false;
 };
 }
