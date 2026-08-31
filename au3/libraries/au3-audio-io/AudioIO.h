@@ -313,6 +313,26 @@ public:
     void StopBufferExchangeOnAudioThread();
     void WaitForBufferExchangeStoppedOnAudioThread();
 
+    struct AudioThreadPacer {
+        virtual ~AudioThreadPacer() = default;
+        virtual void SleepUntil(const std::chrono::steady_clock::time_point& deadline)
+        {
+            std::this_thread::sleep_until(deadline);
+        }
+
+        virtual void SleepFor(const std::chrono::milliseconds& ms)
+        {
+            std::this_thread::sleep_for(ms);
+        }
+
+        virtual bool KeepWaiting() const
+        {
+            return true;
+        }
+    };
+    //! Default, production pacer will be used if this function is not called.
+    static void SetAudioThreadPacerForTests(std::shared_ptr<AudioThreadPacer> pacer);
+
     void ProcessOnceAndWait(std::chrono::milliseconds sleepTime = std::chrono::milliseconds(50));
 
     std::atomic<bool> mForceFadeOut{ false };
