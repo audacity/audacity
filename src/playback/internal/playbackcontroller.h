@@ -122,8 +122,8 @@ private:
 
     void togglePlay(TogglePlayMode mode);
 
-    void stopSeekToLastSeekTime();
-    void stopSeekToPlaybackPosition();
+    void stopAndSeekToLastSeekTime();
+    void stopAndSeekToPlaybackPosition();
 
     void togglePlayPauseAction();
     void togglePlayStopAction();
