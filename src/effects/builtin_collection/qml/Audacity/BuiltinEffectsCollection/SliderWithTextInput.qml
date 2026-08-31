@@ -11,13 +11,7 @@ Column {
     property alias from: slider.from
     property alias text: label.text
     property alias measureUnitsSymbol: incrementalPropertyControl.measureUnitsSymbol
-    property double step: {
-        if (decimals <= 0) {
-            return 1
-        }
-        const val = "0." + "0".repeat(decimals - 1) + "1"
-        return parseFloat(val)
-    }
+    property double step: decimals <= 0 ? 1 : Math.pow(10, -decimals)
 
     property var navigationPanel: null
     property int navigationOrderStart: 0
@@ -72,10 +66,9 @@ Column {
             decimals: root.decimals
             step: root.step
 
-            currentValue: (slider.value).toFixed(decimals)
+            currentValue: ui.df.roundReal(slider.value, root.decimals)
 
             onValueEdited: function (newValue) {
-                newValue = +(newValue.toFixed(decimals))
                 if (newValue !== root.value) {
                     root.newValueRequested(newValue)
                 }

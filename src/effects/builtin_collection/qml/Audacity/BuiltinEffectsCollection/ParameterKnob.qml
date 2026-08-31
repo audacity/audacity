@@ -29,6 +29,17 @@ Item {
         }
     }
 
+    // Fractional digits needed to display the step (numeric, locale-independent)
+    function decimalsForStep(step) {
+        let d = 0
+        let s = step
+        while (d < 6 && Math.abs(s - Math.round(s)) > 1e-9 * Math.max(1, Math.abs(s))) {
+            s *= 10
+            d++
+        }
+        return d
+    }
+
     onParameterChanged: {
         if (parameter) {
             knob.from = parameter["min"]
@@ -93,15 +104,10 @@ Item {
 
                 minValue: knob.from
                 maxValue: knob.to
-                decimals: {
-                    let s = knob.stepSize.toString()
-                    if (s.indexOf('.') >= 0)
-                        return s.split('.')[1].length
-                    return 0
-                }
+                decimals: root.decimalsForStep(knob.stepSize)
                 step: knob.stepSize
 
-                currentValue: +knob.value.toFixed(decimals)
+                currentValue: ui.df.roundReal(knob.value, decimals)
 
                 onValueEdited: function (value) {
                     root.newValueRequested(root.parameter["key"], value)

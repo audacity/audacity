@@ -205,7 +205,7 @@ BuiltinEffectBase {
                         navigation.order: 0
 
                         onNewValueRequested: function (value) {
-                            let newValue = +(value.toFixed(1))
+                            let newValue = ui.df.roundReal(value, 1)
                             if (newValue !== dtmf.dutyCycle) {
                                 dtmf.dutyCycle = newValue
                             }
@@ -240,7 +240,7 @@ BuiltinEffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1%").arg(dtmf.dutyCycle.toFixed(1))
+                        text: qsTrc("effects/dtmf", "%1%").arg(dtmf.dutyCycle.toLocaleString(Qt.locale(), 'f', 1))
                         font.bold: true
                     }
                 }

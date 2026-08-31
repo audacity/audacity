@@ -19,7 +19,7 @@ Row {
     signal newValueRequested(double newValue)
 
     onValueChanged: {
-        const newValue = root.value.toFixed(textControl.decimals)
+        const newValue = ui.df.roundReal(root.value, textControl.decimals)
         if (root.value !== newValue) {
             newValueRequested(newValue)
         }
@@ -39,7 +39,7 @@ Row {
 
         value: root.value
         onMoved: {
-            const newValue = slider.value.toFixed(textControl.decimals)
+            const newValue = ui.df.roundReal(slider.value, textControl.decimals)
             if (root.value !== newValue) {
                 newValueRequested(newValue)
             }
