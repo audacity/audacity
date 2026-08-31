@@ -191,6 +191,14 @@ set(MODULE_DEF ${MODULE_DEF}
     # -DNOTE_TRACK_API=
 )
 
+if (OS_IS_MAC AND AU_BUILD_SPEECH_SWIFT_EFFECT)
+    list(APPEND MODULE_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet3/deepfilternet3effect.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet3/deepfilternet3effect.h
+    )
+    list(APPEND MODULE_DEF -DAU_BUILD_SPEECH_SWIFT_EFFECT)
+endif()
+
 set(MODULE_LINK au3wrap libsbsms shared)
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 
