@@ -257,14 +257,14 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
     player()->seek(secs, applyIfPlaying);
 }
 
-void PlaybackController::stopSeekToLastSeekTime()
+void PlaybackController::stopAndSeekToLastSeekTime()
 {
     stop();
 
     seek(lastPlaybackSeekTime(), false);
 }
 
-void PlaybackController::stopSeekToPlaybackPosition()
+void PlaybackController::stopAndSeekToPlaybackPosition()
 {
     const muse::secs_t stopPosition = playbackPosition();
 
@@ -302,7 +302,7 @@ void PlaybackController::onProjectChanged()
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         prj->aboutCloseBegin().onNotify(this, [this]() {
-            stopSeekToLastSeekTime();
+            stopAndSeekToLastSeekTime();
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
@@ -368,9 +368,9 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
 
     if (isPlaying()) {
         if (mode == TogglePlayMode::PlayStopAndSetCursor) {
-            stopSeekToPlaybackPosition();
+            stopAndSeekToPlaybackPosition();
         } else if (mode == TogglePlayMode::PlayStop) {
-            stopSeekToLastSeekTime();
+            stopAndSeekToLastSeekTime();
         } else {
             doPause();
         }
@@ -508,7 +508,7 @@ void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
 void PlaybackController::rewindToStartAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
-    stopSeekToLastSeekTime();
+    stopAndSeekToLastSeekTime();
 
     doSeek(0.0, false);
 
@@ -519,7 +519,7 @@ void PlaybackController::rewindToEndAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     setLastPlaybackSeekTime(totalPlayTime());
-    stopSeekToLastSeekTime();
+    stopAndSeekToLastSeekTime();
 
     selectionController()->resetTimeSelection();
 }
@@ -610,7 +610,7 @@ void PlaybackController::doPause()
 
     if (m_pauseShouldStopPlayback && isPlaying()) {
         m_pauseShouldStopPlayback = false;
-        stopSeekToLastSeekTime();
+        stopAndSeekToLastSeekTime();
         return;
     }
 
@@ -626,7 +626,7 @@ void PlaybackController::stopAction()
         return;
     }
 
-    stopSeekToLastSeekTime();
+    stopAndSeekToLastSeekTime();
 }
 
 void PlaybackController::stop()
