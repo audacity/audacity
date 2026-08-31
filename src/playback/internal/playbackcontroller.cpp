@@ -367,12 +367,16 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
     }
 
     if (isPlaying()) {
-        if (mode == TogglePlayMode::PlayStopAndSetCursor) {
+        switch (mode) {
+        case TogglePlayMode::PlayStopAndSetCursor:
             stopAndSeekToPlaybackPosition();
-        } else if (mode == TogglePlayMode::PlayStop) {
+            break;
+        case TogglePlayMode::PlayStop:
             stopAndSeekToLastSeekTime();
-        } else {
+            break;
+        case TogglePlayMode::PlayPause:
             doPause();
+            break;
         }
 
         return;
