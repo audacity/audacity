@@ -240,21 +240,11 @@ PlaybackStatus PlaybackController::playbackStatus() const
     return player()->playbackStatus();
 }
 
-void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
-{
-    IF_ASSERT_FAILED(player()) {
-        return;
-    }
-
-    m_pausedResumePos.reset();
-    player()->seek(secs, applyIfPlaying);
-}
-
 void PlaybackController::stopAndSeekToLastSeekTime()
 {
     stop();
 
-    seek(lastPlaybackSeekTime(), false);
+    doSeek(lastPlaybackSeekTime(), false);
 }
 
 void PlaybackController::stopAndSeekToPlaybackPosition()
@@ -298,8 +288,7 @@ void PlaybackController::onProjectChanged()
             stopAndSeekToLastSeekTime();
         });
 
-        seek(0.0, false); // TODO: get the previous position from the project data
-        setLastPlaybackSeekTime(playbackPosition());
+        doSeek(0.0, false); // TODO: get the previous position from the project data
     }
 }
 
@@ -560,7 +549,12 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
 
 void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
 {
-    seek(secs, applyIfPlaying);
+    IF_ASSERT_FAILED(player()) {
+        return;
+    }
+
+    m_pausedResumePos.reset();
+    player()->seek(secs, applyIfPlaying);
     setLastPlaybackSeekTime(secs);
     m_pauseShouldStopPlayback = false;
     m_isPlayingSelection = false;
