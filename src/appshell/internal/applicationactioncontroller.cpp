@@ -333,11 +333,23 @@ bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
     }
 
     if (!installerPath.empty()) {
+        //! NOTE: All windows are quitting to complete the update, apply it
+        //! in-place, falling back to handing the package to the user.
+        bool applied = false;
+        if (appUpdateService()->canAutoInstall()) {
+            const muse::RetVal<muse::io::path_t> prepared = appUpdateService()->prepareUpdate(installerPath);
+            if (prepared.ret) {
+                applied = bool(appUpdateService()->finalizeUpdate(prepared.val));
+            }
+        }
+
+        if (!applied) {
 #if defined(Q_OS_LINUX)
-        platformInteractive()->revealInFileBrowser(installerPath);
+            platformInteractive()->revealInFileBrowser(installerPath);
 #else
-        platformInteractive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
+            platformInteractive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
 #endif
+        }
     }
 
     QCoreApplication::exit();
