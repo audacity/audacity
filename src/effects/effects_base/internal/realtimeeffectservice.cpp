@@ -470,10 +470,7 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     }
     const EffectId effectId = au3::wxToString(id);
     if (!provider->loadEffect(effectId)) {
-        // Not loadable yet: kick off first-use validation (if applicable) in the
-        // background. The realtime engine re-queries this factory once the plugin
-        // becomes available - whether that's here at project open or during playback.
-        provider->validate(effectId);
+        provider->validateEffectAsync(effectId);
         return nullptr;
     }
     return EffectManager::GetInstanceFactory(id, [provider](const PluginID& id) -> EffectSettingsManager* {

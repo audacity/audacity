@@ -21,12 +21,13 @@ public:
     virtual ~IEffectExecutionScenario() = default;
 
     virtual void performEffect(const EffectId& effectId) = 0;
-    virtual void performEffect(const EffectId& effectId, const std::string& params) = 0;
+    //! CAUTION: intended for testflow - unsafe for use in interactive scenarios because
+    //! does not block UI with a dialog while asynchronous validation takes place.
+    virtual muse::Ret performEffect(const EffectId& effectId, const std::string& params) = 0;
     virtual bool lastProcessorIsAvailable() const = 0;
     virtual muse::async::Notification lastProcessorIsNowAvailable() const = 0;
     virtual muse::async::Channel<EffectId> lastProcessorIdChanged() const = 0;
     virtual muse::Ret repeatLastProcessor() = 0;
-    virtual bool isBusy() const = 0;
 
     virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) = 0;
     virtual void stopPreview() = 0;

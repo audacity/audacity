@@ -56,8 +56,7 @@ public:
         : muse::Contextable(ctx) {}
 
     void performEffect(const EffectId& effectId) override;
-    void performEffect(const EffectId& effectId, const std::string& params) override;
-    bool isBusy() const override;
+    muse::Ret performEffect(const EffectId& effectId, const std::string& params) override;
     bool lastProcessorIsAvailable() const override;
     muse::async::Notification lastProcessorIsNowAvailable() const override;
     muse::async::Channel<EffectId> lastProcessorIdChanged() const override;
@@ -67,9 +66,6 @@ public:
     void stopPreview() override;
 
 private:
-    // >0 while performEffect() work (validate + apply) is in flight
-    int m_runningCount = 0;
-
     muse::Ret doPreviewEffect(const EffectId& effectId, EffectSettings& settings);
 
     std::pair<std::string, std::string> makeErrorMsg(const muse::Ret& ret, const EffectId& effectId);
