@@ -394,9 +394,12 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
 
 bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& state) const
 {
-    if (!isAvailable(state)) {
+    if (!state) {
         return false;
     }
+    // The stored active/bypass flag, independent of whether the plugin is currently
+    // loadable: the UI shows the real state and merely greys out when unavailable,
+    // rather than the bypass button falsely reading as bypassed while validating.
     return state->GetSettings().extra.GetActive();
 }
 
