@@ -57,9 +57,10 @@ enum class Acknowledge {
 };
 
 /*!
- Emitted by the global AudioIO object when play, recording, or monitoring
- starts or stops
-*/
+ * Emitted by the global AudioIO object when play, recording, or monitoring
+ * starts or stops. Think twice before using these callbacks to start/stop
+ * playback, recording or monitoring ;)
+ */
 struct AudioIOEvent {
     AudacityProject* pProject;
     enum Type {
