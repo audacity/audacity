@@ -11,19 +11,19 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   libmp3lame::libmp3lame
-   au3-files
    au3-import-export
-   au3-mixer
    au3-strings
 PRIVATE
    au3-basic-ui
+   au3-files
    au3-math
+   au3-mixer
    au3-preferences
    au3-project
    au3-tags
    au3-track
    au3-utility
+   libmp3lame::libmp3lame
    rapidjson::rapidjson
    wxBase
 )
