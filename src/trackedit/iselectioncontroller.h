@@ -51,6 +51,12 @@ public:
     virtual std::optional<secs_t> leftMostSelectedClipStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedClipEndTime() const = 0;
 
+    // item selection
+    // used for range/marquee-like selection
+    virtual ClipAndLabelKeys itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const = 0;
+    virtual void setItemSelectionAnchor(secs_t time, const TrackId& trackId) = 0;
+    virtual ClipAndLabelKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const = 0;
+
     // label selection
     virtual void resetSelectedLabels() = 0;
     virtual bool hasSelectedLabels() const = 0;

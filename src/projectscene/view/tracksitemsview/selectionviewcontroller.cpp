@@ -94,6 +94,10 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     }
     selectionController()->setSelectedTracks(tracks, true);
 
+    if (!modifiers.testFlag(Qt::ShiftModifier) && !modifiers.testFlag(Qt::ControlModifier) && !tracks.empty()) {
+        selectionController()->setItemSelectionAnchor(time, tracks.at(0));
+    }
+
     if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
         double time1 = m_selectionStartTime;
         double time2 = time;

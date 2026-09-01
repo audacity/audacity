@@ -1,5 +1,7 @@
 #include "au3trackeditproject.h"
 
+#include <algorithm>
+
 #include "au3-track/Track.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
@@ -272,6 +274,31 @@ muse::async::NotifyList<au::trackedit::Label> Au3TrackeditProject::labelList(con
     labelNotifyList.setNotify(notifier.notify());
 
     return labelNotifyList;
+}
+
+au::trackedit::ItemWithTimeList Au3TrackeditProject::itemList(const au::trackedit::TrackId& trackId) const
+{
+    const std::optional<Track> track = this->track(trackId);
+    if (!track.has_value()) {
+        return {};
+    }
+
+    ItemWithTimeList items;
+    if (track->type == TrackType::Label) {
+        for (const Label& label : getLabels(trackId)) {
+            items.push_back({ label.key, label.startTime, label.endTime });
+        }
+    } else {
+        for (const Clip& clip : getClips(trackId)) {
+            items.push_back({ clip.key, clip.startTime, clip.endTime });
+        }
+    }
+
+    std::sort(items.begin(), items.end(), [](const ItemWithTime& a, const ItemWithTime& b) {
+        return a.startTime < b.startTime;
+    });
+
+    return items;
 }
 
 std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const

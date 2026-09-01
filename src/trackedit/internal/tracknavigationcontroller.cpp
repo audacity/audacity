@@ -228,63 +228,11 @@ TrackItemKeyList TrackNavigationController::sortedItemsKeys(const TrackId& track
         return result;
     }
 
-    std::optional<Track> track = prj->track(trackId);
-    if (!track.has_value()) {
-        return result;
-    }
-
-    if (track->type == TrackType::Label) {
-        auto labelList = prj->labelList(track->id);
-        std::sort(labelList.begin(), labelList.end(), [](const Label& a, const Label& b){
-            return a.startTime < b.startTime;
-        });
-
-        for (auto& label : labelList) {
-            result.emplace_back(label.key);
-        }
-    } else {
-        auto clipList = prj->clipList(track->id);
-        std::sort(clipList.begin(), clipList.end(), [](const Clip& a, const Clip& b){
-            return a.startTime < b.startTime;
-        });
-
-        for (auto& clip : clipList) {
-            result.emplace_back(clip.key);
-        }
+    for (const ItemWithTime& item : prj->itemList(trackId)) {
+        result.emplace_back(item.key);
     }
 
     return result;
-}
-
-TrackItemKeyList TrackNavigationController::itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const
-{
-    if (!anchor.isValid() || !target.isValid() || anchor.trackId != target.trackId) {
-        return {};
-    }
-
-    const TrackItemKeyList ordered = sortedItemsKeys(target.trackId);
-
-    int anchorIndex = -1;
-    int targetIndex = -1;
-    for (int i = 0; i < static_cast<int>(ordered.size()); ++i) {
-        if (ordered.at(i) == anchor) {
-            anchorIndex = i;
-        }
-        if (ordered.at(i) == target) {
-            targetIndex = i;
-        }
-    }
-
-    if (anchorIndex < 0 || targetIndex < 0) {
-        return {};
-    }
-
-    TrackItemKeyList range;
-    for (int i = std::min(anchorIndex, targetIndex); i <= std::max(anchorIndex, targetIndex); ++i) {
-        range.push_back(ordered.at(i));
-    }
-
-    return range;
 }
 
 void TrackNavigationController::resetNavigation()
@@ -477,35 +425,35 @@ double TrackNavigationController::itemStartTime(const TrackItemKey& key) const
         return 0.0;
     }
 
-    std::optional<Track> track = prj->track(key.trackId);
-    if (!track.has_value() || track->type == TrackType::Undefined) {
-        return 0.0;
+    for (const ItemWithTime& item : prj->itemList(key.trackId)) {
+        if (item.key == key) {
+            return item.startTime;
+        }
     }
 
-    if (track->type == TrackType::Label) {
-        Label l = prj->label(key);
-        return l.startTime;
-    }
-
-    Clip c = prj->clip(key);
-    return c.startTime;
+    return 0.0;
 }
 
 TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const
 {
-    TrackItemKeyList itemsKeys = sortedItemsKeys(trackId);
-    if (itemsKeys.empty()) {
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
         return TrackItemKey { trackId, INVALID_TRACK_ITEM };
     }
 
-    TrackItemKey closest = itemsKeys.front();
+    const ItemWithTimeList items = prj->itemList(trackId);
+    if (items.empty()) {
+        return TrackItemKey { trackId, INVALID_TRACK_ITEM };
+    }
+
+    TrackItemKey closest = items.front().key;
     double closestDiff = std::numeric_limits<double>::max();
 
-    for (const auto& itemKey : itemsKeys) {
-        double diff = std::abs(itemStartTime(itemKey) - referenceStartTime);
+    for (const ItemWithTime& item : items) {
+        double diff = std::abs(item.startTime - referenceStartTime);
         if (diff < closestDiff) {
             closestDiff = diff;
-            closest = itemKey;
+            closest = item.key;
         }
     }
 
@@ -694,19 +642,18 @@ void TrackNavigationController::rangeSelection()
     bool isSelect = false;
 
     if (!isTrackPanel) {
-        TrackItemKeyList range = itemKeysInRange(m_lastSelectedItem, m_focusedItemKey);
+        ClipAndLabelKeys range = selectionController()->itemKeysInRange(m_lastSelectedItem, m_focusedItemKey);
         if (range.empty()) {
             m_lastSelectedItem = m_focusedItemKey;
-            range.push_back(m_focusedItemKey);
+            if (isFocusedItemLabel()) {
+                range.labels.push_back(m_focusedItemKey);
+            } else {
+                range.clips.push_back(m_focusedItemKey);
+            }
         }
 
-        if (isFocusedItemLabel()) {
-            selectionController()->setSelectedLabels(range);
-            selectionController()->setSelectedClips({});
-        } else {
-            selectionController()->setSelectedClips(range);
-            selectionController()->setSelectedLabels({});
-        }
+        selectionController()->setSelectedClips(range.clips);
+        selectionController()->setSelectedLabels(range.labels);
 
         return;
     } else {

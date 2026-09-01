@@ -5,6 +5,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include <optional>
 
 #include "au3-track/Track.h"
 
@@ -47,6 +48,11 @@ public:
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
     std::optional<secs_t> selectedClipStartTime() const override;
     std::optional<secs_t> selectedClipEndTime() const override;
+
+    ClipAndLabelKeys itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
+    void setItemSelectionAnchor(secs_t time, const TrackId& trackId) override;
+    ClipAndLabelKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
+
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
     std::optional<secs_t> rightMostSelectedClipEndTime() const override;
 
@@ -109,11 +115,15 @@ public:
     TrackIdList orderedTrackList() const override;
 
 private:
+    std::optional<std::pair<secs_t, TrackId> > m_itemSelectionAnchor;
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
     void onHistoryEvent(const trackedit::HistoryEvent& event);
     ClipKeyList findClipsIntersectingRangeSelection() const;
     LabelKeyList findLabelsIntersectingRangeSelection() const;
+
+    ClipKeyList clipKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
+    LabelKeyList labelKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
 
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
