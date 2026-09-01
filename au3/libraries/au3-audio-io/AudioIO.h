@@ -598,7 +598,7 @@ public:
      */
     double GetStreamTime();
 
-    static void AudioThread(std::atomic<bool>& finish);
+    static void AudioThread(AudioIO& audioIO, std::atomic<bool>& finish);
 
     static void Init();
     static void Deinit();
