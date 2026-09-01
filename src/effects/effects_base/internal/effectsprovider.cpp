@@ -151,8 +151,16 @@ void EffectsProvider::reloadEffects()
 
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
     std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
-                   [](const muse::audioplugins::AudioPluginInfo& info) {
-        return utils::museToAuEffectMeta(info.path, info.meta, info.state);
+                   [this](const muse::audioplugins::AudioPluginInfo& info) {
+        EffectMeta effectMeta = utils::museToAuEffectMeta(info.path, info.meta, info.state);
+        // Promote a known-good third-party plugin to NewlyValidated once it has been
+        // re-validated in this session; until then it stays PreviouslyValidated.
+        if (effectMeta.state == EffectState::PreviouslyValidated
+            && m_registerAudioPluginsScenario
+            && m_registerAudioPluginsScenario->isValidatedInSession(info.path)) {
+            effectMeta.state = EffectState::NewlyValidated;
+        }
+        return effectMeta;
     });
 
     m_effectsChanged.notify();
@@ -210,15 +218,6 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
     }
 
     return loader->ensurePluginIsLoaded(effectId);
-}
-
-bool EffectsProvider::isEffectAvailable(const EffectId& effectId) const
-{
-    const EffectMeta effectMeta = meta(effectId);
-    // Loadable (Validated) AND already validated this session: a plugin known as
-    // Validated from a previous run still needs its first-use validation before it
-    // can be used, so it is not "available" until then.
-    return effectMeta.isValid() && effectMeta.isLoadable() && !needsFirstUseValidation(effectMeta);
 }
 
 bool EffectsProvider::validateEffect(const muse::modularity::ContextPtr& ctx, const EffectId& effectId)
@@ -295,30 +294,12 @@ bool EffectsProvider::needsFirstUseValidation(const EffectId& id) const
 
 bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) const
 {
-    // in-process families are trusted, only third-party binaries get a subprocess check
-    switch (effectMeta.family) {
-    case EffectFamily::Builtin:
-    case EffectFamily::Nyquist:
-    case EffectFamily::Extension:
-        return false;
-    default:
-        break;
-    }
-
-    if (!m_registerAudioPluginsScenario) {
-        // not initialised (e.g. tests): nothing to validate against
-        return false;
-    }
-
-    using muse::audioplugins::AudioPluginState;
-    // Validated: known from a previous session, re-check it before loading.
-    // Discovered: the startup validation is still in flight, wait for it.
-    // Anything else isn't loadable anyway, ensurePluginIsLoaded reports it.
-    if (effectMeta.state != AudioPluginState::Validated && effectMeta.state != AudioPluginState::Discovered) {
-        return false;
-    }
-
-    return !m_registerAudioPluginsScenario->isValidatedInSession(effectMeta.path);
+    // The trusted-family and this-session logic now lives in the EffectState itself
+    // (see effectStateFromRegister + the promotion in reloadEffects): an effect
+    // still awaiting validation is PreviouslyValidated (known-good, lazy) or
+    // Discovered (newly found, eager).
+    return effectMeta.state == EffectState::PreviouslyValidated
+           || effectMeta.state == EffectState::Discovered;
 }
 
 void EffectsProvider::onPluginValidationFinished(const muse::io::path_t& pluginPath)
@@ -413,7 +394,8 @@ void EffectsProvider::doSave(EffectFilter removeFromConfig)
         muse::audioplugins::AudioPluginInfo info;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = meta.path;
-        info.state = meta.state;
+        // Persist the register's view: Previously/NewlyValidated both save as Validated.
+        info.state = effectStateToRegister(meta.state);
 
         newPlugins.push_back(std::move(info));
     }

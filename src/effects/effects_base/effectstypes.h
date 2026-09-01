@@ -236,6 +236,72 @@ enum class NewPluginsRegistered {
     No,
 };
 
+// The app's per-session view of an effect's validation status. Distinct from the
+// register's muse::audioplugins::AudioPluginState, which is cross-session and
+// persisted: the register only knows "Validated", whereas the app additionally
+// tells apart a plugin validated in THIS session (NewlyValidated, ready to load)
+// from one merely known-good from a previous session (PreviouslyValidated), which
+// must be re-validated before its first use. Re-validating therefore changes the
+// app state without ever mutating the register. The Plugin Manager shows the
+// register status, where the two "validated" entries are equal.
+enum class EffectState {
+    Undefined,
+    Discovered,           // found on disk; validation pending (eager, at startup)
+    PreviouslyValidated,  // known-good from a previous session; re-validated on first use (lazy)
+    NewlyValidated,       // validated in this session; ready to load
+    Missing,              // previously known path no longer found
+    Error,                // validation failed
+};
+
+inline bool isTrustedFamily(EffectFamily family)
+{
+    // in-process families need no subprocess validation, so they are always ready
+    return family == EffectFamily::Builtin
+           || family == EffectFamily::Nyquist
+           || family == EffectFamily::Extension;
+}
+
+// Register status -> app status. A validated third-party plugin starts as
+// PreviouslyValidated (re-checked on first use); trusted in-process families are
+// ready immediately. The provider promotes PreviouslyValidated -> NewlyValidated
+// once this session's re-validation succeeds.
+inline EffectState effectStateFromRegister(muse::audioplugins::AudioPluginState registerState, EffectFamily family)
+{
+    switch (registerState) {
+    case muse::audioplugins::AudioPluginState::Validated:
+        return isTrustedFamily(family) ? EffectState::NewlyValidated : EffectState::PreviouslyValidated;
+    case muse::audioplugins::AudioPluginState::Discovered:
+        return EffectState::Discovered;
+    case muse::audioplugins::AudioPluginState::Missing:
+        return EffectState::Missing;
+    case muse::audioplugins::AudioPluginState::Error:
+        return EffectState::Error;
+    case muse::audioplugins::AudioPluginState::Undefined:
+    default:
+        return EffectState::Undefined;
+    }
+}
+
+// App status -> register status (PreviouslyValidated and NewlyValidated both
+// collapse to Validated). Used by the Plugin Manager, which reports the register.
+inline muse::audioplugins::AudioPluginState effectStateToRegister(EffectState state)
+{
+    switch (state) {
+    case EffectState::PreviouslyValidated:
+    case EffectState::NewlyValidated:
+        return muse::audioplugins::AudioPluginState::Validated;
+    case EffectState::Discovered:
+        return muse::audioplugins::AudioPluginState::Discovered;
+    case EffectState::Missing:
+        return muse::audioplugins::AudioPluginState::Missing;
+    case EffectState::Error:
+        return muse::audioplugins::AudioPluginState::Error;
+    case EffectState::Undefined:
+    default:
+        return muse::audioplugins::AudioPluginState::Undefined;
+    }
+}
+
 struct EffectMeta {
     EffectId id;
     EffectFamily family = EffectFamily::Unknown;
@@ -254,12 +320,18 @@ struct EffectMeta {
     bool paramsAreInputAgnostic = true;
     bool isActivated = true;
 
-    // Carried verbatim so save() round-trips Discovered/Missing/Error.
-    // Undefined marks a default-constructed meta that must not read as loadable.
-    muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Undefined;
+    // The app's per-session validation status (see EffectState). Kept distinct
+    // from the register's AudioPluginState so re-validating a known plugin does
+    // not mutate the persisted register.
+    EffectState state = EffectState::Undefined;
 
     bool isValid() const { return !id.empty(); }
-    bool isLoadable() const { return state == muse::audioplugins::AudioPluginState::Validated; }
+    // Ready to load in THIS session (validated now). PreviouslyValidated is not
+    // loadable until re-validated - see isValidated() for the register's notion.
+    bool isLoadable() const { return state == EffectState::NewlyValidated; }
+    // Known-good in the register (validated now or in a previous session) - the
+    // Plugin Manager's notion of "validated".
+    bool isValidated() const { return state == EffectState::PreviouslyValidated || state == EffectState::NewlyValidated; }
 };
 
 using EffectMetaList = std::vector<EffectMeta>;

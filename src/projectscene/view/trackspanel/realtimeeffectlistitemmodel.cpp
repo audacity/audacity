@@ -50,13 +50,7 @@ bool RealtimeEffectListItemModel::prop_isMasterEffect() const
 
 bool RealtimeEffectListItemModel::prop_isAvailable() const
 {
-    const auto state = m_effectState.lock();
-    if (!state) {
-        return false;
-    }
-    // Clickable only if the plugin is validated and ready to use THIS session;
-    // a plugin validated only in a previous run must be re-validated first.
-    return effectsProvider()->isEffectAvailable(muse::String::fromStdString(state->GetID().ToStdString()));
+    return realtimeEffectService()->isAvailable(m_effectState.lock());
 }
 
 QString RealtimeEffectListItemModel::effectName() const
@@ -65,16 +59,37 @@ QString RealtimeEffectListItemModel::effectName() const
     IF_ASSERT_FAILED(state) {
         return QString();
     }
+    // Base plugin name only; the QML composes any status prefix ("Validating…",
+    // "Broken", "Missing") around it so it can animate the validating case.
+    return QString::fromStdString(effectsProvider()->effectName(state->GetID().ToStdString()));
+}
 
-    const auto effectId = state->GetID().ToStdString();
-    const auto name = QString::fromStdString(effectsProvider()->effectName(effectId));
-    const auto meta = effectsProvider()->meta(muse::String::fromStdString(effectId));
-
-    if (meta.isValid() && meta.isLoadable()) {
-        return name;
+bool RealtimeEffectListItemModel::prop_isValidating() const
+{
+    const auto state = m_effectState.lock();
+    if (!state) {
+        return false;
     }
+    const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
+    return meta.state == effects::EffectState::Discovered
+           || meta.state == effects::EffectState::PreviouslyValidated;
+}
 
-    return muse::qtrc("effects", "%1 - “%2”").arg(effects::pluginStateToString(meta.state)).arg(name);
+QString RealtimeEffectListItemModel::unavailableStatus() const
+{
+    const auto state = m_effectState.lock();
+    if (!state) {
+        return QString();
+    }
+    const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
+    // Only the unavailable, non-validating cases carry a status prefix; Validated
+    // (available) and Discovered (validating) are handled by other bindings.
+    if (meta.isLoadable()
+        || meta.state == effects::EffectState::Discovered
+        || meta.state == effects::EffectState::PreviouslyValidated) {
+        return QString();
+    }
+    return effects::pluginStateToString(effects::effectStateToRegister(meta.state));
 }
 
 QString RealtimeEffectListItemModel::effectState() const

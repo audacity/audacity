@@ -51,7 +51,6 @@ public:
     muse::async::Promise<bool> validateEffectAsync(const EffectId& effectId) override;
 
     bool loadEffect(const EffectId& effectId) const override;
-    bool isEffectAvailable(const EffectId& effectId) const override;
 
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;

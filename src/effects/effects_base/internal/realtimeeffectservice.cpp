@@ -493,8 +493,8 @@ bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) con
     if (!state) {
         return false;
     }
-    // isValid() passes for Missing/Error/Discovered entries too;
-    // only isLoadable (Validated) gates actual usability
+    // isValid() passes for Missing/Error/Discovered/PreviouslyValidated entries too;
+    // only isLoadable() (validated in this session) gates actual usability.
     const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
     return meta.isValid() && meta.isLoadable();
 }

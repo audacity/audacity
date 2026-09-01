@@ -47,11 +47,6 @@ public:
     virtual muse::async::Promise<bool> validateEffectAsync(const EffectId&) = 0;
 
     virtual bool loadEffect(const EffectId& effectId) const = 0;
-    // True if the effect is ready to use right now: loadable AND already validated
-    // in this session. A plugin validated only in a previous session is NOT yet
-    // available - it must be re-validated first (see #11746). Used to gate whether
-    // a realtime-effect-list item is clickable.
-    virtual bool isEffectAvailable(const EffectId& effectId) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
 
