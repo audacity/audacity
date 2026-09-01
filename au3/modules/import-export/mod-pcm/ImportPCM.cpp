@@ -54,6 +54,33 @@ void id3_latin1_decode(id3_latin1_t const*, id3_ucs4_t*);
 }
 #endif
 
+class PCMImportFileHandle final : public ImportFileHandleEx
+{
+public:
+    PCMImportFileHandle(const FilePath& name, SFFile&& file, SF_INFO info);
+    ~PCMImportFileHandle();
+
+    TranslatableString GetFileDescription() override;
+    double GetDuration() const override;
+    int GetRequiredTrackCount() const override;
+    ByteCount GetFileUncompressedBytes() override;
+    void Import(
+        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
+        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+
+    wxInt32 GetStreamCount() override;
+
+    const TranslatableStrings& GetStreamInfo() override;
+
+    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override;
+
+private:
+    SFFile mFile;
+    const SF_INFO mInfo;
+    sampleFormat mEffectiveFormat;
+    sampleFormat mFormat;
+};
+
 #define DESC TranslatableString("import-export", "WAV, AIFF, and other uncompressed types")
 
 PCMImportPlugin::PCMImportPlugin()

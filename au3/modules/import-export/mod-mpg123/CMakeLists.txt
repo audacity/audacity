@@ -11,13 +11,13 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   mpg123::libmpg123
    au3-import-export
-   au3-wave-track
 PRIVATE
    au3-project
    au3-string-utils
    au3-tags
+   au3-wave-track
+   mpg123::libmpg123
    wxBase
 )
 
