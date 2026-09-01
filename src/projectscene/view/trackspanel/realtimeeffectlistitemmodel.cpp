@@ -50,7 +50,13 @@ bool RealtimeEffectListItemModel::prop_isMasterEffect() const
 
 bool RealtimeEffectListItemModel::prop_isAvailable() const
 {
-    return realtimeEffectService()->isAvailable(m_effectState.lock());
+    const auto state = m_effectState.lock();
+    if (!state) {
+        return false;
+    }
+    // Clickable only if the plugin is validated and ready to use THIS session;
+    // a plugin validated only in a previous run must be re-validated first.
+    return effectsProvider()->isEffectAvailable(muse::String::fromStdString(state->GetID().ToStdString()));
 }
 
 QString RealtimeEffectListItemModel::effectName() const

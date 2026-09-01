@@ -69,11 +69,6 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
     ::PluginDescriptor desc;
     ::PluginPath au3path;
 
-    // Loading a third-party binary may crash the whole application; leave a
-    // sentinel on disk so the plugin gets marked as broken at the next launch
-    // if we don't survive this (see IAudioPluginsLoadGuard).
-    loadGuard()->beginLoad(effectId.toStdString());
-
     // dlopen below must not interleave with the background plugin
     // validation forking subprocesses (see muse::processSpawnMutex)
     std::unique_lock spawnGuard(muse::processSpawnMutex());
@@ -95,14 +90,11 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
     });
 
     if (au3path.empty()) {
-        loadGuard()->endLoad(effectId.toStdString());
         LOGE() << "Failed to find plugin path for effect: " << effectId;
         return false;
     }
 
     m_loadedInterfaces.emplace(effectId, m_pluginProvider.LoadPlugin(au3path));
-
-    loadGuard()->endLoad(effectId.toStdString());
 
     if (!m_loadedInterfaces.at(effectId)) {
         LOGE() << "Failed to load plugin: " << effectId;

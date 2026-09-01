@@ -16,6 +16,11 @@
 #include "framework/global/log.h"
 #include "stringutils.h"
 
+#include <optional>
+
+#include <QCoreApplication>
+#include <QEventLoop>
+
 #include <map>
 #include <set>
 
@@ -199,7 +204,7 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
         return false;
     }
 
-    if (needsFirstUseValidation(meta(effectId))) {
+    if (needsFirstUseValidation(effectId)) {
         LOGE() << "Effect not yet validated: " << effectId;
         return false;
     }
@@ -207,7 +212,58 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
     return loader->ensurePluginIsLoaded(effectId);
 }
 
-muse::async::Promise<bool> EffectsProvider::validateEffect(const EffectId& effectId)
+bool EffectsProvider::isEffectAvailable(const EffectId& effectId) const
+{
+    const EffectMeta effectMeta = meta(effectId);
+    // Loadable (Validated) AND already validated this session: a plugin known as
+    // Validated from a previous run still needs its first-use validation before it
+    // can be used, so it is not "available" until then.
+    return effectMeta.isValid() && effectMeta.isLoadable() && !needsFirstUseValidation(effectMeta);
+}
+
+bool EffectsProvider::validateEffect(const muse::modularity::ContextPtr& ctx, const EffectId& effectId)
+{
+    const EffectMeta effectMeta = meta(effectId);
+    if (!needsFirstUseValidation(effectMeta)) {
+        return effectMeta.isLoadable();
+    }
+
+    // Shared with the continuation so that a completion arriving after we stop
+    // waiting (e.g. the user cancelled) is a harmless no-op, not a dangling
+    // reference.
+    const auto success = std::make_shared<std::optional<bool> >();
+
+    if (m_pendingValidations.count(effectMeta.path)) {
+        // Validation already in progress: don't re-trigger it (validatePluginAsync
+        // would dedup it away anyway), just append a continuation to be notified.
+        m_pendingValidations.at(effectMeta.path).push_back([this, effectId, success]() {
+            *success = meta(effectId).isLoadable();
+        });
+    } else {
+        LOGI() << "Validating plugin before its first use in this session: " << effectMeta.id;
+        validateEffectAsync(effectId).onResolve(this, [success](bool loadable) {
+            *success = loadable;
+        });
+    }
+
+    // Show a modal, cancellable progress dialog and pump the event loop until the
+    // validation finishes (or the user cancels). The dialog is application-modal,
+    // so the user cannot mutate project state meanwhile - which is why callers can
+    // treat validate + apply as one synchronous step.
+    au3::ProgressDialog dialog(ctx, muse::trc("effects", "Validating audio plugin"));
+    dialog.start();
+
+    while (!success->has_value() && !dialog.Cancelled()) {
+        // WaitForMoreEvents blocks between events, so this doesn't spin the CPU.
+        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+    }
+
+    // On cancel the validation subprocess keeps running in the background; its
+    // result is still recorded when it finishes (the continuation fires harmlessly).
+    return success->value_or(false);
+}
+
+muse::async::Promise<bool> EffectsProvider::validateEffectAsync(const EffectId& effectId)
 {
     return muse::async::make_promise<bool>([this, effectId](auto resolve) {
         const EffectMeta effectMeta = meta(effectId);
@@ -222,7 +278,7 @@ muse::async::Promise<bool> EffectsProvider::validateEffect(const EffectId& effec
         LOGI() << "Validating plugin before its first use in this session: " << effectMeta.id;
         m_registerAudioPluginsScenario->validatePluginAsync(effectMeta.path);
 
-        m_pendingValidations[effectMeta.path].push_back([this, effectId, resolve]() {
+        m_pendingValidations[effectMeta.path].push_back([this, effectId, resolve] {
             // resolved later, from onPluginValidationFinished: the body already
             // returned dummy_result(), so discard the Result token here
             (void)resolve(meta(effectId).isLoadable());
@@ -232,9 +288,9 @@ muse::async::Promise<bool> EffectsProvider::validateEffect(const EffectId& effec
     });
 }
 
-bool EffectsProvider::validationOngoing() const
+bool EffectsProvider::needsFirstUseValidation(const EffectId& id) const
 {
-    return !m_pendingValidations.empty();
+    return needsFirstUseValidation(meta(id));
 }
 
 bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) const
@@ -268,7 +324,7 @@ bool EffectsProvider::needsFirstUseValidation(const EffectMeta& effectMeta) cons
 void EffectsProvider::onPluginValidationFinished(const muse::io::path_t& pluginPath)
 {
     const auto it = m_pendingValidations.find(pluginPath);
-    IF_ASSERT_FAILED(it != m_pendingValidations.end()) {
+    if (it == m_pendingValidations.end()) {
         return;
     }
 

@@ -49,16 +49,14 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
         realtimeEffectService()->removeRealtimeEffect(*tId, m_effectState);
     } else {
         const auto effectId = effects::effectIdFromAction(menuItem.id());
-        // first use of a plugin in this session validates it in the background first
-        effectsProvider()->validate(effectId).onResolve(this, [this, trackId = *tId, effectId](bool loadable) {
-            if (!loadable || !m_effectState) {
-                LOGW() << "effect not available: " << effectId;
-                return;
-            }
-            if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(trackId, m_effectState, effectId)) {
-                effectViewController()->showEffect(newState);
-            }
-        });
+        // first use of a plugin in this session validates it first (blocking)
+        if (!effectsProvider()->validateEffect(iocContext(), effectId)) {
+            LOGW() << "effect not available: " << effectId;
+            return;
+        }
+        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, m_effectState, effectId)) {
+            effectViewController()->showEffect(newState);
+        }
     }
 }
 

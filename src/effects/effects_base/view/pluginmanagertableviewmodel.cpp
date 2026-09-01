@@ -94,7 +94,7 @@ void PluginManagerTableViewModel::componentComplete()
     // Rescan runs asynchronously now; clear the busy state when the background
     // validation scan reports it has fully finished.
     registerAudioPluginsScenario()->pluginValidationScanFinished().onNotify(this, [this] {
-        setIsScanning(false);
+        setIsValidating(false);
     });
 }
 
@@ -401,18 +401,18 @@ void PluginManagerTableViewModel::rescanPlugins()
     // If new/changed plugins were queued, validation now runs in the background
     // and the table updates live; reflect that in the button. If nothing needed
     // validating, rescanPlugins() already showed the "up to date" message.
-    setIsScanning(registerAudioPluginsScenario()->isValidating());
+    setIsValidating(registerAudioPluginsScenario()->isValidating());
 
     rebuildSourceTable(effectsProvider()->effectMetaList());
 }
 
-void PluginManagerTableViewModel::setIsScanning(bool scanning)
+void PluginManagerTableViewModel::setIsValidating(bool validating)
 {
-    if (m_isScanning == scanning) {
+    if (m_isValidating == validating) {
         return;
     }
-    m_isScanning = scanning;
-    emit isScanningChanged();
+    m_isValidating = validating;
+    emit isValidatingChanged();
 }
 
 void PluginManagerTableViewModel::accept()

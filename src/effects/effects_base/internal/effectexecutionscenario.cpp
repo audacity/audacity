@@ -49,18 +49,19 @@ static bool isNyquistPrompt(const Effect& effect)
 
 void EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
-    ++m_runningCount;
-    effectsProvider()->validate(effectId).onResolve(this, [this, effectId](bool) {
-        au3::Au3Project& project = projectRef();
-        const muse::Ret ret = performEffectWithShowError(project, effectId, 0);
-        if (!ret) {
-            LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
-        }
-        --m_runningCount;
-    });
+    if (!effectsProvider()->validateEffect(iocContext(), effectId)) {
+        LOGW() << "effect not available: " << effectId;
+        return;
+    }
+
+    au3::Au3Project& project = projectRef();
+    const muse::Ret ret = performEffectWithShowError(project, effectId, 0);
+    if (!ret) {
+        LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
+    }
 }
 
-void EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
+muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
 {
     EffectId resolved;
     EffectId titleFallback;
@@ -79,23 +80,16 @@ void EffectExecutionScenario::performEffect(const EffectId& effectId, const std:
     }
     if (resolved.empty()) {
         LOGE() << "no effect found for symbol: " << effectId;
-        return;
+        return make_ret(Err::EffectNotFound);
     }
 
-    ++m_runningCount;
-    effectsProvider()->validate(resolved).onResolve(this, [this, resolved, params, effectId](bool) {
-        au3::Au3Project& project = projectRef();
-        const muse::Ret ret = performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
-        if (!ret) {
-            LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
-        }
-        --m_runningCount;
-    });
-}
+    if (!effectsProvider()->validateEffect(iocContext(), resolved)) {
+        LOGW() << "effect not available: " << resolved;
+        return make_ret(Err::EffectNotFound);
+    }
 
-bool EffectExecutionScenario::isBusy() const
-{
-    return m_runningCount > 0;
+    au3::Au3Project& project = projectRef();
+    return performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()

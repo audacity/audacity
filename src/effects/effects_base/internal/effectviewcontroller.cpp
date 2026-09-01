@@ -66,16 +66,15 @@ void EffectViewController::showEffect(const RealtimeEffectStatePtr& state) const
     }
 
     const EffectId effectId = au3::wxToString(state->GetID());
-    effectsProvider()->validate(effectId).onResolve(this, [this, state, effectId](bool loadable) {
-        if (!loadable) {
-            LOGW() << "effect not available, cannot show: " << effectId;
-            return;
-        }
-        state->GetEffect();
-        callOnLauncher(state, *effectsProvider(), *viewLaunchRegister(),
-                       [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
-            launcher.showRealtimeEffect(state);
-        });
+    if (!effectsProvider()->validateEffect(iocContext(), effectId)) {
+        LOGW() << "effect not available, cannot show: " << effectId;
+        return;
+    }
+
+    state->GetEffect();
+    callOnLauncher(state, *effectsProvider(), *viewLaunchRegister(),
+                   [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
+        launcher.showRealtimeEffect(state);
     });
 }
 

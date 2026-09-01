@@ -64,7 +64,7 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
     Q_PROPERTY(
         bool alsoRescanBrokenPlugins READ alsoRescanBrokenPlugins WRITE setAlsoRescanBrokenPlugins NOTIFY alsoRescanBrokenPluginsChanged)
-    Q_PROPERTY(bool isScanning READ isScanning NOTIFY isScanningChanged)
+    Q_PROPERTY(bool isValidating READ isValidating NOTIFY isValidatingChanged)
 
     Q_PROPERTY(au::uicomponents::TableSortFilterProxyModel * sortFilterProxy READ sortFilterProxy CONSTANT)
 
@@ -97,8 +97,9 @@ public:
     int totalWidth() const;
 
     bool alsoRescanBrokenPlugins() const { return m_alsoRescanBrokenPlugins; }
-    bool isScanning() const { return m_isScanning; }
     void setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins);
+
+    bool isValidating() const { return m_isValidating; }
 
     au::uicomponents::TableSortFilterProxyModel* sortFilterProxy() const;
 
@@ -119,7 +120,7 @@ signals:
     void effectTypeSelectedIndexChanged();
     void statusSelectedIndexChanged();
     void alsoRescanBrokenPluginsChanged();
-    void isScanningChanged();
+    void isValidatingChanged();
 
 private:
     friend class PluginManagerSortFilterProxy;
@@ -140,6 +141,8 @@ private:
     QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable(const EffectMetaList& effects);
     void rebuildSourceTable(EffectMetaList effects);
 
+    void setIsValidating(bool);
+
     EffectMetaList m_allEffects;
     EffectMetaList m_initialState;
     std::unordered_set<EffectId> m_editedEffects;
@@ -153,9 +156,7 @@ private:
     EffectFilter m_acceptEnabledDisabledState = allPassFilter;
 
     bool m_alsoRescanBrokenPlugins = false;
-    bool m_isScanning = false;
-
-    void setIsScanning(bool scanning);
+    bool m_isValidating = false;
 
     int m_effectFamilySelectedIndex = 0;
     EffectFilter m_acceptFamily = allPassFilter;

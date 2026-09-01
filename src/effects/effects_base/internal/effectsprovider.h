@@ -47,10 +47,11 @@ public:
 
     EffectMeta meta(const EffectId& effectId) const override;
 
-    muse::async::Promise<bool> validateEffect(const EffectId& effectId) override;
-    bool validationOngoing() const override;
+    bool validateEffect(const muse::modularity::ContextPtr& ctx, const EffectId& effectId) override;
+    muse::async::Promise<bool> validateEffectAsync(const EffectId& effectId) override;
 
     bool loadEffect(const EffectId& effectId) const override;
+    bool isEffectAvailable(const EffectId& effectId) const override;
 
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
@@ -75,9 +76,8 @@ private:
         const muse::modularity::ContextPtr& ctx, muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
-    // Validate-on-first-use (#11746): a third-party plugin is validated in a
-    // subprocess before its first in-process load in this session.
-    bool needsFirstUseValidation(const EffectMeta& meta) const;
+    bool needsFirstUseValidation(const EffectId&) const;
+    bool needsFirstUseValidation(const EffectMeta&) const;
     void onPluginValidationFinished(const muse::io::path_t& pluginPath);
 
     // set by initOnce; the app-wide scenario outlives this provider's use of it
