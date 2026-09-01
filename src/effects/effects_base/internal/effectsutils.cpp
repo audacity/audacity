@@ -221,7 +221,7 @@ EffectId utils::findRelocatedVst3EffectId(const EffectId& effectId, const Effect
 
     const auto exact = std::find_if(metaList.begin(), metaList.end(), [&](const EffectMeta& meta) {
         return meta.family == EffectFamily::VST3
-               && meta.isLoadable()
+               && meta.isValidated()
                && meta.id == effectId;
     });
     if (exact != metaList.end()) {
@@ -231,7 +231,7 @@ EffectId utils::findRelocatedVst3EffectId(const EffectId& effectId, const Effect
     EffectMetaList candidates;
     std::copy_if(metaList.begin(), metaList.end(), std::back_inserter(candidates), [&](const EffectMeta& meta) {
         return meta.family == EffectFamily::VST3
-               && meta.isLoadable()
+               && meta.isValidated()
                && meta.id != effectId
                && vst3ClassId(meta.id) == classId;
     });
@@ -486,7 +486,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, isLoadable);
     effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, isLoadable);
     effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, isLoadable);
-    effectMeta.state = state;
+    effectMeta.state = effectStateFromRegister(state, effectMeta.family);
 
     return effectMeta;
 }
@@ -715,7 +715,7 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
 void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
-        return !meta.isLoadable() || !meta.isActivated || filter(meta);
+        return !meta.isValidated() || !meta.isActivated || filter(meta);
     }), effects.end());
 }
 } // namespace

@@ -331,14 +331,41 @@ ListItemBlank {
                 navigationCtrl: effectNameButton.navigation
             }
 
-            StyledTextLabel {
-                id: trackNameLabel
+            RowLayout {
                 anchors.fill: parent
                 anchors.leftMargin: 6
                 anchors.rightMargin: 6
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                text: root.item ? root.item.name : ""
+                spacing: 6
+
+                StyledBusyIndicator {
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.preferredWidth: 16
+                    Layout.preferredHeight: 16
+                    // Only takes layout space while spinning, so the label sits
+                    // at the left margin otherwise.
+                    visible: root.item ? root.item.isValidating : false
+                    running: visible
+                }
+
+                StyledTextLabel {
+                    id: trackNameLabel
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    text: {
+                        if (!root.item) {
+                            return ""
+                        }
+                        if (root.item.isValidating) {
+                            //: %1 is the effect name; shown while the plugin is being validated
+                            return qsTrc("effects", "Validating - %1").arg(root.item.name)
+                        }
+                        if (root.item.unavailableStatus.length > 0) {
+                            return root.item.unavailableStatus + " - " + root.item.name
+                        }
+                        return root.item.name
+                    }
+                }
             }
 
             onClicked: {

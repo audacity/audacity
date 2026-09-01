@@ -30,8 +30,14 @@ void MissingEffectChecker::warnIfEffectsMissing()
             continue;
         }
         for (const auto& state : *effectStack) {
-            if (!realtimeEffectService()->isAvailable(state)) {
-                missingEffectIds.insert(au::au3::wxToString(state->GetID()));
+            // Flag only genuinely missing/broken effects, not ones merely awaiting
+            // this-session re-validation (PreviouslyValidated/Discovered).
+            const EffectId id = au::au3::wxToString(state->GetID());
+            const EffectState effectState = effectsProvider()->meta(id).state;
+            if (effectState == EffectState::Missing
+                || effectState == EffectState::Error
+                || effectState == EffectState::Undefined) {
+                missingEffectIds.insert(id);
             }
         }
     }

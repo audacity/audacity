@@ -18,7 +18,7 @@ EffectMeta makeVst3Meta(const EffectId& id)
     EffectMeta meta;
     meta.id = id;
     meta.family = EffectFamily::VST3;
-    meta.state = muse::audioplugins::AudioPluginState::Validated;
+    meta.state = EffectState::NewlyValidated;
     return meta;
 }
 }
@@ -85,7 +85,7 @@ TEST(EffectsBase_EffectsUtilsTests, FindRelocatedVst3EffectId_IgnoresNonLoadable
     EffectMeta candidate = makeVst3Meta(makeId("Soap Audio", "Soap Voice Cleaner",
                                                "D:/Audio/VST3/Soap Voice Cleaner.vst3;"
                                                "ABCDEF019182FAEB536F6170536F6170"));
-    candidate.state = muse::audioplugins::AudioPluginState::Missing;
+    candidate.state = EffectState::Missing;
 
     EXPECT_TRUE(utils::findRelocatedVst3EffectId(oldId, { candidate }).empty());
 }
