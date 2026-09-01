@@ -72,7 +72,8 @@ private:
     IEffectLoaderPtr loader(const EffectId& effectId) const;
 
     NewPluginsRegistered doScanPlugins(
-        const muse::modularity::ContextPtr& ctx, muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario);
+        const muse::modularity::ContextPtr& ctx, muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+        bool validateInBackground);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     bool needsFirstUseValidation(const EffectId&) const;

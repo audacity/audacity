@@ -35,7 +35,7 @@ void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx,
         onPluginValidationFinished(pluginPath);
     });
 
-    doScanPlugins(ctx, registerAudioPluginsScenario);
+    doScanPlugins(ctx, registerAudioPluginsScenario, /*validateInBackground*/ true);
 
     // Providers must be available in ModuleManager for on-demand plugin loading.
     ModuleManager::Get().DiscoverProviders();
@@ -56,12 +56,15 @@ void EffectsProvider::forgetPlugins(const EffectFilter& forget)
 NewPluginsRegistered EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx,
                                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
-    return doScanPlugins(ctx, registerAudioPluginsScenario);
+    // A user-initiated rescan validates synchronously behind a modal progress
+    // dialog; startup validation stays in the background.
+    return doScanPlugins(ctx, registerAudioPluginsScenario, /*validateInBackground*/ false);
 }
 
 NewPluginsRegistered EffectsProvider::doScanPlugins(
     const muse::modularity::ContextPtr& ctx,
-    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
+    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+    bool validateInBackground)
 {
     muse::audioplugins::PluginScanResult scanResult;
     {
@@ -115,7 +118,12 @@ NewPluginsRegistered EffectsProvider::doScanPlugins(
     }
 
     if (!thirdPartyPluginPaths.empty()) {
-        const muse::Ret ret = registerAudioPluginsScenario.registerNewPluginsAsync(thirdPartyPluginPaths);
+        // Background: persist Discovered placeholders and validate on worker threads
+        // (non-blocking). Foreground (manual rescan): validate synchronously behind a
+        // modal progress dialog so the user sees it complete.
+        const muse::Ret ret = validateInBackground
+                              ? registerAudioPluginsScenario.registerNewPluginsAsync(thirdPartyPluginPaths)
+                              : registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, /*validate*/ true);
         if (!ret) {
             LOGE() << "Failed to register new plugins: " << ret.toString();
         }
