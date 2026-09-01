@@ -14,21 +14,23 @@
 
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
 
+#include "Languages.h"
 #include "NetworkManager.h"
 #include "Request.h"
 #include "IResponse.h"
+#include "UrlEncode.h"
 
 
 namespace audacity::musehub
 {
 
 static const std::string becomeAPartnerUrl = "https://developer.musehub.com/muse-partners-help/introduction/becoming-a-muse-partner";
-static const std::string musehubAPIEndpointUrl = "https://cosmos-customer-webservice.azurewebsites.net/graphql/v3";
-static const std::string musehubAPIDevEndpointUrl = "https://cosmos-customer-webservice-dev.azurewebsites.net/graphql/v3";
+static const std::string musehubAPIEndpointUrl = "https://customers-api.musehub.com/graphql/v3";
+static const std::string musehubAPIDevEndpointUrl = "https://customers-api-dev.musehub.com/graphql/v3";
 static const std::string musehubEffectUrl = "https://www.musehub.com/plugin/";
+static const std::string musehubEffectsQueryId = "audacity-effects-page-v1";
+static const std::string fallbackLocale = "en-US";
 
 static const std::string musehubEffectUtmParams =
    "utm_source=au"
@@ -36,6 +38,8 @@ static const std::string musehubEffectUtmParams =
    "&utm_campaign=MH_WW_REF_AU_DESKTOP_ALL_170826_crosslink"
    "&utm_content=get_fx_panel";
 
+// Not sent, the server resolves musehubEffectsQueryId to this query
+// Kept as the reference for the shape of the response we parse
 static const std::string getEffectsQuery = R"(
     query EffectsQuery($locale: String) {
       product_pages_configuration {
@@ -131,32 +135,28 @@ static std::vector<EffectsGroup> parseProductPages(const rapidjson::Document& do
    return pages;
 }
 
+// Converts internal locale tag [ca_ES@valencia] to [ca-ES] accepted by MuseHub
+static std::string GetLocale()
+{
+   wxString lang = Languages::GetLangShort().BeforeFirst(L'@');
+   lang.Replace(L"_", L"-");
+
+   return lang.empty() ? fallbackLocale : lang.ToStdString();
+}
+
 void GetEffects(std::function<void(std::vector<EffectsGroup>)> callback)
 {
    using namespace audacity::network_manager;
-   using rapidjson::StringRef;
 
-   // TODO Get locale
-   const std::string locale = "en-EN";
+   const std::string variables = UrlEncode(R"({"locale":")" + GetLocale() + R"("})");
+   const std::string url = GetMusehubAPIEndpoint()
+      + "?pqId=" + musehubEffectsQueryId
+      + "&variables=" + variables;
 
-   rapidjson::Document jsonDoc;
-   jsonDoc.SetObject();
-   auto& allocator = jsonDoc.GetAllocator();
-   jsonDoc.AddMember("query", rapidjson::Value(getEffectsQuery.c_str(), allocator), allocator);
-
-   rapidjson::Value variables(rapidjson::kObjectType);
-   variables.AddMember("locale", rapidjson::Value(locale.c_str(), allocator), allocator);
-   jsonDoc.AddMember("variables", variables, allocator);
-
-   rapidjson::StringBuffer buffer;
-   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-   jsonDoc.Accept(writer);
-
-   Request request(GetMusehubAPIEndpoint());
-   request.setHeader(common_headers::ContentType, common_content_types::ApplicationJson);
+   Request request(url);
    request.setHeader(common_headers::Accept, common_content_types::ApplicationJson);
 
-   auto response = NetworkManager::GetInstance().doPost(request, buffer.GetString(), buffer.GetSize());
+   auto response = NetworkManager::GetInstance().doGet(request);
 
    response->setRequestFinishedCallback([response, callback](auto) {
       const auto httpCode = response->getHTTPCode();
