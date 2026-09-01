@@ -82,7 +82,7 @@ qt_add_resources(appshell appshell_resources
         resources/LoadingScreen.svg
         resources/GoogleLogo.png
         resources/win_opengl_buglist.json
-        resources/welcomedialog/Audacity40Video.png
+        resources/welcomedialog/YT_Release_Video_Thumb_v1.png
         resources/welcomedialog/Audacity_Feature_Survey.png
         resources/welcomedialog/Audacity_Merch_Store.png
         resources/welcomedialog/AudioDotCom_Dark.png
