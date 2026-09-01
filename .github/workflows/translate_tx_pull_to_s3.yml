@@ -2,7 +2,7 @@ name: '[AU4] Translations: Pull from Transifex and push to S3'
 
 on:
   schedule:
-    - cron: "0 9 * * *"                # Every day at 09:00 UTC (pushes to S3 and creates PR)
+    - cron: "0 9 * * 1-5"              # Every weekday at 09:00 UTC (pushes to S3 and creates PR)
   workflow_dispatch:
     inputs:
       create_pull_request:
@@ -89,11 +89,11 @@ jobs:
 
           echo "BUILD_NUMBER=$BUILD_NUMBER" | tee -a $GITHUB_ENV
 
-      - name: Update .ts files (tx pull) above 79% and create new ts files
+      - name: Update .ts files (tx pull) and create ts files for new languages
         uses: transifex/cli-action@v2
         with:
           token: ${{ secrets.TRANSIFEX_API_TOKEN }}
-          args: "pull -a -f --minimum-perc=79"
+          args: "pull -a -f"
 
       - name: Create Pull Request
         id: create-pr
