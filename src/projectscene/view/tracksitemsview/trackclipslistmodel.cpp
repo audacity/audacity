@@ -768,10 +768,13 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
-        if (!rangeKeys.empty()) {
-            selectionController()->resetSelectedLabels();
-            selectionController()->setSelectedClips(rangeKeys, complete);
+        const ClipAndLabelKeys box = m_context
+                                     ? selectionController()->itemsTouchingSelectionBox(
+            m_context->mousePositionTime(), m_trackId)
+                                     : ClipAndLabelKeys();
+        if (!box.empty()) {
+            selectionController()->setSelectedClips(box.clips, complete);
+            selectionController()->setSelectedLabels(box.labels, complete);
             return;
         }
 
@@ -819,6 +822,9 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     }
 
     setFocusedItem(key);
+    if (m_context) {
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), m_trackId);
+    }
 }
 
 void TrackClipsListModel::handleClipRelease(const ClipKey& key)
