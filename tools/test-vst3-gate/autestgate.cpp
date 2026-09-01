@@ -1,9 +1,13 @@
 /*
  * Audacity: A Digital Audio Editor
  *
- * AU Test Gate: a pass-through VST3 effect whose *module load* is controlled by
- * a gate file, so plugin validation / loading can be held, released, or made
- * to fail on purpose while testing the non-blocking plugin validation (#11746).
+ * AU Test Gate: a VST3 effect whose *module load* is controlled by a gate file,
+ * so plugin validation / loading can be held, released, or made to fail on
+ * purpose while testing the non-blocking plugin validation (#11746).
+ *
+ * When processing it applies a strong amplitude tremolo (full-depth ~5 Hz), so
+ * whether the effect is active or bypassed is immediately audible - handy for
+ * checking that a plugin can be re-validated while a track using it is playing.
  *
  * Gate file: $AU_TEST_VST3_GATE_FILE, or <temp dir>/au_test_vst3_gate.
  * Contents (first integer):
@@ -16,6 +20,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -139,7 +144,16 @@ public:
         return symbolicSampleSize == kSample32 ? kResultTrue : kResultFalse;
     }
 
-    // pass-through
+    tresult PLUGIN_API setupProcessing(ProcessSetup& setup) override
+    {
+        m_sampleRate = setup.sampleRate > 0 ? setup.sampleRate : 44100.0;
+        m_lfoPhase = 0.0;
+        return SingleComponentEffect::setupProcessing(setup);
+    }
+
+    // Full-depth amplitude tremolo: output = input * (0.5 - 0.5*cos(phase)), so the
+    // gain sweeps 0..1 at kLfoHz. Deliberately obvious, so the effect being active
+    // vs bypassed is clearly audible (bypass is handled by the host not calling us).
     tresult PLUGIN_API process(ProcessData& data) override
     {
         if (data.numInputs == 0 || data.numOutputs == 0 || data.numSamples == 0) {
@@ -148,14 +162,32 @@ public:
         const AudioBusBuffers& in = data.inputs[0];
         AudioBusBuffers& out = data.outputs[0];
         const int32 channels = std::min(in.numChannels, out.numChannels);
-        for (int32 ch = 0; ch < channels; ++ch) {
-            if (in.channelBuffers32[ch] != out.channelBuffers32[ch]) {
-                std::memcpy(out.channelBuffers32[ch], in.channelBuffers32[ch], sizeof(float) * data.numSamples);
+
+        constexpr double kPi = 3.14159265358979323846;
+        const double phaseInc = 2.0 * kPi * kLfoHz / m_sampleRate;
+
+        double phase = m_lfoPhase;
+        for (int32 i = 0; i < data.numSamples; ++i) {
+            const float gain = static_cast<float>(0.5 - 0.5 * std::cos(phase));
+            for (int32 ch = 0; ch < channels; ++ch) {
+                out.channelBuffers32[ch][i] = in.channelBuffers32[ch][i] * gain;
+            }
+            phase += phaseInc;
+            if (phase >= 2.0 * kPi) {
+                phase -= 2.0 * kPi;
             }
         }
-        out.silenceFlags = in.silenceFlags;
+        m_lfoPhase = phase;
+
+        // Modulated output isn't silent even across a gain trough within the block.
+        out.silenceFlags = 0;
         return kResultOk;
     }
+
+private:
+    static constexpr double kLfoHz = 5.0;
+    double m_sampleRate = 44100.0;
+    double m_lfoPhase = 0.0;
 };
 
 const FUID kAuTestGateUID(0x7A3E9C41, 0x2B6D4F58, 0x9E1C3A7F, 0x5D2B8E64);
