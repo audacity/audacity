@@ -14,6 +14,7 @@ This is a patch release. It contains the following changes:
      MIDI playback now also starts from the set position instead of the beginning
    * #11711 Fixed a crash after a failed recording attempt
    * #11526 Fixed clips having the wrong tempo after opening a project (Thanks, David Bailes (@DavidBailes)!)
+   * #11623 Fixed a freeze on startup on systems with an incorrect font configuration
 
 Changes in version 3.7.8
 
