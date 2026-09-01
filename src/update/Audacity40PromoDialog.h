@@ -39,6 +39,7 @@ private:
     std::string GetUpdatesUrl() const;
 
     ReleaseInfo mReleaseInfo;
+    std::shared_ptr<bool> mAlive;
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
     std::string mInstallerPath;
     std::ofstream mInstallerFile;

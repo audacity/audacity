@@ -52,6 +52,7 @@ Audacity40PromoDialog::Audacity40PromoDialog(wxWindow* parent, const Notificatio
     : wxDialogWrapper(parent, wxID_ANY, XO("Install Audacity 4"),
                      wxDefaultPosition, wxDefaultSize,
                      wxDEFAULT_DIALOG_STYLE)
+    , mAlive(std::make_shared<bool>(true))
 {
     auto mainSizer = safenew wxBoxSizer(wxVERTICAL);
 
@@ -109,6 +110,8 @@ Audacity40PromoDialog::Audacity40PromoDialog(wxWindow* parent, const Notificatio
 
 Audacity40PromoDialog::~Audacity40PromoDialog()
 {
+    *mAlive = false;
+
     if (mInstallerFile.is_open())
         mInstallerFile.close();
 
@@ -141,6 +144,10 @@ std::string Audacity40PromoDialog::GetUpdatesUrl() const
 
 void Audacity40PromoDialog::OnInstallClicked()
 {
+    // Prevent downloading twice
+    if (auto* installButton = FindWindow(wxID_OK))
+        installButton->Disable();
+
     FetchReleaseInfo();
 }
 
@@ -151,39 +158,41 @@ void Audacity40PromoDialog::FetchReleaseInfo()
     const Request request(GetUpdatesUrl());
     mCurrentResponse = NetworkManager::GetInstance().doGet(request);
 
-    mCurrentResponse->setRequestFinishedCallback([this](IResponse* response) {
-        if (response->getError() != NetworkError::NoError)
-        {
-            BasicUI::CallAfter([this] {
+    mCurrentResponse->setRequestFinishedCallback([this, alive = mAlive](IResponse* response) {
+        const NetworkError error = response->getError();
+        std::string jsonData;
+        if (error == NetworkError::NoError)
+            jsonData = response->readAll<std::string>();
+
+        BasicUI::CallAfter([this, alive, error, jsonData = std::move(jsonData)] {
+            if (!*alive)
+                return;
+
+            if (error != NetworkError::NoError)
+            {
                 wxLogError("Failed to fetch Audacity 4 release info");
                 BasicUI::ShowErrorDialog({},
                     XO("Error"),
                     XO("Unable to fetch Audacity 4 release information. Please try again later."),
                     wxString(),
                     BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
-                EndModal(wxID_CANCEL);
-            });
-            return;
-        }
+                EndModal(wxID_APPLY);
+                return;
+            }
 
-        std::string jsonData = response->readAll<std::string>();
-        UpdateFeedMigrationParser parser;
-
-        if (!parser.ParseRelease(jsonData, mReleaseInfo) || !mReleaseInfo.IsValid())
-        {
-            BasicUI::CallAfter([this] {
+            UpdateFeedMigrationParser parser;
+            if (!parser.ParseRelease(jsonData, mReleaseInfo) || !mReleaseInfo.IsValid())
+            {
                 wxLogError("Failed to parse Audacity 4 release info");
                 BasicUI::ShowErrorDialog({},
                     XO("Error"),
                     XO("Unable to parse Audacity 4 release information. Please try again later."),
                     wxString(),
                     BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
-                EndModal(wxID_CANCEL);
-            });
-            return;
-        }
+                EndModal(wxID_APPLY);
+                return;
+            }
 
-        BasicUI::CallAfter([this] {
             StartDownload();
         });
     });
@@ -201,7 +210,7 @@ void Audacity40PromoDialog::StartDownload()
             XO("No Audacity 4 installer available for your platform."),
             wxString(),
             BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
-        EndModal(wxID_CANCEL);
+        EndModal(wxID_APPLY);
         return;
     }
 
@@ -234,7 +243,7 @@ void Audacity40PromoDialog::StartDownload()
             XO("Unable to create installer file. Please check write permissions."),
             wxString(),
             BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
-        EndModal(wxID_CANCEL);
+        EndModal(wxID_APPLY);
         return;
     }
 
@@ -289,7 +298,7 @@ void Audacity40PromoDialog::OnDownloadFinished(bool success)
             XO("Failed to download Audacity 4 installer. Please try again later."),
             wxString(),
             BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
-        EndModal(wxID_CANCEL);
+        EndModal(wxID_APPLY);
         return;
     }
 
