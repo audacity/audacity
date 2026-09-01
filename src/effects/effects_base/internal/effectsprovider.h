@@ -76,6 +76,9 @@ private:
         // third-party plugins are validated in the background and become
         // available as their results arrive
         Background,
+        // user-initiated rescan: validation runs synchronously behind a modal
+        // progress dialog, so the user sees it complete
+        Interactive,
         // third-party plugins are registered but left unvalidated
         // (StartupPluginValidationPolicy::Skip, e.g. test flows)
         SkipValidation,

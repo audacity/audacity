@@ -62,7 +62,9 @@ void EffectsProvider::forgetPlugins(const EffectFilter& forget)
 NewPluginsRegistered EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx,
                                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
-    return doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Background);
+    // A user-initiated rescan validates synchronously behind a modal progress
+    // dialog; startup validation stays in the background.
+    return doScanPlugins(ctx, registerAudioPluginsScenario, ScanMode::Interactive);
 }
 
 NewPluginsRegistered EffectsProvider::doScanPlugins(
@@ -122,9 +124,14 @@ NewPluginsRegistered EffectsProvider::doScanPlugins(
     }
 
     if (!thirdPartyPluginPaths.empty()) {
+        // Background: persist Discovered placeholders and validate on worker threads
+        // (non-blocking). Interactive (manual rescan): validate synchronously behind a
+        // modal progress dialog so the user sees it complete. SkipValidation: register
+        // the placeholders only.
         const muse::Ret ret = scanMode == ScanMode::Background
                               ? registerAudioPluginsScenario.registerNewPluginsAsync(thirdPartyPluginPaths)
-                              : registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, /*validate*/ false);
+                              : registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths,
+                                                                                /*validate*/ scanMode == ScanMode::Interactive);
         if (!ret) {
             LOGE() << "Failed to register new plugins: " << ret.toString();
         }
