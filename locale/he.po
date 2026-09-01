@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Israel Yedidya, 2026\n"
 "Language-Team: Hebrew (https://app.transifex.com/audacity/teams/164520/he/)\n"
@@ -3473,6 +3473,10 @@ msgstr "הסרת מידע השמירה האוטומטית מקובץ הפרוי�
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "לא ניתן להתחבר ל-blob"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "קובץ הפרויקט הוא לקריאה בלבד"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11654,20 +11658,8 @@ msgid "Welcome to Audacity!"
 msgstr "ברוכים הבאים לאודסיטי!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "נסה את הגרסה הניסיונית החדשה של אודסיטי 4"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "בדיקת גרסת הניסיון"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "יש להשלים את הגדרת הענן של אודסיטי עם audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16879,6 +16871,14 @@ msgstr "&מארח:"
 msgid "Using:"
 msgstr "משתמש ב:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "השתמש בקצב הדגימה של ההתקן"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "הגדרות מנהל ההתקן"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21824,3 +21824,9 @@ msgstr "כלים ספקטראליים"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "אפקטים מסורתיים"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "נסה את הגרסה הניסיונית החדשה של אודסיטי 4"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "בדיקת גרסת הניסיון"

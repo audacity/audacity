@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Catarina Anabela, 2026\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
@@ -3480,6 +3480,10 @@ msgstr "Gagal membuang informasi autosave dari berkas proyek."
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Tidak dapat mengikat ke BLOB"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Berkas proyek bersifat hanya-baca"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11648,20 +11652,8 @@ msgid "Welcome to Audacity!"
 msgstr "Selamat datang di Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Selesaikan pengaturan cloud Audacity Anda dengan audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16862,6 +16854,14 @@ msgstr "&Host:"
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
 msgstr "Menggunakan:"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Gunakan laju sampel perangkat"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Pengaturan driver"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h

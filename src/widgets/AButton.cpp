@@ -400,18 +400,19 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
                }
                else
                {
-                  const auto sumWidth = icon->GetWidth() + border.x + dc.GetTextExtent(GetLabel()).GetWidth();
+                  const auto textWidth = dc.GetTextExtent(GetLabel()).GetWidth();
+                  const auto sumWidth = icon->GetWidth() + border.x + textWidth;
                   const auto iconVCenter = buttonRect.height / 2;
-                  const auto iconHCenter = icon->GetWidth() / 2 + border.x;
-                  const auto textLeft = iconHCenter + icon->GetWidth() / 2;
+                  const auto iconLeft = std::max(border.x, (buttonRect.width - sumWidth) / 2);
+                  const auto textLeft = iconLeft + icon->GetWidth() + border.x;
 
                   dc.DrawBitmap(*icon,
-                                buttonRect.x + iconHCenter - icon->GetWidth() / 2,
+                                buttonRect.x + iconLeft,
                                 buttonRect.y + iconVCenter - icon->GetHeight() / 2);
                   textRect = wxRect(
                      buttonRect.x + textLeft,
                      buttonRect.y + border.y,
-                     buttonRect.width - textLeft,
+                     textWidth,
                      buttonRect.height - border.y * 2
                   );
                }

@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: JURE, 2026\n"
 "Language-Team: Croatian (https://app.transifex.com/audacity/teams/164520/hr/)\n"
@@ -3484,6 +3484,10 @@ msgstr "Nije uspjelo uklanjanje podataka automatskog spremanja iz projektne dato
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Nije moguće povezati se s BLOB-om"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Datoteka projekta je samo za čitanje"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11667,20 +11671,8 @@ msgid "Welcome to Audacity!"
 msgstr "Dobro došli u Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Dovršite svoju Audacity cloud postavu s audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Preuzmite naše besplatne OpenVino AI alate"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16878,6 +16870,14 @@ msgstr ""
 msgid "Using:"
 msgstr "U uporabi:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Koristi uzorkovnu brzinu uređaja"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Postavke upravljačkog programa"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21714,3 +21714,6 @@ msgstr ""
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Preuzmite naše besplatne OpenVino AI alate"

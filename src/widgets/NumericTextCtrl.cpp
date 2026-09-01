@@ -335,14 +335,16 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
    wxCoord strW;
    wxCoord strH;
 
+   const int minFontSize = 4;
+
    // Now decrease it until we fit within our digit box
    dc.SetFont(pf);
    dc.GetTextExtent(wxT("0"), &strW, &strH);
-   while (strW > boxW || strH > boxH) {
+   while ((strW > boxW || strH > boxH) && fontSize > minFontSize) {
       dc.SetFont(wxFont(--fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
       dc.GetTextExtent(wxT("0"), &strW, &strH);
    }
-   fontSize--;
+   fontSize = std::max(minFontSize, fontSize - 1);
 
    // Create the digit font with the new point size
    if (update) {

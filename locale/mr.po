@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Marathi (https://app.transifex.com/audacity/teams/164520/mr/)\n"
@@ -3407,6 +3407,10 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "प्रकल्प धारिका फक्त वाचनीय आहे"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11445,19 +11449,7 @@ msgid "Welcome to Audacity!"
 msgstr "ऑड्यासिटीमध्ये आपले स्वागत आहे!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -16662,6 +16654,14 @@ msgstr "होस्ट(&H)"
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
 msgstr "उपयोग :"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "उपकरणाचा नमुना दर वापरा"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "ड्रायव्हर समायोजन"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h

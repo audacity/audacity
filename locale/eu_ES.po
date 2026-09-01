@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2021-06-11 23:23+0200\n"
 "Last-Translator: Osoitz Elkorobarrutia <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
@@ -3534,6 +3534,10 @@ msgstr "Ezin izan da gorde automatikoki informazioa proiektuaren fitxategitik ke
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Huts egin du kodea aurkitzean"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Proiektuaren fitxategia irakurtzeko soilik da"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11939,19 +11943,7 @@ msgid "Welcome to Audacity!"
 msgstr "Ongi etorri Audacity-ra!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -17250,6 +17242,14 @@ msgstr "&Ostalaria:"
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
 msgstr "Erabiltzen:"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Erabili gailuaren lagin-maiztasuna"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Kontrolatzailearen ezarpenak"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h

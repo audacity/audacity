@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Grzegorz Wojciechowski, 2026\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
@@ -3482,6 +3482,10 @@ msgstr "Nie udało się usunąć informacji o autozapisywaniu z pliku projektu."
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Nie można powiązać z obiektem blob"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Plik projektu jest tylko do odczytu"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11671,20 +11675,8 @@ msgid "Welcome to Audacity!"
 msgstr "Witaj w Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "Wypróbuj nową wersję Audacity 4 Beta"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "Przetestuj wersję Beta"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Wypełnij ustawienia chmury Audacity za pomocą Audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Uzyskaj nasze darmowe narzędzia OpenVino AI"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16901,6 +16893,14 @@ msgstr "&Host:"
 msgid "Using:"
 msgstr "Wykorzystując:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Użyj częstotliwości próbkowania urządzenia"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Ustawienia sterownika"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21847,3 +21847,12 @@ msgstr "Narzędzia widma"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Stare"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "Wypróbuj nową wersję Audacity 4 Beta"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "Przetestuj wersję Beta"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Uzyskaj nasze darmowe narzędzia OpenVino AI"

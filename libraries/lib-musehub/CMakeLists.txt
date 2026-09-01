@@ -8,6 +8,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-network-manager-interface
+   lib-strings-interface # Languages
    rapidjson::rapidjson
 )
 

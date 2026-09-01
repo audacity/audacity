@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2026\n"
 "Language-Team: Hungarian (https://app.transifex.com/audacity/teams/164520/hu/)\n"
@@ -3481,6 +3481,10 @@ msgstr "Nem sikerült eltávolítani az automatikus mentési információkat a p
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Nem sikerült a blobhoz kötés"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "A projektfájl írásvédett"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11675,20 +11679,8 @@ msgid "Welcome to Audacity!"
 msgstr "Üdvözöl az Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Audacity felhős beállításának befejezése audio.com-mal"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Szerezze be az ingyenes OpenVino MI-eszközeinket"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16893,6 +16885,14 @@ msgstr "&Kiszolgáló:"
 msgid "Using:"
 msgstr "Használja:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Az eszköz mintavételezési gyakoriságának használata"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Illesztőprogram beállításai"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21835,3 +21835,6 @@ msgstr "Spektrális eszközök"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Örökölt"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Szerezze be az ingyenes OpenVino MI-eszközeinket"

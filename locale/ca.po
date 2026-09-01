@@ -23,9 +23,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Andreu Ferrero, 2026\n"
 "Language-Team: Catalan (https://app.transifex.com/audacity/teams/164520/ca/)\n"
@@ -3485,6 +3485,10 @@ msgstr "No s'ha pogut eliminar la informació d'auto-guardat del fitxer del proj
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "No es pot vincular la taca"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "El fitxer de projecte és de només lectura"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11476,20 +11480,8 @@ msgid "Welcome to Audacity!"
 msgstr "Benvingut a Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Completeu la configuració del vostre núvol d'Audacity amb audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Obteniu les nostres eines d'IA OpenVino gratuïtes"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16686,6 +16678,14 @@ msgstr "&Amfitrió:"
 msgid "Using:"
 msgstr "Mitjançant:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Usa la freqüència de mostreig del dispositiu"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Ajusts del controlador"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21541,3 +21541,6 @@ msgstr "Eines Espectrals"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Llegat"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Obteniu les nostres eines d'IA OpenVino gratuïtes"

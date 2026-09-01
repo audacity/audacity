@@ -1,9 +1,9 @@
 # Miguel Anxo Bouzada <mbouzada@gmail.com>, 2012, 2013, 2014, 2015.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2015-02-20 17:07-0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -3532,6 +3532,11 @@ msgstr ""
 #, fuzzy
 msgid "Unable to bind to blob"
 msgstr "Non foi posíbel atopar o códec"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "The project file is read-only"
+msgstr "Inspeccionando os datos dos ficheiros do proxecto"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
@@ -12055,19 +12060,7 @@ msgid "Welcome to Audacity!"
 msgstr "Benvido/a a Audacity "
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -17808,6 +17801,16 @@ msgstr "&Servidor"
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
 msgstr "Usando:"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Use device sample rate"
+msgstr "Filtros non usados:"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Driver settings"
+msgstr "Axustes da reverberación"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
@@ -27073,9 +27076,6 @@ msgstr ""
 
 #~ msgid "R&ename"
 #~ msgstr "R&enomear"
-
-#~ msgid "Reverb settings"
-#~ msgstr "Axustes da reverberación"
 
 #~ msgid "Load preset:"
 #~ msgstr "Cargar predefinición:"

@@ -64,8 +64,9 @@ bool UpdateFeedMigrationParser::ParseRelease(const std::string& jsonData, Releas
 
     releaseInfo.version = tagName;
 
-    // Parse release notes
-    releaseInfo.notes = GetString(document, "body");
+    releaseInfo.notes = GetString(document, "bodyMarkdown");
+    if (releaseInfo.notes.empty())
+        releaseInfo.notes = GetString(document, "body");
 
     std::string targetSuffix = GetPlatformFileSuffix();
     ArchitectureMatch bestMatch = ArchitectureMatch::None;

@@ -3,9 +3,9 @@
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2026-05-29 22:18+0200\n"
 "Last-Translator: Marco Oros <marco.oros93@gmail.com>\n"
 "Language-Team: Marco Oros\n"
@@ -3473,6 +3473,10 @@ msgstr "Nepodarilo sa odstrániť automaticky uložené údaje z projektového s
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Nie je možné vytvoriť väzbu na blob"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Súbor projektu je iba na čítanie"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11656,20 +11660,8 @@ msgid "Welcome to Audacity!"
 msgstr "Vitajte v Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "Vyskúšajte nové vydanie Audacity 4 Beta"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "Vyskúšajte beta verziu"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Dokončite nastavenia vášho Audacity cloudu s Audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Získajte naše bezplatné OpenVino AI nástroje"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16883,6 +16875,14 @@ msgstr "&Hostiteľ:"
 msgid "Using:"
 msgstr "Použitie:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Použiť vzorkovaciu frekvenciu zariadenia"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Nastavenia ovládača"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21829,6 +21829,15 @@ msgstr "Spektrálne nástroje"
 msgid "Legacy"
 msgstr "Pravidlá"
 
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "Vyskúšajte nové vydanie Audacity 4 Beta"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "Vyskúšajte beta verziu"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Získajte naše bezplatné OpenVino AI nástroje"
+
 #~ msgid "Video: how we're redesigning Audacity for the future"
 #~ msgstr "Video: ako prerábame Audacity pre budúcnosť"
 
@@ -26154,10 +26163,6 @@ msgstr "Pravidlá"
 #, fuzzy
 #~ msgid "R&ename"
 #~ msgstr "Pre&menovať"
-
-#, fuzzy
-#~ msgid "Reverb settings"
-#~ msgstr "Vykonáva sa obracanie"
 
 #, fuzzy
 #~ msgid "Load preset:"

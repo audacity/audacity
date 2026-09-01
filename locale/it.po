@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2026\n"
 "Language-Team: Italian (https://app.transifex.com/audacity/teams/164520/it/)\n"
@@ -3482,6 +3482,10 @@ msgstr "Non è stato possibile rimuovere l'informazione di salvataggio automatic
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Non è stato possibile associare al blob"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Il file del progetto è di sola lettura"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11675,20 +11679,8 @@ msgid "Welcome to Audacity!"
 msgstr "Benvenuto in Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "Prova la nuova versione beta di Audacity 4"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "Prova la versione beta"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Completa la configurazione del cloud Audacity con audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Ottieni i nostri strumenti gratuiti OpenVino AI"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16902,6 +16894,14 @@ msgstr "&Sistema:"
 msgid "Using:"
 msgstr "Per mezzo di:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Usa la frequenza di campionamento del dispositivo"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Impostazioni del driver"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21845,3 +21845,12 @@ msgstr "Strumenti spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Precedente"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "Prova la nuova versione beta di Audacity 4"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "Prova la versione beta"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Ottieni i nostri strumenti gratuiti OpenVino AI"

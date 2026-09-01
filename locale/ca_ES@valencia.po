@@ -5,9 +5,9 @@
 # empar <montoro_mde@gva.es>, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2019-09-30 13:51+0200\n"
 "Last-Translator: Alfredo vicente <alviboi@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3528,6 +3528,10 @@ msgstr ""
 #, fuzzy
 msgid "Unable to bind to blob"
 msgstr "No s'ha pogut trobar el còdec"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "El fitxer de projecte és de només lectura"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
@@ -11923,19 +11927,7 @@ msgid "Welcome to Audacity!"
 msgstr "Us donem la benvinguda a l'Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -17334,6 +17326,14 @@ msgstr "&Amfitrió:"
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
 msgstr "S'està utilitzant:"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Utilitza la freqüència de mostreig del dispositiu"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Paràmetres del controlador"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h

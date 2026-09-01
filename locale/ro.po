@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.8\n"
+"Project-Id-Version: audacity 3.7.9\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"POT-Creation-Date: 2026-08-19 11:56+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2026\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
@@ -3481,6 +3481,10 @@ msgstr "A eșuat eliminarea informației de auto-salvare din fișierul proiectul
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
 msgstr "Nu s-a putut lega la blob"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project file is read-only"
+msgstr "Fișierul de proiect este doar pentru citire"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to parse project information."
@@ -11672,20 +11676,8 @@ msgid "Welcome to Audacity!"
 msgstr "Bun venit la Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Try the new Audacity 4 Beta release"
-msgstr "Încearcă noul release al Audacity 4 Beta"
-
-#: src/WhatsNewDialog.cpp
-msgid "Test the Beta release"
-msgstr "Testează release-ul Beta"
-
-#: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Finalizează configurarea Cloud-ului în Audacity cu audio.com"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get our free OpenVino AI tools"
-msgstr "Obține uneltele noastre cu IA gratuite OpenVino"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -16899,6 +16891,14 @@ msgstr "&Gazdă:"
 msgid "Using:"
 msgstr "Folosind:"
 
+#: src/prefs/DevicePrefs.cpp
+msgid "Use device sample rate"
+msgstr "Folosește rata de eșantionare a dispozitivului"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Driver settings"
+msgstr "Setările driverului"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
@@ -21845,3 +21845,12 @@ msgstr "Unelte spectrale"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Învechite"
+
+#~ msgid "Try the new Audacity 4 Beta release"
+#~ msgstr "Încearcă noul release al Audacity 4 Beta"
+
+#~ msgid "Test the Beta release"
+#~ msgstr "Testează release-ul Beta"
+
+#~ msgid "Get our free OpenVino AI tools"
+#~ msgstr "Obține uneltele noastre cu IA gratuite OpenVino"
