@@ -91,6 +91,23 @@ struct TrackFocus
     bool operator==(const TrackFocus&) const = default;
 };
 
+struct ItemKeys
+{
+    ClipKeyList clips;
+    LabelKeyList labels;
+
+    inline bool empty() const { return clips.empty() && labels.empty(); }
+};
+
+struct ItemWithTime
+{
+    TrackItemKey key;
+    double startTime = 0.0;
+    double endTime = 0.0;
+};
+
+using ItemWithTimeList = std::vector<ItemWithTime>;
+
 struct TimeSignature
 {
     double tempo = 0;

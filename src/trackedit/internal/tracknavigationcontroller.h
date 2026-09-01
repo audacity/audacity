@@ -50,8 +50,6 @@ public:
     void setFocus(const TrackFocus& focus, bool highlight = false) override;
     muse::async::Channel<TrackFocus, bool /*highlight*/> focusChanged() const override;
 
-    TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
-
     void resetNavigation() override;
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
