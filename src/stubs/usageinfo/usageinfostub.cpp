@@ -5,6 +5,11 @@
 
 using namespace au::usageinfo;
 
+bool UsageInfoStub::isUsageInfoAvailable() const
+{
+    return false;
+}
+
 void UsageInfoStub::setSendAnonymousUsageInfo(bool)
 {
 }
