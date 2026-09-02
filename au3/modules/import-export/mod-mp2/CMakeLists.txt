@@ -1,27 +1,26 @@
 #[[
-MP2 export
+MP2 export via twolame.
 ]]
 
-set( TARGET mod-mp2 )
+set( TARGET au3-mod-mp2 )
 
 set( SOURCES
-      ExportMP2.cpp
-      MP2.cpp
+   ExportMP2.cpp
+   ExportMP2.h
 )
 
 set( LIBRARIES
-   PRIVATE
-      twolame
+PUBLIC
+   twolame # ExportMP2.h includes twolame.h
+   au3-files
+   au3-import-export
+   au3-mixer
+   au3-tags
+   au3-track
+PRIVATE
+   wxBase
 )
 
-if ( USE_LIBID3TAG )
-      list ( APPEND LIBRARIES PRIVATE libid3tag::libid3tag)
-endif()
-
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list (APPEND LIBRARIES
-   lib-import-export-interface
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
 )
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

@@ -48,7 +48,10 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 set(MODULE_LINK
         au3wrap
         au3-basic-ui
+        au3-ffmpeg-support
         au3-import-export
+        au3-import-export-modules
+        au3-mod-ffmpeg
         au3-mixer
         au3-strings
         au3-tags

@@ -38,6 +38,7 @@ set(MODULE_LINK
         au3-file-formats
         au3-basic-ui
         au3-import-export
+        au3-import-export-modules
         au3-label-track
         au3-math
         au3-numeric-formats
