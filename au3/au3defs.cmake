@@ -94,16 +94,9 @@ function(import_export_symbol var module_name)
    set("${var}" "${symbol}" PARENT_SCOPE)
 endfunction()
 
-# Generate API definitions for all AU3 libraries
-# This is shared by all AU3 libraries and au3wrap module to avoid duplication
-# Note: AU3_ALL_LIBRARIES is set by au3/libraries/CMakeLists.txt
-set(AU3_API_DEFS "")
-if(DEFINED AU3_ALL_LIBRARIES)
-    foreach(lib ${AU3_ALL_LIBRARIES})
-        import_export_symbol(api_symbol "${lib}")
-        list(APPEND AU3_API_DEFS -D${api_symbol}=)
-    endforeach()
-endif()
+# Note: each library exports its own API define (e.g. -DUTILITY_API=) PUBLIC via
+# audacity_library(), so cross-library API macros propagate through the declared
+# PUBLIC/PRIVATE link dependencies - there is no blanket list of API defines.
 
 # Macro to define an AU3 library
 # Usage: audacity_library(NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES)
@@ -254,10 +247,7 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
         apply_wxbase_restrictions(${au3_target_name})
     endif()
 
-    # Define API macros for ALL known AU3 libraries (shared variable defined at top of file)
-    # This is necessary because AU3 libraries can include headers from transitive dependencies
     set(_private_defs "")
-    list(APPEND _private_defs ${AU3_API_DEFS})
 
     # Audacity version information (shared variable defined at top of file)
     list(APPEND _private_defs ${AUDACITY_VERSION_DEFS})

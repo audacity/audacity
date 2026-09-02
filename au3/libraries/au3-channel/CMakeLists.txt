@@ -26,9 +26,11 @@ set( SOURCES
    Channel.h
 )
 set( LIBRARIES
-   au3-registries-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-registries
+   au3-utility
+PRIVATE
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

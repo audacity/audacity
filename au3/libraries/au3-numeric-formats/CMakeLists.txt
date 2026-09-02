@@ -35,10 +35,17 @@ set( SOURCES
    formatters/ParsedNumericConverterFormatter.h
 )
 set( LIBRARIES
-   au3-math-interface
-   au3-project-rate-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-components
+   au3-preferences
+   au3-registries
+   au3-strings
+   au3-utility
+PRIVATE
+   au3-math
+   au3-project
+   au3-project-rate
+   au3-xml
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -39,11 +39,13 @@ set( SOURCES
    Registry.h
 )
 set( LIBRARIES
-   au3-utility
-   au3-preferences-interface
+PUBLIC
    au3-exceptions
-   au3-strings-interface
-    PRIVATE
+   au3-preferences
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -32,13 +32,15 @@ set( SOURCES
 )
 
 set ( LIBRARIES
-    au3-string-utils-interface
-    au3-preferences-interface
-    au3-concurrency-interface
-    PRIVATE
-    au3-exceptions-interface
-    au3-strings-interface
-    wxBase
+PUBLIC
+   au3-concurrency
+PRIVATE
+   au3-exceptions
+   au3-preferences
+   au3-string-utils
+   au3-strings
+   au3-utility
+   wxBase
 )
 
 set ( DEFINES INTERFACE "HAS_NETWORKING" PRIVATE "WIN32_LEAN_AND_MEAN" )

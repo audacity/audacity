@@ -31,7 +31,7 @@ set( SOURCES
    wxArrayStringEx.cpp
 )
 set( LIBRARIES
-    PRIVATE
+PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

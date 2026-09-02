@@ -11,11 +11,13 @@ set( SOURCES
    PrefsPanel.h
 )
 set( LIBRARIES
-   au3-registries-interface
-   au3-shuttlegui-interface
-   au3-wx-wrappers-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-components
+   au3-registries
+PRIVATE
+   au3-shuttlegui
+   au3-strings
+   au3-wx-wrappers
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

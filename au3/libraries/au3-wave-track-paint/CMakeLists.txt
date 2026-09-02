@@ -21,17 +21,17 @@ set( SOURCES
    waveform/WavePaintParameters.h
 )
 set( LIBRARIES
-   PUBLIC
-      au3-utility-interface
-   PRIVATE
-      wxBase
-      au3-math-interface
-      au3-screen-geometry-interface
-      au3-track-interface
-      au3-mixer-interface
-      au3-graphics-interface
-      au3-wave-track-interface
-      au3-strings-interface
+PUBLIC
+   au3-graphics
+   au3-math
+   au3-utility
+PRIVATE
+   au3-mixer
+   au3-screen-geometry
+   au3-strings
+   au3-track
+   au3-wave-track
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

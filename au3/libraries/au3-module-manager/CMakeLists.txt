@@ -32,10 +32,16 @@ set( SOURCES
    PluginManager.h
 )
 set( LIBRARIES
-   au3-xml-interface
-   au3-ipc-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-components
+   au3-ipc
+   au3-strings
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-files
+   au3-preferences
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

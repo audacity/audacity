@@ -263,7 +263,6 @@ set(MODULE_SRC ${MODULE_SRC}
 # ==================================
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
-set(MODULE_SRC ${MODULE_SRC})
 set(MODULE_LINK
         ${AU3_LINK}
         project # required for projectconfiguration and projecterrors

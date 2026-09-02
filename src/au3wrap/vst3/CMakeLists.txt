@@ -18,10 +18,6 @@ else()
     set(MODULE_DEF -DRELEASE)
 endif()
 
-set(MODULE_USE_UNITY_NONE ON)
-
-set(MODULE_USE_PCH_DISABLED ON)
-
 if (OS_IS_WIN)
     set(PLATFORM_SRC
         ${VST3_SDK_PATH}/public.sdk/source/vst/hosting/module_win32.cpp

@@ -44,10 +44,15 @@ set( SOURCES
    WideSampleSource.h
 )
 set( LIBRARIES
-   au3-audio-graph-interface
-   au3-xml-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-audio-graph
+   au3-components
+   au3-math
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-exceptions
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -29,13 +29,28 @@ set( SOURCES
    StatefulPerTrackEffect.h
 )
 set( LIBRARIES
-   au3-command-parameters-interface
-   au3-numeric-formats-interface
+PUBLIC
+   au3-audio-graph
+   au3-components
+   au3-math
+   au3-mixer
+   au3-strings
+   au3-track
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-command-parameters
+   au3-exceptions
+   au3-files
+   au3-module-manager
+   au3-numeric-formats
+   au3-project
+   au3-project-rate
    au3-realtime-effects
-   au3-stretching-sequence-interface
-   au3-wave-track-interface
-   au3-strings-interface
-    PRIVATE
+   au3-stretching-sequence
+   au3-time-frequency-selection
+   au3-transactions
+   au3-wave-track
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

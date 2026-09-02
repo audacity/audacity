@@ -34,10 +34,12 @@ set(AU3_DEF
     # FFmpeg support (not yet a library)
     -DFFMPEG_SUPPORT_API=
 
-    # AU3 library API definitions (defined in au3defs.cmake, included above)
-    # Note: AU3_API_DEFS is generated in au3defs.cmake (included above) and reused here
-    # to avoid duplicating the API generation logic
-    ${AU3_API_DEFS}
+    # Note: the per-library API definitions (e.g. UTILITY_API) are deliberately NOT
+    # part of AU3_DEF: each au3 library exports its own API define publicly, so
+    # consumers must link the au3 libraries whose headers they use. Relying on
+    # AU3_API_DEFS here would also be non-deterministic, because it is generated from
+    # the AU3_ALL_LIBRARIES cache variable which is only populated later in the
+    # first configure run.
 
     # Platform-specific wxWidgets definitions
     # Note: WXBASE_RESTRICTIONS and WXPLATFORM_DEFS are defined in au3defs.cmake (included above)

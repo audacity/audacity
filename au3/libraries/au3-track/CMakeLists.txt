@@ -34,10 +34,17 @@ set( SOURCES
    UndoTracks.h
 )
 set( LIBRARIES
-   au3-channel-interface
-   au3-project-history-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-channel
+   au3-registries
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-exceptions
+   au3-project
+   au3-project-history
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

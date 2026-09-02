@@ -32,11 +32,15 @@ set( SOURCES
    TempoChange.h
 )
 set( LIBRARIES
-   au3-channel
+PUBLIC
+   au3-math
    au3-mixer
+   au3-registries
    au3-time-and-pitch
-   au3-strings-interface
-    PRIVATE
+   au3-utility
+PRIVATE
+   au3-channel
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

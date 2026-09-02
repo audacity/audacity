@@ -45,18 +45,20 @@ set( SOURCES
    SettingsWX.h
 )
 set( LIBRARIES
-   au3-shuttlegui-interface
-   au3-string-utils-interface
-   au3-theme-interface
-   au3-wx-wrappers-interface
-   au3-preferences-interface
-   # If Sentry reporting is enabled, this library depends on
-   # au3-network-manager-interface
-   # If Sentry reporting is disabled, an INTERFACE library
-   # will be defined
-   au3-sentry-reporting-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-basic-ui
+   au3-exceptions
+   au3-preferences
+   au3-strings
+PRIVATE
+   au3-files
+   # If Sentry reporting is disabled, au3-sentry-reporting is a header-only INTERFACE library
+   au3-sentry-reporting
+   au3-shuttlegui
+   au3-string-utils
+   au3-theme
+   au3-utility
+   au3-wx-wrappers
    wxBase
 )
 

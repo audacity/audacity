@@ -22,25 +22,30 @@ set( SOURCES
 )
 
 set( LIBRARIES
-   au3-wave-track-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-preferences
+   au3-registries
+   au3-strings
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-files
+   au3-math
+   au3-network-manager
+   au3-project
+   au3-project-history
+   au3-realtime-effects
+   au3-sentry-reporting
+   au3-sqlite-helpers
+   au3-stretching-sequence
+   au3-string-utils
+   au3-track
+   au3-transactions
+   au3-wave-track
+   # Only this library needs sqlite, so make the dependency private
+   sqlite
    wxBase
-)
-
-list( APPEND LIBRARIES
-   # If Sentry reporting is enabled, this library depends on
-   # au3-network-manager-interface
-   # If Sentry reporting is disabled, an INTERFACE library
-   # will be defined
-   au3-sentry-reporting-interface
-)
-
-# Only this library needs sqlite, so make the dependency private
-list( APPEND LIBRARIES
-   PRIVATE
-      au3-sqlite-helpers-interface
-      sqlite
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

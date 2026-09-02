@@ -10,11 +10,11 @@ set( SOURCES
 )
 set( LIBRARIES
 PUBLIC
-    au3-wave-track-interface
-    au3-fft-interface
-    au3-strings-interface
+   au3-fft
 PRIVATE
-    wxBase
+   au3-strings
+   au3-wave-track
+   wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

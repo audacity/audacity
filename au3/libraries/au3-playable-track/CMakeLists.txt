@@ -9,9 +9,11 @@ set( SOURCES
    PlayableTrack.h
 )
 set( LIBRARIES
-   au3-track-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-preferences
+   au3-track
+PRIVATE
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

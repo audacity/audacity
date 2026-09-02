@@ -26,10 +26,11 @@ set( SOURCES
    UserException.h
 )
 set( LIBRARIES
-   au3-utility-interface
-   au3-basic-ui-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-strings
+   au3-utility
+PRIVATE
+   au3-basic-ui
    wxBase
 )
 

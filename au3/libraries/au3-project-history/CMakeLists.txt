@@ -12,10 +12,14 @@ set( SOURCES
    UndoManager.h
 )
 set( LIBRARIES
-   au3-project-interface
-   au3-transactions-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-registries
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-project
+   au3-strings
+   au3-transactions
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

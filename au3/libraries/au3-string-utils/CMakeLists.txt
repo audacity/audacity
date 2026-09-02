@@ -33,7 +33,7 @@ set(SOURCES
 )
 
 set( LIBRARIES
-    PRIVATE
+PRIVATE
    wxBase
 )
 

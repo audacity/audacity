@@ -34,13 +34,18 @@ set( SOURCES
    >
 )
 set( LIBRARIES
+PUBLIC
+   vst_sdk_3 # public headers expose VST3 SDK types
+   au3-components
+   au3-effects
    au3-utility
-   au3-effects-interface
-   au3-files-interface
-   PRIVATE
-   au3-strings-interface
+PRIVATE
+   au3-basic-ui
+   au3-exceptions
+   au3-files
+   au3-module-manager
+   au3-strings
    wxBase
-   vst_sdk_3
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

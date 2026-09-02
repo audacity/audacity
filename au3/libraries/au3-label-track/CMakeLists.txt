@@ -11,9 +11,17 @@ set( SOURCES
    LabelTrack.h
 )
 set( LIBRARIES
-   au3-effects-interface
-   au3-strings-interface
-    PRIVATE
+PUBLIC
+   au3-files
+   au3-time-frequency-selection
+   au3-track
+PRIVATE
+   au3-basic-ui
+   au3-effects
+   au3-preferences
+   au3-project
+   au3-stretching-sequence
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

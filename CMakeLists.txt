@@ -154,7 +154,7 @@ set(APP_BUILTIN_WORKSPACES_DIR "${CMAKE_CURRENT_LIST_DIR}/share/workspaces")
 
 # === Compile ===
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
-option(MUSE_COMPILE_USE_UNITY "Use unity build." ON)
+option(MUSE_COMPILE_USE_UNITY "Use unity build." ON) # many AU4 modules still disable unity per-module; re-enabling is tracked in https://github.com/audacity/audacity/issues/11805
 option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
 
 ###########################################
