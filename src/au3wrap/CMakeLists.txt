@@ -264,14 +264,24 @@ set(MODULE_SRC ${MODULE_SRC}
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC})
-set(MODULE_LINK ${AU3_LINK}
+set(MODULE_LINK
+        ${AU3_LINK}
         project # required for projectconfiguration and projecterrors
         audio # required for audiometer
         sqlite # static Factory init HACK for au3-project-file-io/SqliteSampleBlock.cpp included in au3project.cpp
         # TODO: fix Hack and remove sqlite dependency from au3wrap
         rapidjson::rapidjson # this is a temporary solution and we would need to fix this see: https://github.com/audacity/audacity/issues/10452
+        ${AU3_LIBRARIES_LIST}
 )
-set(MODULE_LINK_PUBLIC ${AU3_LIBRARIES_LIST})
+
+set(MODULE_LINK_PUBLIC
+        # TODO: this isn't nice, we should avoid Wx dependencies in AU4 modules.
+        # wxBase must stay PUBLIC for now: the au3 libraries link wxBase PRIVATE,
+        # so this is the only path providing wx include dirs to the many AU4 files
+        # that include au3 headers (which pull in wx/string.h etc.). Flipping it
+        # requires removing wx from au3 public headers first.
+        wxBase
+)
 
 set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)

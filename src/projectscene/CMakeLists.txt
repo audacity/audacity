@@ -239,9 +239,42 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
-set(MODULE_LINK au3wrap trackedit spectrogram uicomponents)
+set(MODULE_LINK
+        au3wrap
+        au3-audio-graph
+        au3-channel
+        au3-components
+        au3-files
+        au3-graphics
+        au3-label-track
+        au3-math
+        au3-mixer
+        au3-playable-track
+        au3-preferences
+        au3-project-history
+        au3-realtime-effects
+        au3-sample-track
+        au3-screen-geometry
+        au3-stretching-sequence
+        au3-strings
+        au3-time-frequency-selection
+        au3-wave-track
+        au3-xml
+        trackedit
+        spectrogram
+        uicomponents
+        au3-registries
+        au3-track
+        au3-project
+        au3-wave-track-paint
+        au3-musehub
+)
+
 if(MUSE_MODULE_WORKSPACE)
-    set(MODULE_LINK ${MODULE_LINK} muse::workspace_qml)
+    set(MODULE_LINK
+            ${MODULE_LINK}
+            muse::workspace_qml
+    )
 endif()
 
 set(MODULE_INCLUDE ${CLIPSVIEW_V1_INC})

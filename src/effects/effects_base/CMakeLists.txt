@@ -128,13 +128,42 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.h
     )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-
-set(MODULE_LINK au3wrap uicomponents)
+set(MODULE_LINK
+        au3wrap
+        au3-audio-devices
+        au3-audio-graph
+        au3-audio-io
+        au3-basic-ui
+        au3-channel
+        au3-command-parameters
+        au3-components
+        au3-effects
+        au3-exceptions
+        au3-label-track
+        au3-math
+        au3-mixer
+        au3-numeric-formats
+        au3-playable-track
+        au3-preferences
+        au3-project
+        au3-project-history
+        au3-project-rate
+        au3-realtime-effects
+        au3-registries
+        au3-sample-track
+        au3-stretching-sequence
+        au3-strings
+        au3-time-frequency-selection
+        au3-track
+        au3-transactions
+        au3-utility
+        au3-wave-track
+        au3-xml
+        au3-module-manager
+        au3-files
+        uicomponents
+)
 
 set(MODULE_USE_UNITY OFF)
 

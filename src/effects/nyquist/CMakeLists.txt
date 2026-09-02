@@ -30,13 +30,20 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/nyquistprompt/nyquistpromptviewmodel.h
     )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-
-set(MODULE_LINK au3wrap effects_builtin au3-nyquist-effects)
+set(MODULE_LINK
+        au3wrap
+        au3-components
+        au3-files
+        au3-math
+        au3-module-manager
+        au3-preferences
+        au3-strings
+        au3-utility
+        au3-wave-track
+        effects_builtin
+        au3-nyquist-effects
+)
 
 add_subdirectory(libnyquist)
 

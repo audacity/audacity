@@ -191,7 +191,36 @@ set(MODULE_DEF ${MODULE_DEF}
     # -DNOTE_TRACK_API=
 )
 
-set(MODULE_LINK au3wrap libsbsms shared)
+set(MODULE_LINK
+        au3wrap
+        au3-audio-graph
+        au3-basic-ui
+        au3-channel
+        au3-command-parameters
+        au3-components
+        au3-dynamic-range-processor
+        au3-exceptions
+        au3-fft
+        au3-files
+        au3-label-track
+        au3-math
+        au3-mixer
+        au3-module-manager
+        au3-playable-track
+        au3-preferences
+        au3-registries
+        au3-sample-track
+        au3-stretching-sequence
+        au3-strings
+        au3-time-frequency-selection
+        au3-track
+        au3-utility
+        au3-wave-track
+        au3-wave-track-fft
+        au3-xml
+        libsbsms
+        shared
+)
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 
 set(MODULE_USE_UNITY OFF)

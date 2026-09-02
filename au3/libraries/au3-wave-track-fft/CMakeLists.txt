@@ -14,7 +14,6 @@ PUBLIC
     au3-fft-interface
     au3-strings-interface
 PRIVATE
-    PRIVATE
     wxBase
 )
 

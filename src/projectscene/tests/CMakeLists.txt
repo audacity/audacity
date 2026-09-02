@@ -29,6 +29,25 @@ set(MODULE_TEST_LINK
     record
     context
     au3wrap
+    au3-audio-graph
+    au3-channel
+    au3-files
+    au3-math
+    au3-mixer
+    au3-playable-track
+    au3-preferences
+    au3-sample-track
+    au3-stretching-sequence
+    au3-strings
+    au3-time-frequency-selection
+    au3-wave-track
+    au3-xml
+    au3-wave-track-paint
+    au3-import-export
+    au3-label-track
+    au3-project-file-io
+    au3-musehub
+    au3-track
 
     muse::ui
     muse::uicomponents

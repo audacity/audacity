@@ -29,11 +29,32 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/extensionviewlauncher.h
 )
 
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap trackedit muse::extensions)
+set(MODULE_LINK
+        au3wrap
+        au3-audio-graph
+        au3-channel
+        au3-exceptions
+        au3-files
+        au3-math
+        au3-mixer
+        au3-playable-track
+        au3-preferences
+        au3-registries
+        au3-sample-track
+        au3-stretching-sequence
+        au3-time-frequency-selection
+        au3-xml
+        trackedit
+        muse::extensions
+        au3-command-parameters
+        au3-components
+        au3-effects
+        au3-label-track
+        au3-project
+        au3-strings
+        au3-track
+        au3-wave-track
+)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()

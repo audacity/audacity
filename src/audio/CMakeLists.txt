@@ -25,6 +25,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiothreadsecurer.h
 )
 
-set(MODULE_LINK au3wrap) # For LockFreeQueue
+set(MODULE_LINK
+        au3-utility # For LockFreeQueue
+)
 
 setup_module()

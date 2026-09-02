@@ -20,6 +20,14 @@ set(MODULE_TEST_LINK
     record
     trackedit
     au3wrap
+    au3-channel
+    au3-exceptions
+    au3-files
+    au3-registries
+    au3-strings
+    au3-track
+    au3-utility
+    au3-xml
 
     muse::uicomponents
     muse::ui

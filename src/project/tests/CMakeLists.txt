@@ -19,6 +19,15 @@ set(MODULE_TEST_SRC
 set(MODULE_TEST_LINK
     project
     au3wrap
+    au3-components
+    au3-exceptions
+    au3-files
+    au3-project
+    au3-realtime-effects
+    au3-registries
+    au3-strings
+    au3-utility
+    au3-xml
     trackedit
     muse::actions
     muse::draw

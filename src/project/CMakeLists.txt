@@ -138,14 +138,25 @@ else() # MSVC
     )
 endif()
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
+set(MODULE_LINK
+        au3wrap
+        au3-components
+        au3-exceptions
+        au3-files
+        au3-project
+        au3-project-history
+        au3-realtime-effects
+        au3-registries
+        au3-strings
+        au3-tags
+        au3-xml
+        Qt::Widgets
+)
 
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap Qt::Widgets)
 if (QT_ADD_CONCURRENT)
-    list(APPEND MODULE_LINK Qt::Concurrent)
+    list(APPEND MODULE_LINK
+            Qt::Concurrent
+    )
 endif()
 
 set(MODULE_USE_UNITY OFF)

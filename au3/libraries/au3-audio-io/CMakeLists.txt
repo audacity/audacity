@@ -31,6 +31,7 @@ set( LIBRARIES
    au3-project-rate-interface
    au3-realtime-effects
    au3-strings-interface
+   au3-wave-track # AudioIO.cpp dynamic_casts to WaveTrack (needs its typeinfo at link)
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

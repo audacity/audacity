@@ -37,12 +37,19 @@ set_source_files_properties(
     SKIP_PRECOMPILE_HEADERS ON
 )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-
-set(MODULE_LINK au3wrap au3-audio-unit)
+set(MODULE_LINK
+        au3wrap
+        au3-audio-graph
+        au3-components
+        au3-effects
+        au3-exceptions
+        au3-files
+        au3-math
+        au3-realtime-effects
+        au3-registries
+        au3-strings
+        au3-xml
+        au3-audio-unit
+)
 
 setup_module()

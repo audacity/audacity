@@ -31,11 +31,19 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK
+        au3wrap
+        au3-channel
+        au3-exceptions
+        au3-files
+        au3-label-track
+        au3-preferences
+        au3-registries
+        au3-strings
+        au3-time-frequency-selection
+        au3-utility
+        au3-xml
+        au3-track
+)
 
 setup_module()

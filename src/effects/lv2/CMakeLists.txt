@@ -36,12 +36,25 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/x11idleui.h
 )
 
-set(MODULE_LINK effects_base au3wrap lv2sdk X11)
-
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_DEF ${AU3_DEF})
+set(MODULE_LINK
+        effects_base
+        au3wrap
+        au3-audio-graph
+        au3-components
+        au3-effects
+        au3-exceptions
+        au3-files
+        au3-lv2
+        au3-math
+        au3-module-manager
+        au3-realtime-effects
+        au3-registries
+        au3-strings
+        au3-utility
+        au3-xml
+        lv2sdk
+        X11
+)
 
 set(MODULE_USE_UNITY OFF)
 setup_module()
