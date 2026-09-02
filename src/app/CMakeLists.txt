@@ -302,7 +302,11 @@ endif(CC_IS_MSVC)
 ###########################################
 # Link
 ##########################################
-target_link_libraries(audacity PRIVATE ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
+target_link_libraries(audacity
+        PRIVATE
+        ${LINK_LIB}
+        ${COVERAGE_LINK_FLAGS}
+)
 
 ###########################################
 # Dependencies

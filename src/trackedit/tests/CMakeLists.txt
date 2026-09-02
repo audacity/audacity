@@ -29,15 +29,18 @@ set(MODULE_TEST_SRC
     )
 
 set(MODULE_TEST_LINK
-    trackedit
-    spectrogram
-    au3wrap
+        trackedit
+        spectrogram
+        au3wrap
+        au3-label-track
+        au3-time-frequency-selection
+        au3-wave-track
 
-    muse::ui
-    muse::ui_qml
+        muse::ui
+        muse::ui_qml
 
-    Qt::Quick
-    )
+        Qt::Quick
+)
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
 

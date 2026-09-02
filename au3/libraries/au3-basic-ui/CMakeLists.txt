@@ -21,7 +21,9 @@ set( SOURCES
    BasicUIPoint.h
 )
 set( LIBRARIES
-   au3-strings-interface
+PUBLIC
+   au3-strings
+PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

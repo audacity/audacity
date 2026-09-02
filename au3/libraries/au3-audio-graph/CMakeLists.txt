@@ -17,7 +17,8 @@ set( SOURCES
    AudioGraphTask.h
 )
 set( LIBRARIES
-   au3-math-interface
+PUBLIC
+   au3-math
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

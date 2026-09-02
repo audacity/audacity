@@ -31,19 +31,17 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstpluginsregister.h
 )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE} ${MUSE_FRAMEWORK_SRC_PATH}/vst)
-set(MODULE_DEF ${AU3_DEF})
-
 set(MODULE_LINK
         au3wrap
-        vst_sdk_3 # Note: vst_sdk_3 needed because au3-vst3 public headers expose VST3 SDK types
+        au3-components
+        au3-realtime-effects
+        au3-vst3
 )
 
 if(MUSE_MODULE_VST_QML)
-    list(APPEND MODULE_LINK muse::vst_qml)
+    list(APPEND MODULE_LINK
+            muse::vst_qml
+    )
 endif()
 
 set(MODULE_USE_UNITY OFF)

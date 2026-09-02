@@ -25,11 +25,19 @@ set(SOURCES
 )
 
 set( LIBRARIES
-   au3-project-rate-interface
-   au3-numeric-formats-interface
-   au3-screen-geometry-interface
-   au3-track-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+   au3-preferences
+   au3-registries
+   au3-utility
+PRIVATE
+   au3-numeric-formats
+   au3-project
+   au3-project-rate
+   au3-screen-geometry
+   au3-strings
+   au3-track
+   au3-xml
    wxBase
 )
 

@@ -3,8 +3,8 @@
  */
 #pragma once
 
-#include "async/notification.h"
-#include "global/modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
 #include "trackedit/trackedittypes.h"
 #include <optional>
 

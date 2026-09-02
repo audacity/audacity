@@ -24,6 +24,8 @@ set(MODULE_TEST_INCLUDE
 set(MODULE_TEST_LINK
     record
     au3wrap
+    au3-track
+    au3-wave-track
 
     muse::ui
     )

@@ -19,6 +19,8 @@ set(MODULE_TEST_SRC
 set(MODULE_TEST_LINK
     project
     au3wrap
+    au3-project
+    au3-realtime-effects
     trackedit
     muse::actions
     muse::draw

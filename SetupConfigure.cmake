@@ -209,5 +209,3 @@ endif()
 if (MUE_ENABLE_LOAD_QML_FROM_SOURCE)
     add_definitions(-DMUE_ENABLE_LOAD_QML_FROM_SOURCE)
 endif()
-
-configure_file(${CMAKE_CURRENT_LIST_DIR}/src/app/app_config.h.in app_config.h )

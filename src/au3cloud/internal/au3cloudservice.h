@@ -16,6 +16,7 @@
 
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/cloudtypes.h"
+
 #include "oauthhttpserverreplyhandler.h"
 
 namespace au::au3cloud {
