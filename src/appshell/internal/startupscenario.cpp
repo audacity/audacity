@@ -23,10 +23,9 @@
 #include "startupscenario.h"
 
 #include <QDate>
-#include <QJsonDocument>
-#include <QJsonObject>
 
 #include "framework/global/log.h"
+#include "framework/global/settings.h"
 #include "framework/global/types/uri.h"
 
 #include "appshell/appshelltypes.h"
@@ -34,6 +33,8 @@
 using namespace au::appshell;
 using namespace muse::actions;
 using namespace au::project;
+
+static const muse::Settings::Key LAST_UPDATE_CHECK_DAY_KEY("appshell", "application/lastUpdateCheckRequestDay");
 
 static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("audacity://firstLaunchSetup?floating=true");
 static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
@@ -192,6 +193,13 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
+    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
+        appUpdateScenario()->checkInProgressChanged().onNotify(this, [this, modeType]() {
+            appUpdateScenario()->checkInProgressChanged().disconnect(this);
+            showStartupDialogsIfNeed(modeType);
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+
     showStartupDialogsIfNeed(modeType);
 
     if (!m_startupMediaFiles.empty()) {
@@ -240,34 +248,55 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         return;
     }
 
-    const auto showWelcomePage = [this]() {
-        const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
-        const std::string currentAudacityVersion(configuration()->audacityVersion());
+    // Delay popups until update check finished
+    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
+        return;
+    }
 
-        if (welcomeDialogLastShownVersion < currentAudacityVersion) {
-            configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
-            configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+    const auto showWelcomeDialogIfNeed = [this]() {
+        const auto showWelcomePage = [this]() {
+            const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
+            const std::string currentAudacityVersion(configuration()->audacityVersion());
+
+            if (welcomeDialogLastShownVersion < currentAudacityVersion) {
+                configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
+                configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+            }
+
+            if (!configuration()->welcomeDialogShowOnStartup()) {
+                return;
+            }
+
+            muse::UriQuery query(WELCOME_DIALOG_URI);
+            query.set("modal", false);
+            query.set("floating", true);
+            interactive()->open(query);
+
+            configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
+        };
+
+        if (!configuration()->hasCompletedFirstLaunchSetup()) {
+            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
+                return resolve();
+            });
+        } else {
+            showWelcomePage();
         }
-
-        if (!configuration()->welcomeDialogShowOnStartup()) {
-            return;
-        }
-
-        muse::UriQuery query(WELCOME_DIALOG_URI);
-        query.set("modal", false);
-        query.set("floating", true);
-        interactive()->open(query);
-
-        configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
     };
 
-    if (!configuration()->hasCompletedFirstLaunchSetup()) {
-        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
-            return resolve();
-        });
-    } else {
-        showWelcomePage();
+    if (!appUpdateScenario() || !appUpdateScenario()->hasUpdate()) {
+        showWelcomeDialogIfNeed();
+        return;
     }
+
+    auto promise = appUpdateScenario()->showUpdate();
+    promise.onResolve(this, [showWelcomeDialogIfNeed](const muse::Ret& ret) {
+        // Ok means close the app and install the update
+        if (ret.code() == static_cast<int>(muse::Ret::Code::Ok)) {
+            return;
+        }
+        showWelcomeDialogIfNeed();
+    });
 }
 
 muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
@@ -322,6 +351,8 @@ void StartupScenario::tryCheckForUpdate()
         return;
     }
 
+    muse::settings()->setSharedValue(LAST_UPDATE_CHECK_DAY_KEY, muse::Val(QDate::currentDate().toString(Qt::ISODate).toStdString()));
+
     appUpdateScenario()->checkForUpdate(/*manual*/ false);
 }
 
@@ -350,13 +381,6 @@ bool StartupScenario::isAudioActive() const
 
 bool StartupScenario::alreadyCheckedForUpdateToday() const
 {
-    muse::io::path_t historyPath = updateConfiguration()->updateRequestHistoryJsonPath();
-    muse::RetVal<muse::ByteArray> rv = fileSystem()->readFile(historyPath);
-    if (!rv.ret) {
-        return false;
-    }
-
-    QJsonDocument doc = QJsonDocument::fromJson(rv.val.toQByteArrayNoCopy());
-    QDate previousRequestDay = QDate::fromString(doc.object().value("Previous-Request-Day").toString(), Qt::ISODate);
-    return previousRequestDay == QDate::currentDate();
+    const std::string lastCheckDay = muse::settings()->value(LAST_UPDATE_CHECK_DAY_KEY).toString();
+    return lastCheckDay == QDate::currentDate().toString(Qt::ISODate).toStdString();
 }
