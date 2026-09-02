@@ -68,11 +68,58 @@ set(AU4_BUILD_MODE "dev" CACHE STRING "Build mode")
 
 set(AU4_REVISION "" CACHE STRING "Build revision")
 
+# Modules (alphabetical order please)
+option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
+option(AU_BUILD_APPSHELL_TESTS "Build appshell tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_AU3AUDIO_TESTS "Build au3audio tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_AUTOMATION_TESTS "Build automation tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_CLOUD_AUDIOCOM "Build cloud audiocom module" ON)
+option(AU_BUILD_CONTEXT_TESTS "Build context tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
+option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_IMPORT_TESTS "Build import tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
+option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PREFERENCES_TESTS "Build preferences tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PROJECT_TESTS "Build project tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
+option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_RECORD_MODULE "Build record module" ON)
+option(AU_BUILD_RECORD_TESTS "Build record tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_SHARED_TESTS "Build shared tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
+
+option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
+option(AU_MODULE_EFFECTS_NYQUIST "Build audacity nyquist module" ON)
+
+if (OS_IS_LIN)
+    option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
+endif(OS_IS_LIN)
+
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+    option(AU_MODULE_EFFECTS_AUDIO_UNIT "Build Audacity Audio Unit module" ON)
+endif()
+
+# Time-stretching and pitch-shifting libraries
+option(AU_USE_SBSMS "Build with SBSMS support for time-stretching effects" ON)
+option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects" ON)
+
+# Networking
+option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
+
+# Time track
+option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
+
+# Port mixer
+option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
+
 set(MUSE_MODULE_ACCESSIBILITY ON)
 set(MUSE_MODULE_ACTIONS ON)
 set(MUSE_MODULE_AUDIO OFF)
 set(MUSE_MODULE_AUDIOPLUGINS ON)
-set(MUSE_MODULE_CLOUD ON)
+set(MUSE_MODULE_CLOUD ${AU_BUILD_CLOUD_AUDIOCOM})
 set(MUSE_MODULE_CLOUD_MUSESCORECOM OFF CACHE BOOL "Enable MuseScore.com account" FORCE)
 set(MUSE_MODULE_DIAGNOSTICS ON)
 set(MUSE_MODULE_DRAW ON)
@@ -103,54 +150,6 @@ set(MUSE_MODULE_VST_QML ON)
 if (AU4_BUILD_MODE STREQUAL "release")
     set(MUSE_MODULE_TESTFLOW OFF)
 endif()
-
-# Modules (alphabetical order please)
-option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
-option(AU_BUILD_AUTOMATION_TESTS "Build automation tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_AU3AUDIO_TESTS "Build au3audio tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_CLOUD_AUDIOCOM "Build cloud audiocom module" ON)
-option(AU_BUILD_CONTEXT_TESTS "Build context tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
-option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_IMPORT_TESTS "Build import tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
-option(AU_BUILD_APPSHELL_TESTS "Build appshell tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_PREFERENCES_TESTS "Build preferences tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_PROJECT_TESTS "Build project tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
-option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_RECORD_MODULE "Build record module" ON)
-option(AU_BUILD_RECORD_TESTS "Build record tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_SHARED_TESTS "Build shared tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ${MUSE_ENABLE_UNIT_TESTS})
-option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
-
-option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
-
-option(AU_MODULE_EFFECTS_NYQUIST "Build audacity nyquist module" ON)
-
-if (OS_IS_LIN)
-    option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
-endif(OS_IS_LIN)
-
-if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-    option(AU_MODULE_EFFECTS_AUDIO_UNIT "Build Audacity Audio Unit module" ON)
-endif()
-
-# Time-stretching and pitch-shifting libraries
-option(AU_USE_SBSMS "Build with SBSMS support for time-stretching effects" ON)
-option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects" ON)
-
-# Networking
-option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
-
-# Time track
-option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
-
-# Port mixer
-option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
 
 # === Setup ===
 
