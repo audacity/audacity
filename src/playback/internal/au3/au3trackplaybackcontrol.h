@@ -3,7 +3,6 @@
 */
 #pragma once
 
-#include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
@@ -19,10 +18,10 @@ using au::audio::pan_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Contextable
 {
-    muse::GlobalInject<muse::IApplication> application;
-
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
+
+    friend class Au3TrackPlaybackControlTests;
 
 public:
     Au3TrackPlaybackControl(const muse::modularity::ContextPtr& ctx)
@@ -34,10 +33,11 @@ public:
     void setPan(long trackId, au::audio::pan_t pan, bool completed) override;
 
     bool solo(long trackId) const override;
-    void setSolo(long trackId, bool solo) override;
+    void setSolo(long trackId, bool solo, bool exclusive) override;
 
     bool muted(long trackId) const override;
-    void setMuted(long trackId, bool mute) override;
+    void setMuted(long trackId, bool mute, bool exclusive) override;
+    void setMuted(const trackedit::TrackIdList& trackIds, bool mute) override;
 
     muse::async::Channel<long> muteOrSoloChanged() const override;
 
@@ -48,7 +48,8 @@ private:
     };
 
     au3::Au3Project& projectRef() const;
-    void setMuteOrSolo(long trackId, bool value, MuteOrSolo which);
+    bool setMuteOrSolo(long trackId, bool value, MuteOrSolo which, bool exclusive);
+    void onMuteOrSoloChanged();
 
     muse::async::Channel<long> m_muteOrSoloChanged;
 };

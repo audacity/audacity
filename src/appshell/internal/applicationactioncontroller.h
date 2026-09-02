@@ -132,6 +132,7 @@ private:
     void doGlobalCancel();
     void doGlobalTrigger();
     void doGlobalEnter();
+    void doGlobalShiftEnter();
 
     bool m_quiting = false;
 

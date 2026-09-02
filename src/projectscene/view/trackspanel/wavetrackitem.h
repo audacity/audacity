@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "framework/global/iapplication.h"
+
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "playback/iplayback.h"
 #include "playback/itrackplaybackcontrol.h"
@@ -29,6 +31,7 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+    muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
     muse::ContextInject<playback::IPlayback> playback{ this };
