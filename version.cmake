@@ -13,11 +13,7 @@ set(MUSE_APP_VERSION "${MUSE_APP_VERSION_MAJ_MIN}.${MUSE_APP_VERSION_PATCH}")
 
 set(MUSE_APP_VERSION_LABEL "beta.4")
 
-# Must differ from Audacity 3's "org.audacityteam.audacity" by more than case: LaunchServices compares
-# bundle identifiers case-insensitively and merges the two apps' records (icons, localizations).
-# Kept equal to the QSettings/CFPreferences domain derived in src/app/main.cpp
-# (organizationDomain "audacityteam.org" + applicationName "Audacity4"), so AppKit and Qt share one domain.
-set(MUSE_APP_GUI_IDENTIFIER org.audacityteam.${MUSE_APP_NAME_MACHINE_READABLE_COMPAT}${MUSE_APP_VERSION_MAJOR})
+set(MUSE_APP_GUI_IDENTIFIER org.audacityteam.audacity4)
 
 set(MUSE_APP_TITLE "${MUSE_APP_NAME_HUMAN_READABLE}")
 set(MUSE_APP_NAME "${MUSE_APP_NAME_MACHINE_READABLE_COMPAT}")
