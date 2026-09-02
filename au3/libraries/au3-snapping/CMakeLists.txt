@@ -30,6 +30,7 @@ set( LIBRARIES
    au3-screen-geometry-interface
    au3-track-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 

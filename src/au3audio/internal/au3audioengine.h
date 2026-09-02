@@ -3,7 +3,8 @@
 */
 #pragma once
 
-#include "global/modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
 #include "audio/iaudioengine.h"
 #include "record/irecordconfiguration.h"
 

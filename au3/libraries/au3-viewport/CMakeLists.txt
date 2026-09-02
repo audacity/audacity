@@ -14,6 +14,7 @@ set( LIBRARIES
    au3-snapping-interface
    au3-track-selection-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -37,6 +37,7 @@ set( LIBRARIES
    au3-channel-interface
    au3-project-history-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

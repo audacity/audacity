@@ -21,6 +21,7 @@ set( LIBRARIES
    au3-module-manager-interface
    au3-project-history-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

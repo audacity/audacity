@@ -35,6 +35,7 @@ set( LIBRARIES
    au3-xml-interface
    au3-ipc-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

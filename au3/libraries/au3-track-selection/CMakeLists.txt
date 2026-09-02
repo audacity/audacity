@@ -19,6 +19,7 @@ set( SOURCES
 set( LIBRARIES
    au3-time-frequency-selection-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

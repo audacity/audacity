@@ -35,7 +35,7 @@ set ( LIBRARIES
     au3-string-utils-interface
     au3-preferences-interface
     au3-concurrency-interface
-PRIVATE
+    PRIVATE
     au3-exceptions-interface
     au3-strings-interface
     wxBase

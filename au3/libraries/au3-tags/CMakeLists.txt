@@ -12,6 +12,7 @@ set( LIBRARIES
    au3-project-history-interface
    au3-file-formats-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

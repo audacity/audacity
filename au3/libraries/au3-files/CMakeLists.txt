@@ -32,6 +32,7 @@ set( LIBRARIES
    au3-exceptions-interface
    au3-preferences-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 set(DEFINES

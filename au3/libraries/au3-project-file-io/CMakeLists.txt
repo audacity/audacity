@@ -24,6 +24,7 @@ set( SOURCES
 set( LIBRARIES
    au3-wave-track-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 

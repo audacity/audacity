@@ -56,6 +56,7 @@ set( LIBRARIES
    # will be defined
    au3-sentry-reporting-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 

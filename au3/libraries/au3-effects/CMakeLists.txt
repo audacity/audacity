@@ -35,6 +35,7 @@ set( LIBRARIES
    au3-stretching-sequence-interface
    au3-wave-track-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

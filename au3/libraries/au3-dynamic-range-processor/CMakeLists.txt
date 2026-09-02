@@ -29,6 +29,7 @@ set( SOURCES
 set( LIBRARIES
    au3-utility
    au3-strings
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

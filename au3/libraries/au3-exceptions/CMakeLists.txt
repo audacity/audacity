@@ -29,6 +29,7 @@ set( LIBRARIES
    au3-utility-interface
    au3-basic-ui-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 

@@ -20,7 +20,8 @@ if(${_OPT}has_sentry_reporting)
     )
 
 
-    set ( LIBRARIES PRIVATE
+    set ( LIBRARIES
+            PRIVATE
         au3-network-manager # Required for the networking
         au3-string-utils # ToUtf8
         au3-uuid # UUIDs are required as an event identifier.

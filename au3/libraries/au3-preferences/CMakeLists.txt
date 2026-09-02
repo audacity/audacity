@@ -26,6 +26,7 @@ set( LIBRARIES
    au3-basic-ui-interface
    au3-components-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

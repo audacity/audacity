@@ -69,7 +69,10 @@ if (OS_IS_WIN)
         internal/platform/win/winframelesswindowcontroller.h
     )
 
-    set(MODULE_LINK ${MODULE_LINK} dwmapi)
+    set(MODULE_LINK
+            ${MODULE_LINK}
+            dwmapi
+    )
 endif(OS_IS_WIN)
 
 qt_add_resources(appshell appshell_resources

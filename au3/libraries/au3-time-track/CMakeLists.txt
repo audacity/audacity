@@ -14,6 +14,7 @@ set( LIBRARIES
    au3-project-rate-interface
    au3-track-interface
    au3-strings-interface
+    PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
