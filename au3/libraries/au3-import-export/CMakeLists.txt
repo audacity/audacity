@@ -33,8 +33,6 @@ set( SOURCES
    ImportProgressListener.h
    ImportUtils.cpp
    ImportUtils.h
-   LibsndfileTagger.cpp
-   LibsndfileTagger.h
    PlainExportOptionsEditor.cpp
    PlainExportOptionsEditor.h
 )
