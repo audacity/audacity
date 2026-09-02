@@ -1,12 +1,13 @@
 /*
  * Audacity: A Digital Audio Editor
  *
- * AU Test Gate: a VST3 effect whose *module load* is controlled by a gate file,
- * so plugin validation / loading can be held, released, or made to fail on
- * purpose while testing the non-blocking plugin validation (#11746).
+ * Audacity test VST3 plugin: a VST3 effect whose *module load* is controlled by a
+ * gate file, so plugin validation / loading can be held, released, or made to fail
+ * on purpose while testing the non-blocking plugin validation (#11746).
  *
- * When processing it applies a strong amplitude tremolo (full-depth ~5 Hz), so
- * whether the effect is active or bypassed is immediately audible - handy for
+ * When processing it applies an amplitude tremolo (~5 Hz) whose depth is set by an
+ * "Effect depth" parameter, so whether the effect is active/bypassed - and whether a
+ * saved parameter value survived a reload - is immediately audible. Handy for
  * checking that a plugin can be re-validated while a track using it is playing.
  *
  * Gate file: $AU_TEST_VST3_GATE_FILE, or <temp dir>/au_test_vst3_gate.
@@ -32,6 +33,8 @@
 #include "public.sdk/source/main/pluginfactory.h"
 #include "public.sdk/source/vst/vstsinglecomponenteffect.h"
 #include "pluginterfaces/vst/ivstaudioprocessor.h"
+#include "pluginterfaces/vst/ivstparameterchanges.h"
+#include "base/source/fstreamer.h"
 
 using namespace Steinberg;
 using namespace Steinberg::Vst;
@@ -111,6 +114,8 @@ bool DeinitModule()
 }
 
 namespace {
+constexpr ParamID kDepthParamId = 0;
+
 class AuTestGateEffect : public SingleComponentEffect
 {
 public:
@@ -127,7 +132,36 @@ public:
         }
         addAudioInput(STR16("Stereo In"), SpeakerArr::kStereo);
         addAudioOutput(STR16("Stereo Out"), SpeakerArr::kStereo);
+        parameters.addParameter(STR16("Effect depth"), nullptr, 0, 1.0,
+                                ParameterInfo::kCanAutomate, kDepthParamId);
         return kResultOk;
+    }
+
+    // Persist the depth parameter as the component state, so a saved value round-trips
+    // with the project. This is what makes the plugin useful for checking that a
+    // late-loaded effect keeps its saved settings.
+    tresult PLUGIN_API setState(IBStream* state) override
+    {
+        if (!state) {
+            return kResultFalse;
+        }
+        IBStreamer streamer(state, kLittleEndian);
+        float depth = 1.f;
+        if (!streamer.readFloat(depth)) {
+            return kResultFalse;
+        }
+        m_depth = depth;
+        setParamNormalized(kDepthParamId, depth);
+        return kResultOk;
+    }
+
+    tresult PLUGIN_API getState(IBStream* state) override
+    {
+        if (!state) {
+            return kResultFalse;
+        }
+        IBStreamer streamer(state, kLittleEndian);
+        return streamer.writeFloat(static_cast<float>(m_depth)) ? kResultOk : kResultFalse;
     }
 
     tresult PLUGIN_API setBusArrangements(SpeakerArrangement* inputs, int32 numIns, SpeakerArrangement* outputs,
@@ -151,11 +185,31 @@ public:
         return SingleComponentEffect::setupProcessing(setup);
     }
 
-    // Full-depth amplitude tremolo: output = input * (0.5 - 0.5*cos(phase)), so the
-    // gain sweeps 0..1 at kLfoHz. Deliberately obvious, so the effect being active
-    // vs bypassed is clearly audible (bypass is handled by the host not calling us).
+    // Amplitude tremolo whose depth is the "Effect depth" parameter:
+    //   gain = 1 - depth * (0.5 + 0.5*cos(phase))
+    // depth=0 is pass-through, depth=1 sweeps the gain across the full 0..1 range at
+    // kLfoHz. Deliberately obvious, so the effect being active vs bypassed (and the
+    // saved depth value) is clearly audible. Bypass is handled by the host not
+    // calling us.
     tresult PLUGIN_API process(ProcessData& data) override
     {
+        // Pick up depth-parameter changes; block granularity is plenty for a test.
+        if (data.inputParameterChanges) {
+            const int32 numParams = data.inputParameterChanges->getParameterCount();
+            for (int32 p = 0; p < numParams; ++p) {
+                IParamValueQueue* const queue = data.inputParameterChanges->getParameterData(p);
+                if (!queue || queue->getParameterId() != kDepthParamId) {
+                    continue;
+                }
+                ParamValue value = 0.0;
+                int32 sampleOffset = 0;
+                const int32 pointCount = queue->getPointCount();
+                if (pointCount > 0 && queue->getPoint(pointCount - 1, sampleOffset, value) == kResultTrue) {
+                    m_depth = value;
+                }
+            }
+        }
+
         if (data.numInputs == 0 || data.numOutputs == 0 || data.numSamples == 0) {
             return kResultOk;
         }
@@ -168,7 +222,7 @@ public:
 
         double phase = m_lfoPhase;
         for (int32 i = 0; i < data.numSamples; ++i) {
-            const float gain = static_cast<float>(0.5 - 0.5 * std::cos(phase));
+            const float gain = static_cast<float>(1.0 - m_depth * (0.5 + 0.5 * std::cos(phase)));
             for (int32 ch = 0; ch < channels; ++ch) {
                 out.channelBuffers32[ch][i] = in.channelBuffers32[ch][i] * gain;
             }
@@ -188,6 +242,7 @@ private:
     static constexpr double kLfoHz = 5.0;
     double m_sampleRate = 44100.0;
     double m_lfoPhase = 0.0;
+    double m_depth = 1.0;
 };
 
 const FUID kAuTestGateUID(0x7A3E9C41, 0x2B6D4F58, 0x9E1C3A7F, 0x5D2B8E64);
@@ -197,7 +252,7 @@ BEGIN_FACTORY_DEF("Audacity Test", "https://www.audacityteam.org", "mailto:norep
 DEF_CLASS2(INLINE_UID_FROM_FUID(kAuTestGateUID),
            PClassInfo::kManyInstances,
            kVstAudioEffectClass,
-           "AU Test Gate",
+           "Audacity test VST3 plugin",
            Vst::kDistributable,
            Vst::PlugType::kFx,
            "1.0.0",
