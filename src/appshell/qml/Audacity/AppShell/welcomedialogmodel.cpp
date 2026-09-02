@@ -62,6 +62,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 dispatcher()->dispatch(query);
             }
         },
+#ifndef Q_OS_LINUX
         {
             muse::qtrc("appshell/welcome", "Explore free plugins for sculpting your audio"),
             "qrc:/resources/welcomedialog/MuseHubPromo.jpg",
@@ -71,6 +72,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 dispatcher()->dispatch("get-effects");
             }
         },
+#endif
         {
             muse::qtrc("appshell/welcome", "Help us decide the future of Audacity"),
             "qrc:/resources/welcomedialog/Audacity_Feature_Survey.png",
