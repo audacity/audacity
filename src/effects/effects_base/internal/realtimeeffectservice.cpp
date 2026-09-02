@@ -51,6 +51,37 @@ void RealtimeEffectService::init()
     { onProjectChanged(globalContext()->currentProject()); });
 
     onProjectChanged(globalContext()->currentProject());
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
+        // In case an effect of this project transited from `PreviouslyValidated` to `NewlyValidated`.
+        buildNewlyValidatedRealtimeEffects();
+    });
+}
+
+namespace {
+void buildList(RealtimeEffectList& list)
+{
+    for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+        // No-op once the plugin is built; when it has just become validated
+        // this builds mPlugin and its (VST3) settings.
+        list.GetStateAt(i)->GetEffect();
+    }
+}
+}
+
+void RealtimeEffectService::buildNewlyValidatedRealtimeEffects()
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    auto& trackList = TrackList::Get(*au3Project);
+    for (WaveTrack* track : trackList.Any<WaveTrack>()) {
+        buildList(RealtimeEffectList::Get(*track));
+    }
+    buildList(RealtimeEffectList::Get(*au3Project));
 }
 
 void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProjectPtr& project)
