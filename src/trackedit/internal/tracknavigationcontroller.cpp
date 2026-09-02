@@ -597,7 +597,9 @@ void TrackNavigationController::replaceSelection()
     }
 
     m_lastSelectedTrack = isSelect ? std::optional<TrackId>(m_focusedItemKey.trackId) : std::nullopt;
-    m_lastSelectedItem = (isSelect && !isTrackPanel) ? m_focusedItemKey : TrackItemKey {};
+    if (isSelect && !isTrackPanel) {
+        selectionController()->setItemSelectionAnchor(itemStartTime(m_focusedItemKey), m_focusedItemKey);
+    }
 }
 
 void TrackNavigationController::toggleSelection()
@@ -611,6 +613,7 @@ void TrackNavigationController::toggleSelection()
                 selectionController()->removeLabelSelection(m_focusedItemKey);
             } else {
                 selectionController()->addSelectedLabel(m_focusedItemKey);
+                selectionController()->setItemSelectionAnchor(itemStartTime(m_focusedItemKey), m_focusedItemKey);
             }
         } else {
             ClipKeyList selectedClips = selectionController()->selectedClips();
@@ -618,10 +621,9 @@ void TrackNavigationController::toggleSelection()
                 selectionController()->removeClipSelection(m_focusedItemKey);
             } else {
                 selectionController()->addSelectedClip(m_focusedItemKey);
+                selectionController()->setItemSelectionAnchor(itemStartTime(m_focusedItemKey), m_focusedItemKey);
             }
         }
-
-        m_lastSelectedItem = m_focusedItemKey;
     } else {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
         const TrackId focusedTrack = m_focusedItemKey.trackId;
@@ -642,9 +644,9 @@ void TrackNavigationController::rangeSelection()
     bool isSelect = false;
 
     if (!isTrackPanel) {
-        ClipAndLabelKeys range = selectionController()->itemKeysInRange(m_lastSelectedItem, m_focusedItemKey);
-        if (range.empty()) {
-            m_lastSelectedItem = m_focusedItemKey;
+        ClipAndLabelKeys range = selectionController()->itemKeysInRange(m_focusedItemKey);
+        const bool startNewSelection = range.empty();
+        if (startNewSelection) {
             if (isFocusedItemLabel()) {
                 range.labels.push_back(m_focusedItemKey);
             } else {
@@ -654,6 +656,10 @@ void TrackNavigationController::rangeSelection()
 
         selectionController()->setSelectedClips(range.clips);
         selectionController()->setSelectedLabels(range.labels);
+
+        if (startNewSelection) {
+            selectionController()->setItemSelectionAnchor(itemStartTime(m_focusedItemKey), m_focusedItemKey);
+        }
 
         return;
     } else {

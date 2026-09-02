@@ -107,7 +107,6 @@ private:
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
-    TrackItemKey m_lastSelectedItem;
 
     std::optional<double> m_savedItemStartTime;
 
