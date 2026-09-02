@@ -7,29 +7,6 @@
 #include "au3-module-manager/ConfigInterface.h"
 #include "VST3Utils.h"
 
-namespace {
-unsigned CountChannels(Steinberg::Vst::IComponent* component,
-                       const Steinberg::Vst::MediaTypes mediaType,
-                       const Steinberg::Vst::BusDirection busDirection,
-                       const Steinberg::Vst::BusType busType)
-{
-    using namespace Steinberg;
-
-    unsigned channelsCount{ 0 };
-
-    const auto busCount = component->getBusCount(mediaType, busDirection);
-    for (auto i = 0; i < busCount; ++i) {
-        Vst::BusInfo busInfo;
-        if (component->getBusInfo(mediaType, busDirection, i, busInfo) == kResultOk) {
-            if (busInfo.busType == busType) {
-                channelsCount += busInfo.channelCount;
-            }
-        }
-    }
-    return channelsCount;
-}
-}
-
 VST3Instance::VST3Instance(const PerTrackEffect& effect, VST3::Hosting::Module& module, const VST3::Hosting::ClassInfo& effectClassInfo)
     : Instance(effect)
 {
@@ -189,7 +166,7 @@ VST3Wrapper& VST3Instance::GetWrapper()
 unsigned VST3Instance::GetAudioInCount() const
 {
     //setupProcessing should be called first
-    return CountChannels(
+    return VST3Utils::CountChannels(
         mWrapper->mEffectComponent,
         Steinberg::Vst::kAudio,
         Steinberg::Vst::kInput,
@@ -200,7 +177,7 @@ unsigned VST3Instance::GetAudioInCount() const
 unsigned VST3Instance::GetAudioOutCount() const
 {
     //setupProcessing should be called first
-    return CountChannels(
+    return VST3Utils::CountChannels(
         mWrapper->mEffectComponent,
         Steinberg::Vst::kAudio,
         Steinberg::Vst::kOutput,
