@@ -27,6 +27,11 @@ const AccountInfo& AuthorizationStub::accountInfo() const
     return empty;
 }
 
+muse::async::Notification AuthorizationStub::accountInfoChanged() const
+{
+    return {};
+}
+
 muse::ValCh<AuthState> AuthorizationStub::authState() const
 {
     muse::ValCh<AuthState> result;
