@@ -2,7 +2,7 @@
 
 std::vector<u_int8_t> CVSDEncode(std::vector<int16_t> temp, CVSD_CONFIG& current_config, size_t numSamples)
 {
-    auto audioBuffer = temp;
+    const auto& audioBuffer = temp;
     std::vector<u_int8_t> EncoderOutput;
     u_int8_t currentByte = 0;
     int bitCount = 0;

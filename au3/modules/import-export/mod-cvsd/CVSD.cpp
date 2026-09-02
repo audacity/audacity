@@ -16,6 +16,6 @@ https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/ou
 // ld: symbol(s) not found for architecture arm64
 // clang++: error: linker command failed with exit code 1 (use -v to see invocation)
 
-#include "ModuleConstants.h"
+#include "au3-utility/ModuleConstants.h"
 
 DEFINE_MODULE_ENTRIES

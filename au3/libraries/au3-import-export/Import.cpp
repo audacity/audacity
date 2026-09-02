@@ -174,7 +174,7 @@ bool Importer::Initialize()
         PathStart,
         // FFmpeg is in default of all other modules that might handle a format
         // better and specially; including MIDI import
-        { { wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,WavPack,portsmf,FFmpeg") } }
+        { { wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,WavPack,portsmf,FFmpeg,CVSD") } }
     };
 
     // Once only, visit the registry to collect the plug-ins properly
