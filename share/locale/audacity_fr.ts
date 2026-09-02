@@ -9760,7 +9760,7 @@ Canal de droite</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation type="unfinished"/>
+        <translation>Définir le &apos;nombre de mesures&apos; à zéro pour activer la &apos;durée de la piste de rythme&apos;.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
@@ -10431,7 +10431,7 @@ Daulton</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation type="unfinished"/>
+        <translation>Paulstretch est réservé à un effet d&apos;étirement temporel extrême ou de &quot;stase&quot;.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -10457,7 +10457,10 @@ ou de réduire la &apos;résolution temporelle&apos; à moins de %2 secondes.</t
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Impossible de pré-écouter.
+
+Pour la sélection audio courante, la
+&apos;résolution temporelle&apos; maximum est de %1 secondes.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
@@ -15215,12 +15218,12 @@ Veuillez télécharger la dernière version de &apos;LAME pour Audacity&apos;.</
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
         <source>Exporting selected audio with %1 preset</source>
-        <translation>Exportation de la sélection audio avec le préréglage %1</translation>
+        <translation>Exportation de la sélection audio avec le preset %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>
         <source>Exporting the audio with %1 preset</source>
-        <translation>Exportation de l’audio avec le préréglage %1</translation>
+        <translation>Exportation de l’audio avec le preset %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1503"/>

@@ -17990,7 +17990,7 @@ Nie zostanie załadowany.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Pokaż okno dialogowe „Gdzie chcesz wyeksportować?”</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18005,12 +18005,12 @@ Nie zostanie załadowany.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Zawsze zapisuj w chmurze</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Zawsze zapisuj na komputerze</translation>
     </message>
 </context>
 <context>
@@ -19169,7 +19169,7 @@ Musisz uruchomić tę wersję Audacity, aby odzyskać projekt.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Eksportuj na komputer</translation>
     </message>
 </context>
 <context>
