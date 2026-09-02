@@ -14,7 +14,7 @@ rm -f $ENV_FILE
 
 echo "echo 'Setup build environment'" >> $ENV_FILE
 
-export MACOSX_DEPLOYMENT_TARGET=10.15
+export MACOSX_DEPLOYMENT_TARGET=13.0
 
 # fixing install python 3.9 error (it is a dependency for ninja)
 rm '/usr/local/bin/2to3'
