@@ -8,5 +8,5 @@ add_unit_test(
    SOURCES
       CryptoTests.cpp
    LIBRARIES
-      au3-crypto-interface
+      au3-crypto
 )

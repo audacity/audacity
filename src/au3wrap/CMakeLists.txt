@@ -274,6 +274,17 @@ set(MODULE_LINK
 )
 
 set(MODULE_LINK_PUBLIC
+        # au3 libraries exposed by au3wrap's own public headers - consumers get
+        # these transitively and only declare the au3 libraries they include directly
+        au3-audio-devices
+        au3-basic-ui
+        au3-label-track
+        au3-project
+        au3-registries
+        au3-track
+        au3-utility
+        au3-wave-track
+
         # TODO: this isn't nice, we should avoid Wx dependencies in AU4 modules.
         # wxBase must stay PUBLIC for now: the au3 libraries link wxBase PRIVATE,
         # so this is the only path providing wx include dirs to the many AU4 files

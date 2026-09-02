@@ -140,16 +140,7 @@ endif()
 
 set(MODULE_LINK
         au3wrap
-        au3-components
-        au3-exceptions
-        au3-files
-        au3-project
-        au3-project-history
-        au3-realtime-effects
-        au3-registries
-        au3-strings
         au3-tags
-        au3-xml
         Qt::Widgets
 )
 

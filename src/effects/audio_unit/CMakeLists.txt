@@ -39,16 +39,8 @@ set_source_files_properties(
 
 set(MODULE_LINK
         au3wrap
-        au3-audio-graph
-        au3-components
         au3-effects
-        au3-exceptions
-        au3-files
-        au3-math
         au3-realtime-effects
-        au3-registries
-        au3-strings
-        au3-xml
         au3-audio-unit
 )
 

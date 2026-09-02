@@ -181,44 +181,24 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitchviewmodel.h
     )
 
-# AU3
-set(MODULE_DEF ${MODULE_DEF}
-    -DBUILTIN_EFFECTS_API=
-    # Note: USE_SOUNDTOUCH and USE_SBSMS are now set as PUBLIC compile definitions
-    # by the soundtouch and libsbsms targets, so they propagate automatically when linked
-    # Note: NOTE_TRACK_API is only needed if USE_MIDI is defined
-    # Currently MIDI support is not enabled in AU4
-    # -DNOTE_TRACK_API=
-)
-
+# Note: NOTE_TRACK_API would only be needed with USE_MIDI, which AU4 does not enable.
 set(MODULE_LINK
         au3wrap
-        au3-audio-graph
         au3-basic-ui
-        au3-channel
         au3-command-parameters
         au3-components
         au3-dynamic-range-processor
-        au3-exceptions
         au3-fft
-        au3-files
         au3-label-track
         au3-math
+        au3-module-manager # via effects_base/internal/au3/au3effectsutils.h
         au3-mixer
-        au3-module-manager
-        au3-playable-track
         au3-preferences
-        au3-registries
-        au3-sample-track
-        au3-stretching-sequence
         au3-strings
-        au3-time-frequency-selection
         au3-track
         au3-utility
         au3-wave-track
         au3-wave-track-fft
-        au3-xml
-        libsbsms
         shared
 )
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)

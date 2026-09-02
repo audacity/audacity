@@ -94,10 +94,6 @@ function(import_export_symbol var module_name)
    set("${var}" "${symbol}" PARENT_SCOPE)
 endfunction()
 
-# Note: each library exports its own API define (e.g. -DUTILITY_API=) PUBLIC via
-# audacity_library(), so cross-library API macros propagate through the declared
-# PUBLIC/PRIVATE link dependencies - there is no blanket list of API defines.
-
 # Macro to define an AU3 library
 # Usage: audacity_library(NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES)
 # This matches the signature from AU3's AudacityFunctions.cmake
@@ -119,7 +115,6 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     # Parse the IMPORT_TARGETS list to separate PUBLIC, PRIVATE, and INTERFACE
     set(_public_libs "")
     set(_private_libs "")
-    set(_interface_libs "")
     set(_current_scope "public")
 
     foreach(lib ${IMPORT_TARGETS})
@@ -127,21 +122,8 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
             set(_current_scope "public")
         elseif(lib STREQUAL "PRIVATE")
             set(_current_scope "private")
-        elseif(lib STREQUAL "INTERFACE")
-            set(_current_scope "interface")
         else()
-            # Check if this is an interface library (e.g., au3-utility-interface)
-            string(REGEX MATCH "-interface$" is_interface "${lib}")
-
-            if(is_interface)
-                # Remove -interface suffix and add as INTERFACE dependency
-                # This gives us include paths without linking the library
-                string(REPLACE "-interface" "" lib_without_interface "${lib}")
-                list(APPEND _interface_libs ${lib_without_interface})
-            else()
-                # Regular library - add to current scope
-                list(APPEND _${_current_scope}_libs ${lib})
-            endif()
+            list(APPEND _${_current_scope}_libs ${lib})
         endif()
     endforeach()
 
@@ -155,23 +137,6 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
             ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-    # Add PRIVATE include directories for AU3 library dependencies
-    # This allows the library to include headers from its dependencies
-    set(_private_includes "")
-    foreach(lib ${_interface_libs})
-        # Add the include directory of the interface library
-        # Interface libraries provide headers without linking
-        if(TARGET ${lib})
-            get_target_property(_lib_includes ${lib} INTERFACE_INCLUDE_DIRECTORIES)
-            if(_lib_includes)
-                list(APPEND _private_includes ${_lib_includes})
-            endif()
-        endif()
-    endforeach()
-    if(_private_includes)
-        target_include_directories(${au3_target_name} PRIVATE ${_private_includes})
-    endif()
-
     # Link libraries with proper scopes
     if(_public_libs)
         target_link_libraries(${au3_target_name} PUBLIC ${_public_libs})
@@ -179,13 +144,6 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     if(_private_libs)
         target_link_libraries(${au3_target_name} PRIVATE ${_private_libs})
     endif()
-    # Link interface libraries as PRIVATE dependencies
-    # The -interface suffix indicates that the library should not be part of the
-    # public API, but we still need to link it to resolve symbols
-    if(_interface_libs)
-        target_link_libraries(${au3_target_name} PRIVATE ${_interface_libs})
-    endif()
-
     # Add ADDITIONAL_LIBRARIES if provided
     # Note: In macros, we need to check the actual value, not just the parameter name
     if(NOT "${ADDITIONAL_LIBRARIES}" STREQUAL "")
@@ -291,35 +249,11 @@ macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
     target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
     target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
 
-    # define an additional interface library target
-    make_interface_alias(${NAME} "SHARED")
-
     # just for graphviz
 #    collect_edges( ${NAME} "${IMPORT_TARGETS}" "SHARED" )
     set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 endmacro()
 
-function ( make_interface_alias TARGET REAL_LIBTYTPE )
-    set(INTERFACE_TARGET "${TARGET}-interface")
-    if (NOT REAL_LIBTYPE STREQUAL "MODULE")
-        add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
-    else()
-        add_library("${INTERFACE_TARGET}" INTERFACE)
-        foreach(PROP
-                INTERFACE_INCLUDE_DIRECTORIES
-                INTERFACE_COMPILE_DEFINITIONS
-                INTERFACE_LINK_LIBRARIES
-                AUDACITY_GRAPH_DEPENDENCIES
-        )
-            get_target_property( PROPS "${TARGET}" "${PROP}" )
-            if (PROPS)
-                set_target_properties(
-                        "${INTERFACE_TARGET}"
-                        PROPERTIES "${PROP}" "${PROPS}" )
-            endif()
-        endforeach()
-    endif()
-endfunction()
 
 # Macro to add a unit test for an AU3 library
 # Usage: add_unit_test(NAME name SOURCES sources... LIBRARIES libraries...)

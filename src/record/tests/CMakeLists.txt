@@ -24,22 +24,8 @@ set(MODULE_TEST_INCLUDE
 set(MODULE_TEST_LINK
     record
     au3wrap
-    au3-audio-graph
-    au3-channel
-    au3-exceptions
-    au3-files
-    au3-math
-    au3-mixer
-    au3-playable-track
-    au3-preferences
-    au3-registries
-    au3-sample-track
-    au3-stretching-sequence
-    au3-strings
     au3-track
-    au3-utility
     au3-wave-track
-    au3-xml
 
     muse::ui
     )

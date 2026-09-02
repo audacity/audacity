@@ -32,24 +32,9 @@ set(MODULE_TEST_LINK
         trackedit
         spectrogram
         au3wrap
-        au3-audio-graph
-        au3-channel
-        au3-exceptions
-        au3-files
         au3-label-track
-        au3-math
-        au3-mixer
-        au3-playable-track
-        au3-preferences
-        au3-registries
-        au3-sample-track
-        au3-stretching-sequence
         au3-time-frequency-selection
-        au3-track
-        au3-utility
         au3-wave-track
-        au3-xml
-        au3-strings
 
         muse::ui
         muse::ui_qml

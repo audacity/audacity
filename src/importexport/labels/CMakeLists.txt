@@ -33,16 +33,8 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 set(MODULE_LINK
         au3wrap
-        au3-channel
-        au3-exceptions
         au3-files
         au3-label-track
-        au3-preferences
-        au3-registries
-        au3-strings
-        au3-time-frequency-selection
-        au3-utility
-        au3-xml
         au3-track
 )
 

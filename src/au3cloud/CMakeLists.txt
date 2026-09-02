@@ -51,28 +51,14 @@ endif()
 
 set(MODULE_LINK
         au3wrap
-        au3-audio-graph
-        au3-channel
-        au3-exceptions
-        au3-files
         au3-import-export
-        au3-math
-        au3-mixer
         au3-network-manager
-        au3-playable-track
         au3-preferences
         au3-project-file-io
         au3-project-rate
-        au3-registries
-        au3-sample-track
-        au3-sqlite-helpers
-        au3-stretching-sequence
-        au3-strings
         au3-string-utils
-        au3-track
         au3-utility
         au3-wave-track
-        au3-xml
         Qt6::Network
         Qt6::NetworkAuth
         au3-cloud-audiocom

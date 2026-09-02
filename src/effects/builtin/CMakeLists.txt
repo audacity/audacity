@@ -33,13 +33,10 @@ set(MODULE_SRC
 
 set(MODULE_LINK
         au3wrap
-        au3-strings
-        au3-utility
 )
 
 set(MODULE_LINK_PUBLIC
         au3-effects
-        au3-builtin-effects
         au3-components # exposed by this module's public headers
 )
 

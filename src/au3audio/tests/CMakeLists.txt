@@ -12,14 +12,6 @@ set(MODULE_TEST_SRC
 set(MODULE_TEST_LINK
     au3audio
     au3wrap
-    au3-channel
-    au3-exceptions
-    au3-files
-    au3-registries
-    au3-strings
-    au3-track
-    au3-utility
-    au3-xml
     )
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})

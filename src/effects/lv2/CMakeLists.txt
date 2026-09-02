@@ -39,19 +39,11 @@ set(MODULE_SRC
 set(MODULE_LINK
         effects_base
         au3wrap
-        au3-audio-graph
         au3-components
         au3-effects
-        au3-exceptions
-        au3-files
         au3-lv2
-        au3-math
         au3-module-manager
         au3-realtime-effects
-        au3-registries
-        au3-strings
-        au3-utility
-        au3-xml
         lv2sdk
         X11
 )

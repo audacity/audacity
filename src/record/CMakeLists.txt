@@ -45,27 +45,13 @@ set(MODULE_SRC
 set(MODULE_LINK
         au3wrap
         au3-audio-devices
-        au3-audio-graph
         au3-audio-io
-        au3-channel
-        au3-exceptions
-        au3-files
-        au3-label-track
-        au3-math
-        au3-mixer
-        au3-playable-track
-        au3-preferences
         au3-project-rate
-        au3-registries
-        au3-sample-track
-        au3-screen-geometry
         au3-stretching-sequence
         au3-strings
         au3-time-frequency-selection
         au3-track
-        au3-utility
         au3-wave-track
-        au3-xml
 )
 
 set(MODULE_USE_UNITY OFF)

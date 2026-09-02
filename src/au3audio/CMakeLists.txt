@@ -66,22 +66,11 @@ set(MODULE_LINK
         au3-audio-io
         au3wrap
         au3-audio-devices
-        au3-audio-graph
-        au3-channel
-        au3-components
-        au3-exceptions
-        au3-files
         au3-math
-        au3-mixer
-        au3-preferences
         au3-project-rate
-        au3-registries
-        au3-screen-geometry
-        au3-strings
         au3-time-frequency-selection
         au3-track
         au3-utility
-        au3-xml
 )
 
 if (OS_IS_MAC)

@@ -33,19 +33,9 @@ set(MODULE_SRC
 
 set(MODULE_LINK
         au3wrap
-        au3-audio-graph
         au3-components
-        au3-effects
-        au3-exceptions
-        au3-files
-        au3-math
         au3-realtime-effects
-        au3-registries
-        au3-strings
-        au3-xml
-        au3-module-manager
         au3-vst3
-        vst_sdk_3 # Note: vst_sdk_3 needed because au3-vst3 public headers expose VST3 SDK types
 )
 
 if(MUSE_MODULE_VST_QML)

@@ -33,14 +33,7 @@ set(MODULE_SRC
 
 set(MODULE_LINK
         au3wrap
-        au3-components
-        au3-files
-        au3-math
-        au3-module-manager
-        au3-preferences
-        au3-strings
-        au3-utility
-        au3-wave-track
+        au3-effects
         effects_builtin
         au3-nyquist-effects
 )
