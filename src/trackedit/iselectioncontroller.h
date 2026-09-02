@@ -53,8 +53,8 @@ public:
 
     // item selection
     // used for range/marquee-like selection
-    virtual ItemKeys itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const = 0;
-    virtual void setItemSelectionAnchor(secs_t time, const TrackId& trackId) = 0;
+    virtual ItemKeys itemKeysInRange(const TrackItemKey& target) const = 0;
+    virtual void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) = 0;
     virtual ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const = 0;
 
     // label selection

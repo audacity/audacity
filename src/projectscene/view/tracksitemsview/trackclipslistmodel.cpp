@@ -709,6 +709,9 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
         selectionController()->resetSelectedLabels();
         selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         return;
     }
 
@@ -751,7 +754,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
 
     setFocusedItem(key);
     if (m_context) {
-        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), m_trackId);
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
     }
 }
 
