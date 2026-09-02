@@ -26,35 +26,6 @@ void Au3CloudService::init()
         syncUsageInfoPrefs();
     });
 
-    m_replyHandler = new OAuthHttpServerReplyHandler(this);
-    connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
-            this, [this](const QVariantMap& data) {
-        // Extract authorization code from callback
-        std::string code = data.value("code").toString().toStdString();
-        std::string error = data.value("error").toString().toStdString();
-
-        if (code.empty() || !error.empty()) {
-            m_authState.set(NotAuthorized(error));
-            m_replyHandler->sendError();
-            return;
-        }
-
-        auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
-        oauthService.AuthorizeCode(
-            code,
-            m_replyHandler->callback().toStdString(),
-            AudiocomTrace::ignore,
-            [this](auto token)
-        {
-            const auto AUTHORIZATION_FAILED = muse::qtrc("appshell/gettingstarted", "Authorization failed");
-            if (token.empty()) {
-                m_authState.set(NotAuthorized(AUTHORIZATION_FAILED.toStdString()));
-                m_replyHandler->sendError();
-                return;
-            }
-        });
-    });
-
     auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
     if (oauthService.HasRefreshToken()) {
         m_authState.set(AuthState(Authorizing()));
@@ -118,6 +89,46 @@ void Au3CloudService::init()
     });
 }
 
+bool Au3CloudService::initReplyHandlerIfNecessary()
+{
+    if (m_replyHandler) {
+        return m_replyHandler->isListening() || m_replyHandler->listen();
+    }
+
+    m_replyHandler = new OAuthHttpServerReplyHandler(this);
+    connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
+            this, [this](const QVariantMap& data) {
+        // Extract authorization code from callback
+        std::string code = data.value("code").toString().toStdString();
+        std::string error = data.value("error").toString().toStdString();
+
+        if (code.empty() || !error.empty()) {
+            m_authState.set(NotAuthorized(error));
+            m_replyHandler->sendError();
+            m_replyHandler->close();
+            return;
+        }
+
+        auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+        oauthService.AuthorizeCode(
+            code,
+            m_replyHandler->callback().toStdString(),
+            AudiocomTrace::ignore,
+            [this](auto token)
+        {
+            const auto AUTHORIZATION_FAILED = muse::qtrc("appshell/gettingstarted", "Authorization failed");
+            if (token.empty()) {
+                m_authState.set(NotAuthorized(AUTHORIZATION_FAILED.toStdString()));
+                m_replyHandler->sendError();
+                m_replyHandler->close();
+                return;
+            }
+        });
+    });
+
+    return m_replyHandler->isListening();
+}
+
 void Au3CloudService::registerWithPassword(const std::string& email, const std::string& password)
 {
     m_authState.set(Authorizing());
@@ -162,6 +173,12 @@ void Au3CloudService::signInWithPassword(const std::string& email, const std::st
 
 void Au3CloudService::signInWithSocial(const std::string& provider)
 {
+    if (!initReplyHandlerIfNecessary()) {
+        const auto SIGN_IN_FAILED = muse::qtrc("appshell/gettingstarted", "Could not start the sign-in process. Please try again.");
+        m_authState.set(AuthState(NotAuthorized(SIGN_IN_FAILED.toStdString())));
+        return;
+    }
+
     platformInteractive()->openUrl(buildOAuthRequestURL(provider));
 }
 
@@ -205,8 +222,9 @@ void Au3CloudService::openBrowserSession()
     auto& authService = audacity::cloud::audiocom::GetOAuthService();
     const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, serviceConfig.GetTourPage());
 
-    if (m_replyHandler->hasPendingSocket()) {
+    if (m_replyHandler && m_replyHandler->hasPendingSocket()) {
         m_replyHandler->sendRedirect(QString::fromStdString(url));
+        m_replyHandler->close();
         return;
     }
 
