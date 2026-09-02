@@ -562,6 +562,10 @@ RealtimeEffectState::AddGroup(
 
 bool RealtimeEffectState::ProcessStart(bool running)
 {
+    if (!mInitialized) {
+        return false;
+    }
+
     // Get state changes from the main thread
     // Note that it is only here that the answer of IsActive() may be changed,
     // and it is important that for each state the answer is unchanging in one
