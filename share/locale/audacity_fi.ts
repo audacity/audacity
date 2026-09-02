@@ -178,7 +178,7 @@
         <translation>&amp;Kumoa</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="195"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>Kumoa</translation>
@@ -191,7 +191,7 @@
         <translation>Tee &amp;uudelleen</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="201"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>Tee uudelleen</translation>
@@ -241,19 +241,19 @@
         <translation type="vanished">Käynnistä kohdistettu säätöelementti tai valitse kohdistettu raidan kohde</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>Kumoa &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>Uudelleen &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Silence audio</source>
         <translation>Hiljennä ääni</translation>
     </message>
@@ -677,12 +677,12 @@
         <translation>Liitä uusi merkintä</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="647"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
         <source>Manage labels</source>
         <translation>Hallitse merkkejä</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="295"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
         <source>Metadata editor</source>
         <translation>Metatietoeditori</translation>
     </message>
@@ -3885,7 +3885,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="420"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="421"/>
         <source>&amp;Analyze</source>
         <translation>&amp;Analyysi</translation>
     </message>
@@ -3893,12 +3893,12 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Clip</source>
         <translation>Leike</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="618"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
         <source>Rename clip</source>
         <translation>Nimeä leike</translation>
     </message>
@@ -3906,7 +3906,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-cursor</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
         <source>Cursor</source>
         <translation>Kohdistin </translation>
     </message>
@@ -3914,7 +3914,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-device</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="471"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Device</source>
         <translation>Laite </translation>
     </message>
@@ -3922,17 +3922,17 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="785"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="786"/>
         <source>&amp;System</source>
         <translation>&amp;Järjestelmä </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="795"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="796"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Esteettömyys </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="802"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="803"/>
         <source>Test&amp;flow</source>
         <translation>Testi&amp;työnkulku</translation>
     </message>
@@ -3944,32 +3944,32 @@ Tämä toiminto ei poista projektejasi.</translation>
         <translation type="vanished">Diagnostiikka </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="528"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="529"/>
         <source>&amp;System</source>
         <translation>&amp;Järjestelmä </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="550"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
         <source>A&amp;ctions</source>
         <translation>&amp;Toiminnot</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Esteettömyys </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
         <source>E&amp;xtensions</source>
         <translation>&amp;Laajennukset</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="554"/>
         <source>Test&amp;flow</source>
         <translation>Testi&amp;työnkulku</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="558"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="559"/>
         <source>&amp;Diagnostics</source>
         <translation>&amp;Diagnostiikka</translation>
     </message>
@@ -3977,7 +3977,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="302"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
         <source>&amp;Edit</source>
         <translation>&amp;Muokkaa</translation>
     </message>
@@ -3985,7 +3985,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
         <source>&amp;Effect</source>
         <translation>T&amp;ehoste</translation>
     </message>
@@ -4000,7 +4000,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
         <source>&amp;Extra</source>
         <translation>&amp;Extra</translation>
     </message>
@@ -4008,7 +4008,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-extraedit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Edit</source>
         <translation>Muokkaus</translation>
     </message>
@@ -4016,7 +4016,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-extraselect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="473"/>
         <source>Select</source>
         <translation>Valitse</translation>
     </message>
@@ -4024,7 +4024,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-extratools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Tools</source>
         <translation>Työkalut</translation>
     </message>
@@ -4032,12 +4032,12 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="244"/>
         <source>Open &amp;recent</source>
         <translation>Avaa &amp;viimeisin </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>&amp;File</source>
         <translation>&amp;Tiedosto</translation>
     </message>
@@ -4045,7 +4045,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-focus</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
         <source>Focus</source>
         <translation>Tarkennus</translation>
     </message>
@@ -4053,7 +4053,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="410"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
         <source>&amp;Generate</source>
         <translation>&amp;Luo</translation>
     </message>
@@ -4061,7 +4061,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="515"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="516"/>
         <source>&amp;Help</source>
         <translation>&amp;Ohje</translation>
     </message>
@@ -4069,7 +4069,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-images</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="483"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
         <source>Images</source>
         <translation>Kuvat </translation>
     </message>
@@ -4077,12 +4077,12 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Label</source>
         <translation>Merkki</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="639"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="640"/>
         <source>Rename label</source>
         <translation>Nimeä merkintä uudelleen</translation>
     </message>
@@ -4097,7 +4097,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Mixer</source>
         <translation>Mikseri </translation>
     </message>
@@ -4105,7 +4105,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-play</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="464"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
         <source>Play</source>
         <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
         <translation>Toista</translation>
@@ -4114,7 +4114,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-playatspeed</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
         <source>Play at speed</source>
         <translation>Toista nopeudella </translation>
     </message>
@@ -4122,7 +4122,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>&amp;Record</source>
         <translation>&amp;Äänitä</translation>
     </message>
@@ -4130,7 +4130,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-scriptables1</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
         <source>Scriptables1</source>
         <translation>Skriptiti1 </translation>
     </message>
@@ -4138,7 +4138,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-scriptables2</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="481"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="482"/>
         <source>Scriptables2</source>
         <translation>Skriptiti2 </translation>
     </message>
@@ -4146,7 +4146,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-scrubbing</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>Scrubbing</source>
         <translation>Hakeminen</translation>
     </message>
@@ -4162,17 +4162,17 @@ Tämä toiminto ei poista projektejasi.</translation>
         <translation type="vanished">Spektri </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="322"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
         <source>Region</source>
         <translation>Alue </translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="326"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="327"/>
         <source>Looping</source>
         <translation>Jatkuva toisto</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="330"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
         <source>&amp;Select</source>
         <translation>&amp;Valinnat</translation>
     </message>
@@ -4180,7 +4180,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-settings</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="486"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="487"/>
         <source>Settings</source>
         <translation>Asetukset</translation>
     </message>
@@ -4202,7 +4202,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="425"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="426"/>
         <source>&amp;Tools</source>
         <translation>&amp;Työkalut</translation>
     </message>
@@ -4210,7 +4210,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-track</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Track</source>
         <translation>Raita</translation>
     </message>
@@ -4218,7 +4218,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="406"/>
         <source>&amp;Tracks</source>
         <translation>&amp;Raidat</translation>
     </message>
@@ -4226,12 +4226,12 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="359"/>
         <source>W&amp;orkspaces</source>
         <translation>T&amp;yötilat</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="372"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;View</source>
         <translation>&amp;Näytä</translation>
     </message>
@@ -4239,7 +4239,7 @@ Tämä toiminto ei poista projektejasi.</translation>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="343"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="344"/>
         <source>Zoom</source>
         <translation>Zoomaus</translation>
     </message>
@@ -4332,17 +4332,17 @@ Tämä toiminto ei poista projektejasi.</translation>
         <translation>Tekijät</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="201"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
         <translation>Audacityn verkkosivusto: %1</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="215"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
         <translation>&lt;b&gt;Audacity®&lt;/b&gt;-ohjelmiston tekijänoikeus © 1999–%1 Audacity Team.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="220"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
         <translation>Nimi &lt;b&gt;Audacity&lt;/b&gt; on rekisteröity tavaramerkki.</translation>
     </message>
@@ -4370,12 +4370,12 @@ Tämä toiminto ei poista projektejasi.</translation>
         <translation>Sulje</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Dock</source>
         <translation>Telakoi</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Undock</source>
         <translation>Irrota telakasta</translation>
     </message>
@@ -6733,8 +6733,8 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
@@ -6823,112 +6823,112 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <translation>Kirjautuminen epäonnistui. Palaa Audacityyn ja yritä uudelleen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
         <source>View on audio.com</source>
         <translation>Katso osoitteessa audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1308"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
         <source>Track title</source>
         <translation>Raidan otsikko</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share audio</source>
         <translation>Jaa ääni</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
         <source>Share</source>
         <translation>Jaa</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
         <source>Audio shared to audio.com</source>
         <translation>Ääni jaettu sivustolla audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1351"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Ääni jaetaan audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1410"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
         <source>Downloading audio from cloud…</source>
         <translation>Ladataan ääntä pilvestä…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>Projekti on tallennettava ennen äänen esikuuntelun päivittämistä</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Tallenna muutokset jatkaaksesi tai peruuta päivitys.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1453"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
         <source>Unsaved changes</source>
         <translation>Tallentamattomat muutokset</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1474"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1505"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1518"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1531"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1545"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Luo äänen esikuuntelu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
         <translation>Pilven äänen esikuuntelu päivitetty</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
         <translation>Äänen esikuuntelu on ladattu osoitteeseen audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1499"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
         <source>Audio preview is up to date</source>
         <translation>Äänen esikuuntelu on ajan tasalla</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>Äänen esikuuntelu vastaa jo tämän projektin viimeisintä tallennettua versiota.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1510"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
         <source>Updating cloud audio preview…</source>
         <translation>Päivitetään pilviäänen esikuuntelua…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Ladatun projektin paikallista polkua ei voitu määrittää</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="610"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="744"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
         <source>Save to audio.com</source>
         <translation>Tallenna sivustolle audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
         <source>Audio download failed</source>
         <translation>Äänen lataaminen epäonnistui</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
         <source>Open audio from cloud</source>
         <translation>Avaa ääntä pilvestä</translation>
     </message>
@@ -7040,115 +7040,85 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <translation>Tämä luo .zip-tiedoston, joka sisältää tietoja MuseScore Studio -asennuksestasi, jotta kehittäjät voivat auttaa sinua diagnosoimaan mahdolliset ongelmasi. Voit tarkastaa tämän tiedoston sisällön ennen kuin lähetät sen kenellekään.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Tallenna diagnostiikkatiedostot</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
-        <translation>Näytä polut…</translation>
+        <translation type="vanished">Näytä polut…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation>Näytä polut</translation>
+        <translation type="vanished">Näytä polut</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation>Näytä profiloija…</translation>
+        <translation type="vanished">Näytä profiloija…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation>Näytä profilointityökalu</translation>
+        <translation type="vanished">Näytä profilointityökalu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation>Näytä grafiikkatiedot…</translation>
+        <translation type="vanished">Näytä grafiikkatiedot…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation>Näytä grafiikkatiedot</translation>
+        <translation type="vanished">Näytä grafiikkatiedot</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
-        <translation>Näytä navigointipuu…</translation>
+        <translation type="vanished">Näytä navigointipuu…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation>Näytä navigointipuu</translation>
+        <translation type="vanished">Näytä navigointipuu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
-        <translation>Näytä esteettömyyspuu…</translation>
+        <translation type="vanished">Näytä esteettömyyspuu…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation>Näytä esteettömyyspuu</translation>
+        <translation type="vanished">Näytä esteettömyyspuu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation>Esteettömyyspuun poistaminen konsolista</translation>
+        <translation type="vanished">Esteettömyyspuun poistaminen konsolista</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation>Näytä taittoelementit</translation>
+        <translation type="vanished">Näytä taittoelementit</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation>Näytä taiton kumoamispino</translation>
+        <translation type="vanished">Näytä taiton kumoamispino</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation>Näytä taittotyylien vaihtoehtoluettelo</translation>
+        <translation type="vanished">Näytä taittotyylien vaihtoehtoluettelo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation>Näytä toimintoluettelo</translation>
+        <translation type="vanished">Näytä toimintoluettelo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation>Näytä komentoluettelo</translation>
+        <translation type="vanished">Näytä komentoluettelo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="118"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="119"/>
         <source>Test query action</source>
-        <translation>Testaa kyselytoiminto</translation>
+        <translation type="vanished">Testaa kyselytoiminto</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="125"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="126"/>
         <source>Test query action with params 1</source>
-        <translation>Testaa kyselytoimintoa parametreilla 1</translation>
+        <translation type="vanished">Testaa kyselytoimintoa parametreilla 1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="134"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="135"/>
         <source>Test query action with params 2</source>
-        <translation>Testaa kyselytoimintoa parametreilla 2</translation>
+        <translation type="vanished">Testaa kyselytoimintoa parametreilla 2</translation>
     </message>
 </context>
 <context>
@@ -12504,9 +12474,9 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="531"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="669"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
@@ -12583,7 +12553,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <translation>pt</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="131"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="138"/>
         <source>Don’t show again</source>
         <translation>Älä näytä uudelleen</translation>
     </message>
@@ -12621,7 +12591,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Tarkista internetyhteytesi tai yritä myöhemmin uudelleen.</translation>
     </message>
@@ -12669,14 +12639,14 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <translation>Kaikki tiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="695"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1092"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1330"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
         <source>Success</source>
         <translation>Onnistui</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
         <source>Dismiss</source>
         <translation>Hylkää</translation>
     </message>
@@ -12700,8 +12670,8 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
         <source>Stop</source>
         <translation>Pysäytä</translation>
     </message>
@@ -15902,7 +15872,7 @@ Libsndfile ilmoittaa: ”%2”</translation>
         <translation>Avaa %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>Anteeksi, emme pysty lataamaan näitä videoita juuri nyt</translation>
     </message>
@@ -15913,19 +15883,19 @@ Libsndfile ilmoittaa: ”%2”</translation>
         <translation>Opettelu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
         <source>Learn tab bar</source>
         <translation>Tutustu välilehtipalkkiin</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
         <source>Get started</source>
         <translation>Aloitus</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
         <source>Classes</source>
         <translation>Luokat</translation>
     </message>
@@ -15935,22 +15905,22 @@ Libsndfile ilmoittaa: ”%2”</translation>
         <translation>Vastaanotettu soittolista on tyhjä.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
         <source>Instructor</source>
         <translation>Ohjaaja</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Creator, Mastering MuseScore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15967,7 +15937,7 @@ Lisäksi Mastering MuseScore sisältää tukevan muusikkoyhteisön, jossa on kes
 (Huomaa: Mastering MuseScore on saatavilla vain englanniksi)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
         <source>Mastering MuseScore</source>
         <translation>MuseScoren hallinta</translation>
     </message>
@@ -16476,14 +16446,12 @@ Sitä ei ladata.</translation>
 <context>
     <name>multiwindows</name>
     <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation>Useita instansseja</translation>
+        <translation type="vanished">Useita instansseja</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation>Näytä usean ikkunan tiedot</translation>
+        <translation type="vanished">Näytä usean ikkunan tiedot</translation>
     </message>
 </context>
 <context>
@@ -17793,7 +17761,7 @@ Sitä ei ladata.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="247"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
         <source>The previous audio state could not be restored.</source>
         <translation>Edellistä äänitilaa ei voitu palauttaa.</translation>
     </message>
@@ -17854,7 +17822,7 @@ Sitä ei ladata.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>Ääniasetukset</translation>
@@ -17890,16 +17858,21 @@ Sitä ei ladata.</translation>
         <translation>Musiikki</translation>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
+        <source>Export</source>
+        <translation>Vienti</translation>
+    </message>
+    <message>
         <source>Cloud</source>
         <translation type="vanished">Pilvi</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="220"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
         <source>Shortcuts</source>
         <translation>Pikanäppäimet</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
         <translation>Lisäosat</translation>
     </message>
@@ -17908,12 +17881,12 @@ Sitä ei ladata.</translation>
         <translation type="vanished">Lisäasetukset</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="249"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
         <translation>Ääniasetusten palauttaminen epäonnistui</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
         <translation>Äänivirran palauttaminen ääniasetusten nollauksen jälkeen epäonnistui.</translation>
     </message>
@@ -18006,6 +17979,36 @@ Sitä ei ladata.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
         <translation>Ohjaimen asetukset</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
+        <source>Export behavior</source>
+        <translation>Viennin toiminta</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
+        <source>Show ‘How would you like to export?’ dialog</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
+        <source>Save behavior</source>
+        <translation>Tallennuksen toiminta</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="29"/>
+        <source>Always ask</source>
+        <translation>Kysy aina</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
+        <source>Always save to cloud</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
+        <source>Always save to computer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -18330,8 +18333,8 @@ Sitä ei ladata.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="787"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="836"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
         <source>All supported files</source>
         <translation>Kaikki tuetut tiedostot</translation>
     </message>
@@ -18357,189 +18360,189 @@ Sitä ei ladata.</translation>
         <translation>Tuotiin useita tiedostoja</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="380"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
         <source>Error opening file</source>
         <translation>Virhe tiedoston avauksessa</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
         <source>Could not open file: %1</source>
         <translation>Ei voitu avata tiedostoa: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="702"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="725"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1098"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1117"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Hylkää</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="719"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Upload project to audio.com…</source>
         <translation>Lähetä projekti audio.comiin…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
         <source>Audacity project files</source>
         <translation>Audacity-projektitiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 -tiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="182"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 -tiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
         <translation>Pilvisynkronointi epäonnistui</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="626"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
         <source>Project unavailable</source>
         <translation>Projekti ei ole käytettävissä</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="635"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="789"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
         <source>Access denied</source>
         <translation>Käyttö estetty</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="657"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="769"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
         <source>Version conflict</source>
         <translation>Versioristiriita</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="690"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Visit audio.com</source>
         <translation>Käy osoitteessa audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="672"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
         <source>Load latest</source>
         <translation>Lataa viimeisin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="679"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="698"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
         <source>Project incomplete</source>
         <translation>Projekti kesken</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="806"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
         <source>Network error</source>
         <translation>Verkkovirhe</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Kaikki tallennetut muutokset päivitetään nyt pilveen. 
 Voit hallita tätä tiedostoa päivitetyltä projektisivultasi osoitteessa audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
         <source>Importable audio and media files</source>
         <translation>Tuotavat ääni- ja mediatiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="855"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Avaa</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
         <source>Audio files</source>
         <translation>Äänitiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
         <source>Video files</source>
         <translation>Videotiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
         <source>Game media files</source>
         <translation>Pelin mediatiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
         <source>Streaming files</source>
         <translation>Suoratoistotiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
         <source>Animation and image files</source>
         <translation>Animaatio- ja kuvatiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
         <source>Raw files</source>
         <translation>Raakatiedostot</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="871"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Haluatko tallentaa muutokset projektiin ennen sulkemista?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="873"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Haluatko tallentaa muutokset ennen sulkemista projektiin “%1” ?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Muutoksesi menetetään, jos et tallenna niitä.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="884"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
         <source>Unsaved changes</source>
         <translation>Tallentamattomat muutokset</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1111"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Jatketaan synkronointia audio.com-sivustolle…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1129"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1555"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
         <source>Syncing project from cloud…</source>
         <translation>Synkronoidaan projektia pilvestä…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Ei voitu lukea tiedostoa %1 </translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1295"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
         <source>An error occurred while reading this file.</source>
         <translation>Tämän tiedoston lukemisessa tapahtui virhe.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="726"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="742"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="782"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Tallenna tietokoneelle</translation>
@@ -19134,6 +19137,40 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
     </message>
 </context>
 <context>
+    <name>project/export</name>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
+        <source>Export audio</source>
+        <translation>Vie ääni</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
+        <source>How would you like to export?</source>
+        <translation>Miten haluaisit viedä?</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
+        <source>Share to audio.com</source>
+        <translation>Jaa osoitteessa audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
+        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
+        <translation>Lataa pakkaamattoman äänitiedoston ja luo jaettavan linkin. Tämän linkin avulla muut voivat ladata tiedoston joko .wav- tai .mp3-muodossa.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
+        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
+        <translation>Vie MP3-, WAV-, FLAC- ja muita formaatteja tietokoneellesi.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
+        <source>Export to computer</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>project/history</name>
     <message>
         <location filename="../../src/projectscene/view/historypanel/historypanelmodel.cpp" line="76"/>
@@ -19157,57 +19194,57 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Audacity 3 project</source>
         <translation>Audacity 3 -projekti</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Olet avannut Audacity 3 -projektin. Se on muunnettava Audacity 4:ssä ennen kuin voit käyttää sitä.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
         <source>Cancel</source>
         <translation>Peruuta</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
         <source>Save as new project</source>
         <translation>Tallenna uutena projektina</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
         <source>Legacy project</source>
         <translation>Vanhentunut projekti</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>The project was saved as “%1”</source>
         <translation>Projekti tallennettiin nimellä “%1”</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="521"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Continue</source>
         <translation>Jatka</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
         <source>Project saved</source>
         <translation>Projekti tallennettu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Time Track not supported</source>
         <translation>Aikaraitaa ei tueta</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Projekti sisältää aikaradan, jota Audacity 4 ei vielä tue, ja se on poistettava. Tämä ei vaikuta alkuperäiseen Audacity 3 -projektiisi.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1160"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19254,103 +19291,101 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
 <context>
     <name>project/save</name>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="62"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to save?</source>
         <translation>Miten haluaisit tallentaa?</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="81"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>Projektisi on turvattu yksityisesti sivustollaaudio.com. Pääset käsiksi työhösi millä tahansa laitteella ja voit tehdä yhteistyötä projektissasi muiden kanssa. Pilvitallennus on ilmainen rajoitetulle määrälle projekteja.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="82"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Save to cloud</source>
         <translation>Tallenna pilveen</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="88"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <source>Save to the cloud (free)</source>
         <translation>Tallenna pilveen (ilmainen)</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="104"/>
         <source>On your computer</source>
         <translation>Tietokoneellesi</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="98"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
         <translation>Jos haluat mieluummin tallentaa tiedostosi tietokoneellesi, voit tehdä sen täällä.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="99"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
         <source>Save to computer</source>
         <translation>Tallenna tietokoneelle</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="105"/>
         <source>Save on your computer</source>
-        <translation>Tallenna tietokoneellesi</translation>
+        <translation type="vanished">Tallenna tietokoneellesi</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="34"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="168"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>Save project</source>
         <translation>Tallenna projekti</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="173"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="177"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>kopio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="176"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="180"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>valinta</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="265"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>Kirjaudu sisään tai luo uusi tili osoitteessa Audio.com niin voit jakaa musiikkiasi.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Julkaise</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
         <source>Publish changes online?</source>
         <translation>Julkaistaanko muutokset verkossa?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Tallennetut muutoksesi näkyvät julkisesti. Meidän on myös luotava uusi MP3-tiedosto julkista toistoa varten.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="548"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="572"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Tarkista internetyhteytesi tai yritä myöhemmin uudelleen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="547"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="557"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
         <source>Unable to connect to the cloud</source>
         <translation>Yhteyden muodostaminen pilveen ei onnistu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="571"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Yhteyden muodostaminen sivustoon Audio.com ei onnistu</translation>
     </message>
@@ -19410,34 +19445,34 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="853"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
         <source>Your audio could not be shared</source>
         <translation>Audiotasi ei voitu jakaa</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="861"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Audio.com-tilisi on ensin vahvistettava. Aktivoi tilisi aktivointisähköpostissa olevan linkin kautta.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="867"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com palautti tuntemattoman virhekoodin: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="870"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com palautti tuntemattoman virhekoodin.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="879"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Yritä myöhemmin uudelleen tai hae apua tähän ongelmaan osoitteesta audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Yhteyden muodostaminen sivustoon audio.com ei onnistu. Tarkista internetyhteytesi tai yritä myöhemmin uudelleen.</translation>
     </message>
@@ -20396,17 +20431,17 @@ Liitä äänitalteenottolaite ja hae laitteet uudelleen.</translation>
         <translation>Määritä pikakuvake uudelleen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>MuseScore Studion pikanäppäintiedosto</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
         <source>Import shortcuts</source>
         <translation>Tuo pikanäppäimet</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
         <source>Export shortcuts</source>
         <translation>Vie pikanäppäimet</translation>
     </message>
@@ -21085,14 +21120,12 @@ Liitä äänitalteenottolaite ja hae laitteet uudelleen.</translation>
 <context>
     <name>testflow</name>
     <message>
-        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation>Näytä skriptit</translation>
+        <translation type="vanished">Näytä skriptit</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation>Näytä skriptit…</translation>
+        <translation type="vanished">Näytä skriptit…</translation>
     </message>
 </context>
 <context>
@@ -21247,12 +21280,12 @@ Liitä äänitalteenottolaite ja hae laitteet uudelleen.</translation>
         <translation>Toiminto vaatii yhden tai useamman leikkeen muuntamisen monoääneksi. Haluatko jatkaa?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1564"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Yhdistä monoraidat stereoksi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1565"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -22058,7 +22091,7 @@ Haluatko jatkaa?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -22067,7 +22100,7 @@ Haluatko jatkaa?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22142,18 +22175,17 @@ Haluatko jatkaa?</translation>
         <translation>Arvo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation>Muut</translation>
+        <translation type="vanished">Muut</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>Arvoluettelon otsikkopaneeli</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>Arvoluettelopaneeli</translation>
@@ -22208,14 +22240,12 @@ Haluatko jatkaa?</translation>
         <translation>suunta on molempia</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation>laajennettu</translation>
+        <translation type="vanished">laajennettu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation>supistettu</translation>
+        <translation type="vanished">supistettu</translation>
     </message>
 </context>
 <context>
@@ -22520,8 +22550,6 @@ Haluatko jatkaa?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
-        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>Tarkista päivitykset</translation>
     </message>
@@ -22550,28 +22578,20 @@ Haluatko jatkaa?</translation>
 <context>
     <name>vst</name>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation>Käytä vanhaa näkymää</translation>
+        <translation type="vanished">Käytä vanhaa näkymää</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation>Käytä uutta näkymää</translation>
+        <translation type="vanished">Käytä uutta näkymää</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation>Avaa tehoste-editori</translation>
+        <translation type="vanished">Avaa tehoste-editori</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation>Avaa instrumenttieditori</translation>
+        <translation type="vanished">Avaa instrumenttieditori</translation>
     </message>
 </context>
 <context>
@@ -22806,7 +22826,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
         <translation>Muokkaa työtiloja</translation>
     </message>
@@ -22870,25 +22889,20 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Musiikki</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation>Valitse työtila</translation>
+        <translation type="vanished">Valitse työtila</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">Muokkaa työtiloja…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation>Muokkaa työtiloja...</translation>
+        <translation type="vanished">Muokkaa työtiloja...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation>Luo uusi työtila</translation>
+        <translation type="vanished">Luo uusi työtila</translation>
     </message>
 </context>
 <context>

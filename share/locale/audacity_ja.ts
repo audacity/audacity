@@ -178,7 +178,7 @@
         <translation>取り消す(&amp;U)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="195"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>取り消す</translation>
@@ -191,7 +191,7 @@
         <translation>やり直す(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="201"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>やり直す</translation>
@@ -241,19 +241,19 @@
         <translation type="vanished">対象のコントロールを操作するか、対象のトラック項目を選択</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>‘%1’を取り消す</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>‘%1’をやり直す</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Silence audio</source>
         <translation>オーディオを無音化</translation>
     </message>
@@ -677,12 +677,12 @@
         <translation>新規ラベルをペースト</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="647"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
         <source>Manage labels</source>
         <translation>ラベルを管理</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="295"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
         <source>Metadata editor</source>
         <translation>メタデータエディタ</translation>
     </message>
@@ -3392,7 +3392,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="347"/>
         <source>Paste (pushes clips on selected track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ペースト（選択トラックにクリップを押し出す）</translation>
+        <translation>ペースト（選択トラックのクリップを押し出す）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="356"/>
@@ -3885,7 +3885,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="420"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="421"/>
         <source>&amp;Analyze</source>
         <translation>解析(&amp;A)</translation>
     </message>
@@ -3893,12 +3893,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Clip</source>
         <translation>クリップ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="618"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
         <source>Rename clip</source>
         <translation>クリップを名称変更</translation>
     </message>
@@ -3906,7 +3906,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-cursor</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
         <source>Cursor</source>
         <translation>カーソル</translation>
     </message>
@@ -3914,7 +3914,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-device</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="471"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Device</source>
         <translation>デバイス</translation>
     </message>
@@ -3922,17 +3922,17 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="785"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="786"/>
         <source>&amp;System</source>
         <translation>システム(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="795"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="796"/>
         <source>&amp;Accessibility</source>
         <translation>アクセシビリティ(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="802"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="803"/>
         <source>Test&amp;flow</source>
         <translation>テストフロー(&amp;F)</translation>
     </message>
@@ -3944,32 +3944,32 @@ This action will not delete any of your projects.</source>
         <translation type="vanished">診断</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="528"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="529"/>
         <source>&amp;System</source>
         <translation>システム(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="550"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
         <source>A&amp;ctions</source>
         <translation>アクション(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
         <source>&amp;Accessibility</source>
         <translation>アクセシビリティ(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
         <source>E&amp;xtensions</source>
         <translation>拡張機能(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="554"/>
         <source>Test&amp;flow</source>
         <translation>テストフロー(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="558"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="559"/>
         <source>&amp;Diagnostics</source>
         <translation>診断(&amp;D)</translation>
     </message>
@@ -3977,7 +3977,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="302"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
         <source>&amp;Edit</source>
         <translation>編集(&amp;E)</translation>
     </message>
@@ -3985,7 +3985,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
         <source>&amp;Effect</source>
         <translation>エフェクト(&amp;E)</translation>
     </message>
@@ -4000,7 +4000,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
         <source>&amp;Extra</source>
         <translation>エクストラ(&amp;E)</translation>
     </message>
@@ -4008,7 +4008,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extraedit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Edit</source>
         <translation>編集</translation>
     </message>
@@ -4016,7 +4016,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extraselect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="473"/>
         <source>Select</source>
         <translation>選択</translation>
     </message>
@@ -4024,7 +4024,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-extratools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Tools</source>
         <translation>ツール</translation>
     </message>
@@ -4032,12 +4032,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="244"/>
         <source>Open &amp;recent</source>
         <translation>最近使った項目を開く(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>&amp;File</source>
         <translation>ファイル(&amp;F)</translation>
     </message>
@@ -4045,7 +4045,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-focus</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
         <source>Focus</source>
         <translation>フォーカス</translation>
     </message>
@@ -4053,7 +4053,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="410"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
         <source>&amp;Generate</source>
         <translation>生成(&amp;G)</translation>
     </message>
@@ -4061,7 +4061,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="515"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="516"/>
         <source>&amp;Help</source>
         <translation>ヘルプ(&amp;H)</translation>
     </message>
@@ -4069,7 +4069,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-images</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="483"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
         <source>Images</source>
         <translation>画像</translation>
     </message>
@@ -4077,12 +4077,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Label</source>
         <translation>ラベル</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="639"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="640"/>
         <source>Rename label</source>
         <translation>ラベルを名称変更</translation>
     </message>
@@ -4097,7 +4097,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Mixer</source>
         <translation>ミキサー</translation>
     </message>
@@ -4105,7 +4105,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-play</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="464"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
         <source>Play</source>
         <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
         <translation>再生</translation>
@@ -4114,7 +4114,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-playatspeed</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
         <source>Play at speed</source>
         <translation>変速再生</translation>
     </message>
@@ -4122,7 +4122,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>&amp;Record</source>
         <translation>録音(&amp;R)</translation>
     </message>
@@ -4130,7 +4130,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-scriptables1</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
         <source>Scriptables1</source>
         <translation>スクリプト1</translation>
     </message>
@@ -4138,7 +4138,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-scriptables2</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="481"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="482"/>
         <source>Scriptables2</source>
         <translation>スクリプト2</translation>
     </message>
@@ -4146,7 +4146,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-scrubbing</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>Scrubbing</source>
         <translation>スクラブ</translation>
     </message>
@@ -4162,17 +4162,17 @@ This action will not delete any of your projects.</source>
         <translation type="vanished">スペクトル</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="322"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
         <source>Region</source>
         <translation>領域</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="326"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="327"/>
         <source>Looping</source>
         <translation>ループ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="330"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
         <source>&amp;Select</source>
         <translation>選択(&amp;S)</translation>
     </message>
@@ -4180,7 +4180,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-settings</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="486"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="487"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
@@ -4202,7 +4202,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="425"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="426"/>
         <source>&amp;Tools</source>
         <translation>ツール(&amp;T)</translation>
     </message>
@@ -4210,7 +4210,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-track</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Track</source>
         <translation>トラック</translation>
     </message>
@@ -4218,7 +4218,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="406"/>
         <source>&amp;Tracks</source>
         <translation>トラック(&amp;T)</translation>
     </message>
@@ -4226,12 +4226,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="359"/>
         <source>W&amp;orkspaces</source>
         <translation>ワークスペース(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="372"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;View</source>
         <translation>表示(&amp;V)</translation>
     </message>
@@ -4239,7 +4239,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="343"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="344"/>
         <source>Zoom</source>
         <translation>拡大/縮小</translation>
     </message>
@@ -4337,17 +4337,17 @@ SakiPapa 2022-2026</translation>
         <translation>クレジット</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="201"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
         <translation>AudacityのWebサイト: %1</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="215"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
         <translation>&lt;b&gt;Audacity®&lt;/b&gt;ソフトウェア著作権所有 © 1999-%1 Audacityチーム。</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="220"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
         <translation>&lt;b&gt;Audacity&lt;/b&gt;の名称は登録商標です。</translation>
     </message>
@@ -4375,12 +4375,12 @@ SakiPapa 2022-2026</translation>
         <translation>閉じる</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Dock</source>
         <translation>ドック</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Undock</source>
         <translation>アンドック</translation>
     </message>
@@ -5249,22 +5249,22 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation>拡大/縮小を切り替え（拡大鏡）</translation>
+        <translation>倍率を切り替える（拡大鏡）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
         <source>A special tool in the top bar that toggles between two different zoom states.</source>
-        <translation>2種類の拡大/縮小状態を切り替える、トップバーの特別ツールです。</translation>
+        <translation>2種類の倍率を切り替える、トップバーの特別なツールです。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
         <source>Zoom state 1:</source>
-        <translation>拡大/縮小状態1:</translation>
+        <translation>倍率1:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="55"/>
         <source>Zoom state 2:</source>
-        <translation>拡大/縮小状態2:</translation>
+        <translation>倍率2:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
@@ -5279,7 +5279,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="248"/>
         <source>Zoom Default</source>
-        <translation>デフォルト拡大/縮小率</translation>
+        <translation>デフォルト倍率</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="249"/>
@@ -5339,7 +5339,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="260"/>
         <source>Max Zoom</source>
-        <translation>最大拡大率</translation>
+        <translation>拡大率最大</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
@@ -5429,7 +5429,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
         <source>Take part in survey</source>
-        <translation>アンケートに協力する</translation>
+        <translation>アンケートに協力</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
@@ -6738,8 +6738,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
@@ -6828,112 +6828,112 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>サインインできませんでした。Audacityに戻ってやり直してください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
         <source>View on audio.com</source>
         <translation>audio.comで表示</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1308"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
         <source>Track title</source>
         <translation>トラックタイトル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share audio</source>
         <translation>オーディオ共有</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
         <source>Share</source>
         <translation>共有</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
         <source>Audio shared to audio.com</source>
         <translation>audio.comで共有したオーディオ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1351"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
         <source>Sharing audio to audio.com…</source>
         <translation>audio.comでオーディオを共有中…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1410"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
         <source>Downloading audio from cloud…</source>
         <translation>クラウドからオーディオをダウンロード中…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>オーディオプレビューをアップロードする前に、プロジェクトを保存してください</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>続けるには変更を保存するか，アップデートをキャンセルしてください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1453"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
         <source>Unsaved changes</source>
         <translation>保存されていない変更</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1474"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1505"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1518"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1531"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1545"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>オーディオプレビューを生成</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
         <translation>クラウドのオーディオプレビューをアップデートしました</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
         <translation>audio.comにオーディオプレビューをアップロードしました</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1499"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
         <source>Audio preview is up to date</source>
         <translation>オーディオプレビューは最新の状態です</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>オーディオプレビューは、このプロジェクトの保存された最新バージョンと一致しています。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1510"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
         <source>Updating cloud audio preview…</source>
         <translation>クラウドのオーディオプレビューをアップデート中…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>ダウンロードされたプロジェクトのローカルパスを特定できませんでした</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="610"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="744"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
         <source>Save to audio.com</source>
         <translation>audio.comに保存</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
         <source>Audio download failed</source>
         <translation>オーディオをダウンロードできませんでした</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
         <source>Open audio from cloud</source>
         <translation>クラウドのオーディオを開く</translation>
     </message>
@@ -7045,115 +7045,85 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>デベロッパが問題を診断するのに役立つように、 MuseScore Studioのセットアップに関する情報を含む”.zip”ファイルが作成されます。このファイルを送信する前に、内容を確認することができます。</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>診断ファイルを保存</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
-        <translation>パスを表示…</translation>
+        <translation type="vanished">パスを表示…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation>パスを表示</translation>
+        <translation type="vanished">パスを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation>プロファイラを表示…</translation>
+        <translation type="vanished">プロファイラを表示…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation>プロファイラを表示</translation>
+        <translation type="vanished">プロファイラを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation>グラフィックス情報を表示…</translation>
+        <translation type="vanished">グラフィックス情報を表示…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation>グラフィックス情報を表示</translation>
+        <translation type="vanished">グラフィックス情報を表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
-        <translation>ナビゲーションツリーを表示…</translation>
+        <translation type="vanished">ナビゲーションツリーを表示…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation>ナビゲーションツリーを表示</translation>
+        <translation type="vanished">ナビゲーションツリーを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
-        <translation>アクセシビリティツリーを表示…</translation>
+        <translation type="vanished">アクセシビリティツリーを表示…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation>アクセシビリティツリーを表示</translation>
+        <translation type="vanished">アクセシビリティツリーを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation>アクセシビリティツリーをコンソールにダンプ</translation>
+        <translation type="vanished">アクセシビリティツリーをコンソールにダンプ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation>スコア（楽譜）要素を表示</translation>
+        <translation type="vanished">スコア（楽譜）要素を表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation>スコア（楽譜）編集の履歴を表示</translation>
+        <translation type="vanished">スコア（楽譜）編集の履歴を表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation>スコア（楽譜）スタイルのオプションリストを表示</translation>
+        <translation type="vanished">スコア（楽譜）スタイルのオプションリストを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation>操作一覧を表示</translation>
+        <translation type="vanished">操作一覧を表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation>rcommandリストを表示</translation>
+        <translation type="vanished">rcommandリストを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="118"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="119"/>
         <source>Test query action</source>
-        <translation>クエリー操作をテスト</translation>
+        <translation type="vanished">クエリー操作をテスト</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="125"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="126"/>
         <source>Test query action with params 1</source>
-        <translation>パラメータ1でクエリー操作をテスト</translation>
+        <translation type="vanished">パラメータ1でクエリー操作をテスト</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="134"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="135"/>
         <source>Test query action with params 2</source>
-        <translation>パラメータ2でクエリー操作をテスト</translation>
+        <translation type="vanished">パラメータ2でクエリー操作をテスト</translation>
     </message>
 </context>
 <context>
@@ -12506,9 +12476,9 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="531"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="669"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
@@ -12585,7 +12555,7 @@ For tips on suitable drives, click the help button.</source>
         <translation>pt</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="131"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="138"/>
         <source>Don’t show again</source>
         <translation>次回から表示しない</translation>
     </message>
@@ -12623,7 +12593,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>インターネット接続を確認するか、あとでやり直してください。</translation>
     </message>
@@ -12671,14 +12641,14 @@ For tips on suitable drives, click the help button.</source>
         <translation>すべてのファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="695"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1092"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1330"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
         <source>Success</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
         <source>Dismiss</source>
         <translation>閉じる</translation>
     </message>
@@ -12702,8 +12672,8 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
@@ -15701,7 +15671,7 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
         <source>32 bit float</source>
-        <translation>32ビット浮動小数点数</translation>
+        <translation>32ビット浮動小数</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
@@ -15906,7 +15876,7 @@ Libsndfileは“%2”を返しています</translation>
         <translation>%1を開く</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>現在はこれらのビデオを読み込むことができません</translation>
     </message>
@@ -15917,19 +15887,19 @@ Libsndfileは“%2”を返しています</translation>
         <translation>学習</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
         <source>Learn tab bar</source>
         <translation>学習タブバー</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
         <source>Get started</source>
         <translation>はじめに</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
         <source>Classes</source>
         <translation>講座</translation>
     </message>
@@ -15939,22 +15909,22 @@ Libsndfileは“%2”を返しています</translation>
         <translation>受信したプレイリストは空です。</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
         <source>Instructor</source>
         <translation>インストラクタ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Mastering MuseScore作成者</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15971,7 +15941,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 （注: Mastering MuseScoreは英語だけでの提供です）</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
         <source>Mastering MuseScore</source>
         <translation>Mastering MuseScore</translation>
     </message>
@@ -16181,7 +16151,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="69"/>
         <source>32-bit float</source>
         <extracomment>Audio data bit depth (precision): 32-bit floating point</extracomment>
-        <translation>32ビット浮動小数点数</translation>
+        <translation>32ビット浮動小数</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="71"/>
@@ -16479,14 +16449,12 @@ It will not be loaded.</source>
 <context>
     <name>multiwindows</name>
     <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation>複数インスタンスを起動</translation>
+        <translation type="vanished">複数インスタンスを起動</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation>複数ウインドウの情報を表示</translation>
+        <translation type="vanished">複数ウインドウの情報を表示</translation>
     </message>
 </context>
 <context>
@@ -17130,17 +17098,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Rectangle</source>
-        <translation>長方形</translation>
+        <translation>矩形ディザ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Triangle</source>
-        <translation>三角波</translation>
+        <translation>三角形ディザ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Shaped</source>
-        <translation>シェープド</translation>
+        <translation>シェイプドディザ</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
@@ -17329,12 +17297,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="16"/>
         <source>Asymmetric stereo heights</source>
-        <translation>非対称ステレオ高</translation>
+        <translation>非対称なステレオの高さ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="55"/>
         <source>Dragging on the center line may adjust the height of the channel:</source>
-        <translation>中央線をドラッグするとチャンネルの高さが調整される場合があります: </translation>
+        <translation>センターラインをドラッグしてチャンネルの高さを調整: </translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
@@ -17417,17 +17385,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="15"/>
         <source>Move cursor along the timeline during playback</source>
-        <translation>再生中にタイムライン上でカーソルを移動</translation>
+        <translation>再生時のタイムライン上でのカーソル移動</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="23"/>
         <source>Short skip</source>
-        <translation>短スキップ</translation>
+        <translation>ショートスキップ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="43"/>
         <source>Long skip</source>
-        <translation>長スキップ</translation>
+        <translation>ロングスキップ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectBehaviorSection.qml" line="14"/>
@@ -17502,12 +17470,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="11"/>
         <source>Mono &amp; stereo conversion</source>
-        <translation>モノラルとステレオを変換</translation>
+        <translation>モノラルとステレオの変換</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="26"/>
         <source>Always convert to mono without prompt</source>
-        <translation>通知しないで常にモノラルに変換</translation>
+        <translation>通知なしに常にモノラルに変換</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="44"/>
@@ -17552,12 +17520,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="27"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
-        <translation>入力モニタリングをオンにする（録音中に音声を再生します）</translation>
+        <translation>入力モニタリングをオンにする（録音中に音声を再生）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="45"/>
         <source>Show mic metering when not recording</source>
-        <translation>録音中でない場合にマイクレベルメーターを表示</translation>
+        <translation>録音中でない場合もマイクレベルメーターを表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="32"/>
@@ -17796,7 +17764,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="247"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
         <source>The previous audio state could not be restored.</source>
         <translation>前のオーディオ状態を復元できませんでした。</translation>
     </message>
@@ -17857,7 +17825,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>オーディオ設定</translation>
@@ -17880,7 +17848,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="207"/>
         <source>Playback/Recording</source>
-        <translation>再生/録音</translation>
+        <translation>録音/再生</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
@@ -17893,16 +17861,21 @@ It will not be loaded.</source>
         <translation>ミュージック</translation>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
+        <source>Export</source>
+        <translation>書き出す</translation>
+    </message>
+    <message>
         <source>Cloud</source>
         <translation type="vanished">クラウド</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="220"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
         <source>Shortcuts</source>
         <translation>ショートカット</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
         <translation>プラグイン</translation>
     </message>
@@ -17911,24 +17884,24 @@ It will not be loaded.</source>
         <translation type="vanished">詳細オプション</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="249"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
         <translation>オーディオ設定をリセットできません</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
         <translation>オーディオ設定のリセット後にオーディオストリームを復元できませんでした。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
         <source>Recording lead-in time</source>
-        <translation>リードインを録音中</translation>
+        <translation>録音リードインタイム</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
         <source>Lead-in time before recording starts</source>
-        <translation>録音開始までのリードイン時間</translation>
+        <translation>録音開始までのリードインタイム</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
@@ -17943,7 +17916,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
         <source>Detect tempo in imported files:</source>
-        <translation>読み込んだ次のファイルからテンポを検出:</translation>
+        <translation>次の読み込んだファイルからテンポを検出:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
@@ -18009,6 +17982,36 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
         <translation>ドライバ設定</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
+        <source>Export behavior</source>
+        <translation>エクスポート動作</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
+        <source>Show ‘How would you like to export?’ dialog</source>
+        <translation>’どのようにエクスポートしますか?’ダイアログを表示</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
+        <source>Save behavior</source>
+        <translation>保存動作</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="29"/>
+        <source>Always ask</source>
+        <translation>常に確認</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
+        <source>Always save to cloud</source>
+        <translation>常にクラウドに保存</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
+        <source>Always save to computer</source>
+        <translation>常にコンピュータに保存</translation>
     </message>
 </context>
 <context>
@@ -18333,8 +18336,8 @@ It will not be loaded.</source>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="787"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="836"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
         <source>All supported files</source>
         <translation>すべてのサポートされるファイル</translation>
     </message>
@@ -18360,189 +18363,189 @@ It will not be loaded.</source>
         <translation>複数のファイルを読み込みました</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="380"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
         <source>Error opening file</source>
         <translation>ファイルオープンエラー</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
         <source>Could not open file: %1</source>
         <translation>このファイルを開けません: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="702"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="725"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1098"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1117"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>閉じる</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="719"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Upload project to audio.com…</source>
         <translation>audio.comへプロジェクトをアップロード…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
         <source>Audacity project files</source>
         <translation>Audacityプロジェクトファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3のファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="182"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4のファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
         <translation>クラウド同期できませんでした</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="626"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
         <source>Project unavailable</source>
         <translation>プロジェクトは使用できません</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="635"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="789"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
         <source>Access denied</source>
         <translation>アクセスが拒否されました</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="657"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="769"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
         <source>Version conflict</source>
         <translation>バージョンが競合しています</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="690"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Visit audio.com</source>
         <translation>audio.comに接続</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="672"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
         <source>Load latest</source>
         <translation>最新版を読み込む</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="679"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="698"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
         <source>Project incomplete</source>
         <translation>プロジェクトが未完成</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="806"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
         <source>Network error</source>
         <translation>ネットワークエラー</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>保存された変更内容はすべてクラウドにアップデートされます。
 audio.comのアップデートされたプロジェクトページから、このファイルを管理できます。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
         <source>Importable audio and media files</source>
         <translation>読み込み可能なオーディオやメディアファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="855"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>開く</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
         <source>Audio files</source>
         <translation>オーディオファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
         <source>Video files</source>
         <translation>ビデオファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
         <source>Game media files</source>
         <translation>ゲームメディアファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
         <source>Streaming files</source>
         <translation>ストリーミングファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
         <source>Animation and image files</source>
         <translation>アニメーションと画像ファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
         <source>Raw files</source>
         <translation>RAWファイル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="871"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>プロジェクトを閉じる前に、変更内容を保存してもよろしいですか?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="873"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>プロジェクト“%1”を閉じる前に、変更内容を保存してもよろしいですか?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>保存しないと、変更内容は失われます。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="884"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
         <source>Unsaved changes</source>
         <translation>変更が保存されていません</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1111"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
         <source>Resuming sync to audio.com…</source>
         <translation>audio.comとの同期を再開中…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1129"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1555"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
         <source>Syncing project from cloud…</source>
         <translation>クラウドからプロジェクトを同期中…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>ファイル%1を読み込めません</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1295"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
         <source>An error occurred while reading this file.</source>
         <translation>ファイルを読み込み中にエラーが発生しました。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="726"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="742"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="782"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>コンピュータに保存</translation>
@@ -19100,7 +19103,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-rate/QualitySettings.cpp" line="25"/>
         <source>32-bit float</source>
-        <translation>32ビット浮動小数点数</translation>
+        <translation>32ビット浮動小数</translation>
     </message>
 </context>
 <context>
@@ -19137,6 +19140,41 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
 </context>
 <context>
+    <name>project/export</name>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
+        <source>Export audio</source>
+        <translation>オーディオを書き出す</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
+        <source>How would you like to export?</source>
+        <translation>どのようにエクスポートしますか?</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
+        <source>Share to audio.com</source>
+        <translation>audio.com で共有</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
+        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
+        <translation>非圧縮オーディオファイルをアップロードし、共有リンクを作成します。
+このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
+        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
+        <translation>MP3、WAV、FLAC そのほかの形式で自分のコンピューターにエクスポートします。</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
+        <source>Export to computer</source>
+        <translation>コンピュータに書き出す</translation>
+    </message>
+</context>
+<context>
     <name>project/history</name>
     <message>
         <location filename="../../src/projectscene/view/historypanel/historypanelmodel.cpp" line="76"/>
@@ -19160,57 +19198,57 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Audacity 3 project</source>
         <translation>Audacity 3のプロジェクト</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Audacity 3プロジェクトが開かれました。Audacity 4で使用する前に変換する必要があります。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
         <source>Save as new project</source>
         <translation>新規プロジェクトとして保存</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
         <source>Legacy project</source>
         <translation>レガシープロジェクト</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>The project was saved as “%1”</source>
         <translation>プロジェクトを“%1”に保存しました</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="521"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Continue</source>
         <translation>続ける</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
         <source>Project saved</source>
         <translation>プロジェクトを保存しました</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Time Track not supported</source>
         <translation>タイムトラックには対応していません</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>このプロジェクトには、Audacity 4ではまだ対応していないタイムトラックが含まれているため、これを削除する必要があります。元のAudacity 3プロジェクトには影響しません。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1160"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19257,103 +19295,101 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>project/save</name>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="62"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to save?</source>
         <translation>どのように保存しますか?</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="81"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>プロジェクトはaudio.comに非公開でバックアップされます。どのデバイスからでも自分の作品にアクセスしたり、プロジェクトの共同作業を行ったりできます。無料でクラウドに保存できるプロジェクト数には制限があります。</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="82"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Save to cloud</source>
         <translation>クラウドに保存</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="88"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <source>Save to the cloud (free)</source>
         <translation>クラウドに保存（無料）</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="104"/>
         <source>On your computer</source>
         <translation>自分のコンピュータ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="98"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
         <translation>ファイルを自分のコンピュータに保存する場合は、ここで行ってください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="99"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
         <source>Save to computer</source>
         <translation>コンピュータに保存</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="105"/>
         <source>Save on your computer</source>
-        <translation>コンピュータに保存</translation>
+        <translation type="vanished">コンピュータに保存</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="34"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="168"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>Save project</source>
         <translation>プロジェクトを保存</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="173"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="177"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>コピー</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="176"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="180"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>選択範囲</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="265"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>ミュージックを共有する場合はaudio.comにサインインするか新規アカウントを作成してください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>公開</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
         <source>Publish changes online?</source>
         <translation>変更をオンラインで公開しますか?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>保存した変更内容は公開されます。一般公開用に新しいMP3ファイルを生成する必要があります。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="548"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="572"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>インターネット接続を確認するか、あとでやり直してください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="547"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="557"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
         <source>Unable to connect to the cloud</source>
         <translation>クラウドに接続できません</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="571"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
         <source>Unable to connect to Audio.com</source>
         <translation>audio.comに接続できません</translation>
     </message>
@@ -19413,34 +19449,34 @@ You need to run that version of Audacity to recover the project.</source>
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="853"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
         <source>Your audio could not be shared</source>
         <translation>オーディオを共有できません</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="861"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>audio.comのアカウントを認証する必要があります。メールに記載されているリンクから、アカウントをアクティベートしてください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="867"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>audio.comは不明なエラーコードを返しました: %1。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="870"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>audio.comは不明なエラーコードを返しました。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="879"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>あとでやり直すか、audio.comにこの問題の助けを求めてください。</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>audio.comに接続できません。インターネット接続を確認するか、あとでやり直してください。</translation>
     </message>
@@ -20398,17 +20434,17 @@ Please connect an input device and rescan.</source>
         <translation>ショートカットを再割り当て</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>MuseScore Studioショートカットファイル</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
         <source>Import shortcuts</source>
         <translation>ショートカットを読み込む</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
         <source>Export shortcuts</source>
         <translation>ショートカットを書き出す</translation>
     </message>
@@ -21087,14 +21123,12 @@ Please connect an input device and rescan.</source>
 <context>
     <name>testflow</name>
     <message>
-        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation>スクリプトを表示</translation>
+        <translation type="vanished">スクリプトを表示</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation>スクリプトを表示…</translation>
+        <translation type="vanished">スクリプトを表示…</translation>
     </message>
 </context>
 <context>
@@ -21195,7 +21229,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
         <source>32-bit Float</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>32ビット浮動小数点数</translation>
+        <translation>32ビット浮動小数</translation>
     </message>
 </context>
 <context>
@@ -21249,12 +21283,12 @@ Please connect an input device and rescan.</source>
         <translation>この操作では、1つ以上のクリップをモノラルに変換します。続けてもよろしいですか?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1564"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
         <source>Combine mono tracks to stereo</source>
         <translation>モノラルトラックををステレオに結合</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1565"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -21897,7 +21931,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when deleting a portion of a clip</source>
-        <translation>クリップの一部を削除する場合の動作を選択します</translation>
+        <translation>クリップの一部を削除する場合の動作を選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="82"/>
@@ -21907,7 +21941,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when pasting audio</source>
-        <translation>オーディオをペーストする場合の動作を選択します</translation>
+        <translation>オーディオをペーストする場合の動作を選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="82"/>
@@ -21942,12 +21976,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
         <source>Pasting audio pushes other clips on the same track</source>
-        <translation>オーディオをペーストすると同じトラックのほかのクリップを押し出す</translation>
+        <translation>ペーストしたオーディオが同じトラックのほかのクリップを押し出す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation>オーディオをペーストするとすべてのトラックのすべてのクリップを押し出す</translation>
+        <translation>ペーストしたオーディオがすべてのトラックのすべてのクリップを押し出す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
@@ -21957,7 +21991,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="77"/>
         <source>Paste pushes other clips</source>
-        <translation>ペースト（ほかのクリップで押し出し）</translation>
+        <translation>ペースト（ほかのクリップを押し出す）</translation>
     </message>
 </context>
 <context>
@@ -22060,7 +22094,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -22069,7 +22103,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22144,18 +22178,17 @@ Do you wish to continue?</source>
         <translation>値</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation>その他…</translation>
+        <translation type="vanished">その他…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>値リストヘッダパネル</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>値リストパネル</translation>
@@ -22210,14 +22243,12 @@ Do you wish to continue?</source>
         <translation>方向は両方向</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation>展開されました</translation>
+        <translation type="vanished">展開されました</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation>折りたたまれました</translation>
+        <translation type="vanished">折りたたまれました</translation>
     </message>
 </context>
 <context>
@@ -22522,8 +22553,6 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
-        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>アップデートを確認</translation>
     </message>
@@ -22552,28 +22581,20 @@ Do you wish to continue?</source>
 <context>
     <name>vst</name>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation>従来の表示を使用</translation>
+        <translation type="vanished">従来の表示を使用</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation>新しい表示を使用</translation>
+        <translation type="vanished">新しい表示を使用</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation>FXエディタを開く</translation>
+        <translation type="vanished">FXエディタを開く</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation>楽器エディタを開く</translation>
+        <translation type="vanished">楽器エディタを開く</translation>
     </message>
 </context>
 <context>
@@ -22808,7 +22829,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
         <translation>ワークスペースを編集</translation>
     </message>
@@ -22872,25 +22892,20 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>ミュージック</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation>ワークスペースを選択</translation>
+        <translation type="vanished">ワークスペースを選択</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">ワークスペースを編集…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation>ワークスペースを編集…</translation>
+        <translation type="vanished">ワークスペースを編集…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation>新しいワークスペースを作成</translation>
+        <translation type="vanished">新しいワークスペースを作成</translation>
     </message>
 </context>
 <context>

@@ -178,7 +178,7 @@
         <translation>Ongedaan maken</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="195"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>Ongedaan maken</translation>
@@ -191,7 +191,7 @@
         <translation>Opnieuw uitvoeren</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="201"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>Opnieuw uitvoeren</translation>
@@ -241,19 +241,19 @@
         <translation type="vanished">Het geselecteerde besturingselement activeren of het geselecteerde track-item selecteren</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>&apos;%1&apos; ongedaan maken</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>&apos;%1&apos; opnieuw uitvoeren</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Silence audio</source>
         <translation>Audio dempen</translation>
     </message>
@@ -677,12 +677,12 @@
         <translation>Nieuw label plakken</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="647"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
         <source>Manage labels</source>
         <translation>Labels beheren</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="295"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
         <source>Metadata editor</source>
         <translation>Metadata-editor</translation>
     </message>
@@ -3885,7 +3885,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="420"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="421"/>
         <source>&amp;Analyze</source>
         <translation>Analyseren</translation>
     </message>
@@ -3893,12 +3893,12 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Clip</source>
         <translation>Clip</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="618"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
         <source>Rename clip</source>
         <translation>Naam van clip wijzigen</translation>
     </message>
@@ -3906,7 +3906,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-cursor</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
         <source>Cursor</source>
         <translation>Cursor</translation>
     </message>
@@ -3914,7 +3914,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-device</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="471"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Device</source>
         <translation>Apparaat</translation>
     </message>
@@ -3922,17 +3922,17 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="785"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="786"/>
         <source>&amp;System</source>
         <translation>Systeem</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="795"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="796"/>
         <source>&amp;Accessibility</source>
         <translation>Toegankelijkheid</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="802"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="803"/>
         <source>Test&amp;flow</source>
         <translation>Teststroom</translation>
     </message>
@@ -3944,32 +3944,32 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
         <translation type="vanished">Diagnose</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="528"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="529"/>
         <source>&amp;System</source>
         <translation>Systeem</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="550"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
         <source>A&amp;ctions</source>
         <translation>Acties</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
         <source>&amp;Accessibility</source>
         <translation>Toegankelijkheid</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
         <source>E&amp;xtensions</source>
         <translation>Extensies</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="554"/>
         <source>Test&amp;flow</source>
         <translation>Teststroom</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="558"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="559"/>
         <source>&amp;Diagnostics</source>
         <translation>Diagnose</translation>
     </message>
@@ -3977,7 +3977,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="302"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
         <source>&amp;Edit</source>
         <translation>Bewerken</translation>
     </message>
@@ -3985,7 +3985,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
         <source>&amp;Effect</source>
         <translation>Effect</translation>
     </message>
@@ -4000,7 +4000,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
         <source>&amp;Extra</source>
         <translation>Extra</translation>
     </message>
@@ -4008,7 +4008,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-extraedit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Edit</source>
         <translation>Bewerken</translation>
     </message>
@@ -4016,7 +4016,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-extraselect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="473"/>
         <source>Select</source>
         <translation>Selecteren</translation>
     </message>
@@ -4024,7 +4024,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-extratools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Tools</source>
         <translation>Gereedschap</translation>
     </message>
@@ -4032,12 +4032,12 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="244"/>
         <source>Open &amp;recent</source>
         <translation>Recente openen</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>&amp;File</source>
         <translation>Bestand</translation>
     </message>
@@ -4045,7 +4045,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-focus</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
         <source>Focus</source>
         <translation>Focus</translation>
     </message>
@@ -4053,7 +4053,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="410"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
         <source>&amp;Generate</source>
         <translation>Genereren</translation>
     </message>
@@ -4061,7 +4061,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="515"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="516"/>
         <source>&amp;Help</source>
         <translation>Help</translation>
     </message>
@@ -4069,7 +4069,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-images</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="483"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
         <source>Images</source>
         <translation>Afbeeldingen</translation>
     </message>
@@ -4077,12 +4077,12 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="639"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="640"/>
         <source>Rename label</source>
         <translation>Naam van label wijzigen</translation>
     </message>
@@ -4097,7 +4097,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Mixer</source>
         <translation>Mixer</translation>
     </message>
@@ -4105,7 +4105,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-play</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="464"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
         <source>Play</source>
         <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
         <translation>Afspelen</translation>
@@ -4114,7 +4114,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-playatspeed</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
         <source>Play at speed</source>
         <translation>Afspelen met snelheid</translation>
     </message>
@@ -4122,7 +4122,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="386"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>&amp;Record</source>
         <translation>Opnemen</translation>
     </message>
@@ -4130,7 +4130,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-scriptables1</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
         <source>Scriptables1</source>
         <translation>Scriptables1</translation>
     </message>
@@ -4138,7 +4138,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-scriptables2</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="481"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="482"/>
         <source>Scriptables2</source>
         <translation>Scriptables2</translation>
     </message>
@@ -4146,7 +4146,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-scrubbing</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>Scrubbing</source>
         <translation>Scrubben</translation>
     </message>
@@ -4162,17 +4162,17 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
         <translation type="vanished">Spectraal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="322"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
         <source>Region</source>
         <translation>Gebied</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="326"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="327"/>
         <source>Looping</source>
         <translation>Loopen</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="330"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
         <source>&amp;Select</source>
         <translation>Selecteren</translation>
     </message>
@@ -4180,7 +4180,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-settings</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="486"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="487"/>
         <source>Settings</source>
         <translation>Instellingen</translation>
     </message>
@@ -4202,7 +4202,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="425"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="426"/>
         <source>&amp;Tools</source>
         <translation>Gereedschap</translation>
     </message>
@@ -4210,7 +4210,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-track</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Track</source>
         <translation>Track</translation>
     </message>
@@ -4218,7 +4218,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="406"/>
         <source>&amp;Tracks</source>
         <translation>Tracks</translation>
     </message>
@@ -4226,12 +4226,12 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="358"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="359"/>
         <source>W&amp;orkspaces</source>
         <translation>Werkruimtes</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="372"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;View</source>
         <translation>Beeld</translation>
     </message>
@@ -4239,7 +4239,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="343"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="344"/>
         <source>Zoom</source>
         <translation>Zoomen</translation>
     </message>
@@ -4332,17 +4332,17 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
         <translation>Met dank aan</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="201"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
         <translation>Audacity-website: %1</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="215"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
         <translation>&lt;b&gt;Audacity®&lt;/b&gt;-software is auteursrechtelijk beschermd © 1999 - %1 Audacity Team.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="220"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
         <translation>De naam &lt;b&gt;Audacity&lt;/b&gt; is een geregistreerd handelsmerk.</translation>
     </message>
@@ -4370,12 +4370,12 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
         <translation>Sluiten</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Dock</source>
         <translation>Vastzetten</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Undock</source>
         <translation>Loskoppelen</translation>
     </message>
@@ -4676,7 +4676,7 @@ Hierdoor worden uw projecten niet verwijderd.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="110"/>
         <source>Preview of how audio clips will appear with the selected visualization style</source>
-        <translation>Voorbeeld van hoe audioclips eruit zullen zien met de geselecteerde visualisatiestijl</translation>
+        <translation>Voorbeeld van hoe audioclips eruit zullen zien met de geselecteerde weergavestijl</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="115"/>
@@ -6733,8 +6733,8 @@ Probeer uitgerekte clips te resetten of de tracks te mixen en renderen voordat u
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
         <source>Save</source>
         <translation>Opslaan</translation>
     </message>
@@ -6823,112 +6823,112 @@ Probeer uitgerekte clips te resetten of de tracks te mixen en renderen voordat u
         <translation>Aanmelden mislukt. Keer terug naar Audacity en probeer het opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
         <source>View on audio.com</source>
         <translation>Weergeven op audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1308"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
         <source>Track title</source>
         <translation>Track-titel</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share audio</source>
         <translation>Audio delen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
         <source>Share</source>
         <translation>Deel</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
         <source>Audio shared to audio.com</source>
         <translation>Audio gedeeld met audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1351"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Audio delen met audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1410"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
         <source>Downloading audio from cloud…</source>
         <translation>Audio downloaden van cloud...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>Het project moet worden opgeslagen worden voordat het audiovoorbeeld wordt bijgewerkt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Sla uw wijzigingen op om verder te gaan, of annuleer de update.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1453"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
         <source>Unsaved changes</source>
         <translation>Niet-opgeslagen wijzigingen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1474"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1505"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1518"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1531"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1545"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Audiovoorbeeld genereren</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
         <translation>Cloud-audio voorbeeld bijgewerkt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
         <translation>Het audiovoorbeeld is geüpload naar audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1499"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
         <source>Audio preview is up to date</source>
         <translation>Audiovoorbeeld is up-to-date</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>Het audiovoorbeeld komt al overeen met de laatste opgeslagen versie van dit project.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1510"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
         <source>Updating cloud audio preview…</source>
         <translation>Voorbeeld van cloud-audio bijwerken...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Het lokale pad van het gedownloade project kon niet worden vastgesteld</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="610"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="744"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
         <source>Save to audio.com</source>
         <translation>Opslaan naar audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
         <source>Audio download failed</source>
         <translation>Downloaden van audio mislukt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
         <source>Open audio from cloud</source>
         <translation>Audio openen van cloud</translation>
     </message>
@@ -7040,115 +7040,85 @@ Probeer uitgerekte clips te resetten of de tracks te mixen en renderen voordat u
         <translation>Dit maakt een .zip-bestand aan met daarin informatie over uw MuseScore Studio-instellingen, om ontwikkelaars te helpen bij het onderzoeken van problemen die u ervaart. U kunt de inhoud van dit bestand bekijken voordat u het naar iemand opstuurt.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Sla diagnostische bestanden op</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
-        <translation>Paden weergeven...</translation>
+        <translation type="vanished">Paden weergeven...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation>Paden weergeven</translation>
+        <translation type="vanished">Paden weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation>Profiler weergeven...</translation>
+        <translation type="vanished">Profiler weergeven...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation>Profiler weergeven</translation>
+        <translation type="vanished">Profiler weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation>Graphics-informatie weergeven...</translation>
+        <translation type="vanished">Graphics-informatie weergeven...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation>Graphics-informatie weergeven</translation>
+        <translation type="vanished">Graphics-informatie weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
-        <translation>Navigatiestructuur weergeven...</translation>
+        <translation type="vanished">Navigatiestructuur weergeven...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation>Navigatiestructuur weergeven</translation>
+        <translation type="vanished">Navigatiestructuur weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
-        <translation>Toegankelijkheidsstructuur weergeven...</translation>
+        <translation type="vanished">Toegankelijkheidsstructuur weergeven...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation>Toegankelijkheidsstructuur weergeven</translation>
+        <translation type="vanished">Toegankelijkheidsstructuur weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation>Toegankelijkheidsstructuur naar console dumpen</translation>
+        <translation type="vanished">Toegankelijkheidsstructuur naar console dumpen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation>Muziekschriftelementen weergeven</translation>
+        <translation type="vanished">Muziekschriftelementen weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation>Geschiedenis voor ongedaan maken voor muziekschrift weergeven</translation>
+        <translation type="vanished">Geschiedenis voor ongedaan maken voor muziekschrift weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation>Lijst met opties voor muziekschrift-stijl weergeven</translation>
+        <translation type="vanished">Lijst met opties voor muziekschrift-stijl weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation>Lijst met acties weergeven</translation>
+        <translation type="vanished">Lijst met acties weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation>Lijst met rcommands weergeven</translation>
+        <translation type="vanished">Lijst met rcommands weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="118"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="119"/>
         <source>Test query action</source>
-        <translation>Query-actie testen</translation>
+        <translation type="vanished">Query-actie testen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="125"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="126"/>
         <source>Test query action with params 1</source>
-        <translation>Query-actie testen met parameters 1</translation>
+        <translation type="vanished">Query-actie testen met parameters 1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="134"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="135"/>
         <source>Test query action with params 2</source>
-        <translation>Query-actie testen met parameters 2</translation>
+        <translation type="vanished">Query-actie testen met parameters 2</translation>
     </message>
 </context>
 <context>
@@ -12501,9 +12471,9 @@ Klip op de help-knop voor tips over geschikte stations.</translation>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="531"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="669"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
@@ -12580,7 +12550,7 @@ Klip op de help-knop voor tips over geschikte stations.</translation>
         <translation>pt</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="131"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="138"/>
         <source>Don’t show again</source>
         <translation>Niet meer weergeven</translation>
     </message>
@@ -12618,7 +12588,7 @@ Klip op de help-knop voor tips over geschikte stations.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Controleer uw internetverbinding of probeer het later opnieuw.</translation>
     </message>
@@ -12666,14 +12636,14 @@ Klip op de help-knop voor tips over geschikte stations.</translation>
         <translation>Alle bestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="695"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1092"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1330"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
         <source>Success</source>
         <translation>Gelukt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
         <source>Dismiss</source>
         <translation>Afwijzen</translation>
     </message>
@@ -12697,8 +12667,8 @@ Klip op de help-knop voor tips over geschikte stations.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
         <source>Stop</source>
         <translation>Stoppen</translation>
     </message>
@@ -15893,7 +15863,7 @@ Libsndfile zegt &quot;%2&quot;</translation>
         <translation>Open %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>Sorry, we kunnen de video&apos;s op dit moment niet laden</translation>
     </message>
@@ -15904,19 +15874,19 @@ Libsndfile zegt &quot;%2&quot;</translation>
         <translation>Leren</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
         <source>Learn tab bar</source>
         <translation>Leren-tabbladbalk</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
         <source>Get started</source>
         <translation>Aan de slag</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
         <source>Classes</source>
         <translation>Lessen</translation>
     </message>
@@ -15926,22 +15896,22 @@ Libsndfile zegt &quot;%2&quot;</translation>
         <translation>De ontvangen afspeellijst is leeg.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
         <source>Instructor</source>
         <translation>Leermeester</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Creator, Mastering MuseScore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15958,7 +15928,7 @@ Daarnaast biedt Mastering MuseScore een ondersteunende gemeenschap van muzikante
 (Opmerking: Mastering MuseScore is alleen beschikbaar in het Engels.)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
         <source>Mastering MuseScore</source>
         <translation>Mastering MuseScore</translation>
     </message>
@@ -16467,14 +16437,12 @@ Ze wordt niet geladen.</translation>
 <context>
     <name>multiwindows</name>
     <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation>Meerdere instanties</translation>
+        <translation type="vanished">Meerdere instanties</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Meerdere vensters informatie weergeven</translation>
     </message>
 </context>
 <context>
@@ -17784,7 +17752,7 @@ Ze wordt niet geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="247"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
         <source>The previous audio state could not be restored.</source>
         <translation>De vorige audiostatus kon niet worden hersteld.</translation>
     </message>
@@ -17845,7 +17813,7 @@ Ze wordt niet geladen.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>Audio-instellingen</translation>
@@ -17881,16 +17849,21 @@ Ze wordt niet geladen.</translation>
         <translation>Muziek</translation>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
+        <source>Export</source>
+        <translation>Exporteer…</translation>
+    </message>
+    <message>
         <source>Cloud</source>
         <translation type="vanished">Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="220"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
         <source>Shortcuts</source>
         <translation>Sneltoetsen</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
         <translation>Plugins</translation>
     </message>
@@ -17899,12 +17872,12 @@ Ze wordt niet geladen.</translation>
         <translation type="vanished">Geavanceerde opties</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="249"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
         <translation>Kon audio-instellingen niet herstellen</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
         <translation>De audiostream kon niet worden hersteld nadat de audio-instellingen werden hersteld.</translation>
     </message>
@@ -17997,6 +17970,36 @@ Ze wordt niet geladen.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
         <translation>Driver-instellingen</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
+        <source>Export behavior</source>
+        <translation>Gedrag exporteren</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
+        <source>Show ‘How would you like to export?’ dialog</source>
+        <translation>Venster &apos;Hoe wilt u exporteren?&apos; weergeven</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
+        <source>Save behavior</source>
+        <translation>Gedrag bij opslaan</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="29"/>
+        <source>Always ask</source>
+        <translation>Altijd vragen</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
+        <source>Always save to cloud</source>
+        <translation>Altijd opslaan in de cloud</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
+        <source>Always save to computer</source>
+        <translation>Altijd opslaan op de computer</translation>
     </message>
 </context>
 <context>
@@ -18321,8 +18324,8 @@ Ze wordt niet geladen.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="787"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="836"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
         <source>All supported files</source>
         <translation>Alle ondersteunde bestanden</translation>
     </message>
@@ -18348,189 +18351,189 @@ Ze wordt niet geladen.</translation>
         <translation>Meerdere bestanden geïmporteerd</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="380"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
         <source>Error opening file</source>
         <translation>Fout bij openen bestand</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
         <source>Could not open file: %1</source>
         <translation>Kon bestand niet openen: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="702"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="725"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1098"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1117"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Afwijzen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="719"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Upload project to audio.com…</source>
         <translation>Project uploaden naar audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
         <source>Audacity project files</source>
         <translation>Audacity projectbestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 bestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="182"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 bestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
         <translation>Cloud-sync mislukt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="626"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
         <source>Project unavailable</source>
         <translation>Project niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="635"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="789"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
         <source>Access denied</source>
         <translation>Toegang geweigerd</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="657"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="769"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
         <source>Version conflict</source>
         <translation>Versieconflict</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="690"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Visit audio.com</source>
         <translation>Bezoek audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="672"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
         <source>Load latest</source>
         <translation>Nieuwste laden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="679"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="698"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
         <source>Project incomplete</source>
         <translation>Project onvolledig</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="806"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
         <source>Network error</source>
         <translation>Netwerkfout</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Alle opgeslagen wijzigingen worden nu bijgewerkt naar de cloud.
 U kunt dit bestand beheren vanaf uw pagina met bijgewerkte projecten op audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
         <source>Importable audio and media files</source>
         <translation>Importeerbare audio- en mediabestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="855"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Openen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
         <source>Audio files</source>
         <translation>Audiobestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
         <source>Video files</source>
         <translation>Videobestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
         <source>Game media files</source>
         <translation>Spel-mediabestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
         <source>Streaming files</source>
         <translation>Streaming-bestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
         <source>Animation and image files</source>
         <translation>Animatie- en afbeeldingsbestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
         <source>Raw files</source>
         <translation>Raw-bestanden</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="871"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Wilt u de wijzigingen in het project opslaan voordat u het sluit?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="873"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Wilt u de wijzigingen in project &quot;%1&quot; opslaan voordat u het sluit?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Uw wijzigingen gaan verloren als u ze niet opslaat.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="884"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
         <source>Unsaved changes</source>
         <translation>Niet-opgeslagen wijzigingen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1111"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Sync met audio.com hervatten...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1129"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1555"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
         <source>Syncing project from cloud…</source>
         <translation>Project syncen van cloud...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Kan bestand %1 niet lezen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1295"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
         <source>An error occurred while reading this file.</source>
         <translation>Er is een fout opgetreden bij het lezen van dit bestand</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="726"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="742"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="782"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Opslaan op computer</translation>
@@ -19124,6 +19127,40 @@ U moet die versie van Audacity uitvoeren om het project te herstellen.</translat
     </message>
 </context>
 <context>
+    <name>project/export</name>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
+        <source>Export audio</source>
+        <translation>Audio exporteren</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
+        <source>How would you like to export?</source>
+        <translation>Hoe wilt u exporteren?</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
+        <source>Share to audio.com</source>
+        <translation>Delen met audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
+        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
+        <translation>Uploadt een ongecomprimeerd audiobestand en genereert een link om te delen. Met deze link kunnen anderen het bestand downloaden in .wav- of .mp3-indeling.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
+        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
+        <translation>MP3&apos;s, WAVs, FLACs en andere formaten naar uw computer exporteren.</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
+        <source>Export to computer</source>
+        <translation>Exporteren naar computer</translation>
+    </message>
+</context>
+<context>
     <name>project/history</name>
     <message>
         <location filename="../../src/projectscene/view/historypanel/historypanelmodel.cpp" line="76"/>
@@ -19147,57 +19184,57 @@ U moet die versie van Audacity uitvoeren om het project te herstellen.</translat
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Audacity 3 project</source>
         <translation>Audacity 3 project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>U hebt een Audacity 3 project geopend. Dit moet eerst worden geconverteerd voordat u het in Audacity 4 kunt gebruiken.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
         <source>Save as new project</source>
         <translation>Opslaan als nieuw project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
         <source>Legacy project</source>
         <translation>Legacy project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>The project was saved as “%1”</source>
         <translation>Het project is opgeslagen als &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="521"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Continue</source>
         <translation>Doorgaan</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
         <source>Project saved</source>
         <translation>Project opgeslagen</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Time Track not supported</source>
         <translation>Tijd-track niet ondersteund</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Het project bevat een tijd-track, die nog niet wordt ondersteund in Audacity 4 en dus moet worden verwijderd. Dit heeft geen invloed op uw oorspronkelijke Audacity 3-project.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1160"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19244,103 +19281,101 @@ U moet die versie van Audacity uitvoeren om het project te herstellen.</translat
 <context>
     <name>project/save</name>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="62"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to save?</source>
         <translation>Hoe wilt u opslaan?</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="81"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>Uw project wordt privé opgeslagen op audio.com. U hebt vanaf elk apparaat toegang tot uw werk en u kunt met anderen samenwerken aan uw project. Cloudopslag is gratis voor een beperkt aantal projecten.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="82"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Save to cloud</source>
         <translation>Opslaan in de Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="88"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <source>Save to the cloud (free)</source>
         <translation>Opslaan in de cloud (gratis)</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="104"/>
         <source>On your computer</source>
         <translation>Op uw computer</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="98"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
         <translation>Als u uw bestanden liever op uw computer wilt opslaan, kunt u dat hier doen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="99"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
         <source>Save to computer</source>
         <translation>Opslaan op computer</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="105"/>
         <source>Save on your computer</source>
-        <translation>Opslaan op uw computer</translation>
+        <translation type="vanished">Opslaan op uw computer</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="34"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="168"/>
+        <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>Save project</source>
         <translation>Project opslaa</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="173"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="177"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>kopie</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="176"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="180"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>selectie</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="265"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>Meld u aan of maak een nieuw account aan op Audio.com om uw muziek te delen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Publiceer</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
         <source>Publish changes online?</source>
         <translation>Wijzigingen online publiceren?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Uw opgeslagen wijzigingen worden voor iedereen zichtbaar. Daarnaast moeten we een nieuwe MP3-bestand genereren voor openbare weergave.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="548"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="572"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Controleer uw internetverbinding of probeer het later opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="547"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="557"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
         <source>Unable to connect to the cloud</source>
         <translation>Kan geen verbinding maken met de cloud</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="571"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Kan geen verbinding maken met Audio.com</translation>
     </message>
@@ -19400,34 +19435,34 @@ U moet die versie van Audacity uitvoeren om het project te herstellen.</translat
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="853"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
         <source>Your audio could not be shared</source>
         <translation>Uw audio kon niet worden gedeeld</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="861"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Uw audio.com-account moet eerst worden geverifieerd. Activeer uw account via de link in de activeringsmail.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="867"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com heeft een onbekende foutcode geretourneerd: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="870"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com heeft een onbekende foutcode geretourneerd.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="879"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Probeer het later opnieuw, of vraag op audio.com om hulp bij dit probleem.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Er kon geen verbinding worden gemaakt met audio.com. Controleer uw internetverbinding of probeer het later opnieuw.</translation>
     </message>
@@ -20384,17 +20419,17 @@ Sluit een invoerapparaat aan en scan opnieuw.</translation>
         <translation>Herbepaal sneltoets</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>MuseScore Studio-sneltoestenbestand</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
         <source>Import shortcuts</source>
         <translation>Sneltoetsen importeren</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
         <source>Export shortcuts</source>
         <translation>Sneltoetsen exporteren</translation>
     </message>
@@ -21073,14 +21108,12 @@ Sluit een invoerapparaat aan en scan opnieuw.</translation>
 <context>
     <name>testflow</name>
     <message>
-        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation>Scripts weergeven</translation>
+        <translation type="vanished">Scripts weergeven</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation>Scripts weergeven...</translation>
+        <translation type="vanished">Scripts weergeven...</translation>
     </message>
 </context>
 <context>
@@ -21121,20 +21154,20 @@ Sluit een invoerapparaat aan en scan opnieuw.</translation>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
         <source>Track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Track-weergave</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
         <source>Track color</source>
-        <translation type="unfinished"/>
+        <translation>Track-kleur</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation type="unfinished"/>
+        <translation>Meters en monitoring</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
@@ -21151,13 +21184,13 @@ Sluit een invoerapparaat aan en scan opnieuw.</translation>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
         <source>Format: %1</source>
-        <translation type="unfinished"/>
+        <translation>Formaat: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rate: %1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
@@ -21181,7 +21214,7 @@ Sluit een invoerapparaat aan en scan opnieuw.</translation>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
         <source>32-bit Float</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation type="unfinished"/>
+        <translation>32-bit float</translation>
     </message>
 </context>
 <context>
@@ -21235,12 +21268,12 @@ Sluit een invoerapparaat aan en scan opnieuw.</translation>
         <translation>Voor deze handeling moeten een of meer clips naar mono worden geconverteerd. Wilt u doorgaan?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1564"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Mono-tracks naar stereo combineren</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1565"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -21299,7 +21332,7 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>Geselecteerde audiotracks trimmen van %1 seconden naar %2 seconden</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
@@ -21310,7 +21343,7 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>Geselecteerde tracks gedempt van %1 seconden naar %2 seconden</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
@@ -21321,7 +21354,7 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silenced selected clips</source>
-        <translation type="unfinished"/>
+        <translation>Geselecteerde clips gedempt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
@@ -21331,17 +21364,17 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
         <source>Changed Track Title</source>
-        <translation type="unfinished"/>
+        <translation>Track-titel gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
         <source>Clip Title</source>
-        <translation type="unfinished"/>
+        <translation>Clip-titel</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
         <source>Changed clip title</source>
-        <translation type="unfinished"/>
+        <translation>Clip-titel gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
@@ -21372,13 +21405,13 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
         <source>Changed track color</source>
-        <translation type="unfinished"/>
+        <translation>Track-kleur gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="161"/>
         <source>Reset Clip Pitch and Speed</source>
-        <translation type="unfinished"/>
+        <translation>Toonhoogte en snelheid van clip hersteld</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
@@ -21417,12 +21450,12 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
         <source>Remove multiple items</source>
-        <translation type="unfinished"/>
+        <translation>Meerdere items verwijderen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
         <source>Remove multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>Meerdere clips verwijderen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
@@ -21448,24 +21481,24 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
         <source>Items moved</source>
-        <translation type="unfinished"/>
+        <translation>Items verplaatst</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <source>Clip moved</source>
-        <translation type="unfinished"/>
+        <translation>Clip verplaatst</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
         <source>Move clip</source>
-        <translation type="unfinished"/>
+        <translation>Clip verplaatsen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
         <source>Move items</source>
-        <translation type="unfinished"/>
+        <translation>Items verplaatsen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
@@ -21477,13 +21510,13 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
         <source>Split clips at silence</source>
-        <translation type="unfinished"/>
+        <translation>Clips splitsen bij stilte</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
         <source>Split at silence</source>
-        <translation type="unfinished"/>
+        <translation>Splitsen bij stilte</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
@@ -21501,17 +21534,17 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split cut</source>
-        <translation type="unfinished"/>
+        <translation>Splitsen en knippen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim items left</source>
-        <translation type="unfinished"/>
+        <translation>Items links trimmen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim clip left</source>
-        <translation type="unfinished"/>
+        <translation>Clip links trimmen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
@@ -21523,12 +21556,12 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim items right</source>
-        <translation type="unfinished"/>
+        <translation>Items rechts trimmen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim clip right</source>
-        <translation type="unfinished"/>
+        <translation>Clip rechts trimmen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
@@ -21570,7 +21603,7 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
         <source>Created new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Nieuwe monotrack aangemaakt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
@@ -21580,7 +21613,7 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Created new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Nieuwe stereotrack aangemaakt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
@@ -21590,7 +21623,7 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
         <source>Created label track</source>
-        <translation type="unfinished"/>
+        <translation>Labeltrack aangemaakt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
@@ -21621,40 +21654,40 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Clips grouped</source>
-        <translation type="unfinished"/>
+        <translation>Clips gegroepeerd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
         <source>Clips ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>Clips gedegroepeerd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>Trackformaat gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>Track-rate gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>Stereokanalen gewisseld</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
         <source>Split stereo tracks to L/R mono</source>
-        <translation type="unfinished"/>
+        <translation>Stereotracks gesplitst naar L/R mono</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
         <source>Split stereo tracks to center mono</source>
-        <translation type="unfinished"/>
+        <translation>Stereotracks gesplitst naar gecentreerd mono</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
@@ -21670,7 +21703,7 @@ Wilt u doorgaan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
         <source>Label added</source>
-        <translation type="unfinished"/>
+        <translation>Label toegevoegd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
@@ -21681,81 +21714,81 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Label title changed</source>
-        <translation type="unfinished"/>
+        <translation>Labeltitel gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Changed label title</source>
-        <translation type="unfinished"/>
+        <translation>Labeltitel gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Lage frequentie van label gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation>Lage frequentie van label wijzigen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Hoge frequentie van label gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>Hoge frequentie van label wijzigen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut label</source>
-        <translation type="unfinished"/>
+        <translation>Label knippen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Remove label</source>
-        <translation type="unfinished"/>
+        <translation>Label verwijderen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Remove multiple labels</source>
-        <translation type="unfinished"/>
+        <translation>Meerdere labels verwijderen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
         <source>Move labels</source>
-        <translation type="unfinished"/>
+        <translation>Labels verplaatsen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
-        <translation type="unfinished"/>
+        <translation>Verplaatsen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
         <source>Labels moved</source>
-        <translation type="unfinished"/>
+        <translation>Labels verplaatst</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Label stretched</source>
-        <translation type="unfinished"/>
+        <translation>Label uitgerekt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <source>Stretch label left</source>
-        <translation type="unfinished"/>
+        <translation>Label links uitrekken</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch labels left</source>
-        <translation type="unfinished"/>
+        <translation>Labels links uitrekken</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
@@ -21766,18 +21799,18 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Stretch label right</source>
-        <translation type="unfinished"/>
+        <translation>Label rechts uitrekken</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch labels right</source>
-        <translation type="unfinished"/>
+        <translation>Labels rechts uitrekken</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 seconden samengevoegd bij %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
@@ -21799,18 +21832,18 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split-deleted clips</source>
-        <translation type="unfinished"/>
+        <translation>Clips gesplitst en verwijderd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>Splitsen en verwijderen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 seconden verwijderen bij %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -21825,17 +21858,17 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
         <source>Tempo changed</source>
-        <translation type="unfinished"/>
+        <translation>Tempo gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Bovenste tijdsaanduiding gewijzigd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Onderste tijdsaanduiding gewijzigd</translation>
     </message>
 </context>
 <context>
@@ -22046,7 +22079,7 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -22055,7 +22088,7 @@ Wilt u doorgaan?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22130,18 +22163,17 @@ Wilt u doorgaan?</translation>
         <translation>Waarde</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation>Andere</translation>
+        <translation type="vanished">Andere</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>Waardenlijst headerpaneel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>Waardenlijst paneel</translation>
@@ -22196,14 +22228,12 @@ Wilt u doorgaan?</translation>
         <translation>richting is beide</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">uitgeklapt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">ingeklapt</translation>
     </message>
 </context>
 <context>
@@ -22508,8 +22538,6 @@ Wilt u doorgaan?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
-        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>Controleren op update</translation>
     </message>
@@ -22538,28 +22566,20 @@ Wilt u doorgaan?</translation>
 <context>
     <name>vst</name>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation>Oude weergave gebruiken</translation>
+        <translation type="vanished">Oude weergave gebruiken</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation>Nieuwe weergave gebruiken</translation>
+        <translation type="vanished">Nieuwe weergave gebruiken</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">FX-editor openen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Instrument-editor openen</translation>
     </message>
 </context>
 <context>
@@ -22794,7 +22814,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
         <translation>Bewerk werkruimtes</translation>
     </message>
@@ -22858,25 +22877,20 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Muziek</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation>Werkruimte selecteren</translation>
+        <translation type="vanished">Werkruimte selecteren</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">Werkruimtes bewerken...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Werkruimtes bewerken...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation>Nieuwe werkruimte aanmaken</translation>
+        <translation type="vanished">Nieuwe werkruimte aanmaken</translation>
     </message>
 </context>
 <context>
