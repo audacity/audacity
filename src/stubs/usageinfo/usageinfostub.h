@@ -9,6 +9,8 @@ namespace au::usageinfo {
 class UsageInfoStub : public IUsageInfo
 {
 public:
+    bool isUsageInfoAvailable() const override;
+
     void setSendAnonymousUsageInfo(bool allow) override;
     bool getSendAnonymousUsageInfo() const override;
 
