@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ga">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="is">
 <context>
     <name>Playback</name>
     <message>
@@ -17,12 +17,12 @@
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Enabled</source>
-        <translation>Cumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Disabled</source>
-        <translation>Díchumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -113,7 +113,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
         <source>&amp;Tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Rianta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Show/hide tracks</source>
@@ -150,75 +150,75 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="33"/>
         <source>Copy</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cóipeáil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="42"/>
         <source>Cut</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Gearr</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="175"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="336"/>
         <source>&amp;Paste</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>G&amp;reamaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Paste</source>
-        <translation type="vanished">Greamaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="185"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="51"/>
         <source>&amp;Undo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cealaig&amp;h</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
-        <translation>Cealaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
         <source>&amp;Redo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Athdhéan</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
-        <translation>Déan arís é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="205"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="69"/>
         <source>De&amp;lete</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Scrios</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="210"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="217"/>
         <source>Delete</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Scrios</translation>
+        <translation>Eyða</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="214"/>
         <source>&amp;Cancel</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Cealaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Cealaigh</translation>
+        <translation type="vanished">Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
@@ -358,36 +358,36 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sos</translation>
+        <translation>Gera hlé</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Stad</translation>
+        <translation>Stöðva</translation>
     </message>
     <message>
         <source>Stop playback</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Stöðva afspilun</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
         <source>Rewind to start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spóla aftur á byrjun</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
         <source>Rewind to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spóla aftur til enda</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
         <source>Loop playback</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endurtekningarspilun</translation>
     </message>
     <message>
         <source>Toggle ‘Loop playback’</source>
@@ -407,7 +407,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sækja brellur</translation>
     </message>
     <message>
         <source>Open Get effects dialog</source>
@@ -453,7 +453,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
         <source>Tempo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Flutningshraði</translation>
     </message>
     <message>
         <source>Set playback tempo</source>
@@ -591,7 +591,7 @@
         <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="33"/>
         <source>Open</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Oscail</translation>
+        <translation>Opna</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
@@ -631,7 +631,7 @@
     </message>
     <message>
         <source>Export MIDI</source>
-        <translation type="vanished">Tabhair amach MIDI</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
@@ -650,7 +650,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Duplicate</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Déan macasamhail</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
@@ -691,7 +691,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velja allt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
@@ -979,11 +979,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
         <source>&amp;Save</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Taisc</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Save</source>
-        <translation type="vanished">Taisc</translation>
+        <translation type="vanished">Vista</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
@@ -1101,7 +1101,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
         <source>Benchmark</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tagarmharc</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="657"/>
@@ -1418,7 +1418,7 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Déan Taifeadadh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Stop record</source>
@@ -1466,7 +1466,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
         <source>Clear selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Glan an roghnúchán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
@@ -1520,7 +1520,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
         <source>Split</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Deighil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="176"/>
@@ -1616,13 +1616,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
         <source>Waveform</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tonnchrot</translation>
+        <translation>Bylgjulögun</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
         <source>Spectrogram</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Speictreagram</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="586"/>
@@ -1748,7 +1748,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
         <source>Silence</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tost</translation>
+        <translation>Þögn</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="487"/>
@@ -2122,35 +2122,35 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="35"/>
         <source>Copy</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Cóipeáil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="167"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="44"/>
         <source>Cut</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Gearr</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="177"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
         <source>Paste</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Greamaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
         <source>Undo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Cealaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="197"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="62"/>
         <source>Redo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Déan arís é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="207"/>
@@ -2158,13 +2158,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="71"/>
         <source>Delete</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Scrios</translation>
+        <translation>Eyða</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="216"/>
         <source>Cancel</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
@@ -2237,25 +2237,25 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sos</translation>
+        <translation>Gera hlé</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Stöðva afspilun</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spóla aftur á byrjun</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spóla aftur til enda</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
@@ -2418,7 +2418,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
         <source>Open</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Oscailte</translation>
+        <translation>Opna</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
@@ -2436,7 +2436,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>Save</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sábháil</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
@@ -2460,7 +2460,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
         <source>Export MIDI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Tabhair amach MIDI</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
@@ -2474,7 +2474,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
         <source>Duplicate</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Déan macasamhail</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
@@ -2505,7 +2505,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
         <source>Select all</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velja allt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
@@ -2829,7 +2829,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="651"/>
         <source>Benchmark</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Tagarmharc</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="659"/>
@@ -3164,7 +3164,7 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
         <source>Record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Déan Taifeadadh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
@@ -3224,7 +3224,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="89"/>
         <source>Clear selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Glan an roghnúchán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
@@ -3278,7 +3278,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
         <source>Split</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Deighil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
@@ -3374,13 +3374,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
         <source>Waveform</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Tonnchrot</translation>
+        <translation>Bylgjulögun</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="318"/>
         <source>Spectrogram</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Speictreagram</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
@@ -3488,7 +3488,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
         <source>Silence</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Tost</translation>
+        <translation>Þögn</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="489"/>
@@ -3650,7 +3650,7 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
-        <translation>Tionscadal</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Learn</source>
@@ -3676,7 +3676,7 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="138"/>
         <source>All</source>
         <extracomment>The title of an option to display the plugins from all categories.</extracomment>
-        <translation>Uile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
@@ -3712,7 +3712,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
         <source>Tracks</source>
-        <translation>Rianta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
@@ -3722,7 +3722,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
         <source>History</source>
-        <translation>&amp;Stair</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="81"/>
@@ -3885,7 +3885,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="421"/>
         <source>&amp;Analyze</source>
-        <translation>Déan &amp;Anailís</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3914,7 +3914,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Device</source>
-        <translation>Gléas</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3969,7 +3969,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="559"/>
         <source>&amp;Diagnostics</source>
-        <translation>&amp;Diagnóisic</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3977,7 +3977,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
         <source>&amp;Edit</source>
-        <translation>&amp;Eagar</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4008,7 +4008,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Edit</source>
-        <translation>Eagar</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4016,7 +4016,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="473"/>
         <source>Select</source>
-        <translation>Roghnaigh</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4024,7 +4024,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Tools</source>
-        <translation>Uirlisí</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4037,7 +4037,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>&amp;File</source>
-        <translation>&amp;Comhad</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4053,7 +4053,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
         <source>&amp;Generate</source>
-        <translation>Gin</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4061,7 +4061,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="516"/>
         <source>&amp;Help</source>
-        <translation>Cab&amp;hair</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4077,7 +4077,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Label</source>
-        <translation>Lipéad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="640"/>
@@ -4106,7 +4106,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
         <source>Play</source>
         <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
-        <translation>Seinn</translation>
+        <translation>Spila</translation>
     </message>
 </context>
 <context>
@@ -4122,7 +4122,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>&amp;Record</source>
-        <translation>Déan Taifeadadh</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4172,7 +4172,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
         <source>&amp;Select</source>
-        <translation>&amp;Roghnaigh</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4210,7 +4210,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Track</source>
-        <translation>Rian</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4218,7 +4218,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="406"/>
         <source>&amp;Tracks</source>
-        <translation>&amp;Rianta</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4231,7 +4231,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;View</source>
-        <translation>&amp;Amharc</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4239,7 +4239,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="344"/>
         <source>Zoom</source>
-        <translation>Gluais</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4272,27 +4272,27 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
         <source>Contributors</source>
-        <translation>Rannchuiditheoirí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="334"/>
         <source>Website and Graphics</source>
-        <translation>Suíomh Gréasáin agus Grafaicí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
-        <translation>creidiúintí_aistritheora</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
         <source>Translators</source>
-        <translation>Aistritheoirí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="346"/>
         <source>Libraries</source>
-        <translation>Leabharlanna</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
@@ -4327,7 +4327,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
         <source>Credits</source>
-        <translation>Creidiúintí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
@@ -4365,7 +4365,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
         <source>Close</source>
-        <translation>Dún</translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
@@ -4476,7 +4476,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="31"/>
         <source>Playback</source>
-        <translation>Athsheinm</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="36"/>
@@ -4638,7 +4638,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="34"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="45"/>
         <source>Classic</source>
-        <translation type="unfinished"/>
+        <translation>Sígilt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="35"/>
@@ -4776,17 +4776,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="237"/>
         <source>Light</source>
-        <translation>Geal</translation>
+        <translation>Ljóst</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="239"/>
         <source>Dark</source>
-        <translation>Dorcha</translation>
+        <translation>Dökkt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="241"/>
         <source>System</source>
-        <translation>Córas</translation>
+        <translation>Kerfisbundið</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="245"/>
@@ -4919,7 +4919,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="309"/>
         <source>Use LPC</source>
-        <translation>Bain feidhm as LPC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="279"/>
@@ -4929,7 +4929,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="294"/>
         <source>VBL</source>
-        <translation>VBL</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="33"/>
@@ -4984,7 +4984,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="64"/>
         <source>Color:</source>
-        <translation>Dath:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="97"/>
@@ -5191,12 +5191,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
         <source>Horizontal</source>
-        <translation>Cothrománach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="55"/>
         <source>Vertical</source>
-        <translation>Ingearach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="88"/>
@@ -5206,7 +5206,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="32"/>
         <source>Zoom</source>
-        <translation>Gluais</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
@@ -5261,27 +5261,27 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
         <source>Fit to Width</source>
-        <translation>Oiriúnaigh don Leithead</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="247"/>
         <source>Zoom to Selection</source>
-        <translation>&amp;Gluais go dtí an Rogha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="248"/>
         <source>Zoom Default</source>
-        <translation>Réamhshocrú Gluaise</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="249"/>
         <source>Minutes</source>
-        <translation>Nóiméid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="250"/>
         <source>Seconds</source>
-        <translation>Soicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="251"/>
@@ -5316,12 +5316,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="257"/>
         <source>MilliSeconds</source>
-        <translation>Milleasoicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="258"/>
         <source>Samples</source>
-        <translation>Samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="259"/>
@@ -5331,7 +5331,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="260"/>
         <source>Max Zoom</source>
-        <translation>Formhéadú Uasta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
@@ -5358,17 +5358,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramAlgorithmSection.qml" line="14"/>
         <source>Algorithm</source>
-        <translation>Algartam</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramColorsSection.qml" line="14"/>
         <source>Colors</source>
-        <translation>Dathanna</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramScaleSection.qml" line="14"/>
         <source>Scale</source>
-        <translation>Scála</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSelectionSection.qml" line="21"/>
@@ -5436,7 +5436,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
         <source>Continue</source>
-        <translation>Lean ar aghaidh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
@@ -5552,7 +5552,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="855"/>
         <source>No devices found
 </source>
-        <translation>Níor aimsíodh aon ghléas
+        <translation>Engin tæki fundust
 </translation>
     </message>
     <message>
@@ -5566,22 +5566,19 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
         <source>Device ID: %1
 </source>
-        <translation>Aitheantas an ghléis: %1
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="873"/>
         <source>Device name: %1
 </source>
-        <translation>Ainm an ghléis: %1
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="874"/>
         <source>Host name: %1
 </source>
-        <translation>Ainm an óstaigh: %1
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="875"/>
@@ -5593,8 +5590,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="876"/>
         <source>Playback channels: %1
 </source>
-        <translation>Bealaí athsheanma: %1
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
@@ -5664,8 +5660,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="943"/>
         <source>Supported Rates:
 </source>
-        <translation>Luasanna a dtugtar Tacaíocht Dóibh:
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
@@ -5684,14 +5679,14 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1013"/>
         <source>Unable to open Portmixer
 </source>
-        <translation type="unfinished"/>
+        <translation>Ekki tókst að opna Portmixer
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1019"/>
         <source>Available mixers:
 </source>
-        <translation>Meascthóirí ar fáil:
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1026"/>
@@ -5704,8 +5699,7 @@ This action will not delete any of your projects.</source>
 %1 is the recording source index number, %2 is the source name
 ----------
 %1 is the playback volume index number, %2 is the volume control name</extracomment>
-        <translation>%1 - %2
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1030"/>
@@ -5738,7 +5732,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="269"/>
         <source>Could not find any audio devices.
 </source>
-        <translation>Níorbh fhéidir aon ghléasanna fuaime a aimsiú.
+        <translation>Engin hljóðtæki fundust.
 </translation>
     </message>
     <message>
@@ -5746,24 +5740,23 @@ This action will not delete any of your projects.</source>
         <source>You will not be able to play or record audio.
 
 </source>
-        <translation>Ní bheidh tú i gcumas fuaim a sheinnt nó a chur ar thaifead.
-
+        <translation>Þú munt ekki geta spilað eða tekið upp hljóð.
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="273"/>
         <source>Error: %1</source>
-        <translation>Earráid: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="281"/>
         <source>Error Initializing Audio</source>
-        <translation>Earráid le Linn Tosnú Fuaime</translation>
+        <translation>Villa kom upp við að frumstilla hljómflutning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
         <source>Audacity Audio</source>
-        <translation>Fuaim Audacity</translation>
+        <translation>Audacity-hljómflutningur</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
@@ -5774,13 +5767,13 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
         <source>Out of memory!</source>
-        <translation>Gan chuimhne!</translation>
+        <translation>Minni er fullt!</translation>
     </message>
 </context>
 <context>
@@ -5800,7 +5793,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
         <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
-        <translation>n/bh</translation>
+        <translation>ekki tiltækt</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="518"/>
@@ -5825,7 +5818,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
         <source>Audio Unit</source>
         <extracomment>the name of an Apple audio software protocol</extracomment>
-        <translation>Aonad Fuaime</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="134"/>
@@ -5837,7 +5830,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="139"/>
         <source>The Audacity Team</source>
-        <translation>Foireann Audacity</translation>
+        <translation>Audacity-teymið</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="150"/>
@@ -5867,12 +5860,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
         <source>Could not find component</source>
-        <translation>Níorbh fhéidir an chomhpháirt a aimsiú</translation>
+        <translation>Íhlutur fannst ekki</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="231"/>
         <source>Could not initialize component</source>
-        <translation type="unfinished"/>
+        <translation>Ekki tókst að frumstilla íhlut</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
@@ -5912,7 +5905,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="503"/>
         <source>XML data is empty after conversion</source>
-        <translation type="unfinished"/>
+        <translation>XML-gögnin eru auð eftir umbreytingu</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
@@ -5935,7 +5928,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/shared/axis/axislabel.cpp" line="22"/>
         <source>k</source>
-        <translation>k</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5943,7 +5936,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-basic-ui/BasicUI.cpp" line="268"/>
         <source>Message</source>
-        <translation>Teachtaireacht</translation>
+        <translation>Skilaboð</translation>
     </message>
 </context>
 <context>
@@ -5951,7 +5944,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="28"/>
         <source>Auto Duck</source>
-        <translation type="unfinished"/>
+        <translation>Sjálfvirk kaffæring</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
@@ -5962,28 +5955,28 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
         <source>You selected a track which does not contain audio. AutoDuck can only process audio tracks.</source>
         <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
-        <translation type="unfinished"/>
+        <translation>Þú valdir hljóðband sem ekki inniheldur hljóð. Einungis er hægt að nota sjálfvirka kaffæringu til þess að vinna úr hljóðböndum.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="144"/>
         <source>Auto Duck needs a control track which must be placed below the selected track(s).</source>
         <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
-        <translation type="unfinished"/>
+        <translation>Notkun sjálfvirkrar kaffæringar krefst viðmiðunarhljóðbands sem þarf að vera fyrir neðan þau hljóðbönd sem eru valin.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="184"/>
         <source>Rendering Control-Track Time-Stretched Audio</source>
-        <translation type="unfinished"/>
+        <translation>Gengur frá tímalengdu hljóði viðmiðunarhljóðbands</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/BassTrebleBase.cpp" line="21"/>
         <source>Bass and Treble</source>
-        <translation>Dord agus Tribil</translation>
+        <translation>Lág- og hátíðni</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/BassTrebleBase.cpp" line="41"/>
         <source>Simple tone control effect</source>
-        <translation type="unfinished"/>
+        <translation>Einföld tónstýringarbrella</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="52"/>
@@ -5993,114 +5986,116 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="80"/>
         <source>Changes the pitch of a track without changing its tempo</source>
-        <translation type="unfinished"/>
+        <translation>Hefur áhrif á tónhæð hljóðbands án þess að hafa áhrif á flutningshraða þess</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="117"/>
         <source>High Quality Pitch Change</source>
-        <translation type="unfinished"/>
+        <translation>Úrvalstónhæðarstilling</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="21"/>
         <source>Change Speed and Pitch</source>
-        <translation type="unfinished"/>
+        <translation>Stilla hraða og tónhæð</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="48"/>
         <source>Changes the speed of a track, also changing its pitch</source>
-        <translation type="unfinished"/>
+        <translation>Stillir hraða hljóðbands, auk þess að hafa áhrif á tónhæð þess</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="33"/>
         <source>Change Tempo</source>
-        <translation>Athraigh Luas; Airde gan Athrú</translation>
+        <translation>Stilla flutningshraða</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="63"/>
         <source>Changes the tempo of a selection without changing its pitch</source>
-        <translation type="unfinished"/>
+        <translation>Stillir flutningshraða afmörkunar án þess að hafa áhrif á tónhæð hennar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="114"/>
         <source>High Quality Tempo Change</source>
-        <translation type="unfinished"/>
+        <translation>Úrvalsflutningshraðastilling</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="29"/>
         <source>You can only measure one track at a time.</source>
-        <translation type="unfinished"/>
+        <translation>Þú getur aðeins mælt eitt hljóðband í einu.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="35"/>
         <source>Please select an audio track.</source>
-        <translation>Roghnaigh rian fuaime.</translation>
+        <translation>Gerðu svo vel að velja hljóðband.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="52"/>
         <source>Invalid audio selection.
 Please ensure that audio is selected.</source>
-        <translation type="unfinished"/>
+        <translation>Hljóðsafmörkunin er ógild.
+Vinsamlegast gættu þess að hljóð sé valið.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="59"/>
         <source>Nothing to measure.
 Please select a section of a track.</source>
-        <translation type="unfinished"/>
+        <translation>Ekkert til að mæla.
+Gerðu svo vel að afmarka bút úr hljóðbandi.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="29"/>
         <source>Hard Clipping</source>
-        <translation type="unfinished"/>
+        <translation>Harðskerðing</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="29"/>
         <source>Soft Clipping</source>
-        <translation>Gearrthóg Bhog</translation>
+        <translation>Léttskerðing</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="30"/>
         <source>Soft Overdrive</source>
-        <translation type="unfinished"/>
+        <translation>Léttyfirgnæfing</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="30"/>
         <source>Medium Overdrive</source>
-        <translation type="unfinished"/>
+        <translation>Miðlungsyfirgnæfing</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="31"/>
         <source>Hard Overdrive</source>
-        <translation type="unfinished"/>
+        <translation>Harðyfirgnæfing</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="31"/>
         <source>Cubic Curve (odd harmonics)</source>
-        <translation type="unfinished"/>
+        <translation>Verpilsbugða (oddatalna-hljómfræði)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="32"/>
         <source>Even Harmonics</source>
-        <translation type="unfinished"/>
+        <translation>Sléttra talna-hljómfræði</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="32"/>
         <source>Expand and Compress</source>
-        <translation type="unfinished"/>
+        <translation>Þenja út og þjappa saman</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="33"/>
         <source>Leveller</source>
-        <translation type="unfinished"/>
+        <translation>Slétting</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="33"/>
         <source>Rectifier Distortion</source>
-        <translation type="unfinished"/>
+        <translation>Afriðunarhrif</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="34"/>
         <source>Hard Limiter 1413</source>
-        <translation type="unfinished"/>
+        <translation>Stranglegur takmarkari 1413</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="60"/>
@@ -6115,13 +6110,13 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="63"/>
         <source>Fuzz Box</source>
-        <translation type="unfinished"/>
+        <translation>Loðkassi</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="64"/>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="202"/>
         <source>Walkie-talkie</source>
-        <translation type="unfinished"/>
+        <translation>Talstöð</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="65"/>
@@ -6206,7 +6201,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="84"/>
         <source>Distortion</source>
-        <translation>Saobhadh</translation>
+        <translation>Afskræming</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="111"/>
@@ -6216,7 +6211,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EchoBase.cpp" line="21"/>
         <source>Echo</source>
-        <translation>Macalla</translation>
+        <translation>Bergmál</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EchoBase.cpp" line="41"/>
@@ -6232,7 +6227,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="34"/>
         <source>Equalization</source>
-        <translation>Cothromú</translation>
+        <translation>Tónjafnari</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="80"/>
@@ -6242,22 +6237,22 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="180"/>
         <source>100Hz Rumble</source>
-        <translation>Tormán 100Hz</translation>
+        <translation>100Hz urg</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="183"/>
         <source>AM Radio</source>
-        <translation>Raidió AM</translation>
+        <translation>Styrkmótunarbylgjur</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="186"/>
         <source>Bass Boost</source>
-        <translation type="unfinished"/>
+        <translation>Lágtíðnihækkun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="188"/>
         <source>Bass Cut</source>
-        <translation type="unfinished"/>
+        <translation>Lágtíðnihækkun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="190"/>
@@ -6267,22 +6262,22 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="193"/>
         <source>RIAA</source>
-        <translation>RIAA</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="195"/>
         <source>Telephone</source>
-        <translation>Guthán</translation>
+        <translation>Símtæki</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="198"/>
         <source>Treble Boost</source>
-        <translation type="unfinished"/>
+        <translation>Hátíðnihækkun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="200"/>
         <source>Treble Cut</source>
-        <translation type="unfinished"/>
+        <translation>Hátíðnilækkun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="275"/>
@@ -6308,7 +6303,7 @@ Please select a section of a track.</source>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="121"/>
         <source>unnamed</source>
         <extracomment>name of the 'unnamed' custom curve</extracomment>
-        <translation>gan ainm</translation>
+        <translation>ónafngreint</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="98"/>
@@ -6333,32 +6328,32 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
         <source>B-spline</source>
         <extracomment>Technical term for a kind of curve.</extracomment>
-        <translation>B-spline</translation>
+        <translation>Bezier-fjaðurbrúun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="22"/>
         <source>Cosine</source>
-        <translation type="unfinished"/>
+        <translation>Kósínus</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="23"/>
         <source>Cubic</source>
-        <translation type="unfinished"/>
+        <translation>Verpill</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="29"/>
         <source>Find Clipping</source>
-        <translation type="unfinished"/>
+        <translation>Finna skerðingu</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="49"/>
         <source>Creates labels where clipping is detected</source>
-        <translation type="unfinished"/>
+        <translation>Merkir þar sem skerðing greinist</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="70"/>
         <source>Clipping</source>
-        <translation>Ag bearradh</translation>
+        <translation>Skerðing</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="186"/>
@@ -6369,22 +6364,22 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
         <source>There is not enough room available to generate the audio</source>
-        <translation type="unfinished"/>
+        <translation>Það er ekki nægilegt pláss til þess að mynda hljóðið</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/LegacyCompressorBase.cpp" line="42"/>
         <source>Legacy Compressor</source>
-        <translation type="unfinished"/>
+        <translation>Fornþjappari</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/LegacyCompressorBase.cpp" line="69"/>
         <source>Compresses the dynamic range of audio</source>
-        <translation type="unfinished"/>
+        <translation>Þjappar saman heyrnarsviði hljómflutnings</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PhaserBase.cpp" line="44"/>
         <source>Phaser</source>
-        <translation>Phaser</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PhaserBase.cpp" line="69"/>
@@ -6400,7 +6395,7 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="66"/>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="81"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="80"/>
@@ -6416,12 +6411,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/RepeatBase.cpp" line="14"/>
         <source>Repeat</source>
-        <translation>Athdhéan</translation>
+        <translation>Endurtaka</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/RepeatBase.cpp" line="35"/>
         <source>Repeats the selection the specified number of times</source>
-        <translation type="unfinished"/>
+        <translation>Endurtekur afmörkunina tiltekinn fjölda sinnum</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="38"/>
@@ -6438,13 +6433,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="43"/>
         <source>Chebyshev Type I</source>
         <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
-        <translation>Cineál Chebyshev I</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="46"/>
         <source>Chebyshev Type II</source>
         <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
-        <translation>Cineál Chebyshev II</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="51"/>
@@ -6476,7 +6471,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/SilenceBase.cpp" line="20"/>
         <source>Silence</source>
         <comment>generator</comment>
-        <translation>Tost</translation>
+        <translation>Þögn</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/SilenceBase.cpp" line="49"/>
@@ -6486,7 +6481,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="28"/>
         <source>Linear</source>
-        <translation>Líneach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="29"/>
@@ -6496,17 +6491,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="33"/>
         <source>Sine</source>
-        <translation>Sín</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="34"/>
         <source>Square</source>
-        <translation>Cearnóg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="35"/>
         <source>Sawtooth</source>
-        <translation>Sábhfhiaclach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="36"/>
@@ -6517,7 +6512,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="37"/>
         <source>Triangle</source>
         <comment>waveform</comment>
-        <translation type="unfinished"/>
+        <translation>Þríhyrningur</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="61"/>
@@ -6542,7 +6537,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="32"/>
         <source>Wahwah</source>
-        <translation>Wahwah</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
@@ -6641,7 +6636,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
         <source>Select</source>
-        <translation>Roghnaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
@@ -6704,7 +6699,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
         <source>Save</source>
-        <translation>Taisc</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="36"/>
@@ -6800,7 +6795,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
         <source>Track title</source>
-        <translation type="unfinished"/>
+        <translation>Titill lags</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
@@ -6937,7 +6932,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/DataUploader.cpp" line="262"/>
         <source>File not found</source>
-        <translation type="unfinished"/>
+        <translation>Skrá fannst ekki</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="369"/>
@@ -7198,7 +7193,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="98"/>
         <source>Bass Guitar</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Bassagítar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="101"/>
@@ -7296,7 +7291,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="18"/>
         <source>Noise</source>
-        <translation>Torainn</translation>
+        <translation>Háreysti</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="17"/>
@@ -7383,13 +7378,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="118"/>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="76"/>
         <source>Save</source>
-        <translation>Taisc</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="13"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="14"/>
         <source>Threshold</source>
-        <translation>Tairseach</translation>
+        <translation>Þröskuldur</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="15"/>
@@ -7405,24 +7400,24 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
         <source>Make-up gain</source>
-        <translation type="unfinished"/>
+        <translation>Uppbótarmögnun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>Knee width</source>
-        <translation type="unfinished"/>
+        <translation>Tónhækkunarþröskuldur</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
         <source>Ratio</source>
-        <translation>Cóimheas</translation>
+        <translation>Hlutfall</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="17"/>
         <source>Lookahead</source>
-        <translation type="unfinished"/>
+        <translation>Horfur</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="21"/>
@@ -7432,23 +7427,23 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>ms</source>
         <extracomment>Abbreviation of milliseconds, used as a unit suffix</extracomment>
-        <translation type="unfinished"/>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
         <source>Attack</source>
-        <translation type="unfinished"/>
+        <translation>Kast</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="23"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>Release</source>
-        <translation type="unfinished"/>
+        <translation>Losun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="15"/>
         <source>Output</source>
-        <translation>Aschur</translation>
+        <translation>Úttak</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="39"/>
@@ -7463,7 +7458,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
         <source>Unknown error</source>
-        <translation type="unfinished"/>
+        <translation>Óþekkt villa</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="45"/>
@@ -7498,7 +7493,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
         <source>Applied effect: %1</source>
-        <translation>Maisiúchán forchurtha: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="49"/>
@@ -7521,7 +7516,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="108"/>
         <source>Presets</source>
-        <translation>Réamhshocruithe</translation>
+        <translation>Sniðmát</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="118"/>
@@ -7668,29 +7663,29 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="101"/>
         <source>Nyquist scripts</source>
-        <translation>Scripteanna Nyquist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="49"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="102"/>
         <source>Lisp scripts</source>
-        <translation>Scripteanna Lisp</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="50"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="103"/>
         <source>All files</source>
-        <translation>Gach comhad</translation>
+        <translation>Allar skrár</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="58"/>
         <source>Load Nyquist script</source>
-        <translation>Luchtaigh script Nyquist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="111"/>
         <source>Save Nyquist script</source>
-        <translation>Taisc script Nyquist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="163"/>
@@ -7734,7 +7729,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="130"/>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="54"/>
         <source>OK</source>
-        <translation>Tá go Maith</translation>
+        <translation>Í lagi</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
@@ -7750,7 +7745,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="384"/>
         <source>Unknown</source>
-        <translation>Anaithnid</translation>
+        <translation>Óþekkt</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
@@ -7761,12 +7756,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="242"/>
         <source>Close</source>
         <extracomment>Label of the button that closes the dialog</extracomment>
-        <translation>Dún</translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="148"/>
         <source>Cancel</source>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="58"/>
@@ -7776,7 +7771,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="64"/>
         <source>Type:</source>
-        <translation>Cineál:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="70"/>
@@ -7825,7 +7820,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="59"/>
         <source>Missing</source>
-        <translation>In easnamh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="63"/>
@@ -7839,18 +7834,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="248"/>
         <source>All</source>
         <extracomment>Filter option in the Plugin Manager dropdowns that shows every entry</extracomment>
-        <translation>Uile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="156"/>
         <source>Disabled</source>
-        <translation>Díchumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="157"/>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="307"/>
         <source>Enabled</source>
-        <translation>Cumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="312"/>
@@ -7861,7 +7856,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="310"/>
         <source>Name</source>
-        <translation>Ainm</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="314"/>
@@ -7872,12 +7867,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="316"/>
         <source>Path</source>
-        <translation>Conair</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="318"/>
         <source>Type</source>
-        <translation>Cineál</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
@@ -7893,7 +7888,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="72"/>
         <source>Built-in</source>
-        <translation>Ionsuite</translation>
+        <translation>Innbyggt</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="274"/>
@@ -7912,12 +7907,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="88"/>
         <source>Builtin Effects</source>
-        <translation>Maisiúcháin Ionsuite</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="93"/>
         <source>The Audacity Team</source>
-        <translation>Foireann Audacity</translation>
+        <translation>Audacity-teymið</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="104"/>
@@ -7932,12 +7927,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/MixAndRender.cpp" line="132"/>
         <source>Mix and Render</source>
-        <translation type="unfinished"/>
+        <translation>Hljóðblanda og ganga frá</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/MixAndRender.cpp" line="133"/>
         <source>Mixing and rendering tracks</source>
-        <translation type="unfinished"/>
+        <translation>Hljóðblöndun og frágangur hljóðbanda</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/BypassEffectButton.qml" line="19"/>
@@ -8015,22 +8010,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="386"/>
         <source>Generator</source>
-        <translation>Gineadóir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="387"/>
         <source>Effect</source>
-        <translation>Maisiúchán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="388"/>
         <source>Tool</source>
-        <translation>Uirlis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="124"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
@@ -8043,7 +8038,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="47"/>
         <source>Amplify</source>
-        <translation>Aimpligh</translation>
+        <translation>Magna</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="202"/>
@@ -8079,7 +8074,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
         <source>Algorithm not effective on this audio. Nothing changed.</source>
-        <translation type="unfinished"/>
+        <translation>Reiknirit virkar ekki á þetta hljóð. Ekkert breyttist.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
@@ -8092,7 +8087,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/dtmfgenerator.cpp" line="13"/>
         <source>DTMF Tones</source>
-        <translation type="unfinished"/>
+        <translation>Tónval</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/dtmfgenerator.cpp" line="52"/>
@@ -8105,7 +8100,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="15"/>
         <source>Compressor</source>
-        <translation>Comhbhrúiteoir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
@@ -8128,7 +8123,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
         <source>Preparing preview</source>
-        <translation>Réamhamharc á ullmhú</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -8136,22 +8131,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="64"/>
         <source>Fade In</source>
-        <translation>Céimnigh Isteach</translation>
+        <translation>Vaxandi skýrleiki</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="78"/>
         <source>Applies a linear fade-in to the selected audio</source>
-        <translation type="unfinished"/>
+        <translation>Setur línuréttan vaxandi skýrleika á valið hljóð</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="81"/>
         <source>Fade Out</source>
-        <translation>Céimnigh Amach</translation>
+        <translation>Minnkandi skýrleiki</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="95"/>
         <source>Applies a linear fade-out to the selected audio</source>
-        <translation type="unfinished"/>
+        <translation>Setur línuréttan minnkandi skýrleika á valið hljóð</translation>
     </message>
 </context>
 <context>
@@ -8175,12 +8170,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="15"/>
         <source>Invert</source>
-        <translation>Inbheartaigh</translation>
+        <translation>Hvolfa</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="26"/>
         <source>Flips the audio samples upside-down, reversing their polarity</source>
-        <translation type="unfinished"/>
+        <translation>Snýr hljóðbrotunum á hvolf, og þar með umpólar þau</translation>
     </message>
 </context>
 <context>
@@ -8188,7 +8183,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="30"/>
         <source>Loudness Normalization</source>
-        <translation type="unfinished"/>
+        <translation>Hávaðastöðlun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="59"/>
@@ -8205,7 +8200,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>Ag miondealú: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="181"/>
@@ -8219,7 +8214,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noisegenerator.cpp" line="11"/>
         <source>Noise</source>
-        <translation>Torainn</translation>
+        <translation>Suð</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noisegenerator.cpp" line="44"/>
@@ -8232,17 +8227,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="69"/>
         <source>Median</source>
-        <translation>Meánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
         <source>Second greatest</source>
-        <translation>An dara ceann is mó</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="201"/>
         <source>Noise reduction</source>
-        <translation>Maolú fuaime</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="221"/>
@@ -8281,7 +8276,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="33"/>
         <source>Normalize</source>
         <extracomment>Name of the Normalize effect; shown in menus and dialog titles</extracomment>
-        <translation>Normalú</translation>
+        <translation>Staðla</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="54"/>
@@ -8316,7 +8311,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>Ag miondealú: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="133"/>
@@ -8362,22 +8357,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistprompteffect.cpp" line="23"/>
         <source>Built-in</source>
-        <translation>Ionsuite</translation>
+        <translation>Innbyggt</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="104"/>
         <source>Nyquist Effects</source>
-        <translation>Maisiúcháin Nyquist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="109"/>
         <source>The Audacity Team</source>
-        <translation>Foireann Audacity</translation>
+        <translation>Audacity-teymið</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="120"/>
         <source>Provides Nyquist Effects support to Audacity</source>
-        <translation>Cuireann sé tacaíocht do Mhaisiúcháin Nyquist ar fáil do Audacity</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
@@ -8389,13 +8384,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="69"/>
         <source>n/a</source>
-        <translation>n/bh</translation>
+        <translation>ekki tiltækt</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
         <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
-        <translation>Oibrí Nyquist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="111"/>
@@ -8424,7 +8419,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="823"/>
         <source>Audio selection required.</source>
-        <translation>Is gá fuaim a roghnú.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1381"/>
@@ -8456,25 +8451,24 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
         <source>plug-in</source>
-        <translation>breiseán</translation>
+        <translation>viðbót</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
         <source>Nyquist returned a list.</source>
-        <translation>Níor sheol Nyquist fuaim thar n-ais.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
         <source>Nyquist returned the value: %1</source>
-        <translation>Seo an luach do thug Nyquist ar ais: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
         <source>Nyquist returned too many audio channels.
 </source>
-        <translation>Sheol Nyquist an iomad cainéail fhuaime thar n-ais.
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
@@ -8507,7 +8501,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
         <source>Could not open file</source>
-        <translation>Níorbh fhéidir an comhad a oscailt</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2388"/>
@@ -8522,7 +8516,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
         <source>untitled</source>
-        <translation>gan teideal</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
@@ -8532,7 +8526,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
         <source>Steve Daulton</source>
-        <translation>Steve Daulton</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="10"/>
@@ -8557,7 +8551,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="14"/>
         <source>Frequency (Hz)</source>
-        <translation>Minicíocht (Hz):</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="15"/>
@@ -8577,12 +8571,12 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
         <source>Paul Licameli</source>
-        <translation>Paul Licameli</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="19"/>
         <source>~aPlease select frequencies.</source>
-        <translation>~aRoghnaigh minicíochtaí.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="20"/>
@@ -8601,7 +8595,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="22"/>
         <source>Error.~%</source>
-        <translation>Earráid.~%</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="23"/>
@@ -8611,7 +8605,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
         <source>Gain (dB)</source>
-        <translation>Neartúchán (dB):</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="25"/>
@@ -8670,17 +8664,17 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
         <source>Fade Type</source>
-        <translation type="unfinished"/>
+        <translation>Tegund skýrleikaumskipta</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="36"/>
         <source>Fade Up</source>
-        <translation>Céimnigh Suas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="37"/>
         <source>Fade Down</source>
-        <translation>Céimnigh Síos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="38"/>
@@ -8700,7 +8694,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="41"/>
         <source>Start/End as</source>
-        <translation>Tosaigh/Críochnaigh ag</translation>
+        <translation>Byrja/enda á</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="42"/>
@@ -8710,17 +8704,17 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="43"/>
         <source>dB Gain</source>
-        <translation>Neartúchán dB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="44"/>
         <source>Start (or end)</source>
-        <translation>Tosach (nó críoch)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="45"/>
         <source>End (or start)</source>
-        <translation>Críoch (nó an tús)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="46"/>
@@ -8730,17 +8724,17 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="47"/>
         <source>None Selected</source>
-        <translation>Faic Roghnaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="48"/>
         <source>Linear In</source>
-        <translation>Líneach Isteach</translation>
+        <translation>Línurétt vaxandi</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="49"/>
         <source>Linear Out</source>
-        <translation>Líneach Amach</translation>
+        <translation>Línurétt minnkandi</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="50"/>
@@ -8795,7 +8789,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="60"/>
         <source>Error~%~%</source>
-        <translation>Earráid~%~%</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="61"/>
@@ -8882,12 +8876,12 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="78"/>
         <source>Constant Power 1</source>
-        <translation>Cumhacht Leanúnach 1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="79"/>
         <source>Constant Power 2</source>
-        <translation>Cumhacht Leanúnach 2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="80"/>
@@ -8907,7 +8901,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="83"/>
         <source>Automatic</source>
-        <translation>Uathoibríoch</translation>
+        <translation>Sjálfvirkt</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="84"/>
@@ -8927,27 +8921,27 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="87"/>
         <source>Delay</source>
-        <translation>Moill</translation>
+        <translation>Bið</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="88"/>
         <source>Delay type</source>
-        <translation type="unfinished"/>
+        <translation>Tegund biðs</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="89"/>
         <source>Regular</source>
-        <translation>Rialta</translation>
+        <translation>Venjulegt</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="90"/>
         <source>Bouncing Ball</source>
-        <translation>Liathróid Léimneach</translation>
+        <translation>Skoppandi bolti</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="91"/>
         <source>Reverse Bouncing Ball</source>
-        <translation type="unfinished"/>
+        <translation>Öfugur skoppandi bolti</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="92"/>
@@ -8967,7 +8961,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="95"/>
         <source>Pitch/Tempo</source>
-        <translation type="unfinished"/>
+        <translation>Tónhæð/Flutningshraði</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="96"/>
@@ -8987,7 +8981,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="99"/>
         <source>Number of echoes</source>
-        <translation type="unfinished"/>
+        <translation>Fjöldi bergmála</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="100"/>
@@ -8997,12 +8991,12 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="101"/>
         <source>Yes</source>
-        <translation>Ba mhaith</translation>
+        <translation>Já</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="102"/>
         <source>No</source>
-        <translation>Ná</translation>
+        <translation>Nei</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="103"/>
@@ -9022,17 +9016,17 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="106"/>
         <source>Number of Labels</source>
-        <translation>Líon na Lipéad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="107"/>
         <source>Label Interval</source>
-        <translation>Eatramh an Lipéid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="108"/>
         <source>Number of labels</source>
-        <translation>Líon na lipéad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="109"/>
@@ -9052,12 +9046,12 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="112"/>
         <source>Label text</source>
-        <translation>Téacs an lipéid</translation>
+        <translation>Texti merkis</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="113"/>
         <source>Label</source>
-        <translation>Lipéad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="114"/>
@@ -9067,62 +9061,62 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="115"/>
         <source>None - Text Only</source>
-        <translation>Dada - Téacs Amháin</translation>
+        <translation>Ekkert - texti eingöngu</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="116"/>
         <source>1 (Before Label)</source>
-        <translation>1 (Roimh an Lipéad)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="117"/>
         <source>2 (Before Label)</source>
-        <translation>2 (Roimh an Lipéad)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="118"/>
         <source>3 (Before Label)</source>
-        <translation>3 (Roimh an Lipéad)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="119"/>
         <source>1 (After Label)</source>
-        <translation>1 (I nDiaidh an Lipéid)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="120"/>
         <source>2 (After Label)</source>
-        <translation>2 (I nDiaidh an Lipéid)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="121"/>
         <source>3 (After Label)</source>
-        <translation>3 (I nDiaidh an Lipéid)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="122"/>
         <source>Begin numbering from</source>
-        <translation>Tosaigh an t-uimhriú ó</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="123"/>
         <source>Message on completion</source>
-        <translation>Teachtaireacht um chríochnú</translation>
+        <translation>Skilaboð þegar lokið er</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="124"/>
         <source>Details</source>
-        <translation>Mionsonraí</translation>
+        <translation>Nánar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="125"/>
         <source>Warnings only</source>
-        <translation>Rabhaí amháin</translation>
+        <translation>Viðvaranir eingöngu</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="126"/>
         <source>None</source>
-        <translation>Faic</translation>
+        <translation>Ekkert</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="127"/>
@@ -9157,7 +9151,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
         <source>Dominic Mazzoni</source>
-        <translation>Dominic Mazzoni</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="134"/>
@@ -9192,7 +9186,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="140"/>
         <source>Frequency must be at least 0.1 Hz.</source>
-        <translation>Ní mór don mhinicíocht a bheith 0.1 Hz ar a laghad.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="141"/>
@@ -9209,32 +9203,32 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
         <source>Threshold level (dB)</source>
-        <translation type="unfinished"/>
+        <translation>Þröskuldsstig (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="144"/>
         <source>Threshold measurement</source>
-        <translation type="unfinished"/>
+        <translation>Þröskuldsmæling</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="145"/>
         <source>Peak level</source>
-        <translation type="unfinished"/>
+        <translation>Hámarksstig</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="146"/>
         <source>Average level</source>
-        <translation type="unfinished"/>
+        <translation>Meðalstig</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="147"/>
         <source>RMS level</source>
-        <translation type="unfinished"/>
+        <translation>Ferningsmeðaltal</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="148"/>
         <source>Minimum silence duration</source>
-        <translation type="unfinished"/>
+        <translation>Lágmarksþagnarlengd</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="149"/>
@@ -9279,12 +9273,12 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="157"/>
         <source>Sound ##1</source>
-        <translation type="unfinished"/>
+        <translation>Hljóð ##1</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="158"/>
         <source>~ah ~am ~as</source>
-        <translation>~ah ~am ~as</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="159"/>
@@ -9312,27 +9306,27 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
         <source>Type</source>
-        <translation>Cineál</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="164"/>
         <source>Soft Limit</source>
-        <translation>Teorainn Bhog</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="165"/>
         <source>Hard Limit</source>
-        <translation>Teorainn Chrua</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="166"/>
         <source>Soft Clip</source>
-        <translation>Gearrthóg Bhog</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="167"/>
         <source>Hard Clip</source>
-        <translation>Gearrthóg Chrua</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="168"/>
@@ -9349,12 +9343,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="170"/>
         <source>Limit to (dB)</source>
-        <translation>Teorannaigh go (dB)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="171"/>
         <source>Hold (ms)</source>
-        <translation>Greim (ms)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="172"/>
@@ -9379,7 +9373,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="176"/>
         <source>Gate</source>
-        <translation>Geata</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="177"/>
@@ -9460,7 +9454,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
         <source>Steve Daulton and Bill Wharrie</source>
-        <translation>Steve Daulton agus Bill Wharrie</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="192"/>
@@ -9492,47 +9486,47 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
         <source>Plug-in</source>
-        <translation>Breiseán</translation>
+        <translation>Viðbót</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="198"/>
         <source>Lisp file</source>
-        <translation>Comhaid Lisp</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="199"/>
         <source>HTML file</source>
-        <translation>Comhaid HTML</translation>
+        <translation>HTML-skrá</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="200"/>
         <source>Text file</source>
-        <translation>Comhad téacs</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="201"/>
         <source>All supported</source>
-        <translation>Gach a dtugtar tacaíocht dóibh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="202"/>
         <source>All files</source>
-        <translation>Gach comhad</translation>
+        <translation>Allar skrár</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="203"/>
         <source>Allow overwriting</source>
-        <translation>Ceadaigh forscríobh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="204"/>
         <source>Disallow</source>
-        <translation>Dícheadaigh</translation>
+        <translation>Ógilda</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="205"/>
         <source>Allow</source>
-        <translation>Ceadaigh</translation>
+        <translation>Gilda</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
@@ -9562,7 +9556,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
         <source>Plug-ins updated:</source>
-        <translation type="unfinished"/>
+        <translation>Viðbætur uppfærðar:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
@@ -9577,7 +9571,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Unsupported file type:</source>
-        <translation type="unfinished"/>
+        <translation>Óstudd skráartegund:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
@@ -9597,7 +9591,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="218"/>
         <source>David R.Sky</source>
-        <translation>David R.Sky</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
@@ -9612,17 +9606,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
         <source>Abrupt</source>
-        <translation>Go grod</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
         <source>Gradual</source>
-        <translation>De réir a chéile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Duration (60s max)</source>
-        <translation>Aga (60s ar a mhéid)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -9637,17 +9631,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="226"/>
         <source>Tempo (bpm)</source>
-        <translation>Luas (bpm)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
         <source>30 - 300 beats/minute</source>
-        <translation type="unfinished"/>
+        <translation>30 - 300 slög/mínútu</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
         <source>Beats per bar</source>
-        <translation type="unfinished"/>
+        <translation>Slög á strik</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="229"/>
@@ -9662,7 +9656,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
         <source>+/- 1</source>
-        <translation>+/- 1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
@@ -9672,7 +9666,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
         <source>Number of bars</source>
-        <translation>Líon na mbarraí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
@@ -9697,12 +9691,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="238"/>
         <source>Silence before first beat</source>
-        <translation>Tost roimh an chéad bhuille</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="239"/>
         <source>Beat sound</source>
-        <translation>Fuaim buillí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="240"/>
@@ -9722,7 +9716,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
         <source>Cowbell</source>
-        <translation>Clog bó</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="244"/>
@@ -9752,7 +9746,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
         <source>18 - 116</source>
-        <translation>18 - 116</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
@@ -9773,12 +9767,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
         <source>Steven Jones</source>
-        <translation>Steven Jones</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
         <source>Decay (seconds)</source>
-        <translation>Meath (soicindí):</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
@@ -9798,7 +9792,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Amplitude (0 - 1)</source>
-        <translation>Aimplitiúid (0 - 1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -9843,17 +9837,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
         <source>samples</source>
-        <translation>samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
         <source>Measurement scale</source>
-        <translation>Scála tomhais</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="269"/>
         <source>Linear</source>
-        <translation>Líneach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="270"/>
@@ -9863,17 +9857,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="271"/>
         <source>Select a file</source>
-        <translation>Roghnaigh comhad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
         <source>CSV files</source>
-        <translation>Comhaid CSV</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
         <source>HTML files</source>
-        <translation>Comhaid HTML</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
@@ -9898,17 +9892,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
         <source>Minimal</source>
-        <translation>Íosta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="279"/>
         <source>Standard</source>
-        <translation>Caighdeánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="280"/>
         <source>All</source>
-        <translation>Uile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
@@ -9928,37 +9922,37 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="284"/>
         <source>Alternate Lines</source>
-        <translation>Línte Malartacha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="285"/>
         <source>L Channel First</source>
-        <translation>Bealach C Ar dTús</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="286"/>
         <source>Show messages</source>
-        <translation>Taispeáin teachtaireachtaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="287"/>
         <source>Errors Only</source>
-        <translation>Earráidí Amháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="288"/>
         <source>[-inf]</source>
-        <translation>[-inf]</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="289"/>
         <source>Left Channel.~%~%</source>
-        <translation>Bealach Clé.~%~%</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
         <source>~%~%Right Channel.~%~%</source>
-        <translation>~%~%Bealach Deas.~%~%</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
@@ -9991,7 +9985,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
         <source>~a linear, ~a dB.</source>
-        <translation>~a líneach, ~a dB.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="297"/>
@@ -10011,7 +10005,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
         <source>~a seconds.</source>
-        <translation>~a soicindí.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
@@ -10041,7 +10035,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
         <source>~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>~a líneach, &amp;nbsp;&amp;nbsp;~a dB.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
@@ -10051,27 +10045,27 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
         <source>sample data</source>
-        <translation>sonraí samplacha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="309"/>
         <source>Sample #</source>
-        <translation>Sampla #</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="310"/>
         <source>Seconds</source>
-        <translation>Soicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
         <source>Value (linear)</source>
-        <translation>Luach (líneach)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
         <source>Value (dB)</source>
-        <translation>Luach (dB)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
@@ -10081,22 +10075,22 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
         <source>Left (linear)</source>
-        <translation>Clé (líneach)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="315"/>
         <source>Right (linear)</source>
-        <translation>Deas (líneach)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Left (dB)</source>
-        <translation>Clé (dB)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
         <source>Right (dB)</source>
-        <translation>Deas (dB)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="318"/>
@@ -10108,7 +10102,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="319"/>
         <source>linear</source>
-        <translation>líneach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="320"/>
@@ -10163,7 +10157,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
         <source>Select file</source>
-        <translation>Roghnaigh comhad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="331"/>
@@ -10178,7 +10172,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
         <source>Read as Zero</source>
-        <translation>Léigh mar Náid é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
@@ -10204,7 +10198,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
         <source>Error.~%Unable to open file</source>
-        <translation>Earráid.~%Ní féidir an comhad a oscailt</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
@@ -10219,27 +10213,27 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
         <source>Tremolo</source>
-        <translation>Tremolo</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
         <source>Waveform type</source>
-        <translation>Cineál tonnchrutha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
         <source>Sine</source>
-        <translation>Sín</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="343"/>
         <source>Triangle</source>
-        <translation type="unfinished"/>
+        <translation>Þríhyrningur</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="344"/>
         <source>Sawtooth</source>
-        <translation>Sábhfhiaclach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="345"/>
@@ -10249,7 +10243,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="346"/>
         <source>Square</source>
-        <translation>Cearnóg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
@@ -10264,7 +10258,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
         <source>Vocoder</source>
-        <translation>Vocoder</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
@@ -10274,22 +10268,22 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="351"/>
         <source>Distance: (1 to 120, default = 20)</source>
-        <translation>Fad: (1 go 120, réamhshocrú = 20)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
         <source>Output choice</source>
-        <translation>Rogha aschuir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
         <source>Both Channels</source>
-        <translation>An Dá Bhealach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="354"/>
         <source>Right Only</source>
-        <translation>An Deas Amháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="355"/>
@@ -10389,7 +10383,7 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>Ag miondealú: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="100"/>
@@ -10403,7 +10397,7 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="20"/>
         <source>Repair</source>
-        <translation>Deisigh</translation>
+        <translation>Græða</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="31"/>
@@ -10466,13 +10460,13 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="79"/>
         <source>Vocal I</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Guth I</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="81"/>
         <source>Vocal II</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Guth II</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="83"/>
@@ -10496,7 +10490,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="90"/>
         <source>Bathroom</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Seomra Folctha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="92"/>
@@ -10514,25 +10508,25 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="96"/>
         <source>Medium Room</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Seomra Meánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="98"/>
         <source>Large Room</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Seomra Mór</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="100"/>
         <source>Church Hall</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Halla Eaglaise</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="102"/>
         <source>Cathedral</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Ardeaglais</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="104"/>
@@ -10543,7 +10537,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="111"/>
         <source>Reverb</source>
-        <translation>Aisfhuaim</translation>
+        <translation>Endurómun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
@@ -10556,12 +10550,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="21"/>
         <source>Reverse</source>
-        <translation>Aisiompú</translation>
+        <translation>Umsnúa</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="30"/>
         <source>Reverses the selected audio</source>
-        <translation type="unfinished"/>
+        <translation>Snúir völdu hljóðbrotinu við</translation>
     </message>
 </context>
 <context>
@@ -10603,7 +10597,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="26"/>
         <source>Amplify</source>
-        <translation>Aimpligh</translation>
+        <translation>Magna</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="31"/>
@@ -10626,7 +10620,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="13"/>
         <source>Bass and Treble</source>
-        <translation>Dord agus Tribil</translation>
+        <translation>Lág- og hátíðni</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
@@ -10636,12 +10630,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
         <source>Bass</source>
-        <translation>Dord</translation>
+        <translation>Lágtíðni</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="46"/>
         <source>Treble</source>
-        <translation>Tribil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="55"/>
@@ -10700,7 +10694,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="681"/>
         <source>Use high quality stretching (slow)</source>
-        <translation type="unfinished"/>
+        <translation>Nota úrvalsteygingu (hægfara)</translation>
     </message>
 </context>
 <context>
@@ -10708,7 +10702,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="74"/>
         <source>Waveform</source>
-        <translation>Tonnchrot</translation>
+        <translation>Bylgjulögun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="118"/>
@@ -10718,7 +10712,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="128"/>
         <source>Linear</source>
-        <translation>Líneach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="144"/>
@@ -10748,7 +10742,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="294"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
 </context>
 <context>
@@ -10774,7 +10768,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/CompressorView.qml" line="17"/>
         <source>Compressor</source>
-        <translation>Comhbhrúiteoir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
@@ -10784,17 +10778,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
         <source>Input</source>
-        <translation type="unfinished"/>
+        <translation>Inntak</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="131"/>
         <source>Output</source>
-        <translation>Aschur</translation>
+        <translation>Úttak</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="136"/>
         <source>Compression</source>
-        <translation>Comhbhrú</translation>
+        <translation>Þjöppun</translation>
     </message>
 </context>
 <context>
@@ -10822,7 +10816,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
@@ -10848,7 +10842,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
         <source>%1 ms</source>
-        <translation>%1 ms</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
@@ -10876,12 +10870,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="113"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="127"/>
         <source>Invert</source>
-        <translation>Inbheartaigh</translation>
+        <translation>Hvolfa</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="143"/>
@@ -10906,12 +10900,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="82"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="96"/>
         <source>Invert</source>
-        <translation>Inbheartaigh</translation>
+        <translation>Hvolfa</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
@@ -10937,7 +10931,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="33"/>
         <source>RMS</source>
-        <translation>RMS</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="34"/>
@@ -10953,7 +10947,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="114"/>
         <source>Normalize</source>
         <extracomment>Verb: starts the sentence-like control row, e.g. &quot;Normalize perceived loudness to -23 LUFS&quot;</extracomment>
-        <translation>Normalú</translation>
+        <translation>Staðla</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="132"/>
@@ -11000,7 +10994,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="46"/>
         <source>Type</source>
-        <translation>Cineál</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="67"/>
@@ -11010,25 +11004,25 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="26"/>
         <source>White</source>
         <comment>not a color, but 'white noise' having a uniform spectrum</comment>
-        <translation>Bán</translation>
+        <translation>Hvítt</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="31"/>
         <source>Pink</source>
         <comment>not a color, but 'pink noise' having a spectrum with more power in low frequencies</comment>
-        <translation>Bándearg</translation>
+        <translation>Bleikt</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="35"/>
         <source>Brownian</source>
         <comment>a kind of noise spectrum also known as 'red' or 'brown'</comment>
-        <translation type="unfinished"/>
+        <translation>Rautt</translation>
     </message>
 </context>
 <context>
@@ -11036,7 +11030,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="68"/>
         <source>Step 1</source>
-        <translation>Céim 1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="78"/>
@@ -11051,7 +11045,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
         <source>Step 2</source>
-        <translation>Céim 2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
@@ -11063,13 +11057,13 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="155"/>
         <source>Noise reduction</source>
-        <translation>Maolú fuaime</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="173"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="187"/>
         <source>Sensitivity</source>
-        <translation>Íogaireacht</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="203"/>
@@ -11085,27 +11079,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="242"/>
         <source>Output</source>
-        <translation>Aschur</translation>
+        <translation>Úttak</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="269"/>
         <source>Audio with noise removed</source>
-        <translation type="unfinished"/>
+        <translation>Hljóðbútar með suði fjarlægt</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="284"/>
         <source>Noise only</source>
-        <translation type="unfinished"/>
+        <translation>Suð eingöngu</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="150"/>
         <source>Warning</source>
-        <translation>Foláireamh</translation>
+        <translation>Aðvörun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="151"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
 </context>
 <context>
@@ -11114,7 +11108,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="12"/>
         <source>Normalize</source>
         <extracomment>Title of the Normalize effect dialog</extracomment>
-        <translation>Normalú</translation>
+        <translation>Staðla</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="42"/>
@@ -11155,7 +11149,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="13"/>
         <source>Reverb</source>
-        <translation>Aisfhuaim</translation>
+        <translation>Endurómun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="269"/>
@@ -11175,7 +11169,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="49"/>
         <source>ms</source>
-        <translation type="unfinished"/>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
@@ -11261,12 +11255,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="54"/>
         <source>Waveform</source>
-        <translation>Tonnchrot</translation>
+        <translation>Bylgjulögun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="78"/>
         <source>Frequency</source>
-        <translation>Minicíocht</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="102"/>
@@ -11276,22 +11270,22 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="35"/>
         <source>Sine</source>
-        <translation>Sín</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="35"/>
         <source>Square</source>
-        <translation>Cearnóg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="35"/>
         <source>Sawtooth</source>
-        <translation>Sábhfhiaclach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="35"/>
@@ -11301,7 +11295,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="36"/>
         <source>Triangle</source>
-        <translation type="unfinished"/>
+        <translation>Þríhyrningur</translation>
     </message>
 </context>
 <context>
@@ -11319,17 +11313,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="30"/>
         <source>Threshold</source>
-        <translation>Tairseach</translation>
+        <translation>Þröskuldur</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="75"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="120"/>
         <source>Action</source>
-        <translation>Gníomh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
@@ -11368,29 +11362,29 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
         <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
-        <translation>s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="37"/>
         <source>seconds</source>
-        <translation>soicindí</translation>
+        <translation>sekúndur</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
         <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="46"/>
         <source>milliseconds</source>
-        <translation>milleasoicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="53"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="54"/>
         <source>samples</source>
-        <translation>samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
@@ -11401,13 +11395,13 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="64"/>
         <source>hertz</source>
-        <translation>hertz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
         <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
-        <translation>kHz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="73"/>
@@ -11470,7 +11464,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../au3/libraries/au3-exceptions/AudacityException.h" line="98"/>
         <source>Message</source>
-        <translation>Teachtaireacht</translation>
+        <translation>Skilaboð</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="30"/>
@@ -11490,7 +11484,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.h" line="27"/>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.h" line="36"/>
         <source>Internal Error</source>
-        <translation>Earráid Inmheánach</translation>
+        <translation>Innri villa</translation>
     </message>
 </context>
 <context>
@@ -11521,24 +11515,24 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>Flytja út hljómflutning</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
         <source>Export</source>
         <extracomment>Section heading in the Export dialog</extracomment>
-        <translation>Tabhair amach</translation>
+        <translation>Flytja út</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
         <source>Type</source>
-        <translation>Cineál</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="129"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
-        <translation>Comhad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
@@ -11596,12 +11590,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
         <source>Format:</source>
-        <translation>Formáid:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
         <source>Codec:</source>
-        <translation>Comhbhrú/dí-chomhbhrú:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
@@ -11621,12 +11615,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
         <source>FLAC options</source>
-        <translation>Roghanna FLAC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="54"/>
         <source>Compression</source>
-        <translation>Comhbhrú</translation>
+        <translation>Þjöppun</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="73"/>
@@ -11636,7 +11630,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="86"/>
         <source>LPC</source>
-        <translation>LPC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="105"/>
@@ -11656,7 +11650,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
         <source>Min. PtO</source>
-        <translation>PtO íosta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
@@ -11696,7 +11690,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
         <source>Max. PtO</source>
-        <translation>PtO uasta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
@@ -11734,12 +11728,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="83"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="97"/>
         <source>Tag</source>
-        <translation>Clib</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="109"/>
         <source>Quality</source>
-        <translation>Caighdeán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="128"/>
@@ -11749,7 +11743,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
         <source>Cutoff</source>
-        <translation type="unfinished"/>
+        <translation>Afmörkun</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
@@ -11808,13 +11802,13 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="76"/>
         <source>Set as default</source>
-        <translation type="unfinished"/>
+        <translation>Nota sem sjálfsgefið</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="96"/>
         <source>Delete</source>
         <extracomment>Label of the button that deletes the selected metadata tag</extracomment>
-        <translation>Scrios</translation>
+        <translation>Eyða</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="111"/>
@@ -11869,7 +11863,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="60"/>
         <source>Download FFmpeg</source>
-        <translation type="unfinished"/>
+        <translation>Sækja FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="73"/>
@@ -11939,12 +11933,12 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
         <source>Do you want to overwrite?</source>
-        <translation type="unfinished"/>
+        <translation>Viltu yfirskrifa?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
         <source>Overwrite</source>
-        <translation type="unfinished"/>
+        <translation>Yfirskrifa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
@@ -11969,24 +11963,24 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
         <source>Enabled</source>
-        <translation>Cumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
         <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
         <source>Disabled</source>
-        <translation>Díchumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
         <source>Version:</source>
-        <translation>Leagan:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
         <source>Shortcut:</source>
         <extracomment>Keyboard shortcut</extracomment>
-        <translation>Aicearra:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
@@ -11997,7 +11991,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
         <source>Enable</source>
-        <translation>Cumasaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
@@ -12089,12 +12083,12 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
         <source>Playback</source>
-        <translation>Athsheinm</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
         <source>Lyrics</source>
-        <translation>Liricí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
@@ -12126,7 +12120,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="348"/>
         <source>Rectangular</source>
-        <translation>Dronnuilleogach</translation>
+        <translation>Rétthyrningslaga</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="351"/>
@@ -12162,25 +12156,25 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="366"/>
         <source>Welch</source>
         <extracomment>a proper name</extracomment>
-        <translation>Loic</translation>
+        <translation>Welch</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="369"/>
         <source>Gaussian(a=2.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>Gaussian(a=2.5)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="372"/>
         <source>Gaussian(a=3.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>Gaussian(a=3.5)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="375"/>
         <source>Gaussian(a=4.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>Gaussian(a=4.5)</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -12198,7 +12192,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="25"/>
         <source>Audacity failed to open a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>Theip ar Audacity comhad a oscailt in %1.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="29"/>
@@ -12222,12 +12216,12 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.h" line="31"/>
         <source>File Error</source>
-        <translation>Earráid Comhaid</translation>
+        <translation>Skráarvilla</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="48"/>
         <source>All files</source>
-        <translation>Gach comhad</translation>
+        <translation>Allar skrár</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
@@ -12249,29 +12243,29 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
         <source>Text files</source>
-        <translation>Comhaid téacs</translation>
+        <translation>Textaskrár</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
         <source>XML files</source>
-        <translation>Comhaid XML</translation>
+        <translation>XML-skrár</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
         <source>, </source>
-        <translation>, </translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
         <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
-        <translation>%1 comhaid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
         <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
-        <translation>(%1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
@@ -12283,7 +12277,7 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="59"/>
@@ -12319,7 +12313,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
-        <translation>Tá go Maith</translation>
+        <translation>Í lagi</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="162"/>
@@ -12363,7 +12357,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
@@ -12374,14 +12368,14 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
-        <translation>Cuir i bhféidhm é</translation>
+        <translation>Nota</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
-        <translation>Tabhair amach</translation>
+        <translation>Flytja út</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="81"/>
@@ -12391,12 +12385,12 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
-        <translation>Dún</translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="114"/>
         <source>Select all</source>
-        <translation type="unfinished"/>
+        <translation>Velja allt</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
@@ -12404,7 +12398,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
         <source>Clear</source>
-        <translation>Glan</translation>
+        <translation>Hreinsa</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="75"/>
@@ -12420,14 +12414,14 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
         <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="31"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="51"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="35"/>
         <source>seconds</source>
-        <translation>soicindí</translation>
+        <translation>sekúndur</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
@@ -12438,7 +12432,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="138"/>
         <source>Don’t show again</source>
-        <translation type="unfinished"/>
+        <translation>Ekki sýna aftur</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="124"/>
@@ -12448,13 +12442,13 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
         <extracomment>Message shown when a search returns nothing</extracomment>
-        <translation type="unfinished"/>
+        <translation>Engar niðurstöður bárust</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="310"/>
         <source>Duration</source>
         <comment>file duration</comment>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
@@ -12462,48 +12456,48 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="296"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="63"/>
         <source>Unknown</source>
-        <translation>Anaithnid</translation>
+        <translation>Óþekkt</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="347"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="278"/>
         <source>Size</source>
         <comment>file size</comment>
-        <translation type="unfinished"/>
+        <translation>Stærð</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
-        <translation type="unfinished"/>
+        <translation>Gerðu svo vel að athugaðu nettenginguna þína eða reyndu aftur síðar.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Back</source>
-        <translation>Siar</translation>
+        <translation>Til baka</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Next</source>
-        <translation>Ar aghaidh</translation>
+        <translation>Næst</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="148"/>
         <source>Done</source>
-        <translation>Déanta</translation>
+        <translation>Lokið</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="104"/>
         <source>Success!</source>
-        <translation type="unfinished"/>
+        <translation>Tókst!</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation>Sleppa</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="40"/>
@@ -12519,49 +12513,49 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="109"/>
         <source>All files</source>
-        <translation>Gach comhad</translation>
+        <translation>Allar skrár</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
         <source>Success</source>
-        <translation>D&apos;éirigh leis</translation>
+        <translation>Tókst</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
         <source>Dismiss</source>
-        <translation type="unfinished"/>
+        <translation>Hunsa</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>Save</source>
-        <translation>Taisc</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
-        <translation>Oscail</translation>
+        <translation>Opna</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
         <source>s</source>
-        <translation>s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
         <source>Stop</source>
-        <translation>Stad</translation>
+        <translation>Stöðva</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
         <source>Copy</source>
-        <translation>Cóipeáil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
@@ -12576,7 +12570,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
         <source>Show details</source>
-        <translation>Taispeáin na mionsonraí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
@@ -12592,12 +12586,12 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
         <source>Warning</source>
-        <translation>Rabhadh</translation>
+        <translation>Aðvörun</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
@@ -12607,17 +12601,17 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
         <source>Delete</source>
-        <translation>Scrios</translation>
+        <translation>Eyða</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
         <source>On</source>
-        <translation>Ar Siúl</translation>
+        <translation>Virkt</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
         <source>Off</source>
-        <translation>As</translation>
+        <translation>Óvirkt</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
@@ -12627,12 +12621,12 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
         <source>Minutes</source>
-        <translation>Nóiméid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
         <source>Seconds</source>
-        <translation>Soicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
@@ -12648,23 +12642,23 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
         <source>Collapse</source>
         <extracomment>Collapse a tree item</extracomment>
-        <translation>Leacaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
         <source>Expand</source>
         <extracomment>Expand a tree item</extracomment>
-        <translation>Fairsingigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="118"/>
         <source>Create</source>
-        <translation>Cruthaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="115"/>
         <source>Select</source>
-        <translation>Roghnaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
@@ -12679,7 +12673,7 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
         <source>%n day(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
@@ -12689,7 +12683,7 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
         <source>%n week(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
@@ -12699,39 +12693,39 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
         <source>%n month(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
         <source>%n year(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
         <source>%1 GB</source>
         <comment>gigabyte</comment>
         <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
-        <translation>%1 GB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
         <source>%1 MB</source>
         <comment>megabyte</comment>
         <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
-        <translation>%1 MB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
         <source>%1 KB</source>
         <comment>kilobyte</comment>
         <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
-        <translation>%1 KB</translation>
+        <translation type="unfinished"/>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
         <source>%Ln byte(s)</source>
         <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
@@ -12746,7 +12740,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Yes</source>
-        <translation>Ba mhaith</translation>
+        <translation>Já</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
@@ -12756,7 +12750,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>No</source>
-        <translation>Níor mhaith</translation>
+        <translation>Nei</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
@@ -12766,12 +12760,12 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>Abort</source>
-        <translation>Tobscoir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>Retry</source>
-        <translation>Féach arís é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
@@ -12786,17 +12780,17 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Help</source>
-        <translation>Cabhair</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Continue</source>
-        <translation>Lean ar aghaidh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
@@ -12820,93 +12814,93 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/global/utils.cpp" line="267"/>
         <location filename="../../muse/framework/global/utils.cpp" line="282"/>
         <source>C</source>
-        <translation>C</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="268"/>
         <source>C♯</source>
-        <translation>C♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="269"/>
         <location filename="../../muse/framework/global/utils.cpp" line="284"/>
         <source>D</source>
-        <translation>D</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="270"/>
         <source>D♯</source>
-        <translation>D♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="271"/>
         <location filename="../../muse/framework/global/utils.cpp" line="286"/>
         <source>E</source>
-        <translation>E</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="272"/>
         <location filename="../../muse/framework/global/utils.cpp" line="287"/>
         <source>F</source>
-        <translation>F</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="273"/>
         <source>F♯</source>
-        <translation>F♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="274"/>
         <location filename="../../muse/framework/global/utils.cpp" line="289"/>
         <source>G</source>
-        <translation>G</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="275"/>
         <source>G♯</source>
-        <translation>G♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="276"/>
         <location filename="../../muse/framework/global/utils.cpp" line="291"/>
         <source>A</source>
-        <translation>A</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="277"/>
         <source>A♯</source>
-        <translation>A♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="278"/>
         <location filename="../../muse/framework/global/utils.cpp" line="293"/>
         <source>B</source>
-        <translation>B</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="283"/>
         <source>D♭</source>
-        <translation>D♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="285"/>
         <source>E♭</source>
-        <translation>E♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="288"/>
         <source>G♭</source>
-        <translation>G♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="290"/>
         <source>A♭</source>
-        <translation>A♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="292"/>
         <source>B♭</source>
-        <translation>B♭</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -14049,7 +14043,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="173"/>
         <source>Do nothing</source>
-        <translation>Ná déan faic</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
@@ -14070,13 +14064,13 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
-        <translation>Tabhair amach</translation>
+        <translation>Flytja út</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="70"/>
         <source>Importing %1</source>
         <extracomment>%1 is the description of the file format being imported</extracomment>
-        <translation>Ag tabhairt isteach %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="485"/>
@@ -14089,7 +14083,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.h" line="41"/>
         <source>Warning</source>
-        <translation>Foláireamh</translation>
+        <translation>Aðvörun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportPlugin.cpp" line="43"/>
@@ -14111,7 +14105,7 @@ Error %1</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="215"/>
         <source>All supported files</source>
-        <translation>Gach comhad a dtugtar tacaíocht dóibh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="500"/>
@@ -14141,7 +14135,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
         <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
-        <translation>Tiomsaíodh an leagan seo d&apos;Audacity gan cumas láimhseála %1.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="697"/>
@@ -14262,7 +14256,7 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
         <source>%1, %2</source>
         <extracomment>%1 is the list of importers so far, %2 is the next importer's format name being appended</extracomment>
-        <translation>%1, %2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="827"/>
@@ -14282,27 +14276,27 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
         <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
-        <translation>LC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="350"/>
         <source>Main</source>
-        <translation>Príomh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="352"/>
         <source>LTP</source>
-        <translation>LTP</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="360"/>
         <source>M4A (AAC) Files (FFmpeg)</source>
-        <translation>Comhaid M4A (AAC) (FFmpeg)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="362"/>
         <source>AC3 Files (FFmpeg)</source>
-        <translation>Comhaid AC3 (FFmpeg)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="364"/>
@@ -14312,12 +14306,12 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="368"/>
         <source>Opus (OggOpus) Files (FFmpeg)</source>
-        <translation>Comhaid Opus (OggOpus) (FFmpeg)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="373"/>
         <source>WMA (version 2) Files (FFmpeg)</source>
-        <translation>Comhaid WMA (leagan 2) (FFmpeg)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="376"/>
@@ -14327,27 +14321,27 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="468"/>
         <source>Estimate</source>
-        <translation>Meastúchán</translation>
+        <translation>Áætlun</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="469"/>
         <source>2-level</source>
-        <translation>2-leibhéal</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="470"/>
         <source>4-level</source>
-        <translation>4-leibhéil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="471"/>
         <source>8-level</source>
-        <translation>8-leibhéil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="472"/>
         <source>Full search</source>
-        <translation>Cuardach iomlán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
@@ -14381,7 +14375,7 @@ but none of them understood this file format.</source>
         <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
-        <translation>%1 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="108"/>
@@ -14392,17 +14386,17 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="80"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="75"/>
         <source>Bit Rate</source>
-        <translation type="unfinished"/>
+        <translation>Bitahraði</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="166"/>
         <source>Quality (kbps)</source>
-        <translation type="unfinished"/>
+        <translation>Gæði (kbps)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="262"/>
         <source>Compression</source>
-        <translation>Comhbhrú</translation>
+        <translation>Þjöppun</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="270"/>
@@ -14456,13 +14450,13 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
         <source>Off</source>
-        <translation>As</translation>
+        <translation>Óvirkt</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
         <source>On</source>
-        <translation>Ar Siúl</translation>
+        <translation>Virkt</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
@@ -14473,36 +14467,36 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="304"/>
         <source>Application</source>
-        <translation>Feidhmchlár</translation>
+        <translation>Forrit</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
         <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
-        <translation>VOIP</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
         <source>Audio</source>
-        <translation>Fuaim</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
         <source>Low Delay</source>
-        <translation>Moill Íseal</translation>
+        <translation>Lítil seinkun</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="315"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="130"/>
         <source>Cutoff</source>
-        <translation type="unfinished"/>
+        <translation>Afmörkun</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="327"/>
         <source>Disabled</source>
-        <translation>Díchumasaithe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="328"/>
@@ -14656,12 +14650,12 @@ You can configure it at Preferences &gt; General.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1566"/>
         <source>Invalid sample rate</source>
-        <translation type="unfinished"/>
+        <translation>Ógild hljóðtökutíðni</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1576"/>
         <source>Resample</source>
-        <translation>Athshampláil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1582"/>
@@ -14688,7 +14682,7 @@ supported by the current output file format. </source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/FFmpeg.cpp" line="74"/>
         <source>FFmpeg library not found</source>
-        <translation>Níorbh aimsíodh leabharlann FFmpeg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="34"/>
@@ -14701,78 +14695,78 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="77"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="28"/>
         <source>16 bit</source>
-        <translation>16 bheart</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="77"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="29"/>
         <source>24 bit</source>
-        <translation>24 bheart</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="43"/>
         <source>Level</source>
-        <translation>Leibhéal</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="58"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="88"/>
         <source>0 (fastest)</source>
-        <translation>0 (is tapúla)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="59"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="89"/>
         <source>1</source>
-        <translation>1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="60"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
         <source>2</source>
-        <translation>2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="61"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="91"/>
         <source>3</source>
-        <translation>3</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="62"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="92"/>
         <source>4</source>
-        <translation>4</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="63"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="93"/>
         <source>5</source>
-        <translation>5</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="64"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="94"/>
         <source>6</source>
-        <translation>6</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="65"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="95"/>
         <source>7</source>
-        <translation>7</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="66"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="96"/>
         <source>8 (best)</source>
-        <translation>8 (is fearr)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="159"/>
         <source>FLAC Files</source>
-        <translation>Comhaid FLAC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
@@ -14799,12 +14793,12 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.h" line="20"/>
         <source>FLAC files</source>
-        <translation>Comhaid FLAC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="161"/>
         <source>MP2 Files</source>
-        <translation>Comhaid MP2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="220"/>
@@ -14818,7 +14812,7 @@ Status: %1</source>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="446"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="254"/>
         <source>Unable to open target file for writing</source>
-        <translation>Theip ar oscailt sprioc-chomhad chun scrite</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="245"/>
@@ -14848,52 +14842,52 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="165"/>
         <source>220-260 kbps (Best Quality)</source>
-        <translation>220-260 kbps (An Cháilíocht Is Fearr)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="166"/>
         <source>200-250 kbps</source>
-        <translation>200-250 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="167"/>
         <source>170-210 kbps</source>
-        <translation>170-210 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="168"/>
         <source>155-195 kbps</source>
-        <translation>155-195 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="169"/>
         <source>145-185 kbps</source>
-        <translation>145-185 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="170"/>
         <source>110-150 kbps</source>
-        <translation>110-150 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="171"/>
         <source>95-135 kbps</source>
-        <translation>95-135 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="172"/>
         <source>80-120 kbps</source>
-        <translation>80-120 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="173"/>
         <source>65-105 kbps</source>
-        <translation>65-105 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="174"/>
         <source>45-85 kbps (Smaller files)</source>
-        <translation>45-85 kbps (Comhaid níos lú)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="183"/>
@@ -14903,17 +14897,17 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="184"/>
         <source>Extreme, 220-260 kbps</source>
-        <translation>Foircneach, 220-260 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="185"/>
         <source>Standard, 170-210 kbps</source>
-        <translation>Gnáth, 170-210 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="186"/>
         <source>Medium, 145-185 kbps</source>
-        <translation>Meánach, 145-185 kbps</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="190"/>
@@ -14923,17 +14917,17 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="191"/>
         <source>Extreme</source>
-        <translation>Foircneach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="192"/>
         <source>Standard</source>
-        <translation>Caighdeánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="193"/>
         <source>Medium</source>
-        <translation>Meánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="219"/>
@@ -14943,22 +14937,22 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="231"/>
         <source>Preset</source>
-        <translation>Réamhshocrú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="232"/>
         <source>Variable</source>
-        <translation>Athraitheach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="233"/>
         <source>Average</source>
-        <translation>Meánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="234"/>
         <source>Constant</source>
-        <translation>Leanúnach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="238"/>
@@ -14969,7 +14963,7 @@ Status: %1</source>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="46"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="51"/>
         <source>Quality</source>
-        <translation>Caighdeán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="735"/>
@@ -14981,17 +14975,17 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
         <source>Only lame_enc.dll</source>
-        <translation>lame_enc.dll amháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1063"/>
         <source>Only libmp3lame64bit.dylib</source>
-        <translation>libmp3lame64bit.dylib amháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1066"/>
         <source>Only libmp3lame.dylib</source>
-        <translation>libmp3lame.dylib amháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1090"/>
@@ -15013,23 +15007,23 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1113"/>
         <source>Only libmp3lame.so.0</source>
-        <translation>libmp3lame.so.0 amháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1234"/>
         <source>MP3 Files</source>
-        <translation>Comhaid MP3</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1334"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
         <source>Could not open MP3 encoding library!</source>
-        <translation>Theip ar oscailt aon leabharlann inchódaithe MP3!</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1367"/>
@@ -15039,7 +15033,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1379"/>
         <source>Not a valid or supported MP3 encoding library!</source>
-        <translation>Tá an leabharlann inchódaithe MP3 neamhdhlistineach, nó ní láimhseáltar é!</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1464"/>
@@ -15089,12 +15083,12 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1743"/>
         <source>(Built-in)</source>
-        <translation>(Ionsuite)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mpg123/ImportMP3_MPG123.cpp" line="21"/>
         <source>MP3 files</source>
-        <translation>Comhaid MP3</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
@@ -15108,7 +15102,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
         <source>Ogg Vorbis Files</source>
-        <translation>Comhaid Ogg Vorbis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="173"/>
@@ -15138,12 +15132,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
         <source>Exporting the selected audio as Ogg Vorbis</source>
-        <translation>Fuaim roghnaithe á heaspórtáil mar Ogg Vorbis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="237"/>
         <source>Exporting the audio as Ogg Vorbis</source>
-        <translation>Fuaim á tabhairt amach mar Ogg Vorbis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
@@ -15153,32 +15147,32 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="353"/>
         <source>Media read error</source>
-        <translation>Earráid le linn léamh an mheáin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="356"/>
         <source>Not an Ogg Vorbis file</source>
-        <translation>Ní comhad Ogg Vorbis é seo</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="359"/>
         <source>Vorbis version mismatch</source>
-        <translation>Ní thagann leaganacha Vorbis le chéile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="362"/>
         <source>Invalid Vorbis bitstream header</source>
-        <translation>Ceanntásc neamhdhlistineach giotánsruth Vorbis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="365"/>
         <source>Internal logic fault</source>
-        <translation>Locht inmheánach loighce</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.h" line="18"/>
         <source>Ogg Vorbis files</source>
-        <translation>Comhaid Ogg Vorbis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="82"/>
@@ -15319,7 +15313,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="49"/>
         <source>Unknown error</source>
-        <translation type="unfinished"/>
+        <translation>Óþekkt villa</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="119"/>
@@ -15390,12 +15384,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="57"/>
         <source>AIFF (Apple/SGI)</source>
-        <translation>AIFF (Apple/SGI)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="61"/>
         <source>WAV (Microsoft)</source>
-        <translation>WAV (Microsoft)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="129"/>
@@ -15411,28 +15405,28 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="398"/>
         <source>Other uncompressed files</source>
-        <translation>Comhaid neamhchomhbhrúite eile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="517"/>
         <source>GSM 6.10 requires mono</source>
-        <translation>Tá aonfhónach de dhíth ar GSM 6.10</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="521"/>
         <source>WAVEX and GSM 6.10 formats are not compatible</source>
-        <translation>Níl WAVEX agus GSM 6.10 comhoiriúnach lena chéile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="534"/>
         <source>Cannot export audio in this format.</source>
-        <translation>Ní féidir fuaim a easpórtáil sa bhformáid seo.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="548"/>
         <source>Cannot export audio to %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>Ní féidir fuaim a easpórtáil go %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="581"/>
@@ -15456,7 +15450,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
         <source>WAV, AIFF, and other uncompressed types</source>
-        <translation>WAV, AIFF, agus cineálacha neamhchomhbhrúite eile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="163"/>
@@ -15528,7 +15522,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
 </context>
 <context>
@@ -15627,7 +15621,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="49"/>
         <source>WebVTT file</source>
-        <translation type="unfinished"/>
+        <translation>WebVTT-skrá</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="54"/>
@@ -15642,12 +15636,12 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
         <source>Labels</source>
-        <translation>Lipéid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="179"/>
         <source>Label Track</source>
-        <translation>Cuir Lipéad ar an Rian</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="758"/>
@@ -15775,23 +15769,23 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="369"/>
         <source>None</source>
-        <translation>Faic</translation>
+        <translation>Ekkert</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="370"/>
         <source>Rectangle</source>
-        <translation>Dronnuilleog</translation>
+        <translation>Rétthyrningur</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="371"/>
         <source>Triangle</source>
         <comment>dither</comment>
-        <translation type="unfinished"/>
+        <translation>Þríhyrningur</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="372"/>
         <source>Shaped</source>
-        <translation>Cumtha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="58"/>
@@ -15799,13 +15793,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="112"/>
         <source>C</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>C</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="60"/>
         <source>C♯</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>C♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="62"/>
@@ -15813,13 +15807,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="116"/>
         <source>D</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>D</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="64"/>
         <source>D♯</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>D♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="66"/>
@@ -15827,7 +15821,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="120"/>
         <source>E</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>E</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="68"/>
@@ -15835,13 +15829,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="122"/>
         <source>F</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>F</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="70"/>
         <source>F♯</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>F♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="72"/>
@@ -15849,13 +15843,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="126"/>
         <source>G</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>G</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="74"/>
         <source>G♯</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>G♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="76"/>
@@ -15863,13 +15857,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="130"/>
         <source>A</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>A</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="78"/>
         <source>A♯</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>A♯</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="80"/>
@@ -15877,99 +15871,99 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="134"/>
         <source>B</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>B</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="87"/>
         <source>D♭</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>D♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="91"/>
         <source>E♭</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>E♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="97"/>
         <source>G♭</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>G♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="101"/>
         <source>A♭</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>A♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="105"/>
         <source>B♭</source>
         <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>B♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="114"/>
         <source>C♯/D♭</source>
         <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>C♯/D♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="118"/>
         <source>D♯/E♭</source>
         <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>D♯/E♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="124"/>
         <source>F♯/G♭</source>
         <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>F♯/G♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="128"/>
         <source>G♯/A♭</source>
         <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>G♯/A♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="132"/>
         <source>A♯/B♭</source>
         <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
-        <translation>A♯/B♭</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="52"/>
         <source>Low Quality (Fastest)</source>
-        <translation>Cáilíocht Íseal (Is tapúla)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="53"/>
         <source>Medium Quality</source>
-        <translation>Caighdeán Meánach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="54"/>
         <source>High Quality</source>
-        <translation>Ardcháilíocht</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="55"/>
         <source>Best Quality (Slowest)</source>
-        <translation>An Cháilíocht Is Fearr (Is moille)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="63"/>
         <source>16-bit PCM</source>
         <extracomment>Audio data bit depth (precision): 16-bit integers</extracomment>
-        <translation>16-bit PCM</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="66"/>
         <source>24-bit PCM</source>
         <extracomment>Audio data bit depth (precision): 24-bit integers</extracomment>
-        <translation>24-bit PCM</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="69"/>
@@ -15999,18 +15993,18 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="150"/>
         <source>XML files</source>
-        <translation>Comhaid XML</translation>
+        <translation>XML-skrár</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="133"/>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="162"/>
         <source>Save</source>
-        <translation>Taisc</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="166"/>
         <source>Error saving template</source>
-        <translation type="unfinished"/>
+        <translation>Villa við að vista sniðmát</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="167"/>
@@ -16021,43 +16015,43 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="67"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="37"/>
         <source>TITLE</source>
-        <translation type="unfinished"/>
+        <translation>TITILL</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="68"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="38"/>
         <source>ARTIST</source>
-        <translation type="unfinished"/>
+        <translation>HÖFUNDUR</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="69"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="39"/>
         <source>ALBUM</source>
-        <translation type="unfinished"/>
+        <translation>SKÍFA</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="70"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="40"/>
         <source>TRACKNUMBER</source>
-        <translation type="unfinished"/>
+        <translation>LAGSNÚMER</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation type="unfinished"/>
+        <translation>ÁRTAL</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation type="unfinished"/>
+        <translation>ATHUGASEMDIR</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
         <source>Error loading template</source>
-        <translation type="unfinished"/>
+        <translation>Villa við að hlaða sniðmáti</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="133"/>
@@ -16068,32 +16062,32 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="98"/>
         <source>Artist name</source>
-        <translation type="unfinished"/>
+        <translation>Nafn höfundar</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="99"/>
         <source>Track title</source>
-        <translation type="unfinished"/>
+        <translation>Titill lags</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="100"/>
         <source>Album title</source>
-        <translation type="unfinished"/>
+        <translation>Titill skífu</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="101"/>
         <source>Track number</source>
-        <translation type="unfinished"/>
+        <translation>Númer lags</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="103"/>
         <source>Year</source>
-        <translation>Bliain</translation>
+        <translation>Ártal</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="104"/>
         <source>Comments</source>
-        <translation>Nótaí</translation>
+        <translation>Athugasemdir</translation>
     </message>
 </context>
 <context>
@@ -16101,7 +16095,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
         <source>Module Unsuitable</source>
-        <translation>Níl an Modúl Oiriúnach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="93"/>
@@ -16148,12 +16142,12 @@ Only use modules from trusted sources</source>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
         <source>Yes</source>
-        <translation>Ba mhaith</translation>
+        <translation>Já</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
         <source>No</source>
-        <translation>Ná</translation>
+        <translation>Nei</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="325"/>
@@ -16163,7 +16157,7 @@ Only use modules from trusted sources</source>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="328"/>
         <source>Try and load this module?</source>
-        <translation>Féach an modúl seo a luchtú?</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="353"/>
@@ -16180,7 +16174,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
         <source>Plug-in already exists</source>
-        <translation>Is ann don bhreiseán cheana</translation>
+        <translation>Viðbót er nú þegar til staðar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="447"/>
@@ -16192,19 +16186,19 @@ It will not be loaded.</source>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
-        <translation>Theip ar chlárú: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message numerus="yes">
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
         <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
         <source>Enable new plug-ins</source>
-        <translation>Cumasaigh breiseáin nua</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -16253,7 +16247,7 @@ It will not be loaded.</source>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="52"/>
         <source>Join</source>
         <extracomment>Verb: context menu command that joins the selected clips</extracomment>
-        <translation>Cuir míreanna le chéile</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -16362,7 +16356,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
         <source>Up</source>
-        <translation>Suas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
@@ -16505,7 +16499,7 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="688"/>
         <source>01000,01000 seconds</source>
         <extracomment>Format string for displaying time in seconds. Change the comma * in the middle to the 1000s separator for your locale, and the 'seconds' * on the end to the word for seconds. Don't change the numbers.</extracomment>
-        <translation>01000,01000 soicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="694"/>
@@ -16523,31 +16517,31 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="701"/>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="749"/>
         <source>milliseconds</source>
-        <translation>milleasoicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="711"/>
         <source>0100 h 060 m 060 s</source>
         <extracomment>Format string for displaying time in hours, minutes and * seconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds. Don't * change the numbers unless there aren't 60 seconds in a minute in your * locale</extracomment>
-        <translation>0100 u 060 n 060 s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="717"/>
         <source>dd:hh:mm:ss</source>
         <extracomment>Name of time display format that shows time in days, hours, * minutes and seconds</extracomment>
-        <translation>ll:uu:nn:ss</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="723"/>
         <source>0100 days 024 h 060 m 060 s</source>
         <extracomment>Format string for displaying time in days, hours, minutes and * seconds. Change the 'days' to the word for days, 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes and 's' to the * abbreviation for seconds. Don't change the numbers unless there aren't * 24 hours in a day in your locale</extracomment>
-        <translation>0100 lá  024 u 060 n 060 s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="735"/>
         <source>0100 h 060 m 060&gt;0100 s</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and hundredths of a second. Change the 'h' to the abbreviation for hours, * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds * (the hundredths are shown as decimal seconds). Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060&gt;0100 s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="736"/>
@@ -16558,49 +16552,49 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="748"/>
         <source>0100 h 060 m 060&gt;01000 s</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds (the * milliseconds are shown as decimal seconds) . Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060&gt;01000 s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="761"/>
         <source>0100 h 060 m 060 s+&gt;# samples</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and samples. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes, 's' to the abbreviation for seconds and * translate samples . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060 s+&gt;# samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="769"/>
         <source>samples</source>
         <extracomment>Name of time display format that shows time in samples (at the * current project sample rate). For example the number of a sample at 1 * second into a recording at 44.1KHz would be 44,100.</extracomment>
-        <translation>samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="774"/>
         <source>01000,01000,01000 samples|#</source>
         <extracomment>Format string for displaying time in samples (lots of samples). * Change the ',' to the 1000s separator for your locale, and translate * samples. If 1000s aren't a base multiple for your number system, then you * can change the numbers to an appropriate one, and put a 0 on the front</extracomment>
-        <translation>01000,01000,01000 samplaí|#</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="780"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at 24 frames per second (commonly used for films)</extracomment>
-        <translation>uu:nn:ss + frámaí scannáin (24 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="788"/>
         <source>0100 h 060 m 060 s+&gt;24 frames</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames at 24 frames per second. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames' . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060 s+&gt;24 fhráma</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="794"/>
         <source>film frames (24 fps)</source>
         <extracomment>Name of time display format that shows time in frames (lots of * frames) at 24 frames per second (commonly used for films)</extracomment>
-        <translation>frámaí scannáin (24 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="799"/>
         <source>01000,01000 frames|24</source>
         <extracomment>Format string for displaying time in frames at 24 frames per * second. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
-        <translation>01000,01000 frámaí|24</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="806"/>
@@ -16612,7 +16606,7 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="813"/>
         <source>0100 h 060 m 060 s+&gt;30 frames|N</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the |N alone, it's important! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060 s+&gt;30 frámaí|N</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="820"/>
@@ -16624,67 +16618,67 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="828"/>
         <source>0100 h 060 m 060 s+&gt;030 frames| .999000999</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the | .999000999 alone, * the whole things really is slightly off-speed! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060 s+&gt;030 frámaí| .999000999</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="834"/>
         <source>NTSC frames</source>
         <extracomment>Name of time display format that shows time in frames at NTSC * TV frame rate (used for American / Japanese TV</extracomment>
-        <translation>Frámaí NTSC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="840"/>
         <source>01000,01000 frames|29.97002997</source>
         <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone. That really is the frame * rate!</extracomment>
-        <translation>01000,01000 fráma|29.97002997</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="846"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at PAL TV frame rate (used for European TV)</extracomment>
-        <translation>uu:nn:ss + frámaí PAL (25 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="853"/>
         <source>0100 h 060 m 060 s+&gt;25 frames</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with PAL TV frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Nice simple time code! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 u 060 n 060 s+&gt;25 fhráma</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="859"/>
         <source>PAL frames (25 fps)</source>
         <extracomment>Name of time display format that shows time in frames at PAL * TV frame rate (used for European TV)</extracomment>
-        <translation>Frámaí PAL (25 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="864"/>
         <source>01000,01000 frames|25</source>
         <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone.</extracomment>
-        <translation>01000,01000 frámaí|25</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="870"/>
         <source>hh:mm:ss + CDDA frames (75 fps)</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at CD Audio frame rate (75 frames per second)</extracomment>
-        <translation>uu:nn:ss + frámaí CDDA (75 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="877"/>
         <source>0100 h 060 m 060 s+&gt;75 frames</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with CD Audio frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;75 frames</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="883"/>
         <source>CDDA frames (75 fps)</source>
         <extracomment>Name of time display format that shows time in frames at CD * Audio frame rate (75 frames per second)</extracomment>
-        <translation>Frámaí CDDA (75 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="888"/>
         <source>01000,01000 frames|75</source>
         <extracomment>Format string for displaying time in frames with CD Audio * frames. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
-        <translation>01000,01000 frames|75</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="908"/>
@@ -16695,30 +16689,30 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="909"/>
         <source>centihertz</source>
-        <translation>centihertz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="915"/>
         <source>kHz</source>
         <extracomment>Name of display format that shows frequency in kilohertz</extracomment>
-        <translation>kHz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="921"/>
         <source>01000&gt;01000 kHz|0.001</source>
         <extracomment>Format string for displaying frequency in kilohertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>01000&gt;01000 kHz|0.001</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="922"/>
         <source>hertz</source>
-        <translation>hertz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="943"/>
         <source>100&gt;01000 octaves|1.442695041</source>
         <extracomment>Format string for displaying log of frequency in octaves. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>100&gt;01000 ochtacha|1.442695041</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="945"/>
@@ -16766,19 +16760,19 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="86"/>
         <source>hh:mm:ss + samples</source>
         <extracomment>Name of time display format that shows time in hours, * minutes, seconds and samples (at the current project sample rate)</extracomment>
-        <translation>uu:nn:ss + samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="92"/>
         <source>seconds</source>
         <extracomment>Name of time display format that shows time in seconds</extracomment>
-        <translation>soicindí</translation>
+        <translation>sekúndur</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="99"/>
         <source>hh:mm:ss</source>
         <extracomment>Name of time display format that shows time in hours, minutes * and seconds</extracomment>
-        <translation>uu:nn:ss</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="106"/>
@@ -16810,7 +16804,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-playable-track/PlayableTrack.cpp" line="177"/>
         <source>Audio Track</source>
-        <translation>Rian Fuaime</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-playable-track/PlayableTrack.cpp" line="185"/>
@@ -16820,12 +16814,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-playable-track/PlayableTrack.cpp" line="194"/>
         <source>Multi-track</source>
-        <translation>Ilriantach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-playable-track/PlayableTrack.cpp" line="194"/>
         <source>Simple</source>
-        <translation>Simplí</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -16833,7 +16827,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="34"/>
         <source>Position</source>
-        <translation>Suíomh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="47"/>
@@ -16853,17 +16847,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="89"/>
         <source>RMS</source>
-        <translation>RMS</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="93"/>
         <source>Gradient</source>
-        <translation>Grádán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="121"/>
         <source>Logarithmic (dB)</source>
-        <translation>Logartamach (dB)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="125"/>
@@ -16883,42 +16877,42 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Low quality</source>
-        <translation type="unfinished"/>
+        <translation>Minni gæði</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Medium quality</source>
-        <translation type="unfinished"/>
+        <translation>Miðlungsgæði</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>High quality</source>
-        <translation type="unfinished"/>
+        <translation>Meiri gæði</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Best quality</source>
-        <translation type="unfinished"/>
+        <translation>Úrvalsgæði</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>None</source>
-        <translation>Faic</translation>
+        <translation>Ekkert</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Rectangle</source>
-        <translation>Dronnuilleog</translation>
+        <translation>Rétthyrningur</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Triangle</source>
-        <translation type="unfinished"/>
+        <translation>Þríhyrningur</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Shaped</source>
-        <translation>Cumtha</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
@@ -16934,7 +16928,7 @@ It will not be loaded.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
-        <translation type="unfinished"/>
+        <translation>Hljóðstyrkur</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="66"/>
@@ -16945,7 +16939,7 @@ It will not be loaded.</source>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
         <source>Pan</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Pean</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
@@ -17090,13 +17084,13 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="74"/>
         <source>Value</source>
-        <translation>Luach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AdvancedTopSection.qml" line="46"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemeAdditionalOptionsSection.qml" line="52"/>
         <source>Reset to default</source>
-        <translation>Athshocraigh an réamhshocrú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AdvancedTopSection.qml" line="69"/>
@@ -17118,7 +17112,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="61"/>
         <source>Always</source>
-        <translation type="unfinished"/>
+        <translation>Alltaf</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="88"/>
@@ -17130,7 +17124,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="114"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="102"/>
         <source>Never</source>
-        <translation type="unfinished"/>
+        <translation>Aldrei</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="31"/>
@@ -17160,7 +17154,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="105"/>
         <source>Automatic</source>
-        <translation>Uathoibríoch</translation>
+        <translation>Sjálfvirkt</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
@@ -17175,7 +17169,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="100"/>
         <source>Classic</source>
-        <translation type="unfinished"/>
+        <translation>Sígilt</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="88"/>
@@ -17240,7 +17234,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="42"/>
         <source>FFmpeg library not found</source>
-        <translation>Níorbh aimsíodh leabharlann FFmpeg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
@@ -17365,7 +17359,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="17"/>
         <source>Selection</source>
-        <translation>Roghnú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TemporaryFilesSection.qml" line="46"/>
@@ -17395,7 +17389,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
         <source>Theme</source>
-        <translation>Téama</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
@@ -17451,13 +17445,13 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
         <source>Preferences</source>
-        <translation>Sainroghanna</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="129"/>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="137"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="130"/>
@@ -17474,7 +17468,7 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="199"/>
         <source>Success</source>
-        <translation>D&apos;éirigh leis</translation>
+        <translation>Tókst</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="147"/>
@@ -17495,7 +17489,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="160"/>
         <source>Cancel</source>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="163"/>
@@ -17614,7 +17608,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="184"/>
         <source>%1 GB</source>
-        <translation>%1 GB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="204"/>
@@ -17624,7 +17618,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="205"/>
         <source>Changes to temporary directory will not take effect until Audacity is restarted</source>
-        <translation>Ní chuirfear athruithe ar an gcomhadlann shealadach i gcrích go dtí go n-athmhúsclófar Audacity</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="195"/>
@@ -17673,7 +17667,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
         <source>Export</source>
-        <translation>Tabhair amach</translation>
+        <translation>Flytja út</translation>
     </message>
     <message>
         <source>Cloud</source>
@@ -17746,7 +17740,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
         <source>Remove</source>
-        <translation>Bain</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
@@ -17829,17 +17823,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramAlgorithmSection.qml" line="15"/>
         <source>Algorithm</source>
-        <translation>Algartam</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramColorsSection.qml" line="15"/>
         <source>Colors</source>
-        <translation>Dathanna</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramScaleSection.qml" line="15"/>
         <source>Scale</source>
-        <translation>Scála</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
@@ -17852,7 +17846,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramScaleSection.qml" line="26"/>
         <source>Scale</source>
-        <translation>Scála</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -18015,7 +18009,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="213"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="132"/>
         <source>Name</source>
-        <translation>Ainm</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="88"/>
@@ -18082,7 +18076,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="435"/>
         <source>New</source>
-        <translation>Nua</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="447"/>
@@ -18149,7 +18143,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
         <source>All supported files</source>
-        <translation>Gach comhad a dtugtar tacaíocht dóibh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/audacityproject.cpp" line="71"/>
@@ -18164,7 +18158,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Import</source>
         <extracomment>Name of the undo history entry created by importing files</extracomment>
-        <translation>Iompórtáil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
@@ -18175,12 +18169,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
         <source>Error opening file</source>
-        <translation>Earráid le linn oscailt an chomhaid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
         <source>Could not open file: %1</source>
-        <translation>Theip ar oscailt an chomhaid: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
@@ -18189,7 +18183,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hunsa</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
@@ -18275,7 +18269,7 @@ You can manage this file from your updated projects page on audio.com</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
-        <translation>Oscail</translation>
+        <translation>Opna</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
@@ -18362,7 +18356,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectconfiguration.cpp" line="162"/>
         <source>Untitled</source>
-        <translation>Gan teideal</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="40"/>
@@ -18438,14 +18432,14 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
         <source>Warning</source>
-        <translation>Foláireamh</translation>
+        <translation>Aðvörun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1114"/>
         <source>Progress</source>
         <extracomment>This title appears on a dialog that indicates the progress in doing something.</extracomment>
-        <translation>Dul Chun Cinn</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
@@ -18741,13 +18735,13 @@ For tips on freeing up space, click the help button.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
         <source>&lt;untitled&gt;</source>
-        <translation>&lt;gan teideal&gt;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
-        <translation>(Athshlánaithe)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
@@ -18847,7 +18841,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-history/ProjectHistory.cpp" line="45"/>
         <source>Created new project</source>
-        <translation>Tionscadal nua arna cheapadh</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -18855,12 +18849,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-rate/QualitySettings.cpp" line="23"/>
         <source>16-bit</source>
-        <translation>16-bheart</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-rate/QualitySettings.cpp" line="24"/>
         <source>24-bit</source>
-        <translation>24-bheart</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-rate/QualitySettings.cpp" line="25"/>
@@ -18906,7 +18900,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>Flytja út hljómflutning</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
@@ -18971,7 +18965,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
         <source>Cancel</source>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
@@ -18991,7 +18985,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Continue</source>
-        <translation>Lean ar aghaidh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
@@ -19011,7 +19005,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
         <source>OK</source>
-        <translation>Tá go Maith</translation>
+        <translation>Í lagi</translation>
     </message>
 </context>
 <context>
@@ -19045,7 +19039,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="88"/>
         <source>Value</source>
-        <translation>Luach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectPropertiesDialog.qml" line="34"/>
@@ -19141,7 +19135,7 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Please check your internet connection or try again later.</source>
-        <translation type="unfinished"/>
+        <translation>Gerðu svo vel að athugaðu nettenginguna þína eða reyndu aftur síðar.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
@@ -19255,7 +19249,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="28"/>
         <source>Selection</source>
-        <translation>Roghnú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="50"/>
@@ -19270,7 +19264,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
         <source>Duration</source>
-        <translation>Aga</translation>
+        <translation>Lengd</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
@@ -19280,7 +19274,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
-        <translation type="unfinished"/>
+        <translation>Sækja brellur</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="52"/>
@@ -19370,7 +19364,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="112"/>
         <source>Confirm</source>
-        <translation>Deimhnigh</translation>
+        <translation>Samþykkja</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
@@ -19380,25 +19374,25 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
         <source>Labels</source>
-        <translation>Lipéid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="72"/>
         <source>Import</source>
         <extracomment>Label of the button that imports labels from a file</extracomment>
-        <translation>Iompórtáil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="90"/>
         <source>Export</source>
         <extracomment>Label of the button that exports labels to a file</extracomment>
-        <translation>Tabhair amach</translation>
+        <translation>Flytja út</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="110"/>
         <source>Delete</source>
         <extracomment>Label of the button that deletes the selected labels</extracomment>
-        <translation>Scrios</translation>
+        <translation>Eyða</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="127"/>
@@ -19459,7 +19453,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="57"/>
         <source>Label</source>
-        <translation>Lipéad</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
@@ -19529,13 +19523,13 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
         <source>Tracks</source>
-        <translation>Rianta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="63"/>
         <source>Pan</source>
         <extracomment>Noun: accessibility name of the pan knob</extracomment>
-        <translation>Pean</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
@@ -19546,7 +19540,7 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="104"/>
         <source>Effects</source>
-        <translation>Maisiúcháin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
@@ -19557,13 +19551,13 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
         <source>Mute</source>
         <extracomment>Accessibility name of the mute button</extracomment>
-        <translation>Tost</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="273"/>
         <source>Solo</source>
         <extracomment>Accessibility name of the solo button</extracomment>
-        <translation>Aonréadach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="232"/>
@@ -19618,7 +19612,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="217"/>
         <source>Seconds</source>
-        <translation>Soicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="218"/>
@@ -19638,7 +19632,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="221"/>
         <source>Samples</source>
-        <translation>Samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
@@ -19663,12 +19657,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="233"/>
         <source>PAL frames (25 fps)</source>
-        <translation>Frámaí PAL (25 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
         <source>CDDA frames (75 fps)</source>
-        <translation>Frámaí CDDA (75 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
@@ -19683,12 +19677,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="67"/>
         <source>Track</source>
-        <translation>Rian</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="70"/>
         <source>Label text</source>
-        <translation>Téacs an lipéid</translation>
+        <translation>Texti merkis</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="76"/>
@@ -19813,7 +19807,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
         <source>Sample Edit</source>
-        <translation>Déan Eagarthóireacht ar Shamplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="197"/>
@@ -19866,12 +19860,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="15"/>
         <source>Silence</source>
-        <translation>Tost</translation>
+        <translation>Þögn</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="41"/>
         <source>Duration:</source>
-        <translation>Aga:</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -19920,7 +19914,7 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Déan Taifeadadh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
@@ -19978,7 +19972,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="52"/>
         <source>Please select a time within a clip.</source>
-        <translation>Roghnaigh am laistigh de ghearrthóg.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="55"/>
@@ -20101,7 +20095,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="71"/>
         <source>Join</source>
         <extracomment>Verb: context menu command that joins the selected audio</extracomment>
-        <translation>Cuir míreanna le chéile</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -20114,12 +20108,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
         <source>New shortcut:</source>
-        <translation>Aicearra nua:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
         <source>Type to set shortcut</source>
-        <translation>Clóscríobh chun an t-aicearra a shocrú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
@@ -20129,17 +20123,17 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
         <source>Import</source>
-        <translation>Tabhair isteach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
         <source>Export</source>
-        <translation>Tabhair amach</translation>
+        <translation>Flytja út</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
         <source>Reset to default</source>
-        <translation>Athshocraigh an réamhshocrú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
@@ -20320,7 +20314,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="25"/>
         <source>PAL frames (25 fps)</source>
-        <translation>Frámaí PAL (25 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="27"/>
@@ -20330,7 +20324,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="28"/>
         <source>CDDA frames (75 fps)</source>
-        <translation>Frámaí CDDA (75 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="24"/>
@@ -20340,7 +20334,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="25"/>
         <source>Seconds</source>
-        <translation>Soicindí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="26"/>
@@ -20360,7 +20354,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="29"/>
         <source>Samples</source>
-        <translation>Samplaí</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -20368,12 +20362,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/SpectrogramRulerCustomizePopup.qml" line="108"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/SpectrogramRulerCustomizePopup.qml" line="124"/>
         <source>Scale</source>
-        <translation>Scála</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/SpectrogramRulerCustomizePopup.qml" line="157"/>
@@ -20391,12 +20385,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="38"/>
         <source>Classic</source>
-        <translation type="unfinished"/>
+        <translation>Sígilt</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="40"/>
         <source>Grayscale</source>
-        <translation>Scála liath</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="42"/>
@@ -20407,12 +20401,12 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="45"/>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="77"/>
         <source>Unknown</source>
-        <translation>Anaithnid</translation>
+        <translation>Óþekkt</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="64"/>
         <source>Linear</source>
-        <translation>Líneach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="66"/>
@@ -20422,7 +20416,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="68"/>
         <source>Mel</source>
-        <translation>Mel</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="70"/>
@@ -20432,7 +20426,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="72"/>
         <source>ERB</source>
-        <translation>ERB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="74"/>
@@ -20442,12 +20436,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="18"/>
         <source>Frequencies</source>
-        <translation>Minicíochtí</translation>
+        <translation>Tíðnir</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="19"/>
         <source>Reassignment</source>
-        <translation>Athshannú</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="20"/>
@@ -20457,7 +20451,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="24"/>
         <source>Rectangular</source>
-        <translation>Dronnuilleogach</translation>
+        <translation>Rétthyrningslaga</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="25"/>
@@ -20487,7 +20481,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="30"/>
         <source>Welch</source>
-        <translation>Loic</translation>
+        <translation>Welch</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="31"/>
@@ -20517,7 +20511,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="107"/>
         <source>Algorithm</source>
-        <translation>Algartam</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="109"/>
@@ -20538,7 +20532,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="94"/>
         <source>Gain</source>
         <extracomment>Noun: label of the spectrogram color gain slider</extracomment>
-        <translation>Neartúchán</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="96"/>
@@ -20581,12 +20575,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="113"/>
         <source>Cancel</source>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="132"/>
         <source>OK</source>
-        <translation>Tá go Maith</translation>
+        <translation>Í lagi</translation>
     </message>
 </context>
 <context>
@@ -20600,7 +20594,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramScaleSection.qml" line="25"/>
         <source>Scale</source>
-        <translation>Scála</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -20632,7 +20626,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="68"/>
         <source>Access permission denied</source>
         <extracomment>database operation has failed due to the permission error</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aðgangsheimild hafnað</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="71"/>
@@ -20686,7 +20680,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="95"/>
         <source>File not found</source>
         <extracomment>database operation has failed because the requested item was not found</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skrá fannst ekki</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="98"/>
@@ -20746,13 +20740,13 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="125"/>
         <source>Authorization denied</source>
         <extracomment>database operation has failed due to the authorization error</extracomment>
-        <translation type="unfinished"/>
+        <translation>Heimild hafnað</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="128"/>
         <source>Not used</source>
         <extracomment>database operation has failed due to the format error</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ekki notað</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="131"/>
@@ -20770,7 +20764,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="137"/>
         <source>Unknown error</source>
         <extracomment>database operation has failed due to the unknown error</extracomment>
-        <translation type="unfinished"/>
+        <translation>Óþekkt villa</translation>
     </message>
 </context>
 <context>
@@ -20789,40 +20783,40 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="190"/>
         <source>Unable to determine</source>
-        <translation>Ní fhéidir a aithint</translation>
+        <translation>Ómögulegt að ákvarða</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="194"/>
         <source>%1 bytes</source>
-        <translation>%1 bearta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="197"/>
         <source>%1 KB</source>
         <extracomment>Abbreviation for Kilo bytes</extracomment>
-        <translation>%1 KB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="200"/>
         <source>%1 MB</source>
         <extracomment>Abbreviation for Mega bytes</extracomment>
-        <translation>%1 MB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="203"/>
         <source>%1 GB</source>
         <extracomment>Abbreviation for Giga bytes</extracomment>
-        <translation>%1 GB</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Languages.cpp" line="293"/>
         <source>Simplified</source>
-        <translation>Simplithe</translation>
+        <translation>Einfaldað</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Languages.cpp" line="310"/>
         <source>System</source>
-        <translation>Córas</translation>
+        <translation>Kerfisbundið</translation>
     </message>
 </context>
 <context>
@@ -20903,7 +20897,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-time-track/TimeTrack.cpp" line="58"/>
         <location filename="../../au3/libraries/au3-time-track/TimeTrack.cpp" line="145"/>
         <source>Time Track</source>
-        <translation>Rian Ama</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -20946,13 +20940,13 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
         <source>Format:</source>
-        <translation>Formáid:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
         <source>Rate:</source>
-        <translation>Luas:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
@@ -20975,13 +20969,13 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/trackedit/dom/track.h" line="52"/>
         <source>16-bit PCM</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>16-bit PCM</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="54"/>
         <source>24-bit PCM</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>24-bit PCM</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
@@ -21118,7 +21112,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silence</source>
-        <translation>Tost</translation>
+        <translation>Þögn</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
@@ -21128,7 +21122,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
         <source>Track Title</source>
-        <translation>Teideal an Riain</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
@@ -21195,25 +21189,25 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
         <source>Pasted from the clipboard</source>
-        <translation>Arna ghreamú ón ghearrathaisce</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
         <source>Paste</source>
-        <translation>Greamaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
         <source>Cut to the clipboard</source>
-        <translation>Gearr is cuir sa ghearrathaisce</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut</source>
-        <translation>Gearr</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
@@ -21232,14 +21226,14 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Remove</source>
-        <translation>Bain</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
         <source>Delete</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Scrios</translation>
+        <translation>Eyða</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
@@ -21273,7 +21267,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Deighil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
@@ -21563,7 +21557,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
         <source>Stretch</source>
-        <translation>Sín</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
@@ -21585,18 +21579,18 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
         <source>Join</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Cuir míreanna le chéile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
         <source>Duplicated</source>
-        <translation>Macasamhail déanta</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Déan macasamhail</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
@@ -21665,7 +21659,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="57"/>
         <source>Preferences</source>
-        <translation>Sainroghanna</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="58"/>
@@ -21769,7 +21763,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="107"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="121"/>
@@ -21792,7 +21786,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
         <source>Warning</source>
-        <translation>Foláireamh</translation>
+        <translation>Aðvörun</translation>
     </message>
 </context>
 <context>
@@ -21801,7 +21795,7 @@ Do you wish to continue?</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
-        <translation>Siortaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
@@ -21828,7 +21822,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
         <source>Directories</source>
-        <translation>Comhadlanna</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
@@ -21838,7 +21832,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
         <source>Path</source>
-        <translation>Conair</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
@@ -21882,7 +21876,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
         <source>Menu</source>
         <extracomment>a type of ui item</extracomment>
-        <translation>Roghchlár</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
@@ -21902,7 +21896,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
         <source>Search</source>
-        <translation>Cuardaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
@@ -21929,7 +21923,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
         <source>Value</source>
-        <translation>Luach</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Other</source>
@@ -21950,7 +21944,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
         <source>Visible</source>
-        <translation>Infheicthe</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
@@ -21961,19 +21955,19 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
         <source>Light</source>
         <extracomment>The name of the light ui theme</extracomment>
-        <translation>Geal</translation>
+        <translation>Ljóst</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
         <source>Dark</source>
         <extracomment>The name of the dark ui theme</extracomment>
-        <translation>Dorcha</translation>
+        <translation>Dökkt</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
         <source>White</source>
         <extracomment>The name of the high contrast light ui theme</extracomment>
-        <translation>Bán</translation>
+        <translation>Hvítt</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
@@ -22015,7 +22009,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="19"/>
         <source>kHz</source>
-        <translation>kHz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="44"/>
@@ -22030,7 +22024,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="18"/>
         <source>seconds</source>
-        <translation>soicindí</translation>
+        <translation>sekúndur</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="20"/>
@@ -22040,12 +22034,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="23"/>
         <source>hh:mm:ss</source>
-        <translation>uu:nn:ss</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="25"/>
         <source>dd:hh:mm:ss</source>
-        <translation>ll:uu:nn:ss</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="28"/>
@@ -22060,17 +22054,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="35"/>
         <source>hh:mm:ss + samples</source>
-        <translation>uu:nn:ss + samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="38"/>
         <source>samples</source>
-        <translation>samplaí</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="41"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
-        <translation>uu:nn:ss + frámaí scannáin (24 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="44"/>
@@ -22090,17 +22084,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="54"/>
         <source>NTSC frames</source>
-        <translation>Frámaí NTSC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="57"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
-        <translation>uu:nn:ss + frámaí PAL (25 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="60"/>
         <source>PAL frames (25 fps)</source>
-        <translation>Frámaí PAL (25 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="64"/>
@@ -22110,7 +22104,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="67"/>
         <source>CDDA frames (75 fps)</source>
-        <translation>Frámaí CDDA (75 fps)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="71"/>
@@ -22130,12 +22124,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
         <source>OK</source>
-        <translation>Ceart go leor</translation>
+        <translation>Í lagi</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
         <source>Save</source>
-        <translation>Sábháil</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
@@ -22150,12 +22144,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
         <source>Open</source>
-        <translation>Oscailte</translation>
+        <translation>Opna</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
         <source>Yes</source>
-        <translation>Ba mhaith</translation>
+        <translation>Já</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
@@ -22165,7 +22159,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
         <source>No</source>
-        <translation>Níor mhaith</translation>
+        <translation>Nei</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
@@ -22175,12 +22169,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
         <source>Abort</source>
-        <translation>Tobscoir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
         <source>Retry</source>
-        <translation>Féach arís é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
@@ -22190,12 +22184,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
         <source>Close</source>
-        <translation>Dún</translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
         <source>Cancel</source>
-        <translation>Cealaigh</translation>
+        <translation>Hætta við</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
@@ -22205,17 +22199,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
         <source>Help</source>
-        <translation>Cabhair</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
         <source>Apply</source>
-        <translation>Cuir i bhféidhm é</translation>
+        <translation>Nota</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
@@ -22225,32 +22219,32 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
         <source>Continue</source>
-        <translation>Lean ar aghaidh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
         <source>Next</source>
-        <translation>Ar aghaidh</translation>
+        <translation>Næst</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
         <source>Back</source>
-        <translation>Siar</translation>
+        <translation>Til baka</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
         <source>Select</source>
-        <translation>Roghnaigh</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
         <source>Clear</source>
-        <translation>Glan</translation>
+        <translation>Hreinsa</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
         <source>Done</source>
-        <translation>Déanta</translation>
+        <translation>Lokið</translation>
     </message>
 </context>
 <context>
@@ -22318,7 +22312,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
         <source>Close</source>
-        <translation>Dún</translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
@@ -22377,7 +22371,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
         <source>The Audacity Team</source>
-        <translation>Foireann Audacity</translation>
+        <translation>Audacity-teymið</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="176"/>
@@ -22403,7 +22397,7 @@ Do you wish to continue?</source>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
         <source>Error</source>
-        <translation>Earráid</translation>
+        <translation>Villa</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
@@ -22437,7 +22431,7 @@ Truncating to this maximum length.</source>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveChannelViewConstants.cpp" line="111"/>
         <source>&amp;Multi-view</source>
-        <translation>&amp;Il-amharc</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
@@ -22448,12 +22442,12 @@ Truncating to this maximum length.</source>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="341"/>
         <source>Warning</source>
-        <translation>Foláireamh</translation>
+        <translation>Aðvörun</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="368"/>
         <source>Audio</source>
-        <translation>Fuaim</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="688"/>
@@ -22493,7 +22487,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="34"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="208"/>
         <source>Logarithmic (dB)</source>
-        <translation>Logartamach (dB)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="35"/>
@@ -22504,12 +22498,12 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
-        <translation>-36 dB (réimse éadoimhin i gcomhair eagarthóireacht ard-aimplitiúide)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
-        <translation>-48 dB (réimse PCM de shamplaí 8 giotán)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
@@ -22529,17 +22523,17 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
-        <translation>-96 dB (réimse PCM de shamplaí 16 giotán)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
-        <translation>-120 dB (teorainn gharbh éisteacht an duine)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
-        <translation>-145 dB (réimse PCM de shamplaí 24 giotán)</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -22548,7 +22542,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
         <source>Remove</source>
-        <translation>Bain</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
@@ -22568,7 +22562,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
         <source>Reset</source>
-        <translation>Athshocraigh é</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
@@ -22588,7 +22582,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
         <source>New</source>
-        <translation>Nua</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
@@ -22630,7 +22624,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/shared/types/workspacetitles.h" line="20"/>
         <source>Classic</source>
         <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sígilt</translation>
     </message>
     <message>
         <location filename="../../src/shared/types/workspacetitles.h" line="24"/>
@@ -22673,7 +22667,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="266"/>
         <source>Error: %1 at line %2</source>
         <extracomment>%1 is the parser error message, %2 is the line number in the file</extracomment>
-        <translation>Earráud: %1 ag líne %2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
