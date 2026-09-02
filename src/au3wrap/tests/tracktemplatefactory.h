@@ -6,7 +6,7 @@
 
 #include "au3wrap/au3types.h"
 
-namespace au::trackedit {
+namespace au::au3 {
 using ClipDataGeneratorFunc = std::function<std::vector<float>(double duration, double sampleRate)>;
 
 struct ClipTemplate {
