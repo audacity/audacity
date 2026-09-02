@@ -1888,7 +1888,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
         <source>Show p&amp;aths…</source>
-        <translation>Mostra p&amp;ercorsi</translation>
+        <translation>Mostra p&amp;ercorsi…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
@@ -1898,12 +1898,12 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
         <source>Show pr&amp;ofiler…</source>
-        <translation>Mostra pr&amp;ofiler</translation>
+        <translation>Mostra pr&amp;ofiler…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation>Mostra il profilatore</translation>
+        <translation>Mostra profiler</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
@@ -1928,7 +1928,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
         <source>Show &amp;accessibility tree…</source>
-        <translation>Mostra l&apos;albero dell&apos;&amp;accessibilità...</translation>
+        <translation>Mostra albero &amp;accessibilità...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
@@ -1968,42 +1968,42 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
         <source>Show engraving &amp;style options list</source>
-        <translation>Mostra l&apos;elenco delle opzioni di incisione e &amp;stile</translation>
+        <translation>Mostra elenco delle opzioni di &amp;stile di incisione</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
         <source>Show engraving style options list</source>
-        <translation>Mostra l&apos;elenco delle opzioni di stile di incisione</translation>
+        <translation>Mostra elenco delle opzioni di &amp;stile di incisione</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
         <source>Show &amp;actions list</source>
-        <translation>Mostra lista &amp;azioni</translation>
+        <translation>Mostra elenco &amp;azioni</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
         <source>Show actions list</source>
-        <translation>Mostra lista azioni</translation>
+        <translation>Mostra elenco azioni</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
         <source>Show &amp;rcommands list</source>
-        <translation>Mostra l&apos;elenco dei &amp;rcomandi</translation>
+        <translation>Mostra elenco dei &amp;rcomandi</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
         <source>Show rcommands list</source>
-        <translation>Mostra l&apos;elenco dei rcomandi</translation>
+        <translation>Mostra elenco dei rcomandi</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
         <source>&amp;Manage plugins…</source>
-        <translation>&amp;Gestisci i plugin…</translation>
+        <translation>&amp;Gestisci estensioni…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
         <source>Manage plugins…</source>
-        <translation>Gestisci i plugin…</translation>
+        <translation>Gestisci estensioni…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
@@ -2194,7 +2194,7 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
         <source>Remove realtime effect</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rimuovi l&apos;effetto in tempo reale</translation>
+        <translation>Rimuovi effetto in tempo reale</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
@@ -3660,12 +3660,12 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="97"/>
         <source>Plugins</source>
-        <translation>Plugin</translation>
+        <translation>Estensioni</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="110"/>
         <source>Plugins search</source>
-        <translation>Ricerca plugin</translation>
+        <translation>Ricerca estensioni</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
@@ -3739,7 +3739,7 @@
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation>Questa azione ripristinerà tutte le preferenze dell&apos;applicazione e le configurazioni personalizzate dell&apos;interfaccia. Eliminerà inoltre gli spazi di lavoro e le scorciatoie personalizzati. Sarà anche necessario analizzare di nuovo tutti i plugin di terze parti.
+        <translation>Questa azione ripristinerà tutte le preferenze dell&apos;applicazione e le configurazioni personalizzate dell&apos;interfaccia. Eliminerà inoltre gli spazi di lavoro e le scorciatoie personalizzati. Sarà anche necessario analizzare di nuovo tutte le estensioni di terze parti.
 
 Questa azione non eliminerà alcun progetto.</translation>
     </message>
@@ -3801,12 +3801,12 @@ Questa azione non eliminerà alcun progetto.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
         <source>Validate audio plugins</source>
-        <translation>Convalida i plugin audio</translation>
+        <translation>Convalida delle estensioni audio</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation>Audacity ha trovato dei plugin che devono essere convalidati prima dell&apos;uso. Convalidarli adesso o saltare l&apos;operazione?</translation>
+        <translation>Audacity ha trovato delle estensioni che devono essere convalidate prima dell&apos;uso. Convalidarle adesso o saltare l&apos;operazione?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
@@ -3821,7 +3821,7 @@ Questa azione non eliminerà alcun progetto.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
         <source>Audio plugin validation</source>
-        <translation>Convalida dei plugin audio</translation>
+        <translation>Convalida delle estensioni audio</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
@@ -5480,19 +5480,19 @@ Questa azione non eliminerà alcun progetto.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>Audio plugins scan completed</source>
-        <translation>Analisi dei plugin audio completata</translation>
+        <translation>Analisi delle estensioni audio completata</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>All audio plugins are up to date.</source>
-        <translation>Tutti i plugin audio sono aggiornati.</translation>
+        <translation>Tutte le estensioni sono aggiornate.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
         <source>Validating audio plugins</source>
-        <translation>Convalida dei plugin audio in corso</translation>
+        <translation>Convalida delle estensioni audio in corso</translation>
     </message>
 </context>
 <context>
@@ -5943,12 +5943,12 @@ Codice errore: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation>Il plugin “%1” non supporta la dimensione del blocco richiesta</translation>
+        <translation>L&apos;estensione “%1” non supporta la dimensione del blocco richiesta</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation>Il plugin “%1” si è bloccato durante l’elaborazione dell&apos;audio</translation>
+        <translation>L&apos;estensione “%1” si è bloccata durante l’elaborazione dell&apos;audio</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
@@ -7102,11 +7102,11 @@ Provare a reimpostare eventuali clip allungate o a mixare e renderizzare le trac
     </message>
     <message>
         <source>Show actions list</source>
-        <translation type="vanished">Mostra lista azioni</translation>
+        <translation type="vanished">Mostra elenco azioni</translation>
     </message>
     <message>
         <source>Show rcommands list</source>
-        <translation type="vanished">Mostra l&apos;elenco dei rcomandi</translation>
+        <translation type="vanished">Mostra elenco dei rcomandi</translation>
     </message>
     <message>
         <source>Test query action</source>
@@ -7738,28 +7738,28 @@ Provare a reimpostare eventuali clip allungate o a mixare e renderizzare le trac
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation>Gestisci i plugin</translation>
+        <translation>Gestisci estensioni</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="91"/>
         <source>Rescan plugins</source>
-        <translation>Analizza di nuovo i plugin</translation>
+        <translation>Analizza di nuovo le estensioni</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="107"/>
         <source>Include plugins with errors</source>
-        <translation>Includi i plugin con errori</translation>
+        <translation>Includi le estensioni con errori</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation>Plugin mancanti</translation>
+        <translation>Estensioni mancanti</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation>Alcuni plugin usati in questo progetto non sono stati trovati. Fai doppio clic su una voce per vederne la posizione.</translation>
+        <translation>Alcune estensioni usate in questo progetto non sono state trovate. Fai doppio clic su una voce per vederne la posizione.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
@@ -7771,7 +7771,7 @@ Provare a reimpostare eventuali clip allungate o a mixare e renderizzare le trac
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation>Dettagli del plugin</translation>
+        <translation>Dettagli dell&apos;estensione</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
@@ -8460,7 +8460,7 @@ l&apos;intervallo di frequenze su cui l&apos;effetto deve agire.</translation>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation>errore: il file “%1” specificato nell&apos;intestazione non è stato trovato nel percorso dei plugin.
+        <translation>errore: il file “%1” specificato nell&apos;intestazione non è stato trovato nel percorso delle estensioni.
 </translation>
     </message>
     <message>
@@ -9555,7 +9555,7 @@ Canale destro</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
         <source>Nyquist plugin installer</source>
-        <translation>Installatore di plugin Nyquist</translation>
+        <translation>Installazione estensioni Nyquist</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="195"/>
@@ -11082,7 +11082,7 @@ Seleziona un&apos;area da riparare che abbia dell&apos;audio su almeno un lato (
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation>Nessuna interfaccia fornita dal plugin (segnala il problema se AU3 fornisce un&apos;interfaccia per questo plugin)</translation>
+        <translation>Nessuna interfaccia fornita dall&apos;estensione (segnala il problema se AU3 fornisce un&apos;interfaccia per questa estensione)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
@@ -12076,7 +12076,7 @@ Gli effetti master verranno riattivati dopo l&apos;esportazione.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="168"/>
         <source>Reload plugins</source>
-        <translation>Ricarica i plugin</translation>
+        <translation>Ricarica le estensioni</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
@@ -12119,17 +12119,17 @@ Gli effetti master verranno riattivati dopo l&apos;esportazione.</translation>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
         <source>Plugin not found</source>
-        <translation>Plugin non trovato</translation>
+        <translation>Estensione non trovata</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
         <source>Could not load plugin</source>
-        <translation>Plugin non caricato</translation>
+        <translation>Estensione non caricata</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
         <source>Plugin is not in the correct format</source>
-        <translation>Il plugin non è nel formato corretto</translation>
+        <translation>L&apos;estensione non è nel formato corretto</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
@@ -12181,12 +12181,12 @@ Gli effetti master verranno riattivati dopo l&apos;esportazione.</translation>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
-        <translation>Il plugin &quot;%1&quot; è attualmente disabilitato. Vuoi abilitarlo ora?</translation>
+        <translation>L&apos;estensione &quot;%1&quot; è attualmente disabilitata. Vuoi abilitarla ora?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
         <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
-        <translation>In alternativa, puoi attivarlo in ogni momento da Home &gt; Plugin.</translation>
+        <translation>In alternativa, puoi attivarla in ogni momento da Pagina iniziale &gt; Estensione.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
@@ -12212,13 +12212,13 @@ Gli effetti master verranno riattivati dopo l&apos;esportazione.</translation>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation>Esecuzione plugin %1</translation>
+        <translation>Esecuzione estensione %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation>Esegui plugin %1: %2</translation>
+        <translation>Esegui estensione %1: %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
@@ -16384,9 +16384,9 @@ Non verrà caricato.</translation>
 </source>
         <comment>plug-ins</comment>
         <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="vanished"><numerusform>Abilitare questo plugin?
-</numerusform><numerusform>Abilitare questi plugin?
-</numerusform><numerusform>Abilitare questi plugin?
+        <translation type="vanished"><numerusform>Abilitare questa estensione?
+</numerusform><numerusform>Abilitare queste estensioni?
+</numerusform><numerusform>Abilitare queste estensioni?
 </numerusform></translation>
     </message>
     <message>
@@ -17875,7 +17875,7 @@ Non verrà caricato.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
-        <translation>Plugin</translation>
+        <translation>Estensioni</translation>
     </message>
     <message>
         <source>Advanced options</source>
@@ -17929,7 +17929,7 @@ Non verrà caricato.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation>Scegli la posizione dei plugin</translation>
+        <translation>Scegli la posizione dell&apos;estensione</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
@@ -17954,22 +17954,22 @@ Non verrà caricato.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
-        <translation>Posizione personalizzata dei plugin LV2</translation>
+        <translation>Posizione personalizzata delle estensioni LV2</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation>Scegli la posizione personalizzata dei plugin LV2</translation>
+        <translation>Scegli la posizione personalizzata delle estensioni LV2</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation>Posizione personalizzata dei plugin VST3</translation>
+        <translation>Posizione personalizzata delle estensioni VST3</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation>Scegli la posizione personalizzata dei plugin VST3</translation>
+        <translation>Scegli la posizione personalizzata delle estensioni VST3</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
@@ -17989,7 +17989,7 @@ Non verrà caricato.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Mostra la finestra di dialogo &apos;Come esportare?&apos;</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18004,12 +18004,12 @@ Non verrà caricato.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Salva sempre nel cloud</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Salva sempre nel computer</translation>
     </message>
 </context>
 <context>
@@ -19169,7 +19169,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Esporta nel computer</translation>
     </message>
 </context>
 <context>
@@ -19295,7 +19295,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to save?</source>
-        <translation>Come procedere col salvataggio?</translation>
+        <translation>Come salvare?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
@@ -21090,7 +21090,7 @@ Collega un dispositivo di ingresso ed esegui una nuova rilevazione.</translation
     <message>
         <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
         <source>The directory could not be cleared</source>
-        <translation>La directory non può essere svuotata</translation>
+        <translation>La cartella non può essere svuotata</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
@@ -22061,23 +22061,23 @@ Vuoi continuare?</translation>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
         <source>Choose directory</source>
-        <translation>Scegli directory</translation>
+        <translation>Scegli cartella</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
         <source>Directories actions</source>
         <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
-        <translation>Azioni delle directory</translation>
+        <translation>Azioni delle cartelle</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
         <source>Directories</source>
-        <translation>Directory</translation>
+        <translation>Cartelle</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
         <source>Add directory</source>
-        <translation>Aggiungi directory</translation>
+        <translation>Aggiungi cartella</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
@@ -22087,7 +22087,7 @@ Vuoi continuare?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
         <source>Directories list</source>
-        <translation>Elenco delle directory</translation>
+        <translation>Elenco delle cartelle</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>

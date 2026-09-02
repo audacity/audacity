@@ -22877,7 +22877,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/shared/types/workspacetitles.h" line="24"/>
         <source>Modern</source>
         <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
-        <translation>Современный</translation>
+        <translation>Современная</translation>
     </message>
     <message>
         <location filename="../../src/shared/types/workspacetitles.h" line="28"/>
