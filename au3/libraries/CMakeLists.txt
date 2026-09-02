@@ -17,7 +17,8 @@ before processing individual library subdirectories.
 # - The restrictions do NOT propagate to consumers (PRIVATE, not INTERFACE)
 # - Libraries can choose between wxBase (no GUI) or wxwidgets::wxwidgets (full GUI)
 if(NOT TARGET wxBase)
-    add_library(wxBase INTERFACE)
+    add_library(wxBase INTERFACE
+            ../modules/import-export/mod-cvsd/ImportCVSD.h)
     target_link_libraries(wxBase INTERFACE wxwidgets::wxwidgets)
 endif()
 

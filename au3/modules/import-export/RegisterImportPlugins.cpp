@@ -5,6 +5,7 @@
 #include "au3-import-export/Import.h"
 #include "RegisterImportPlugins.h"
 
+#include "mod-cvsd/ImportCVSD.h"
 #include "mod-wavpack/ImportWavPack.h"
 #include "mod-mpg123/ImportMP3_MPG123.h"
 #include "mod-pcm/ImportPCM.h"
@@ -22,4 +23,5 @@ void RegisterImportPlugins()
     Importer::RegisteredImportPlugin("FLAC", std::make_unique<FLACImportPlugin>());
     Importer::RegisteredImportPlugin("Opus", std::make_unique<OpusImportPlugin>());
     Importer::RegisteredImportPlugin("FFmpeg", std::make_unique<FFmpegImportPlugin>());
+    Importer::RegisteredImportPlugin("CVSD", std::make_unique<CVSDImportPlugin>());
 }
