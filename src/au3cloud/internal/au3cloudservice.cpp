@@ -220,7 +220,6 @@ std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)
         { "authclient", provider },
         { "response_type", "code" },
         { "client_id", serviceConfig.GetOAuthClientID() },
-        { "client_secret", serviceConfig.GetOAuthClientSecret() },
         { "redirect_uri", m_replyHandler->callback().toStdString() }
     };
 
