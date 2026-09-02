@@ -1,9 +1,15 @@
-# AU Test Gate — a VST3 plugin with a controllable load moment
+# Audacity test VST3 plugin — a VST3 plugin with a controllable load moment
 
-A pass-through stereo effect whose *module load* (`ModuleEntry`, i.e. the first
-thing a host does after `dlopen`) is driven by a gate file. Use it to hold,
-release, or break plugin validation/loading on purpose while testing the
-non-blocking plugin validation (#11746).
+A stereo effect whose *module load* (`ModuleEntry`, i.e. the first thing a host
+does after `dlopen`) is driven by a gate file. Use it to hold, release, or break
+plugin validation/loading on purpose while testing the non-blocking plugin
+validation (#11746).
+
+While processing it applies an amplitude tremolo (~5 Hz) whose depth is the
+`Effect depth` parameter (default full). The parameter is persisted with the
+project, so it doubles as a check that a plugin's saved settings survive a
+reload. The effect being active vs bypassed (and any non-default depth) is
+immediately audible.
 
 ## Build
 
