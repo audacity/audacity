@@ -44,7 +44,6 @@ set(MODULE_LINK
         au3-lv2
         au3-module-manager
         au3-realtime-effects
-        lv2sdk
         X11
 )
 

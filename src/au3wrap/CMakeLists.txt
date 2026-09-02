@@ -64,29 +64,29 @@ set(MODULE_SRC
 include(${CMAKE_CURRENT_LIST_DIR}/au3wrapDefs.cmake)
 
 # Third-party libraries (not part of au3/libraries)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/twolame au3-twolame)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/sqlite au3-sqlite)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/soxr au3-soxr)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/pffft au3-pffft)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/portmixer au3-portmixer)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/twolame au3-twolame)
 tft_add_to_build()
 
 # Conditional time-stretching and pitch-shifting libraries
 if (AU_USE_SOUNDTOUCH)
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soundtouch au3-soundtouch)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/soundtouch au3-soundtouch)
 endif()
 
 if (AU_USE_SBSMS)
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/sbsms au3-sbsms)
 endif()
 
 # Conditional third-party SDKs (must be set up before AU3 libraries)
 if (AU_MODULE_EFFECTS_LV2)
-    add_subdirectory(lv2sdk)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/lv2sdk lv2sdk)
 endif()
 
 if(AU_MODULE_EFFECTS_VST)
-    add_subdirectory(vst3)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/vst3 vst3)
 endif()
 
 # RapidJSON (header-only, used by au3-musehub, au3-cloud-audiocom, au3-import-export, au3-sentry-reporting)
@@ -98,11 +98,6 @@ add_subdirectory(${AU3_LIBRARIES} au3-libraries)
 
 # AU3 import/export format plugins (per-format static libraries)
 add_subdirectory(${AU3_MODULES}/import-export au3-import-export-modules)
-
-# Additional linking setup for conditional libraries
-if (AU_MODULE_EFFECTS_LV2)
-    set(AU3_LINK ${AU3_LINK} lv2sdk)
-endif()
 
 # ==================================
 # AU3_LIBRARIES_LIST is now set by au3/libraries/CMakeLists.txt

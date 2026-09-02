@@ -32,6 +32,7 @@ set( SOURCES
 )
 set( LIBRARIES
 PUBLIC
+   lv2sdk # LoadLV2.h includes lilv/lilv.h
    au3-components
    au3-effects
    au3-math
@@ -41,7 +42,6 @@ PRIVATE
    au3-basic-ui
    au3-exceptions
    au3-module-manager
-   lv2sdk
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
