@@ -32,7 +32,7 @@
 #endif
 
 #include "au3-file-formats/FileFormats.h"
-#include "au3-import-export/GetAcidizerTags.h"
+#include "au3-file-formats/GetAcidizerTags.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
 #include "au3-import-export/ImportUtils.h"
@@ -452,7 +452,7 @@ void PCMImportFileHandle::Import(
     // To begin with, only trust the Muse Hub, with whom we collaborate and can
     // ensure they comply. In the future we may extend this list.
     const std::vector<std::string> trustedDistributors { "Muse Hub" };
-    if (const auto acidTags = LibImportExport::GetAcidizerTags(*mFile, trustedDistributors)) {
+    if (const auto acidTags = LibFileFormats::GetAcidizerTags(*mFile, trustedDistributors)) {
         outAcidTags.emplace(*acidTags);
     }
 
