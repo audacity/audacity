@@ -25,6 +25,9 @@ class UsageInfoPreferencesModel : public QObject
 public:
     explicit UsageInfoPreferencesModel(QObject* parent = nullptr);
 
+    Q_INVOKABLE bool isCrashReportingAvailable() const;
+    Q_INVOKABLE bool isUsageInfoAvailable() const;
+
     bool sendAnonymousUsageInfo() const;
     bool sendCrashReports() const;
 

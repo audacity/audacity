@@ -18,10 +18,10 @@ set( SOURCES
    internal/socket_guard.h
 )
 set( LIBRARIES
-   au3-utility-interface
-   PRIVATE
-      $<$<PLATFORM_ID:Windows>:wsock32>
-      $<$<PLATFORM_ID:Windows>:ws2_32>
+PRIVATE
+   au3-utility
+   $<$<PLATFORM_ID:Windows>:wsock32>
+   $<$<PLATFORM_ID:Windows>:ws2_32>
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

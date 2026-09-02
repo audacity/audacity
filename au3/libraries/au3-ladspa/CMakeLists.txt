@@ -14,8 +14,15 @@ set( SOURCES
    ladspa.h
 )
 set( LIBRARIES
-   au3-effects-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+   au3-effects
+   au3-utility
+PRIVATE
+   au3-exceptions
+   au3-files
+   au3-module-manager
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

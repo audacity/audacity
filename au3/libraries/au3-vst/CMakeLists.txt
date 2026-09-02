@@ -16,8 +16,16 @@ set( SOURCES
    aeffectx.h
 )
 set( LIBRARIES
-   au3-effects-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+   au3-effects
+   au3-module-manager
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-files
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

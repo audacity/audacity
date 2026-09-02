@@ -14,8 +14,8 @@ set( SOURCES
    graphics/Size.h
 )
 set( LIBRARIES
-   PRIVATE
-      au3-utility-interface
+PUBLIC
+   au3-utility
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

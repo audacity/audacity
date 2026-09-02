@@ -24,8 +24,10 @@ set( SOURCES
    SettingsVisitor.h
 )
 set( LIBRARIES
-   au3-strings-interface
+PUBLIC
+   au3-strings
    au3-utility
+PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -104,17 +104,27 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.h
     )
 
-# AU3
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap extension_native)
-
 set(MODULE_LINK
-    ${MODULE_LINK}
-    muse::draw
+        au3wrap
+        au3-audio-graph
+        au3-effects
+        au3-exceptions
+        au3-label-track
+        au3-math
+        au3-mixer
+        au3-numeric-formats
+        au3-project
+        au3-project-history
+        au3-project-rate
+        au3-realtime-effects
+        au3-stretching-sequence
+        au3-time-frequency-selection
+        au3-time-track
+        au3-track
+        au3-transactions
+        au3-wave-track
+        extension_native
+        muse::draw
 )
 
 set(MODULE_USE_UNITY OFF)

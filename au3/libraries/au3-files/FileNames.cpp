@@ -25,10 +25,12 @@ used throughout Audacity into this one place.
 
 #include <memory>
 
+#include <wx/dir.h> // for wxDIR_FILES
 #include <wx/defs.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/utils.h>
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-strings/Internat.h"
@@ -680,8 +682,7 @@ void FileNames::AddMultiPathsToPathList(const wxString& multiPathStringArg,
 // static
 void FileNames::FindFilesInPathList(const wxString& pattern,
                                     const FilePaths& pathList,
-                                    FilePaths& results,
-                                    int flags)
+                                    FilePaths& results)
 {
     wxLogNull nolog;
 
@@ -693,7 +694,7 @@ void FileNames::FindFilesInPathList(const wxString& pattern,
 
     for (size_t i = 0; i < pathList.size(); i++) {
         ff = pathList[i] + wxFILE_SEP_PATH + pattern;
-        wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
+        wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), wxDIR_FILES);
     }
 }
 

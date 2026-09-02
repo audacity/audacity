@@ -14,8 +14,21 @@ set( SOURCES
    ViewInfo.h
 )
 set( LIBRARIES
-   au3-snapping-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+   au3-preferences
+   au3-registries
+   au3-screen-geometry
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-numeric-formats
+   au3-project
+   au3-project-history
+   au3-project-rate
+   au3-snapping
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

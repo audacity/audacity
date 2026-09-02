@@ -9,9 +9,9 @@ set(SOURCES
    BreakpadConfigurer.h
    BreakpadConfigurer.cpp
 )
-set(LIBRARIES 
-   PRIVATE
-      breakpad::client
+set( LIBRARIES
+PRIVATE
+   breakpad::client
 )
 set(DEFINES
    INTERFACE

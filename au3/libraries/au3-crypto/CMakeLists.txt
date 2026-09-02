@@ -12,7 +12,7 @@ set( SOURCES
    crypto/SHA256.h
 )
 set( LIBRARIES
-   PUBLIC
+
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" "" )

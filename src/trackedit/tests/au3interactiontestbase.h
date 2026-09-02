@@ -11,8 +11,7 @@
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "mocks/trackeditprojectmock.h"
 
-#include "tracktemplatefactory.h"
-
+#include "au3wrap/tests/tracktemplatefactory.h"
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"

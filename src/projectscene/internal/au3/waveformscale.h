@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include <wx/gdicmn.h>
 #include "au3-registries/ClientData.h"
 
 class WaveChannel;

@@ -37,12 +37,12 @@ set( SOURCES
    TimeAndPitchInterface.h
 )
 set( LIBRARIES
-PUBLIC
-   au3-files-interface
-   au3-utility-interface
-   PRIVATE
+PRIVATE
+   au3-files
+   au3-preferences
+   au3-strings
+   au3-utility
    pffft
-   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -9,10 +9,12 @@ set( SOURCES
    MuseHubService.h
 )
 set( LIBRARIES
-   au3-network-manager-interface
-   au3-strings-interface # Languages
-   PRIVATE
+PRIVATE
+   au3-network-manager
+   au3-string-utils
+   au3-strings # Languages
    rapidjson::rapidjson
+   wxBase # au3-strings/Languages.h pulls in wx/string.h
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
