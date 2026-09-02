@@ -107,7 +107,9 @@ endif()
 
 if(BUILD_CONFIGURE MATCHES "APP-PORTABLE")
     set(AU4_GENERAL_APP ON)
-    set(WIN_PORTABLE ON)
+    if (OS_IS_WIN)
+        set(WIN_PORTABLE ON)
+    endif()
 endif()
 
 if (AU4_GENERAL_APP)
