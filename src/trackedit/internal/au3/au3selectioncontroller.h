@@ -49,8 +49,8 @@ public:
     std::optional<secs_t> selectedClipStartTime() const override;
     std::optional<secs_t> selectedClipEndTime() const override;
 
-    ClipAndLabelKeys itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
-    void setItemSelectionAnchor(secs_t time, const TrackId& trackId) override;
+    ClipAndLabelKeys itemKeysInRange(const TrackItemKey& target) const override;
+    void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
     ClipAndLabelKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
 
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
@@ -115,7 +115,12 @@ public:
     TrackIdList orderedTrackList() const override;
 
 private:
-    std::optional<std::pair<secs_t, TrackId> > m_itemSelectionAnchor;
+    struct ItemSelectionAnchor {
+        secs_t time = 0.0;
+        TrackItemKey itemKey;
+    };
+    std::optional<ItemSelectionAnchor> m_itemSelectionAnchor;
+    void resetItemSelectionAnchorIfNoSelection();
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
     void onHistoryEvent(const trackedit::HistoryEvent& event);

@@ -255,6 +255,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectionController()->resetSelectedClips();
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         m_needToSelectTracksData = false;
         return;
     }
@@ -280,7 +283,7 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     setFocusedItem(key);
     if (m_context) {
-        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), m_trackId);
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
     }
     m_needToSelectTracksData = false;
 }

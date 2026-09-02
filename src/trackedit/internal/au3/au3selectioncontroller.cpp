@@ -243,6 +243,7 @@ void Au3SelectionController::resetSelectedClips()
     //! NOTE: sync clip deselection with au3 persistence
     au3::DomAccessor::clearAllClipSelection(projectRef());
     m_selectedClips.set(au::trackedit::ClipKeyList(), true);
+    resetItemSelectionAnchorIfNoSelection();
 }
 
 bool Au3SelectionController::hasSelectedClips() const
@@ -292,11 +293,13 @@ int trackIndexOf(const std::vector<au::trackedit::Track>& tracks, const au::trac
 }
 }
 
-ClipAndLabelKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const
+ClipAndLabelKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& target) const
 {
-    if (!anchor.isValid() || !target.isValid()) {
+    if (!m_itemSelectionAnchor.has_value() || !target.isValid()) {
         return {};
     }
+
+    const TrackItemKey anchor = m_itemSelectionAnchor->itemKey;
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -349,9 +352,16 @@ ClipAndLabelKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& anc
     return range;
 }
 
-void Au3SelectionController::setItemSelectionAnchor(secs_t time, const TrackId& trackId)
+void Au3SelectionController::setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey)
 {
-    m_itemSelectionAnchor = std::make_pair(time, trackId);
+    m_itemSelectionAnchor = ItemSelectionAnchor { time, itemKey };
+}
+
+void Au3SelectionController::resetItemSelectionAnchorIfNoSelection()
+{
+    if (m_selectedClips.val.empty() && m_selectedLabels.val.empty()) {
+        m_itemSelectionAnchor = std::nullopt;
+    }
 }
 
 ClipAndLabelKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const
@@ -366,14 +376,24 @@ ClipAndLabelKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, 
     }
 
     const std::vector<Track> tracks = prj->trackList();
-    const int anchorTrackIndex = trackIndexOf(tracks, m_itemSelectionAnchor->second);
+    const int anchorTrackIndex = trackIndexOf(tracks, m_itemSelectionAnchor->itemKey.trackId);
     const int targetTrackIndex = trackIndexOf(tracks, trackId);
     if (anchorTrackIndex < 0 || targetTrackIndex < 0) {
         return {};
     }
 
-    const double boxStartTime = std::min(m_itemSelectionAnchor->first.raw(), time.raw());
-    const double boxEndTime = std::max(m_itemSelectionAnchor->first.raw(), time.raw());
+    const std::optional<ItemWithTime> anchorItem
+        = findItem(prj->itemList(m_itemSelectionAnchor->itemKey.trackId), m_itemSelectionAnchor->itemKey);
+
+    //! NOTE A leftward box reaches the anchor item's end rather than the anchor
+    //! point, so items sharing the anchor's time span are included as well
+    const double anchorTime = m_itemSelectionAnchor->time.raw();
+    double boxStartTime = anchorTime;
+    double boxEndTime = time.raw();
+    if (boxEndTime < boxStartTime) {
+        boxStartTime = time.raw();
+        boxEndTime = anchorItem.has_value() ? anchorItem->endTime : anchorTime;
+    }
 
     const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);
     const int lastTrackIndex = std::max(anchorTrackIndex, targetTrackIndex);
@@ -401,6 +421,7 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool 
     }
 
     m_selectedClips.set(clipKeys, complete);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: when selecting a clip, we also need to select
     //! the track on which the clip is located
@@ -446,6 +467,7 @@ void Au3SelectionController::removeClipSelection(const ClipKey& clipKey)
         );
 
     m_selectedClips.set(selectedClips, true);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: update selected tracks
     TrackIdList selectedTracks;
@@ -568,6 +590,7 @@ void Au3SelectionController::resetSelectedLabels()
     MYLOG() << "[SELECTION] resetSelectedLabels";
     au3::DomAccessor::clearAllLabelSelection(projectRef());
     m_selectedLabels.set(au::trackedit::LabelKeyList(), true);
+    resetItemSelectionAnchorIfNoSelection();
 }
 
 bool Au3SelectionController::hasSelectedLabels() const
@@ -603,6 +626,7 @@ void Au3SelectionController::setSelectedLabels(const LabelKeyList& labelKeys, bo
     }
 
     m_selectedLabels.set(labelKeys, complete);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: when selecting a label, we also need to select
     //! the track on which the label is located
@@ -648,6 +672,7 @@ void Au3SelectionController::removeLabelSelection(const LabelKey& labelKey)
         );
 
     m_selectedLabels.set(selectedLabels, true);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: update selected tracks
     TrackIdList selectedTracks;
