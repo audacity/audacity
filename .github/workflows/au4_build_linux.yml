@@ -215,7 +215,7 @@ jobs:
         path: |
           ./build.release/test-plugins/AuTestGate.vst3/
           ./build.release/test-plugins/au_test_vst3_gate_controller-*.AppImage
-          ./tools/test-vst3-gate/README.md
+          ./tools/vst3-test-plugin/README.md
         if-no-files-found: warn
 
     - name: Generate and upload dump symbols
