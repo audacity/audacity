@@ -26,6 +26,14 @@ The target is a harmless no-op when the plugin isn't built, so it never breaks
 F5 for anyone else. (On Linux/macOS the deploy is a symlink into the build
 output, so it's idempotent and rebuilds are live; on Windows it's a copy.)
 
+## Getting it from CI (QA)
+
+The Linux CI build has the plugin enabled and uploads the built bundle, the
+controller (as a self-contained AppImage, so no Qt install is needed) and this
+README as the `test-vst3-plugin-linux-<arch>` artifact of each `au4_build_linux`
+run. Download it, drop `AuTestGate.vst3` into `~/.vst3` (or run the controller
+AppImage and use its Install button) and rescan plugins in Audacity.
+
 ## Controller app
 
 `<build dir>/test-plugins/au_test_vst3_gate_controller` is a small Qt (Widgets)
