@@ -9,6 +9,7 @@
 #include <mutex>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "au3cloud/internal/downloadmanager.h"
 #include "framework/global/async/asyncable.h"
@@ -85,6 +86,7 @@ public:
 
 private:
     muse::ProgressPtr createSyncProgress();
+    void trackProgress(const muse::ProgressPtr& progress);
     void startNewSnapshotUpload(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress, const std::string& name,
                                 UploadMode uploadMode, std::function<bool()> projectSaveCallback);
     void resumePendingSnapshotOrStartNew(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress,
@@ -121,5 +123,6 @@ private:
     muse::ValCh<bool> m_syncingInProgressChangedChannel;
     muse::ProgressPtr m_syncInProgress;
     muse::ProgressPtr m_audioPreviewProgress;
+    std::vector<std::weak_ptr<muse::Progress> > m_activeProgresses;
 };
 }
