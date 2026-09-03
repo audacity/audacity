@@ -416,9 +416,20 @@ const EffectInstanceFactory* RealtimeEffectState::GetEffect()
             mMainSettings.settings.extra.SetActive(wasActive);
             mOutputs = mPlugin->MakeOutputs();
             mMovedOutputs = mPlugin->MakeOutputs();
+            ConsumeXmlParameters();
         }
     }
     return mPlugin;
+}
+
+void RealtimeEffectState::ConsumeXmlParameters()
+{
+    assert(mPlugin);
+    if (mPlugin && !mParameters.empty()) {
+        CommandParameters parms(mParameters);
+        mPlugin->LoadSettings(parms, mMainSettings.settings);
+    }
+    mParameters.clear();
 }
 
 std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
@@ -892,11 +903,11 @@ bool RealtimeEffectState::HandleXMLTag(
 void RealtimeEffectState::HandleXMLEndTag(const std::string_view& tag)
 {
     if (tag == XMLTag()) {
-        if (mPlugin && !mParameters.empty()) {
-            CommandParameters parms(mParameters);
-            mPlugin->LoadSettings(parms, mMainSettings.settings);
+        // Apply the parsed parameters now if the plugin is already loaded; otherwise
+        // keep them until it loads.
+        if (mPlugin) {
+            ConsumeXmlParameters();
         }
-        mParameters.clear();
     }
 }
 

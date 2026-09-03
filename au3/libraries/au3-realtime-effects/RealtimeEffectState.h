@@ -126,6 +126,8 @@ public:
 
 private:
 
+    void ConsumeXmlParameters();
+
     std::shared_ptr<EffectInstance> MakeInstance();
     std::shared_ptr<EffectInstance> EnsureInstance(double rate, size_t audioThreadBufferSize);
 
