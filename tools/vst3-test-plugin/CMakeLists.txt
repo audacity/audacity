@@ -7,7 +7,7 @@
 #
 
 option(AU_BUILD_TEST_VST3_GATE_PLUGIN
-       "Build the gated test VST3 plugin and its controller (developer tool, see tools/test-vst3-gate)" OFF)
+       "Build the gated test VST3 plugin and its controller (developer tool, see tools/vst3-test-plugin)" OFF)
 
 # The deploy target must always exist so a pre-launch task (.vscode/tasks.json) can
 # invoke it without breaking F5 for anyone not building the plugin. The real deploy
@@ -86,7 +86,7 @@ set(SDK_PLUGIN_SRC
     ${VST3_SDK_PATH}/pluginterfaces/base/ustring.cpp
 )
 
-add_library(au_test_vst3_gate MODULE autestgate.cpp ${SDK_PLUGIN_SRC})
+add_library(au_test_vst3_gate MODULE vst3testplugin.cpp ${SDK_PLUGIN_SRC})
 
 target_include_directories(au_test_vst3_gate PRIVATE ${VST3_SDK_PATH})
 target_compile_definitions(au_test_vst3_gate PRIVATE $<IF:$<CONFIG:Debug>,DEVELOPMENT=1,RELEASE=1>)
