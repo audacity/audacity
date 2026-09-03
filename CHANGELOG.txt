@@ -1,5 +1,76 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+# Audacity 4.0 release notes
+
+Audacity 4 rebuilds the application interface on Qt and introduces a new clip-editing model. Most Audacity 3 workflows remain available, but some controls have moved or changed.
+
+## Editing clips
+
+- Clips can be selected directly. Click a clip header to select it, or Shift-click to select multiple clips.
+- Several clips can be edited together. Moving, trimming and time stretching apply to all selected clips.
+- Clips can be grouped. Groups remain together when moved, copied, pasted or duplicated.
+- Clips can be placed more freely. They can move between mono and stereo tracks. Moving a clip over another replaces the overlapped part instead of blocking the move.
+- Splitting has a dedicated tool. Press or hold `S`, then click the waveform or clip header. Split, split-cut, split-delete, split at silences and split to a new track are also available as commands.
+- Paste handles more cases automatically. Audacity can create a track when needed, adapt compatible channel layouts and paste audio files from the operating-system clipboard.
+- Alignment guides, sample-boundary snapping and per-project snap settings have been added or expanded.
+
+## Interface and tools
+
+- The interface has been rebuilt on Qt, with native high-DPI rendering.
+- Toolbars and panels can be moved, docked, floated, shown or hidden.
+- UI layouts can be saved as Workspaces. Audacity includes Modern, Classic and Music workspaces.
+- Light, dark and high-contrast themes are available, along with accent colors, track colors and several clip styles.
+- The new Home screen shows recent projects with preview thumbnails.
+
+The separate Select, Envelope, Draw and Multi-tool modes have been removed. Their functions are now context-sensitive:
+
+- Volume envelopes are displayed in the Clip gain mode.
+- Sample drawing becomes available when the waveform is zoomed to individual samples.
+- Splitting is available by holding `S`.
+- Track and effect parameters use consistent rotary controls with fine adjustment and double-click reset.
+
+- Sync-Lock has been removed. Delete, cut and paste now have explicit variants for either leaving a gap or moving later material to preserve timing.
+
+## Playback and recording
+
+- The playhead remains visible during navigation and can be dragged to a new position.
+- Playback can seek to another position without stopping.
+- Recording can start anywhere on the timeline and creates a clip at that position.
+- Loop boundaries and the interaction between playback, selections and loops have been revised.
+- Punch and Roll, lead-in recording, latency compensation, software playthrough and per-track input monitoring have been rebuilt for the new interface.
+- Audio Setup now includes system-default devices, refreshable device lists and custom channel mapping. Audacity can follow operating-system device changes automatically.
+- Official Windows builds include ASIO playback and recording support.
+
+## Tracks, meters and effects
+
+- Track headers now contain live playback and recording meters.
+- Preset handling is consistent across built-in, destructive and realtime effects.
+- Built-in effects, generators and analyzers have been rebuilt for the Qt interface.
+- Supported plugin formats are VST3, Nyquist, LV2 on Linux and Audio Units on macOS. Audacity can display generated controls when a plugin's own interface is unavailable.
+- Spectrogram has been redesigned with clearer guides and rulers, and faster rendering.
+
+## Projects, import and export
+
+- Audacity 4 uses the new `.aup4` project format.
+- `.aup3` projects open and convert to `.aup4` without changing the original file. Converted projects cannot be saved back to `.aup3`.
+- Older `.aup` projects can be imported.
+- Project files store preview thumbnails and Audacity 4's additional clip and appearance data.
+
+## Compatibility notes
+
+The following Audacity 3 features are not available in Audacity 4.0, but we're working on adding them in future releases.
+
+- Time Tracks
+- Note/MIDI tracks
+- Mixer
+- Macro Manager and the scripting pipe
+- VAMP and LADSPA plugin hosting
+- Play-at-speed
+
+Sync-Lock and the old tool modes were replaced by the workflows described above.
+
+Additionally, Audacity 4 ships with some missing exporting and rendering features, analyzers, and effects.
+
 Changes in version 4.0.0 beta 1
 
 Audacity 4 is a ground-up rebuild on the Qt framework.
