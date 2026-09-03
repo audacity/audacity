@@ -1,8 +1,8 @@
 # Deploys the test VST3 bundle into the user's VST3 folder: a symlink on Linux/macOS
 # (so rebuilds stay live), a copy on Windows.
 
-set(src "@AU_TEST_VST3_GATE_BUNDLE@")
-set(name "@AU_TEST_VST3_GATE_NAME@.vst3")
+set(src "@AU_VST3_TEST_PLUGIN_BUNDLE@")
+set(name "@AU_VST3_TEST_PLUGIN_NAME@.vst3")
 
 if(APPLE)
     set(dir "$ENV{HOME}/Library/Audio/Plug-Ins/VST3")
@@ -14,7 +14,7 @@ endif()
 set(dst "${dir}/${name}")
 
 if(NOT EXISTS "${src}")
-    message(FATAL_ERROR "[test-vst3-gate] bundle not built: ${src}")
+    message(FATAL_ERROR "[vst3-test-plugin] bundle not built: ${src}")
 endif()
 file(MAKE_DIRECTORY "${dir}")
 
@@ -31,4 +31,4 @@ if(WIN32)
 else()
     file(CREATE_LINK "${src}" "${dst}" SYMBOLIC)
 endif()
-message(STATUS "[test-vst3-gate] deployed ${name} -> ${dst}")
+message(STATUS "[vst3-test-plugin] deployed ${name} -> ${dst}")

@@ -1,7 +1,7 @@
 # Audacity test VST3 plugin — a VST3 plugin with a controllable load moment
 
 A stereo effect whose _module load_ (`ModuleEntry`, i.e. the first thing a host
-does after `dlopen`) is driven by a gate file. Use it to hold, release, or break
+does after `dlopen`) is driven by a validation gate file. Use it to hold, release, or break
 plugin validation/loading on purpose while testing the non-blocking plugin
 validation (#11746).
 
@@ -13,8 +13,8 @@ immediately audible.
 
 ## Build
 
-    cmake -DAU_BUILD_TEST_VST3_GATE_PLUGIN=ON <build dir>
-    ninja -C <build dir> au_test_vst3_gate au_test_vst3_gate_controller
+    cmake -DAU_BUILD_VST3_TEST_PLUGIN=ON <build dir>
+    ninja -C <build dir> au_vst3_test_plugin_validation_gate au_vst3_test_plugin_validation_controller
     ninja -C <build dir> deploy_test_vst3     # symlink/copy the bundle into your VST3 folder
 
 Deploying is deliberately _not_ part of `install` (that option is meant to be ON
@@ -31,26 +31,26 @@ output, so it's idempotent and rebuilds are live; on Windows it's a copy.)
 The Linux CI build has the plugin enabled and uploads the built bundle, the
 controller (as a self-contained AppImage, so no Qt install is needed) and this
 README as the `test-vst3-plugin-linux-<arch>` artifact of each `au4_build_linux`
-run. Download it, drop `AuTestGate.vst3` into `~/.vst3` (or run the controller
+run. Download it, drop `AuVst3TestPlugin.vst3` into `~/.vst3` (or run the controller
 AppImage and use its Install button) and rescan plugins in Audacity.
 
 ## Controller app
 
-`<build dir>/test-plugins/au_test_vst3_gate_controller` is a small Qt (Widgets)
-app so you never have to edit the gate file by hand. It
+`<build dir>/test-plugins/au_vst3_test_plugin_validation_controller` is a small Qt (Widgets)
+app so you never have to edit the validation gate file by hand. It
 
 - **installs** the built bundle into the platform VST3 folder (`~/.vst3`,
   `~/Library/Audio/Plug-Ins/VST3`, `%COMMONPROGRAMFILES%\VST3`) - as a symlink on
   Linux/macOS so rebuilds stay live, a copy on Windows;
 - sets the **load result**: succeed / crash / refuse, either _immediately_ or _after_
-  a delay (default 180 s = the 3 min plugin-load timeout), by writing the gate file;
-- shows the gate file's path and current content.
+  a delay (default 180 s = the 3 min plugin-load timeout), by writing the validation gate file;
+- shows the validation gate file's path and current content.
 
-The controller and the plugin resolve the gate path identically, so they always agree.
+The controller and the plugin resolve the validation gate path identically, so they always agree.
 
-## Gate file
+## Validation gate file
 
-`$AU_TEST_VST3_GATE_FILE`, or `<temp dir>/au_test_vst3_gate` (`/tmp/au_test_vst3_gate`
+`$AU_VST3_TEST_PLUGIN_VALIDATION_GATE_FILE`, or `<temp dir>/au_vst3_test_plugin_validation_gate` (`/tmp/au_vst3_test_plugin_validation_gate`
 on Linux). Contents are `<code> [delaySeconds]`: the code below is applied after
 waiting the optional delay (default 0), counted from when the load started. The
 file keeps being polled meanwhile, so writing a new value overrides a pending one.
@@ -62,16 +62,16 @@ file keeps being polled meanwhile, so writing a new value overrides a pending on
 | `-1`           | crash (null dereference) while loading                   |
 | `2`            | refuse to load (`ModuleEntry` returns false)             |
 
-While waiting it prints `[AuTestGate] gate closed, waiting ...` to stderr about
+While waiting it prints `[AuVst3TestPlugin] validation gate closed, waiting ...` to stderr about
 once a second; the validation subprocess timeout is an _inactivity_ timeout, so
 a waiting plugin isn't killed.
 
-    echo 0 > /tmp/au_test_vst3_gate       # hold
-    echo 1 > /tmp/au_test_vst3_gate       # release
-    echo -1 > /tmp/au_test_vst3_gate      # crash on next load
-    echo "1 180" > /tmp/au_test_vst3_gate # load, but only after 3 minutes
-    echo "-1 180" > /tmp/au_test_vst3_gate# crash after 3 minutes
+    echo 0 > /tmp/au_vst3_test_plugin_validation_gate       # hold
+    echo 1 > /tmp/au_vst3_test_plugin_validation_gate       # release
+    echo -1 > /tmp/au_vst3_test_plugin_validation_gate      # crash on next load
+    echo "1 180" > /tmp/au_vst3_test_plugin_validation_gate # load, but only after 3 minutes
+    echo "-1 180" > /tmp/au_vst3_test_plugin_validation_gate# crash after 3 minutes
 
-The gate applies to every process that loads the module: the validation
+The validation gate applies to every process that loads the module: the validation
 subprocess _and_ the in-process load in the app. Keep it at `1` once the plugin
 has been validated unless you want the in-process load itself to hang/crash.

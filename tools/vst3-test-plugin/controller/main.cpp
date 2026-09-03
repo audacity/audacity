@@ -2,11 +2,12 @@
  * Audacity: A Digital Audio Editor
  *
  * Controller for the Audacity test VST3 plugin: installs the built bundle into the
- * platform's VST3 folder and drives the plugin's load behaviour by writing its gate
- * file (see ../vst3testplugin.cpp and ../README.md) - no more editing the file by hand.
- * Changes are written as you make them; there is no separate "apply" step.
+ * platform's VST3 folder and drives the plugin's load behaviour by writing its
+ * validation gate file (see ../vst3testplugin.cpp and ../README.md) - no more
+ * editing the file by hand. Changes are written as you make them; there is no
+ * separate "apply" step.
  *
- * The gate path is resolved exactly as the plugin does, so the two always agree.
+ * The validation gate path is resolved exactly as the plugin does, so the two always agree.
  */
 
 #include <cstdlib>
@@ -19,25 +20,25 @@
 namespace fs = std::filesystem;
 
 namespace {
-constexpr int GATE_LOAD = 1;
-constexpr int GATE_CRASH = -1;
-constexpr int GATE_REFUSE = 2;
+constexpr int VALIDATION_GATE_LOAD = 1;
+constexpr int VALIDATION_GATE_CRASH = -1;
+constexpr int VALIDATION_GATE_REFUSE = 2;
 constexpr int DEFAULT_DELAY_SECONDS = 180; // the 3 min plugin-load timeout
 
-// Must mirror vst3testplugin.cpp gateFilePath().
-fs::path gateFilePath()
+// Must mirror vst3testplugin.cpp validationGateFilePath().
+fs::path validationGateFilePath()
 {
-    if (const char* env = std::getenv("AU_TEST_VST3_GATE_FILE"); env && *env) {
+    if (const char* env = std::getenv("AU_VST3_TEST_PLUGIN_VALIDATION_GATE_FILE"); env && *env) {
         return env;
     }
-    return fs::temp_directory_path() / "au_test_vst3_gate";
+    return fs::temp_directory_path() / "au_vst3_test_plugin_validation_gate";
 }
 
 // Baked in at build time; the user can still browse to another bundle.
 fs::path defaultBundlePath()
 {
-#ifdef AU_TEST_VST3_GATE_BUNDLE
-    return AU_TEST_VST3_GATE_BUNDLE;
+#ifdef AU_VST3_TEST_PLUGIN_BUNDLE
+    return AU_VST3_TEST_PLUGIN_BUNDLE;
 #else
     return {};
 #endif
@@ -45,10 +46,10 @@ fs::path defaultBundlePath()
 
 QString bundleName()
 {
-#ifdef AU_TEST_VST3_GATE_NAME
-    return QStringLiteral(AU_TEST_VST3_GATE_NAME ".vst3");
+#ifdef AU_VST3_TEST_PLUGIN_NAME
+    return QStringLiteral(AU_VST3_TEST_PLUGIN_NAME ".vst3");
 #else
-    return QStringLiteral("AuTestGate.vst3");
+    return QStringLiteral("AuVst3TestPlugin.vst3");
 #endif
 }
 
@@ -102,19 +103,19 @@ bool installBundle(const fs::path& src, const fs::path& dst, QString& error)
     return true;
 }
 
-struct Gate {
-    int code = GATE_LOAD;
+struct ValidationGate {
+    int code = VALIDATION_GATE_LOAD;
     int delaySeconds = 0;
 };
 
-// `<code> [delaySeconds]`, mirroring the plugin's readGate(): a missing or malformed
+// `<code> [delaySeconds]`, mirroring the plugin's readValidationGate(): a missing or malformed
 // file means "load normally".
-Gate readGate(const fs::path& path)
+ValidationGate readValidationGate(const fs::path& path)
 {
     std::ifstream in(path);
-    Gate gate;
+    ValidationGate gate;
     if (!in || !(in >> gate.code)) {
-        return Gate {};
+        return ValidationGate {};
     }
     if (!(in >> gate.delaySeconds) || gate.delaySeconds < 0) {
         gate.delaySeconds = 0;
@@ -122,7 +123,7 @@ Gate readGate(const fs::path& path)
     return gate;
 }
 
-bool writeGate(const fs::path& path, const Gate& gate, QString& error)
+bool writeValidationGate(const fs::path& path, const ValidationGate& gate, QString& error)
 {
     std::ofstream out(path, std::ios::trunc);
     if (!out) {
@@ -137,10 +138,10 @@ bool writeGate(const fs::path& path, const Gate& gate, QString& error)
     return static_cast<bool>(out);
 }
 
-QString describe(const Gate& gate)
+QString describe(const ValidationGate& gate)
 {
-    const QString what = gate.code == GATE_CRASH ? QStringLiteral("crash")
-                         : gate.code == GATE_REFUSE ? QStringLiteral("refuse to load")
+    const QString what = gate.code == VALIDATION_GATE_CRASH ? QStringLiteral("crash")
+                         : gate.code == VALIDATION_GATE_REFUSE ? QStringLiteral("refuse to load")
                          : QStringLiteral("load");
     if (gate.delaySeconds > 0) {
         return QStringLiteral("On its next load the plugin will %1 after %2 s.").arg(what).arg(gate.delaySeconds);
@@ -215,11 +216,12 @@ int main(int argc, char* argv[])
 
     QObject::connect(afterRadio, &QRadioButton::toggled, delaySpin, &QSpinBox::setEnabled);
 
-    // Reflect the gate file as it currently is, before wiring the write-on-change
+    // Reflect the validation gate file as it currently is, before wiring the write-on-change
     // handlers, so opening the controller never rewrites the file by itself.
-    const fs::path gatePath = gateFilePath();
-    const Gate current = readGate(gatePath);
-    (current.code == GATE_CRASH ? crashRadio : current.code == GATE_REFUSE ? refuseRadio : succeedRadio)->setChecked(true);
+    const fs::path validationGatePath = validationGateFilePath();
+    const ValidationGate current = readValidationGate(validationGatePath);
+    (current.code == VALIDATION_GATE_CRASH ? crashRadio : current.code == VALIDATION_GATE_REFUSE ? refuseRadio : succeedRadio)->setChecked(
+        true);
     if (current.delaySeconds > 0) {
         delaySpin->setValue(current.delaySeconds);
         afterRadio->setChecked(true);
@@ -230,12 +232,13 @@ int main(int argc, char* argv[])
     status->setText(describe(current));
 
     // ---- Behaviour ----------------------------------------------------------
-    const auto applyGate = [&] {
-        Gate gate;
-        gate.code = crashRadio->isChecked() ? GATE_CRASH : refuseRadio->isChecked() ? GATE_REFUSE : GATE_LOAD;
+    const auto applyValidationGate = [&] {
+        ValidationGate gate;
+        gate.code
+            = crashRadio->isChecked() ? VALIDATION_GATE_CRASH : refuseRadio->isChecked() ? VALIDATION_GATE_REFUSE : VALIDATION_GATE_LOAD;
         gate.delaySeconds = afterRadio->isChecked() ? delaySpin->value() : 0;
         QString error;
-        if (writeGate(gatePath, gate, error)) {
+        if (writeValidationGate(validationGatePath, gate, error)) {
             status->setText(describe(gate));
         } else {
             status->setText(QStringLiteral("Failed: %1").arg(error));
@@ -243,14 +246,14 @@ int main(int argc, char* argv[])
     };
     const auto onToggled = [&](QAbstractButton*, bool checked) {
         if (checked) {
-            applyGate();
+            applyValidationGate();
         }
     };
     QObject::connect(outcomeGroup, &QButtonGroup::buttonToggled, onToggled);
     QObject::connect(whenGroup, &QButtonGroup::buttonToggled, onToggled);
     QObject::connect(delaySpin, &QSpinBox::valueChanged, [&](int) {
         if (afterRadio->isChecked()) {
-            applyGate();
+            applyValidationGate();
         }
     });
 
