@@ -19,24 +19,18 @@ static const auto exts = {
   wxT("CVSD"), wxT("CVSDM")
 };
 
-void CVSDDecode(wxFFile* wxCVSDFile, int32_t* PCMbuffer, uint32_t& samplesRead, const int samples_to_read, CVSD_CONFIG& mDecoderConfig)
+void CVSDDecode(wxFFile* wxCVSDFile, int16_t* PCMbuffer, uint32_t& samplesRead, const uint32_t samples_to_read, CVSD_CONFIG& mDecoderConfig)
 {
-    // resetting the seek just in case
-    wxCVSDFile->Seek(0);
-
-    // bits -> Samples is a 1:1 mapping
-    // Todo: check how many bytes this is
-    const int number_of_bytes_to_read = std::ceil(samples_to_read/8);
-    std::vector<uint8_t> CVSDBuffer(number_of_bytes_to_read);
+    std::vector<uint8_t> CVSDBuffer(samples_to_read, 0);
 
     // Read the entire file into the buffer
-    const size_t bytesRead = wxCVSDFile->Read(CVSDBuffer.data(), number_of_bytes_to_read);
+    const size_t bytesRead = wxCVSDFile->Read(CVSDBuffer.data(), samples_to_read);
 
     // don't need to handle eof for now
 
     // raw binary file
     int sampleIndex = 0;
-    for (size_t i=0; i<CVSDBuffer.size(); i++)
+    for (size_t i=0; i<bytesRead; i++)
     {
         uint8_t rawCVSDbyte = CVSDBuffer[i];
 
@@ -67,10 +61,10 @@ void CVSDDecode(wxFFile* wxCVSDFile, int32_t* PCMbuffer, uint32_t& samplesRead, 
                 mDecoderConfig.maxAccumulatorSize);
 
             // Assign to PCMBuffer using index
-            PCMbuffer[sampleIndex++] = static_cast<int32_t>(mDecoderConfig.accumulator);
-            samplesRead+=sampleIndex;
+            PCMbuffer[sampleIndex++] = static_cast<int16_t>(mDecoderConfig.accumulator);
         }
     }
+    samplesRead=sampleIndex;
 }
 
 CVSDImportPlugin::CVSDImportPlugin()
@@ -109,6 +103,7 @@ CVSDImportFileHandle::CVSDImportFileHandle(const FilePath& filename) :
     wxCVSDFile->SeekEnd(0);
     // Todo check if it's indeed int64_t
     int64_t fileSizeBytes = wxCVSDFile->Tell();
+    wxLogDebug(wxT("File size: %lld"), fileSizeBytes);
     wxCVSDFile->Seek(0); // Reset to start of file
 
     // 1->1 mapping, CVSD
@@ -134,8 +129,9 @@ double CVSDImportFileHandle::GetDuration() const {
     if (mSampleRate <= 0 || mNumSamples <= 0) {
         return 0.0;
     }
+    double duration = static_cast<double>(mNumSamples) / mSampleRate;
 
-    return static_cast<double>(mNumSamples) / static_cast<double>(mSampleRate);
+    return duration;
 }
 
 int CVSDImportFileHandle::GetRequiredTrackCount() const
@@ -156,31 +152,25 @@ void CVSDImportFileHandle::Import(
 
     outTracks.clear();
 
-    auto tracks = trackFactory->CreateMany(mNumChannels, mFormat, mSampleRate);
-    const int SAMPLES_TO_READ = (*tracks->Any<WaveTrack>().begin())->GetMaxBlockSize();
+    auto tracks = trackFactory->Create(mNumChannels, mFormat, mSampleRate);
+    const size_t SAMPLES_TO_READ = (tracks->GetMaxBlockSize());
     int totalSamplesRead = 0;
     {
-        const uint32_t bufferSize = mNumChannels * SAMPLES_TO_READ;
-        ArrayOf<int32_t> CVSDBuffer{ bufferSize };
-        ArrayOf<int16_t> int16Buffer;
+        const uint32_t bufferSize = (mNumChannels * SAMPLES_TO_READ)/8;
+        ArrayOf<int16_t> int16Buffer { bufferSize*8 };
         uint32_t samplesRead = 0;
-
-        // The buffer is always going to be a int16Sample
-        int16Buffer.reinit(bufferSize);
-        unsigned chn = 0;
         do
         {
-            CVSDDecode(wxCVSDFile.get(), CVSDBuffer.get(), samplesRead, SAMPLES_TO_READ, mDecoderConfig);
+            CVSDDecode(wxCVSDFile.get(), int16Buffer.get(), samplesRead, bufferSize, mDecoderConfig);
             ImportUtils::ForEachChannel(*tracks, [&](auto& channel)
             {
                 channel.AppendBuffer(
-                        reinterpret_cast<constSamplePtr>(int16Buffer.get() + chn),
+                        reinterpret_cast<constSamplePtr>(int16Buffer.get()),
                         mFormat,
                         samplesRead,
                         mNumChannels,
                         mFormat
                         );
-                    ++chn;
             });
 
             totalSamplesRead += samplesRead;
@@ -197,7 +187,9 @@ void CVSDImportFileHandle::Import(
         return;
     }
 
-    ImportUtils::FinalizeImport(outTracks, std::move(*tracks));
+    std::vector<std::shared_ptr<WaveTrack>> outTrack;
+    outTrack.push_back(tracks);
+    ImportUtils::FinalizeImport(outTracks, outTrack);
 
     progressListener.OnImportResult(IsStopped()
                                     ? ImportProgressListener::ImportResult::Stopped
@@ -218,127 +210,3 @@ const TranslatableStrings& CVSDImportFileHandle::GetStreamInfo()
 void CVSDImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use))
 {
 }
-
-// class CVSDImportFileHandle final : public ImportFileHandle
-// {
-// public:
-//   CVSDImportFileHandle(const FilePath &name)
-//       : mFilename(name)
-//   {
-//     mFile = std::make_unique<wxFFile>(mFilename, wxT("rb"));
-//
-//     mAccumulator = 0.0f;
-//     mStepSize = 0.01f;
-//   }
-//
-//   ~CVSDImportFileHandle() override = default;
-//
-//   FilePath GetFilename() const override { return mFilename; }
-//
-//   TranslatableString GetFileDescription() override { return DESC; }
-//
-//   // 1 bit encoded -> 32 bit PCM (ratio of 32 bytes out for every 1 byte in)
-//   ByteCount GetFileUncompressedBytes() override {
-//     return mFile->IsOpened() ? (ByteCount)mFile->Length() * 32 : 0;
-//   }
-//
-//   wxInt32 GetStreamCount() override { return 1; }
-//   const TranslatableStrings &GetStreamInfo() override { return mStreamInfo; }
-//   void SetStreamUsage(wxInt32 StreamID, bool Use) override { }
-//
-//   void Import(
-//       ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
-//       TrackHolders& outTracks, Tags* tags,
-//       std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override
-//   {
-//       // could not import the file
-//       if (!mFile->IsOpened()) return;
-//
-//       // decode the wave itself
-//       CVSDDecode(mFile);
-//
-//       const size_t bufferSize = 1024;
-//       std::vector<uint8_t> inBuffer(bufferSize);
-//       std::vector<float> outBuffer(bufferSize * 8);
-//
-//       mFile->Seek(0);
-//       long long processed = 0;
-//       long long total = mFile->Length();
-//
-//       while (!mFile->Eof()) {
-//           size_t read = mFile->Read(inBuffer.data(), bufferSize);
-//           if (read == 0) break;
-//
-//           for (size_t i = 0; i < read; ++i) {
-//               // Extract 8 bits from each byte
-//               for (int bitPos = 7; bitPos >= 0; --bitPos) {
-//                   bool bit = (inBuffer[i] >> bitPos) & 0x01;
-//
-//                   // --- CVSD Decoding Logic ---
-//                   // 1. Adjust accumulator based on bit (1 = up, 0 = down)
-//                   if (bit) mAccumulator += mStepSize;
-//                   else mAccumulator -= mStepSize;
-//
-//                   // 2. Simple Leaky Integrator (prevents DC offset build-up)
-//                   mAccumulator *= 0.99f;
-//
-//                   // 3. Clamp to Audacity's float range [-1.0, 1.0]
-//                   if (mAccumulator > 1.0f) mAccumulator = 1.0f;
-//                   if (mAccumulator < -1.0f) mAccumulator = -1.0f;
-//
-//                   outBuffer[(i * 8) + (7 - bitPos)] = mAccumulator;
-//               }
-//           }
-//
-//           newTrack->Append((samplePtr)outBuffer.data(), floatSample, read * 8);
-//
-//           processed += read;
-//           if (progressListener.Update(processed, total) != ProgressResult::Success) {
-//               break;
-//           }
-//       }
-//
-//       outTracks.push_back(std::move(newTrack));
-//       progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
-//   }
-//
-//   void Cancel() override { }
-//   void Stop() override { }
-//
-// private:
-//   FilePath mFilename;
-//   std::unique_ptr<wxFFile> mFile;
-//   TranslatableStrings mStreamInfo;
-//
-//   // Decoder state
-//   float mAccumulator;
-//   float mStepSize;
-// };
-//
-// // --- The Plugin (The Entry Point) ---
-// class CVSDImportPlugin final : public ImportPlugin
-// {
-// public:
-//   CVSDImportPlugin()
-//       : ImportPlugin(FileExtensions(exts.begin(), exts.end()))
-//   {
-//   }
-//
-//   wxString GetPluginStringID() override { return wxT("cvsd"); }
-//
-//   TranslatableString GetPluginFormatDescription() override {
-//     return DESC;
-//   }
-//
-//   std::unique_ptr<ImportFileHandle> Open(
-//       const FilePath &Filename, AudacityProject*) override
-//   {
-//     // The Plugin creates the Handle and hands over the Filename
-//     return std::make_unique<CVSDImportFileHandle>(Filename);
-//   }
-// };
-//
-// // Register the plugin with Audacity's Importer
-// static Importer::RegisteredImportPlugin registered{ "CVSD",
-//    std::make_unique< CVSDImportPlugin >()
-// };
