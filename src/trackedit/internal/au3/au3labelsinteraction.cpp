@@ -511,7 +511,10 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
 
     newStartTime = std::max(0.0, newStartTime.to_double());
 
-    au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
+    // If the left anchor is dragged after the right one, set them to a point, the final stretch performed by the autoscroll completion will invert the anchors.
+    if (au3Label.selectedRegion.setTimes(newStartTime, anchorT1) && completed) {
+        au3Label.selectedRegion.setTimes(anchorT1, anchorT1);
+    }
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
@@ -581,7 +584,10 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
 
     newEndTime = std::max(0.0, newEndTime.to_double());
 
-    au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
+    // If the right anchor is dragged before the left one, set them to a point, the final stretch performed by the autoscroll completion will invert the anchors.
+    if (au3Label.selectedRegion.setTimes(anchorT0, newEndTime) && completed) {
+        au3Label.selectedRegion.setTimes(anchorT0, anchorT0);
+    }
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
