@@ -198,7 +198,9 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
                 }
             }
         }
-    } else {
+    } else if (playbackState()->playbackStatus() != playback::PlaybackStatus::Paused) {
+        //! NOTE: residual ticks after pausing must not scroll the view;
+        //! seeks made while paused stop playback first, so they still follow
         const double halfFrameDuration = (m_context->frameEndTime() - m_context->frameStartTime()) * 0.5;
         const bool zoomTooClose = halfFrameDuration < ANIMATION_DURATION_SEC;
 
