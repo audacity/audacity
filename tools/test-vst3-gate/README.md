@@ -14,8 +14,22 @@ immediately audible.
 ## Build
 
     cmake -DAU_BUILD_TEST_VST3_GATE_PLUGIN=ON <build dir>
-    ninja -C <build dir> au_test_vst3_gate
-    ln -s <build dir>/test-plugins/AuTestGate.vst3 ~/.vst3/AuTestGate.vst3
+    ninja -C <build dir> au_test_vst3_gate au_test_vst3_gate_controller
+    ln -s <build dir>/test-plugins/AuTestGate.vst3 ~/.vst3/AuTestGate.vst3   # or use the controller
+
+## Controller app
+
+`<build dir>/test-plugins/au_test_vst3_gate_controller` is a small Qt (Widgets)
+app so you never have to edit the gate file by hand. It
+
+- **installs** the built bundle into the platform VST3 folder (`~/.vst3`,
+  `~/Library/Audio/Plug-Ins/VST3`, `%COMMONPROGRAMFILES%\VST3`) - as a symlink on
+  Linux/macOS so rebuilds stay live, a copy on Windows;
+- sets the **load result**: succeed / crash / refuse, either _immediately_ or _after_
+  a delay (default 180 s = the 3 min plugin-load timeout), by writing the gate file;
+- shows the gate file's path and current content.
+
+The controller and the plugin resolve the gate path identically, so they always agree.
 
 ## Gate file
 
